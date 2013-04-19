@@ -29,8 +29,8 @@
     </distributionManagement>
     <licenses>
         <license>
-            <name>GPLv2</name>
-            <url>http://www.gnu.org/licenses/gpl-2.0.html</url>
+            <name>AGPLv3</name>
+            <url>http://www.gnu.org/licenses/agpl-3.0.html</url>
         </license>
     </licenses>
     <modules>
