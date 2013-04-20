@@ -10,7 +10,7 @@
     <inceptionYear>2013</inceptionYear>
     <ciManagement>
         <system>hudson</system>
-        <url>giv-car.uni-muenster.de:8080/jenkins/lcs-server-master</url>
+        <url>giv-car.uni-muenster.de:8080/jenkins/jobs/lcs-server-master</url>
     </ciManagement>
     <scm>
         <url>http://github.com/autermann/lcs-server</url>
