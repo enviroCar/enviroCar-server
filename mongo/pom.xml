@@ -1,18 +1,18 @@
 <?xml version="1.0"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" 
          xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>de.ifgi.lcs.server</groupId>
-    <artifactId>lcs-server</artifactId>
+    <groupId>io.car.server</groupId>
+    <artifactId>server</artifactId>
     <version>1.0-SNAPSHOT</version>
   </parent>
-  <artifactId>lcs-server-rest</artifactId>
-  <name>LCS Server REST</name>
+  <artifactId>mongo</artifactId>
+  <name>LCS Server Mongo Backend</name>
   <dependencies>
       <dependency>
           <groupId>${project.groupId}</groupId>
-          <artifactId>lcs-server-core</artifactId>
+          <artifactId>core</artifactId>
       </dependency>
       <dependency>
           <groupId>junit</groupId>
@@ -23,16 +23,20 @@
           <artifactId>hamcrest-all</artifactId>
       </dependency>
       <dependency>
-          <groupId>org.slf4j</groupId>
+          <groupId>com.github.jmkgreen.morphia</groupId>
+          <artifactId>morphia</artifactId>
+      </dependency>
+      <dependency>
+          <groupId>com.github.jmkgreen.morphia</groupId>
+          <artifactId>morphia-logging-slf4j</artifactId>
+      </dependency>
+      <dependency>
           <artifactId>slf4j-api</artifactId>
+          <groupId>org.slf4j</groupId>
       </dependency>
       <dependency>
           <groupId>javax.inject</groupId>
           <artifactId>javax.inject</artifactId>
-      </dependency>
-      <dependency>
-          <groupId>com.sun.jersey</groupId>
-          <artifactId>jersey-server</artifactId>
       </dependency>
   </dependencies>
 </project>
