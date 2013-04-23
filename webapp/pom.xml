@@ -9,7 +9,7 @@
     </parent>
     <artifactId>webapp</artifactId>
     <packaging>war</packaging>
-    <name>LCS Server Webapp</name>
+    <name>car.io server webapp</name>
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>

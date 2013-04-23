@@ -8,7 +8,7 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
     <artifactId>core</artifactId>
-    <name>LCS Server Core</name>
+    <name>car.io server core</name>
     <dependencies>
         <dependency>
             <groupId>junit</groupId>

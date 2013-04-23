@@ -8,7 +8,7 @@
     <version>1.0-SNAPSHOT</version>
   </parent>
   <artifactId>rest</artifactId>
-  <name>LCS Server REST</name>
+  <name>car.io server rest interface</name>
   <dependencies>
       <dependency>
           <groupId>${project.groupId}</groupId>

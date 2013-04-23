@@ -6,7 +6,7 @@
     <artifactId>server</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>LCS Server</name>
+    <name>car.io server</name>
     <inceptionYear>2013</inceptionYear>
     <ciManagement>
         <system>hudson</system>
