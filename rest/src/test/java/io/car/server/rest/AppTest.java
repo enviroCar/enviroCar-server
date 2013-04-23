@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.ifgi.lcs.server.lcs.server.rest;
+package io.car.server.rest;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

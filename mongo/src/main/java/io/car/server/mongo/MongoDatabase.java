@@ -15,29 +15,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.ifgi.lcs.server.lcs.server.rest;
+package io.car.server.mongo;
 
-import javax.inject.Inject;
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import io.car.server.core.Database;
 
-import de.ifgi.lcs.server.core.Database;
-
-@Path("/")
-public class Root {
-    private Database database;
-
-    @Inject
-    public Root(Database database) {
-        this.database = database;
-    }
-
-    @GET
-    @Produces("text/plain")
-    public String get(@QueryParam("name") @DefaultValue("World") String name) {
-        return "Hello " + name;
-    }
+/**
+ * @author Christian Autermann <c.autermann@52north.org>
+ */
+public class MongoDatabase implements Database {
 }

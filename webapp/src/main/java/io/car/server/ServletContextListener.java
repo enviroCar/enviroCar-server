@@ -15,12 +15,33 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.ifgi.lcs.server.mongo;
+package io.car.server;
 
-import de.ifgi.lcs.server.core.Database;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.servlet.GuiceServletContextListener;
+import com.sun.jersey.guice.JerseyServletModule;
+import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
+
+import io.car.server.core.Database;
+import io.car.server.mongo.MongoDatabase;
+import io.car.server.rest.Root;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public class MongoDatabase implements Database {
+public class ServletContextListener extends GuiceServletContextListener {
+
+    @Override
+    protected Injector getInjector() {
+        return Guice.createInjector(new JerseyServletModule() {
+            @Override
+            protected void configureServlets() {
+                /* TODO add other modules */
+                bind(Root.class);
+                bind(Database.class).to(MongoDatabase.class);
+                serve("/*").with(GuiceContainer.class);
+            }
+        });
+    }
 }
