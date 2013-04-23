@@ -15,16 +15,16 @@
     <scm>
         <url>http://github.com/car.io/car.io-server</url>
         <connection>scm:git:ssh://github.com/car.io/car.io-server.git</connection>
-        <developerConnection>scm:git:git+ssh://git@github.com/car.io/car.io-server.git</developerConnection>
+        <developerConnection>scm:git:git+ssh://git@github.com/car-io/car.io-server.git</developerConnection>
     </scm>
     <issueManagement>
         <system>GitHub Issue Management</system>
-        <url>https://github.com/car.io/car.io-server/issues</url>
+        <url>https://github.com/car-io/car.io-server/issues</url>
     </issueManagement>
     <distributionManagement>
         <site>
             <id>github</id>
-            <url>gitsite:git@github.com/car.io/car.io-server.git</url>
+            <url>gitsite:git@github.com/car-io/car.io-server.git</url>
         </site>
     </distributionManagement>
     <licenses>
