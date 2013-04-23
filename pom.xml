@@ -10,21 +10,21 @@
     <inceptionYear>2013</inceptionYear>
     <ciManagement>
         <system>hudson</system>
-        <url>giv-car.uni-muenster.de:8080/jenkins/job/lcs-server-master</url>
+        <url>giv-car.uni-muenster.de:8080/jenkins/job/car.io-server-master</url>
     </ciManagement>
     <scm>
-        <url>http://github.com/autermann/lcs-server</url>
-        <connection>scm:git:ssh://github.com/autermann/lcs-server.git</connection>
-        <developerConnection>scm:git:git+ssh://git@github.com/autermann/lcs-server.git</developerConnection>
+        <url>http://github.com/car.io/car.io-server</url>
+        <connection>scm:git:ssh://github.com/car.io/car.io-server.git</connection>
+        <developerConnection>scm:git:git+ssh://git@github.com/car.io/car.io-server.git</developerConnection>
     </scm>
     <issueManagement>
         <system>GitHub Issue Management</system>
-        <url>https://github.com/autermann/lcs-server/issues</url>
+        <url>https://github.com/car.io/car.io-server/issues</url>
     </issueManagement>
     <distributionManagement>
         <site>
             <id>github</id>
-            <url>gitsite:git@github.com/autermann/lcs-server.git</url>
+            <url>gitsite:git@github.com/car.io/car.io-server.git</url>
         </site>
     </distributionManagement>
     <licenses>
