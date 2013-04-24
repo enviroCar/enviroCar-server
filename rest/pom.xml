@@ -34,5 +34,29 @@
           <groupId>com.sun.jersey</groupId>
           <artifactId>jersey-server</artifactId>
       </dependency>
+      <dependency>
+          <groupId>com.sun.jersey</groupId>
+          <artifactId>jersey-json</artifactId>
+      </dependency>
+      <dependency>
+          <groupId>com.sun.jersey.contribs</groupId>
+          <artifactId>jersey-guice</artifactId>
+      </dependency>
+      <dependency>
+          <groupId>com.google.guava</groupId>
+          <artifactId>guava</artifactId>
+      </dependency>
+      <dependency>
+          <groupId>javax.servlet</groupId>
+          <artifactId>servlet-api</artifactId>
+      </dependency>
+      <dependency>
+          <groupId>com.sun.jersey.contribs.jersey-oauth</groupId>
+          <artifactId>oauth-server</artifactId>
+      </dependency>
+      <dependency>
+          <groupId>com.sun.jersey.contribs.jersey-oauth</groupId>
+          <artifactId>oauth-signature</artifactId>
+      </dependency>
   </dependencies>
 </project>
