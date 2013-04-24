@@ -20,4 +20,13 @@ package io.car.server.core;
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public interface Database {}
+public class UserUpdater implements EntityUpdater<User> {
+
+    @Override
+    public User update(User changes, User original) {
+        if (changes.getName() != null) {
+            original.setName(changes.getName());
+        }
+        return original;
+    }
+}

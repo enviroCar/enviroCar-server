@@ -15,28 +15,27 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server;
+package io.car.server.rest;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.google.inject.Module;
-import com.google.inject.servlet.GuiceServletContextListener;
-
-import io.car.server.core.CoreModule;
-import io.car.server.mongo.MongoModule;
-import io.car.server.rest.RESTModule;
+import com.google.common.collect.ImmutableMap;
+import com.sun.jersey.api.core.PackagesResourceConfig;
+import com.sun.jersey.api.core.ResourceConfig;
+import com.sun.jersey.api.json.JSONConfiguration;
+import com.sun.jersey.core.util.FeaturesAndProperties;
+import com.sun.jersey.guice.JerseyServletModule;
+import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public class ServletContextListener extends GuiceServletContextListener {
+public class RESTModule extends JerseyServletModule {
 
     @Override
-    protected Injector getInjector() {
-        return Guice.createInjector(new Module[] {
-            new CoreModule(),
-            new MongoModule(),
-            new RESTModule()
-        });
+    protected void configureServlets() {
+        serve("/*").with(GuiceContainer.class, ImmutableMap.of(
+                PackagesResourceConfig.PROPERTY_PACKAGES, getClass().getPackage().getName(),
+                ResourceConfig.FEATURE_DISABLE_WADL, String.valueOf(true),
+                FeaturesAndProperties.FEATURE_FORMATTED, String.valueOf(true),
+                JSONConfiguration.FEATURE_POJO_MAPPING, String.valueOf(false)));
     }
 }

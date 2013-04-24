@@ -15,28 +15,17 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server;
+package io.car.server.core.db;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.google.inject.Module;
-import com.google.inject.servlet.GuiceServletContextListener;
-
-import io.car.server.core.CoreModule;
-import io.car.server.mongo.MongoModule;
-import io.car.server.rest.RESTModule;
+import io.car.server.core.User;
+import io.car.server.core.Users;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public class ServletContextListener extends GuiceServletContextListener {
-
-    @Override
-    protected Injector getInjector() {
-        return Guice.createInjector(new Module[] {
-            new CoreModule(),
-            new MongoModule(),
-            new RESTModule()
-        });
-    }
+public interface UserDao {
+    User getUserByName(String name);
+    Users getAll();
+    User createUser(User user);
+    User saveUser(User user);
 }

@@ -15,28 +15,24 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server;
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package io.car.server.rest;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.google.inject.Module;
-import com.google.inject.servlet.GuiceServletContextListener;
-
-import io.car.server.core.CoreModule;
-import io.car.server.mongo.MongoModule;
-import io.car.server.rest.RESTModule;
+import javax.ws.rs.core.MediaType;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public class ServletContextListener extends GuiceServletContextListener {
-
-    @Override
-    protected Injector getInjector() {
-        return Guice.createInjector(new Module[] {
-            new CoreModule(),
-            new MongoModule(),
-            new RESTModule()
-        });
-    }
+public interface MediaTypes {
+    String USERS = "application/json; schema=\"users.json\"";
+    MediaType USERS_TYPE = MediaType.valueOf(USERS);
+    String USER = "application/json; schema=\"user.json\"";
+    MediaType USER_TYPE = MediaType.valueOf(USER);
+    String USER_MODIFY = "application/json; schema=\"user.modify.json\"";
+    MediaType USER_MODIFY_TYPE = MediaType.valueOf(USER_MODIFY);
+    String USER_CREATE = "application/json; schema=\"user.create.json\"";
+    MediaType USER_CREATE_TYPE = MediaType.valueOf(USER_CREATE);
 }

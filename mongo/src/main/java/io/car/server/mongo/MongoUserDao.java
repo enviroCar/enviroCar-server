@@ -15,28 +15,45 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server;
+package io.car.server.mongo;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.google.inject.Module;
-import com.google.inject.servlet.GuiceServletContextListener;
+import javax.inject.Inject;
 
-import io.car.server.core.CoreModule;
-import io.car.server.mongo.MongoModule;
-import io.car.server.rest.RESTModule;
+import com.github.jmkgreen.morphia.dao.BasicDAO;
+
+import io.car.server.core.User;
+import io.car.server.core.Users;
+import io.car.server.core.db.UserDao;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public class ServletContextListener extends GuiceServletContextListener {
+public class MongoUserDao extends BasicDAO<MongoUser, String> implements UserDao {
+    @Inject
+    public MongoUserDao(MongoDB mongodb) {
+        super(MongoUser.class, mongodb.getDatastore());
+    }
 
     @Override
-    protected Injector getInjector() {
-        return Guice.createInjector(new Module[] {
-            new CoreModule(),
-            new MongoModule(),
-            new RESTModule()
-        });
+    public User getUserByName(String name) {
+        return get(name);
+    }
+
+    @Override
+    public Users getAll() {
+        return new Users(find().fetch());
+    }
+
+    @Override
+    public User createUser(User user) {
+        // todo  check for existence
+        save((MongoUser) user);
+        return user;
+    }
+
+    @Override
+    public User saveUser(User user) {
+        save((MongoUser) user);
+        return user;
     }
 }

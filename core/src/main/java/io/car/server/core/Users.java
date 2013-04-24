@@ -15,29 +15,23 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest;
+package io.car.server.core;
 
-import javax.inject.Inject;
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import java.util.Iterator;
 
-import io.car.server.core.Database;
+/**
+ * @author Christian Autermann <c.autermann@52north.org>
+ */
+public class Users implements Iterable<User> {
+    private final Iterable<? extends User> delegate;
 
-@Path("/")
-public class Root {
-    private Database database;
-
-    @Inject
-    public Root(Database database) {
-        this.database = database;
+    public Users(Iterable<? extends User> delegate) {
+        this.delegate = delegate;
     }
 
-    @GET
-    @Produces("text/plain")
-    public String get(@QueryParam("name") @DefaultValue("World") String name) {
-        return "Hello " + name;
+    @Override
+    @SuppressWarnings("unchecked")
+    public Iterator<User> iterator() {
+        return (Iterator<User>) delegate.iterator();
     }
 }
