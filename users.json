@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "type": "object"
+    "type": "object",
     "properties": {
         "users": {
             "type": "array",
@@ -15,13 +15,13 @@
                         "type": "string",
                         "format": "uri"
                     }
-                }
+                },
                 "required": [ "name", "href" ],
                 "additionalProperties": false
             }
 
         }
-    }
+    },
     "required": [ "users" ],
     "additionalProperties": false
 }
