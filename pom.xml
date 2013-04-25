@@ -41,8 +41,9 @@
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <logback.version>1.0.11</logback.version>
-        <morphia.version>1.2.3</morphia.version>
+        <logback-version>1.0.11</logback-version>
+        <morphia-version>1.2.3</morphia-version>
+        <jersey-version>1.17.1</jersey-version>
     </properties>
     <repositories>
         <repository>
@@ -112,6 +113,11 @@
                 <version>3.0</version>
             </dependency>
             <dependency>
+                <artifactId>guice-servlet</artifactId>
+                <groupId>com.google.inject.extensions</groupId>
+                <version>3.0</version>
+            </dependency>
+            <dependency>
                 <groupId>javax.inject</groupId>
                 <artifactId>javax.inject</artifactId>
                 <version>1</version>
@@ -119,12 +125,17 @@
             <dependency>
                 <artifactId>morphia</artifactId>
                 <groupId>com.github.jmkgreen.morphia</groupId>
-                <version>${morphia.version}</version>
+                <version>${morphia-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.jmkgreen.morphia</groupId>
+                <artifactId>morphia-guice-plugin</artifactId>
+                <version>${morphia-version}</version>
             </dependency>
             <dependency>
                 <groupId>com.github.jmkgreen.morphia</groupId>
                 <artifactId>morphia-logging-slf4j</artifactId>
-                <version>${morphia.version}</version>
+                <version>${morphia-version}</version>
                 <scope>runtime</scope>
             </dependency>
             <dependency>
@@ -140,13 +151,13 @@
             <dependency>
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
-                <version>${logback.version}</version>
+                <version>${logback-version}</version>
                 <scope>runtime</scope>
             </dependency>
             <dependency>
                 <artifactId>logback-core</artifactId>
                 <groupId>ch.qos.logback</groupId>
-                <version>${logback.version}</version>
+                <version>${logback-version}</version>
                 <scope>runtime</scope>
             </dependency>
             <dependency>
@@ -162,12 +173,33 @@
             <dependency>
                 <groupId>com.sun.jersey</groupId>
                 <artifactId>jersey-server</artifactId>
-                <version>1.14</version>
+                <version>${jersey-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sun.jersey</groupId>
+                <artifactId>jersey-json</artifactId>
+                <version>${jersey-version}</version>
             </dependency>
             <dependency>
                 <groupId>com.sun.jersey.contribs</groupId>
                 <artifactId>jersey-guice</artifactId>
-                <version>1.17.1</version>
+                <version>${jersey-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sun.jersey.contribs.jersey-oauth</groupId>
+                <artifactId>oauth-client</artifactId>
+                <version>${jersey-version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.sun.jersey.contribs.jersey-oauth</groupId>
+                <artifactId>oauth-server</artifactId>
+                <version>${jersey-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sun.jersey.contribs.jersey-oauth</groupId>
+                <artifactId>oauth-signature</artifactId>
+                <version>${jersey-version}</version>
             </dependency>
             <dependency>
                 <groupId>javax.servlet</groupId>

@@ -15,12 +15,15 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.mongo;
-
-import io.car.server.core.Database;
+package io.car.server.core.exception;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public class MongoDatabase implements Database {
+public class UserNotFoundException extends ResourceNotFoundException {
+    private static final long serialVersionUID = 4939411216719020238L;
+
+    public UserNotFoundException(String username) {
+        super(String.format("The user '%s' was not found", username));
+    }
 }

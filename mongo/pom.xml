@@ -28,6 +28,10 @@
       </dependency>
       <dependency>
           <groupId>com.github.jmkgreen.morphia</groupId>
+          <artifactId>morphia-guice-plugin</artifactId>
+      </dependency>
+      <dependency>
+          <groupId>com.github.jmkgreen.morphia</groupId>
           <artifactId>morphia-logging-slf4j</artifactId>
       </dependency>
       <dependency>
@@ -37,6 +41,14 @@
       <dependency>
           <groupId>javax.inject</groupId>
           <artifactId>javax.inject</artifactId>
+      </dependency>
+      <dependency>
+          <groupId>com.google.inject</groupId>
+          <artifactId>guice</artifactId>
+      </dependency>
+      <dependency>
+          <groupId>com.google.guava</groupId>
+          <artifactId>guava</artifactId>
       </dependency>
   </dependencies>
 </project>

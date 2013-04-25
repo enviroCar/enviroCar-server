@@ -1,3 +1,3 @@
-[submodule "schema"]
-	path = schema
+[submodule "rest/src/main/resources/schema"]
+	path = rest/src/main/resources/schema
 	url = https://github.com/car-io/car.io-schema.git

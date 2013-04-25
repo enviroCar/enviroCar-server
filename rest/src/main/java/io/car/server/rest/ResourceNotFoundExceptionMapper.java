@@ -17,27 +17,26 @@
  */
 package io.car.server.rest;
 
-import javax.inject.Inject;
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.ext.ExceptionMapper;
+import javax.ws.rs.ext.Provider;
 
-import io.car.server.core.Database;
+import io.car.server.core.exception.ResourceNotFoundException;
 
-@Path("/")
-public class Root {
-    private Database database;
+/**
+ * @author Christian Autermann <c.autermann@52north.org>
+ */
+@Provider
+public class ResourceNotFoundExceptionMapper implements ExceptionMapper<ResourceNotFoundException> {
 
-    @Inject
-    public Root(Database database) {
-        this.database = database;
-    }
-
-    @GET
-    @Produces("text/plain")
-    public String get(@QueryParam("name") @DefaultValue("World") String name) {
-        return "Hello " + name;
+    @Override
+    public Response toResponse(ResourceNotFoundException exception) {
+        return Response
+                .status(Status.NOT_FOUND)
+                .type(MediaType.TEXT_PLAIN)
+                .entity(exception.getMessage())
+                .build();
     }
 }

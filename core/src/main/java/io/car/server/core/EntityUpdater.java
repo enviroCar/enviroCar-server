@@ -20,4 +20,6 @@ package io.car.server.core;
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public interface Database {}
+public interface EntityUpdater<T> {
+    T update(T changes, T original);
+}

@@ -15,41 +15,23 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest;
+package io.car.server.core;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import java.util.Iterator;
 
 /**
- * Unit test for simple App.
+ * @author Christian Autermann <c.autermann@52north.org>
  */
-public class AppTest 
-    extends TestCase
-{
-    /**
-     * Create the test case
-     *
-     * @param testName name of the test case
-     */
-    public AppTest( String testName )
-    {
-        super( testName );
+public class Users implements Iterable<User> {
+    private final Iterable<? extends User> delegate;
+
+    public Users(Iterable<? extends User> delegate) {
+        this.delegate = delegate;
     }
 
-    /**
-     * @return the suite of tests being tested
-     */
-    public static Test suite()
-    {
-        return new TestSuite( AppTest.class );
-    }
-
-    /**
-     * Rigourous Test :-)
-     */
-    public void testApp()
-    {
-        assertTrue( true );
+    @Override
+    @SuppressWarnings("unchecked")
+    public Iterator<User> iterator() {
+        return (Iterator<User>) delegate.iterator();
     }
 }
