@@ -21,6 +21,7 @@ import javax.inject.Inject;
 
 import com.github.jmkgreen.morphia.Datastore;
 import com.github.jmkgreen.morphia.dao.BasicDAO;
+import com.github.jmkgreen.morphia.query.Query;
 
 import io.car.server.core.User;
 import io.car.server.core.Users;
@@ -47,7 +48,7 @@ public class MongoUserDao extends BasicDAO<MongoUser, String> implements UserDao
 
     @Override
     public Users getAll(int limit) {
-        return new Users(find(createQuery().limit(limit)).fetch());
+        return fetch(createQuery().limit(limit).order(MongoUser.CREATION_DATE));
     }
 
     @Override
@@ -66,5 +67,9 @@ public class MongoUserDao extends BasicDAO<MongoUser, String> implements UserDao
     @Override
     public void deleteUser(User user) {
         delete((MongoUser) user);
+    }
+
+    protected Users fetch(Query<MongoUser> q) {
+        return new Users(find(q).fetch());
     }
 }
