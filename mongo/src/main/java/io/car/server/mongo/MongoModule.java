@@ -19,6 +19,7 @@ package io.car.server.mongo;
 
 import com.github.jmkgreen.morphia.Datastore;
 import com.github.jmkgreen.morphia.Morphia;
+import com.github.jmkgreen.morphia.mapping.Mapper;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.mongodb.Mongo;
@@ -60,4 +61,8 @@ public class MongoModule extends AbstractModule {
         return mongoClient(mongoDB);
     }
 
+    @Provides
+    public Mapper mapper(Morphia morphia) {
+        return morphia.getMapper();
+    }
 }
