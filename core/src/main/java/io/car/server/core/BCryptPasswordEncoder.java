@@ -17,18 +17,21 @@
  */
 package io.car.server.core;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.TypeLiteral;
+import org.mindrot.jbcrypt.BCrypt;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public class CoreModule extends AbstractModule {
+public class BCryptPasswordEncoder implements PasswordEncoder {
+    private static final int ROUNDS = 10;
 
     @Override
-    protected void configure() {
-        bind(new TypeLiteral<EntityUpdater<User>>() {}).to(UserUpdater.class);
-        bind(UserService.class);
-        bind(PasswordEncoder.class).to(BCryptPasswordEncoder.class);
+    public String encode(String rawPassword) {
+        return BCrypt.hashpw(rawPassword, BCrypt.gensalt(ROUNDS));
+    }
+
+    @Override
+    public boolean verify(String rawPassword, String encodedPassword) {
+        return BCrypt.checkpw(rawPassword, encodedPassword);
     }
 }

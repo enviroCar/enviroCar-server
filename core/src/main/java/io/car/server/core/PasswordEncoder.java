@@ -17,18 +17,10 @@
  */
 package io.car.server.core;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.TypeLiteral;
-
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public class CoreModule extends AbstractModule {
-
-    @Override
-    protected void configure() {
-        bind(new TypeLiteral<EntityUpdater<User>>() {}).to(UserUpdater.class);
-        bind(UserService.class);
-        bind(PasswordEncoder.class).to(BCryptPasswordEncoder.class);
-    }
+public interface PasswordEncoder {
+    String encode(String rawPassword);
+    boolean verify(String rawPassword, String encodedPassword);
 }
