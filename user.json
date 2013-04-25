@@ -3,7 +3,15 @@
     "type": "object",
     "properties": {
         "name": { "type": "string" },
-        "mail": { "type": "string" }
+        "mail": { "type": "string" },
+        "created": {
+            "type": "string",
+            "format": "date-time"
+        },
+        "modified": {
+            "type": "string",
+            "format": "date-time"
+        }
     },
     "additionalProperties": false,
     "required": [ "name" ]
