@@ -25,7 +25,7 @@ The [JSON schema](http://json-schema.org/) is maintained in a [different git rep
     |:--------:|:-------------------|:----------------------------|
     | `GET`    |                    | `200 OK` [user.json]        |
     | `PUT`    | [user.modify.json] | `200 OK` or `303 See Other` |
-    | `DELETE` |                    | *not yet implemented*       |
+    | `DELETE` |                    | `204 No Content`            |
 
 ## Deployments ##
 
