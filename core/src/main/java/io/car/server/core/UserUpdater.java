@@ -17,13 +17,15 @@
  */
 package io.car.server.core;
 
+import io.car.server.core.exception.IllegalModificationException;
+
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
 public class UserUpdater implements EntityUpdater<User> {
 
     @Override
-    public User update(User changes, User original) {
+    public User update(User changes, User original) throws IllegalModificationException {
         if (changes.getName() != null) {
             original.setName(changes.getName());
         }

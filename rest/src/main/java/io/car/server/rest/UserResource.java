@@ -37,6 +37,7 @@ import javax.ws.rs.core.UriInfo;
 import io.car.server.core.User;
 import io.car.server.core.UserService;
 import io.car.server.core.Users;
+import io.car.server.core.exception.IllegalModificationException;
 import io.car.server.core.exception.UserNotFoundException;
 
 /**
@@ -70,7 +71,8 @@ public class UserResource {
     @PUT
     @Path("{username}")
     @Consumes(MediaTypes.USER_MODIFY)
-    public Response modify(@PathParam("username") String username, User user) throws UserNotFoundException {
+    public Response modify(@PathParam("username") String username, User user) throws UserNotFoundException,
+                                                                                     IllegalModificationException {
         User modified = this.service.modifyUser(username, user);
         if (modified.getName().equals(username)) {
             return Response.noContent().build();

@@ -17,9 +17,11 @@
  */
 package io.car.server.core;
 
+import io.car.server.core.exception.IllegalModificationException;
+
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
 public interface EntityUpdater<T> {
-    T update(T changes, T original);
+    T update(T changes, T original) throws IllegalModificationException;
 }
