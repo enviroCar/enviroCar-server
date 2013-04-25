@@ -27,6 +27,7 @@ import javax.ws.rs.core.SecurityContext;
 import com.sun.jersey.spi.container.ContainerRequest;
 import com.sun.jersey.spi.container.ContainerRequestFilter;
 
+import io.car.server.core.PasswordEncoder;
 import io.car.server.core.User;
 import io.car.server.core.UserService;
 import io.car.server.core.exception.UserNotFoundException;
@@ -37,10 +38,12 @@ import io.car.server.core.exception.UserNotFoundException;
 public class AuthenticationFilter implements ContainerRequestFilter {
     
     private final UserService service;
+    private final PasswordEncoder passwordEncoder;
 
     @Inject
-    public AuthenticationFilter(UserService service) {
+    public AuthenticationFilter(UserService service, PasswordEncoder passwordEncoder) {
         this.service = service;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -54,7 +57,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
             }
             try {
                 User user = service.getUser(username);
-                if (token.equals(user.getToken())) {
+                if (passwordEncoder.verify(token, user.getToken())) {
                     request.setSecurityContext(new CustomSecurityContext(username, request.isSecure(), user.isAdmin()));
                 } else {
                     throw new WebApplicationException(Status.FORBIDDEN);

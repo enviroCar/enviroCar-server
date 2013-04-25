@@ -33,18 +33,21 @@ public class UserService {
     private final UserDao dao;
     private final EntityUpdater<User> updater;
     private final EntityValidator<User> validator;
-
+    private final PasswordEncoder passwordEncoder;
     @Inject
     public UserService(UserDao dao,
+                       PasswordEncoder passwordEncoder,
                        EntityUpdater<User> updater,
                        EntityValidator<User> validator) {
         this.dao = dao;
+        this.passwordEncoder = passwordEncoder;
         this.updater = updater;
         this.validator = validator;
     }
 
     public User createUser(User user) throws ValidationException {
         validator.validateCreate(user);
+        user.setToken(passwordEncoder.encode(user.getToken()));
         return this.dao.createUser(user);
     }
 
