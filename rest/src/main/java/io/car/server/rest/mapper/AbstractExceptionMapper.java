@@ -17,17 +17,27 @@
  */
 package io.car.server.rest.mapper;
 
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-import javax.ws.rs.ext.Provider;
-
-import io.car.server.core.exception.ResourceNotFoundException;
+import javax.ws.rs.ext.ExceptionMapper;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-@Provider
-public class ResourceNotFoundExceptionMapper extends AbstractExceptionMapper<ResourceNotFoundException> {
-    public ResourceNotFoundExceptionMapper() {
-        super(Status.NOT_FOUND);
+public class AbstractExceptionMapper<T extends Throwable> implements ExceptionMapper<T> {
+    private final Status status;
+
+    public AbstractExceptionMapper(Status status) {
+        this.status = status;
+    }
+
+    @Override
+    public Response toResponse(T exception) {
+        return Response
+                .status(status)
+                .type(MediaType.TEXT_PLAIN)
+                .entity(exception.getMessage())
+                .build();
     }
 }
