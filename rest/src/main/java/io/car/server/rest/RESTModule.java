@@ -33,7 +33,7 @@ public class RESTModule extends JerseyServletModule {
     @Override
     protected void configureServlets() {
         serve("/schema/*").with(SchemaServlet.class);
-        serve("/rest/*").with(GuiceContainer.class, ImmutableMap.of(
+        serve("/rest*").with(GuiceContainer.class, ImmutableMap.of(
                 PackagesResourceConfig.PROPERTY_PACKAGES, getClass().getPackage().getName(),
                 ResourceConfig.FEATURE_DISABLE_WADL, String.valueOf(true),
                 FeaturesAndProperties.FEATURE_FORMATTED, String.valueOf(true),
