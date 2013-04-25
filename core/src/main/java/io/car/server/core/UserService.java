@@ -23,6 +23,7 @@ import javax.inject.Singleton;
 import io.car.server.core.db.UserDao;
 import io.car.server.core.exception.IllegalModificationException;
 import io.car.server.core.exception.UserNotFoundException;
+import io.car.server.core.exception.ValidationException;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
@@ -32,19 +33,21 @@ public class UserService {
     private final UserDao dao;
     private final EntityFactory factory;
     private final EntityUpdater<User> updater;
+    private final EntityValidator<User> validator;
 
     @Inject
-    public UserService(UserDao dao, EntityFactory factory, EntityUpdater<User> updater) {
+    public UserService(UserDao dao,
+                       EntityFactory factory,
+                       EntityUpdater<User> updater,
+                       EntityValidator<User> validator) {
         this.dao = dao;
         this.factory = factory;
         this.updater = updater;
+        this.validator = validator;
     }
 
-    public void createUser(String name) {
-        this.dao.createUser(factory.createUser().setName(name));
-    }
-
-    public User createUser(User user) {
+    public User createUser(User user) throws ValidationException {
+        validator.validateCreate(user);
         return this.dao.createUser(user);
     }
 
@@ -64,7 +67,10 @@ public class UserService {
         return getAllUsers(0);
     }
 
-    public User modifyUser(String username, User user) throws UserNotFoundException, IllegalModificationException {
+    public User modifyUser(String username, User user) throws UserNotFoundException,
+                                                              IllegalModificationException,
+                                                              ValidationException {
+        validator.validateUpdate(user);
         return this.dao.saveUser(this.updater.update(user, getUser(username)));
     }
 

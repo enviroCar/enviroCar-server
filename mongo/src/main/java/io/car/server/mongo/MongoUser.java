@@ -51,10 +51,10 @@ public class MongoUser implements User {
     private boolean isAdmin = false;
     @Indexed
     @Property(CREATION_DATE)
-    private DateTime creationDate = new DateTime(DateTimeZone.UTC);
+    private DateTime creationDate;
     @Indexed
     @Property(LAST_MODIFIED)
-    private DateTime lastModificationDate = new DateTime(DateTimeZone.UTC);
+    private DateTime lastModificationDate;
 
     @Override
     public String getName() {
@@ -120,6 +120,10 @@ public class MongoUser implements User {
 
     @PrePersist
     public void prePersist() {
-        setLastModificationDate(new DateTime(DateTimeZone.UTC));
+        DateTime now = new DateTime(DateTimeZone.UTC);
+        if (getCreationDate() == null) {
+            setCreationDate(now);
+        }
+        setLastModificationDate(now);
     }
 }

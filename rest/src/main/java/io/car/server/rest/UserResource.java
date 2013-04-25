@@ -40,6 +40,7 @@ import io.car.server.core.User;
 import io.car.server.core.Users;
 import io.car.server.core.exception.IllegalModificationException;
 import io.car.server.core.exception.UserNotFoundException;
+import io.car.server.core.exception.ValidationException;
 import io.car.server.rest.auth.Anonymous;
 import io.car.server.rest.auth.Authenticated;
 
@@ -57,7 +58,7 @@ public class UserResource extends AbstractResource {
     @POST
     @Consumes(MediaTypes.USER_CREATE)
     @Anonymous
-    public Response create(User user) {
+    public Response create(User user) throws ValidationException {
         return Response.created(
                 getUriInfo().getRequestUriBuilder()
                 .path(getUserService().createUser(user).getName())
@@ -69,7 +70,7 @@ public class UserResource extends AbstractResource {
     @Consumes(MediaTypes.USER_MODIFY)
     @Authenticated
     public Response modify(@PathParam("username") String user, User changes) throws
-            UserNotFoundException, IllegalModificationException {
+            UserNotFoundException, IllegalModificationException, ValidationException {
         if (!canModifyUser(user)) {
             throw new WebApplicationException(Status.FORBIDDEN);
         }
