@@ -56,4 +56,9 @@ public class MongoUserDao extends BasicDAO<MongoUser, String> implements UserDao
         save((MongoUser) user);
         return user;
     }
+
+    @Override
+    public void deleteUser(User user) {
+        delete((MongoUser) user);
+    }
 }

@@ -28,4 +28,5 @@ public interface UserDao {
     Users getAll();
     User createUser(User user);
     User saveUser(User user);
+    void deleteUser(User user);
 }
