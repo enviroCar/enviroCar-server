@@ -62,4 +62,8 @@ public class UserService {
     public User modifyUser(String username, User user) throws UserNotFoundException {
         return this.dao.saveUser(this.updater.update(user, getUser(username)));
     }
+
+    public void deleteUser(String username) throws UserNotFoundException {
+        this.dao.deleteUser(this.getUser(username));
+    }
 }
