@@ -40,6 +40,11 @@ public class MongoUserDao extends BasicDAO<MongoUser, String> implements UserDao
     }
 
     @Override
+    public User getUserByMail(String mail) {
+        return find(createQuery().field(MongoUser.MAIL).equal(mail)).get();
+    }
+
+    @Override
     public Users getAll() {
         return new Users(find().fetch());
     }

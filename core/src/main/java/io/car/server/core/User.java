@@ -23,4 +23,8 @@ package io.car.server.core;
 public interface User {
     String getName();
     User setName(String name);
+    String getMail();
+    User setMail(String mail);
+    String getToken();
+    User setToken(String token);
 }

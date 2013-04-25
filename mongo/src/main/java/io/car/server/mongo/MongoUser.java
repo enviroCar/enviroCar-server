@@ -19,6 +19,7 @@ package io.car.server.mongo;
 
 import com.github.jmkgreen.morphia.annotations.Entity;
 import com.github.jmkgreen.morphia.annotations.Id;
+import com.github.jmkgreen.morphia.annotations.Indexed;
 import com.github.jmkgreen.morphia.mapping.Mapper;
 
 import io.car.server.core.User;
@@ -29,8 +30,13 @@ import io.car.server.core.User;
 @Entity("users")
 public class MongoUser implements User {
     public static final String NAME = Mapper.ID_KEY;
+    public static final String MAIL = "mail";
+    public static final String TOKEN = "token";
     @Id
     private String name;
+    @Indexed(unique = true)
+    private String mail;
+    private String token;
 
     @Override
     public String getName() {
@@ -38,8 +44,30 @@ public class MongoUser implements User {
     }
 
     @Override
-    public User setName(String name) {
+    public MongoUser setName(String name) {
         this.name = name;
+        return this;
+    }
+
+    @Override
+    public String getMail() {
+        return mail;
+    }
+
+    @Override
+    public MongoUser setMail(String mail) {
+        this.mail = mail;
+        return this;
+    }
+
+    @Override
+    public String getToken() {
+        return this.token;
+    }
+
+    @Override
+    public MongoUser setToken(String token) {
+        this.token = token;
         return this;
     }
 }

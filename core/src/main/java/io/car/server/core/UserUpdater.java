@@ -26,8 +26,14 @@ public class UserUpdater implements EntityUpdater<User> {
 
     @Override
     public User update(User changes, User original) throws IllegalModificationException {
+        if (changes.getToken() != null) {
+            throw new IllegalModificationException("token", "tokens may not be changed");
+        }
         if (changes.getName() != null) {
             original.setName(changes.getName());
+        }
+        if (changes.getMail() != null) {
+            original.setMail(changes.getMail());
         }
         return original;
     }

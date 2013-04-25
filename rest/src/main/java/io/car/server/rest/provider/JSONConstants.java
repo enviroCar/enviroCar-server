@@ -21,7 +21,9 @@ package io.car.server.rest.provider;
  * @author Christian Autermann <c.autermann@52north.org>
  */
 public interface JSONConstants {
+    String TOKEN_KEY = "token";
     String HREF_KEY = "href";
     String NAME_KEY = "name";
     String USERS_KEY = "users";
+    String MAIL_KEY = "mail";
 }
