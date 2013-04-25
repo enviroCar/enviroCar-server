@@ -25,6 +25,9 @@ import com.sun.jersey.core.util.FeaturesAndProperties;
 import com.sun.jersey.guice.JerseyServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 
+import io.car.server.rest.auth.AuthenticationFilter;
+import io.car.server.rest.auth.AuthenticationResourceFilterFactory;
+
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
@@ -33,10 +36,19 @@ public class RESTModule extends JerseyServletModule {
     @Override
     protected void configureServlets() {
         serve("/schema/*").with(SchemaServlet.class);
-        serve("/rest*").with(GuiceContainer.class, ImmutableMap.of(
-                PackagesResourceConfig.PROPERTY_PACKAGES, getClass().getPackage().getName(),
-                ResourceConfig.FEATURE_DISABLE_WADL, String.valueOf(true),
-                FeaturesAndProperties.FEATURE_FORMATTED, String.valueOf(true),
-                JSONConfiguration.FEATURE_POJO_MAPPING, String.valueOf(false)));
+        serve("/rest*").with(GuiceContainer.class, ImmutableMap.<String, String>builder()
+                .put(PackagesResourceConfig.PROPERTY_PACKAGES,
+                     getClass().getPackage().getName())
+                .put(ResourceConfig.FEATURE_DISABLE_WADL,
+                     String.valueOf(true))
+                .put(ResourceConfig.PROPERTY_CONTAINER_REQUEST_FILTERS,
+                     AuthenticationFilter.class.getName())
+                .put(ResourceConfig.PROPERTY_RESOURCE_FILTER_FACTORIES,
+                     AuthenticationResourceFilterFactory.class.getName())
+                .put(FeaturesAndProperties.FEATURE_FORMATTED,
+                     String.valueOf(true))
+                .put(JSONConfiguration.FEATURE_POJO_MAPPING,
+                     String.valueOf(false))
+                .build());
     }
 }

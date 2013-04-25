@@ -29,8 +29,11 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
@@ -39,6 +42,9 @@ import io.car.server.core.UserService;
 import io.car.server.core.Users;
 import io.car.server.core.exception.IllegalModificationException;
 import io.car.server.core.exception.UserNotFoundException;
+import io.car.server.rest.auth.Anonymous;
+import io.car.server.rest.auth.AuthConstants;
+import io.car.server.rest.auth.Authenticated;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
@@ -46,11 +52,13 @@ import io.car.server.core.exception.UserNotFoundException;
 public class UserResource {
     private final UserService service;
     private final UriInfo uriInfo;
+    private SecurityContext securityContext;
 
     @Inject
-    public UserResource(UserService service, UriInfo uriInfo) {
+    public UserResource(UserService service, UriInfo uriInfo, SecurityContext securityContext) {
         this.service = service;
         this.uriInfo = uriInfo;
+        this.securityContext = securityContext;
     }
 
     @GET
@@ -61,6 +69,7 @@ public class UserResource {
 
     @POST
     @Consumes(MediaTypes.USER_CREATE)
+    @Anonymous
     public Response create(User user) {
         return Response.created(
                 uriInfo.getRequestUriBuilder()
@@ -71,10 +80,14 @@ public class UserResource {
     @PUT
     @Path("{username}")
     @Consumes(MediaTypes.USER_MODIFY)
-    public Response modify(@PathParam("username") String username, User user) throws UserNotFoundException,
-                                                                                     IllegalModificationException {
-        User modified = this.service.modifyUser(username, user);
-        if (modified.getName().equals(username)) {
+    @Authenticated
+    public Response modify(@PathParam("username") String user, User changes) throws
+            UserNotFoundException, IllegalModificationException {
+        if (!canModifyUser(user)) {
+            throw new WebApplicationException(Status.FORBIDDEN);
+        }
+        User modified = this.service.modifyUser(user, changes);
+        if (modified.getName().equals(user)) {
             return Response.noContent().build();
         } else {
             UriBuilder b = uriInfo.getBaseUriBuilder();
@@ -91,13 +104,24 @@ public class UserResource {
     @GET
     @Path("{username}")
     @Produces(MediaTypes.USER)
+    @Authenticated
     public User get(@PathParam("username") String name) throws UserNotFoundException {
         return this.service.getUser(name);
     }
 
     @DELETE
     @Path("{username}")
+    @Authenticated
     public void delete(@PathParam("username") String name) throws UserNotFoundException {
+        if (!canModifyUser(name)) {
+            throw new WebApplicationException(Status.FORBIDDEN);
+        }
         this.service.deleteUser(name);
+    }
+
+    private boolean canModifyUser(String username) {
+        return securityContext.isUserInRole(AuthConstants.ADMIN_ROLE) ||
+               (securityContext.getUserPrincipal() != null &&
+                securityContext.getUserPrincipal().getName().equals(username));
     }
 }
