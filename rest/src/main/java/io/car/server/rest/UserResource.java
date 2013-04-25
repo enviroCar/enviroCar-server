@@ -36,6 +36,7 @@ import javax.ws.rs.core.UriInfo;
 import io.car.server.core.User;
 import io.car.server.core.UserService;
 import io.car.server.core.Users;
+import io.car.server.core.exception.UserNotFoundException;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
@@ -68,7 +69,7 @@ public class UserResource {
     @PUT
     @Path("{username}")
     @Consumes(MediaTypes.USER_MODIFY)
-    public Response modify(@PathParam("username") String username, User user) {
+    public Response modify(@PathParam("username") String username, User user) throws UserNotFoundException {
         User modified = this.service.modifyUser(username, user);
         if (modified.getName().equals(username)) {
             return Response.noContent().build();
@@ -87,7 +88,7 @@ public class UserResource {
     @GET
     @Path("{username}")
     @Produces(MediaTypes.USER)
-    public User get(@PathParam("username") String name) {
+    public User get(@PathParam("username") String name) throws UserNotFoundException {
         return this.service.getUser(name);
     }
 

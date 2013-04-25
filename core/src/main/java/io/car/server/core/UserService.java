@@ -21,6 +21,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import io.car.server.core.db.UserDao;
+import io.car.server.core.exception.UserNotFoundException;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
@@ -46,15 +47,19 @@ public class UserService {
         return this.dao.createUser(user);
     }
 
-    public User getUser(String name) {
-        return this.dao.getUserByName(name);
+    public User getUser(String name) throws UserNotFoundException {
+        User user = this.dao.getUserByName(name);
+        if (user == null) {
+            throw new UserNotFoundException(name);
+        }
+        return user;
     }
 
     public Users getAllUsers() {
         return this.dao.getAll();
     }
 
-    public User modifyUser(String username, User user) {
+    public User modifyUser(String username, User user) throws UserNotFoundException {
         return this.dao.saveUser(this.updater.update(user, getUser(username)));
     }
 }
