@@ -27,4 +27,6 @@ public interface User {
     User setMail(String mail);
     String getToken();
     User setToken(String token);
+    boolean isAdmin();
+    User setAdmin(boolean isAdmin);
 }

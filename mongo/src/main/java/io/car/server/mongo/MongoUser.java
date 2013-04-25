@@ -20,6 +20,7 @@ package io.car.server.mongo;
 import com.github.jmkgreen.morphia.annotations.Entity;
 import com.github.jmkgreen.morphia.annotations.Id;
 import com.github.jmkgreen.morphia.annotations.Indexed;
+import com.github.jmkgreen.morphia.annotations.Property;
 import com.github.jmkgreen.morphia.mapping.Mapper;
 
 import io.car.server.core.User;
@@ -32,11 +33,16 @@ public class MongoUser implements User {
     public static final String NAME = Mapper.ID_KEY;
     public static final String MAIL = "mail";
     public static final String TOKEN = "token";
+    public static final String IS_ADMIN = "isAdmin";
     @Id
     private String name;
     @Indexed(unique = true)
+    @Property(MAIL)
     private String mail;
+    @Property(TOKEN)
     private String token;
+    @Property(IS_ADMIN)
+    private boolean isAdmin = false;
 
     @Override
     public String getName() {
@@ -68,6 +74,17 @@ public class MongoUser implements User {
     @Override
     public MongoUser setToken(String token) {
         this.token = token;
+        return this;
+    }
+
+    @Override
+    public boolean isAdmin() {
+        return isAdmin;
+    }
+
+    @Override
+    public MongoUser setAdmin(boolean isAdmin) {
+        this.isAdmin = isAdmin;
         return this;
     }
 }
