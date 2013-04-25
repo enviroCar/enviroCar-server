@@ -31,17 +31,14 @@ import io.car.server.core.exception.ValidationException;
 @Singleton
 public class UserService {
     private final UserDao dao;
-    private final EntityFactory factory;
     private final EntityUpdater<User> updater;
     private final EntityValidator<User> validator;
 
     @Inject
     public UserService(UserDao dao,
-                       EntityFactory factory,
                        EntityUpdater<User> updater,
                        EntityValidator<User> validator) {
         this.dao = dao;
-        this.factory = factory;
         this.updater = updater;
         this.validator = validator;
     }
