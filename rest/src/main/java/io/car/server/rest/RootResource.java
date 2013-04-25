@@ -24,7 +24,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response.Status;
-import javax.ws.rs.core.UriInfo;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -32,14 +31,12 @@ import org.codehaus.jettison.json.JSONObject;
 import io.car.server.rest.provider.JSONConstants;
 
 @Path("/")
-public class RootResource {
+public class RootResource extends AbstractResource {
     private final UserResource userResource;
-    private final UriInfo uriInfo;
 
     @Inject
-    public RootResource(UserResource userResource, UriInfo uriInfo) {
+    public RootResource(UserResource userResource) {
         this.userResource = userResource;
-        this.uriInfo = uriInfo;
     }
 
     @GET
@@ -47,7 +44,7 @@ public class RootResource {
     public JSONObject get() {
         try {
             return new JSONObject().put(JSONConstants.USERS_KEY,
-                                        uriInfo.getRequestUriBuilder().path("users").build());
+                                        getUriInfo().getRequestUriBuilder().path("users").build());
         } catch (JSONException ex) {
             throw new WebApplicationException(ex, Status.INTERNAL_SERVER_ERROR);
         }

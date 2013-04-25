@@ -20,7 +20,6 @@ package io.car.server.rest;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
@@ -35,38 +34,24 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
 
 import io.car.server.core.User;
-import io.car.server.core.UserService;
 import io.car.server.core.Users;
 import io.car.server.core.exception.IllegalModificationException;
 import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.rest.auth.Anonymous;
-import io.car.server.rest.auth.AuthConstants;
 import io.car.server.rest.auth.Authenticated;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public class UserResource {
-    private final UserService service;
-    private final UriInfo uriInfo;
-    private SecurityContext securityContext;
-
-    @Inject
-    public UserResource(UserService service, UriInfo uriInfo, SecurityContext securityContext) {
-        this.service = service;
-        this.uriInfo = uriInfo;
-        this.securityContext = securityContext;
-    }
+public class UserResource extends AbstractResource {
 
     @GET
     @Produces(MediaTypes.USERS)
     public Users get(@QueryParam("limit") @DefaultValue(value = "0") int limit) {
-        return this.service.getAllUsers(limit);
+        return getUserService().getAllUsers(limit);
     }
 
     @POST
@@ -74,8 +59,8 @@ public class UserResource {
     @Anonymous
     public Response create(User user) {
         return Response.created(
-                uriInfo.getRequestUriBuilder()
-                .path(this.service.createUser(user).getName())
+                getUriInfo().getRequestUriBuilder()
+                .path(getUserService().createUser(user).getName())
                 .build()).build();
     }
 
@@ -88,12 +73,12 @@ public class UserResource {
         if (!canModifyUser(user)) {
             throw new WebApplicationException(Status.FORBIDDEN);
         }
-        User modified = this.service.modifyUser(user, changes);
+        User modified = getUserService().modifyUser(user, changes);
         if (modified.getName().equals(user)) {
             return Response.noContent().build();
         } else {
-            UriBuilder b = uriInfo.getBaseUriBuilder();
-            List<PathSegment> pathSegments = uriInfo.getPathSegments();
+            UriBuilder b = getUriInfo().getBaseUriBuilder();
+            List<PathSegment> pathSegments = getUriInfo().getPathSegments();
             Iterator<PathSegment> ps = pathSegments.iterator();
             for (int i = 0; i < pathSegments.size() - 1; ++i) {
                 b.path(ps.next().getPath());
@@ -108,7 +93,7 @@ public class UserResource {
     @Produces(MediaTypes.USER)
     @Authenticated
     public User get(@PathParam("username") String name) throws UserNotFoundException {
-        return this.service.getUser(name);
+        return getUserService().getUser(name);
     }
 
     @DELETE
@@ -118,12 +103,6 @@ public class UserResource {
         if (!canModifyUser(name)) {
             throw new WebApplicationException(Status.FORBIDDEN);
         }
-        this.service.deleteUser(name);
-    }
-
-    private boolean canModifyUser(String username) {
-        return securityContext.isUserInRole(AuthConstants.ADMIN_ROLE) ||
-               (securityContext.getUserPrincipal() != null &&
-                securityContext.getUserPrincipal().getName().equals(username));
+        getUserService().deleteUser(name);
     }
 }
