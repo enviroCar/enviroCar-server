@@ -21,6 +21,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import io.car.server.core.db.UserDao;
+import io.car.server.core.exception.IllegalModificationException;
 import io.car.server.core.exception.UserNotFoundException;
 
 /**
@@ -55,11 +56,15 @@ public class UserService {
         return user;
     }
 
-    public Users getAllUsers() {
-        return this.dao.getAll();
+    public Users getAllUsers(int limit) {
+        return this.dao.getAll(limit);
     }
 
-    public User modifyUser(String username, User user) throws UserNotFoundException {
+    public Users getAllUsers() {
+        return getAllUsers(0);
+    }
+
+    public User modifyUser(String username, User user) throws UserNotFoundException, IllegalModificationException {
         return this.dao.saveUser(this.updater.update(user, getUser(username)));
     }
 

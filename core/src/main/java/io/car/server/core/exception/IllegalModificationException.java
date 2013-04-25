@@ -15,18 +15,19 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.core;
+package io.car.server.core.exception;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public interface User {
-    String getName();
-    User setName(String name);
-    String getMail();
-    User setMail(String mail);
-    String getToken();
-    User setToken(String token);
-    boolean isAdmin();
-    User setAdmin(boolean isAdmin);
+public class IllegalModificationException extends Exception {
+    private static final long serialVersionUID = -2141547378006507067L;
+    private final String field;
+    private final String cause;
+
+    public IllegalModificationException(String field, String cause) {
+        super(String.format("Invalid modification of field '%s': %s", field, cause));
+        this.field = field;
+        this.cause = cause;
+    }
 }

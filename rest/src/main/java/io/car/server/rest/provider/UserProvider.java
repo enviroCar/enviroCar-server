@@ -47,11 +47,16 @@ public class UserProvider extends AbstractJsonEntityProvider<User> {
 
     @Override
     public User read(JSONObject j, MediaType mediaType) throws JSONException {
-        return factory.createUser().setName(j.getString(JSONConstants.NAME_KEY));
+        return factory.createUser()
+                .setName(j.optString(JSONConstants.NAME_KEY, null))
+                .setMail(j.optString(JSONConstants.MAIL_KEY, null))
+                .setToken(j.optString(JSONConstants.TOKEN_KEY, null));
     }
 
     @Override
     public JSONObject write(User t, MediaType mediaType) throws JSONException {
-        return new JSONObject().put(JSONConstants.NAME_KEY, t.getName());
+        return new JSONObject()
+                .put(JSONConstants.NAME_KEY, t.getName())
+                .put(JSONConstants.MAIL_KEY, t.getMail());
     }
 }

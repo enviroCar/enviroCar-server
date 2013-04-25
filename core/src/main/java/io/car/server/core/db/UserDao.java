@@ -25,7 +25,8 @@ import io.car.server.core.Users;
  */
 public interface UserDao {
     User getUserByName(String name);
-    Users getAll();
+    User getUserByMail(String mail);
+    Users getAll(int limit);
     User createUser(User user);
     User saveUser(User user);
     void deleteUser(User user);

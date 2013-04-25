@@ -15,18 +15,28 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.core;
+package io.car.server.rest.mapper;
+
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.ext.ExceptionMapper;
+import javax.ws.rs.ext.Provider;
+
+import io.car.server.core.exception.ResourceNotFoundException;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public interface User {
-    String getName();
-    User setName(String name);
-    String getMail();
-    User setMail(String mail);
-    String getToken();
-    User setToken(String token);
-    boolean isAdmin();
-    User setAdmin(boolean isAdmin);
+@Provider
+public class IllegalModificationExceptionMapper implements ExceptionMapper<ResourceNotFoundException> {
+
+    @Override
+    public Response toResponse(ResourceNotFoundException exception) {
+        return Response
+                .status(Status.BAD_REQUEST)
+                .type(MediaType.TEXT_PLAIN)
+                .entity(exception.getMessage())
+                .build();
+    }
 }

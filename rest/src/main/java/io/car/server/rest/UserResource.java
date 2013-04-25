@@ -20,63 +20,65 @@ package io.car.server.rest;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
 
 import io.car.server.core.User;
-import io.car.server.core.UserService;
 import io.car.server.core.Users;
+import io.car.server.core.exception.IllegalModificationException;
 import io.car.server.core.exception.UserNotFoundException;
+import io.car.server.rest.auth.Anonymous;
+import io.car.server.rest.auth.Authenticated;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public class UserResource {
-    private final UserService service;
-    private final UriInfo uriInfo;
-
-    @Inject
-    public UserResource(UserService service, UriInfo uriInfo) {
-        this.service = service;
-        this.uriInfo = uriInfo;
-    }
+public class UserResource extends AbstractResource {
 
     @GET
     @Produces(MediaTypes.USERS)
-    public Users get() {
-        return this.service.getAllUsers();
+    public Users get(@QueryParam("limit") @DefaultValue(value = "0") int limit) {
+        return getUserService().getAllUsers(limit);
     }
 
     @POST
     @Consumes(MediaTypes.USER_CREATE)
+    @Anonymous
     public Response create(User user) {
         return Response.created(
-                uriInfo.getRequestUriBuilder()
-                .path(this.service.createUser(user).getName())
+                getUriInfo().getRequestUriBuilder()
+                .path(getUserService().createUser(user).getName())
                 .build()).build();
     }
 
     @PUT
     @Path("{username}")
     @Consumes(MediaTypes.USER_MODIFY)
-    public Response modify(@PathParam("username") String username, User user) throws UserNotFoundException {
-        User modified = this.service.modifyUser(username, user);
-        if (modified.getName().equals(username)) {
+    @Authenticated
+    public Response modify(@PathParam("username") String user, User changes) throws
+            UserNotFoundException, IllegalModificationException {
+        if (!canModifyUser(user)) {
+            throw new WebApplicationException(Status.FORBIDDEN);
+        }
+        User modified = getUserService().modifyUser(user, changes);
+        if (modified.getName().equals(user)) {
             return Response.noContent().build();
         } else {
-            UriBuilder b = uriInfo.getBaseUriBuilder();
-            List<PathSegment> pathSegments = uriInfo.getPathSegments();
+            UriBuilder b = getUriInfo().getBaseUriBuilder();
+            List<PathSegment> pathSegments = getUriInfo().getPathSegments();
             Iterator<PathSegment> ps = pathSegments.iterator();
             for (int i = 0; i < pathSegments.size() - 1; ++i) {
                 b.path(ps.next().getPath());
@@ -89,13 +91,18 @@ public class UserResource {
     @GET
     @Path("{username}")
     @Produces(MediaTypes.USER)
+    @Authenticated
     public User get(@PathParam("username") String name) throws UserNotFoundException {
-        return this.service.getUser(name);
+        return getUserService().getUser(name);
     }
 
     @DELETE
     @Path("{username}")
+    @Authenticated
     public void delete(@PathParam("username") String name) throws UserNotFoundException {
-        this.service.deleteUser(name);
+        if (!canModifyUser(name)) {
+            throw new WebApplicationException(Status.FORBIDDEN);
+        }
+        getUserService().deleteUser(name);
     }
 }

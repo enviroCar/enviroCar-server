@@ -18,6 +18,7 @@
 package io.car.server.rest;
 
 import com.google.common.collect.ImmutableMap;
+import com.sun.jersey.api.container.filter.GZIPContentEncodingFilter;
 import com.sun.jersey.api.core.PackagesResourceConfig;
 import com.sun.jersey.api.core.ResourceConfig;
 import com.sun.jersey.api.json.JSONConfiguration;
@@ -25,18 +26,41 @@ import com.sun.jersey.core.util.FeaturesAndProperties;
 import com.sun.jersey.guice.JerseyServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 
+import io.car.server.rest.auth.AuthenticationFilter;
+import io.car.server.rest.auth.AuthenticationResourceFilterFactory;
+
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
 public class RESTModule extends JerseyServletModule {
+    public static final String FALSE = String.valueOf(false);
+    public static final String TRUE = String.valueOf(true);
 
     @Override
     protected void configureServlets() {
         serve("/schema/*").with(SchemaServlet.class);
-        serve("/rest*").with(GuiceContainer.class, ImmutableMap.of(
-                PackagesResourceConfig.PROPERTY_PACKAGES, getClass().getPackage().getName(),
-                ResourceConfig.FEATURE_DISABLE_WADL, String.valueOf(true),
-                FeaturesAndProperties.FEATURE_FORMATTED, String.valueOf(true),
-                JSONConfiguration.FEATURE_POJO_MAPPING, String.valueOf(false)));
+        serve("/rest*").with(GuiceContainer.class, ImmutableMap.<String, String>builder()
+                .put(PackagesResourceConfig.PROPERTY_PACKAGES,
+                     getClass().getPackage().getName())
+                .put(ResourceConfig.FEATURE_DISABLE_WADL, TRUE)
+                .put(ResourceConfig.PROPERTY_CONTAINER_REQUEST_FILTERS,
+                     classList(AuthenticationFilter.class,
+                               GZIPContentEncodingFilter.class))
+                .put(ResourceConfig.PROPERTY_CONTAINER_RESPONSE_FILTERS,
+                     classList(GZIPContentEncodingFilter.class))
+                .put(ResourceConfig.PROPERTY_RESOURCE_FILTER_FACTORIES,
+                     classList(AuthenticationResourceFilterFactory.class))
+                .put(FeaturesAndProperties.FEATURE_FORMATTED, TRUE)
+                .put(JSONConfiguration.FEATURE_POJO_MAPPING, FALSE)
+                .build());
+    }
+
+    private String classList(Class<?> clazz, Class<?>... classes) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(clazz.getName());
+        for (Class<?> c : classes) {
+            sb.append(",").append(c.getName());
+        }
+        return sb.toString();
     }
 }

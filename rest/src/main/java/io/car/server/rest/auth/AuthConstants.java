@@ -15,28 +15,15 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest;
-
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-import javax.ws.rs.ext.ExceptionMapper;
-import javax.ws.rs.ext.Provider;
-
-import io.car.server.core.exception.ResourceNotFoundException;
+package io.car.server.rest.auth;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-@Provider
-public class ResourceNotFoundExceptionMapper implements ExceptionMapper<ResourceNotFoundException> {
-
-    @Override
-    public Response toResponse(ResourceNotFoundException exception) {
-        return Response
-                .status(Status.NOT_FOUND)
-                .type(MediaType.TEXT_PLAIN)
-                .entity(exception.getMessage())
-                .build();
-    }
+public interface AuthConstants {
+    String USER_ROLE = "user";
+    String ADMIN_ROLE = "admin";
+    String AUTH_SCHEME = "car.io";
+    String USERNAME_HEADER = "X-User";
+    String TOKEN_HEADER = "X-Token";
 }
