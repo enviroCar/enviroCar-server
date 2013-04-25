@@ -2,10 +2,10 @@
     "$schema": "http://json-schema.org/draft-04/schema#",
     "type": "object",
     "properties": {
-        "name": {
-            "type": "string"
-        }
+        "name": { "type": "string" },
+        "mail": { "type": "string" },
+        "token": { "type": "string" },
     },
     "additionalProperties": false,
-    "required": [ "name" ]
+    "required": [ "name", "mail", "token" ]
 }
