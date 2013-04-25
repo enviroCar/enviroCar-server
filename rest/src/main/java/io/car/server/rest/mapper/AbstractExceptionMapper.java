@@ -15,21 +15,29 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.core;
+package io.car.server.rest.mapper;
+
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.ext.ExceptionMapper;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public class UserUpdater implements EntityUpdater<User> {
+public class AbstractExceptionMapper<T extends Throwable> implements ExceptionMapper<T> {
+    private final Status status;
+
+    public AbstractExceptionMapper(Status status) {
+        this.status = status;
+    }
 
     @Override
-    public User update(User changes, User original) {
-        if (changes.getName() != null) {
-            original.setName(changes.getName());
-        }
-        if (changes.getMail() != null) {
-            original.setMail(changes.getMail());
-        }
-        return original;
+    public Response toResponse(T exception) {
+        return Response
+                .status(status)
+                .type(MediaType.TEXT_PLAIN)
+                .entity(exception.getMessage())
+                .build();
     }
 }

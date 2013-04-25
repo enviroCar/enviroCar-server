@@ -17,19 +17,21 @@
  */
 package io.car.server.core;
 
+import org.mindrot.jbcrypt.BCrypt;
+
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public class UserUpdater implements EntityUpdater<User> {
+public class BCryptPasswordEncoder implements PasswordEncoder {
+    private static final int ROUNDS = 10;
 
     @Override
-    public User update(User changes, User original) {
-        if (changes.getName() != null) {
-            original.setName(changes.getName());
-        }
-        if (changes.getMail() != null) {
-            original.setMail(changes.getMail());
-        }
-        return original;
+    public String encode(String rawPassword) {
+        return BCrypt.hashpw(rawPassword, BCrypt.gensalt(ROUNDS));
+    }
+
+    @Override
+    public boolean verify(String rawPassword, String encodedPassword) {
+        return BCrypt.checkpw(rawPassword, encodedPassword);
     }
 }

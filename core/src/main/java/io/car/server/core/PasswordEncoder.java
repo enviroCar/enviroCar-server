@@ -20,16 +20,7 @@ package io.car.server.core;
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public class UserUpdater implements EntityUpdater<User> {
-
-    @Override
-    public User update(User changes, User original) {
-        if (changes.getName() != null) {
-            original.setName(changes.getName());
-        }
-        if (changes.getMail() != null) {
-            original.setMail(changes.getMail());
-        }
-        return original;
-    }
+public interface PasswordEncoder {
+    String encode(String rawPassword);
+    boolean verify(String rawPassword, String encodedPassword);
 }

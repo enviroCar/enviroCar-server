@@ -17,6 +17,8 @@
  */
 package io.car.server.core;
 
+import org.joda.time.DateTime;
+
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
@@ -29,4 +31,6 @@ public interface User {
     User setToken(String token);
     boolean isAdmin();
     User setAdmin(boolean isAdmin);
+    DateTime getCreationDate();
+    DateTime getLastModificationDate();
 }

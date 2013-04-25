@@ -15,21 +15,19 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.core;
+package io.car.server.rest.mapper;
+
+import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.ext.Provider;
+
+import io.car.server.core.exception.ValidationException;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public class UserUpdater implements EntityUpdater<User> {
-
-    @Override
-    public User update(User changes, User original) {
-        if (changes.getName() != null) {
-            original.setName(changes.getName());
-        }
-        if (changes.getMail() != null) {
-            original.setMail(changes.getMail());
-        }
-        return original;
+@Provider
+public class ValidationExceptionMapper extends AbstractExceptionMapper<ValidationException> {
+    public ValidationExceptionMapper() {
+        super(Status.BAD_REQUEST);
     }
 }

@@ -17,9 +17,13 @@
  */
 package io.car.server.mongo;
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+
 import com.github.jmkgreen.morphia.annotations.Entity;
 import com.github.jmkgreen.morphia.annotations.Id;
 import com.github.jmkgreen.morphia.annotations.Indexed;
+import com.github.jmkgreen.morphia.annotations.PrePersist;
 import com.github.jmkgreen.morphia.annotations.Property;
 import com.github.jmkgreen.morphia.mapping.Mapper;
 
@@ -34,6 +38,8 @@ public class MongoUser implements User {
     public static final String MAIL = "mail";
     public static final String TOKEN = "token";
     public static final String IS_ADMIN = "isAdmin";
+    public static final String CREATION_DATE = "created";
+    public static final String LAST_MODIFIED = "modified";
     @Id
     private String name;
     @Indexed(unique = true)
@@ -43,6 +49,12 @@ public class MongoUser implements User {
     private String token;
     @Property(IS_ADMIN)
     private boolean isAdmin = false;
+    @Indexed
+    @Property(CREATION_DATE)
+    private DateTime creationDate;
+    @Indexed
+    @Property(LAST_MODIFIED)
+    private DateTime lastModificationDate;
 
     @Override
     public String getName() {
@@ -86,5 +98,32 @@ public class MongoUser implements User {
     public MongoUser setAdmin(boolean isAdmin) {
         this.isAdmin = isAdmin;
         return this;
+    }
+
+    @Override
+    public DateTime getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(DateTime creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    @Override
+    public DateTime getLastModificationDate() {
+        return lastModificationDate;
+    }
+
+    public void setLastModificationDate(DateTime lastModificationDate) {
+        this.lastModificationDate = lastModificationDate;
+    }
+
+    @PrePersist
+    public void prePersist() {
+        DateTime now = new DateTime(DateTimeZone.UTC);
+        if (getCreationDate() == null) {
+            setCreationDate(now);
+        }
+        setLastModificationDate(now);
     }
 }

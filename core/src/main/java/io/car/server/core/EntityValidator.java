@@ -17,19 +17,12 @@
  */
 package io.car.server.core;
 
+import io.car.server.core.exception.ValidationException;
+
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public class UserUpdater implements EntityUpdater<User> {
-
-    @Override
-    public User update(User changes, User original) {
-        if (changes.getName() != null) {
-            original.setName(changes.getName());
-        }
-        if (changes.getMail() != null) {
-            original.setMail(changes.getMail());
-        }
-        return original;
-    }
+public interface EntityValidator<T> {
+    void validateCreate(T t) throws ValidationException;
+    void validateUpdate(T t) throws ValidationException;
 }

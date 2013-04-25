@@ -17,10 +17,7 @@
  */
 package io.car.server.rest.mapper;
 
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
 import io.car.server.core.exception.ResourceNotFoundException;
@@ -29,14 +26,8 @@ import io.car.server.core.exception.ResourceNotFoundException;
  * @author Christian Autermann <c.autermann@52north.org>
  */
 @Provider
-public class ResourceNotFoundExceptionMapper implements ExceptionMapper<ResourceNotFoundException> {
-
-    @Override
-    public Response toResponse(ResourceNotFoundException exception) {
-        return Response
-                .status(Status.NOT_FOUND)
-                .type(MediaType.TEXT_PLAIN)
-                .entity(exception.getMessage())
-                .build();
+public class ResourceNotFoundExceptionMapper extends AbstractExceptionMapper<ResourceNotFoundException> {
+    public ResourceNotFoundExceptionMapper() {
+        super(Status.NOT_FOUND);
     }
 }
