@@ -56,8 +56,12 @@ public class UserService {
         return user;
     }
 
+    public Users getAllUsers(int limit) {
+        return this.dao.getAll(limit);
+    }
+
     public Users getAllUsers() {
-        return this.dao.getAll();
+        return getAllUsers(0);
     }
 
     public User modifyUser(String username, User user) throws UserNotFoundException, IllegalModificationException {
