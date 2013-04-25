@@ -19,6 +19,7 @@ package io.car.server.mongo;
 
 import javax.inject.Inject;
 
+import com.github.jmkgreen.morphia.Datastore;
 import com.github.jmkgreen.morphia.dao.BasicDAO;
 
 import io.car.server.core.User;
@@ -30,8 +31,8 @@ import io.car.server.core.db.UserDao;
  */
 public class MongoUserDao extends BasicDAO<MongoUser, String> implements UserDao {
     @Inject
-    public MongoUserDao(MongoDB mongodb) {
-        super(MongoUser.class, mongodb.getDatastore());
+    public MongoUserDao(Datastore datastore) {
+        super(MongoUser.class, datastore);
     }
 
     @Override
