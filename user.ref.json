@@ -2,7 +2,10 @@
     "$schema": "http://json-schema.org/draft-04/schema#",
     "type": "object",
     "properties": {
-        "name": { "type": "string" }
+        "name": {
+            "type": "string",
+            "pattern": "^[_A-Za-z0-9-]{6,}$"
+        } 
     },
     "additionalProperties": false,
     "required": [ "name" ]

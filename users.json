@@ -9,7 +9,8 @@
                 "type": "object",
                 "properties": {
                     "name": {
-                        "type": "string"
+                        "type": "string",
+                        "pattern": "^[_A-Za-z0-9-]{6,}$"
                     },
                     "href": {
                         "type": "string",
@@ -19,7 +20,6 @@
                 "required": [ "name", "href" ],
                 "additionalProperties": false
             }
-
         }
     },
     "required": [ "users" ],
