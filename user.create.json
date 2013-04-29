@@ -4,7 +4,7 @@
     "properties": {
         "name": { "type": "string" },
         "mail": { "type": "string" },
-        "token": { "type": "string" },
+        "token": { "type": "string" }
     },
     "additionalProperties": false,
     "required": [ "name", "mail", "token" ]
