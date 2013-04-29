@@ -15,61 +15,49 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest;
+package io.car.server.rest.resources;
 
 import java.util.Iterator;
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
-import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriBuilder;
 
+import com.google.inject.assistedinject.Assisted;
+
 import io.car.server.core.User;
-import io.car.server.core.Users;
 import io.car.server.core.exception.IllegalModificationException;
 import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.core.exception.ValidationException;
-import io.car.server.rest.auth.Anonymous;
+import io.car.server.rest.AbstractResource;
+import io.car.server.rest.MediaTypes;
 import io.car.server.rest.auth.Authenticated;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
 public class UserResource extends AbstractResource {
+    private final User user;
 
-    @GET
-    @Produces(MediaTypes.USERS)
-    public Users get(@QueryParam("limit") @DefaultValue(value = "0") int limit) {
-        return getUserService().getAllUsers(limit);
-    }
-
-    @POST
-    @Consumes(MediaTypes.USER_CREATE)
-    @Anonymous
-    public Response create(User user) throws ValidationException {
-        return Response.created(
-                getUriInfo().getRequestUriBuilder()
-                .path(getUserService().createUser(user).getName())
-                .build()).build();
+    @Inject
+    public UserResource(@Assisted User user) {
+        this.user = user;
     }
 
     @PUT
-    @Path("{username}")
     @Consumes(MediaTypes.USER_MODIFY)
     @Authenticated
-    public Response modify(@PathParam("username") String user, User changes) throws
+    public Response modify(User changes) throws
             UserNotFoundException, IllegalModificationException, ValidationException {
         if (!canModifyUser(user)) {
             throw new WebApplicationException(Status.FORBIDDEN);
@@ -88,22 +76,26 @@ public class UserResource extends AbstractResource {
         }
     }
 
-
     @GET
-    @Path("{username}")
     @Produces(MediaTypes.USER)
     @Authenticated
-    public User get(@PathParam("username") String name) throws UserNotFoundException {
-        return getUserService().getUser(name);
+    public User get() throws UserNotFoundException {
+        return user;
     }
 
     @DELETE
-    @Path("{username}")
     @Authenticated
-    public void delete(@PathParam("username") String name) throws UserNotFoundException {
-        if (!canModifyUser(name)) {
+    public void delete() throws UserNotFoundException {
+        if (!canModifyUser(user)) {
             throw new WebApplicationException(Status.FORBIDDEN);
         }
-        getUserService().deleteUser(name);
+        getUserService().deleteUser(user);
     }
+
+    @Path("friends")
+    @Authenticated
+    public FriendsResource friends() {
+        return getResourceFactory().createFriendsResource(user);
+    }
+
 }

@@ -21,6 +21,7 @@ import javax.inject.Inject;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
+import io.car.server.core.User;
 import io.car.server.core.UserService;
 import io.car.server.rest.auth.AuthConstants;
 
@@ -31,11 +32,12 @@ public abstract class AbstractResource {
     private SecurityContext securityContext;
     private UserService service;
     private UriInfo uriInfo;
+    private ResourceFactory resourceFactory;
 
-    protected boolean canModifyUser(String username) {
+    protected boolean canModifyUser(User user) {
         return getSecurityContext().isUserInRole(AuthConstants.ADMIN_ROLE) ||
                (getSecurityContext().getUserPrincipal() != null &&
-                getSecurityContext().getUserPrincipal().getName().equals(username));
+                getSecurityContext().getUserPrincipal().getName().equals(user.getName()));
     }
 
     public SecurityContext getSecurityContext() {
@@ -65,4 +67,12 @@ public abstract class AbstractResource {
         this.service = service;
     }
 
+    @Inject
+    public void setResourceFactory(ResourceFactory resourceFactory) {
+        this.resourceFactory = resourceFactory;
+    }
+
+    public ResourceFactory getResourceFactory() {
+        return resourceFactory;
+    }
 }
