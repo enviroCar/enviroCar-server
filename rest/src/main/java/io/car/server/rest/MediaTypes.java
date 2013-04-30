@@ -35,4 +35,6 @@ public interface MediaTypes {
     MediaType USER_MODIFY_TYPE = MediaType.valueOf(USER_MODIFY);
     String USER_CREATE = "application/json; schema=\"user.create.json\"";
     MediaType USER_CREATE_TYPE = MediaType.valueOf(USER_CREATE);
+    String USER_REF = "application/json; schema=\"user.ref.json\"";
+    MediaType USER_REF_TYPE = MediaType.valueOf(USER_REF);
 }

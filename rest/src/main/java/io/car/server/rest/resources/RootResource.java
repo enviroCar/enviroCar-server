@@ -15,8 +15,9 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest;
+package io.car.server.rest.resources;
 
+import io.car.server.rest.AbstractResource;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -32,10 +33,10 @@ import io.car.server.rest.provider.JSONConstants;
 
 @Path("/")
 public class RootResource extends AbstractResource {
-    private final UserResource userResource;
+    private final UsersResource userResource;
 
     @Inject
-    public RootResource(UserResource userResource) {
+    public RootResource(UsersResource userResource) {
         this.userResource = userResource;
     }
 
@@ -51,7 +52,7 @@ public class RootResource extends AbstractResource {
     }
 
     @Path("users")
-    public UserResource users() {
+    public UsersResource users() {
         return userResource;
     }
 }

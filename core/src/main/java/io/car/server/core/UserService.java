@@ -67,14 +67,25 @@ public class UserService {
         return getAllUsers(0);
     }
 
-    public User modifyUser(String username, User user) throws UserNotFoundException,
-                                                              IllegalModificationException,
-                                                              ValidationException {
+    public User modifyUser(User user, User changes) throws UserNotFoundException, IllegalModificationException,
+                                                           ValidationException {
         validator.validateUpdate(user);
-        return this.dao.saveUser(this.updater.update(user, getUser(username)));
+        return this.dao.saveUser(this.updater.update(changes, user));
     }
 
     public void deleteUser(String username) throws UserNotFoundException {
-        this.dao.deleteUser(this.getUser(username));
+        deleteUser(getUser(username));
+    }
+
+    public void deleteUser(User user) throws UserNotFoundException {
+        this.dao.deleteUser(user);
+    }
+
+    public void removeFriend(User user, User friend) throws UserNotFoundException {
+        this.dao.saveUser(user.removeFriend(getUser(friend.getName())));
+    }
+
+    public void addFriend(User user, User friend) throws UserNotFoundException {
+        this.dao.saveUser(user.addFriend(getUser(friend.getName())));
     }
 }

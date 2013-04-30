@@ -17,6 +17,8 @@
  */
 package io.car.server.mongo;
 
+import java.util.Set;
+
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
@@ -25,9 +27,12 @@ import com.github.jmkgreen.morphia.annotations.Id;
 import com.github.jmkgreen.morphia.annotations.Indexed;
 import com.github.jmkgreen.morphia.annotations.PrePersist;
 import com.github.jmkgreen.morphia.annotations.Property;
+import com.github.jmkgreen.morphia.annotations.Reference;
 import com.github.jmkgreen.morphia.mapping.Mapper;
+import com.google.common.collect.Sets;
 
 import io.car.server.core.User;
+import io.car.server.core.Users;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
@@ -40,6 +45,7 @@ public class MongoUser implements User {
     public static final String IS_ADMIN = "isAdmin";
     public static final String CREATION_DATE = "created";
     public static final String LAST_MODIFIED = "modified";
+    public static final String FRIENDS = "friends";
     @Id
     private String name;
     @Indexed(unique = true)
@@ -55,6 +61,8 @@ public class MongoUser implements User {
     @Indexed
     @Property(LAST_MODIFIED)
     private DateTime lastModificationDate;
+    @Reference(value = FRIENDS, lazy = true)
+    private Set<MongoUser> friends = Sets.newHashSet();
 
     @Override
     public String getName() {
@@ -125,5 +133,30 @@ public class MongoUser implements User {
             setCreationDate(now);
         }
         setLastModificationDate(now);
+    }
+
+    @Override
+    public Users getFriends() {
+        return new Users(this.friends);
+    }
+
+    @Override
+    public MongoUser addFriend(User user) {
+        this.friends.add((MongoUser) user);
+        return this;
+    }
+
+    @Override
+    public MongoUser removeFriend(User user) {
+        this.friends.remove((MongoUser) user);
+        return this;
+    }
+
+    public MongoUser setFriends(Users friends) {
+        this.friends.clear();
+        for (User u : friends) {
+            this.friends.add((MongoUser) u);
+        }
+        return this;
     }
 }

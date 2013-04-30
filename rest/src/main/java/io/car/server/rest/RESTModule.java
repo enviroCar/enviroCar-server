@@ -18,6 +18,7 @@
 package io.car.server.rest;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.sun.jersey.api.container.filter.GZIPContentEncodingFilter;
 import com.sun.jersey.api.core.PackagesResourceConfig;
 import com.sun.jersey.api.core.ResourceConfig;
@@ -28,6 +29,9 @@ import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 
 import io.car.server.rest.auth.AuthenticationFilter;
 import io.car.server.rest.auth.AuthenticationResourceFilterFactory;
+import io.car.server.rest.resources.FriendsResource;
+import io.car.server.rest.resources.UserResource;
+import io.car.server.rest.resources.UsersResource;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
@@ -38,6 +42,11 @@ public class RESTModule extends JerseyServletModule {
 
     @Override
     protected void configureServlets() {
+        install(new FactoryModuleBuilder()
+                .implement(UserResource.class, UserResource.class)
+                .implement(UsersResource.class, UsersResource.class)
+                .implement(FriendsResource.class, FriendsResource.class)
+                .build(ResourceFactory.class));
         serve("/schema/*").with(SchemaServlet.class);
         serve("/rest*").with(GuiceContainer.class, ImmutableMap.<String, String>builder()
                 .put(PackagesResourceConfig.PROPERTY_PACKAGES,
