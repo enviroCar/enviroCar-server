@@ -192,22 +192,6 @@
                 <version>${jersey-version}</version>
             </dependency>
             <dependency>
-                <groupId>com.sun.jersey.contribs.jersey-oauth</groupId>
-                <artifactId>oauth-client</artifactId>
-                <version>${jersey-version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.sun.jersey.contribs.jersey-oauth</groupId>
-                <artifactId>oauth-server</artifactId>
-                <version>${jersey-version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.sun.jersey.contribs.jersey-oauth</groupId>
-                <artifactId>oauth-signature</artifactId>
-                <version>${jersey-version}</version>
-            </dependency>
-            <dependency>
                 <groupId>javax.servlet</groupId>
                 <artifactId>servlet-api</artifactId>
                 <version>2.5</version>
