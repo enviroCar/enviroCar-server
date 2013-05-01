@@ -24,6 +24,7 @@ import com.google.inject.Inject;
 
 import io.car.server.core.User;
 import io.car.server.core.UserService;
+import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.rest.auth.AuthConstants;
 
 /**
@@ -75,5 +76,9 @@ public abstract class AbstractResource {
 
     public ResourceFactory getResourceFactory() {
         return resourceFactory;
+    }
+
+    protected User getCurrentUser() throws UserNotFoundException {
+        return getUserService().getUser(getSecurityContext().getUserPrincipal().getName());
     }
 }

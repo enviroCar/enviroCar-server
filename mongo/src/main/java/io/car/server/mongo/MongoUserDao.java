@@ -22,6 +22,7 @@ import com.github.jmkgreen.morphia.dao.BasicDAO;
 import com.github.jmkgreen.morphia.query.Query;
 import com.google.inject.Inject;
 
+import io.car.server.core.Group;
 import io.car.server.core.User;
 import io.car.server.core.Users;
 import io.car.server.core.db.UserDao;
@@ -30,19 +31,25 @@ import io.car.server.core.db.UserDao;
  * @author Christian Autermann <c.autermann@52north.org>
  */
 public class MongoUserDao extends BasicDAO<MongoUser, String> implements UserDao {
+
     @Inject
     public MongoUserDao(Datastore datastore) {
         super(MongoUser.class, datastore);
     }
 
     @Override
-    public User getUserByName(String name) {
-        return get(name);
+    public MongoUser getByName(String name) {
+        return find(createQuery().field(MongoUser.NAME).equal(name)).get();
     }
 
     @Override
-    public User getUserByMail(String mail) {
+    public MongoUser getByMail(String mail) {
         return find(createQuery().field(MongoUser.MAIL).equal(mail)).get();
+    }
+
+    @Override
+    public Users getAll() {
+        return getAll(0);
     }
 
     @Override
@@ -51,21 +58,25 @@ public class MongoUserDao extends BasicDAO<MongoUser, String> implements UserDao
     }
 
     @Override
-    public User createUser(User user) {
-        // todo  check for existence
-        save((MongoUser) user);
-        return user;
+    public MongoUser create(User user) {
+        return save(user);
     }
 
     @Override
-    public User saveUser(User user) {
-        save((MongoUser) user);
-        return user;
+    public MongoUser save(User user) {
+        MongoUser mu = (MongoUser) user;
+        save(mu);
+        return mu;
     }
 
     @Override
-    public void deleteUser(User user) {
+    public void delete(User user) {
         delete((MongoUser) user);
+    }
+
+    @Override
+    public Users getByGroup(Group group) {
+        return group.getMembers();
     }
 
     protected Users fetch(Query<MongoUser> q) {

@@ -21,35 +21,38 @@ import java.util.Set;
 
 import com.github.jmkgreen.morphia.annotations.Entity;
 import com.github.jmkgreen.morphia.annotations.Indexed;
+import com.github.jmkgreen.morphia.annotations.PreSave;
 import com.github.jmkgreen.morphia.annotations.Property;
 import com.github.jmkgreen.morphia.annotations.Reference;
-import com.google.common.collect.Sets;
 
+import io.car.server.core.Group;
 import io.car.server.core.User;
 import io.car.server.core.Users;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-@Entity("users")
-public class MongoUser extends MongoBaseEntity implements User {
+@Entity("userGroups")
+public class MongoGroup extends MongoBaseEntity implements Group {
     public static final String NAME = "name";
-    public static final String MAIL = "mail";
-    public static final String TOKEN = "token";
-    public static final String IS_ADMIN = "isAdmin";
-    public static final String FRIENDS = "friends";
+    public static final String DESCRIPTION = "desc";
+    public static final String MEMBERS = "members";
+    public static final String OWNER = "owner";
     @Indexed(unique = true)
     @Property(NAME)
     private String name;
-    @Indexed(unique = true)
-    @Property(MAIL)
-    private String mail;
-    @Property(TOKEN)
-    private String token;
-    @Property(IS_ADMIN)
-    private boolean isAdmin = false;
-    @Reference(value = FRIENDS, lazy = true)
-    private Set<MongoUser> friends = Sets.newHashSet();
+    @Property(DESCRIPTION)
+    private String description;
+    @Reference(value = MEMBERS, lazy = true)
+    private Set<MongoUser> members;
+    @Reference(value = OWNER, lazy = true)
+    private MongoUser owner;
+
+    @Override
+    public MongoGroup setName(String name) {
+        this.name = name;
+        return this;
+    }
 
     @Override
     public String getName() {
@@ -57,66 +60,45 @@ public class MongoUser extends MongoBaseEntity implements User {
     }
 
     @Override
-    public MongoUser setName(String name) {
-        this.name = name;
+    public MongoGroup setDescription(String description) {
+        this.description = description;
         return this;
     }
 
     @Override
-    public String getMail() {
-        return mail;
+    public String getDescription() {
+        return this.description;
     }
 
     @Override
-    public MongoUser setMail(String mail) {
-        this.mail = mail;
+    public Users getMembers() {
+        return new Users(this.members);
+    }
+
+    @Override
+    public MongoGroup addMember(User user) {
+        this.members.add((MongoUser) user);
         return this;
     }
 
     @Override
-    public String getToken() {
-        return this.token;
-    }
-
-    @Override
-    public MongoUser setToken(String token) {
-        this.token = token;
+    public MongoGroup removeMember(User user) {
+        this.members.remove((MongoUser) user);
         return this;
     }
 
     @Override
-    public boolean isAdmin() {
-        return isAdmin;
-    }
-
-    @Override
-    public MongoUser setAdmin(boolean isAdmin) {
-        this.isAdmin = isAdmin;
+    public MongoGroup setOwner(User user) {
+        this.owner = (MongoUser) user;
         return this;
     }
 
     @Override
-    public Users getFriends() {
-        return new Users(this.friends);
+    public MongoUser getOwner() {
+        return this.owner;
     }
 
-    @Override
-    public MongoUser addFriend(User user) {
-        this.friends.add((MongoUser) user);
-        return this;
-    }
-
-    @Override
-    public MongoUser removeFriend(User user) {
-        this.friends.remove((MongoUser) user);
-        return this;
-    }
-
-    public MongoUser setFriends(Users friends) {
-        this.friends.clear();
-        for (User u : friends) {
-            this.friends.add((MongoUser) u);
-        }
-        return this;
+    @PreSave
+    public void clearMemberChanges() {
     }
 }

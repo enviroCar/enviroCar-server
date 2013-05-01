@@ -17,10 +17,12 @@
  */
 package io.car.server.core;
 
+import org.joda.time.DateTime;
+
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public interface EntityFactory {
-    User createUser();
-    Group createGroup();
+public interface BaseEntity {
+    DateTime getCreationDate();
+    DateTime getLastModificationDate();
 }

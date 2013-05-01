@@ -37,4 +37,14 @@ public interface MediaTypes {
     MediaType USER_CREATE_TYPE = MediaType.valueOf(USER_CREATE);
     String USER_REF = "application/json; schema=\"user.ref.json\"";
     MediaType USER_REF_TYPE = MediaType.valueOf(USER_REF);
+    String GROUPS = "application/json; schema=\"groups.json\"";
+    MediaType GROUPS_TYPE = MediaType.valueOf(GROUPS);
+    String GROUP = "application/json; schema=\"group.json\"";
+    MediaType GROUP_TYPE = MediaType.valueOf(GROUP);
+    String GROUP_MODIFY = "application/json; schema=\"group.modify.json\"";
+    MediaType GROUP_MODIFY_TYPE = MediaType.valueOf(GROUP_MODIFY);
+    String GROUP_CREATE = "application/json; schema=\"group.create.json\"";
+    MediaType GROUP_CREATE_TYPE = MediaType.valueOf(GROUP_CREATE);
+    String GROUP_REF = "application/json; schema=\"group.ref.json\"";
+    MediaType GROUP_REF_TYPE = MediaType.valueOf(GROUP_REF);
 }

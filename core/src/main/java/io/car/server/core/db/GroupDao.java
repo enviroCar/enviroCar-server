@@ -15,12 +15,29 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.core;
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package io.car.server.core.db;
+
+import io.car.server.core.Group;
+import io.car.server.core.Groups;
+import io.car.server.core.User;
 
 /**
+ *
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public interface EntityFactory {
-    User createUser();
-    Group createGroup();
+public interface GroupDao {
+    Group getByName(String name);
+    Groups search(String search);
+    Groups search(String search, int limit);
+    Groups getByOwner(User owner);
+    Groups getByMember(User member);
+    Groups getAll();
+    Groups getAll(int limit);
+    Group create(Group group);
+    Group save(Group group);
+    void delete(Group group);
 }

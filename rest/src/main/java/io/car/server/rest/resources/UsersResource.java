@@ -30,10 +30,12 @@ import javax.ws.rs.core.Response;
 
 import io.car.server.core.User;
 import io.car.server.core.Users;
+import io.car.server.core.exception.ResourceAlreadyExistException;
 import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.core.exception.ValidationException;
 import io.car.server.rest.AbstractResource;
 import io.car.server.rest.MediaTypes;
+import io.car.server.rest.RESTConstants;
 import io.car.server.rest.auth.Anonymous;
 
 /**
@@ -43,14 +45,14 @@ public class UsersResource extends AbstractResource {
 
     @GET
     @Produces(MediaTypes.USERS)
-    public Users get(@QueryParam("limit") @DefaultValue(value = "0") int limit) {
+    public Users get(@QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit) {
         return getUserService().getAllUsers(limit);
     }
 
     @POST
     @Consumes(MediaTypes.USER_CREATE)
     @Anonymous
-    public Response create(User user) throws ValidationException {
+    public Response create(User user) throws ValidationException, ResourceAlreadyExistException {
         return Response.created(
                 getUriInfo().getRequestUriBuilder()
                 .path(getUserService().createUser(user).getName())

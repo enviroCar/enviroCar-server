@@ -22,12 +22,25 @@
  * visit the Free Software Foundation web page, http://www.fsf.org.
  */
 
-package io.car.server.rest;
+package io.car.server.core.exception;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public interface RESTConstants {
-    String LIMIT = "limit";
-    String SEARCH = "q";
+public class ResourceAlreadyExistException extends Exception {
+
+    public ResourceAlreadyExistException() {
+    }
+
+    public ResourceAlreadyExistException(String message) {
+        super(message);
+    }
+
+    public ResourceAlreadyExistException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public ResourceAlreadyExistException(Throwable cause) {
+        super(cause);
+    }
 }

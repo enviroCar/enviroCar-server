@@ -15,17 +15,23 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.mongo;
+package io.car.server.core;
 
-import io.car.server.core.EntityFactory;
+import io.car.server.core.exception.IllegalModificationException;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public class MongoEntityFactory implements EntityFactory {
+public class GroupUpdater implements EntityUpdater<Group> {
 
     @Override
-    public MongoUser createUser() {
-        return new MongoUser();
+    public Group update(Group changes, Group original) throws IllegalModificationException {
+        if (changes.getDescription() != null) {
+            original.setDescription(changes.getDescription());
+        }
+        if (changes.getName() != null) {
+            original.setName(changes.getName());
+        }
+        return original;
     }
 }

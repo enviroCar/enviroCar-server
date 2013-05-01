@@ -20,7 +20,14 @@ package io.car.server.core;
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public interface EntityFactory {
-    User createUser();
-    Group createGroup();
+public interface Group extends BaseEntity {
+    Group setName(String name);
+    String getName();
+    Group setDescription(String description);
+    String getDescription();
+    Users getMembers();
+    Group addMember(User user);
+    Group removeMember(User user);
+    Group setOwner(User user);
+    User getOwner();
 }

@@ -17,6 +17,7 @@
  */
 package io.car.server.core.db;
 
+import io.car.server.core.Group;
 import io.car.server.core.User;
 import io.car.server.core.Users;
 
@@ -24,10 +25,12 @@ import io.car.server.core.Users;
  * @author Christian Autermann <c.autermann@52north.org>
  */
 public interface UserDao {
-    User getUserByName(String name);
-    User getUserByMail(String mail);
+    User getByName(String name);
+    User getByMail(String mail);
+    Users getAll();
     Users getAll(int limit);
-    User createUser(User user);
-    User saveUser(User user);
-    void deleteUser(User user);
+    User create(User user);
+    User save(User user);
+    void delete(User user);
+    Users getByGroup(Group group);
 }

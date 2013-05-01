@@ -22,12 +22,19 @@
  * visit the Free Software Foundation web page, http://www.fsf.org.
  */
 
-package io.car.server.rest;
+package io.car.server.rest.mapper;
+
+import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.ext.Provider;
+
+import io.car.server.core.exception.ResourceAlreadyExistException;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public interface RESTConstants {
-    String LIMIT = "limit";
-    String SEARCH = "q";
+@Provider
+public class ResourceAlreadyExistExceptionMapper extends AbstractExceptionMapper<ResourceAlreadyExistException> {
+    public ResourceAlreadyExistExceptionMapper() {
+        super(Status.CONFLICT);
+    }
 }

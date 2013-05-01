@@ -22,12 +22,37 @@
  * visit the Free Software Foundation web page, http://www.fsf.org.
  */
 
-package io.car.server.rest;
+package io.car.server.rest.resources;
+
+import javax.ws.rs.DELETE;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response.Status;
+
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
+
+import io.car.server.core.Group;
+import io.car.server.core.User;
+import io.car.server.core.exception.UserNotFoundException;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public interface RESTConstants {
-    String LIMIT = "limit";
-    String SEARCH = "q";
+public class GroupMemberResource extends UserResource {
+    private Group group;
+
+    @Inject
+    public GroupMemberResource(@Assisted Group group, @Assisted User member) {
+        super(member);
+        this.group = group;
+    }
+
+    @DELETE
+    @Override
+    public void delete() throws UserNotFoundException {
+        if (!canModifyUser(getUser())) {
+            throw new WebApplicationException(Status.FORBIDDEN);
+        }
+        getUserService().removeGroupMember(group, getUser());
+    }
 }

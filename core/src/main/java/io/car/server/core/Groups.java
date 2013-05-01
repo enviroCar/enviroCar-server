@@ -17,10 +17,23 @@
  */
 package io.car.server.core;
 
+import java.util.Iterator;
+
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public interface EntityFactory {
-    User createUser();
-    Group createGroup();
+public class Groups implements Iterable<Group> {
+
+    private final Iterable<? extends Group> delegate;
+
+    public Groups(Iterable<? extends Group> delegate) {
+        this.delegate = delegate;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public Iterator<Group> iterator() {
+        return (Iterator<Group>) delegate.iterator();
+    }
+
 }

@@ -17,6 +17,7 @@
  */
 package io.car.server.core;
 
+import java.util.Collection;
 import java.util.regex.Pattern;
 
 import io.car.server.core.exception.ValidationException;
@@ -56,6 +57,17 @@ public abstract class AbstractValidator<T> implements EntityValidator<T> {
         }
     }
 
+    protected void isEmpty(String name, Collection<?> o) throws ValidationException {
+        if (o != null && !o.isEmpty()) {
+            throw new ValidationException(String.format("%s is not empty", name));
+        }
+    }
+
+    protected void isEmpty(String name, Iterable<?> o) throws ValidationException {
+        if (o != null && !o.iterator().hasNext()) {
+            throw new ValidationException(String.format("%s is not empty", name));
+        }
+    }
     protected void matches(String name, String o, Pattern pattern) throws ValidationException {
         isNotNull(name, o);
         if (!pattern.matcher(o).matches()) {

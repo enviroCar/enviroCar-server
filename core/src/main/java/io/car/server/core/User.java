@@ -17,12 +17,10 @@
  */
 package io.car.server.core;
 
-import org.joda.time.DateTime;
-
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public interface User {
+public interface User extends BaseEntity {
     String getName();
     User setName(String name);
     String getMail();
@@ -31,8 +29,6 @@ public interface User {
     User setToken(String token);
     boolean isAdmin();
     User setAdmin(boolean isAdmin);
-    DateTime getCreationDate();
-    DateTime getLastModificationDate();
     Users getFriends();
     User addFriend(User user);
     User removeFriend(User user);
