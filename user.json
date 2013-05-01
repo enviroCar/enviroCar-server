@@ -1,6 +1,8 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
     "type": "object",
+    "required": [ "name", "groups", "created", "modified" ],
+    "additionalProperties": false,
     "properties": {
         "name": { 
             "type": "string",
@@ -11,14 +13,48 @@
             "pattern": "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$"
         },
         "created": {
-            "type": "string",
-            "format": "date-time"
+            "$ref": "#/definitions/date-time"
         },
         "modified": {
+            "$ref": "#/definitions/date-time"
+        },
+        "groups": {
+            "type": "object",
+            "required": [ "owner","member" ],
+            "additionalProperties": false,
+            "properties": {
+                "owner": {
+                    "$ref": "#/definitions/group-ref-list"
+                },
+                "member": {
+                    "$ref": "#/definitions/group-ref-list"
+                }
+            }
+        }
+    },
+    "definitions": {
+        "date-time": {
             "type": "string",
             "format": "date-time"
         }
-    },
-    "additionalProperties": false,
-    "required": [ "name" ]
+        "group-ref-list": {
+            "type": "array",
+            "minItems": 0,
+            "uniqueItems": true,
+            "items": {
+                "type": "object"
+                "required": [ "name", "href" ],
+                "additionalProperties": false,
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "href": {
+                        "type": "string",
+                        "format": "uri"
+                    }
+                }
+            }
+        }
+    }
 }
