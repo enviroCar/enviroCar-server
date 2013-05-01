@@ -29,6 +29,8 @@ public class CoreModule extends AbstractModule {
     protected void configure() {
         bind(new TypeLiteral<EntityUpdater<User>>() {}).to(UserUpdater.class);
         bind(new TypeLiteral<EntityValidator<User>>() {}).to(UserValidator.class);
+        bind(new TypeLiteral<EntityUpdater<Group>>() {}).to(GroupUpdater.class);
+        bind(new TypeLiteral<EntityValidator<Group>>() {}).to(GroupValidator.class);
         bind(UserService.class);
         bind(PasswordEncoder.class).to(BCryptPasswordEncoder.class);
     }

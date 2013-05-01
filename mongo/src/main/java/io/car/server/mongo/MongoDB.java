@@ -96,6 +96,6 @@ public class MongoDB {
     }
 
     private Iterable<Class<?>> getMappedClasses() {
-        return Sets.newHashSet(new Class<?>[] { MongoUser.class });
+        return Sets.newHashSet(new Class<?>[] { MongoUser.class, MongoGroup.class });
     }
 }

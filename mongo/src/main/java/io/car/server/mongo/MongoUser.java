@@ -19,16 +19,10 @@ package io.car.server.mongo;
 
 import java.util.Set;
 
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-
 import com.github.jmkgreen.morphia.annotations.Entity;
-import com.github.jmkgreen.morphia.annotations.Id;
 import com.github.jmkgreen.morphia.annotations.Indexed;
-import com.github.jmkgreen.morphia.annotations.PrePersist;
 import com.github.jmkgreen.morphia.annotations.Property;
 import com.github.jmkgreen.morphia.annotations.Reference;
-import com.github.jmkgreen.morphia.mapping.Mapper;
 import com.google.common.collect.Sets;
 
 import io.car.server.core.User;
@@ -38,15 +32,14 @@ import io.car.server.core.Users;
  * @author Christian Autermann <c.autermann@52north.org>
  */
 @Entity("users")
-public class MongoUser implements User {
-    public static final String NAME = Mapper.ID_KEY;
+public class MongoUser extends MongoBaseEntity implements User {
+    public static final String NAME = "name";
     public static final String MAIL = "mail";
     public static final String TOKEN = "token";
     public static final String IS_ADMIN = "isAdmin";
-    public static final String CREATION_DATE = "created";
-    public static final String LAST_MODIFIED = "modified";
     public static final String FRIENDS = "friends";
-    @Id
+    @Indexed(unique = true)
+    @Property(NAME)
     private String name;
     @Indexed(unique = true)
     @Property(MAIL)
@@ -55,12 +48,6 @@ public class MongoUser implements User {
     private String token;
     @Property(IS_ADMIN)
     private boolean isAdmin = false;
-    @Indexed
-    @Property(CREATION_DATE)
-    private DateTime creationDate;
-    @Indexed
-    @Property(LAST_MODIFIED)
-    private DateTime lastModificationDate;
     @Reference(value = FRIENDS, lazy = true)
     private Set<MongoUser> friends = Sets.newHashSet();
 
@@ -106,33 +93,6 @@ public class MongoUser implements User {
     public MongoUser setAdmin(boolean isAdmin) {
         this.isAdmin = isAdmin;
         return this;
-    }
-
-    @Override
-    public DateTime getCreationDate() {
-        return creationDate;
-    }
-
-    public void setCreationDate(DateTime creationDate) {
-        this.creationDate = creationDate;
-    }
-
-    @Override
-    public DateTime getLastModificationDate() {
-        return lastModificationDate;
-    }
-
-    public void setLastModificationDate(DateTime lastModificationDate) {
-        this.lastModificationDate = lastModificationDate;
-    }
-
-    @PrePersist
-    public void prePersist() {
-        DateTime now = new DateTime(DateTimeZone.UTC);
-        if (getCreationDate() == null) {
-            setCreationDate(now);
-        }
-        setLastModificationDate(now);
     }
 
     @Override

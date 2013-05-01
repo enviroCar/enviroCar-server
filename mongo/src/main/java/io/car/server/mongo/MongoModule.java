@@ -22,10 +22,14 @@ import com.github.jmkgreen.morphia.Morphia;
 import com.github.jmkgreen.morphia.mapping.Mapper;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
 
 import io.car.server.core.EntityFactory;
+import io.car.server.core.Group;
+import io.car.server.core.User;
+import io.car.server.core.db.GroupDao;
 import io.car.server.core.db.UserDao;
 
 /**
@@ -35,10 +39,14 @@ public class MongoModule extends AbstractModule {
 
     @Override
     protected void configure() {
+        install(new FactoryModuleBuilder()
+                .implement(User.class, MongoUser.class)
+                .implement(Group.class, MongoGroup.class)
+                .build(EntityFactory.class));
         install(new MongoConnectionModule());
         bind(MongoDB.class);
         bind(UserDao.class).to(MongoUserDao.class);
-        bind(EntityFactory.class).to(MongoEntityFactory.class);
+        bind(GroupDao.class).to(MongoGroupDao.class);
     }
 
     @Provides
