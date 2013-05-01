@@ -28,4 +28,7 @@ public interface JSONConstants {
     String NAME_KEY = "name";
     String USERS_KEY = "users";
     String MAIL_KEY = "mail";
+    String GROUPS_KEY = "groups";
+    String DESCRIPTION_KEY = "description";
+    String OWNER_KEY = "owner";
 }

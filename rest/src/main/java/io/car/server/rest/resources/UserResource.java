@@ -47,11 +47,17 @@ import io.car.server.rest.auth.Authenticated;
  * @author Christian Autermann <c.autermann@52north.org>
  */
 public class UserResource extends AbstractResource {
-    private final User user;
+    public static final String GROUPS_PATH = "groups";
+    public static final String FRIENDS_PATH = "friends";
+    protected final User user;
 
     @Inject
     public UserResource(@Assisted User user) {
         this.user = user;
+    }
+
+    protected User getUser() {
+        return user;
     }
 
     @PUT
@@ -59,11 +65,11 @@ public class UserResource extends AbstractResource {
     @Authenticated
     public Response modify(User changes) throws
             UserNotFoundException, IllegalModificationException, ValidationException {
-        if (!canModifyUser(user)) {
+        if (!canModifyUser(getUser())) {
             throw new WebApplicationException(Status.FORBIDDEN);
         }
-        User modified = getUserService().modifyUser(user, changes);
-        if (modified.getName().equals(user)) {
+        User modified = getUserService().modifyUser(getUser(), changes);
+        if (modified.getName().equals(getUser().getName())) {
             return Response.noContent().build();
         } else {
             UriBuilder b = getUriInfo().getBaseUriBuilder();
@@ -80,22 +86,28 @@ public class UserResource extends AbstractResource {
     @Produces(MediaTypes.USER)
     @Authenticated
     public User get() throws UserNotFoundException {
-        return user;
+        return getUser();
     }
 
     @DELETE
     @Authenticated
     public void delete() throws UserNotFoundException {
-        if (!canModifyUser(user)) {
+        if (!canModifyUser(getUser())) {
             throw new WebApplicationException(Status.FORBIDDEN);
         }
-        getUserService().deleteUser(user);
+        getUserService().deleteUser(getUser());
     }
 
-    @Path("friends")
+    @Path(FRIENDS_PATH)
     @Authenticated
     public FriendsResource friends() {
-        return getResourceFactory().createFriendsResource(user);
+        return getResourceFactory().createFriendsResource(getUser());
+    }
+
+    @Path(GROUPS_PATH)
+    @Authenticated
+    public GroupsResource groups() {
+        return getResourceFactory().createGroupsResource(getUser());
     }
 
 }

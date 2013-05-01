@@ -30,6 +30,10 @@ import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 import io.car.server.rest.auth.AuthenticationFilter;
 import io.car.server.rest.auth.AuthenticationResourceFilterFactory;
 import io.car.server.rest.resources.FriendsResource;
+import io.car.server.rest.resources.GroupMemberResource;
+import io.car.server.rest.resources.GroupMembersResource;
+import io.car.server.rest.resources.GroupResource;
+import io.car.server.rest.resources.GroupsResource;
 import io.car.server.rest.resources.UserResource;
 import io.car.server.rest.resources.UsersResource;
 
@@ -46,6 +50,10 @@ public class RESTModule extends JerseyServletModule {
                 .implement(UserResource.class, UserResource.class)
                 .implement(UsersResource.class, UsersResource.class)
                 .implement(FriendsResource.class, FriendsResource.class)
+                .implement(GroupResource.class, GroupResource.class)
+                .implement(GroupsResource.class, GroupsResource.class)
+                .implement(GroupMembersResource.class, GroupMembersResource.class)
+                .implement(GroupMemberResource.class, GroupMemberResource.class)
                 .build(ResourceFactory.class));
         serve("/schema/*").with(SchemaServlet.class);
         serve("/rest*").with(GuiceContainer.class, ImmutableMap.<String, String>builder()

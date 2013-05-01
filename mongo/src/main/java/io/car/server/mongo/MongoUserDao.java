@@ -48,6 +48,11 @@ public class MongoUserDao extends BasicDAO<MongoUser, String> implements UserDao
     }
 
     @Override
+    public Users getAll() {
+        return getAll(0);
+    }
+
+    @Override
     public Users getAll(int limit) {
         return fetch(createQuery().limit(limit).order(MongoUser.CREATION_DATE));
     }

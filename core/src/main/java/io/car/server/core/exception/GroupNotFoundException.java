@@ -22,12 +22,15 @@
  * visit the Free Software Foundation web page, http://www.fsf.org.
  */
 
-package io.car.server.rest;
+package io.car.server.core.exception;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public interface RESTConstants {
-    String LIMIT = "limit";
-    String SEARCH = "q";
+public class GroupNotFoundException extends ResourceNotFoundException {
+    private static final long serialVersionUID = -2965141243070029269L;
+
+    public GroupNotFoundException(String groupname) {
+        super(String.format("The group '%s' was not found", groupname));
+    }
 }

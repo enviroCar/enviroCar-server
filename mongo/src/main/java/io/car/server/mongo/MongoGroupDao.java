@@ -43,10 +43,7 @@ public class MongoGroupDao extends BasicDAO<MongoGroup, String> implements Group
 
     @Override
     public Groups search(String search) {
-        Query<MongoGroup> q = createQuery();
-        q.or(q.criteria(MongoGroup.NAME).containsIgnoreCase(search),
-             q.criteria(MongoGroup.DESCRIPTION).containsIgnoreCase(search));
-        return fetch(q);
+        return search(search, 0);
     }
 
     @Override
@@ -59,8 +56,13 @@ public class MongoGroupDao extends BasicDAO<MongoGroup, String> implements Group
     }
 
     @Override
+    public Groups getAll() {
+        return getAll(0);
+    }
+
+    @Override
     public Groups getAll(int limit) {
-        return fetch(createQuery().limit(limit));
+        return fetch(createQuery().limit(limit).order(MongoGroup.LAST_MODIFIED));
     }
 
     @Override
@@ -78,5 +80,18 @@ public class MongoGroupDao extends BasicDAO<MongoGroup, String> implements Group
     @Override
     public void delete(Group group) {
         delete((MongoGroup) group);
+    }
+
+    @Override
+    public Groups getByMember(User member) {
+        return fetch(createQuery().field(MongoGroup.MEMBERS).hasThisElement(member));
+    }
+
+    @Override
+    public Groups search(String search, int limit) {
+        Query<MongoGroup> q = createQuery();
+        q.or(q.criteria(MongoGroup.NAME).containsIgnoreCase(search),
+             q.criteria(MongoGroup.DESCRIPTION).containsIgnoreCase(search));
+        return fetch(q.limit(limit));
     }
 }

@@ -17,8 +17,13 @@
  */
 package io.car.server.rest;
 
+import io.car.server.core.Group;
 import io.car.server.core.User;
 import io.car.server.rest.resources.FriendsResource;
+import io.car.server.rest.resources.GroupMemberResource;
+import io.car.server.rest.resources.GroupMembersResource;
+import io.car.server.rest.resources.GroupResource;
+import io.car.server.rest.resources.GroupsResource;
 import io.car.server.rest.resources.UserResource;
 import io.car.server.rest.resources.UsersResource;
 
@@ -29,4 +34,9 @@ public interface ResourceFactory {
     FriendsResource createFriendsResource(User user);
     UsersResource createUsersResource();
     UserResource createUserResource(User user);
+    GroupResource createGroupResource(Group group);
+    GroupsResource createGroupsResource();
+    GroupsResource createGroupsResource(User user);
+    GroupMembersResource createGroupMembersResource(Group group);
+    GroupMemberResource createGroupMemberResource(Group group, User member);
 }

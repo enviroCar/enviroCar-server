@@ -22,5 +22,5 @@ package io.car.server.core;
  */
 public interface EntityFactory {
     User createUser();
-    Group createUserGroup();
+    Group createGroup();
 }

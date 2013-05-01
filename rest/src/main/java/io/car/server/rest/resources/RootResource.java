@@ -27,33 +27,32 @@ import javax.ws.rs.core.Response.Status;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import com.google.inject.Inject;
-
 import io.car.server.rest.AbstractResource;
 import io.car.server.rest.provider.JSONConstants;
 
 @Path("/")
 public class RootResource extends AbstractResource {
-    private final UsersResource userResource;
-
-    @Inject
-    public RootResource(UsersResource userResource) {
-        this.userResource = userResource;
-    }
-
+    public static final String USERS_PATH = "users";
+    public static final String GROUPS_PATH = "groups";
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public JSONObject get() {
         try {
-            return new JSONObject().put(JSONConstants.USERS_KEY,
-                                        getUriInfo().getRequestUriBuilder().path("users").build());
+            return new JSONObject()
+                    .put(JSONConstants.USERS_KEY, getUriInfo().getRequestUriBuilder().path(USERS_PATH).build())
+                    .put(JSONConstants.GROUPS_KEY, getUriInfo().getRequestUriBuilder().path(GROUPS_PATH).build());
         } catch (JSONException ex) {
             throw new WebApplicationException(ex, Status.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @Path("users")
+    @Path(USERS_PATH)
     public UsersResource users() {
-        return userResource;
+        return getResourceFactory().createUsersResource();
+    }
+
+    @Path(GROUPS_PATH)
+    public GroupsResource groups() {
+        return getResourceFactory().createGroupsResource();
     }
 }
