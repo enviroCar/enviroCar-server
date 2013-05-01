@@ -17,11 +17,10 @@
  */
 package io.car.server.mongo;
 
-import javax.inject.Inject;
-
 import com.github.jmkgreen.morphia.Datastore;
 import com.github.jmkgreen.morphia.dao.BasicDAO;
 import com.github.jmkgreen.morphia.query.Query;
+import com.google.inject.Inject;
 
 import io.car.server.core.User;
 import io.car.server.core.Users;

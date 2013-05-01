@@ -17,9 +17,10 @@
  */
 package io.car.server.rest;
 
-import javax.inject.Inject;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
+
+import com.google.inject.Inject;
 
 import io.car.server.core.User;
 import io.car.server.core.UserService;

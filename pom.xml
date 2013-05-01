@@ -124,11 +124,6 @@
                 <version>${guice-version}</version>
             </dependency>
             <dependency>
-                <groupId>javax.inject</groupId>
-                <artifactId>javax.inject</artifactId>
-                <version>1</version>
-            </dependency>
-            <dependency>
                 <artifactId>morphia</artifactId>
                 <groupId>com.github.jmkgreen.morphia</groupId>
                 <version>${morphia-version}</version>
