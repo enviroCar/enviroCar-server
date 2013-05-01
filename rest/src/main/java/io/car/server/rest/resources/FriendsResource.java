@@ -17,7 +17,6 @@
  */
 package io.car.server.rest.resources;
 
-import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -28,6 +27,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response.Status;
 
+import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
 import io.car.server.core.User;

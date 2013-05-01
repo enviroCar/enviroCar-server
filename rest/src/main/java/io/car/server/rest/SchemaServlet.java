@@ -20,7 +20,6 @@ package io.car.server.rest;
 import java.io.IOException;
 import java.io.InputStream;
 
-import javax.inject.Singleton;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -30,6 +29,7 @@ import javax.ws.rs.core.MediaType;
 
 import com.google.common.io.ByteStreams;
 import com.google.common.io.Closeables;
+import com.google.inject.Singleton;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>

@@ -17,7 +17,6 @@
  */
 package io.car.server.rest.provider;
 
-import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -27,6 +26,8 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
+
+import com.google.inject.Inject;
 
 import io.car.server.core.EntityFactory;
 import io.car.server.core.User;

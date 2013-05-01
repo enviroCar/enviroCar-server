@@ -17,8 +17,9 @@
  */
 package io.car.server.core;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import io.car.server.core.db.UserDao;
 import io.car.server.core.exception.IllegalModificationException;

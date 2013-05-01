@@ -18,22 +18,23 @@
 package io.car.server.mongo;
 
 import javax.annotation.Nullable;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
 
 import com.github.jmkgreen.morphia.Datastore;
 import com.github.jmkgreen.morphia.Morphia;
 import com.github.jmkgreen.morphia.converters.DefaultConverters;
 import com.github.jmkgreen.morphia.ext.guice.GuiceExtension;
 import com.google.common.collect.Sets;
+import com.google.inject.Inject;
 import com.google.inject.Injector;
+import com.google.inject.Singleton;
+import com.google.inject.name.Named;
 import com.mongodb.MongoClient;
 import com.mongodb.ServerAddress;
 
 import io.car.server.mongo.convert.DateTimeConverter;
 import io.car.server.mongo.convert.DurationConverter;
 import io.car.server.mongo.convert.FileConverter;
+import io.car.server.mongo.convert.GeometryConverter;
 import io.car.server.mongo.convert.URLConverter;
 
 /**
@@ -91,6 +92,7 @@ public class MongoDB {
         dc.addConverter(DurationConverter.class);
         dc.addConverter(FileConverter.class);
         dc.addConverter(URLConverter.class);
+        dc.addConverter(GeometryConverter.class);
     }
 
     private Iterable<Class<?>> getMappedClasses() {

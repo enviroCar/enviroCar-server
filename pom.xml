@@ -124,11 +124,6 @@
                 <version>${guice-version}</version>
             </dependency>
             <dependency>
-                <groupId>javax.inject</groupId>
-                <artifactId>javax.inject</artifactId>
-                <version>1</version>
-            </dependency>
-            <dependency>
                 <artifactId>morphia</artifactId>
                 <groupId>com.github.jmkgreen.morphia</groupId>
                 <version>${morphia-version}</version>
@@ -189,22 +184,6 @@
             <dependency>
                 <groupId>com.sun.jersey.contribs</groupId>
                 <artifactId>jersey-guice</artifactId>
-                <version>${jersey-version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.sun.jersey.contribs.jersey-oauth</groupId>
-                <artifactId>oauth-client</artifactId>
-                <version>${jersey-version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.sun.jersey.contribs.jersey-oauth</groupId>
-                <artifactId>oauth-server</artifactId>
-                <version>${jersey-version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.sun.jersey.contribs.jersey-oauth</groupId>
-                <artifactId>oauth-signature</artifactId>
                 <version>${jersey-version}</version>
             </dependency>
             <dependency>
