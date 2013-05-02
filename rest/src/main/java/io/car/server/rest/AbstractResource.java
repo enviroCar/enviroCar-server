@@ -21,6 +21,7 @@ import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 import io.car.server.core.User;
 import io.car.server.core.UserService;
@@ -31,10 +32,10 @@ import io.car.server.rest.auth.AuthConstants;
  * @author Christian Autermann <c.autermann@52north.org>
  */
 public abstract class AbstractResource {
-    private SecurityContext securityContext;
-    private UserService service;
-    private UriInfo uriInfo;
-    private ResourceFactory resourceFactory;
+    private Provider<SecurityContext> securityContext;
+    private Provider<UserService> service;
+    private Provider<UriInfo> uriInfo;
+    private Provider<ResourceFactory> resourceFactory;
 
     protected boolean canModifyUser(User user) {
         return getSecurityContext().isUserInRole(AuthConstants.ADMIN_ROLE) ||
@@ -43,42 +44,42 @@ public abstract class AbstractResource {
     }
 
     public SecurityContext getSecurityContext() {
-        return securityContext;
+        return securityContext.get();
     }
 
     public UriInfo getUriInfo() {
-        return uriInfo;
+        return uriInfo.get();
     }
 
     public UserService getUserService() {
-        return service;
-    }
-
-    @Inject
-    public void setSecurityContext(SecurityContext securityContext) {
-        this.securityContext = securityContext;
-    }
-
-    @Inject
-    public void setUriInfo(UriInfo uriInfo) {
-        this.uriInfo = uriInfo;
-    }
-
-    @Inject
-    public void setUserService(UserService service) {
-        this.service = service;
-    }
-
-    @Inject
-    public void setResourceFactory(ResourceFactory resourceFactory) {
-        this.resourceFactory = resourceFactory;
+        return service.get();
     }
 
     public ResourceFactory getResourceFactory() {
-        return resourceFactory;
+        return resourceFactory.get();
     }
 
     protected User getCurrentUser() throws UserNotFoundException {
         return getUserService().getUser(getSecurityContext().getUserPrincipal().getName());
+    }
+
+    @Inject
+    public void setSecurityContext(Provider<SecurityContext> securityContext) {
+        this.securityContext = securityContext;
+    }
+
+    @Inject
+    public void setUriInfo(Provider<UriInfo> uriInfo) {
+        this.uriInfo = uriInfo;
+    }
+
+    @Inject
+    public void setUserService(Provider<UserService> service) {
+        this.service = service;
+    }
+
+    @Inject
+    public void setResourceFactory(Provider<ResourceFactory> resourceFactory) {
+        this.resourceFactory = resourceFactory;
     }
 }
