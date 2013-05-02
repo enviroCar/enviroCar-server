@@ -62,10 +62,10 @@ public class MongoDB {
             mongo = new MongoClient(new ServerAddress(host, port));
             morphia = new Morphia();
             new GuiceExtension(morphia, injector);
+            addConverters(morphia);
             for (Class<?> c : getMappedClasses()) {
                 morphia.getMapper().addMappedClass(c);
             }
-            addConverters(morphia);
             datastore = morphia.createDatastore(mongo, database, username, password);
             datastore.ensureIndexes();
             datastore.ensureCaps();
