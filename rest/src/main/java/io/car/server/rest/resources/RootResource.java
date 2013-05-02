@@ -34,6 +34,7 @@ import io.car.server.rest.provider.JSONConstants;
 public class RootResource extends AbstractResource {
     public static final String USERS_PATH = "users";
     public static final String GROUPS_PATH = "groups";
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public JSONObject get() {
