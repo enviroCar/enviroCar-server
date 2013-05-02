@@ -23,6 +23,7 @@ import com.github.jmkgreen.morphia.mapping.Mapper;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
+import com.mongodb.DB;
 import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
 
@@ -72,5 +73,10 @@ public class MongoModule extends AbstractModule {
     @Provides
     public Mapper mapper(Morphia morphia) {
         return morphia.getMapper();
+    }
+
+    @Provides
+    public DB db(Datastore datastore) {
+        return datastore.getDB();
     }
 }
