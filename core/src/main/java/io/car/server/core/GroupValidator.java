@@ -20,7 +20,6 @@ package io.car.server.core;
 import io.car.server.core.exception.ValidationException;
 
 /**
- * TODO JavaDoc
  * @author Christian Autermann <c.autermann@52north.org>
  */
 public class GroupValidator extends AbstractValidator<Group> {
