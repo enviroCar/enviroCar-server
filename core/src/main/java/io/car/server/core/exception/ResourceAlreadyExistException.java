@@ -28,6 +28,7 @@ package io.car.server.core.exception;
  * @author Christian Autermann <c.autermann@52north.org>
  */
 public class ResourceAlreadyExistException extends Exception {
+    private static final long serialVersionUID = 5649841369270314609L;
 
     public ResourceAlreadyExistException() {
     }
