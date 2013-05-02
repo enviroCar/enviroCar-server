@@ -1,7 +1,7 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
     "type": "object",
-    "required": [ "name", "description", "created", "modified", "owner" ],
+    "required": [ "name", "description", "created", "modified", "owner", "members" ],
     "additionalProperties": false,
     "properties": {
         "name": { "type": "string" },
@@ -9,12 +9,17 @@
         "created": { "$ref": "#/definitions/date-time" },
         "modified": { "$ref": "#/definitions/date-time" },
         "owner": { "$ref": "#/definitions/user-ref" },
+        "members": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "$ref": "#/definitions/user-ref" }
+        }
     },
     "definitions": {
         "date-time": {
             "type": "string",
             "format": "date-time"
-        }
+        },
         "user-ref": {
             "type": "object",
             "required": [ "name", "href" ],

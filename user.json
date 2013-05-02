@@ -36,13 +36,13 @@
         "date-time": {
             "type": "string",
             "format": "date-time"
-        }
+},
         "group-ref-list": {
             "type": "array",
             "minItems": 0,
             "uniqueItems": true,
             "items": {
-                "type": "object"
+                "type": "object",
                 "required": [ "name", "href" ],
                 "additionalProperties": false,
                 "properties": {
