@@ -20,18 +20,23 @@ package io.car.server;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.google.inject.servlet.GuiceServletContextListener;
+import com.google.inject.AbstractModule;
+
+import io.car.server.core.CoreModule;
+import io.car.server.mongo.MongoModule;
+import io.car.server.rest.guice.JerseyModule;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public class ServletContextListener extends GuiceServletContextListener {
-    private static final Logger log = LoggerFactory.getLogger(ServletContextListener.class);
+public class DefaultConfigurationModule extends AbstractModule {
+    private static final Logger log = LoggerFactory.getLogger(DefaultConfigurationModule.class);
     @Override
-    protected Injector getInjector() {
-        log.debug("Creating Injector");
-        return Guice.createInjector(new DefaultConfigurationModule());
+    protected void configure() {
+        log.debug("Installing DefaultConfigurationModule");
+        install(new CoreModule());
+        install(new MongoModule());
+        install(new JerseyModule());
     }
+
 }

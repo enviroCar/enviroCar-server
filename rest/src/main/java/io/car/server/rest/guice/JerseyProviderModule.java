@@ -15,23 +15,32 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server;
+package io.car.server.rest.guice;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.google.inject.servlet.GuiceServletContextListener;
+import com.google.inject.AbstractModule;
+import com.google.inject.Scopes;
+
+import io.car.server.rest.provider.GroupProvider;
+import io.car.server.rest.provider.GroupsProvider;
+import io.car.server.rest.provider.UserProvider;
+import io.car.server.rest.provider.UsersProvider;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public class ServletContextListener extends GuiceServletContextListener {
-    private static final Logger log = LoggerFactory.getLogger(ServletContextListener.class);
+public class JerseyProviderModule extends AbstractModule {
+    private static final Logger log = LoggerFactory.getLogger(JerseyProviderModule.class);
+
     @Override
-    protected Injector getInjector() {
-        log.debug("Creating Injector");
-        return Guice.createInjector(new DefaultConfigurationModule());
+    protected void configure() {
+        log.debug("Installing JerseyProviderModule");
+        bind(GroupProvider.class).in(Scopes.SINGLETON);
+        bind(GroupsProvider.class).in(Scopes.SINGLETON);
+        bind(UserProvider.class).in(Scopes.SINGLETON);
+        bind(UsersProvider.class).in(Scopes.SINGLETON);
     }
+
 }
