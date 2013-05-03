@@ -15,23 +15,34 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server;
+package io.car.server.matchers;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import javax.ws.rs.core.MediaType;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.google.inject.servlet.GuiceServletContextListener;
+import org.hamcrest.BaseMatcher;
+import org.hamcrest.Description;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public class ServletContextListener extends GuiceServletContextListener {
-    private static final Logger log = LoggerFactory.getLogger(ServletContextListener.class);
-    @Override
-    protected Injector getInjector() {
-        log.debug("Creating Injector");
-        return Guice.createInjector(new DefaultConfigurationModule());
+public class IsCompatibleMediaType extends BaseMatcher<MediaType> {
+    private MediaType type;
+
+    public IsCompatibleMediaType(MediaType type) {
+        this.type = type;
     }
+
+    @Override
+    public boolean matches(Object item) {
+        if (item == null || !(item instanceof MediaType)) {
+            return false;
+        }
+        return ((MediaType) item).isCompatible(this.type);
+    }
+
+    @Override
+    public void describeTo(Description description) {
+        description.appendText("is compatiple to ").appendValue(this.type);
+    }
+
 }

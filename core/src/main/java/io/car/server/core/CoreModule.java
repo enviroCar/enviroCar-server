@@ -17,6 +17,9 @@
  */
 package io.car.server.core;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
 
@@ -24,9 +27,10 @@ import com.google.inject.TypeLiteral;
  * @author Christian Autermann <c.autermann@52north.org>
  */
 public class CoreModule extends AbstractModule {
-
+    private static final Logger log = LoggerFactory.getLogger(CoreModule.class);
     @Override
     protected void configure() {
+        log.debug("Installing CoreModule");
         bind(new TypeLiteral<EntityUpdater<User>>() {}).to(UserUpdater.class);
         bind(new TypeLiteral<EntityValidator<User>>() {}).to(UserValidator.class);
         bind(new TypeLiteral<EntityUpdater<Group>>() {}).to(GroupUpdater.class);

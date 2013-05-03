@@ -45,6 +45,7 @@
         <morphia-version>1.2.3</morphia-version>
         <jersey-version>1.17.1</jersey-version>
         <guice-version>3.0</guice-version>
+        <slf4j-version>1.7.5</slf4j-version>
     </properties>
     <repositories>
         <repository>
@@ -142,7 +143,19 @@
             <dependency>
                 <artifactId>slf4j-api</artifactId>
                 <groupId>org.slf4j</groupId>
-                <version>1.7.5</version>
+                <version>${slf4j-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>jul-to-slf4j</artifactId>
+                <version>${slf4j-version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>log4j-over-slf4j</artifactId>
+                <version>${slf4j-version}</version>
+                <scope>runtime</scope>
             </dependency>
             <dependency>
                 <artifactId>mongo-java-driver</artifactId>
@@ -187,9 +200,27 @@
                 <version>${jersey-version}</version>
             </dependency>
             <dependency>
+                <groupId>com.sun.jersey</groupId>
+                <artifactId>jersey-client</artifactId>
+                <version>${jersey-version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-servlet</artifactId>
+                <version>9.0.2.v20130417</version>
+                <scope>test</scope>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>javax.servlet</artifactId>
+                        <groupId>org.eclipse.jetty.orbit</groupId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
                 <groupId>javax.servlet</groupId>
-                <artifactId>servlet-api</artifactId>
-                <version>2.5</version>
+                <artifactId>javax.servlet-api</artifactId>
+                <version>3.0.1</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
@@ -218,7 +249,7 @@
                 </configuration>
                 <executions>
                     <execution>
-                        <phase>prepare-sources</phase>
+                        <phase>process-resources</phase>
                         <goals>
                             <goal>format</goal>
                         </goals>

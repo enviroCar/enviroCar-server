@@ -15,23 +15,32 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server;
+package io.car.server.matchers;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response.StatusType;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.google.inject.servlet.GuiceServletContextListener;
+import org.codehaus.jettison.json.JSONObject;
+import org.hamcrest.Matcher;
+
+import com.sun.jersey.api.client.ClientResponse;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public class ServletContextListener extends GuiceServletContextListener {
-    private static final Logger log = LoggerFactory.getLogger(ServletContextListener.class);
-    @Override
-    protected Injector getInjector() {
-        log.debug("Creating Injector");
-        return Guice.createInjector(new DefaultConfigurationModule());
+public class JerseyMatchers {
+    public static Matcher<MediaType> isCompatible(MediaType type) {
+        return new IsCompatibleMediaType(type);
+    }
+
+    public static Matcher<JSONObject> hasProperty(String key) {
+        return new IsJsonObjectWithProperty(key);
+    }
+
+    public static Matcher<ClientResponse> hasStatus(StatusType status) {
+        return new IsResponseStatus(status);
+    }
+
+    private JerseyMatchers() {
     }
 }

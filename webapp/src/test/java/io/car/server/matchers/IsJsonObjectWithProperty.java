@@ -15,23 +15,41 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server;
+package io.car.server.matchers;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.google.inject.servlet.GuiceServletContextListener;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
+import org.hamcrest.BaseMatcher;
+import org.hamcrest.Description;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public class ServletContextListener extends GuiceServletContextListener {
-    private static final Logger log = LoggerFactory.getLogger(ServletContextListener.class);
-    @Override
-    protected Injector getInjector() {
-        log.debug("Creating Injector");
-        return Guice.createInjector(new DefaultConfigurationModule());
+public class IsJsonObjectWithProperty extends BaseMatcher<JSONObject> {
+
+    private String key;
+
+    public IsJsonObjectWithProperty(String key) {
+        this.key = key;
     }
+
+    @Override
+    public boolean matches(Object item) {
+        if (item instanceof JSONObject) {
+            JSONObject json = (JSONObject) item;
+            try {
+                return json.has(key) && json.get(key) != JSONObject.NULL;
+            } catch (JSONException ex) {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public void describeTo(Description description) {
+        description.appendText("has property ").appendValue(this.key);
+    }
+
 }
