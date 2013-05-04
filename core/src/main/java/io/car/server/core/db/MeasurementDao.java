@@ -1,7 +1,6 @@
 package io.car.server.core.db;
 
 import io.car.server.core.Measurement;
-import io.car.server.core.MeasurementValue;
 import io.car.server.core.Measurements;
 import io.car.server.core.Track;
 
@@ -21,4 +20,7 @@ public interface MeasurementDao {
 	Measurements getByTrack(Track track);
 	Measurements getByBbox(Envelope bbox);
 	Measurements getByBbox(double minx, double miny, double maxx, double maxy);
+	
+	Measurements getAll();
+	Measurements getAll(int limit);
 }
