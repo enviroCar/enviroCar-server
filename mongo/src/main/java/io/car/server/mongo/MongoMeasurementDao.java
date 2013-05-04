@@ -59,20 +59,21 @@ public class MongoMeasurementDao extends BasicDAO<MongoMeasurement, String> impl
 	}
 
 	@Override
-	public Measurements getByPhenomenon(String string) {
-		// TODO Auto-generated method stub
-		return null;
+	public Measurements getByPhenomenon(String phenomenon) {
+		Query<MongoMeasurement> q = createQuery();
+		q.field(MongoMeasurement.PHENOMENONS).equal(phenomenon);
+		return fetch(q);
 	}
 
 	@Override
 	public Measurements getByTrack(Track track) {
-		// TODO Auto-generated method stub
+//		Query<MongoTrack> qTrack = createQuery();
 		return null;
 	}
 
 	@Override
 	public Measurements getByBbox(Geometry bbox) {
-		Coordinate[] coords = bbox.get
+		Coordinate[] coords = bbox.getBoundary().getCoordinates();
 		return null;
 	}
 

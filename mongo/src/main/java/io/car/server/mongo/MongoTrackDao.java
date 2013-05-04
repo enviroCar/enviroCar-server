@@ -36,9 +36,8 @@ public class MongoTrackDao extends BasicDAO<MongoTrack, String> implements Track
 	}
 
 	@Override
-	public Track getByUser(User user) {
-		// XXX not implemented
-		return null;
+	public Tracks getByUser(User user) {
+		return fetch(createQuery().field(MongoUser.TRACKS).hasThisElement(user));
 	}
 
 	@Override
