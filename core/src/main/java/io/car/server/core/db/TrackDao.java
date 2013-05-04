@@ -29,7 +29,7 @@ import com.vividsolutions.jts.geom.Polygon;
  *
  */
 public interface TrackDao {
-
+	// standard
 	Track create(Track track);
 	Track save(Track track);
 	void delete(Track track);
@@ -40,4 +40,6 @@ public interface TrackDao {
 	Tracks getByBbox(Polygon bbox);
 	Tracks getAll();
 	Tracks getAll(int limit);
+	
+	
 }

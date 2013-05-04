@@ -17,38 +17,40 @@
  */
 package io.car.server.rest.provider;
 
+import io.car.server.core.Tracks;
+import io.car.server.rest.MediaTypes;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.ext.Provider;
 
+import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
-
-import io.car.server.core.Track;
-import io.car.server.core.Tracks;
-import io.car.server.core.Users;
-import io.car.server.rest.MediaTypes;
 
 @Provider
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class TracksProvider extends AbstractJsonEntityProvider<Tracks> {
 
+	@Context
+	private UriInfo uriInfo;
+	
 	public TracksProvider() {
 		super(Tracks.class, MediaTypes.TRACKS_TYPE);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public Tracks read(JSONObject j, MediaType mediaType) throws JSONException {
-		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public JSONObject write(Tracks t, MediaType mediaType) throws JSONException {
-		// TODO Auto-generated method stub
+		JSONArray array = new JSONArray();
 		return null;
 	}
 
