@@ -19,8 +19,10 @@ package io.car.server.core;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
+ * @author Arne de Wall
  */
 public interface EntityFactory {
     User createUser();
     Group createGroup();
+    Track createTrack();
 }

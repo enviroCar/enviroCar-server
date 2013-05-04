@@ -67,12 +67,12 @@ public class MongoMeasurementDao extends BasicDAO<MongoMeasurement, String> impl
 
 	@Override
 	public Measurements getByTrack(Track track) {
-//		Query<MongoTrack> qTrack = createQuery();
-		return null;
+		return track.getMeasurements();
 	}
 
 	@Override
 	public Measurements getByBbox(Geometry bbox) {
+		// XXX TODO
 		Coordinate[] coords = bbox.getBoundary().getCoordinates();
 		return null;
 	}

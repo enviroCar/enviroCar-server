@@ -21,6 +21,9 @@ import com.vividsolutions.jts.geom.Polygon;
 
 public interface Track extends BaseEntity {
 	
+	Track setCar(String car);
+	String getCar();
+	
 	Track addMeasurements(Measurements measurements);
 	Track addMeasurement(Measurement measurement);
 	Track removeMeasurement(Measurement measurement);
@@ -29,5 +32,6 @@ public interface Track extends BaseEntity {
 	Polygon getBbox();
 	Track setBbox(Polygon bbox);
 	Track setBbox(double minx, double miny, double maxx, double maxy);
+	
 	
 }

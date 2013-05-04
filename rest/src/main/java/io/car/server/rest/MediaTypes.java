@@ -25,6 +25,7 @@ import javax.ws.rs.core.MediaType;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
+ * @author Arne de Wall
  */
 public interface MediaTypes {
     String USERS = "application/json; schema=\"users.json\"";
@@ -37,6 +38,7 @@ public interface MediaTypes {
     MediaType USER_CREATE_TYPE = MediaType.valueOf(USER_CREATE);
     String USER_REF = "application/json; schema=\"user.ref.json\"";
     MediaType USER_REF_TYPE = MediaType.valueOf(USER_REF);
+    
     String GROUPS = "application/json; schema=\"groups.json\"";
     MediaType GROUPS_TYPE = MediaType.valueOf(GROUPS);
     String GROUP = "application/json; schema=\"group.json\"";
@@ -47,4 +49,17 @@ public interface MediaTypes {
     MediaType GROUP_CREATE_TYPE = MediaType.valueOf(GROUP_CREATE);
     String GROUP_REF = "application/json; schema=\"group.ref.json\"";
     MediaType GROUP_REF_TYPE = MediaType.valueOf(GROUP_REF);
+    
+    String TRACK = "application/json; schema=\"track.json\"";
+    MediaType TRACK_TYPE = MediaType.valueOf(TRACK);
+    String TRACKS = "application/json; schema=\"tracks.json\"";
+    MediaType TRACKS_TYPE = MediaType.valueOf(TRACKS);
+    String TRACK_CREATE = "application/json; schema=\"track.create.json\"";
+    MediaType TRACK_CREATE_TYPE = MediaType.valueOf(TRACK_CREATE);
+    String TRACK_MODIFY = "application/json; schema=\"track.modify.json\"";
+    MediaType TRACK_MODIFY_TYPE = MediaType.valueOf(TRACK_MODIFY);
+
+    String MEASUREMENT = "application/json; schema=\"measurement.json\"";
+    MediaType MEASUREMENT_TYPE = MediaType.valueOf(MEASUREMENT);
+    String MEASUREMENTS = "application/json; schema=\"measurements.json\"";
 }

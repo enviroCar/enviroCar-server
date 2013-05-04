@@ -40,10 +40,12 @@ public class MongoTrack extends MongoBaseEntity implements Track {
 	public static final String ID = "id";
 	public static final String BBOX = "bbox";
 	public static final String MEASUREMENTS = "measurements";
+	public static final String CAR = "car";
 
-	@Embedded
-	@Property(BBOX)
+	@Embedded(BBOX)
 	private Polygon bbox;
+	@Property(CAR)
+	private String car;
 
 	@Reference(value = MEASUREMENTS, lazy = true)
 	private List<MongoMeasurement> measurements = new ArrayList<MongoMeasurement>();
@@ -100,6 +102,17 @@ public class MongoTrack extends MongoBaseEntity implements Track {
 				new Coordinate(maxx, maxy) };
 		this.bbox = factory.createPolygon(coords);
 		return null;
+	}
+
+	@Override
+	public Track setCar(String car) {
+		this.car = car;
+		return this;
+	}
+
+	@Override
+	public String getCar() {
+		return this.car;
 	}
 
 }

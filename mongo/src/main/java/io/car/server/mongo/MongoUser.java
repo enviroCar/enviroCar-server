@@ -26,6 +26,7 @@ import com.github.jmkgreen.morphia.annotations.Reference;
 import com.google.common.collect.Sets;
 
 import io.car.server.core.Track;
+import io.car.server.core.Tracks;
 import io.car.server.core.User;
 import io.car.server.core.Users;
 
@@ -134,5 +135,10 @@ public class MongoUser extends MongoBaseEntity implements User {
 	public User removeTrack(Track track) {
 		this.tracks.remove((MongoTrack) track);
 		return this;
+	}
+
+	@Override
+	public Tracks getTracks() {
+		return new Tracks(this.tracks);
 	}
 }
