@@ -22,6 +22,7 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import com.google.common.base.Preconditions;
+import com.google.inject.Inject;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.CoordinateSequence;
 import com.vividsolutions.jts.geom.Geometry;
@@ -34,7 +35,6 @@ import com.vividsolutions.jts.geom.MultiPoint;
 import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
-import com.vividsolutions.jts.geom.PrecisionModel;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
@@ -50,6 +50,12 @@ public class GeoJSONProvider {
     public static final String MULTI_POLYGON_TYPE = "MultiPolygon";
     public static final String GEOMETRIES_KEY = "geometries";
     public static final String COORDINATES_KEY = "coordinates";
+    private final GeometryFactory factory;
+
+    @Inject
+    public GeoJSONProvider(GeometryFactory factory) {
+        this.factory = factory;
+    }
 
     public JSONObject encode(Geometry value) throws JSONException {
         if (value == null) {
@@ -63,7 +69,7 @@ public class GeoJSONProvider {
         if (json == null) {
             return null;
         } else {
-            return decodeGeometry(json, new GeometryFactory(new PrecisionModel(PrecisionModel.FLOATING), 4326));
+            return decodeGeometry(json);
         }
     }
 
@@ -233,7 +239,7 @@ public class GeoJSONProvider {
         return coordinates;
     }
 
-    protected Polygon decodePolygonCoordinates(JSONArray coordinates, GeometryFactory factory) throws JSONException {
+    protected Polygon decodePolygonCoordinates(JSONArray coordinates) throws JSONException {
         if (coordinates.length() < 1) {
             throw new JSONException("missing polygon shell");
         }
@@ -245,7 +251,7 @@ public class GeoJSONProvider {
         return factory.createPolygon(shell, holes);
 }
 
-    protected Geometry decodeGeometry(Object o, GeometryFactory factory) throws JSONException {
+    protected Geometry decodeGeometry(Object o) throws JSONException {
         if (!(o instanceof JSONObject)) {
             throw new JSONException("Cannot decode " + o);
         }
@@ -259,25 +265,25 @@ public class GeoJSONProvider {
         }
         String type = (String) to;
         if (type.equals(POINT_TYPE)) {
-            return decodePoint(json, factory);
+            return decodePoint(json);
         } else if (type.equals(MULTI_POINT_TYPE)) {
-            return decodeMultiPoint(json, factory);
+            return decodeMultiPoint(json);
         } else if (type.equals(LINE_STRING_TYPE)) {
-            return decodeLineString(json, factory);
+            return decodeLineString(json);
         } else if (type.equals(MULTI_LINE_STRING_TYPE)) {
-            return decodeMultiLineString(json, factory);
+            return decodeMultiLineString(json);
         } else if (type.equals(POLYGON_TYPE)) {
-            return decodePolygon(json, factory);
+            return decodePolygon(json);
         } else if (type.equals(MULTI_POLYGON_TYPE)) {
-            return decodeMultiPolygon(json, factory);
+            return decodeMultiPolygon(json);
         } else if (type.equals(GEOMETRY_COLLECTION_TYPE)) {
-            return decodeGeometryCollection(json, factory);
+            return decodeGeometryCollection(json);
         } else {
             throw new JSONException("Unkown geometry type: " + type);
         }
     }
 
-    protected Geometry decodeMultiLineString(JSONObject json, GeometryFactory factory) throws JSONException {
+    protected Geometry decodeMultiLineString(JSONObject json) throws JSONException {
         JSONArray coordinates = requireCoordinates(json);
         LineString[] lineStrings = new LineString[coordinates.length()];
         for (int i = 0; i < coordinates.length(); ++i) {
@@ -287,43 +293,43 @@ public class GeoJSONProvider {
         return factory.createMultiLineString(lineStrings);
     }
 
-    protected Geometry decodeLineString(JSONObject json, GeometryFactory factory) throws JSONException {
+    protected Geometry decodeLineString(JSONObject json) throws JSONException {
         Coordinate[] coordinates = decodeCoordinates(requireCoordinates(json));
         return factory.createLineString(coordinates);
     }
 
-    protected Geometry decodeMultiPoint(JSONObject json, GeometryFactory factory) throws JSONException {
+    protected Geometry decodeMultiPoint(JSONObject json) throws JSONException {
         Coordinate[] coordinates = decodeCoordinates(requireCoordinates(json));
         return factory.createMultiPoint(coordinates);
     }
 
-    protected Geometry decodePoint(JSONObject json, GeometryFactory factory) throws JSONException {
+    protected Geometry decodePoint(JSONObject json) throws JSONException {
         Coordinate parsed = decodeCoordinate(requireCoordinates(json));
         return factory.createPoint(parsed);
     }
 
-    protected Geometry decodePolygon(JSONObject json, GeometryFactory factory) throws JSONException {
+    protected Geometry decodePolygon(JSONObject json) throws JSONException {
         JSONArray coordinates = requireCoordinates(json);
-        return decodePolygonCoordinates(coordinates, factory);
+        return decodePolygonCoordinates(coordinates);
     }
 
-    protected Geometry decodeMultiPolygon(JSONObject json, GeometryFactory factory) throws JSONException {
+    protected Geometry decodeMultiPolygon(JSONObject json) throws JSONException {
         JSONArray coordinates = requireCoordinates(json);
         Polygon[] polygons = new Polygon[coordinates.length()];
         for (int i = 0; i < coordinates.length(); ++i) {
-            polygons[i] = decodePolygonCoordinates(toList(coordinates.get(i)), factory);
+            polygons[i] = decodePolygonCoordinates(toList(coordinates.get(i)));
         }
         return factory.createMultiPolygon(polygons);
     }
 
-    protected Geometry decodeGeometryCollection(JSONObject json, GeometryFactory factory) throws JSONException {
+    protected Geometry decodeGeometryCollection(JSONObject json) throws JSONException {
         if (!json.has(GEOMETRIES_KEY)) {
             throw new JSONException("missing 'geometries' field");
         }
         JSONArray geometries = toList(json.get(GEOMETRIES_KEY));
         Geometry[] geoms = new Geometry[geometries.length()];
         for (int i = 0; i < geometries.length(); ++i) {
-            geoms[i] = decodeGeometry(geometries.get(i), factory);
+            geoms[i] = decodeGeometry(geometries.get(i));
         }
         return factory.createGeometryCollection(geoms);
     }

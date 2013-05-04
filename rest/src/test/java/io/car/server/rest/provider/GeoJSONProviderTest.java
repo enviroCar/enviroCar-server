@@ -104,7 +104,7 @@ public class GeoJSONProviderTest {
         GeometryFactory fac = new GeometryFactory();
         Geometry col = fac.createGeometryCollection(new Geometry[] { randomGeometryCollection(fac),
                                                                      randomGeometryCollection(fac) });
-        GeoJSONProvider conv = new GeoJSONProvider();
+        GeoJSONProvider conv = new GeoJSONProvider(fac);
         JSONObject json = conv.encode(col);
         Geometry geom = conv.decode(json);
         assertThat(geom, is(equalTo(col)));

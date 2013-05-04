@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
 
+import io.car.server.rest.provider.GeoJSONProvider;
 import io.car.server.rest.provider.GroupProvider;
 import io.car.server.rest.provider.GroupsProvider;
 import io.car.server.rest.provider.UserProvider;
@@ -37,6 +38,7 @@ public class JerseyProviderModule extends AbstractModule {
     @Override
     protected void configure() {
         log.debug("Installing JerseyProviderModule");
+        bind(GeoJSONProvider.class).in(Scopes.SINGLETON);
         bind(GroupProvider.class).in(Scopes.SINGLETON);
         bind(GroupsProvider.class).in(Scopes.SINGLETON);
         bind(UserProvider.class).in(Scopes.SINGLETON);
