@@ -17,6 +17,7 @@
  */
 package io.car.server.rest.provider;
 
+import io.car.server.core.Track;
 import io.car.server.core.Tracks;
 import io.car.server.rest.MediaTypes;
 
@@ -51,6 +52,10 @@ public class TracksProvider extends AbstractJsonEntityProvider<Tracks> {
 	@Override
 	public JSONObject write(Tracks t, MediaType mediaType) throws JSONException {
 		JSONArray array = new JSONArray();
+		for(Track track : t){
+			// TODO
+//			URI uri = uriInfo.getAbsolutePathBuilder().path(track.get)
+		}
 		return null;
 	}
 

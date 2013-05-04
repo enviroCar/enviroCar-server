@@ -58,7 +58,8 @@ public class UsersProvider extends AbstractJsonEntityProvider<Users> {
         JSONArray a = new JSONArray();
         for (User u : t) {
             URI uri = uriInfo.getAbsolutePathBuilder().path(u.getName()).build();
-            a.put(new JSONObject().put(JSONConstants.NAME_KEY, u.getName()).put(JSONConstants.HREF_KEY, uri));
+            a.put(new JSONObject().put(JSONConstants.NAME_KEY, u.getName())
+            		.put(JSONConstants.HREF_KEY, uri));
         }
         return new JSONObject().put(JSONConstants.USERS_KEY, a);
     }
