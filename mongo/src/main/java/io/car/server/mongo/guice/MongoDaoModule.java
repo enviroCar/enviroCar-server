@@ -20,14 +20,15 @@ package io.car.server.mongo.guice;
 import com.google.inject.AbstractModule;
 
 import io.car.server.core.db.GroupDao;
+import io.car.server.core.db.MeasurementDao;
 import io.car.server.core.db.TrackDao;
 import io.car.server.core.db.UserDao;
 import io.car.server.mongo.MongoGroupDao;
+import io.car.server.mongo.MongoMeasurementDao;
 import io.car.server.mongo.MongoTrackDao;
 import io.car.server.mongo.MongoUserDao;
 
 /**
- * TODO JavaDoc
  * @author Christian Autermann <c.autermann@52north.org>
  */
 public class MongoDaoModule extends AbstractModule {
@@ -37,5 +38,6 @@ public class MongoDaoModule extends AbstractModule {
         bind(UserDao.class).to(MongoUserDao.class);
         bind(GroupDao.class).to(MongoGroupDao.class);
         bind(TrackDao.class).to(MongoTrackDao.class);
+        bind(MeasurementDao.class).to(MongoMeasurementDao.class);
     }
 }
