@@ -31,4 +31,7 @@ public interface JSONConstants {
     String GROUPS_KEY = "groups";
     String DESCRIPTION_KEY = "description";
     String OWNER_KEY = "owner";
+    
+    String BBOX_KEY = "bbox";
+    String CAR_KEY = "car";
 }

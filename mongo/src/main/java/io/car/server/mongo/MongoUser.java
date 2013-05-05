@@ -17,6 +17,8 @@
  */
 package io.car.server.mongo;
 
+import static io.car.server.mongo.MongoBaseEntity.ID;
+
 import java.util.Set;
 
 import com.github.jmkgreen.morphia.annotations.Entity;
@@ -26,6 +28,8 @@ import com.github.jmkgreen.morphia.annotations.Reference;
 import com.google.common.base.Objects;
 import com.google.common.collect.Sets;
 
+import io.car.server.core.Track;
+import io.car.server.core.Tracks;
 import io.car.server.core.User;
 import io.car.server.core.Users;
 
@@ -39,6 +43,7 @@ public class MongoUser extends MongoBaseEntity implements User {
     public static final String TOKEN = "token";
     public static final String IS_ADMIN = "isAdmin";
     public static final String FRIENDS = "friends";
+    public static final String TRACKS = "tracks";
     @Indexed(unique = true)
     @Property(NAME)
     private String name;
@@ -51,6 +56,8 @@ public class MongoUser extends MongoBaseEntity implements User {
     private boolean isAdmin = false;
     @Reference(value = FRIENDS, lazy = true)
     private Set<MongoUser> friends = Sets.newHashSet();
+    @Reference(value = TRACKS, lazy = true)
+    private Set<MongoTrack> tracks = Sets.newHashSet();
 
     @Override
     public String getName() {
@@ -120,6 +127,23 @@ public class MongoUser extends MongoBaseEntity implements User {
         }
         return this;
     }
+    
+	@Override
+	public User addTrack(Track track) {
+		this.tracks.add((MongoTrack) track);
+		return this;
+	}
+
+	@Override
+	public User removeTrack(Track track) {
+		this.tracks.remove((MongoTrack) track);
+		return this;
+	}
+
+	@Override
+	public Tracks getTracks() {
+		return new Tracks(this.tracks);
+    }
 
     @Override
     public String toString() {
@@ -131,6 +155,7 @@ public class MongoUser extends MongoBaseEntity implements User {
                 .add(TOKEN, getToken())
                 .add(IS_ADMIN, isAdmin())
                 .add(FRIENDS, getFriends())
+                .add(TRACKS, getTracks())
                 .toString();
     }
 }

@@ -17,7 +17,9 @@
  */
 package io.car.server.rest.provider;
 
-import java.net.URI;
+import io.car.server.core.Track;
+import io.car.server.core.Tracks;
+import io.car.server.rest.MediaTypes;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
@@ -30,37 +32,31 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import io.car.server.core.User;
-import io.car.server.core.Users;
-import io.car.server.rest.MediaTypes;
-
-/**
- * @author Christian Autermann <c.autermann@52north.org>
- */
 @Provider
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class UsersProvider extends AbstractJsonEntityProvider<Users> {
-    @Context
-    private UriInfo uriInfo;
+public class TracksProvider extends AbstractJsonEntityProvider<Tracks> {
 
-    public UsersProvider() {
-        super(Users.class, MediaTypes.USERS_TYPE);
-    }
+	@Context
+	private UriInfo uriInfo;
+	
+	public TracksProvider() {
+		super(Tracks.class, MediaTypes.TRACKS_TYPE);
+	}
 
-    @Override
-    public Users read(JSONObject j, MediaType mediaType) throws JSONException {
-        throw new UnsupportedOperationException();
-    }
+	@Override
+	public Tracks read(JSONObject j, MediaType mediaType) throws JSONException {
+		throw new UnsupportedOperationException();
+	}
 
-    @Override
-    public JSONObject write(Users t, MediaType mediaType) throws JSONException {
-        JSONArray a = new JSONArray();
-        for (User u : t) {
-            URI uri = uriInfo.getAbsolutePathBuilder().path(u.getName()).build();
-            a.put(new JSONObject().put(JSONConstants.NAME_KEY, u.getName())
-            		.put(JSONConstants.HREF_KEY, uri));
-        }
-        return new JSONObject().put(JSONConstants.USERS_KEY, a);
-    }
+	@Override
+	public JSONObject write(Tracks t, MediaType mediaType) throws JSONException {
+		JSONArray array = new JSONArray();
+		for(Track track : t){
+			// TODO
+//			URI uri = uriInfo.getAbsolutePathBuilder().path(track.get)
+		}
+		return null;
+	}
+
 }

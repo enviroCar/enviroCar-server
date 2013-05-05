@@ -29,14 +29,17 @@ import com.vividsolutions.jts.geom.Polygon;
  *
  */
 public interface TrackDao {
-	Track getByUser(User user);
-
+	// standard
 	Track create(Track track);
 	Track save(Track track);
 	void delete(Track track);
 	
+	Tracks getByUser(User user);
+	Tracks getByCar(String car);
 	Tracks getByBbox(double minx, double miny, double maxx, double maxy);
 	Tracks getByBbox(Polygon bbox);
 	Tracks getAll();
 	Tracks getAll(int limit);
+	
+	
 }

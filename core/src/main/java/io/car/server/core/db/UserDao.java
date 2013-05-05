@@ -18,6 +18,7 @@
 package io.car.server.core.db;
 
 import io.car.server.core.Group;
+import io.car.server.core.Track;
 import io.car.server.core.User;
 import io.car.server.core.Users;
 
@@ -33,4 +34,5 @@ public interface UserDao {
     User save(User user);
     void delete(User user);
     Users getByGroup(Group group);
+    Users getByTrack(Track track);
 }

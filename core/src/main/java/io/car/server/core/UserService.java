@@ -17,11 +17,8 @@
  */
 package io.car.server.core;
 
-
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-
 import io.car.server.core.db.GroupDao;
+import io.car.server.core.db.TrackDao;
 import io.car.server.core.db.UserDao;
 import io.car.server.core.exception.GroupNotFoundException;
 import io.car.server.core.exception.IllegalModificationException;
@@ -29,127 +26,151 @@ import io.car.server.core.exception.ResourceAlreadyExistException;
 import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.core.exception.ValidationException;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
 @Singleton
 public class UserService {
-    private final UserDao userDao;
-    private final GroupDao groupDao;
-    private final EntityUpdater<User> userUpdater;
-    private final EntityValidator<User> userValidator;
-    private final EntityUpdater<Group> groupUpdater;
-    private final EntityValidator<Group> groupValidator;
-    private final PasswordEncoder passwordEncoder;
-    @Inject
-    public UserService(UserDao userDao, GroupDao groupDao,
-                       PasswordEncoder passwordEncoder,
-                       EntityUpdater<User> userUpdater,
-                       EntityValidator<User> userValidator,
-                       EntityUpdater<Group> groupUpdater,
-                       EntityValidator<Group> groupValidator) {
-        this.userDao = userDao;
-        this.groupDao = groupDao;
-        this.passwordEncoder = passwordEncoder;
-        this.userUpdater = userUpdater;
-        this.userValidator = userValidator;
-        this.groupUpdater = groupUpdater;
-        this.groupValidator = groupValidator;
-    }
+	private final UserDao userDao;
+	private final GroupDao groupDao;
+	private final TrackDao trackDao;
+	private final EntityUpdater<User> userUpdater;
+	private final EntityValidator<User> userValidator;
+	private final EntityUpdater<Group> groupUpdater;
+	private final EntityValidator<Group> groupValidator;
+	private final PasswordEncoder passwordEncoder;
 
-    public User createUser(User user) throws ValidationException, ResourceAlreadyExistException {
-        userValidator.validateCreate(user);
-        if (userDao.getByName(user.getName()) != null) {
-            throw new ResourceAlreadyExistException();
-        }
-        user.setToken(passwordEncoder.encode(user.getToken()));
-        return this.userDao.create(user);
-    }
+	@Inject
+	public UserService(UserDao userDao, GroupDao groupDao, TrackDao trackDao,
+			PasswordEncoder passwordEncoder, EntityUpdater<User> userUpdater,
+			EntityValidator<User> userValidator,
+			EntityUpdater<Group> groupUpdater,
+			EntityValidator<Group> groupValidator) {
+		this.userDao = userDao;
+		this.groupDao = groupDao;
+		this.trackDao = trackDao;
+		this.passwordEncoder = passwordEncoder;
+		this.userUpdater = userUpdater;
+		this.userValidator = userValidator;
+		this.groupUpdater = groupUpdater;
+		this.groupValidator = groupValidator;
+	}
 
-    public User getUser(String name) throws UserNotFoundException {
-        User user = this.userDao.getByName(name);
-        if (user == null) {
-            throw new UserNotFoundException(name);
-        }
-        return user;
-    }
+	public User createUser(User user) throws ValidationException,
+			ResourceAlreadyExistException {
+		userValidator.validateCreate(user);
+		if (userDao.getByName(user.getName()) != null) {
+			throw new ResourceAlreadyExistException();
+		}
+		user.setToken(passwordEncoder.encode(user.getToken()));
+		return this.userDao.create(user);
+	}
 
-    public Users getAllUsers(int limit) {
-        return this.userDao.getAll(limit);
-    }
+	public User getUser(String name) throws UserNotFoundException {
+		User user = this.userDao.getByName(name);
+		if (user == null) {
+			throw new UserNotFoundException(name);
+		}
+		return user;
+	}
 
-    public Users getAllUsers() {
-        return getAllUsers(0);
-    }
+	public Users getAllUsers(int limit) {
+		return this.userDao.getAll(limit);
+	}
 
-    public User modifyUser(User user, User changes) throws UserNotFoundException, IllegalModificationException,
-                                                           ValidationException {
-        userValidator.validateUpdate(user);
-        return this.userDao.save(this.userUpdater.update(changes, user));
-    }
+	public Users getAllUsers() {
+		return getAllUsers(0);
+	}
 
-    public void deleteUser(String username) throws UserNotFoundException {
-        deleteUser(getUser(username));
-    }
+	public User modifyUser(User user, User changes)
+			throws UserNotFoundException, IllegalModificationException,
+			ValidationException {
+		userValidator.validateUpdate(user);
+		return this.userDao.save(this.userUpdater.update(changes, user));
+	}
 
-    public void deleteUser(User user) throws UserNotFoundException {
-        this.userDao.delete(user);
-    }
+	public void deleteUser(String username) throws UserNotFoundException {
+		deleteUser(getUser(username));
+	}
 
-    public void removeFriend(User user, User friend) throws UserNotFoundException {
-        this.userDao.save(user.removeFriend(getUser(friend.getName())));
-    }
+	public void deleteUser(User user) throws UserNotFoundException {
+		this.userDao.delete(user);
+	}
 
-    public void addFriend(User user, User friend) throws UserNotFoundException {
-        this.userDao.save(user.addFriend(getUser(friend.getName())));
-    }
+	public void removeFriend(User user, User friend)
+			throws UserNotFoundException {
+		this.userDao.save(user.removeFriend(getUser(friend.getName())));
+	}
 
-    public Group getGroup(String name) throws GroupNotFoundException {
-        Group group = this.groupDao.getByName(name);
-        if (group == null) {
-            throw new GroupNotFoundException(name);
-        }
-        return group;
-    }
+	public void addFriend(User user, User friend) throws UserNotFoundException {
+		this.userDao.save(user.addFriend(getUser(friend.getName())));
+	}
 
-    public Groups getAllGroups(int limit) {
-        return this.groupDao.getAll(limit);
-    }
+	public Group getGroup(String name) throws GroupNotFoundException {
+		Group group = this.groupDao.getByName(name);
+		if (group == null) {
+			throw new GroupNotFoundException(name);
+		}
+		return group;
+	}
 
-    public Group createGroup(Group group) throws ValidationException, ResourceAlreadyExistException {
-        groupValidator.validateCreate(group);
-        if (groupDao.getByName(group.getName()) != null) {
-            throw new ResourceAlreadyExistException();
-        }
-        return this.groupDao.create(group);
-    }
+	public Groups getAllGroups(int limit) {
+		return this.groupDao.getAll(limit);
+	}
 
-    public Group modifyGroup(Group group, Group changes) throws ValidationException, IllegalModificationException {
-        groupValidator.validateUpdate(group);
-        return this.groupDao.save(this.groupUpdater.update(changes, group));
-    }
+	public Group createGroup(Group group) throws ValidationException,
+			ResourceAlreadyExistException {
+		groupValidator.validateCreate(group);
+		if (groupDao.getByName(group.getName()) != null) {
+			throw new ResourceAlreadyExistException();
+		}
+		return this.groupDao.create(group);
+	}
 
-    public void deleteGroup(String username) throws GroupNotFoundException {
-        deleteGroup(getGroup(username));
-    }
+	public Group modifyGroup(Group group, Group changes)
+			throws ValidationException, IllegalModificationException {
+		groupValidator.validateUpdate(group);
+		return this.groupDao.save(this.groupUpdater.update(changes, group));
+	}
 
-    public void deleteGroup(Group user) throws GroupNotFoundException {
-        this.groupDao.delete(user);
-    }
+	public void deleteGroup(String username) throws GroupNotFoundException {
+		deleteGroup(getGroup(username));
+	}
 
-    public Groups getGroupsOfUser(User user, int limit) {
-        return this.groupDao.getByMember(user);
-    }
+	public void deleteGroup(Group user) throws GroupNotFoundException {
+		this.groupDao.delete(user);
+	}
 
-    public Groups searchGroups(String search, int limit) {
-        return this.groupDao.search(search, limit);
-    }
+	public Groups getGroupsOfUser(User user, int limit) {
+		return this.groupDao.getByMember(user);
+	}
 
-    public void addGroupMember(Group group, User user) throws UserNotFoundException {
-        this.groupDao.save(group.addMember(getUser(user.getName())));
-    }
+	public Groups searchGroups(String search, int limit) {
+		return this.groupDao.search(search, limit);
+	}
 
-    public void removeGroupMember(Group group, User user) throws UserNotFoundException {
-        this.groupDao.save(group.removeMember(getUser(user.getName())));
-    }
+	public void addGroupMember(Group group, User user)
+			throws UserNotFoundException {
+		this.groupDao.save(group.addMember(getUser(user.getName())));
+	}
+
+	public void removeGroupMember(Group group, User user)
+			throws UserNotFoundException {
+		this.groupDao.save(group.removeMember(getUser(user.getName())));
+	}
+	
+	public Tracks getAllTracks(){
+		return getAllTracks(0);
+	}
+	
+	public Tracks getAllTracks(int limit){
+		return trackDao.getAll(limit);
+	}
+	
+	public Track createTrack(Track track){
+		return this.trackDao.create(track);
+	}
 }

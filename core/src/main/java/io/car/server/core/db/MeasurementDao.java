@@ -21,7 +21,7 @@ import io.car.server.core.Measurement;
 import io.car.server.core.Measurements;
 import io.car.server.core.Track;
 
-import com.vividsolutions.jts.geom.Envelope;
+import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * 
@@ -35,9 +35,10 @@ public interface MeasurementDao {
 	
 	Measurements getByPhenomenon(String string);
 	Measurements getByTrack(Track track);
-	Measurements getByBbox(Envelope bbox);
+	Measurements getByBbox(Geometry bbox);
 	Measurements getByBbox(double minx, double miny, double maxx, double maxy);
 	
 	Measurements getAll();
 	Measurements getAll(int limit);
+
 }

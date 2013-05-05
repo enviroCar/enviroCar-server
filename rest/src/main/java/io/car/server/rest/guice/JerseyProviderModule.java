@@ -26,6 +26,8 @@ import com.google.inject.Scopes;
 import io.car.server.rest.provider.GeoJSONProvider;
 import io.car.server.rest.provider.GroupProvider;
 import io.car.server.rest.provider.GroupsProvider;
+import io.car.server.rest.provider.TrackProvider;
+import io.car.server.rest.provider.TracksProvider;
 import io.car.server.rest.provider.UserProvider;
 import io.car.server.rest.provider.UsersProvider;
 
@@ -43,6 +45,8 @@ public class JerseyProviderModule extends AbstractModule {
         bind(GroupsProvider.class).in(Scopes.SINGLETON);
         bind(UserProvider.class).in(Scopes.SINGLETON);
         bind(UsersProvider.class).in(Scopes.SINGLETON);
+        bind(TrackProvider.class).in(Scopes.SINGLETON);
+        bind(TracksProvider.class).in(Scopes.SINGLETON);
     }
 
 }

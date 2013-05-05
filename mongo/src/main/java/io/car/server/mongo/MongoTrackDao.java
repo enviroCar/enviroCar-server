@@ -28,6 +28,11 @@ import com.github.jmkgreen.morphia.query.Query;
 import com.google.inject.Inject;
 import com.vividsolutions.jts.geom.Polygon;
 
+/** 
+ * 
+ * @author Arne de Wall
+ *
+ */
 public class MongoTrackDao extends BasicDAO<MongoTrack, String> implements TrackDao{
 
 	@Inject
@@ -36,9 +41,8 @@ public class MongoTrackDao extends BasicDAO<MongoTrack, String> implements Track
 	}
 
 	@Override
-	public Track getByUser(User user) {
-		// XXX not implemented
-		return null;
+	public Tracks getByUser(User user) {
+		return user.getTracks();
 	}
 
 	@Override
@@ -69,7 +73,6 @@ public class MongoTrackDao extends BasicDAO<MongoTrack, String> implements Track
 	public Tracks getByBbox(Polygon bbox) {
 		// XXX not implemented yet
 		Query<MongoTrack> q = createQuery();
-		
 		return null;
 	}
 
@@ -85,6 +88,11 @@ public class MongoTrackDao extends BasicDAO<MongoTrack, String> implements Track
 	
 	protected Tracks fetch(Query<MongoTrack> q){
 		return new Tracks(find(q).fetch());
+	}
+
+	@Override
+	public Tracks getByCar(String car) {
+		return fetch(createQuery().field(MongoTrack.CAR).equal(car));
 	}
 
 }

@@ -26,7 +26,8 @@ import com.github.jmkgreen.morphia.Datastore;
 import com.github.jmkgreen.morphia.dao.BasicDAO;
 import com.github.jmkgreen.morphia.query.Query;
 import com.google.inject.Inject;
-import com.vividsolutions.jts.geom.Envelope;
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * 
@@ -58,28 +59,30 @@ public class MongoMeasurementDao extends BasicDAO<MongoMeasurement, String> impl
 	}
 
 	@Override
-	public Measurements getByPhenomenon(String string) {
-		// TODO Auto-generated method stub
-		return null;
+	public Measurements getByPhenomenon(String phenomenon) {
+		Query<MongoMeasurement> q = createQuery();
+		q.field(MongoMeasurement.PHENOMENONS).equal(phenomenon);
+		return fetch(q);
 	}
 
 	@Override
 	public Measurements getByTrack(Track track) {
-		// TODO Auto-generated method stub
-		return null;
+		return track.getMeasurements();
 	}
 
 	@Override
-	public Measurements getByBbox(Envelope bbox) {
-		// TODO Auto-generated method stub
+	public Measurements getByBbox(Geometry bbox) {
+		// XXX TODO
+		Coordinate[] coords = bbox.getBoundary().getCoordinates();
 		return null;
 	}
 
 	@Override
 	public Measurements getByBbox(double minx, double miny, double maxx,
 			double maxy) {
-		// TODO Auto-generated method stub
-		return null;
+		Query<MongoMeasurement> q = createQuery();
+		q.field(MongoMeasurement.LOCATION).within(minx, miny, maxx, maxy);
+		return fetch(q);
 	}
 
 	@Override

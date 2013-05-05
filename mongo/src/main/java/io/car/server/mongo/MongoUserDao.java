@@ -23,12 +23,14 @@ import com.github.jmkgreen.morphia.query.Query;
 import com.google.inject.Inject;
 
 import io.car.server.core.Group;
+import io.car.server.core.Track;
 import io.car.server.core.User;
 import io.car.server.core.Users;
 import io.car.server.core.db.UserDao;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
+ * @author Arne de Wall
  */
 public class MongoUserDao extends BasicDAO<MongoUser, String> implements UserDao {
 
@@ -82,4 +84,9 @@ public class MongoUserDao extends BasicDAO<MongoUser, String> implements UserDao
     protected Users fetch(Query<MongoUser> q) {
         return new Users(find(q).fetch());
     }
+
+	@Override
+	public Users getByTrack(Track track) {
+		return fetch(createQuery().field(MongoUser.TRACKS).hasThisElement(track));
+	}
 }
