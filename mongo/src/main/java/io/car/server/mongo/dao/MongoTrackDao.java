@@ -26,13 +26,13 @@ import com.github.jmkgreen.morphia.Datastore;
 import com.github.jmkgreen.morphia.dao.BasicDAO;
 import com.github.jmkgreen.morphia.query.Query;
 import com.google.inject.Inject;
-import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.geom.Geometry;
 
 import io.car.server.mongo.entity.MongoTrack;
 
 /** 
  * 
- * @author Arne de Wall
+ * @author Arne de Wall <a.dewall@52north.org>
  *
  */
 public class MongoTrackDao extends BasicDAO<MongoTrack, String> implements TrackDao{
@@ -40,6 +40,11 @@ public class MongoTrackDao extends BasicDAO<MongoTrack, String> implements Track
 	@Inject
 	public MongoTrackDao(Datastore ds) {
 		super(MongoTrack.class, ds);
+	}
+	
+	@Override
+	public Track getById(String id) {
+		return find(createQuery().field(MongoTrack.ID).equal(id)).get();
 	}
 
 	@Override
@@ -72,7 +77,7 @@ public class MongoTrackDao extends BasicDAO<MongoTrack, String> implements Track
 	}
 
 	@Override
-	public Tracks getByBbox(Polygon bbox) {
+	public Tracks getByBbox(Geometry bbox) {
 		// XXX not implemented yet
 		Query<MongoTrack> q = createQuery();
 		return null;
@@ -96,5 +101,6 @@ public class MongoTrackDao extends BasicDAO<MongoTrack, String> implements Track
 	public Tracks getByCar(String car) {
 		return fetch(createQuery().field(MongoTrack.CAR).equal(car));
 	}
+
 
 }

@@ -45,7 +45,7 @@ import io.car.server.rest.auth.Authenticated;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
- * @author Arne de Wall
+ * @author Arne de Wall <a.dewall@52north.org>
  */
 public class UserResource extends AbstractResource {
     public static final String GROUPS_PATH = "groups";
@@ -115,6 +115,6 @@ public class UserResource extends AbstractResource {
     @Path(TRACKS_PATH)
     @Authenticated
     public TracksResource tracks(){
-    	return null;
+    	return getResourceFactory().createTracksResource();
     }
 }

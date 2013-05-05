@@ -23,6 +23,7 @@ import io.car.server.core.db.UserDao;
 import io.car.server.core.exception.GroupNotFoundException;
 import io.car.server.core.exception.IllegalModificationException;
 import io.car.server.core.exception.ResourceAlreadyExistException;
+import io.car.server.core.exception.TrackNotFoundException;
 import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.core.exception.ValidationException;
 
@@ -31,6 +32,7 @@ import com.google.inject.Singleton;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
+ * @author Arne de Wall <a.dewall@52north.org>
  */
 @Singleton
 public class UserService {
@@ -161,16 +163,25 @@ public class UserService {
 			throws UserNotFoundException {
 		this.groupDao.save(group.removeMember(getUser(user.getName())));
 	}
-	
-	public Tracks getAllTracks(){
+
+	// track stuff //
+
+	public Tracks getAllTracks() {
 		return getAllTracks(0);
 	}
-	
-	public Tracks getAllTracks(int limit){
+
+	public Tracks getAllTracks(int limit) {
 		return trackDao.getAll(limit);
 	}
-	
-	public Track createTrack(Track track){
+
+	public Track getTrack(String id) throws TrackNotFoundException {
+		Track track = trackDao.getById(id);
+		if (track == null)
+			throw new TrackNotFoundException(id);
+		return track;
+	}
+
+	public Track createTrack(Track track) {
 		return this.trackDao.create(track);
 	}
 }
