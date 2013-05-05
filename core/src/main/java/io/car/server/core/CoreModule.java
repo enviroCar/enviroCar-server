@@ -17,11 +17,15 @@
  */
 package io.car.server.core;
 
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.PrecisionModel;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
@@ -37,5 +41,8 @@ public class CoreModule extends AbstractModule {
         bind(new TypeLiteral<EntityValidator<Group>>() {}).to(GroupValidator.class);
         bind(UserService.class);
         bind(PasswordEncoder.class).to(BCryptPasswordEncoder.class);
+        bind(GeometryFactory.class)
+                .toInstance(new GeometryFactory(new PrecisionModel(PrecisionModel.FLOATING_SINGLE), 4326));
+        bind(DateTimeFormatter.class).toInstance(ISODateTimeFormat.dateTimeNoMillis());
     }
 }

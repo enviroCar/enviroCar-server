@@ -15,15 +15,17 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.core;
+package io.car.server.core.subscription;
 
-import io.car.server.core.util.UpCastingIterable;
+import io.car.server.core.BaseEntity;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public class Users extends UpCastingIterable<User> {
-    public Users(Iterable<? extends User> delegate) {
-        super(delegate);
-    }
+public interface Subscription extends BaseEntity {
+    Subscriber getSubscriber();
+    Subscription setSubscriber(Subscriber subscriber);
+    SubscriptionFilterParameters getFilters();
+    Subscription addFilter(SubscriptionFilterParameter filter);
+    Subscription removeFilter(SubscriptionFilterParameter filter);
 }

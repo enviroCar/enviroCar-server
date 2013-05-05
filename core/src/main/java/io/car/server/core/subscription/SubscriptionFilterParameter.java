@@ -15,15 +15,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.core;
-
-import io.car.server.core.util.UpCastingIterable;
+package io.car.server.core.subscription;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public class Users extends UpCastingIterable<User> {
-    public Users(Iterable<? extends User> delegate) {
-        super(delegate);
-    }
+public interface SubscriptionFilterParameter {
 }

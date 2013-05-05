@@ -17,13 +17,15 @@
  */
 package io.car.server.mongo;
 
+import java.util.Set;
+
 import javax.annotation.Nullable;
 
 import com.github.jmkgreen.morphia.Datastore;
 import com.github.jmkgreen.morphia.Morphia;
 import com.github.jmkgreen.morphia.converters.DefaultConverters;
+import com.github.jmkgreen.morphia.converters.TypeConverter;
 import com.github.jmkgreen.morphia.ext.guice.GuiceExtension;
-import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
@@ -31,17 +33,12 @@ import com.google.inject.name.Named;
 import com.mongodb.MongoClient;
 import com.mongodb.ServerAddress;
 
-import io.car.server.mongo.convert.DateTimeConverter;
-import io.car.server.mongo.convert.DurationConverter;
-import io.car.server.mongo.convert.FileConverter;
-import io.car.server.mongo.convert.GeometryConverter;
-import io.car.server.mongo.convert.URLConverter;
-
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
 @Singleton
 public class MongoDB {
+    public static final String MAPPED_CLASSES = "mappedClasses";
     public static final String HOST_PROPERTY = "host";
     public static final String PORT_PROPERTY = "port";
     public static final String USER_PROPERTY = "user";
@@ -53,6 +50,8 @@ public class MongoDB {
 
     @Inject
     public MongoDB(Injector injector,
+                   Set<TypeConverter> converters,
+                   @Named(MAPPED_CLASSES) Set<Class<?>> mappedClasses,
                    @Named(HOST_PROPERTY) String host,
                    @Named(PORT_PROPERTY) int port,
                    @Named(DATABASE_PROPERTY) String database,
@@ -62,10 +61,8 @@ public class MongoDB {
             mongo = new MongoClient(new ServerAddress(host, port));
             morphia = new Morphia();
             new GuiceExtension(morphia, injector);
-            addConverters(morphia);
-            for (Class<?> c : getMappedClasses()) {
-                morphia.getMapper().addMappedClass(c);
-            }
+            addConverters(converters);
+            addMappedClasses(mappedClasses);
             datastore = morphia.createDatastore(mongo, database, username, password);
             datastore.ensureIndexes();
             datastore.ensureCaps();
@@ -86,16 +83,16 @@ public class MongoDB {
         return this.datastore;
     }
 
-    private void addConverters(Morphia m) {
-        final DefaultConverters dc = m.getMapper().getConverters();
-        dc.addConverter(DateTimeConverter.class);
-        dc.addConverter(DurationConverter.class);
-        dc.addConverter(FileConverter.class);
-        dc.addConverter(URLConverter.class);
-        dc.addConverter(GeometryConverter.class);
+    private void addConverters(Set<TypeConverter> converters) {
+        DefaultConverters dc = morphia.getMapper().getConverters();
+        for (TypeConverter tc : converters) {
+            dc.addConverter(tc);
+        }
     }
 
-    private Iterable<Class<?>> getMappedClasses() {
-        return Sets.newHashSet(new Class<?>[] { MongoUser.class, MongoGroup.class });
+    private void addMappedClasses(Set<Class<?>> mappedClasses) {
+        for (Class<?> c : mappedClasses) {
+            morphia.getMapper().addMappedClass(c);
+        }
     }
 }

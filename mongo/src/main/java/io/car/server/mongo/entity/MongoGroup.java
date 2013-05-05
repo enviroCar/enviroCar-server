@@ -15,15 +15,15 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.mongo;
+package io.car.server.mongo.entity;
 
 import java.util.Set;
 
 import com.github.jmkgreen.morphia.annotations.Entity;
 import com.github.jmkgreen.morphia.annotations.Indexed;
-import com.github.jmkgreen.morphia.annotations.PreSave;
 import com.github.jmkgreen.morphia.annotations.Property;
 import com.github.jmkgreen.morphia.annotations.Reference;
+import com.google.common.base.Objects;
 
 import io.car.server.core.Group;
 import io.car.server.core.User;
@@ -33,7 +33,7 @@ import io.car.server.core.Users;
  * @author Christian Autermann <c.autermann@52north.org>
  */
 @Entity("userGroups")
-public class MongoGroup extends MongoBaseEntity implements Group {
+public class MongoGroup extends MongoBaseEntity<MongoGroup> implements Group {
     public static final String NAME = "name";
     public static final String DESCRIPTION = "desc";
     public static final String MEMBERS = "members";
@@ -98,7 +98,16 @@ public class MongoGroup extends MongoBaseEntity implements Group {
         return this.owner;
     }
 
-    @PreSave
-    public void clearMemberChanges() {
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+                .omitNullValues()
+                .add(ID, getId())
+                .add(NAME, getName())
+                .add(DESCRIPTION, getDescription())
+                .add(OWNER, getOwner())
+                .add(MEMBERS, getMembers())
+                .toString();
     }
+
 }

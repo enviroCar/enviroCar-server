@@ -15,15 +15,17 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.core;
+package io.car.server.mongo.entity;
 
-import io.car.server.core.util.UpCastingIterable;
+import com.github.jmkgreen.morphia.annotations.Entity;
+
+import io.car.server.core.subscription.SubscriptionFilterParameter;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public class Users extends UpCastingIterable<User> {
-    public Users(Iterable<? extends User> delegate) {
-        super(delegate);
-    }
+@Entity("filters")
+public class MongoSubscriptionFilter extends MongoBaseEntity<MongoSubscriptionFilter> implements
+        SubscriptionFilterParameter {
+
 }

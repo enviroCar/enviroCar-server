@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.mongo;
+package io.car.server.mongo.guice;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,6 +28,8 @@ import com.google.common.io.Closeables;
 import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;
 import com.google.inject.util.Providers;
+
+import io.car.server.mongo.MongoDB;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>

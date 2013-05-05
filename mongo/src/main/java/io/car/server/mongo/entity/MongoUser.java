@@ -15,7 +15,9 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.mongo;
+package io.car.server.mongo.entity;
+
+import static io.car.server.mongo.entity.MongoBaseEntity.ID;
 
 import java.util.Set;
 
@@ -23,6 +25,7 @@ import com.github.jmkgreen.morphia.annotations.Entity;
 import com.github.jmkgreen.morphia.annotations.Indexed;
 import com.github.jmkgreen.morphia.annotations.Property;
 import com.github.jmkgreen.morphia.annotations.Reference;
+import com.google.common.base.Objects;
 import com.google.common.collect.Sets;
 
 import io.car.server.core.Track;
@@ -34,7 +37,7 @@ import io.car.server.core.Users;
  * @author Christian Autermann <c.autermann@52north.org>
  */
 @Entity("users")
-public class MongoUser extends MongoBaseEntity implements User {
+public class MongoUser extends MongoBaseEntity<MongoUser> implements User {
     public static final String NAME = "name";
     public static final String MAIL = "mail";
     public static final String TOKEN = "token";
@@ -124,7 +127,7 @@ public class MongoUser extends MongoBaseEntity implements User {
         }
         return this;
     }
-
+    
 	@Override
 	public User addTrack(Track track) {
 		this.tracks.add((MongoTrack) track);
@@ -140,5 +143,19 @@ public class MongoUser extends MongoBaseEntity implements User {
 	@Override
 	public Tracks getTracks() {
 		return new Tracks(this.tracks);
-	}
+    }
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+                .omitNullValues()
+                .add(ID, getId())
+                .add(NAME, getName())
+                .add(MAIL, getMail())
+                .add(TOKEN, getToken())
+                .add(IS_ADMIN, isAdmin())
+                .add(FRIENDS, getFriends())
+                .add(TRACKS, getTracks())
+                .toString();
+    }
 }

@@ -15,11 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.mongo;
-
-import io.car.server.core.Measurement;
-import io.car.server.core.Measurements;
-import io.car.server.core.Track;
+package io.car.server.mongo.entity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,8 +28,12 @@ import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Polygon;
 
+import io.car.server.core.Measurement;
+import io.car.server.core.Measurements;
+import io.car.server.core.Track;
+
 @Entity("track")
-public class MongoTrack extends MongoBaseEntity implements Track {
+public class MongoTrack extends MongoBaseEntity<MongoTrack> implements Track {
 
 	static GeometryFactory factory = new GeometryFactory();
 

@@ -15,15 +15,29 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.core;
+package io.car.server.core.util;
 
-import io.car.server.core.util.UpCastingIterable;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public class Users extends UpCastingIterable<User> {
-    public Users(Iterable<? extends User> delegate) {
-        super(delegate);
+public class GroupedAndNamedThreadFactory implements ThreadFactory {
+
+    private final String groupName;
+    private final AtomicInteger count;
+    private final ThreadGroup group;
+
+    public GroupedAndNamedThreadFactory(String groupName) {
+        this.count = new AtomicInteger();
+        this.group = new ThreadGroup(groupName);
+        this.groupName = groupName;
     }
+
+    @Override
+    public Thread newThread(Runnable r) {
+        return new Thread(group, r, groupName + "-" + count.getAndIncrement());
+    }
+
 }

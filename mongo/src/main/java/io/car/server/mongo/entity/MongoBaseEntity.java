@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.mongo;
+package io.car.server.mongo.entity;
 
 import org.bson.types.ObjectId;
 import org.joda.time.DateTime;
@@ -26,13 +26,14 @@ import com.github.jmkgreen.morphia.annotations.Indexed;
 import com.github.jmkgreen.morphia.annotations.PrePersist;
 import com.github.jmkgreen.morphia.annotations.Property;
 import com.github.jmkgreen.morphia.mapping.Mapper;
+import com.google.common.base.Objects;
 
 import io.car.server.core.BaseEntity;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public class MongoBaseEntity implements BaseEntity {
+public class MongoBaseEntity<T> implements BaseEntity {
     public static final String ID = Mapper.ID_KEY;
     public static final String CREATION_DATE = "created";
     public static final String LAST_MODIFIED = "modified";
@@ -50,8 +51,10 @@ public class MongoBaseEntity implements BaseEntity {
         return creationDate;
     }
 
-    public void setCreationDate(DateTime creationDate) {
+    @SuppressWarnings("unchecked")
+    public T setCreationDate(DateTime creationDate) {
         this.creationDate = creationDate;
+        return (T) this;
     }
 
     @Override
@@ -59,8 +62,10 @@ public class MongoBaseEntity implements BaseEntity {
         return lastModificationDate;
     }
 
-    public void setLastModificationDate(DateTime lastModificationDate) {
+    @SuppressWarnings("unchecked")
+    public T setLastModificationDate(DateTime lastModificationDate) {
         this.lastModificationDate = lastModificationDate;
+        return (T) this;
     }
 
     @PrePersist
@@ -78,5 +83,27 @@ public class MongoBaseEntity implements BaseEntity {
 
     public void setId(ObjectId id) {
         this.id = id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(getId());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final MongoBaseEntity<?> other = (MongoBaseEntity) obj;
+        return Objects.equal(this.getId(), other.getId());
+    }
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this).omitNullValues().add(ID, getId()).toString();
     }
 }

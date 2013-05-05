@@ -17,19 +17,10 @@
  */
 package io.car.server.core;
 
-import java.util.Iterator;
+import io.car.server.core.util.UpCastingIterable;
 
-public class Measurements implements Iterable<Measurement>{
-    private final Iterable<? extends Measurement> delegate;
-
+public class Measurements extends UpCastingIterable<Measurement> {
     public Measurements(Iterable<? extends Measurement> delegate) {
-        this.delegate = delegate;
+        super(delegate);
     }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public Iterator<Measurement> iterator() {
-        return (Iterator<Measurement>) delegate.iterator();
-    }
-
 }

@@ -15,15 +15,29 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.core;
+package io.car.server.mongo.entity;
 
-import io.car.server.core.util.UpCastingIterable;
+import com.github.jmkgreen.morphia.annotations.Embedded;
+import com.github.jmkgreen.morphia.annotations.Property;
 
-/**
- * @author Christian Autermann <c.autermann@52north.org>
- */
-public class Users extends UpCastingIterable<User> {
-    public Users(Iterable<? extends User> delegate) {
-        super(delegate);
-    }
+import io.car.server.core.MeasurementValue;
+
+@Embedded("measurementvalue")
+public class MongoMeasurementValue extends MongoBaseEntity<MongoMeasurementValue> implements MeasurementValue<Object> {
+	public static final String VALUE = "value";
+	
+	@Property(VALUE)
+	Object value;
+	
+	@Override
+	public Object getValue() {
+		return this.value;
+	}
+
+	@Override
+	public MeasurementValue<Object> setValue(Object value) {
+		this.value = value;
+		return this;
+	}
+	
 }

@@ -17,23 +17,14 @@
  */
 package io.car.server.core;
 
-import java.util.Iterator;
+import io.car.server.core.util.UpCastingIterable;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public class Groups implements Iterable<Group> {
-
-    private final Iterable<? extends Group> delegate;
+public class Groups extends UpCastingIterable<Group> {
 
     public Groups(Iterable<? extends Group> delegate) {
-        this.delegate = delegate;
+        super(delegate);
     }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public Iterator<Group> iterator() {
-        return (Iterator<Group>) delegate.iterator();
-    }
-
 }
