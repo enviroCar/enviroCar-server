@@ -17,16 +17,21 @@
  */
 package io.car.server.rest.resources;
 
-import javax.ws.rs.DELETE;
-
 import io.car.server.core.Track;
+import io.car.server.core.exception.TrackNotFoundException;
+import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.rest.AbstractResource;
 import io.car.server.rest.auth.Authenticated;
+
+import javax.ws.rs.DELETE;
+import javax.ws.rs.Path;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
 public class TrackResource extends AbstractResource {
+	public static final String MEASUREMENTS_PATH = "measurements";
+	
 	protected final Track track;
 	
 	@Inject
@@ -34,17 +39,24 @@ public class TrackResource extends AbstractResource {
 		this.track = track;
 	}
 	
-//	protected User getUser(){
-//		return user;
-//	}
+	protected Track getTrack(){
+		return track;
+	}
 	
 //	@PUT
 //	@Consumes(MediaTypes.TRACK_MODIFY)
 //	@Authenticated
 //	public Response 
-//	@DELETE
-//	@Authenticated
-//	public void delete() throws TrackNotFoundException(){
-//		if(!)
-//	}
+	@DELETE
+	@Authenticated
+	public void delete() throws TrackNotFoundException, UserNotFoundException{
+		// XXX TODO check is authorized
+		getUserService().deleteTrack(track);
+	}
+	
+	@Path(MEASUREMENTS_PATH)
+	@Authenticated
+	public MeasurementsResource measurements(){
+		return getResourceFactory().createMeasurementsResource(getTrack());
+	}
 }

@@ -19,7 +19,7 @@ package io.car.server.core;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
- * @author Arne de Wall
+ * @author Arne de Wall <a.dewall@52north.org>
  */
 public interface EntityFactory {
     User createUser();

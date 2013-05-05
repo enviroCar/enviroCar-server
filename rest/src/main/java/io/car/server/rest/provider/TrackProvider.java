@@ -40,8 +40,8 @@ import com.vividsolutions.jts.geom.Geometry;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class TrackProvider extends AbstractJsonEntityProvider<Track> {
-	private final DateTimeFormatter formatter = ISODateTimeFormat
-			.dateTimeNoMillis();
+    @Inject
+    private DateTimeFormatter formatter;
 	@Inject
 	private EntityFactory factory;
 

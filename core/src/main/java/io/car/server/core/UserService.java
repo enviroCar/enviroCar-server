@@ -196,4 +196,12 @@ public class UserService {
 	public Measurement getMeasurement(String id) {
 		return this.measurementDao.getById(id);
 	}
+	
+	public void deleteTrack(String id) throws TrackNotFoundException{
+		this.trackDao.delete(getTrack(id));
+	}
+	
+	public void deleteTrack(Track track){
+		this.trackDao.delete(track);
+	}
 }

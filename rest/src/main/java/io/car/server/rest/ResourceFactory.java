@@ -57,4 +57,5 @@ public interface ResourceFactory {
     MeasurementResource createMeasurementResource(Measurement measuurement);
     MeasurementsResource createMeasurementsResource();
     MeasurementsResource createMeasurementsResource(User user);
+	MeasurementsResource createMeasurementsResource(Track track);
 }

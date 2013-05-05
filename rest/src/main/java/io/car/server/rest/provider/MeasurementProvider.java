@@ -53,8 +53,8 @@ public class MeasurementProvider extends
 
 	static final GeometryFactory geometry = new GeometryFactory();
 
-	private final DateTimeFormatter formatter = ISODateTimeFormat
-			.dateTimeNoMillis();
+    @Inject
+    private DateTimeFormatter formatter;
 	@Inject
 	private EntityFactory factory;
 
