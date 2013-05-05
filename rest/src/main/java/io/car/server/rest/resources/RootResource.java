@@ -34,6 +34,7 @@ import io.car.server.rest.provider.JSONConstants;
 public class RootResource extends AbstractResource {
     public static final String USERS_PATH = "users";
     public static final String GROUPS_PATH = "groups";
+    public static final String TRACKS_PATH = "tracks";
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -41,7 +42,8 @@ public class RootResource extends AbstractResource {
         try {
             return new JSONObject()
                     .put(JSONConstants.USERS_KEY, getUriInfo().getRequestUriBuilder().path(USERS_PATH).build())
-                    .put(JSONConstants.GROUPS_KEY, getUriInfo().getRequestUriBuilder().path(GROUPS_PATH).build());
+                    .put(JSONConstants.GROUPS_KEY, getUriInfo().getRequestUriBuilder().path(GROUPS_PATH).build())
+                    .put(JSONConstants.TRACKS_KEY, getUriInfo().getRequestUriBuilder().path(TRACKS_PATH).build());
         } catch (JSONException ex) {
             throw new WebApplicationException(ex, Status.INTERNAL_SERVER_ERROR);
         }
@@ -55,5 +57,10 @@ public class RootResource extends AbstractResource {
     @Path(GROUPS_PATH)
     public GroupsResource groups() {
         return getResourceFactory().createGroupsResource();
+    }
+    
+    @Path(TRACKS_PATH)
+    public TracksResource tracks() {
+    	return getResourceFactory().createTracksResource();
     }
 }

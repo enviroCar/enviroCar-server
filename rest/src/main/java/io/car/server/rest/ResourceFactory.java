@@ -18,25 +18,36 @@
 package io.car.server.rest;
 
 import io.car.server.core.Group;
+import io.car.server.core.Track;
 import io.car.server.core.User;
 import io.car.server.rest.resources.FriendsResource;
 import io.car.server.rest.resources.GroupMemberResource;
 import io.car.server.rest.resources.GroupMembersResource;
 import io.car.server.rest.resources.GroupResource;
 import io.car.server.rest.resources.GroupsResource;
+import io.car.server.rest.resources.TrackResource;
+import io.car.server.rest.resources.TracksResource;
 import io.car.server.rest.resources.UserResource;
 import io.car.server.rest.resources.UsersResource;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
+ * @author Arne de Wall <a.dewall@52north.org>
  */
 public interface ResourceFactory {
-    FriendsResource createFriendsResource(User user);
-    UsersResource createUsersResource();
     UserResource createUserResource(User user);
+    UsersResource createUsersResource();
+
+    FriendsResource createFriendsResource(User user);
+
     GroupResource createGroupResource(Group group);
     GroupsResource createGroupsResource();
     GroupsResource createGroupsResource(User user);
-    GroupMembersResource createGroupMembersResource(Group group);
+    
     GroupMemberResource createGroupMemberResource(Group group, User member);
+    GroupMembersResource createGroupMembersResource(Group group);
+    
+    TrackResource createTrackResource(Track track);
+    TracksResource createTracksResource();
+    TracksResource createTracksResource(User user);
 }

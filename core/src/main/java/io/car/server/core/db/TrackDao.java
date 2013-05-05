@@ -21,7 +21,7 @@ import io.car.server.core.Track;
 import io.car.server.core.Tracks;
 import io.car.server.core.User;
 
-import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * 
@@ -29,17 +29,16 @@ import com.vividsolutions.jts.geom.Polygon;
  *
  */
 public interface TrackDao {
-	// standard
 	Track create(Track track);
 	Track save(Track track);
 	void delete(Track track);
 	
+	Track getById(String id);
+	
 	Tracks getByUser(User user);
 	Tracks getByCar(String car);
 	Tracks getByBbox(double minx, double miny, double maxx, double maxy);
-	Tracks getByBbox(Polygon bbox);
+	Tracks getByBbox(Geometry bbox);
 	Tracks getAll();
 	Tracks getAll(int limit);
-	
-	
 }
