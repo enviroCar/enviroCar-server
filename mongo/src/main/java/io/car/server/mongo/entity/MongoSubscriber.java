@@ -15,87 +15,71 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.mongo;
+package io.car.server.mongo.entity;
 
 import java.util.Set;
 
 import com.github.jmkgreen.morphia.annotations.Entity;
-import com.github.jmkgreen.morphia.annotations.Indexed;
 import com.github.jmkgreen.morphia.annotations.Property;
 import com.github.jmkgreen.morphia.annotations.Reference;
 import com.google.common.base.Objects;
 
-import io.car.server.core.Group;
-import io.car.server.core.User;
-import io.car.server.core.Users;
+import io.car.server.core.subscription.Subscriber;
+import io.car.server.core.subscription.Subscription;
+import io.car.server.core.subscription.Subscriptions;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-@Entity("userGroups")
-public class MongoGroup extends MongoBaseEntity<MongoGroup> implements Group {
+@Entity("subscribers")
+public class MongoSubscriber extends MongoBaseEntity<MongoSubscriber> implements Subscriber {
     public static final String NAME = "name";
-    public static final String DESCRIPTION = "desc";
-    public static final String MEMBERS = "members";
-    public static final String OWNER = "owner";
-    @Indexed(unique = true)
+    public static final String SECRET = "secret";
+    public static final String SUBSCRIPTIONS = "subscriptions";
     @Property(NAME)
     private String name;
-    @Property(DESCRIPTION)
-    private String description;
-    @Reference(value = MEMBERS, lazy = true)
-    private Set<MongoUser> members;
-    @Reference(value = OWNER, lazy = true)
-    private MongoUser owner;
+    @Property(SECRET)
+    private String secret;
+    @Reference(SUBSCRIPTIONS)
+    private Set<MongoSubscription> subscriptions;
 
     @Override
-    public MongoGroup setName(String name) {
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public Subscriber setName(String name) {
         this.name = name;
         return this;
     }
 
     @Override
-    public String getName() {
-        return this.name;
+    public String getSecret() {
+        return this.secret;
     }
 
     @Override
-    public MongoGroup setDescription(String description) {
-        this.description = description;
+    public Subscriber setSecret(String secret) {
+        this.secret = secret;
         return this;
     }
 
     @Override
-    public String getDescription() {
-        return this.description;
+    public Subscriptions getSubscriptions() {
+        return new Subscriptions(subscriptions);
     }
 
     @Override
-    public Users getMembers() {
-        return new Users(this.members);
-    }
-
-    @Override
-    public MongoGroup addMember(User user) {
-        this.members.add((MongoUser) user);
+    public Subscriber addSubscription(Subscription subscription) {
+        this.subscriptions.add((MongoSubscription) subscription);
         return this;
     }
 
     @Override
-    public MongoGroup removeMember(User user) {
-        this.members.remove((MongoUser) user);
+    public Subscriber removeSubscription(Subscription subscription) {
+        this.subscriptions.remove((MongoSubscription) subscription);
         return this;
-    }
-
-    @Override
-    public MongoGroup setOwner(User user) {
-        this.owner = (MongoUser) user;
-        return this;
-    }
-
-    @Override
-    public MongoUser getOwner() {
-        return this.owner;
     }
 
     @Override
@@ -104,9 +88,8 @@ public class MongoGroup extends MongoBaseEntity<MongoGroup> implements Group {
                 .omitNullValues()
                 .add(ID, getId())
                 .add(NAME, getName())
-                .add(DESCRIPTION, getDescription())
-                .add(OWNER, getOwner())
-                .add(MEMBERS, getMembers())
+                .add(SECRET, getSecret())
+                .add(SUBSCRIPTIONS, getSubscriptions())
                 .toString();
     }
 

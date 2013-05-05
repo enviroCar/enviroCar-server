@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.mongo;
+package io.car.server.mongo.dao;
 
 import io.car.server.core.Track;
 import io.car.server.core.Tracks;
@@ -27,6 +27,8 @@ import com.github.jmkgreen.morphia.dao.BasicDAO;
 import com.github.jmkgreen.morphia.query.Query;
 import com.google.inject.Inject;
 import com.vividsolutions.jts.geom.Polygon;
+
+import io.car.server.mongo.entity.MongoTrack;
 
 /** 
  * 

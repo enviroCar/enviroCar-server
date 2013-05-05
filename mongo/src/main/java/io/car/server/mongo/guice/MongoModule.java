@@ -35,9 +35,9 @@ import io.car.server.core.Group;
 import io.car.server.core.Track;
 import io.car.server.core.User;
 import io.car.server.mongo.MongoDB;
-import io.car.server.mongo.MongoGroup;
-import io.car.server.mongo.MongoTrack;
-import io.car.server.mongo.MongoUser;
+import io.car.server.mongo.entity.MongoGroup;
+import io.car.server.mongo.entity.MongoTrack;
+import io.car.server.mongo.entity.MongoUser;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>

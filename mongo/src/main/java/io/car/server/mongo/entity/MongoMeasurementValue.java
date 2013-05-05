@@ -15,17 +15,29 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.mongo;
+package io.car.server.mongo.entity;
 
-import com.github.jmkgreen.morphia.annotations.Entity;
+import com.github.jmkgreen.morphia.annotations.Embedded;
+import com.github.jmkgreen.morphia.annotations.Property;
 
-import io.car.server.core.subscription.SubscriptionFilterParameter;
+import io.car.server.core.MeasurementValue;
 
-/**
- * @author Christian Autermann <c.autermann@52north.org>
- */
-@Entity("filters")
-public class MongoSubscriptionFilter extends MongoBaseEntity<MongoSubscriptionFilter> implements
-        SubscriptionFilterParameter {
+@Embedded("measurementvalue")
+public class MongoMeasurementValue extends MongoBaseEntity<MongoMeasurementValue> implements MeasurementValue<Object> {
+	public static final String VALUE = "value";
+	
+	@Property(VALUE)
+	Object value;
+	
+	@Override
+	public Object getValue() {
+		return this.value;
+	}
 
+	@Override
+	public MeasurementValue<Object> setValue(Object value) {
+		this.value = value;
+		return this;
+	}
+	
 }

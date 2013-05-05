@@ -23,13 +23,13 @@ import com.google.inject.multibindings.Multibinder;
 import com.google.inject.name.Names;
 
 import io.car.server.mongo.MongoDB;
-import io.car.server.mongo.MongoGroup;
-import io.car.server.mongo.MongoMeasurement;
-import io.car.server.mongo.MongoSubscriber;
-import io.car.server.mongo.MongoSubscription;
-import io.car.server.mongo.MongoSubscriptionFilter;
-import io.car.server.mongo.MongoTrack;
-import io.car.server.mongo.MongoUser;
+import io.car.server.mongo.entity.MongoGroup;
+import io.car.server.mongo.entity.MongoMeasurement;
+import io.car.server.mongo.entity.MongoSubscriber;
+import io.car.server.mongo.entity.MongoSubscription;
+import io.car.server.mongo.entity.MongoSubscriptionFilter;
+import io.car.server.mongo.entity.MongoTrack;
+import io.car.server.mongo.entity.MongoUser;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>

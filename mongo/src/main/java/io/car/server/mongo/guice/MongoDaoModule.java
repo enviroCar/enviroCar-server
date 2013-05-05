@@ -23,10 +23,10 @@ import io.car.server.core.db.GroupDao;
 import io.car.server.core.db.MeasurementDao;
 import io.car.server.core.db.TrackDao;
 import io.car.server.core.db.UserDao;
-import io.car.server.mongo.MongoGroupDao;
-import io.car.server.mongo.MongoMeasurementDao;
-import io.car.server.mongo.MongoTrackDao;
-import io.car.server.mongo.MongoUserDao;
+import io.car.server.mongo.dao.MongoGroupDao;
+import io.car.server.mongo.dao.MongoMeasurementDao;
+import io.car.server.mongo.dao.MongoTrackDao;
+import io.car.server.mongo.dao.MongoUserDao;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
