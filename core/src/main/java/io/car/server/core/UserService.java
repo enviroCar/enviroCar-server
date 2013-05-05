@@ -45,6 +45,8 @@ public class UserService {
 	private final EntityValidator<User> userValidator;
 	private final EntityUpdater<Group> groupUpdater;
 	private final EntityValidator<Group> groupValidator;
+	private final EntityUpdater<Track> trackUpdater;
+	private final EntityValidator<Track> trackValidator;
 	private final PasswordEncoder passwordEncoder;
 
 	@Inject
@@ -53,7 +55,9 @@ public class UserService {
 			EntityUpdater<User> userUpdater,
 			EntityValidator<User> userValidator,
 			EntityUpdater<Group> groupUpdater,
-			EntityValidator<Group> groupValidator) {
+			EntityValidator<Group> groupValidator,
+			EntityUpdater<Track> trackUpdater,
+			EntityValidator<Track> trackValidator) {
 		this.userDao = userDao;
 		this.groupDao = groupDao;
 		this.trackDao = trackDao;
@@ -63,6 +67,8 @@ public class UserService {
 		this.userValidator = userValidator;
 		this.groupUpdater = groupUpdater;
 		this.groupValidator = groupValidator;
+		this.trackUpdater = trackUpdater;
+		this.trackValidator = trackValidator;
 	}
 
 	public User createUser(User user) throws ValidationException,
@@ -140,6 +146,12 @@ public class UserService {
 			throws ValidationException, IllegalModificationException {
 		groupValidator.validateUpdate(group);
 		return this.groupDao.save(this.groupUpdater.update(changes, group));
+	}
+	
+	public Track modifyTrack(Track track, Track changes)
+			throws ValidationException, IllegalModificationException {
+		trackValidator.validateCreate(track);
+		return this.trackDao.save(this.trackUpdater.update(changes, track));
 	}
 
 	public void deleteGroup(String username) throws GroupNotFoundException {
