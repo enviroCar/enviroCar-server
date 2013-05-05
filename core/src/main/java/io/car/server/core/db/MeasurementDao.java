@@ -25,13 +25,15 @@ import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * 
- * @author Arne de Wall
+ * @author Arne de Wall <a.dewall@52north.org>
  *
  */
 public interface MeasurementDao {
 	Measurement create(Measurement measurement);
 	Measurement save(Measurement measurement);
 	void delete(Measurement measurement);
+	
+	Measurement getById(String id);
 	
 	Measurements getByPhenomenon(String string);
 	Measurements getByTrack(Track track);

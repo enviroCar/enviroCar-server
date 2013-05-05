@@ -25,7 +25,7 @@ import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * 
- * @author Arne de Wall
+ * @author Arne de Wall <a.dewall@52north.org>
  *
  */
 public interface TrackDao {

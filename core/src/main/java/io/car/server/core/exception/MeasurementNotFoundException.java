@@ -17,6 +17,11 @@
  */
 package io.car.server.core.exception;
 
+/**
+ * 
+ * @author Arne de Wall <a.dewall@52north.org>
+ *
+ */
 public class MeasurementNotFoundException extends ResourceNotFoundException {
 
 	private static final long serialVersionUID = 8868660032711428006L;

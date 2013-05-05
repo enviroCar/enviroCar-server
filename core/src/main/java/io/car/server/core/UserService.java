@@ -18,6 +18,7 @@
 package io.car.server.core;
 
 import io.car.server.core.db.GroupDao;
+import io.car.server.core.db.MeasurementDao;
 import io.car.server.core.db.TrackDao;
 import io.car.server.core.db.UserDao;
 import io.car.server.core.exception.GroupNotFoundException;
@@ -39,6 +40,7 @@ public class UserService {
 	private final UserDao userDao;
 	private final GroupDao groupDao;
 	private final TrackDao trackDao;
+	private final MeasurementDao measurementDao;
 	private final EntityUpdater<User> userUpdater;
 	private final EntityValidator<User> userValidator;
 	private final EntityUpdater<Group> groupUpdater;
@@ -47,13 +49,15 @@ public class UserService {
 
 	@Inject
 	public UserService(UserDao userDao, GroupDao groupDao, TrackDao trackDao,
-			PasswordEncoder passwordEncoder, EntityUpdater<User> userUpdater,
+			MeasurementDao measurementDao, PasswordEncoder passwordEncoder,
+			EntityUpdater<User> userUpdater,
 			EntityValidator<User> userValidator,
 			EntityUpdater<Group> groupUpdater,
 			EntityValidator<Group> groupValidator) {
 		this.userDao = userDao;
 		this.groupDao = groupDao;
 		this.trackDao = trackDao;
+		this.measurementDao = measurementDao;
 		this.passwordEncoder = passwordEncoder;
 		this.userUpdater = userUpdater;
 		this.userValidator = userValidator;
@@ -183,5 +187,13 @@ public class UserService {
 
 	public Track createTrack(Track track) {
 		return this.trackDao.create(track);
+	}
+
+	public Measurements getAllMeasurements(int limit) {
+		return this.measurementDao.getAll(limit);
+	}
+
+	public Measurement getMeasurement(String id) {
+		return this.measurementDao.getById(id);
 	}
 }
