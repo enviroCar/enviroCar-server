@@ -15,28 +15,30 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server;
+package io.car.server.mongo.guice;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import com.github.jmkgreen.morphia.converters.TypeConverter;
 import com.google.inject.AbstractModule;
+import com.google.inject.multibindings.Multibinder;
 
-import io.car.server.core.CoreModule;
-import io.car.server.mongo.guice.MongoModule;
-import io.car.server.rest.guice.JerseyModule;
+import io.car.server.mongo.convert.DateTimeConverter;
+import io.car.server.mongo.convert.DurationConverter;
+import io.car.server.mongo.convert.FileConverter;
+import io.car.server.mongo.convert.GeometryConverter;
+import io.car.server.mongo.convert.URLConverter;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public class DefaultConfigurationModule extends AbstractModule {
-    private static final Logger log = LoggerFactory.getLogger(DefaultConfigurationModule.class);
+public class MongoConverterModule extends AbstractModule {
+
     @Override
     protected void configure() {
-        log.debug("Installing DefaultConfigurationModule");
-        install(new CoreModule());
-        install(new MongoModule());
-        install(new JerseyModule());
+        Multibinder<TypeConverter> mb = Multibinder.newSetBinder(binder(), TypeConverter.class);
+        mb.addBinding().to(DateTimeConverter.class);
+        mb.addBinding().to(DurationConverter.class);
+        mb.addBinding().to(FileConverter.class);
+        mb.addBinding().to(GeometryConverter.class);
+        mb.addBinding().to(URLConverter.class);
     }
-
 }

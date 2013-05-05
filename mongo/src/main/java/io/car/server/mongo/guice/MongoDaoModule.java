@@ -15,28 +15,27 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+package io.car.server.mongo.guice;
 
 import com.google.inject.AbstractModule;
 
-import io.car.server.core.CoreModule;
-import io.car.server.mongo.guice.MongoModule;
-import io.car.server.rest.guice.JerseyModule;
+import io.car.server.core.db.GroupDao;
+import io.car.server.core.db.TrackDao;
+import io.car.server.core.db.UserDao;
+import io.car.server.mongo.MongoGroupDao;
+import io.car.server.mongo.MongoTrackDao;
+import io.car.server.mongo.MongoUserDao;
 
 /**
+ * TODO JavaDoc
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public class DefaultConfigurationModule extends AbstractModule {
-    private static final Logger log = LoggerFactory.getLogger(DefaultConfigurationModule.class);
+public class MongoDaoModule extends AbstractModule {
+
     @Override
     protected void configure() {
-        log.debug("Installing DefaultConfigurationModule");
-        install(new CoreModule());
-        install(new MongoModule());
-        install(new JerseyModule());
+        bind(UserDao.class).to(MongoUserDao.class);
+        bind(GroupDao.class).to(MongoGroupDao.class);
+        bind(TrackDao.class).to(MongoTrackDao.class);
     }
-
 }
