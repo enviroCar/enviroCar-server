@@ -51,12 +51,12 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 public class MeasurementProvider extends
 		AbstractJsonEntityProvider<Measurement> {
 
-	static final GeometryFactory geometry = new GeometryFactory();
-
     @Inject
     private DateTimeFormatter formatter;
 	@Inject
 	private EntityFactory factory;
+	@Inject
+	private GeometryFactory geometry;
 
 	public MeasurementProvider() {
 		super(Measurement.class, MediaTypes.MEASUREMENT_TYPE,

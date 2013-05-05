@@ -17,21 +17,24 @@
  */
 package io.car.server.core;
 
-import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.geom.Geometry;
 
+/**
+ * 
+ * @author Arne de Wall <a.dewall@52north.org>
+ *
+ */
 public interface Track extends BaseEntity {
-	
 	Track setCar(String car);
 	String getCar();
-	
-	Track addMeasurements(Measurements measurements);
-	Track addMeasurement(Measurement measurement);
-	Track removeMeasurement(Measurement measurement);
+
 	Measurements getMeasurements();	
 	
-	Polygon getBbox();
-	Track setBbox(Polygon bbox);
-	Track setBbox(double minx, double miny, double maxx, double maxy);
+	Track addMeasurement(Measurement measurement);
+	Track addMeasurements(Measurements measurements);
+	Track removeMeasurement(Measurement measurement);
 	
-	
+	Geometry getBbox();
+	Track setBbox(Geometry bbox);
+	Track setBbox(double minx, double miny, double maxx, double maxy);	
 }
