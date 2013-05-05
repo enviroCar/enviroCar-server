@@ -26,6 +26,7 @@ import com.github.jmkgreen.morphia.annotations.Indexed;
 import com.github.jmkgreen.morphia.annotations.PrePersist;
 import com.github.jmkgreen.morphia.annotations.Property;
 import com.github.jmkgreen.morphia.mapping.Mapper;
+import com.google.common.base.Objects;
 
 import io.car.server.core.BaseEntity;
 
@@ -78,5 +79,27 @@ public class MongoBaseEntity implements BaseEntity {
 
     public void setId(ObjectId id) {
         this.id = id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(getId());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final MongoBaseEntity other = (MongoBaseEntity) obj;
+        return Objects.equal(this.getId(), other.getId());
+    }
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this).omitNullValues().add("id", getId()).toString();
     }
 }

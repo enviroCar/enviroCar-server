@@ -21,9 +21,9 @@ import java.util.Set;
 
 import com.github.jmkgreen.morphia.annotations.Entity;
 import com.github.jmkgreen.morphia.annotations.Indexed;
-import com.github.jmkgreen.morphia.annotations.PreSave;
 import com.github.jmkgreen.morphia.annotations.Property;
 import com.github.jmkgreen.morphia.annotations.Reference;
+import com.google.common.base.Objects;
 
 import io.car.server.core.Group;
 import io.car.server.core.User;
@@ -98,7 +98,16 @@ public class MongoGroup extends MongoBaseEntity implements Group {
         return this.owner;
     }
 
-    @PreSave
-    public void clearMemberChanges() {
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+                .omitNullValues()
+                .add(ID, getId())
+                .add(NAME, getName())
+                .add(DESCRIPTION, getDescription())
+                .add(OWNER, getOwner())
+                .add(MEMBERS, getMembers())
+                .toString();
     }
+
 }

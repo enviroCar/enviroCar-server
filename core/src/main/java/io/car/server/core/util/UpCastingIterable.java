@@ -19,6 +19,9 @@ package io.car.server.core.util;
 
 import java.util.Iterator;
 
+import com.google.common.base.Joiner;
+import com.google.common.base.Preconditions;
+
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
@@ -26,6 +29,7 @@ public class UpCastingIterable<T> implements Iterable<T> {
     private final Iterable<? extends T> delegate;
 
     public UpCastingIterable(Iterable<? extends T> delegate) {
+        Preconditions.checkNotNull(delegate);
         this.delegate = delegate;
     }
 
@@ -33,5 +37,12 @@ public class UpCastingIterable<T> implements Iterable<T> {
     @SuppressWarnings("unchecked")
     public Iterator<T> iterator() {
         return (Iterator<T>) delegate.iterator();
+    }
+
+    @Override
+    public String toString() {
+        return Joiner.on(", ").appendTo(new StringBuilder()
+                .append(getClass().getSimpleName())
+                .append('['), iterator()).append(']').toString();
     }
 }

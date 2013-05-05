@@ -23,6 +23,7 @@ import com.github.jmkgreen.morphia.annotations.Entity;
 import com.github.jmkgreen.morphia.annotations.Indexed;
 import com.github.jmkgreen.morphia.annotations.Property;
 import com.github.jmkgreen.morphia.annotations.Reference;
+import com.google.common.base.Objects;
 import com.google.common.collect.Sets;
 
 import io.car.server.core.User;
@@ -118,5 +119,18 @@ public class MongoUser extends MongoBaseEntity implements User {
             this.friends.add((MongoUser) u);
         }
         return this;
+    }
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+                .omitNullValues()
+                .add(ID, getId())
+                .add(NAME, getName())
+                .add(MAIL, getMail())
+                .add(TOKEN, getToken())
+                .add(IS_ADMIN, isAdmin())
+                .add(FRIENDS, getFriends())
+                .toString();
     }
 }
