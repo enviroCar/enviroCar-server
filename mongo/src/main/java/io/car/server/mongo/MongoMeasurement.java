@@ -17,9 +17,6 @@
  */
 package io.car.server.mongo;
 
-import io.car.server.core.Measurement;
-import io.car.server.core.MeasurementValue;
-
 import java.util.Map;
 
 import com.github.jmkgreen.morphia.annotations.Embedded;
@@ -27,13 +24,16 @@ import com.github.jmkgreen.morphia.annotations.Entity;
 import com.github.jmkgreen.morphia.annotations.Property;
 import com.vividsolutions.jts.geom.Point;
 
+import io.car.server.core.Measurement;
+import io.car.server.core.MeasurementValue;
+
 /**
  * 
  * @author Arne de Wall
  *
  */
 @Entity("measurement")
-public class MongoMeasurement extends MongoBaseEntity implements Measurement{
+public class MongoMeasurement extends MongoBaseEntity<MongoMeasurement> implements Measurement {
 	public static final String PHENOMENONS = "phenomenons";
 	public static final String VALUES = "values";
 	public static final String LOCATION = "location";

@@ -37,7 +37,7 @@ import io.car.server.core.Users;
  * @author Christian Autermann <c.autermann@52north.org>
  */
 @Entity("users")
-public class MongoUser extends MongoBaseEntity implements User {
+public class MongoUser extends MongoBaseEntity<MongoUser> implements User {
     public static final String NAME = "name";
     public static final String MAIL = "mail";
     public static final String TOKEN = "token";

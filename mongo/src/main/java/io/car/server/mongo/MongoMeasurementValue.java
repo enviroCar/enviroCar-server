@@ -17,13 +17,13 @@
  */
 package io.car.server.mongo;
 
-import io.car.server.core.MeasurementValue;
-
 import com.github.jmkgreen.morphia.annotations.Embedded;
 import com.github.jmkgreen.morphia.annotations.Property;
 
+import io.car.server.core.MeasurementValue;
+
 @Embedded("measurementvalue")
-public class MongoMeasurementValue extends MongoBaseEntity implements MeasurementValue<Object> {
+public class MongoMeasurementValue extends MongoBaseEntity<MongoMeasurementValue> implements MeasurementValue<Object> {
 	public static final String VALUE = "value";
 	
 	@Property(VALUE)

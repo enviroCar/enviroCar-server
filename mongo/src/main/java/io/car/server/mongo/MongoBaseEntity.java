@@ -33,7 +33,7 @@ import io.car.server.core.BaseEntity;
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public class MongoBaseEntity implements BaseEntity {
+public class MongoBaseEntity<T> implements BaseEntity {
     public static final String ID = Mapper.ID_KEY;
     public static final String CREATION_DATE = "created";
     public static final String LAST_MODIFIED = "modified";
@@ -51,8 +51,10 @@ public class MongoBaseEntity implements BaseEntity {
         return creationDate;
     }
 
-    public void setCreationDate(DateTime creationDate) {
+    @SuppressWarnings("unchecked")
+    public T setCreationDate(DateTime creationDate) {
         this.creationDate = creationDate;
+        return (T) this;
     }
 
     @Override
@@ -60,8 +62,10 @@ public class MongoBaseEntity implements BaseEntity {
         return lastModificationDate;
     }
 
-    public void setLastModificationDate(DateTime lastModificationDate) {
+    @SuppressWarnings("unchecked")
+    public T setLastModificationDate(DateTime lastModificationDate) {
         this.lastModificationDate = lastModificationDate;
+        return (T) this;
     }
 
     @PrePersist
@@ -94,12 +98,12 @@ public class MongoBaseEntity implements BaseEntity {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final MongoBaseEntity other = (MongoBaseEntity) obj;
+        final MongoBaseEntity<?> other = (MongoBaseEntity) obj;
         return Objects.equal(this.getId(), other.getId());
     }
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this).omitNullValues().add("id", getId()).toString();
+        return Objects.toStringHelper(this).omitNullValues().add(ID, getId()).toString();
     }
 }
