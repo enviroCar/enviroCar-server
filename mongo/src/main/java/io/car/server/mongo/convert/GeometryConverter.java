@@ -25,6 +25,7 @@ import com.github.jmkgreen.morphia.converters.TypeConverter;
 import com.github.jmkgreen.morphia.mapping.MappedField;
 import com.github.jmkgreen.morphia.mapping.MappingException;
 import com.google.common.base.Preconditions;
+import com.google.inject.Inject;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.vividsolutions.jts.geom.Coordinate;
@@ -39,7 +40,6 @@ import com.vividsolutions.jts.geom.MultiPoint;
 import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
-import com.vividsolutions.jts.geom.PrecisionModel;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
@@ -55,12 +55,15 @@ public class GeometryConverter extends TypeConverter implements SimpleValueConve
     public static final String MULTI_POLYGON_TYPE = "MultiPolygon";
     public static final String GEOMETRIES_KEY = "geometries";
     public static final String COORDINATES_KEY = "coordinates";
+    private final GeometryFactory factory;
 
-    public GeometryConverter() {
+    @Inject
+    public GeometryConverter(GeometryFactory factory) {
         super(Geometry.class, GeometryCollection.class,
               Point.class, MultiPoint.class,
               LineString.class, MultiLineString.class,
               Polygon.class, MultiPolygon.class);
+        this.factory = factory;
     }
 
     @Override
@@ -80,7 +83,7 @@ public class GeometryConverter extends TypeConverter implements SimpleValueConve
         if (db == null) {
             return null;
         } else {
-            return decodeGeometry(db, new GeometryFactory(new PrecisionModel(PrecisionModel.FLOATING), 4326));
+            return decodeGeometry(db);
         }
     }
 
@@ -249,7 +252,7 @@ public class GeometryConverter extends TypeConverter implements SimpleValueConve
         return coordinates;
     }
 
-    protected Polygon decodePolygonCoordinates(BasicDBList coordinates, GeometryFactory factory) throws
+    protected Polygon decodePolygonCoordinates(BasicDBList coordinates) throws
             MappingException {
         if (coordinates.size() < 1) {
             throw new MappingException("missing polygon shell");
@@ -262,7 +265,7 @@ public class GeometryConverter extends TypeConverter implements SimpleValueConve
         return factory.createPolygon(shell, holes);
     }
 
-    protected Geometry decodeGeometry(Object db, GeometryFactory factory) {
+    protected Geometry decodeGeometry(Object db) {
         if (!(db instanceof BSONObject)) {
             throw new MappingException("Cannot decode " + db);
         }
@@ -276,25 +279,25 @@ public class GeometryConverter extends TypeConverter implements SimpleValueConve
         }
         String type = (String) to;
         if (type.equals(POINT_TYPE)) {
-            return decodePoint(bson, factory);
+            return decodePoint(bson);
         } else if (type.equals(MULTI_POINT_TYPE)) {
-            return decodeMultiPoint(bson, factory);
+            return decodeMultiPoint(bson);
         } else if (type.equals(LINE_STRING_TYPE)) {
-            return decodeLineString(bson, factory);
+            return decodeLineString(bson);
         } else if (type.equals(MULTI_LINE_STRING_TYPE)) {
-            return decodeMultiLineString(bson, factory);
+            return decodeMultiLineString(bson);
         } else if (type.equals(POLYGON_TYPE)) {
-            return decodePolygon(bson, factory);
+            return decodePolygon(bson);
         } else if (type.equals(MULTI_POLYGON_TYPE)) {
-            return decodeMultiPolygon(bson, factory);
+            return decodeMultiPolygon(bson);
         } else if (type.equals(GEOMETRY_COLLECTION_TYPE)) {
-            return decodeGeometryCollection(bson, factory);
+            return decodeGeometryCollection(bson);
         } else {
             throw new MappingException("Unkown geometry type: " + type);
         }
     }
 
-    protected Geometry decodeMultiLineString(BSONObject bson, GeometryFactory factory) {
+    protected Geometry decodeMultiLineString(BSONObject bson) {
         BasicDBList coordinates = requireCoordinates(bson);
         LineString[] lineStrings = new LineString[coordinates.size()];
         for (int i = 0; i < coordinates.size(); ++i) {
@@ -304,43 +307,43 @@ public class GeometryConverter extends TypeConverter implements SimpleValueConve
         return factory.createMultiLineString(lineStrings);
     }
 
-    protected Geometry decodeLineString(BSONObject bson, GeometryFactory factory) {
+    protected Geometry decodeLineString(BSONObject bson) {
         Coordinate[] coordinates = decodeCoordinates(requireCoordinates(bson));
         return factory.createLineString(coordinates);
     }
 
-    protected Geometry decodeMultiPoint(BSONObject bson, GeometryFactory factory) {
+    protected Geometry decodeMultiPoint(BSONObject bson) {
         Coordinate[] coordinates = decodeCoordinates(requireCoordinates(bson));
         return factory.createMultiPoint(coordinates);
     }
 
-    protected Geometry decodePoint(BSONObject bson, GeometryFactory factory) {
+    protected Geometry decodePoint(BSONObject bson) {
         Coordinate parsed = decodeCoordinate(requireCoordinates(bson));
         return factory.createPoint(parsed);
     }
 
-    protected Geometry decodePolygon(BSONObject bson, GeometryFactory factory) {
+    protected Geometry decodePolygon(BSONObject bson) {
         BasicDBList coordinates = requireCoordinates(bson);
-        return decodePolygonCoordinates(coordinates, factory);
+        return decodePolygonCoordinates(coordinates);
     }
 
-    protected Geometry decodeMultiPolygon(BSONObject bson, GeometryFactory factory) {
+    protected Geometry decodeMultiPolygon(BSONObject bson) {
         BasicDBList coordinates = requireCoordinates(bson);
         Polygon[] polygons = new Polygon[coordinates.size()];
         for (int i = 0; i < coordinates.size(); ++i) {
-            polygons[i] = decodePolygonCoordinates(toList(coordinates.get(i)), factory);
+            polygons[i] = decodePolygonCoordinates(toList(coordinates.get(i)));
         }
         return factory.createMultiPolygon(polygons);
     }
 
-    protected Geometry decodeGeometryCollection(BSONObject bson, GeometryFactory factory) {
+    protected Geometry decodeGeometryCollection(BSONObject bson) {
         if (!bson.containsField(GEOMETRIES_KEY)) {
             throw new MappingException("missing 'geometries' field");
         }
         BasicDBList geometries = toList(bson.get(GEOMETRIES_KEY));
         Geometry[] geoms = new Geometry[geometries.size()];
         for (int i = 0; i < geometries.size(); ++i) {
-            geoms[i] = decodeGeometry(geometries.get(i), factory);
+            geoms[i] = decodeGeometry(geometries.get(i));
         }
         return factory.createGeometryCollection(geoms);
     }
