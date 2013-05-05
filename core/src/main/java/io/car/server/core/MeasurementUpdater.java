@@ -17,18 +17,20 @@
  */
 package io.car.server.core;
 
-import java.util.Map;
-
-import com.vividsolutions.jts.geom.Point;
+import io.car.server.core.exception.IllegalModificationException;
 
 /**
  * 
  * @author Arne de Wall <a.dewall@52north.org>
  *
  */
-public interface Measurement extends BaseEntity, Comparable<Measurement>  {
-	Map<String, MeasurementValue<?>> getPhenomenons();
-	Measurement setPhenomenon(String phenomenon, MeasurementValue<?> value);
-	Point getLocation();
-	Measurement setLocation(Point location);
+public class MeasurementUpdater implements EntityUpdater<Measurement>{
+
+	@Override
+	public Measurement update(Measurement changes, Measurement original)
+			throws IllegalModificationException {
+		if(changes.getLocation() != null)
+			original.setLocation(changes.getLocation());
+		return original;
+	}
 }

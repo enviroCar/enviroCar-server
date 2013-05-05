@@ -17,18 +17,27 @@
  */
 package io.car.server.core;
 
-import java.util.Map;
-
-import com.vividsolutions.jts.geom.Point;
+import io.car.server.core.exception.ValidationException;
 
 /**
  * 
  * @author Arne de Wall <a.dewall@52north.org>
  *
  */
-public interface Measurement extends BaseEntity, Comparable<Measurement>  {
-	Map<String, MeasurementValue<?>> getPhenomenons();
-	Measurement setPhenomenon(String phenomenon, MeasurementValue<?> value);
-	Point getLocation();
-	Measurement setLocation(Point location);
+public class MeasurementValidator extends AbstractValidator<Measurement>{
+
+	@Override
+	public void validateCreate(Measurement t) throws ValidationException {
+		isNotNull("location", t.getLocation());
+        isNull("created", t.getCreationDate());
+        isNull("modified", t.getLastModificationDate());
+	}
+
+	@Override
+	public void validateUpdate(Measurement t) throws ValidationException {
+		isNotNull("location", t.getLocation());
+        isNull("created", t.getCreationDate());
+        isNull("modified", t.getLastModificationDate());
+	}
+
 }
