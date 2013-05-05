@@ -25,4 +25,5 @@ public interface EntityFactory {
     User createUser();
     Group createGroup();
     Track createTrack();
+	Measurement createMeasurement();
 }
