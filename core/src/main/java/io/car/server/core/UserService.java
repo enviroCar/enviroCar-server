@@ -217,4 +217,8 @@ public class UserService {
 	public void deleteTrack(Track track){
 		this.trackDao.delete(track);
 	}
+
+    public Track addMeasurement(Track track, Measurement measurement) {
+        return this.trackDao.save(track.addMeasurement(this.measurementDao.save(measurement)));
+    }
 }

@@ -17,15 +17,6 @@
  */
 package io.car.server.rest.resources;
 
-import io.car.server.core.Track;
-import io.car.server.core.exception.IllegalModificationException;
-import io.car.server.core.exception.TrackNotFoundException;
-import io.car.server.core.exception.UserNotFoundException;
-import io.car.server.core.exception.ValidationException;
-import io.car.server.rest.AbstractResource;
-import io.car.server.rest.MediaTypes;
-import io.car.server.rest.auth.Authenticated;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -39,6 +30,15 @@ import javax.ws.rs.core.Response.Status;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
+import io.car.server.core.Track;
+import io.car.server.core.exception.IllegalModificationException;
+import io.car.server.core.exception.TrackNotFoundException;
+import io.car.server.core.exception.UserNotFoundException;
+import io.car.server.core.exception.ValidationException;
+import io.car.server.rest.AbstractResource;
+import io.car.server.rest.MediaTypes;
+import io.car.server.rest.auth.Authenticated;
+
 /**
  * 
  * @author Arne de Wall <a.dewall@52north.org>
@@ -46,16 +46,11 @@ import com.google.inject.assistedinject.Assisted;
  */
 public class TrackResource extends AbstractResource {
 	public static final String MEASUREMENTS_PATH = "measurements";
-
 	protected final Track track;
 
 	@Inject
 	public TrackResource(@Assisted Track track) {
 		this.track = track;
-	}
-
-	protected Track getTrack() {
-		return track;
 	}
 
 	@PUT
@@ -64,32 +59,32 @@ public class TrackResource extends AbstractResource {
 	public Response modify(Track changes) throws TrackNotFoundException,
 			UserNotFoundException, IllegalModificationException,
 			ValidationException {
-		if(!canModifyUser(getCurrentUser()))
-			throw new WebApplicationException(Status.FORBIDDEN);
-		Track modified = getUserService().modifyTrack(getTrack(), changes);
-		// ?!
-		return null;
+        if (!canModifyUser(getCurrentUser())) {
+            throw new WebApplicationException(Status.FORBIDDEN);
+        }
+        getUserService().modifyTrack(track, changes);
+        return Response.ok().build();
 	}
 
 	@GET
 	@Produces(MediaTypes.TRACK)
 	@Authenticated
-	public Track get() throws TrackNotFoundException {
-		return getTrack();
+    public Track get() throws TrackNotFoundException {
+        return track;
 	}
 
 	@DELETE
 	@Authenticated
 	public void delete() throws TrackNotFoundException, UserNotFoundException {
-		if (!canModifyUser(getCurrentUser()))
-			throw new WebApplicationException(Status.FORBIDDEN);
-
+        if (!canModifyUser(getCurrentUser())) {
+            throw new WebApplicationException(Status.FORBIDDEN);
+        }
 		getUserService().deleteTrack(track);
 	}
 
 	@Path(MEASUREMENTS_PATH)
 	@Authenticated
 	public MeasurementsResource measurements() {
-		return getResourceFactory().createMeasurementsResource(getTrack());
+        return getResourceFactory().createMeasurementsResource(track);
 	}
 }
