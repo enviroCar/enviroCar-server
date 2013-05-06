@@ -67,7 +67,7 @@ public class GroupResource extends AbstractResource {
         if (!group.getOwner().equals(getCurrentUser())) {
             throw new WebApplicationException(Status.FORBIDDEN);
         }
-        Group modified = getUserService().modifyGroup(group, changes);
+        Group modified = getService().modifyGroup(group, changes);
         if (modified.getName().equals(group.getName())) {
             return Response.noContent().build();
         } else {
@@ -87,7 +87,7 @@ public class GroupResource extends AbstractResource {
         if (!group.getOwner().equals(getCurrentUser())) {
             throw new WebApplicationException(Status.FORBIDDEN);
         }
-        getUserService().deleteGroup(group);
+        getService().deleteGroup(group);
     }
 
     @Path("members")

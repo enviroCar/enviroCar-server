@@ -64,12 +64,12 @@ public class GroupsResource extends AbstractResource {
                       @QueryParam(RESTConstants.SEARCH) String search) {
         if (user == null) {
             if (search != null && !search.trim().isEmpty()) {
-                return getUserService().searchGroups(search, limit);
+                return getService().searchGroups(search, limit);
             } else {
-                return getUserService().getAllGroups(limit);
+                return getService().getAllGroups(limit);
             }
         } else {
-            return getUserService().getGroupsOfUser(user, limit);
+            return getService().getGroupsOfUser(user, limit);
         }
     }
 
@@ -78,12 +78,12 @@ public class GroupsResource extends AbstractResource {
     @Authenticated
     public Response createGroup(Group group) throws UserNotFoundException, ResourceAlreadyExistException,
                                                     ValidationException {
-        return Response.created(getUriInfo().getRequestUriBuilder().path(getUserService().createGroup(group
+        return Response.created(getUriInfo().getRequestUriBuilder().path(getService().createGroup(group
                 .setOwner(getCurrentUser())).getName()).build()).build();
     }
 
     @Path("{groupname}")
     public GroupResource group(@PathParam("groupname") String groupname) throws GroupNotFoundException {
-        return getResourceFactory().createGroupResource(getUserService().getGroup(groupname));
+        return getResourceFactory().createGroupResource(getService().getGroup(groupname));
     }
 }

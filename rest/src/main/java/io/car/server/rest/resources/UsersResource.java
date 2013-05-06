@@ -46,7 +46,7 @@ public class UsersResource extends AbstractResource {
     @GET
     @Produces(MediaTypes.USERS)
     public Users get(@QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit) {
-        return getUserService().getAllUsers(limit);
+        return getService().getAllUsers(limit);
     }
 
     @POST
@@ -55,12 +55,12 @@ public class UsersResource extends AbstractResource {
     public Response create(User user) throws ValidationException, ResourceAlreadyExistException {
         return Response.created(
                 getUriInfo().getRequestUriBuilder()
-                .path(getUserService().createUser(user).getName())
+                .path(getService().createUser(user).getName())
                 .build()).build();
     }
 
     @Path("{username}")
     public UserResource user(@PathParam("username") String username) throws UserNotFoundException {
-        return getResourceFactory().createUserResource(getUserService().getUser(username));
+        return getResourceFactory().createUserResource(getService().getUser(username));
     }
 }

@@ -62,7 +62,7 @@ public class TrackResource extends AbstractResource {
         if (!canModifyUser(getCurrentUser())) {
             throw new WebApplicationException(Status.FORBIDDEN);
         }
-        getUserService().modifyTrack(track, changes);
+        getService().modifyTrack(track, changes);
         return Response.ok().build();
 	}
 
@@ -79,7 +79,7 @@ public class TrackResource extends AbstractResource {
         if (!canModifyUser(getCurrentUser())) {
             throw new WebApplicationException(Status.FORBIDDEN);
         }
-		getUserService().deleteTrack(track);
+		getService().deleteTrack(track);
 	}
 
 	@Path(MEASUREMENTS_PATH)

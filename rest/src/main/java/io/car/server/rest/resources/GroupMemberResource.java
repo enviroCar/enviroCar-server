@@ -46,6 +46,6 @@ public class GroupMemberResource extends UserResource {
         if (!canModifyUser(getUser())) {
             throw new WebApplicationException(Status.FORBIDDEN);
         }
-        getUserService().removeGroupMember(group, getUser());
+        getService().removeGroupMember(group, getUser());
     }
 }

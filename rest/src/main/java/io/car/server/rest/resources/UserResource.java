@@ -71,7 +71,7 @@ public class UserResource extends AbstractResource {
         if (!canModifyUser(getUser())) {
             throw new WebApplicationException(Status.FORBIDDEN);
         }
-        User modified = getUserService().modifyUser(getUser(), changes);
+        User modified = getService().modifyUser(getUser(), changes);
         if (modified.getName().equals(getUser().getName())) {
             return Response.noContent().build();
         } else {
@@ -98,7 +98,7 @@ public class UserResource extends AbstractResource {
         if (!canModifyUser(getUser())) {
             throw new WebApplicationException(Status.FORBIDDEN);
         }
-        getUserService().deleteUser(getUser());
+        getService().deleteUser(getUser());
     }
 
     @Path(FRIENDS_PATH)

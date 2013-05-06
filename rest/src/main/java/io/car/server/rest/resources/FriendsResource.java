@@ -59,7 +59,7 @@ public class FriendsResource extends AbstractResource {
         if (friend.getName() == null) {
             throw new WebApplicationException(Status.BAD_REQUEST);
         }
-        getUserService().addFriend(user, friend);
+        getService().addFriend(user, friend);
     }
 
     @DELETE
@@ -68,11 +68,11 @@ public class FriendsResource extends AbstractResource {
         if (friend.getName() == null) {
             throw new WebApplicationException(Status.BAD_REQUEST);
         }
-        getUserService().removeFriend(user, friend);
+        getService().removeFriend(user, friend);
     }
 
     @Path("{username}")
     public UserResource friend(@PathParam("username") String username) throws UserNotFoundException {
-        return getResourceFactory().createUserResource(getUserService().getUser(username));
+        return getResourceFactory().createUserResource(getService().getUser(username));
     }
 }

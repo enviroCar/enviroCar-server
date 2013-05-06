@@ -48,7 +48,7 @@ public class TracksResource extends AbstractResource {
     @Produces(MediaTypes.TRACKS)
     public Tracks get(
             @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit) {
-        return getUserService().getAllTracks();
+        return getService().getAllTracks();
     }
 
     @POST
@@ -60,12 +60,12 @@ public class TracksResource extends AbstractResource {
         // TODO FIXME XXX any unique id instead of carname =C !?
         return Response.created(
                 getUriInfo().getRequestUriBuilder()
-                .path(getUserService().createTrack(track.setUser(getCurrentUser())).getIdentifier())
+                .path(getService().createTrack(track.setUser(getCurrentUser())).getIdentifier())
                 .build()).build();
     }
 
     @Path("{trackid}")
     public TrackResource user(@PathParam("trackid") String track) throws TrackNotFoundException {
-        return getResourceFactory().createTrackResource(getUserService().getTrack(track));
+        return getResourceFactory().createTrackResource(getService().getTrack(track));
     }
 }

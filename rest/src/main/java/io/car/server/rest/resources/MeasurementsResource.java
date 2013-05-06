@@ -56,18 +56,18 @@ public class MeasurementsResource extends AbstractResource {
     @Produces(MediaTypes.MEASUREMENTS)
     public Measurements get(
             @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit) {
-        return getUserService().getAllMeasurements(limit);
+        return getService().getAllMeasurements(limit);
     }
 
     @POST
     @Consumes(MediaTypes.MEASUREMENT_CREATE)
     public Response create(Measurement measurement) throws ResourceAlreadyExistException {
 
-        getUserService().addMeasurement(track, measurement);
+        getService().addMeasurement(track, measurement);
 
         // TODO XXX not discussed yet
         // return
-        // Response.created(getUriInfo().getRequestUriBuilder().path(getUserService().createMeasurement(measurement.toString()));
+        // Response.created(getUriInfo().getRequestUriBuilder().path(getService().createMeasurement(measurement.toString()));
         return null;
     }
 
@@ -75,6 +75,6 @@ public class MeasurementsResource extends AbstractResource {
     public MeasurementResource measurement(@PathParam("measurementid") String id)
             throws MeasurementNotFoundException {
         return getResourceFactory().createMeasurementResource(
-                getUserService().getMeasurement(id));
+                getService().getMeasurement(id));
     }
 }

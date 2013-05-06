@@ -36,7 +36,7 @@ import io.car.server.core.exception.ValidationException;
  * @author Arne de Wall <a.dewall@52north.org>
  */
 @Singleton
-public class UserService {
+public class Service {
 	private final UserDao userDao;
 	private final GroupDao groupDao;
 	private final TrackDao trackDao;
@@ -50,7 +50,7 @@ public class UserService {
 	private final PasswordEncoder passwordEncoder;
 
 	@Inject
-	public UserService(UserDao userDao, GroupDao groupDao, TrackDao trackDao,
+	public Service(UserDao userDao, GroupDao groupDao, TrackDao trackDao,
 			MeasurementDao measurementDao, PasswordEncoder passwordEncoder,
 			EntityUpdater<User> userUpdater,
 			EntityValidator<User> userValidator,

@@ -29,7 +29,7 @@ import com.sun.jersey.spi.container.ContainerRequestFilter;
 
 import io.car.server.core.PasswordEncoder;
 import io.car.server.core.User;
-import io.car.server.core.UserService;
+import io.car.server.core.Service;
 import io.car.server.core.exception.UserNotFoundException;
 
 /**
@@ -37,11 +37,11 @@ import io.car.server.core.exception.UserNotFoundException;
  */
 public class AuthenticationFilter implements ContainerRequestFilter {
     
-    private final UserService service;
+    private final Service service;
     private final PasswordEncoder passwordEncoder;
 
     @Inject
-    public AuthenticationFilter(UserService service, PasswordEncoder passwordEncoder) {
+    public AuthenticationFilter(Service service, PasswordEncoder passwordEncoder) {
         this.service = service;
         this.passwordEncoder = passwordEncoder;
     }

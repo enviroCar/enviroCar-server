@@ -44,7 +44,7 @@ public class CoreModule extends AbstractModule {
         bind(new TypeLiteral<EntityValidator<Track>>() {}).to(TrackValidator.class);
         bind(new TypeLiteral<EntityUpdater<Measurement>>() {}).to(MeasurementUpdater.class);
         bind(new TypeLiteral<EntityValidator<Measurement>>() {}).to(MeasurementValidator.class);
-        bind(UserService.class);
+        bind(Service.class);
         bind(PasswordEncoder.class).to(BCryptPasswordEncoder.class);
         bind(GeometryFactory.class)
                 .toInstance(new GeometryFactory(new PrecisionModel(PrecisionModel.FLOATING_SINGLE), 4326));

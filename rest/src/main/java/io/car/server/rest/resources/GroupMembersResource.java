@@ -57,11 +57,11 @@ public class GroupMembersResource extends AbstractResource {
         if (!canModifyUser(user)) {
             throw new WebApplicationException(Status.FORBIDDEN);
         }
-        getUserService().addGroupMember(group, user);
+        getService().addGroupMember(group, user);
     }
 
     @Path("{member}")
     public GroupMemberResource friend(@PathParam("member") String username) throws UserNotFoundException {
-        return getResourceFactory().createGroupMemberResource(group, getUserService().getUser(username));
+        return getResourceFactory().createGroupMemberResource(group, getService().getUser(username));
     }
 }
