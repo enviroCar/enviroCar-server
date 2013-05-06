@@ -27,16 +27,14 @@ import com.vividsolutions.jts.geom.Geometry;
 public interface Track extends BaseEntity {
     String getIdentifier();
     Track setIdentifier(String id);
-
+    User getUser();
+    Track setUser(User user);
 	Track setCar(String car);
 	String getCar();
-
 	Measurements getMeasurements();	
-	
 	Track addMeasurement(Measurement measurement);
 	Track addMeasurements(Measurements measurements);
 	Track removeMeasurement(Measurement measurement);
-	
 	Geometry getBbox();
 	Track setBbox(Geometry bbox);
 	Track setBbox(double minx, double miny, double maxx, double maxy);	

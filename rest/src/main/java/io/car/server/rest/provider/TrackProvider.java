@@ -17,10 +17,6 @@
  */
 package io.car.server.rest.provider;
 
-import io.car.server.core.EntityFactory;
-import io.car.server.core.Track;
-import io.car.server.rest.MediaTypes;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -30,11 +26,13 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.ISODateTimeFormat;
 
 import com.google.inject.Inject;
 import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
+
+import io.car.server.core.EntityFactory;
+import io.car.server.core.Track;
+import io.car.server.rest.MediaTypes;
 
 @Provider
 @Produces(MediaType.APPLICATION_JSON)
