@@ -29,6 +29,7 @@ import com.vividsolutions.jts.geom.PrecisionModel;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
+ * @author Arne de Wall
  */
 public class CoreModule extends AbstractModule {
     private static final Logger log = LoggerFactory.getLogger(CoreModule.class);
@@ -39,6 +40,10 @@ public class CoreModule extends AbstractModule {
         bind(new TypeLiteral<EntityValidator<User>>() {}).to(UserValidator.class);
         bind(new TypeLiteral<EntityUpdater<Group>>() {}).to(GroupUpdater.class);
         bind(new TypeLiteral<EntityValidator<Group>>() {}).to(GroupValidator.class);
+        bind(new TypeLiteral<EntityUpdater<Track>>() {}).to(TrackUpdater.class);
+        bind(new TypeLiteral<EntityValidator<Track>>() {}).to(TrackValidator.class);
+        bind(new TypeLiteral<EntityUpdater<Measurement>>() {}).to(MeasurementUpdater.class);
+        bind(new TypeLiteral<EntityValidator<Measurement>>() {}).to(MeasurementValidator.class);
         bind(UserService.class);
         bind(PasswordEncoder.class).to(BCryptPasswordEncoder.class);
         bind(GeometryFactory.class)

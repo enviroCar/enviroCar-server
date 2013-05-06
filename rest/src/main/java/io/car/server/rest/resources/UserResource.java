@@ -51,6 +51,7 @@ public class UserResource extends AbstractResource {
     public static final String GROUPS_PATH = "groups";
     public static final String FRIENDS_PATH = "friends";
     public static final String TRACKS_PATH = "tracks";
+    public static final String MEASUREMENTS_PATH = "measurements";
     protected final User user;
 
     @Inject
@@ -115,6 +116,12 @@ public class UserResource extends AbstractResource {
     @Path(TRACKS_PATH)
     @Authenticated
     public TracksResource tracks(){
-    	return getResourceFactory().createTracksResource();
+    	return getResourceFactory().createTracksResource(getUser());
+    }
+    
+    @Path(MEASUREMENTS_PATH)
+    @Authenticated
+    public MeasurementsResource measurements(){
+    	return getResourceFactory().createMeasurementsResource(getUser());
     }
 }

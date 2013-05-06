@@ -15,30 +15,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.provider;
+package io.car.server.rest.resources;
 
-/**
- * @author Christian Autermann <c.autermann@52north.org>
- */
-public interface JSONConstants {
-    String CREATED_KEY = "created";
-    String MODIFIED_KEY = "modified";
-    String TOKEN_KEY = "token";
-    String HREF_KEY = "href";
-    String NAME_KEY = "name";
-    String USERS_KEY = "users";
-    String MAIL_KEY = "mail";
-    String GROUPS_KEY = "groups";
-    String DESCRIPTION_KEY = "description";
-    String OWNER_KEY = "owner";
-    
-    String LOCATION_KEY = "location";
-    String LONGITUDE_KEY = "longitude";
-    String LATITUDE_KEY = "latitude";
-    
-    String BBOX_KEY = "bbox";
-    String CAR_KEY = "car";
-    
-    String TRACKS_KEY = "tracks";
-	String PHENOMENONS_KEY = "phenomenon";
+import io.car.server.rest.AbstractResource;
+
+public class MeasurementResource extends AbstractResource {
+
 }

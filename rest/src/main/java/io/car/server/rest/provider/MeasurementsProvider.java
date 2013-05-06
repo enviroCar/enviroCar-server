@@ -17,55 +17,54 @@
  */
 package io.car.server.rest.provider;
 
-import io.car.server.core.EntityFactory;
-import io.car.server.core.Track;
+import java.net.URI;
+
+import io.car.server.core.Measurement;
+import io.car.server.core.Measurements;
 import io.car.server.rest.MediaTypes;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.ext.Provider;
 
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.ISODateTimeFormat;
 
-import com.google.inject.Inject;
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
-
+/**
+ * 
+ * @author Arne de Wall <a.dewall@52north.org>
+ * 
+ */
 @Provider
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class TrackProvider extends AbstractJsonEntityProvider<Track> {
-    @Inject
-    private DateTimeFormatter formatter;
-	@Inject
-	private EntityFactory factory;
+public class MeasurementsProvider extends
+		AbstractJsonEntityProvider<Measurements> {
 
-	public TrackProvider() {
-		super(Track.class, MediaTypes.TRACK_TYPE, MediaTypes.TRACK_CREATE_TYPE,
-				MediaTypes.TRACK_MODIFY_TYPE);
+	@Context
+	private UriInfo uriInfo;
+
+	public MeasurementsProvider(Class<Measurements> classType, MediaType get) {
+		super(Measurements.class, MediaTypes.MEASUREMENTS_TYPE);
 	}
 
 	@Override
-	public Track read(JSONObject j, MediaType mediaType) throws JSONException {
-		JSONArray bbox = j.getJSONArray(JSONConstants.BBOX_KEY);
-		return factory
-				.createTrack()
-				.setBbox(bbox.getDouble(0), bbox.getDouble(1),
-						bbox.getDouble(2), bbox.getDouble(3))
-				.setCar(j.optString(JSONConstants.CAR_KEY));
+	public Measurements read(JSONObject j, MediaType mediaType)
+			throws JSONException {
+        throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public JSONObject write(Track t, MediaType mediaType) throws JSONException {
-		Coordinate[] coords = t.getBbox().getCoordinates();
-		JSONArray bbox = new JSONArray().put(coords[0].x).put(coords[0].y)
-				.put(coords[1].x).put(coords[1].y);
-		return new JSONObject().put(JSONConstants.CAR_KEY, t.getCar()).put(
-				JSONConstants.BBOX_KEY, bbox);
+	public JSONObject write(Measurements t, MediaType mediaType)
+			throws JSONException {
+		JSONArray a = new JSONArray();
+		for(Measurement m : t){
+//			URI uri = uriInfo.getAbsolutePathBuilder()
+		}
+		return null;
 	}
 }

@@ -18,8 +18,12 @@
 package io.car.server.rest.provider;
 
 import io.car.server.core.EntityFactory;
-import io.car.server.core.Track;
+import io.car.server.core.Measurement;
+import io.car.server.core.MeasurementValue;
 import io.car.server.rest.MediaTypes;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
@@ -34,38 +38,55 @@ import org.joda.time.format.ISODateTimeFormat;
 
 import com.google.inject.Inject;
 import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
 
+/**
+ * 
+ * @author @author Arne de Wall <a.dewall@52north.org>
+ * 
+ */
 @Provider
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class TrackProvider extends AbstractJsonEntityProvider<Track> {
+public class MeasurementProvider extends
+		AbstractJsonEntityProvider<Measurement> {
+
     @Inject
     private DateTimeFormatter formatter;
 	@Inject
 	private EntityFactory factory;
+	@Inject
+	private GeometryFactory geometry;
 
-	public TrackProvider() {
-		super(Track.class, MediaTypes.TRACK_TYPE, MediaTypes.TRACK_CREATE_TYPE,
-				MediaTypes.TRACK_MODIFY_TYPE);
+	public MeasurementProvider() {
+		super(Measurement.class, MediaTypes.MEASUREMENT_TYPE,
+				MediaTypes.MEASUREMENT_CREATE_TYPE,
+				MediaTypes.MEASUREMENT_MODIFY_TYPE);
 	}
 
 	@Override
-	public Track read(JSONObject j, MediaType mediaType) throws JSONException {
-		JSONArray bbox = j.getJSONArray(JSONConstants.BBOX_KEY);
-		return factory
-				.createTrack()
-				.setBbox(bbox.getDouble(0), bbox.getDouble(1),
-						bbox.getDouble(2), bbox.getDouble(3))
-				.setCar(j.optString(JSONConstants.CAR_KEY));
+	public Measurement read(JSONObject j, MediaType mediaType)
+			throws JSONException {
+		// XXX check which direction of lon lat =) ?
+		Measurement measurement = factory.createMeasurement();
+		JSONArray location = j.getJSONArray(JSONConstants.LOCATION_KEY);
+		measurement.setLocation(geometry.createPoint(new Coordinate(location
+				.getDouble(0), location.getDouble(1))));
+
+		JSONArray array = j.getJSONArray(JSONConstants.PHENOMENONS_KEY);
+		for (int i = 0; i < array.length(); i++) {
+			// measurement.addPhenomenon(array.get(i), value);
+			// measurement. XXX TODO
+		}
+		return null;
 	}
 
 	@Override
-	public JSONObject write(Track t, MediaType mediaType) throws JSONException {
-		Coordinate[] coords = t.getBbox().getCoordinates();
-		JSONArray bbox = new JSONArray().put(coords[0].x).put(coords[0].y)
-				.put(coords[1].x).put(coords[1].y);
-		return new JSONObject().put(JSONConstants.CAR_KEY, t.getCar()).put(
-				JSONConstants.BBOX_KEY, bbox);
+	public JSONObject write(Measurement t, MediaType mediaType)
+			throws JSONException {
+		JSONObject object = new JSONObject();
+		// object.put(JSONConstants.lo, value)
+		return null;
 	}
+
 }

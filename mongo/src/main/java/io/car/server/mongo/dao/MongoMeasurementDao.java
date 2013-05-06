@@ -30,6 +30,7 @@ import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 
 import io.car.server.mongo.entity.MongoMeasurement;
+import io.car.server.mongo.entity.MongoTrack;
 
 /**
  * 
@@ -100,4 +101,9 @@ public class MongoMeasurementDao extends BasicDAO<MongoMeasurement, String> impl
     protected Measurements fetch(Query<MongoMeasurement> q) {
         return new Measurements(find(q).fetch());
     }
+
+	@Override
+	public Measurement getById(String id) {
+		return find(createQuery().field(MongoMeasurement.ID).equal(id)).get();
+	}
 }

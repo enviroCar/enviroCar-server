@@ -17,10 +17,7 @@
  */
 package io.car.server.mongo.dao;
 
-import io.car.server.core.Track;
-import io.car.server.core.Tracks;
-import io.car.server.core.User;
-import io.car.server.core.db.TrackDao;
+import org.bson.types.ObjectId;
 
 import com.github.jmkgreen.morphia.Datastore;
 import com.github.jmkgreen.morphia.dao.BasicDAO;
@@ -28,6 +25,10 @@ import com.github.jmkgreen.morphia.query.Query;
 import com.google.inject.Inject;
 import com.vividsolutions.jts.geom.Geometry;
 
+import io.car.server.core.Track;
+import io.car.server.core.Tracks;
+import io.car.server.core.User;
+import io.car.server.core.db.TrackDao;
 import io.car.server.mongo.entity.MongoTrack;
 
 /** 
@@ -35,7 +36,7 @@ import io.car.server.mongo.entity.MongoTrack;
  * @author Arne de Wall <a.dewall@52north.org>
  *
  */
-public class MongoTrackDao extends BasicDAO<MongoTrack, String> implements TrackDao{
+public class MongoTrackDao extends BasicDAO<MongoTrack, ObjectId> implements TrackDao {
 
 	@Inject
 	public MongoTrackDao(Datastore ds) {
@@ -43,8 +44,8 @@ public class MongoTrackDao extends BasicDAO<MongoTrack, String> implements Track
 	}
 	
 	@Override
-	public Track getById(String id) {
-		return find(createQuery().field(MongoTrack.ID).equal(id)).get();
+    public Track getById(String id) {
+        return get(new ObjectId(id));
 	}
 
 	@Override

@@ -17,34 +17,79 @@
  */
 package io.car.server.rest.resources;
 
-import javax.ws.rs.DELETE;
-
 import io.car.server.core.Track;
+import io.car.server.core.exception.IllegalModificationException;
+import io.car.server.core.exception.TrackNotFoundException;
+import io.car.server.core.exception.UserNotFoundException;
+import io.car.server.core.exception.ValidationException;
 import io.car.server.rest.AbstractResource;
+import io.car.server.rest.MediaTypes;
 import io.car.server.rest.auth.Authenticated;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
+/**
+ * 
+ * @author Arne de Wall <a.dewall@52north.org>
+ * 
+ */
 public class TrackResource extends AbstractResource {
+	public static final String MEASUREMENTS_PATH = "measurements";
+
 	protected final Track track;
-	
+
 	@Inject
-	public TrackResource(@Assisted Track track){
+	public TrackResource(@Assisted Track track) {
 		this.track = track;
 	}
-	
-//	protected User getUser(){
-//		return user;
-//	}
-	
-//	@PUT
-//	@Consumes(MediaTypes.TRACK_MODIFY)
-//	@Authenticated
-//	public Response 
-//	@DELETE
-//	@Authenticated
-//	public void delete() throws TrackNotFoundException(){
-//		if(!)
-//	}
+
+	protected Track getTrack() {
+		return track;
+	}
+
+	@PUT
+	@Consumes(MediaTypes.TRACK_MODIFY)
+	@Authenticated
+	public Response modify(Track changes) throws TrackNotFoundException,
+			UserNotFoundException, IllegalModificationException,
+			ValidationException {
+		if(!canModifyUser(getCurrentUser()))
+			throw new WebApplicationException(Status.FORBIDDEN);
+		Track modified = getUserService().modifyTrack(getTrack(), changes);
+		// ?!
+		return null;
+	}
+
+	@GET
+	@Produces(MediaTypes.TRACK)
+	@Authenticated
+	public Track get() throws TrackNotFoundException {
+		return getTrack();
+	}
+
+	@DELETE
+	@Authenticated
+	public void delete() throws TrackNotFoundException, UserNotFoundException {
+		if (!canModifyUser(getCurrentUser()))
+			throw new WebApplicationException(Status.FORBIDDEN);
+
+		getUserService().deleteTrack(track);
+	}
+
+	@Path(MEASUREMENTS_PATH)
+	@Authenticated
+	public MeasurementsResource measurements() {
+		return getResourceFactory().createMeasurementsResource(getTrack());
+	}
 }

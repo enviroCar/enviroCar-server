@@ -15,30 +15,30 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.provider;
+package io.car.server.core;
+
+import io.car.server.core.exception.ValidationException;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * 
+ * @author Arne de Wall <a.dewall@52north.org>
+ *
  */
-public interface JSONConstants {
-    String CREATED_KEY = "created";
-    String MODIFIED_KEY = "modified";
-    String TOKEN_KEY = "token";
-    String HREF_KEY = "href";
-    String NAME_KEY = "name";
-    String USERS_KEY = "users";
-    String MAIL_KEY = "mail";
-    String GROUPS_KEY = "groups";
-    String DESCRIPTION_KEY = "description";
-    String OWNER_KEY = "owner";
-    
-    String LOCATION_KEY = "location";
-    String LONGITUDE_KEY = "longitude";
-    String LATITUDE_KEY = "latitude";
-    
-    String BBOX_KEY = "bbox";
-    String CAR_KEY = "car";
-    
-    String TRACKS_KEY = "tracks";
-	String PHENOMENONS_KEY = "phenomenon";
+public class TrackValidator extends AbstractValidator<Track> {
+
+	@Override
+	public void validateCreate(Track t) throws ValidationException {
+		isNotNullOrEmpty("car", t.getCar());
+		isNull("bbox", t.getBbox());
+		isNull("created", t.getCreationDate());
+		isNull("modified", t.getLastModificationDate());
+	}
+
+	@Override
+	public void validateUpdate(Track t) throws ValidationException {
+		isNotEmpty("car", t.getCar());
+        isNull("created", t.getCreationDate());
+        isNull("modified", t.getLastModificationDate());
+	}
+	
 }

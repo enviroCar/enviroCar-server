@@ -32,10 +32,14 @@ import com.mongodb.MongoClient;
 
 import io.car.server.core.EntityFactory;
 import io.car.server.core.Group;
+import io.car.server.core.Measurement;
+import io.car.server.core.MeasurementValue;
 import io.car.server.core.Track;
 import io.car.server.core.User;
 import io.car.server.mongo.MongoDB;
 import io.car.server.mongo.entity.MongoGroup;
+import io.car.server.mongo.entity.MongoMeasurement;
+import io.car.server.mongo.entity.MongoMeasurementValue;
 import io.car.server.mongo.entity.MongoTrack;
 import io.car.server.mongo.entity.MongoUser;
 
@@ -51,6 +55,8 @@ public class MongoModule extends AbstractModule {
                 .implement(User.class, MongoUser.class)
                 .implement(Group.class, MongoGroup.class)
                 .implement(Track.class, MongoTrack.class)
+                .implement(Measurement.class, MongoMeasurement.class)
+                .implement(MeasurementValue.class, MongoMeasurementValue.class)
                 .build(EntityFactory.class));
 
         install(new MongoConverterModule());
