@@ -34,17 +34,21 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 import io.car.server.core.Measurement;
 import io.car.server.core.Measurements;
 import io.car.server.core.Track;
+import io.car.server.core.User;
 
 @Entity("track")
 public class MongoTrack extends MongoBaseEntity<MongoTrack> implements Track {
 	public static final String BBOX = "bbox";
 	public static final String MEASUREMENTS = "measurements";
-	public static final String CAR = "car";
+    public static final String CAR = "car";
+    public static final String USER = "user";
 
 	@Embedded(BBOX)
 	private Geometry bbox;
 	@Property(CAR)
-	private String car;
+    private String car;
+    @Reference(USER)
+    private MongoUser user;
 	@Inject
 	private GeometryFactory factory;
 	
@@ -123,6 +127,17 @@ public class MongoTrack extends MongoBaseEntity<MongoTrack> implements Track {
     @Override
     public MongoTrack setIdentifier(String id) {
         setId(new ObjectId(id));
+        return this;
+    }
+
+    @Override
+    public User getUser() {
+        return this.user;
+    }
+
+    @Override
+    public Track setUser(User user) {
+        this.user = (MongoUser) user;
         return this;
     }
 }

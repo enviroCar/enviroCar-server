@@ -17,58 +17,73 @@
  */
 package io.car.server.mongo.entity;
 
+import java.util.Collections;
 import java.util.Map;
 
 import com.github.jmkgreen.morphia.annotations.Embedded;
 import com.github.jmkgreen.morphia.annotations.Entity;
 import com.github.jmkgreen.morphia.annotations.Property;
+import com.github.jmkgreen.morphia.annotations.Reference;
 import com.vividsolutions.jts.geom.Point;
 
 import io.car.server.core.Measurement;
 import io.car.server.core.MeasurementValue;
+import io.car.server.core.User;
 
 /**
- * 
+ *
  * @author Arne de Wall
  *
  */
 @Entity("measurement")
 public class MongoMeasurement extends MongoBaseEntity<MongoMeasurement> implements Measurement {
-	public static final String PHENOMENONS = "phenomenons";
-	public static final String VALUES = "values";
-	public static final String LOCATION = "location";
-	
-	@Property(LOCATION)
-	private Point location;
-	
-	@Embedded(PHENOMENONS)
-	private Map<String, MeasurementValue<?>> phenomenonMap;
+    public static final String PHENOMENONS = "phenomenons";
+    public static final String VALUES = "values";
+    public static final String LOCATION = "location";
+    public static final String USER = "user";
+    @Reference
+    private MongoUser user;
+    @Property(LOCATION)
+    private Point location;
+    @Embedded(PHENOMENONS)
+    private Map<String, MeasurementValue<?>> phenomenonMap;
 
-	@Override
-	public Map<String, MeasurementValue<?>> getPhenomenons() {
-		return this.phenomenonMap;
-	}
+    @Override
+    public Map<String, MeasurementValue<?>> getPhenomenons() {
+        return Collections.unmodifiableMap(this.phenomenonMap);
+    }
 
-	@Override
-	public Measurement setPhenomenon(String phenomenon,
-			MeasurementValue<?> value) {
-		this.phenomenonMap.put(phenomenon, (MongoMeasurementValue) value);
-		return this;
-	}
+    @Override
+    public Measurement setPhenomenon(String phenomenon,
+                                     MeasurementValue<?> value) {
+        this.phenomenonMap.put(phenomenon, (MongoMeasurementValue) value);
+        return this;
+    }
 
-	@Override
-	public Point getLocation() {
-		return this.location;
-	}
+    @Override
+    public Point getLocation() {
+        return this.location;
+    }
 
-	@Override
-	public MongoMeasurement setLocation(Point location) {
-		this.location = location;
-		return this;
-	}
+    @Override
+    public MongoMeasurement setLocation(Point location) {
+        this.location = location;
+        return this;
+    }
 
-	@Override
-	public int compareTo(Measurement o) {
-		return this.getCreationDate().compareTo(o.getCreationDate());
-	}	
+    @Override
+    public int compareTo(Measurement o) {
+        return this.getCreationDate().compareTo(o.getCreationDate());
+    }
+
+    @Override
+    public MongoUser getUser() {
+        return user;
+    }
+
+    @Override
+    public Measurement setUser(User user) {
+        this.user = (MongoUser) user;
+        return this;
+    }
 }
