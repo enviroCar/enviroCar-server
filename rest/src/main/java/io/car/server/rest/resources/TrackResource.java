@@ -45,7 +45,7 @@ import io.car.server.rest.auth.Authenticated;
  * 
  */
 public class TrackResource extends AbstractResource {
-	public static final String MEASUREMENTS_PATH = "measurements";
+    public static final String MEASUREMENTS_PATH = "measurements";
 	protected final Track track;
 
 	@Inject

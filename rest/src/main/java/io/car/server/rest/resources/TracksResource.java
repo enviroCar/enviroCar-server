@@ -31,6 +31,7 @@ import io.car.server.core.Track;
 import io.car.server.core.Tracks;
 import io.car.server.core.exception.ResourceAlreadyExistException;
 import io.car.server.core.exception.TrackNotFoundException;
+import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.core.exception.ValidationException;
 import io.car.server.rest.AbstractResource;
 import io.car.server.rest.MediaTypes;
@@ -54,11 +55,12 @@ public class TracksResource extends AbstractResource {
     @Consumes(MediaTypes.TRACK_CREATE)
     @Authenticated
     public Response create(Track track) throws ValidationException,
-                                               ResourceAlreadyExistException {
+                                               ResourceAlreadyExistException,
+                                               UserNotFoundException {
         // TODO FIXME XXX any unique id instead of carname =C !?
         return Response.created(
                 getUriInfo().getRequestUriBuilder()
-                .path(getUserService().createTrack(track).getIdentifier())
+                .path(getUserService().createTrack(track.setUser(getCurrentUser())).getIdentifier())
                 .build()).build();
     }
 
