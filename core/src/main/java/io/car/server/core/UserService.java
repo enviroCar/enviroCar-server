@@ -17,6 +17,9 @@
  */
 package io.car.server.core;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
 import io.car.server.core.db.GroupDao;
 import io.car.server.core.db.MeasurementDao;
 import io.car.server.core.db.TrackDao;
@@ -27,9 +30,6 @@ import io.car.server.core.exception.ResourceAlreadyExistException;
 import io.car.server.core.exception.TrackNotFoundException;
 import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.core.exception.ValidationException;
-
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
@@ -192,8 +192,9 @@ public class UserService {
 
 	public Track getTrack(String id) throws TrackNotFoundException {
 		Track track = trackDao.getById(id);
-		if (track == null)
-			throw new TrackNotFoundException(id);
+        if (track == null) {
+            throw new TrackNotFoundException(id);
+        }
 		return track;
 	}
 
