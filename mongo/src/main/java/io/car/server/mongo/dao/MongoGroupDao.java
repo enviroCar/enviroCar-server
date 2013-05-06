@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.mongo;
+package io.car.server.mongo.dao;
 
 import com.github.jmkgreen.morphia.Datastore;
 import com.github.jmkgreen.morphia.dao.BasicDAO;
@@ -26,6 +26,7 @@ import io.car.server.core.Group;
 import io.car.server.core.Groups;
 import io.car.server.core.User;
 import io.car.server.core.db.GroupDao;
+import io.car.server.mongo.entity.MongoGroup;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>

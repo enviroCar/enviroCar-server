@@ -45,10 +45,13 @@ import io.car.server.rest.auth.Authenticated;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
+ * @author Arne de Wall <a.dewall@52north.org>
  */
 public class UserResource extends AbstractResource {
     public static final String GROUPS_PATH = "groups";
     public static final String FRIENDS_PATH = "friends";
+    public static final String TRACKS_PATH = "tracks";
+    public static final String MEASUREMENTS_PATH = "measurements";
     protected final User user;
 
     @Inject
@@ -109,5 +112,16 @@ public class UserResource extends AbstractResource {
     public GroupsResource groups() {
         return getResourceFactory().createGroupsResource(getUser());
     }
-
+    
+    @Path(TRACKS_PATH)
+    @Authenticated
+    public TracksResource tracks(){
+    	return getResourceFactory().createTracksResource(getUser());
+    }
+    
+    @Path(MEASUREMENTS_PATH)
+    @Authenticated
+    public MeasurementsResource measurements(){
+    	return getResourceFactory().createMeasurementsResource(getUser());
+    }
 }

@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.mongo;
+package io.car.server.mongo.guice;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,9 +32,16 @@ import com.mongodb.MongoClient;
 
 import io.car.server.core.EntityFactory;
 import io.car.server.core.Group;
+import io.car.server.core.Measurement;
+import io.car.server.core.MeasurementValue;
+import io.car.server.core.Track;
 import io.car.server.core.User;
-import io.car.server.core.db.GroupDao;
-import io.car.server.core.db.UserDao;
+import io.car.server.mongo.MongoDB;
+import io.car.server.mongo.entity.MongoGroup;
+import io.car.server.mongo.entity.MongoMeasurement;
+import io.car.server.mongo.entity.MongoMeasurementValue;
+import io.car.server.mongo.entity.MongoTrack;
+import io.car.server.mongo.entity.MongoUser;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
@@ -47,11 +54,16 @@ public class MongoModule extends AbstractModule {
         install(new FactoryModuleBuilder()
                 .implement(User.class, MongoUser.class)
                 .implement(Group.class, MongoGroup.class)
+                .implement(Track.class, MongoTrack.class)
+                .implement(Measurement.class, MongoMeasurement.class)
+                .implement(MeasurementValue.class, MongoMeasurementValue.class)
                 .build(EntityFactory.class));
+
+        install(new MongoConverterModule());
         install(new MongoConnectionModule());
+        install(new MongoMappedClassesModule());
+        install(new MongoDaoModule());
         bind(MongoDB.class);
-        bind(UserDao.class).to(MongoUserDao.class);
-        bind(GroupDao.class).to(MongoGroupDao.class);
     }
 
     @Provides

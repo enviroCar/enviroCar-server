@@ -17,21 +17,13 @@
  */
 package io.car.server.core;
 
-import java.util.Iterator;
+import io.car.server.core.util.UpCastingIterable;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public class Users implements Iterable<User> {
-    private final Iterable<? extends User> delegate;
-
+public class Users extends UpCastingIterable<User> {
     public Users(Iterable<? extends User> delegate) {
-        this.delegate = delegate;
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public Iterator<User> iterator() {
-        return (Iterator<User>) delegate.iterator();
+        super(delegate);
     }
 }

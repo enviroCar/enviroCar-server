@@ -23,9 +23,15 @@ import org.slf4j.LoggerFactory;
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
 
+import io.car.server.rest.mapper.IllegalModificationExceptionMapper;
+import io.car.server.rest.mapper.ResourceAlreadyExistExceptionMapper;
+import io.car.server.rest.mapper.ResourceNotFoundExceptionMapper;
+import io.car.server.rest.mapper.ValidationExceptionMapper;
 import io.car.server.rest.provider.GeoJSONProvider;
 import io.car.server.rest.provider.GroupProvider;
 import io.car.server.rest.provider.GroupsProvider;
+import io.car.server.rest.provider.TrackProvider;
+import io.car.server.rest.provider.TracksProvider;
 import io.car.server.rest.provider.UserProvider;
 import io.car.server.rest.provider.UsersProvider;
 
@@ -43,6 +49,12 @@ public class JerseyProviderModule extends AbstractModule {
         bind(GroupsProvider.class).in(Scopes.SINGLETON);
         bind(UserProvider.class).in(Scopes.SINGLETON);
         bind(UsersProvider.class).in(Scopes.SINGLETON);
+        bind(TrackProvider.class).in(Scopes.SINGLETON);
+        bind(TracksProvider.class).in(Scopes.SINGLETON);
+        bind(IllegalModificationExceptionMapper.class).in(Scopes.SINGLETON);
+        bind(ResourceNotFoundExceptionMapper.class).in(Scopes.SINGLETON);
+        bind(ValidationExceptionMapper.class).in(Scopes.SINGLETON);
+        bind(ResourceAlreadyExistExceptionMapper.class).in(Scopes.SINGLETON);
     }
 
 }
