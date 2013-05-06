@@ -22,7 +22,7 @@ import com.github.jmkgreen.morphia.annotations.Property;
 
 import io.car.server.core.MeasurementValue;
 
-@Embedded("measurementvalue")
+@Embedded
 public class MongoMeasurementValue extends MongoBaseEntity<MongoMeasurementValue> implements MeasurementValue<Object> {
 	public static final String VALUE = "value";
 	
