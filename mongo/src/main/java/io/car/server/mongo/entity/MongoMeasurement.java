@@ -22,10 +22,12 @@ import java.util.Map;
 import com.github.jmkgreen.morphia.annotations.Embedded;
 import com.github.jmkgreen.morphia.annotations.Entity;
 import com.github.jmkgreen.morphia.annotations.Property;
+import com.github.jmkgreen.morphia.annotations.Reference;
 import com.vividsolutions.jts.geom.Point;
 
 import io.car.server.core.Measurement;
 import io.car.server.core.MeasurementValue;
+import io.car.server.core.User;
 
 /**
  * 
@@ -37,7 +39,9 @@ public class MongoMeasurement extends MongoBaseEntity<MongoMeasurement> implemen
 	public static final String PHENOMENONS = "phenomenons";
 	public static final String VALUES = "values";
 	public static final String LOCATION = "location";
-	
+    public static final String USER = "user";
+    @Reference
+    private MongoUser user;
 	@Property(LOCATION)
 	private Point location;
 	
@@ -71,4 +75,15 @@ public class MongoMeasurement extends MongoBaseEntity<MongoMeasurement> implemen
 	public int compareTo(Measurement o) {
 		return this.getCreationDate().compareTo(o.getCreationDate());
 	}	
+
+    @Override
+    public MongoUser getUser() {
+        return user;
+    }
+
+    @Override
+    public Measurement setUser(User user) {
+        this.user = (MongoUser) user;
+        return this;
+    }
 }

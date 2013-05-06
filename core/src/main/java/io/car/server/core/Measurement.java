@@ -30,5 +30,7 @@ public interface Measurement extends BaseEntity, Comparable<Measurement>  {
 	Map<String, MeasurementValue<?>> getPhenomenons();
 	Measurement setPhenomenon(String phenomenon, MeasurementValue<?> value);
 	Point getLocation();
-	Measurement setLocation(Point location);
+    Measurement setLocation(Point location);
+    Measurement setUser(User user);
+    User getUser();
 }
