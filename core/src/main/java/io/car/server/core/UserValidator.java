@@ -17,7 +17,6 @@
  */
 package io.car.server.core;
 
-
 import java.util.regex.Pattern;
 
 import io.car.server.core.exception.ValidationException;
@@ -31,20 +30,22 @@ public class UserValidator extends AbstractValidator<User> {
     private final Pattern NAME_PATTERN = Pattern.compile("^[_A-Za-z0-9-]{6,}$");
 
     @Override
-    public void validateCreate(User user) throws ValidationException {
+    public User validateCreate(User user) throws ValidationException {
         matches("name", user.getName(), NAME_PATTERN);
         matches("mail", user.getMail(), EMAIL_PATTERN);
         isNotNullOrEmpty("token", user.getToken());
         isNull("created", user.getCreationDate());
         isNull("modified", user.getLastModificationDate());
+        return user;
     }
 
     @Override
-    public void validateUpdate(User user) throws ValidationException {
+    public User validateUpdate(User user) throws ValidationException {
         isNullOrMatches("name", user.getName(), NAME_PATTERN);
         isNullOrMatches("mail", user.getMail(), EMAIL_PATTERN);
         isNull("token", user.getToken());
         isNull("created", user.getCreationDate());
         isNull("modified", user.getLastModificationDate());
+        return user;
     }
 }

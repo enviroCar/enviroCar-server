@@ -27,17 +27,19 @@ import io.car.server.core.exception.ValidationException;
 public class MeasurementValidator extends AbstractValidator<Measurement>{
 
 	@Override
-	public void validateCreate(Measurement t) throws ValidationException {
+    public Measurement validateCreate(Measurement t) throws ValidationException {
 		isNotNull("location", t.getLocation());
         isNull("created", t.getCreationDate());
         isNull("modified", t.getLastModificationDate());
+        return t;
 	}
 
 	@Override
-	public void validateUpdate(Measurement t) throws ValidationException {
+    public Measurement validateUpdate(Measurement t) throws ValidationException {
 		isNotNull("location", t.getLocation());
         isNull("created", t.getCreationDate());
         isNull("modified", t.getLastModificationDate());
+        return t;
 	}
 
 }
