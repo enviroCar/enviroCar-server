@@ -58,7 +58,7 @@ public class TracksResource extends AbstractResource {
         // TODO FIXME XXX any unique id instead of carname =C !?
         return Response.created(
                 getUriInfo().getRequestUriBuilder()
-                .path(getUserService().createTrack(track).getCar())
+                .path(getUserService().createTrack(track).getIdentifier())
                 .build()).build();
     }
 
