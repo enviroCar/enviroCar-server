@@ -17,12 +17,10 @@
  */
 package io.car.server.mongo.entity;
 
-import io.car.server.core.Measurement;
-import io.car.server.core.Measurements;
-import io.car.server.core.Track;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import org.bson.types.ObjectId;
 
 import com.github.jmkgreen.morphia.annotations.Embedded;
 import com.github.jmkgreen.morphia.annotations.Entity;
@@ -33,9 +31,12 @@ import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 
+import io.car.server.core.Measurement;
+import io.car.server.core.Measurements;
+import io.car.server.core.Track;
+
 @Entity("track")
 public class MongoTrack extends MongoBaseEntity<MongoTrack> implements Track {
-	public static final String ID = "id";
 	public static final String BBOX = "bbox";
 	public static final String MEASUREMENTS = "measurements";
 	public static final String CAR = "car";
@@ -113,4 +114,15 @@ public class MongoTrack extends MongoBaseEntity<MongoTrack> implements Track {
 		this.bbox = factory.createPolygon(coords);
 		return this;
 	}
+
+    @Override
+    public String getIdentifier() {
+        return (getId() == null) ? null : getId().toString();
+    }
+
+    @Override
+    public MongoTrack setIdentifier(String id) {
+        setId(new ObjectId(id));
+        return this;
+    }
 }

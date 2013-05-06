@@ -25,6 +25,9 @@ import com.vividsolutions.jts.geom.Geometry;
  *
  */
 public interface Track extends BaseEntity {
+    String getIdentifier();
+    Track setIdentifier(String id);
+
 	Track setCar(String car);
 	String getCar();
 
