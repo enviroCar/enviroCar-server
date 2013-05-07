@@ -32,6 +32,7 @@ import io.car.server.core.Measurements;
 import io.car.server.core.Track;
 import io.car.server.core.exception.MeasurementNotFoundException;
 import io.car.server.core.exception.ResourceAlreadyExistException;
+import io.car.server.core.exception.ValidationException;
 import io.car.server.rest.AbstractResource;
 import io.car.server.rest.MediaTypes;
 import io.car.server.rest.RESTConstants;
@@ -61,7 +62,7 @@ public class MeasurementsResource extends AbstractResource {
 
     @POST
     @Consumes(MediaTypes.MEASUREMENT_CREATE)
-    public Response create(Measurement measurement) throws ResourceAlreadyExistException {
+    public Response create(Measurement measurement) throws ResourceAlreadyExistException, ValidationException {
 
         getService().addMeasurement(track, measurement);
 
