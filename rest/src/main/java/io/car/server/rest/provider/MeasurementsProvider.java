@@ -19,8 +19,8 @@ package io.car.server.rest.provider;
 
 import java.net.URI;
 
-import io.car.server.core.Measurement;
-import io.car.server.core.Measurements;
+import io.car.server.core.entities.Measurement;
+import io.car.server.core.entities.Measurements;
 import io.car.server.rest.MediaTypes;
 
 import javax.ws.rs.Consumes;

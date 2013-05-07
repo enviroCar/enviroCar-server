@@ -15,24 +15,36 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.core;
+package io.car.server.mongo.dao;
 
-import io.car.server.core.entities.Group;
-import io.car.server.core.entities.Measurement;
+import org.bson.types.ObjectId;
+
+import com.github.jmkgreen.morphia.Datastore;
+import com.github.jmkgreen.morphia.dao.BasicDAO;
+import com.google.inject.Inject;
+
+import io.car.server.core.db.PhenomenonDao;
 import io.car.server.core.entities.Phenomenon;
-import io.car.server.core.entities.Sensor;
-import io.car.server.core.entities.Track;
-import io.car.server.core.entities.User;
+import io.car.server.core.entities.Phenomenons;
+import io.car.server.mongo.entity.MongoPhenomenon;
+import io.car.server.mongo.entity.MongoSensor;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
- * @author Arne de Wall <a.dewall@52north.org>
  */
-public interface EntityFactory {
-    User createUser();
-    Group createGroup();
-    Track createTrack();
-    Measurement createMeasurement();
-    Sensor createSensor();
-    Phenomenon createPhenomenon();
+public class MongoPhenomenonDao extends BasicDAO<MongoPhenomenon, ObjectId> implements PhenomenonDao {
+    @Inject
+    public MongoPhenomenonDao(Datastore datastore) {
+        super(MongoPhenomenon.class, datastore);
+    }
+
+    @Override
+    public Phenomenon getByName(String name) {
+        return createQuery().field(MongoSensor.NAME).equal(name).get();
+    }
+
+    @Override
+    public Phenomenons getAll() {
+        return new Phenomenons(find().fetch());
+    }
 }

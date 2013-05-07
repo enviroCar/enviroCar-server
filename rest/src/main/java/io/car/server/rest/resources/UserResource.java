@@ -35,7 +35,7 @@ import javax.ws.rs.core.UriBuilder;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
-import io.car.server.core.User;
+import io.car.server.core.entities.User;
 import io.car.server.core.exception.IllegalModificationException;
 import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.core.exception.ValidationException;

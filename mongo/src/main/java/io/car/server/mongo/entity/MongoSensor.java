@@ -15,24 +15,28 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.core;
+package io.car.server.mongo.entity;
 
-import io.car.server.core.entities.Group;
-import io.car.server.core.entities.Measurement;
-import io.car.server.core.entities.Phenomenon;
+import com.github.jmkgreen.morphia.annotations.Property;
+
 import io.car.server.core.entities.Sensor;
-import io.car.server.core.entities.Track;
-import io.car.server.core.entities.User;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
- * @author Arne de Wall <a.dewall@52north.org>
  */
-public interface EntityFactory {
-    User createUser();
-    Group createGroup();
-    Track createTrack();
-    Measurement createMeasurement();
-    Sensor createSensor();
-    Phenomenon createPhenomenon();
+public class MongoSensor extends MongoBaseEntity<MongoSensor> implements Sensor {
+    public static final String NAME = "name";
+    @Property(NAME)
+    private String name;
+
+    @Override
+    public String getName() {
+        return this.name;
+    }
+
+    @Override
+    public Sensor setName(String name) {
+        this.name = name;
+        return this;
+    }
 }

@@ -28,9 +28,9 @@ import javax.ws.rs.core.Response.Status;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
-import io.car.server.core.Group;
-import io.car.server.core.User;
-import io.car.server.core.Users;
+import io.car.server.core.entities.Group;
+import io.car.server.core.entities.User;
+import io.car.server.core.entities.Users;
 import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.rest.AbstractResource;
 import io.car.server.rest.MediaTypes;

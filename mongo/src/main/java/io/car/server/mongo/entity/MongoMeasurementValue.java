@@ -19,8 +19,10 @@ package io.car.server.mongo.entity;
 
 import com.github.jmkgreen.morphia.annotations.Embedded;
 import com.github.jmkgreen.morphia.annotations.Property;
+import com.github.jmkgreen.morphia.annotations.Reference;
 
 import io.car.server.core.MeasurementValue;
+import io.car.server.core.entities.Phenomenon;
 
 @Embedded
 public class MongoMeasurementValue extends MongoBaseEntity<MongoMeasurementValue> implements MeasurementValue<Object> {
@@ -28,8 +30,8 @@ public class MongoMeasurementValue extends MongoBaseEntity<MongoMeasurementValue
     public static final String PHENOMENON = "phen";
 	@Property(VALUE)
     private Object value;
-    @Property(PHENOMENON)
-    private String phenomenon;
+    @Reference(PHENOMENON)
+    private Phenomenon phenomenon;
 	
 	@Override
 	public Object getValue() {
@@ -43,12 +45,12 @@ public class MongoMeasurementValue extends MongoBaseEntity<MongoMeasurementValue
 	}
 
     @Override
-    public String getPhenomenon() {
+    public Phenomenon getPhenomenon() {
         return this.phenomenon;
     }
 
     @Override
-    public MeasurementValue<Object> setPhenomenon(String phenomenon) {
+    public MeasurementValue<Object> setPhenomenon(Phenomenon phenomenon) {
         this.phenomenon = phenomenon;
         return this;
     }

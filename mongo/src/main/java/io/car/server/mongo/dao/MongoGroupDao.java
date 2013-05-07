@@ -22,9 +22,9 @@ import com.github.jmkgreen.morphia.dao.BasicDAO;
 import com.github.jmkgreen.morphia.query.Query;
 import com.google.inject.Inject;
 
-import io.car.server.core.Group;
-import io.car.server.core.Groups;
-import io.car.server.core.User;
+import io.car.server.core.entities.Group;
+import io.car.server.core.entities.Groups;
+import io.car.server.core.entities.User;
 import io.car.server.core.db.GroupDao;
 import io.car.server.mongo.entity.MongoGroup;
 

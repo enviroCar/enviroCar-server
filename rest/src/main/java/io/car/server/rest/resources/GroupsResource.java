@@ -30,9 +30,9 @@ import javax.ws.rs.core.Response;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 
-import io.car.server.core.Group;
-import io.car.server.core.Groups;
-import io.car.server.core.User;
+import io.car.server.core.entities.Group;
+import io.car.server.core.entities.Groups;
+import io.car.server.core.entities.User;
 import io.car.server.core.exception.GroupNotFoundException;
 import io.car.server.core.exception.ResourceAlreadyExistException;
 import io.car.server.core.exception.UserNotFoundException;
@@ -82,8 +82,8 @@ public class GroupsResource extends AbstractResource {
                 .setOwner(getCurrentUser())).getName()).build()).build();
     }
 
-    @Path("{groupname}")
-    public GroupResource group(@PathParam("groupname") String groupname) throws GroupNotFoundException {
+    @Path("{id}")
+    public GroupResource group(@PathParam("id") String groupname) throws GroupNotFoundException {
         return getResourceFactory().createGroupResource(getService().getGroup(groupname));
     }
 }

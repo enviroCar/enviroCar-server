@@ -31,7 +31,8 @@ import com.google.inject.Inject;
 import com.vividsolutions.jts.geom.Coordinate;
 
 import io.car.server.core.EntityFactory;
-import io.car.server.core.Track;
+import io.car.server.core.db.SensorDao;
+import io.car.server.core.entities.Track;
 import io.car.server.rest.MediaTypes;
 
 @Provider
@@ -41,7 +42,11 @@ public class TrackProvider extends AbstractJsonEntityProvider<Track> {
     @Inject
     private DateTimeFormatter formatter;
 	@Inject
-	private EntityFactory factory;
+    private EntityFactory factory;
+    @Inject
+    private SensorProvider sensorProvider;
+    @Inject
+    private SensorDao sensorDao;
 
 	public TrackProvider() {
 		super(Track.class, MediaTypes.TRACK_TYPE, MediaTypes.TRACK_CREATE_TYPE,
@@ -55,15 +60,18 @@ public class TrackProvider extends AbstractJsonEntityProvider<Track> {
 				.createTrack()
 				.setBbox(bbox.getDouble(0), bbox.getDouble(1),
 						bbox.getDouble(2), bbox.getDouble(3))
-				.setCar(j.optString(JSONConstants.CAR_KEY));
+                .setSensor(sensorDao.getByName(j.optString(JSONConstants.SENSOR_KEY)));
 	}
 
 	@Override
 	public JSONObject write(Track t, MediaType mediaType) throws JSONException {
 		Coordinate[] coords = t.getBbox().getCoordinates();
-		JSONArray bbox = new JSONArray().put(coords[0].x).put(coords[0].y)
-				.put(coords[1].x).put(coords[1].y);
-		return new JSONObject().put(JSONConstants.CAR_KEY, t.getCar()).put(
-				JSONConstants.BBOX_KEY, bbox);
+        JSONArray bbox = new JSONArray()
+                .put(coords[0].x).put(coords[0].y)
+                .put(coords[1].x).put(coords[1].y);
+        //TODO include bounding box
+        return new JSONObject()
+                .put(JSONConstants.SENSOR_KEY, sensorProvider.write(t.getSensor(), mediaType))
+                .put(JSONConstants.BBOX_KEY, bbox);
 	}
 }

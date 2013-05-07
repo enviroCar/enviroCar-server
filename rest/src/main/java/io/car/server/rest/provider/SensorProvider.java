@@ -15,37 +15,38 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.resources;
+package io.car.server.rest.provider;
 
-import javax.ws.rs.DELETE;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.MediaType;
+
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 
 import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
 
-import io.car.server.core.entities.Group;
-import io.car.server.core.entities.User;
-import io.car.server.core.exception.UserNotFoundException;
+import io.car.server.core.EntityFactory;
+import io.car.server.core.entities.Sensor;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public class GroupMemberResource extends UserResource {
-    private Group group;
+public class SensorProvider extends AbstractJsonEntityProvider<Sensor> {
+    private EntityFactory factory;
 
     @Inject
-    public GroupMemberResource(@Assisted Group group, @Assisted User member) {
-        super(member);
-        this.group = group;
+    public SensorProvider(EntityFactory factory) {
+        //TODO mediatypes
+        super(Sensor.class, MediaType.APPLICATION_JSON_TYPE, MediaType.APPLICATION_JSON_TYPE, MediaType.APPLICATION_JSON_TYPE);
+        this.factory = factory;
     }
 
-    @DELETE
     @Override
-    public void delete() throws UserNotFoundException {
-        if (!canModifyUser(getUser())) {
-            throw new WebApplicationException(Status.FORBIDDEN);
-        }
-        getService().removeGroupMember(group, getUser());
+    public Sensor read(JSONObject j, MediaType mediaType) throws JSONException {
+        return factory.createSensor().setName(j.getString(JSONConstants.NAME_KEY));
+    }
+
+    @Override
+    public JSONObject write(Sensor t, MediaType mediaType) throws JSONException {
+        return new JSONObject().put(JSONConstants.NAME_KEY, t.getName());
     }
 }

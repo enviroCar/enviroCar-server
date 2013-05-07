@@ -22,10 +22,10 @@ import com.github.jmkgreen.morphia.dao.BasicDAO;
 import com.github.jmkgreen.morphia.query.Query;
 import com.google.inject.Inject;
 
-import io.car.server.core.Group;
-import io.car.server.core.Track;
-import io.car.server.core.User;
-import io.car.server.core.Users;
+import io.car.server.core.entities.Group;
+import io.car.server.core.entities.Track;
+import io.car.server.core.entities.User;
+import io.car.server.core.entities.Users;
 import io.car.server.core.db.UserDao;
 import io.car.server.mongo.entity.MongoUser;
 

@@ -17,10 +17,10 @@
  */
 package io.car.server.core.db;
 
-import io.car.server.core.Group;
-import io.car.server.core.Track;
-import io.car.server.core.User;
-import io.car.server.core.Users;
+import io.car.server.core.entities.Group;
+import io.car.server.core.entities.Track;
+import io.car.server.core.entities.User;
+import io.car.server.core.entities.Users;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>

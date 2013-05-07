@@ -30,7 +30,7 @@ import javax.ws.rs.core.Response.Status;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
-import io.car.server.core.Track;
+import io.car.server.core.entities.Track;
 import io.car.server.core.exception.IllegalModificationException;
 import io.car.server.core.exception.TrackNotFoundException;
 import io.car.server.core.exception.UserNotFoundException;

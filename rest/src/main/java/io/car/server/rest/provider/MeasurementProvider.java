@@ -18,7 +18,7 @@
 package io.car.server.rest.provider;
 
 import io.car.server.core.EntityFactory;
-import io.car.server.core.Measurement;
+import io.car.server.core.entities.Measurement;
 import io.car.server.core.MeasurementValue;
 import io.car.server.rest.MediaTypes;
 
@@ -70,7 +70,7 @@ public class MeasurementProvider extends
 		// XXX check which direction of lon lat =) ?
 		Measurement measurement = factory.createMeasurement();
 		JSONArray location = j.getJSONArray(JSONConstants.LOCATION_KEY);
-		measurement.setLocation(geometry.createPoint(new Coordinate(location
+		measurement.setGeometry(geometry.createPoint(new Coordinate(location
 				.getDouble(0), location.getDouble(1))));
 
 		JSONArray array = j.getJSONArray(JSONConstants.PHENOMENONS_KEY);

@@ -17,20 +17,21 @@
  */
 package io.car.server.core;
 
+import io.car.server.core.entities.Measurement;
 import io.car.server.core.exception.IllegalModificationException;
 
 /**
- * 
+ *
  * @author Arne de Wall <a.dewall@52north.org>
  *
  */
-public class MeasurementUpdater implements EntityUpdater<Measurement>{
-
-	@Override
-	public Measurement update(Measurement changes, Measurement original)
-			throws IllegalModificationException {
-		if(changes.getLocation() != null)
-			original.setLocation(changes.getLocation());
-		return original;
-	}
+public class MeasurementUpdater implements EntityUpdater<Measurement> {
+    @Override
+    public Measurement update(Measurement changes, Measurement original)
+            throws IllegalModificationException {
+        if (changes.getGeometry() != null) {
+            original.setGeometry(changes.getGeometry());
+        }
+        return original;
+    }
 }

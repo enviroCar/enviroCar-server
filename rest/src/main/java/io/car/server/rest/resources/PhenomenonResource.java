@@ -15,12 +15,29 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.core;
+package io.car.server.rest.resources;
 
-import io.car.server.core.util.UpCastingIterable;
+import javax.ws.rs.GET;
 
-public class Tracks extends UpCastingIterable<Track> {
-    public Tracks(Iterable<? extends Track> delegate) {
-        super(delegate);
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
+
+import io.car.server.core.entities.Phenomenon;
+
+/**
+ * TODO JavaDoc
+ * @author Christian Autermann <c.autermann@52north.org>
+ */
+public class PhenomenonResource {
+    private Phenomenon phenomenon;
+
+    @Inject
+    public PhenomenonResource(@Assisted Phenomenon phenomenon) {
+        this.phenomenon = phenomenon;
+    }
+
+    @GET
+    public Phenomenon getPhenomenon() {
+        return phenomenon;
     }
 }

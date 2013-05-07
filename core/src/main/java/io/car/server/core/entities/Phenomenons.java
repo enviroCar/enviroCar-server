@@ -15,19 +15,16 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.core;
+package io.car.server.core.entities;
+
+import io.car.server.core.util.UpCastingIterable;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public interface Group extends BaseEntity {
-    Group setName(String name);
-    String getName();
-    Group setDescription(String description);
-    String getDescription();
-    Users getMembers();
-    Group addMember(User user);
-    Group removeMember(User user);
-    Group setOwner(User user);
-    User getOwner();
+public class Phenomenons extends UpCastingIterable<Phenomenon> {
+
+    public Phenomenons(Iterable<? extends Phenomenon> delegate) {
+        super(delegate);
+    }
 }

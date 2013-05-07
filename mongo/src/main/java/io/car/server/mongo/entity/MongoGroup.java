@@ -25,9 +25,9 @@ import com.github.jmkgreen.morphia.annotations.Property;
 import com.github.jmkgreen.morphia.annotations.Reference;
 import com.google.common.base.Objects;
 
-import io.car.server.core.Group;
-import io.car.server.core.User;
-import io.car.server.core.Users;
+import io.car.server.core.entities.Group;
+import io.car.server.core.entities.User;
+import io.car.server.core.entities.Users;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>

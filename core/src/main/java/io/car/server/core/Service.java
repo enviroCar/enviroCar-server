@@ -22,11 +22,27 @@ import com.google.inject.Singleton;
 
 import io.car.server.core.db.GroupDao;
 import io.car.server.core.db.MeasurementDao;
+import io.car.server.core.db.PhenomenonDao;
+import io.car.server.core.db.SensorDao;
 import io.car.server.core.db.TrackDao;
 import io.car.server.core.db.UserDao;
+import io.car.server.core.entities.Group;
+import io.car.server.core.entities.Groups;
+import io.car.server.core.entities.Measurement;
+import io.car.server.core.entities.Measurements;
+import io.car.server.core.entities.Phenomenon;
+import io.car.server.core.entities.Phenomenons;
+import io.car.server.core.entities.Sensor;
+import io.car.server.core.entities.Sensors;
+import io.car.server.core.entities.Track;
+import io.car.server.core.entities.Tracks;
+import io.car.server.core.entities.User;
+import io.car.server.core.entities.Users;
 import io.car.server.core.exception.GroupNotFoundException;
 import io.car.server.core.exception.IllegalModificationException;
+import io.car.server.core.exception.PhenomenonNotFoundException;
 import io.car.server.core.exception.ResourceAlreadyExistException;
+import io.car.server.core.exception.SensorNotFoundException;
 import io.car.server.core.exception.TrackNotFoundException;
 import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.core.exception.ValidationException;
@@ -37,48 +53,36 @@ import io.car.server.core.exception.ValidationException;
  */
 @Singleton
 public class Service {
-    private final UserDao userDao;
-    private final GroupDao groupDao;
-    private final TrackDao trackDao;
-    private final MeasurementDao measurementDao;
-    private final EntityValidator<User> userValidator;
-    private final EntityValidator<Group> groupValidator;
-    private final EntityValidator<Track> trackValidator;
-    private final EntityUpdater<Track> trackUpdater;
-    private final EntityUpdater<Group> groupUpdater;
-    private final EntityUpdater<User> userUpdater;
-    private final EntityUpdater<Measurement> measurementUpdater;
-    private final EntityValidator<Measurement> measurementValidator;
-    private final PasswordEncoder passwordEncoder;
-
     @Inject
-    public Service(UserDao userDao,
-                   GroupDao groupDao,
-                   TrackDao trackDao,
-                   MeasurementDao measurementDao,
-                   PasswordEncoder passwordEncoder,
-                   EntityUpdater<User> userUpdater,
-                   EntityValidator<User> userValidator,
-                   EntityUpdater<Group> groupUpdater,
-                   EntityValidator<Group> groupValidator,
-                   EntityUpdater<Track> trackUpdater,
-                   EntityValidator<Track> trackValidator,
-                   EntityUpdater<Measurement> measurementUpdater,
-                   EntityValidator<Measurement> measurementValidator) {
-        this.userDao = userDao;
-        this.groupDao = groupDao;
-        this.trackDao = trackDao;
-        this.measurementDao = measurementDao;
-        this.passwordEncoder = passwordEncoder;
-        this.userUpdater = userUpdater;
-        this.userValidator = userValidator;
-        this.groupUpdater = groupUpdater;
-        this.groupValidator = groupValidator;
-        this.trackUpdater = trackUpdater;
-        this.trackValidator = trackValidator;
-        this.measurementUpdater = measurementUpdater;
-        this.measurementValidator = measurementValidator;
-    }
+    private UserDao userDao;
+    @Inject
+    private GroupDao groupDao;
+    @Inject
+    private TrackDao trackDao;
+    @Inject
+    private MeasurementDao measurementDao;
+    @Inject
+    private SensorDao sensorDao;
+    @Inject
+    private PhenomenonDao phenomenonDao;
+    @Inject
+    private EntityValidator<User> userValidator;
+    @Inject
+    private EntityValidator<Group> groupValidator;
+    @Inject
+    private EntityValidator<Track> trackValidator;
+    @Inject
+    private EntityUpdater<Track> trackUpdater;
+    @Inject
+    private EntityUpdater<Group> groupUpdater;
+    @Inject
+    private EntityUpdater<User> userUpdater;
+    @Inject
+    private EntityUpdater<Measurement> measurementUpdater;
+    @Inject
+    private EntityValidator<Measurement> measurementValidator;
+    @Inject
+    private PasswordEncoder passwordEncoder;
 
     public User createUser(User user) throws ValidationException,
                                              ResourceAlreadyExistException {
@@ -224,5 +228,29 @@ public class Service {
     public Track addMeasurement(Track track, Measurement measurement) throws ValidationException {
         return trackDao
                 .save(track.addMeasurement(measurementDao.save(measurementValidator.validateCreate(measurement))));
+    }
+
+    public Phenomenon getPhenomenonByName(String name) throws PhenomenonNotFoundException {
+        Phenomenon p = this.phenomenonDao.getByName(name);
+        if (p == null) {
+            throw new PhenomenonNotFoundException(name);
+        }
+        return p;
+    }
+
+    public Sensor getSensorByName(String name) throws SensorNotFoundException {
+        Sensor s = this.sensorDao.getByName(name);
+        if (s == null) {
+            throw new SensorNotFoundException(name);
+        }
+        return s;
+    }
+
+    public Phenomenons getAllPhenomenons() {
+        return this.phenomenonDao.getAll();
+    }
+
+    public Sensors getAllSensors() {
+        return this.sensorDao.getAll();
     }
 }

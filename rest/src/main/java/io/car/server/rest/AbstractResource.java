@@ -24,7 +24,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import io.car.server.core.Service;
-import io.car.server.core.User;
+import io.car.server.core.entities.User;
 import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.rest.auth.AuthConstants;
 

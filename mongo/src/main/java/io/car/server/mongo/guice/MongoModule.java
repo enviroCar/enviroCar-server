@@ -31,15 +31,19 @@ import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
 
 import io.car.server.core.EntityFactory;
-import io.car.server.core.Group;
-import io.car.server.core.Measurement;
 import io.car.server.core.MeasurementValue;
-import io.car.server.core.Track;
-import io.car.server.core.User;
+import io.car.server.core.entities.Group;
+import io.car.server.core.entities.Measurement;
+import io.car.server.core.entities.Phenomenon;
+import io.car.server.core.entities.Sensor;
+import io.car.server.core.entities.Track;
+import io.car.server.core.entities.User;
 import io.car.server.mongo.MongoDB;
 import io.car.server.mongo.entity.MongoGroup;
 import io.car.server.mongo.entity.MongoMeasurement;
 import io.car.server.mongo.entity.MongoMeasurementValue;
+import io.car.server.mongo.entity.MongoPhenomenon;
+import io.car.server.mongo.entity.MongoSensor;
 import io.car.server.mongo.entity.MongoTrack;
 import io.car.server.mongo.entity.MongoUser;
 
@@ -57,8 +61,9 @@ public class MongoModule extends AbstractModule {
                 .implement(Track.class, MongoTrack.class)
                 .implement(Measurement.class, MongoMeasurement.class)
                 .implement(MeasurementValue.class, MongoMeasurementValue.class)
+                .implement(Phenomenon.class, MongoPhenomenon.class)
+                .implement(Sensor.class, MongoSensor.class)
                 .build(EntityFactory.class));
-
         install(new MongoConverterModule());
         install(new MongoConnectionModule());
         install(new MongoMappedClassesModule());

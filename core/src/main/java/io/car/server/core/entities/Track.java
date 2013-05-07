@@ -15,9 +15,11 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.core;
+package io.car.server.core.entities;
 
 import com.vividsolutions.jts.geom.Geometry;
+
+import io.car.server.core.BaseEntity;
 
 /**
  * 
@@ -29,12 +31,12 @@ public interface Track extends BaseEntity {
     Track setIdentifier(String id);
     User getUser();
     Track setUser(User user);
-	Track setCar(String car);
-	String getCar();
 	Measurements getMeasurements();	
 	Track addMeasurement(Measurement measurement);
 	Track addMeasurements(Measurements measurements);
-	Track removeMeasurement(Measurement measurement);
+    Track removeMeasurement(Measurement measurement);
+    Sensor getSensor();
+    Track setSensor(Sensor track);
 	Geometry getBbox();
 	Track setBbox(Geometry bbox);
 	Track setBbox(double minx, double miny, double maxx, double maxy);	

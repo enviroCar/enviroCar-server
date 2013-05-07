@@ -15,24 +15,28 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.core;
+package io.car.server.core.entities;
 
-import io.car.server.core.entities.Group;
-import io.car.server.core.entities.Measurement;
-import io.car.server.core.entities.Phenomenon;
-import io.car.server.core.entities.Sensor;
-import io.car.server.core.entities.Track;
-import io.car.server.core.entities.User;
+
+import com.vividsolutions.jts.geom.Geometry;
+
+import io.car.server.core.BaseEntity;
+import io.car.server.core.MeasurementValue;
+import io.car.server.core.MeasurementValues;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * 
  * @author Arne de Wall <a.dewall@52north.org>
+ *
  */
-public interface EntityFactory {
-    User createUser();
-    Group createGroup();
-    Track createTrack();
-    Measurement createMeasurement();
-    Sensor createSensor();
-    Phenomenon createPhenomenon();
+public interface Measurement extends BaseEntity, Comparable<Measurement>  {
+    MeasurementValues getValues();
+    Measurement addValue(MeasurementValue<?> value);
+    Measurement removeValue(MeasurementValue<?> value);
+    Geometry getGeometry();
+    Measurement setGeometry(Geometry geometry);
+    Measurement setUser(User user);
+    Sensor getSensor();
+    Measurement setSensor(Sensor sensor);
+    User getUser();
 }

@@ -15,22 +15,32 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.core;
+package io.car.server.rest.resources;
 
+import javax.ws.rs.GET;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
-import com.vividsolutions.jts.geom.Point;
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
+
+import io.car.server.core.entities.Sensor;
 
 /**
- * 
- * @author Arne de Wall <a.dewall@52north.org>
- *
+ * @author Christian Autermann <c.autermann@52north.org>
  */
-public interface Measurement extends BaseEntity, Comparable<Measurement>  {
-    MeasurementValues getValues();
-    Measurement addValue(MeasurementValue<?> value);
-    Measurement removeValue(MeasurementValue<?> value);
-	Point getLocation();
-    Measurement setLocation(Point location);
-    Measurement setUser(User user);
-    User getUser();
+public class SensorResource {
+    private Sensor sensor;
+
+    @Inject
+    public SensorResource(@Assisted Sensor sensor) {
+        this.sensor = sensor;
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Sensor get() {
+        return this.sensor;
+    }
+
 }

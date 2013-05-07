@@ -15,25 +15,21 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.core;
+package io.car.server.core.entities;
+
+import io.car.server.core.BaseEntity;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public interface User extends BaseEntity {
+public interface Group extends BaseEntity {
+    Group setName(String name);
     String getName();
-    User setName(String name);
-    String getMail();
-    User setMail(String mail);
-    String getToken();
-    User setToken(String token);
-    boolean isAdmin();
-    User setAdmin(boolean isAdmin);
-    Users getFriends();
-    User addFriend(User user);
-    User removeFriend(User user);
-    // track stuff
-    Tracks getTracks();
-    User addTrack(Track track);
-    User removeTrack(Track track);
+    Group setDescription(String description);
+    String getDescription();
+    Users getMembers();
+    Group addMember(User user);
+    Group removeMember(User user);
+    Group setOwner(User user);
+    User getOwner();
 }

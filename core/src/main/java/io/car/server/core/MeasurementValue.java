@@ -17,9 +17,11 @@
  */
 package io.car.server.core;
 
+import io.car.server.core.entities.Phenomenon;
+
 public interface MeasurementValue<T> {
 	T getValue();
     MeasurementValue<T> setValue(T value);
-    String getPhenomenon();
-    MeasurementValue<T> setPhenomenon(String phenomenon);
+    Phenomenon getPhenomenon();
+    MeasurementValue<T> setPhenomenon(Phenomenon phenomenon);
 }

@@ -28,8 +28,8 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import io.car.server.core.Track;
-import io.car.server.core.Tracks;
+import io.car.server.core.entities.Track;
+import io.car.server.core.entities.Tracks;
 import io.car.server.rest.MediaTypes;
 
 @Provider

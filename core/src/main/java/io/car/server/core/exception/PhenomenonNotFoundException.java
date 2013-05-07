@@ -15,24 +15,14 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.core;
-
-import io.car.server.core.entities.Group;
-import io.car.server.core.entities.Measurement;
-import io.car.server.core.entities.Phenomenon;
-import io.car.server.core.entities.Sensor;
-import io.car.server.core.entities.Track;
-import io.car.server.core.entities.User;
+package io.car.server.core.exception;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
- * @author Arne de Wall <a.dewall@52north.org>
  */
-public interface EntityFactory {
-    User createUser();
-    Group createGroup();
-    Track createTrack();
-    Measurement createMeasurement();
-    Sensor createSensor();
-    Phenomenon createPhenomenon();
+public class PhenomenonNotFoundException extends ResourceNotFoundException {
+    private static final long serialVersionUID = 1311418967057928565L;
+    public PhenomenonNotFoundException(String phenomenon) {
+        super(String.format("The phenomenon '%s' was not found", phenomenon));
+    }
 }

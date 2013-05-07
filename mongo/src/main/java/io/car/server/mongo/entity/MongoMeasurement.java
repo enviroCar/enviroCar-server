@@ -23,28 +23,32 @@ import com.github.jmkgreen.morphia.annotations.Embedded;
 import com.github.jmkgreen.morphia.annotations.Entity;
 import com.github.jmkgreen.morphia.annotations.Property;
 import com.github.jmkgreen.morphia.annotations.Reference;
-import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.geom.Geometry;
 
-import io.car.server.core.Measurement;
 import io.car.server.core.MeasurementValue;
 import io.car.server.core.MeasurementValues;
-import io.car.server.core.User;
+import io.car.server.core.entities.Measurement;
+import io.car.server.core.entities.Sensor;
+import io.car.server.core.entities.User;
 
 /**
  *
  * @author Arne de Wall
  *
  */
-@Entity("measurement")
+@Entity("measurements")
 public class MongoMeasurement extends MongoBaseEntity<MongoMeasurement> implements Measurement {
     public static final String PHENOMENONS = "phenomenons";
     public static final String VALUES = "values";
-    public static final String LOCATION = "location";
+    public static final String GEOMETRY = "geometry";
     public static final String USER = "user";
+    public static final String SENSOR = "sensor";
     @Reference
     private MongoUser user;
-    @Property(LOCATION)
-    private Point location;
+    @Property(GEOMETRY)
+    private Geometry geometry;
+    @Reference(SENSOR)
+    private MongoSensor sensor;
     @Embedded(PHENOMENONS)
     private Set<MongoMeasurementValue> values;
 
@@ -54,13 +58,13 @@ public class MongoMeasurement extends MongoBaseEntity<MongoMeasurement> implemen
     }
 
     @Override
-    public Point getLocation() {
-        return this.location;
+    public Geometry getGeometry() {
+        return this.geometry;
     }
 
     @Override
-    public MongoMeasurement setLocation(Point location) {
-        this.location = location;
+    public MongoMeasurement setGeometry(Geometry location) {
+        this.geometry = location;
         return this;
     }
 
@@ -89,6 +93,17 @@ public class MongoMeasurement extends MongoBaseEntity<MongoMeasurement> implemen
     @Override
     public Measurement removeValue(MeasurementValue<?> value) {
         this.values.remove((MongoMeasurementValue) value);
+        return this;
+    }
+
+    @Override
+    public MongoSensor getSensor() {
+        return sensor;
+    }
+
+    @Override
+    public MongoMeasurement setSensor(Sensor sensor) {
+        this.sensor = (MongoSensor) sensor;
         return this;
     }
 }

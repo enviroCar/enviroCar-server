@@ -15,24 +15,32 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.core;
+package io.car.server.rest.resources;
 
-import io.car.server.core.entities.Group;
-import io.car.server.core.entities.Measurement;
-import io.car.server.core.entities.Phenomenon;
-import io.car.server.core.entities.Sensor;
-import io.car.server.core.entities.Track;
-import io.car.server.core.entities.User;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+
+import io.car.server.core.entities.Sensors;
+import io.car.server.core.exception.SensorNotFoundException;
+import io.car.server.rest.AbstractResource;
 
 /**
+ *
  * @author Christian Autermann <c.autermann@52north.org>
- * @author Arne de Wall <a.dewall@52north.org>
  */
-public interface EntityFactory {
-    User createUser();
-    Group createGroup();
-    Track createTrack();
-    Measurement createMeasurement();
-    Sensor createSensor();
-    Phenomenon createPhenomenon();
+public class SensorsResource extends AbstractResource {
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Sensors get() {
+        return getService().getAllSensors();
+    }
+
+    @Path("{id}")
+    public SensorResource sensor(@PathParam("id") String id) throws SensorNotFoundException {
+        return getResourceFactory().createSensorResource(getService().getSensorByName(id));
+    }
+
 }

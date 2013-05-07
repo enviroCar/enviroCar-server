@@ -37,8 +37,10 @@ public interface JSONConstants {
     String LATITUDE_KEY = "latitude";
     
     String BBOX_KEY = "bbox";
-    String CAR_KEY = "car";
+    String SENSOR_KEY = "sensor";
+    String SENSORS_KEY = "sensors";
     
     String TRACKS_KEY = "tracks";
-	String PHENOMENONS_KEY = "phenomenon";
+    String PHENOMENON_KEY = "phenomenon";
+    String PHENOMENONS_KEY = "phenomenons";
 }
