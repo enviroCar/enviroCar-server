@@ -162,8 +162,8 @@ public class Service {
         deleteGroup(getGroup(username));
     }
 
-    public void deleteGroup(Group user) throws GroupNotFoundException {
-        this.groupDao.delete(user);
+    public void deleteGroup(Group group) throws GroupNotFoundException {
+        this.groupDao.delete(group);
     }
 
     public Groups getGroupsOfUser(User user, int limit) {
