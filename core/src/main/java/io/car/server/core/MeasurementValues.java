@@ -17,20 +17,13 @@
  */
 package io.car.server.core;
 
-
-import com.vividsolutions.jts.geom.Point;
+import io.car.server.core.util.UpCastingIterable;
 
 /**
- * 
- * @author Arne de Wall <a.dewall@52north.org>
- *
+ * @author Christian Autermann <c.autermann@52north.org>
  */
-public interface Measurement extends BaseEntity, Comparable<Measurement>  {
-    MeasurementValues getValues();
-    Measurement addValue(MeasurementValue<?> value);
-    Measurement removeValue(MeasurementValue<?> value);
-	Point getLocation();
-    Measurement setLocation(Point location);
-    Measurement setUser(User user);
-    User getUser();
+public class MeasurementValues extends UpCastingIterable<MeasurementValue<?>> {
+    public MeasurementValues(Iterable<? extends MeasurementValue<?>> delegate) {
+        super(delegate);
+    }
 }

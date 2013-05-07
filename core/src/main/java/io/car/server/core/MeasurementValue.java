@@ -19,5 +19,7 @@ package io.car.server.core;
 
 public interface MeasurementValue<T> {
 	T getValue();
-	MeasurementValue<T> setValue(T value);
+    MeasurementValue<T> setValue(T value);
+    String getPhenomenon();
+    MeasurementValue<T> setPhenomenon(String phenomenon);
 }

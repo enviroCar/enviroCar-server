@@ -17,8 +17,7 @@
  */
 package io.car.server.mongo.entity;
 
-import java.util.Collections;
-import java.util.Map;
+import java.util.Set;
 
 import com.github.jmkgreen.morphia.annotations.Embedded;
 import com.github.jmkgreen.morphia.annotations.Entity;
@@ -28,6 +27,7 @@ import com.vividsolutions.jts.geom.Point;
 
 import io.car.server.core.Measurement;
 import io.car.server.core.MeasurementValue;
+import io.car.server.core.MeasurementValues;
 import io.car.server.core.User;
 
 /**
@@ -46,18 +46,11 @@ public class MongoMeasurement extends MongoBaseEntity<MongoMeasurement> implemen
     @Property(LOCATION)
     private Point location;
     @Embedded(PHENOMENONS)
-    private Map<String, MeasurementValue<?>> phenomenonMap;
+    private Set<MongoMeasurementValue> values;
 
     @Override
-    public Map<String, MeasurementValue<?>> getPhenomenons() {
-        return Collections.unmodifiableMap(this.phenomenonMap);
-    }
-
-    @Override
-    public Measurement setPhenomenon(String phenomenon,
-                                     MeasurementValue<?> value) {
-        this.phenomenonMap.put(phenomenon, (MongoMeasurementValue) value);
-        return this;
+    public MeasurementValues getValues() {
+        return new MeasurementValues(this.values);
     }
 
     @Override
@@ -84,6 +77,18 @@ public class MongoMeasurement extends MongoBaseEntity<MongoMeasurement> implemen
     @Override
     public Measurement setUser(User user) {
         this.user = (MongoUser) user;
+        return this;
+    }
+
+    @Override
+    public Measurement addValue(MeasurementValue<?> value) {
+        this.values.add((MongoMeasurementValue) value);
+        return this;
+    }
+
+    @Override
+    public Measurement removeValue(MeasurementValue<?> value) {
+        this.values.remove((MongoMeasurementValue) value);
         return this;
     }
 }
