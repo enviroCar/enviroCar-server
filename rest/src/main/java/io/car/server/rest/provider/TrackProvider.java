@@ -22,13 +22,11 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
-import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.joda.time.format.DateTimeFormatter;
 
 import com.google.inject.Inject;
-import com.vividsolutions.jts.geom.Coordinate;
 
 import io.car.server.core.EntityFactory;
 import io.car.server.core.db.SensorDao;
@@ -46,34 +44,27 @@ public class TrackProvider extends AbstractJsonEntityProvider<Track> {
     @Inject
     private SensorProvider sensorProvider;
     @Inject
+    private UserProvider userProvider;
+    @Inject
     private SensorDao sensorDao;
 
-	public TrackProvider() {
-		super(Track.class, MediaTypes.TRACK_TYPE, MediaTypes.TRACK_CREATE_TYPE,
-				MediaTypes.TRACK_MODIFY_TYPE);
-	}
+    public TrackProvider() {
+        super(Track.class, MediaTypes.TRACK_TYPE, MediaTypes.TRACK_CREATE_TYPE, MediaTypes.TRACK_MODIFY_TYPE);
+    }
 
-	@Override
-	public Track read(JSONObject j, MediaType mediaType) throws JSONException {
-		JSONArray bbox = j.getJSONArray(JSONConstants.BBOX_KEY);
-		return factory
-				.createTrack()
-				.setBbox(bbox.getDouble(0), bbox.getDouble(1),
-						bbox.getDouble(2), bbox.getDouble(3))
-                .setSensor(sensorDao.getByName(j.optString(JSONConstants.SENSOR_KEY)));
-	}
+    @Override
+    public Track read(JSONObject j, MediaType mediaType) throws JSONException {
+        return factory.createTrack()
+                .setSensor(sensorDao.getByName(j.getString(JSONConstants.SENSOR_KEY)));
+    }
 
-	@Override
-	public JSONObject write(Track t, MediaType mediaType) throws JSONException {
-		Coordinate[] coords = t.getBbox().getCoordinates();
-        JSONArray bbox = new JSONArray()
-                .put(coords[0].x).put(coords[0].y)
-                .put(coords[1].x).put(coords[1].y);
-        //TODO include bounding box
+    @Override
+    public JSONObject write(Track t, MediaType mediaType) throws JSONException {
         return new JSONObject()
+                .put(JSONConstants.IDENTIFIER, t.getIdentifier())
                 .put(JSONConstants.CREATED_KEY, formatter.print(t.getCreationDate()))
                 .put(JSONConstants.MODIFIED_KEY, formatter.print(t.getLastModificationDate()))
                 .put(JSONConstants.SENSOR_KEY, sensorProvider.write(t.getSensor(), mediaType))
-                .put(JSONConstants.BBOX_KEY, bbox);
-	}
+                .put(JSONConstants.USER_KEY, userProvider.write(t.getUser(), mediaType));
+    }
 }
