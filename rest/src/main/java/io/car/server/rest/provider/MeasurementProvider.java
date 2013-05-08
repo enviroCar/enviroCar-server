@@ -92,9 +92,9 @@ public class MeasurementProvider extends AbstractJsonEntityProvider<Measurement>
     }
 
     @Override
-    public JSONObject write(Measurement t, MediaType mediaType)
-            throws JSONException {
+    public JSONObject write(Measurement t, MediaType mediaType) throws JSONException {
         try {
+            //FIXME just encode references to user/sensor
             JSONObject j = new JSONObject()
                     .put(JSONConstants.IDENTIFIER_KEY, t.getIdentifier())
                     .put(JSONConstants.TIME_KEY, formatter.print(t.getTime()))
