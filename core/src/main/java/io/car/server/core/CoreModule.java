@@ -17,6 +17,7 @@
  */
 package io.car.server.core;
 
+import io.car.server.core.util.BCryptPasswordEncoder;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 import org.slf4j.Logger;
