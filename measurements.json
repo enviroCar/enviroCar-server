@@ -1,0 +1,26 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "properties": {
+        "measurements": {
+            "type": "array",
+            "minItems": 0,
+            "items": {
+                "type": "object",
+                "properties": {
+                    "identifier": {
+                        "type": "string",
+                    },
+                    "href": {
+                        "type": "string",
+                        "format": "uri"
+                    }
+                },
+                "required": [ "identifier", "href" ],
+                "additionalProperties": false
+            }
+        }
+    },
+    "required": [ "measurements" ],
+    "additionalProperties": false
+}
