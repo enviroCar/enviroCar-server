@@ -71,6 +71,8 @@ public class TrackProvider extends AbstractJsonEntityProvider<Track> {
                 .put(coords[1].x).put(coords[1].y);
         //TODO include bounding box
         return new JSONObject()
+                .put(JSONConstants.CREATED_KEY, formatter.print(t.getCreationDate()))
+                .put(JSONConstants.MODIFIED_KEY, formatter.print(t.getLastModificationDate()))
                 .put(JSONConstants.SENSOR_KEY, sensorProvider.write(t.getSensor(), mediaType))
                 .put(JSONConstants.BBOX_KEY, bbox);
 	}
