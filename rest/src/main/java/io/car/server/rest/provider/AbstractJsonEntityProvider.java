@@ -32,6 +32,10 @@ public abstract class AbstractJsonEntityProvider<T> extends AbstracJsonProvider<
         super(classType, ImmutableSet.of(post, put), ImmutableSet.of(get));
     }
 
+    public AbstractJsonEntityProvider(Class<T> classType, MediaType get, MediaType post) {
+        super(classType, ImmutableSet.of(post), ImmutableSet.of(get));
+    }
+
     public AbstractJsonEntityProvider(Class<T> classType, MediaType get) {
         super(classType, Collections.<MediaType>emptySet(), ImmutableSet.of(get));
     }

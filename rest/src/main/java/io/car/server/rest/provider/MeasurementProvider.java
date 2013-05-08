@@ -60,9 +60,7 @@ public class MeasurementProvider extends AbstractJsonEntityProvider<Measurement>
     private PhenomenonDao phenomenonDao;
 
     public MeasurementProvider() {
-        super(Measurement.class, MediaTypes.MEASUREMENT_TYPE,
-              MediaTypes.MEASUREMENT_CREATE_TYPE,
-              MediaTypes.MEASUREMENT_MODIFY_TYPE);
+        super(Measurement.class, MediaTypes.MEASUREMENT_TYPE, MediaTypes.MEASUREMENT_CREATE_TYPE);
     }
 
     @Override
