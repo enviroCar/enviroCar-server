@@ -17,44 +17,12 @@
         },
         "modified": {
             "$ref": "#/definitions/date-time"
-        },
-        "groups": {
-            "type": "object",
-            "required": [ "owner","member" ],
-            "additionalProperties": false,
-            "properties": {
-                "owner": {
-                    "$ref": "#/definitions/group-ref-list"
-                },
-                "member": {
-                    "$ref": "#/definitions/group-ref-list"
-                }
-            }
         }
     },
     "definitions": {
         "date-time": {
             "type": "string",
             "format": "date-time"
-        }
-        "group-ref-list": {
-            "type": "array",
-            "minItems": 0,
-            "uniqueItems": true,
-            "items": {
-                "type": "object"
-                "required": [ "name", "href" ],
-                "additionalProperties": false,
-                "properties": {
-                    "name": {
-                        "type": "string"
-                    },
-                    "href": {
-                        "type": "string",
-                        "format": "uri"
-                    }
-                }
-            }
         }
     }
 }
