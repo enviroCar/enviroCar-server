@@ -41,8 +41,9 @@ public class MeasurementsProvider extends AbstractJsonEntityProvider<Measurement
     public JSONObject write(Measurements t, MediaType mediaType) throws JSONException {
         JSONArray measurements = new JSONArray();
         for (Measurement m : t) {
-            measurements.put(new JSONObject().put(JSONConstants.HREF_KEY,
-                                                  uriInfo.getRequestUriBuilder().path(m.getIdentifier())));
+            measurements.put(new JSONObject()
+                    .put(JSONConstants.IDENTIFIER, m.getIdentifier())
+                    .put(JSONConstants.HREF_KEY, uriInfo.getRequestUriBuilder().path(m.getIdentifier())));
 		}
         return new JSONObject().put(JSONConstants.MEASUREMENTS_KEY, measurements);
 	}

@@ -93,6 +93,7 @@ public class MeasurementProvider extends AbstractJsonEntityProvider<Measurement>
             throws JSONException {
         try {
             JSONObject j = new JSONObject()
+                    .put(JSONConstants.IDENTIFIER, t.getIdentifier())
                     .put(JSONConstants.SENSOR_KEY, sensorProvider.write(t.getSensor(), mediaType))
                     .put(JSONConstants.USERS_KEY, userProvider.write(t.getUser(), mediaType))
                     .put(JSONConstants.GEOMETRY_KEY, geoJSON.encode(t.getGeometry()))
