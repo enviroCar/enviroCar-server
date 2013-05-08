@@ -24,7 +24,9 @@ import org.bson.types.ObjectId;
 
 import com.github.jmkgreen.morphia.annotations.Embedded;
 import com.github.jmkgreen.morphia.annotations.Entity;
+import com.github.jmkgreen.morphia.annotations.Indexed;
 import com.github.jmkgreen.morphia.annotations.Reference;
+import com.github.jmkgreen.morphia.utils.IndexDirection;
 import com.google.inject.Inject;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
@@ -38,73 +40,73 @@ import io.car.server.core.entities.User;
 
 @Entity("tracks")
 public class MongoTrack extends MongoBaseEntity<MongoTrack> implements Track {
-	public static final String BBOX = "bbox";
-	public static final String MEASUREMENTS = "measurements";
+    public static final String BBOX = "bbox";
+    public static final String MEASUREMENTS = "measurements";
     public static final String SENSOR = "sensor";
     public static final String USER = "user";
-
-	@Embedded(BBOX)
-	private Geometry bbox;
+    @Indexed(IndexDirection.GEO2D)
+    @Embedded(BBOX)
+    private Geometry bbox;
     @Reference(USER)
     private MongoUser user;
-	@Inject
-    private GeometryFactory factory;
     @Reference(SENSOR)
     private MongoSensor sensor;
-	@Reference(value = MEASUREMENTS, lazy = true)
-	private List<MongoMeasurement> measurements = new ArrayList<MongoMeasurement>();
+    @Reference(value = MEASUREMENTS, lazy = true)
+    private List<MongoMeasurement> measurements = new ArrayList<MongoMeasurement>();
+    @Inject
+    private GeometryFactory factory;
 
-	@Override
-	public MongoTrack addMeasurement(Measurement measurement) {
-		this.measurements.add((MongoMeasurement) measurement);
-		return this;
-	}
+    @Override
+    public MongoTrack addMeasurement(Measurement measurement) {
+        this.measurements.add((MongoMeasurement) measurement);
+        return this;
+    }
 
-	@Override
-	public MongoTrack removeMeasurement(Measurement measurement) {
-		this.measurements.remove((MongoMeasurement) measurement);
-		return this;
-	}
+    @Override
+    public MongoTrack removeMeasurement(Measurement measurement) {
+        this.measurements.remove((MongoMeasurement) measurement);
+        return this;
+    }
 
-	@Override
-	public Measurements getMeasurements() {
-		return new Measurements(this.measurements);
-	}
+    @Override
+    public Measurements getMeasurements() {
+        return new Measurements(this.measurements);
+    }
 
-	public MongoTrack setMeasurements(Measurements measurements) {
-		this.measurements.clear();
-		for (Measurement m : measurements) {
-			this.measurements.add((MongoMeasurement) m);
-		}
-		return this;
-	}
+    public MongoTrack setMeasurements(Measurements measurements) {
+        this.measurements.clear();
+        for (Measurement m : measurements) {
+            this.measurements.add((MongoMeasurement) m);
+        }
+        return this;
+    }
 
-	@Override
-	public MongoTrack addMeasurements(Measurements measurements) {
-		for (Measurement m : measurements) {
-			this.measurements.add((MongoMeasurement) m);
-		}
-		return this;
-	}
+    @Override
+    public MongoTrack addMeasurements(Measurements measurements) {
+        for (Measurement m : measurements) {
+            this.measurements.add((MongoMeasurement) m);
+        }
+        return this;
+    }
 
-	@Override
-	public MongoTrack setBbox(Geometry bbox) {
-		this.bbox = bbox;
-		return this;
-	}
+    @Override
+    public MongoTrack setBbox(Geometry bbox) {
+        this.bbox = bbox;
+        return this;
+    }
 
-	@Override
-	public Geometry getBbox() {
-		return this.bbox;
-	}
+    @Override
+    public Geometry getBbox() {
+        return this.bbox;
+    }
 
-	@Override
-	public MongoTrack setBbox(double minx, double miny, double maxx, double maxy) {
-		Coordinate[] coords = new Coordinate[] { new Coordinate(minx, miny),
-				new Coordinate(maxx, maxy) };
-		this.bbox = factory.createPolygon(coords);
-		return this;
-	}
+    @Override
+    public MongoTrack setBbox(double minx, double miny, double maxx, double maxy) {
+        Coordinate[] coords = new Coordinate[] { new Coordinate(minx, miny),
+                                                 new Coordinate(maxx, maxy) };
+        this.bbox = factory.createPolygon(coords);
+        return this;
+    }
 
     @Override
     public String getIdentifier() {
