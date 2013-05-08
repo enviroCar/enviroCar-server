@@ -2,7 +2,7 @@
     "$schema": "http://json-schema.org/draft-04/schema#",
     "type": "object",
     "required": [ "identifier", "sensor", "time", "geometry",
-                    "phenomenons", "created", "modified", "user"]
+                    "phenomenons", "created", "modified", "user"],
     "properties": {
         "identifier": {
             "type": "string"
@@ -47,7 +47,7 @@
             }
         },
         "geometry": {
-            "$ref": "FIXME GeoJSON schema"
+            "$ref": "https://github.com/fge/sample-json-schemas/blob/master/geojson/geometry.json"
         },
         "phenomenons": {
             "type": "array",
