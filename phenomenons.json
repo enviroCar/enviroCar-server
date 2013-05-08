@@ -1,0 +1,26 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "properties": {
+        "phenomenons": {
+            "type": "array",
+            "minItems": 0,
+            "items": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                    },
+                    "href": {
+                        "type": "string",
+                        "format": "uri"
+                    }
+                },
+                "required": [ "name", "href" ],
+                "additionalProperties": false
+            }
+        }
+    },
+    "required": [ "phenomenons" ],
+    "additionalProperties": false
+}
