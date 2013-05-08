@@ -21,18 +21,18 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 
 import io.car.server.core.entities.Phenomenons;
 import io.car.server.core.exception.PhenomenonNotFoundException;
 import io.car.server.rest.AbstractResource;
+import io.car.server.rest.MediaTypes;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
 public class PhenomenonsResource extends AbstractResource {
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces(MediaTypes.PHENOMENONS)
     public Phenomenons get() {
         return getService().getAllPhenomenons();
     }

@@ -33,6 +33,7 @@ import com.google.inject.Inject;
 
 import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.Sensors;
+import io.car.server.rest.MediaTypes;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
@@ -45,7 +46,7 @@ public class SensorsProvider extends AbstractJsonEntityProvider<Sensors> {
     private UriInfo uriInfo;
 
     public SensorsProvider() {
-        super(Sensors.class, MediaType.APPLICATION_JSON_TYPE);
+        super(Sensors.class, MediaTypes.SENSORS_TYPE);
     }
 
     @Override

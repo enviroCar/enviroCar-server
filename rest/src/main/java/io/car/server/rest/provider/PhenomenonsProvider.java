@@ -33,6 +33,7 @@ import com.google.inject.Inject;
 
 import io.car.server.core.entities.Phenomenon;
 import io.car.server.core.entities.Phenomenons;
+import io.car.server.rest.MediaTypes;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
@@ -45,7 +46,7 @@ public class PhenomenonsProvider extends AbstractJsonEntityProvider<Phenomenons>
     private UriInfo uriInfo;
 
     public PhenomenonsProvider() {
-        super(Phenomenons.class, MediaType.APPLICATION_JSON_TYPE);
+        super(Phenomenons.class, MediaTypes.PHENOMENONS_TYPE);
     }
 
     @Override

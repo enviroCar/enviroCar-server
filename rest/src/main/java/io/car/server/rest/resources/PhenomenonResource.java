@@ -18,11 +18,13 @@
 package io.car.server.rest.resources;
 
 import javax.ws.rs.GET;
+import javax.ws.rs.Produces;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
 import io.car.server.core.entities.Phenomenon;
+import io.car.server.rest.MediaTypes;
 
 /**
  * TODO JavaDoc
@@ -37,6 +39,7 @@ public class PhenomenonResource {
     }
 
     @GET
+    @Produces(MediaTypes.PHENOMENON)
     public Phenomenon getPhenomenon() {
         return phenomenon;
     }

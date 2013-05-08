@@ -26,6 +26,7 @@ import com.google.inject.Inject;
 
 import io.car.server.core.EntityFactory;
 import io.car.server.core.entities.Sensor;
+import io.car.server.rest.MediaTypes;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
@@ -35,8 +36,7 @@ public class SensorProvider extends AbstractJsonEntityProvider<Sensor> {
 
     @Inject
     public SensorProvider(EntityFactory factory) {
-        //TODO mediatypes
-        super(Sensor.class, MediaType.APPLICATION_JSON_TYPE, MediaType.APPLICATION_JSON_TYPE, MediaType.APPLICATION_JSON_TYPE);
+        super(Sensor.class, MediaTypes.SENSOR_TYPE, MediaTypes.SENSOR_CREATE_TYPE, MediaTypes.SENSOR_MODIFY_TYPE);
         this.factory = factory;
     }
 

@@ -30,6 +30,7 @@ import com.google.inject.Inject;
 
 import io.car.server.core.EntityFactory;
 import io.car.server.core.entities.Phenomenon;
+import io.car.server.rest.MediaTypes;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
@@ -44,7 +45,8 @@ public class PhenomenonProvider extends AbstractJsonEntityProvider<Phenomenon> {
     private EntityFactory factory;
 
     public PhenomenonProvider() {
-        super(Phenomenon.class, MediaType.APPLICATION_JSON_TYPE, MediaType.APPLICATION_JSON_TYPE, MediaType.APPLICATION_JSON_TYPE);
+        super(Phenomenon.class, MediaTypes.PHENOMENON_TYPE,
+              MediaTypes.PHENOMENON_CREATE_TYPE, MediaTypes.PHENOMENON_MODIFY_TYPE);
     }
 
     @Override

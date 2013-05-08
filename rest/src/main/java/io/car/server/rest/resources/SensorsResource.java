@@ -21,11 +21,11 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 
 import io.car.server.core.entities.Sensors;
 import io.car.server.core.exception.SensorNotFoundException;
 import io.car.server.rest.AbstractResource;
+import io.car.server.rest.MediaTypes;
 
 /**
  *
@@ -33,7 +33,7 @@ import io.car.server.rest.AbstractResource;
  */
 public class SensorsResource extends AbstractResource {
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces(MediaTypes.SENSORS)
     public Sensors get() {
         return getService().getAllSensors();
     }

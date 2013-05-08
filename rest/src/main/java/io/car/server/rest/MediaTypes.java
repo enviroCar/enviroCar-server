@@ -66,5 +66,21 @@ public interface MediaTypes {
     String MEASUREMENT_CREATE = "application/json; schema=\"measurement.create.json\"";
 	MediaType MEASUREMENT_CREATE_TYPE = MediaType.valueOf(MEASUREMENT_CREATE);
     String MEASUREMENT_MODIFY = "application/json; schema=\"measurement.modify.json\"";
-	MediaType MEASUREMENT_MODIFY_TYPE = MediaType.valueOf(MEASUREMENT_MODIFY);
+    MediaType MEASUREMENT_MODIFY_TYPE = MediaType.valueOf(MEASUREMENT_MODIFY);
+    String SENSOR = "application/json; schema=\"sensor.json\"";
+    MediaType SENSOR_TYPE = MediaType.valueOf(SENSOR);
+    String SENSORS = "application/json; schema=\"sensors.json\"";
+    MediaType SENSORS_TYPE = MediaType.valueOf(SENSORS);
+    String SENSOR_CREATE = "application/json; schema=\"sensor.create.json\"";
+    MediaType SENSOR_CREATE_TYPE = MediaType.valueOf(SENSOR_CREATE);
+    String SENSOR_MODIFY = "application/json; schema=\"sensor.modify.json\"";
+    MediaType SENSOR_MODIFY_TYPE = MediaType.valueOf(SENSOR_MODIFY);
+    String PHENOMENON = "application/json; schema=\"phenomenon.json\"";
+    MediaType PHENOMENON_TYPE = MediaType.valueOf(PHENOMENON);
+    String PHENOMENONS = "application/json; schema=\"phenomenons.json\"";
+    MediaType PHENOMENONS_TYPE = MediaType.valueOf(PHENOMENONS);
+    String PHENOMENON_CREATE = "application/json; schema=\"phenomenon.create.json\"";
+    MediaType PHENOMENON_CREATE_TYPE = MediaType.valueOf(PHENOMENON_CREATE);
+    String PHENOMENON_MODIFY = "application/json; schema=\"phenomenon.modify.json\"";
+    MediaType PHENOMENON_MODIFY_TYPE = MediaType.valueOf(PHENOMENON_MODIFY);
 }
