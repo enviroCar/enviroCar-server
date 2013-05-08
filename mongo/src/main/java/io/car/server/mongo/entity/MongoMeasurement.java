@@ -85,13 +85,13 @@ public class MongoMeasurement extends MongoBaseEntity<MongoMeasurement> implemen
     }
 
     @Override
-    public Measurement addValue(MeasurementValue<?> value) {
+    public Measurement addValue(MeasurementValue value) {
         this.values.add((MongoMeasurementValue) value);
         return this;
     }
 
     @Override
-    public Measurement removeValue(MeasurementValue<?> value) {
+    public Measurement removeValue(MeasurementValue value) {
         this.values.remove((MongoMeasurementValue) value);
         return this;
     }

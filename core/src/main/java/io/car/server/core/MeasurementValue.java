@@ -19,9 +19,9 @@ package io.car.server.core;
 
 import io.car.server.core.entities.Phenomenon;
 
-public interface MeasurementValue<T> {
-	T getValue();
-    MeasurementValue<T> setValue(T value);
+public interface MeasurementValue {
+    Object getValue();
+    MeasurementValue setValue(Object value);
     Phenomenon getPhenomenon();
-    MeasurementValue<T> setPhenomenon(Phenomenon phenomenon);
+    MeasurementValue setPhenomenon(Phenomenon phenomenon);
 }

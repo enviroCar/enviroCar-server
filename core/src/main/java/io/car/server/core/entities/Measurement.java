@@ -31,8 +31,8 @@ import io.car.server.core.MeasurementValues;
  */
 public interface Measurement extends BaseEntity, Comparable<Measurement>  {
     MeasurementValues getValues();
-    Measurement addValue(MeasurementValue<?> value);
-    Measurement removeValue(MeasurementValue<?> value);
+    Measurement addValue(MeasurementValue value);
+    Measurement removeValue(MeasurementValue value);
     Geometry getGeometry();
     Measurement setGeometry(Geometry geometry);
     Measurement setUser(User user);

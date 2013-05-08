@@ -33,6 +33,7 @@ public interface EntityFactory {
     Group createGroup();
     Track createTrack();
     Measurement createMeasurement();
+    MeasurementValue createMeasurementValue();
     Sensor createSensor();
     Phenomenon createPhenomenon();
 }

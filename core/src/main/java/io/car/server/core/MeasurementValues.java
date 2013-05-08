@@ -22,8 +22,8 @@ import io.car.server.core.util.UpCastingIterable;
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public class MeasurementValues extends UpCastingIterable<MeasurementValue<?>> {
-    public MeasurementValues(Iterable<? extends MeasurementValue<?>> delegate) {
+public class MeasurementValues extends UpCastingIterable<MeasurementValue> {
+    public MeasurementValues(Iterable<? extends MeasurementValue> delegate) {
         super(delegate);
     }
 }

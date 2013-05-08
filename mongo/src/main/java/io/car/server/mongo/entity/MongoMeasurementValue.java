@@ -25,7 +25,7 @@ import io.car.server.core.MeasurementValue;
 import io.car.server.core.entities.Phenomenon;
 
 @Embedded
-public class MongoMeasurementValue extends MongoBaseEntity<MongoMeasurementValue> implements MeasurementValue<Object> {
+public class MongoMeasurementValue extends MongoBaseEntity<MongoMeasurementValue> implements MeasurementValue {
 	public static final String VALUE = "value";
     public static final String PHENOMENON = "phen";
 	@Property(VALUE)
@@ -39,7 +39,7 @@ public class MongoMeasurementValue extends MongoBaseEntity<MongoMeasurementValue
 	}
 
 	@Override
-	public MeasurementValue<Object> setValue(Object value) {
+	public MeasurementValue setValue(Object value) {
 		this.value = value;
 		return this;
 	}
@@ -50,7 +50,7 @@ public class MongoMeasurementValue extends MongoBaseEntity<MongoMeasurementValue
     }
 
     @Override
-    public MeasurementValue<Object> setPhenomenon(Phenomenon phenomenon) {
+    public MeasurementValue setPhenomenon(Phenomenon phenomenon) {
         this.phenomenon = phenomenon;
         return this;
     }
