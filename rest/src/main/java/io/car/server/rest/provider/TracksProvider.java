@@ -52,8 +52,10 @@ public class TracksProvider extends AbstractJsonEntityProvider<Tracks> {
 	public JSONObject write(Tracks t, MediaType mediaType) throws JSONException {
 		JSONArray array = new JSONArray();
         for (Track track : t) {
-            array.put(new JSONObject().put(JSONConstants.HREF_KEY,
-                                           uriInfo.getRequestUriBuilder().path(track.getIdentifier()).build()));
+
+            array.put(new JSONObject()
+                    .put(JSONConstants.IDENTIFIER, track.getIdentifier())
+                    .put(JSONConstants.HREF_KEY, uriInfo.getRequestUriBuilder().path(track.getIdentifier()).build()));
 		}
         return new JSONObject().put(JSONConstants.TRACKS_KEY, array);
 	}
