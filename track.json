@@ -1,7 +1,7 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
     "type": "object",
-    "required": [ "identifier", "sensor", "created", "modified", "user"]
+    "required": [ "identifier", "sensor", "created", "modified", "user"],
     "properties": {
         "identifier": {
             "type": "string"

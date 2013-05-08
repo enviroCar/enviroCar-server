@@ -23,12 +23,12 @@
             "minItems": 0,
             "items": {
                 "type": "object",
-                "required": [ "phenomenon", "value" ]
+                "required": [ "phenomenon", "value" ],
                 "properties": {
                     "phenomenon": {
                         "properties": {
                             "name": {
-                                "type": "string",
+                                "type": "string"
                             }
                         }
                     },

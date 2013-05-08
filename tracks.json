@@ -9,7 +9,7 @@
                 "type": "object",
                 "properties": {
                     "identifier": {
-                        "type": "string",
+                        "type": "string"
                     },
                     "href": {
                         "type": "string",
