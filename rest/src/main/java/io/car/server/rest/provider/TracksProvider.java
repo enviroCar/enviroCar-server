@@ -54,7 +54,7 @@ public class TracksProvider extends AbstractJsonEntityProvider<Tracks> {
         for (Track track : t) {
 
             array.put(new JSONObject()
-                    .put(JSONConstants.IDENTIFIER, track.getIdentifier())
+                    .put(JSONConstants.IDENTIFIER_KEY, track.getIdentifier())
                     .put(JSONConstants.HREF_KEY, uriInfo.getRequestUriBuilder().path(track.getIdentifier()).build()));
 		}
         return new JSONObject().put(JSONConstants.TRACKS_KEY, array);

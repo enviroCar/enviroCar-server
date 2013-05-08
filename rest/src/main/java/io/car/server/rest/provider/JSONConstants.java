@@ -21,7 +21,8 @@ package io.car.server.rest.provider;
  * @author Christian Autermann <c.autermann@52north.org>
  */
 public interface JSONConstants {
-    String IDENTIFIER = "id";
+    String TIME_KEY = "time";
+    String IDENTIFIER_KEY = "id";
     String MEASUREMENTS_KEY = "measurements";
     String CREATED_KEY = "created";
     String MODIFIED_KEY = "modified";

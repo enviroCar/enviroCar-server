@@ -42,7 +42,7 @@ public class MeasurementsProvider extends AbstractJsonEntityProvider<Measurement
         JSONArray measurements = new JSONArray();
         for (Measurement m : t) {
             measurements.put(new JSONObject()
-                    .put(JSONConstants.IDENTIFIER, m.getIdentifier())
+                    .put(JSONConstants.IDENTIFIER_KEY, m.getIdentifier())
                     .put(JSONConstants.HREF_KEY, uriInfo.getRequestUriBuilder().path(m.getIdentifier())));
 		}
         return new JSONObject().put(JSONConstants.MEASUREMENTS_KEY, measurements);

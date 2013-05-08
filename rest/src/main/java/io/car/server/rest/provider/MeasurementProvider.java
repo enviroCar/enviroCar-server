@@ -70,6 +70,9 @@ public class MeasurementProvider extends AbstractJsonEntityProvider<Measurement>
             throws JSONException {
         try {
             Measurement measurement = factory.createMeasurement();
+            if (j.has(JSONConstants.TIME_KEY)) {
+                measurement.setTime(formatter.parseDateTime(j.getString(JSONConstants.TIME_KEY)));
+            }
             if (j.has(JSONConstants.GEOMETRY_KEY)) {
                 measurement.setGeometry(geoJSON.decode(j.getJSONObject(JSONConstants.GEOMETRY_KEY)));
             }
@@ -93,7 +96,8 @@ public class MeasurementProvider extends AbstractJsonEntityProvider<Measurement>
             throws JSONException {
         try {
             JSONObject j = new JSONObject()
-                    .put(JSONConstants.IDENTIFIER, t.getIdentifier())
+                    .put(JSONConstants.IDENTIFIER_KEY, t.getIdentifier())
+                    .put(JSONConstants.TIME_KEY, formatter.print(t.getTime()))
                     .put(JSONConstants.SENSOR_KEY, sensorProvider.write(t.getSensor(), mediaType))
                     .put(JSONConstants.USER_KEY, userProvider.write(t.getUser(), mediaType))
                     .put(JSONConstants.GEOMETRY_KEY, geoJSON.encode(t.getGeometry()))

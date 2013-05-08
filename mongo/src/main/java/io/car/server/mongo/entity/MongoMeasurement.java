@@ -20,9 +20,11 @@ package io.car.server.mongo.entity;
 import java.util.Set;
 
 import org.bson.types.ObjectId;
+import org.joda.time.DateTime;
 
 import com.github.jmkgreen.morphia.annotations.Embedded;
 import com.github.jmkgreen.morphia.annotations.Entity;
+import com.github.jmkgreen.morphia.annotations.Indexed;
 import com.github.jmkgreen.morphia.annotations.Property;
 import com.github.jmkgreen.morphia.annotations.Reference;
 import com.vividsolutions.jts.geom.Geometry;
@@ -45,6 +47,7 @@ public class MongoMeasurement extends MongoBaseEntity<MongoMeasurement> implemen
     public static final String GEOMETRY = "geometry";
     public static final String USER = "user";
     public static final String SENSOR = "sensor";
+    public static final String TIME = "time";
     @Reference
     private MongoUser user;
     @Property(GEOMETRY)
@@ -53,6 +56,9 @@ public class MongoMeasurement extends MongoBaseEntity<MongoMeasurement> implemen
     private MongoSensor sensor;
     @Embedded(PHENOMENONS)
     private Set<MongoMeasurementValue> values;
+    @Indexed
+    @Property(TIME)
+    private DateTime time;
 
     @Override
     public MeasurementValues getValues() {
@@ -72,7 +78,7 @@ public class MongoMeasurement extends MongoBaseEntity<MongoMeasurement> implemen
 
     @Override
     public int compareTo(Measurement o) {
-        return this.getCreationDate().compareTo(o.getCreationDate());
+        return this.getTime().compareTo(o.getTime());
     }
 
     @Override
@@ -115,7 +121,18 @@ public class MongoMeasurement extends MongoBaseEntity<MongoMeasurement> implemen
     }
 
     @Override
-    public Measurement setIdentifier(String identifier) {
+    public MongoMeasurement setIdentifier(String identifier) {
         return setId(new ObjectId(identifier));
+    }
+
+    @Override
+    public DateTime getTime() {
+        return this.time;
+    }
+
+    @Override
+    public MongoMeasurement setTime(DateTime time) {
+        this.time = time;
+        return this;
     }
 }

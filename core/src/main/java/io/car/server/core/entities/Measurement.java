@@ -18,6 +18,8 @@
 package io.car.server.core.entities;
 
 
+import org.joda.time.DateTime;
+
 import com.vividsolutions.jts.geom.Geometry;
 
 import io.car.server.core.BaseEntity;
@@ -40,5 +42,7 @@ public interface Measurement extends BaseEntity, Comparable<Measurement>  {
     Measurement setSensor(Sensor sensor);
     User getUser();
     String getIdentifier();
+    DateTime getTime();
+    Measurement setTime(DateTime time);
     Measurement setIdentifier(String identifier);
 }

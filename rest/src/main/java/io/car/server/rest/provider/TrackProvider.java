@@ -61,7 +61,7 @@ public class TrackProvider extends AbstractJsonEntityProvider<Track> {
     @Override
     public JSONObject write(Track t, MediaType mediaType) throws JSONException {
         return new JSONObject()
-                .put(JSONConstants.IDENTIFIER, t.getIdentifier())
+                .put(JSONConstants.IDENTIFIER_KEY, t.getIdentifier())
                 .put(JSONConstants.CREATED_KEY, formatter.print(t.getCreationDate()))
                 .put(JSONConstants.MODIFIED_KEY, formatter.print(t.getLastModificationDate()))
                 .put(JSONConstants.SENSOR_KEY, sensorProvider.write(t.getSensor(), mediaType))
