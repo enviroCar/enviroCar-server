@@ -39,4 +39,6 @@ public interface Measurement extends BaseEntity, Comparable<Measurement>  {
     Sensor getSensor();
     Measurement setSensor(Sensor sensor);
     User getUser();
+    String getIdentifier();
+    Measurement setIdentifier(String identifier);
 }

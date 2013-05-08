@@ -115,8 +115,7 @@ public class MongoTrack extends MongoBaseEntity<MongoTrack> implements Track {
 
     @Override
     public MongoTrack setIdentifier(String id) {
-        setId(new ObjectId(id));
-        return this;
+        return setId(new ObjectId(id));
     }
 
     @Override

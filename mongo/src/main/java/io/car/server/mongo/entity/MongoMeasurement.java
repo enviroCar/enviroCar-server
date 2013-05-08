@@ -19,6 +19,8 @@ package io.car.server.mongo.entity;
 
 import java.util.Set;
 
+import org.bson.types.ObjectId;
+
 import com.github.jmkgreen.morphia.annotations.Embedded;
 import com.github.jmkgreen.morphia.annotations.Entity;
 import com.github.jmkgreen.morphia.annotations.Property;
@@ -105,5 +107,15 @@ public class MongoMeasurement extends MongoBaseEntity<MongoMeasurement> implemen
     public MongoMeasurement setSensor(Sensor sensor) {
         this.sensor = (MongoSensor) sensor;
         return this;
+    }
+
+    @Override
+    public String getIdentifier() {
+        return getId().toString();
+    }
+
+    @Override
+    public Measurement setIdentifier(String identifier) {
+        return setId(new ObjectId(identifier));
     }
 }
