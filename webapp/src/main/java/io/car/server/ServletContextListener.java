@@ -17,9 +17,6 @@
  */
 package io.car.server;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.servlet.GuiceServletContextListener;
@@ -28,7 +25,6 @@ import com.google.inject.servlet.GuiceServletContextListener;
  * @author Christian Autermann <c.autermann@52north.org>
  */
 public class ServletContextListener extends GuiceServletContextListener {
-    private static final Logger log = LoggerFactory.getLogger(ServletContextListener.class);
     @Override
     protected Injector getInjector() {
         return Guice.createInjector(new ServiceLoaderConfigurationModule());
