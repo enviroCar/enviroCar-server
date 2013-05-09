@@ -81,8 +81,10 @@ public class MongoBaseEntity<T> implements BaseEntity {
         return id;
     }
 
-    public void setId(ObjectId id) {
+    @SuppressWarnings("unchecked")
+    public T setId(ObjectId id) {
         this.id = id;
+        return (T) this;
     }
 
     @Override

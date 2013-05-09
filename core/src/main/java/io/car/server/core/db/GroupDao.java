@@ -21,9 +21,9 @@
  */
 package io.car.server.core.db;
 
-import io.car.server.core.Group;
-import io.car.server.core.Groups;
-import io.car.server.core.User;
+import io.car.server.core.entities.Group;
+import io.car.server.core.entities.Groups;
+import io.car.server.core.entities.User;
 
 /**
  *

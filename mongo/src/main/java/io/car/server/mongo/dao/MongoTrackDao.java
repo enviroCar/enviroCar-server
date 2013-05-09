@@ -25,10 +25,11 @@ import com.github.jmkgreen.morphia.query.Query;
 import com.google.inject.Inject;
 import com.vividsolutions.jts.geom.Geometry;
 
-import io.car.server.core.Track;
-import io.car.server.core.Tracks;
-import io.car.server.core.User;
 import io.car.server.core.db.TrackDao;
+import io.car.server.core.entities.Sensor;
+import io.car.server.core.entities.Track;
+import io.car.server.core.entities.Tracks;
+import io.car.server.core.entities.User;
 import io.car.server.mongo.entity.MongoTrack;
 
 /** 
@@ -78,10 +79,9 @@ public class MongoTrackDao extends BasicDAO<MongoTrack, ObjectId> implements Tra
 	}
 
 	@Override
-	public Tracks getByBbox(Geometry bbox) {
-		// XXX not implemented yet
-		Query<MongoTrack> q = createQuery();
-		return null;
+    public Tracks getByBbox(Geometry bbox) {
+        //FIXME implement
+        throw new UnsupportedOperationException("not yet implemented");
 	}
 
 	@Override
@@ -99,8 +99,8 @@ public class MongoTrackDao extends BasicDAO<MongoTrack, ObjectId> implements Tra
 	}
 
 	@Override
-	public Tracks getByCar(String car) {
-		return fetch(createQuery().field(MongoTrack.CAR).equal(car));
+    public Tracks getBySensor(Sensor car) {
+        return fetch(createQuery().field(MongoTrack.SENSOR).equal(car));
 	}
 
 

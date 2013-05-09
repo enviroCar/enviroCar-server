@@ -17,6 +17,7 @@
  */
 package io.car.server.core;
 
+import io.car.server.core.entities.Measurement;
 import io.car.server.core.exception.ValidationException;
 
 /**
@@ -28,7 +29,7 @@ public class MeasurementValidator extends AbstractValidator<Measurement>{
 
 	@Override
     public Measurement validateCreate(Measurement t) throws ValidationException {
-		isNotNull("location", t.getLocation());
+		isNotNull("location", t.getGeometry());
         isNull("created", t.getCreationDate());
         isNull("modified", t.getLastModificationDate());
         return t;
@@ -36,7 +37,7 @@ public class MeasurementValidator extends AbstractValidator<Measurement>{
 
 	@Override
     public Measurement validateUpdate(Measurement t) throws ValidationException {
-		isNotNull("location", t.getLocation());
+		isNotNull("location", t.getGeometry());
         isNull("created", t.getCreationDate());
         isNull("modified", t.getLastModificationDate());
         return t;

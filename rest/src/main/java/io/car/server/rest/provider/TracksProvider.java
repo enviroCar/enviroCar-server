@@ -28,8 +28,8 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import io.car.server.core.Track;
-import io.car.server.core.Tracks;
+import io.car.server.core.entities.Track;
+import io.car.server.core.entities.Tracks;
 import io.car.server.rest.MediaTypes;
 
 @Provider
@@ -52,7 +52,9 @@ public class TracksProvider extends AbstractJsonEntityProvider<Tracks> {
 	public JSONObject write(Tracks t, MediaType mediaType) throws JSONException {
 		JSONArray array = new JSONArray();
         for (Track track : t) {
+
             array.put(new JSONObject()
+                    .put(JSONConstants.IDENTIFIER_KEY, track.getIdentifier())
                     .put(JSONConstants.HREF_KEY, uriInfo.getRequestUriBuilder().path(track.getIdentifier()).build()));
 		}
         return new JSONObject().put(JSONConstants.TRACKS_KEY, array);

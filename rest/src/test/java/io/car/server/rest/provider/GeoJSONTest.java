@@ -17,12 +17,12 @@
  */
 package io.car.server.rest.provider;
 
+import io.car.server.core.exception.GeometryConverterException;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
 import java.util.Random;
 
-import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
 
@@ -41,7 +41,7 @@ import com.vividsolutions.jts.geom.Polygon;
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public class GeoJSONProviderTest {
+public class GeoJSONTest {
     private final Random random = new Random();
     private Coordinate randomCoordinate() {
         return new Coordinate(random.nextInt(), random.nextInt());
@@ -100,11 +100,11 @@ public class GeoJSONProviderTest {
     }
 
     @Test
-    public void readWriteTest() throws JSONException {
+    public void readWriteTest() throws GeometryConverterException {
         GeometryFactory fac = new GeometryFactory();
         Geometry col = fac.createGeometryCollection(new Geometry[] { randomGeometryCollection(fac),
                                                                      randomGeometryCollection(fac) });
-        GeoJSONProvider conv = new GeoJSONProvider(fac);
+        GeoJSON conv = new GeoJSON(fac);
         JSONObject json = conv.encode(col);
         Geometry geom = conv.decode(json);
         assertThat(geom, is(equalTo(col)));

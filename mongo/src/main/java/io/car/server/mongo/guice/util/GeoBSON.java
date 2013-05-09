@@ -15,15 +15,11 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.mongo.convert;
+package io.car.server.mongo.guice.util;
 
 import org.bson.BSONObject;
 import org.bson.types.BasicBSONList;
 
-import com.github.jmkgreen.morphia.converters.SimpleValueConverter;
-import com.github.jmkgreen.morphia.converters.TypeConverter;
-import com.github.jmkgreen.morphia.mapping.MappedField;
-import com.github.jmkgreen.morphia.mapping.MappingException;
 import com.google.common.base.Preconditions;
 import com.google.inject.Inject;
 import com.mongodb.BasicDBList;
@@ -41,53 +37,21 @@ import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
 
+import io.car.server.core.exception.GeometryConverterException;
+import io.car.server.core.util.GeometryConverter;
+
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public class GeometryConverter extends TypeConverter implements SimpleValueConverter {
-    public static final String TYPE_KEY = "type";
-    public static final String GEOMETRY_COLLECTION_TYPE = "GeometryCollection";
-    public static final String POINT_TYPE = "Point";
-    public static final String MULTI_POINT_TYPE = "MultiPoint";
-    public static final String LINE_STRING_TYPE = "LineString";
-    public static final String MULTI_LINE_STRING_TYPE = "MultiLineString";
-    public static final String POLYGON_TYPE = "Polygon";
-    public static final String MULTI_POLYGON_TYPE = "MultiPolygon";
-    public static final String GEOMETRIES_KEY = "geometries";
-    public static final String COORDINATES_KEY = "coordinates";
+public class GeoBSON implements GeometryConverter<BSONObject> {
     private final GeometryFactory factory;
 
     @Inject
-    public GeometryConverter(GeometryFactory factory) {
-        super(Geometry.class, GeometryCollection.class,
-              Point.class, MultiPoint.class,
-              LineString.class, MultiLineString.class,
-              Polygon.class, MultiPolygon.class);
+    public GeoBSON(GeometryFactory factory) {
         this.factory = factory;
     }
 
-    @Override
-    public BSONObject encode(Object value, MappedField optionalExtraInfo) {
-        if (value == null) {
-            return null;
-        } else if (value instanceof Geometry) {
-            return encodeGeometry((Geometry) value);
-        } else {
-            throw new MappingException("value is not a geometry");
-        }
-    }
-
-    @Override
-    @SuppressWarnings("rawtypes")
-    public Geometry decode(Class targetClass, Object db, MappedField optionalExtraInfo) {
-        if (db == null) {
-            return null;
-        } else {
-            return decodeGeometry(db);
-        }
-    }
-
-    protected BSONObject encodeGeometry(Geometry geometry) {
+    protected BSONObject encodeGeometry(Geometry geometry) throws GeometryConverterException {
         Preconditions.checkNotNull(geometry);
         if (geometry.isEmpty()) {
             return null;
@@ -106,11 +70,12 @@ public class GeometryConverter extends TypeConverter implements SimpleValueConve
         } else if (geometry instanceof GeometryCollection) {
             return encode((GeometryCollection) geometry);
         } else {
-            throw new MappingException("unknown geometry type " + geometry.getGeometryType());
+            throw new GeometryConverterException("unknown geometry type " + geometry.getGeometryType());
         }
     }
 
-    protected BSONObject encode(Point geometry) {
+    @Override
+    public BSONObject encode(Point geometry) {
         Preconditions.checkNotNull(geometry);
         BSONObject db;
         db = new BasicDBObject();
@@ -119,7 +84,8 @@ public class GeometryConverter extends TypeConverter implements SimpleValueConve
         return db;
     }
 
-    protected BSONObject encode(LineString geometry) {
+    @Override
+    public BSONObject encode(LineString geometry) {
         Preconditions.checkNotNull(geometry);
         BSONObject db = new BasicDBObject();
         db.put(TYPE_KEY, LINE_STRING_TYPE);
@@ -127,7 +93,8 @@ public class GeometryConverter extends TypeConverter implements SimpleValueConve
         return db;
     }
 
-    protected BSONObject encode(Polygon geometry) {
+    @Override
+    public BSONObject encode(Polygon geometry) {
         Preconditions.checkNotNull(geometry);
         BSONObject db = new BasicDBObject();
         db.put(TYPE_KEY, POLYGON_TYPE);
@@ -135,7 +102,8 @@ public class GeometryConverter extends TypeConverter implements SimpleValueConve
         return db;
     }
 
-    protected BSONObject encode(MultiPoint geometry) {
+    @Override
+    public BSONObject encode(MultiPoint geometry) {
         Preconditions.checkNotNull(geometry);
         BSONObject db = new BasicDBObject();
         db.put(TYPE_KEY, MULTI_POINT_TYPE);
@@ -147,7 +115,8 @@ public class GeometryConverter extends TypeConverter implements SimpleValueConve
         return db;
     }
 
-    protected BSONObject encode(MultiLineString geometry) {
+    @Override
+    public BSONObject encode(MultiLineString geometry) {
         Preconditions.checkNotNull(geometry);
         BSONObject db = new BasicDBObject();
         db.put(TYPE_KEY, MULTI_LINE_STRING_TYPE);
@@ -159,7 +128,8 @@ public class GeometryConverter extends TypeConverter implements SimpleValueConve
         return db;
     }
 
-    protected BSONObject encode(MultiPolygon geometry) {
+    @Override
+    public BSONObject encode(MultiPolygon geometry) {
         Preconditions.checkNotNull(geometry);
         BSONObject db = new BasicDBObject();
         db.put(TYPE_KEY, MULTI_POLYGON_TYPE);
@@ -171,7 +141,8 @@ public class GeometryConverter extends TypeConverter implements SimpleValueConve
         return db;
     }
 
-    protected BSONObject encode(GeometryCollection geometry) {
+    @Override
+    public BSONObject encode(GeometryCollection geometry) throws GeometryConverterException {
         Preconditions.checkNotNull(geometry);
         BSONObject bson = new BasicDBObject();
         bson.put(TYPE_KEY, GEOMETRY_COLLECTION_TYPE);
@@ -218,33 +189,33 @@ public class GeometryConverter extends TypeConverter implements SimpleValueConve
         return list;
     }
 
-    protected BasicDBList requireCoordinates(BSONObject bson) {
+    protected BasicDBList requireCoordinates(BSONObject bson) throws GeometryConverterException {
         if (!bson.containsField(COORDINATES_KEY)) {
-            throw new MappingException("missing 'coordinates' field");
+            throw new GeometryConverterException("missing 'coordinates' field");
         }
         return toList(bson.get(COORDINATES_KEY));
     }
 
-    protected Coordinate decodeCoordinate(BasicDBList list) {
+    protected Coordinate decodeCoordinate(BasicDBList list) throws GeometryConverterException {
         if (list.size() != 2) {
-            throw new MappingException("coordinates may only have 2 dimensions");
+            throw new GeometryConverterException("coordinates may only have 2 dimensions");
         }
         Object x = list.get(0);
         Object y = list.get(1);
         if (!(x instanceof Number) || !(y instanceof Number)) {
-            throw new MappingException("x and y have to be numbers");
+            throw new GeometryConverterException("x and y have to be numbers");
         }
         return new Coordinate(((Number) x).doubleValue(), ((Number) y).doubleValue());
     }
 
-    protected BasicDBList toList(Object o) {
+    protected BasicDBList toList(Object o) throws GeometryConverterException {
         if (!(o instanceof BasicDBList)) {
-            throw new MappingException("expected list");
+            throw new GeometryConverterException("expected list");
         }
         return (BasicDBList) o;
     }
 
-    protected Coordinate[] decodeCoordinates(BasicDBList list) {
+    protected Coordinate[] decodeCoordinates(BasicDBList list) throws GeometryConverterException {
         Coordinate[] coordinates = new Coordinate[list.size()];
         for (int i = 0; i < list.size(); ++i) {
             coordinates[i] = decodeCoordinate(toList(list.get(i)));
@@ -253,9 +224,9 @@ public class GeometryConverter extends TypeConverter implements SimpleValueConve
     }
 
     protected Polygon decodePolygonCoordinates(BasicDBList coordinates) throws
-            MappingException {
+            GeometryConverterException {
         if (coordinates.size() < 1) {
-            throw new MappingException("missing polygon shell");
+            throw new GeometryConverterException("missing polygon shell");
         }
         LinearRing shell = factory.createLinearRing(decodeCoordinates(toList(coordinates.get(0))));
         LinearRing[] holes = new LinearRing[coordinates.size() - 1];
@@ -265,17 +236,14 @@ public class GeometryConverter extends TypeConverter implements SimpleValueConve
         return factory.createPolygon(shell, holes);
     }
 
-    protected Geometry decodeGeometry(Object db) {
-        if (!(db instanceof BSONObject)) {
-            throw new MappingException("Cannot decode " + db);
-        }
+    protected Geometry decodeGeometry(Object db) throws GeometryConverterException {
         BSONObject bson = (BSONObject) db;
         if (!bson.containsField(TYPE_KEY)) {
-            throw new MappingException("Can not determine geometry type (missing 'type' field)");
+            throw new GeometryConverterException("Can not determine geometry type (missing 'type' field)");
         }
         Object to = bson.get(TYPE_KEY);
         if (!(to instanceof String)) {
-            throw new MappingException("'type' field has to be a string");
+            throw new GeometryConverterException("'type' field has to be a string");
         }
         String type = (String) to;
         if (type.equals(POINT_TYPE)) {
@@ -293,11 +261,12 @@ public class GeometryConverter extends TypeConverter implements SimpleValueConve
         } else if (type.equals(GEOMETRY_COLLECTION_TYPE)) {
             return decodeGeometryCollection(bson);
         } else {
-            throw new MappingException("Unkown geometry type: " + type);
+            throw new GeometryConverterException("Unkown geometry type: " + type);
         }
     }
 
-    protected Geometry decodeMultiLineString(BSONObject bson) {
+    @Override
+    public MultiLineString decodeMultiLineString(BSONObject bson) throws GeometryConverterException {
         BasicDBList coordinates = requireCoordinates(bson);
         LineString[] lineStrings = new LineString[coordinates.size()];
         for (int i = 0; i < coordinates.size(); ++i) {
@@ -307,27 +276,32 @@ public class GeometryConverter extends TypeConverter implements SimpleValueConve
         return factory.createMultiLineString(lineStrings);
     }
 
-    protected Geometry decodeLineString(BSONObject bson) {
+    @Override
+    public LineString decodeLineString(BSONObject bson) throws GeometryConverterException {
         Coordinate[] coordinates = decodeCoordinates(requireCoordinates(bson));
         return factory.createLineString(coordinates);
     }
 
-    protected Geometry decodeMultiPoint(BSONObject bson) {
+    @Override
+    public MultiPoint decodeMultiPoint(BSONObject bson) throws GeometryConverterException {
         Coordinate[] coordinates = decodeCoordinates(requireCoordinates(bson));
         return factory.createMultiPoint(coordinates);
     }
 
-    protected Geometry decodePoint(BSONObject bson) {
+    @Override
+    public Point decodePoint(BSONObject bson) throws GeometryConverterException {
         Coordinate parsed = decodeCoordinate(requireCoordinates(bson));
         return factory.createPoint(parsed);
     }
 
-    protected Geometry decodePolygon(BSONObject bson) {
+    @Override
+    public Polygon decodePolygon(BSONObject bson) throws GeometryConverterException {
         BasicDBList coordinates = requireCoordinates(bson);
         return decodePolygonCoordinates(coordinates);
     }
 
-    protected Geometry decodeMultiPolygon(BSONObject bson) {
+    @Override
+    public MultiPolygon decodeMultiPolygon(BSONObject bson) throws GeometryConverterException {
         BasicDBList coordinates = requireCoordinates(bson);
         Polygon[] polygons = new Polygon[coordinates.size()];
         for (int i = 0; i < coordinates.size(); ++i) {
@@ -336,9 +310,10 @@ public class GeometryConverter extends TypeConverter implements SimpleValueConve
         return factory.createMultiPolygon(polygons);
     }
 
-    protected Geometry decodeGeometryCollection(BSONObject bson) {
+    @Override
+    public GeometryCollection decodeGeometryCollection(BSONObject bson) throws GeometryConverterException {
         if (!bson.containsField(GEOMETRIES_KEY)) {
-            throw new MappingException("missing 'geometries' field");
+            throw new GeometryConverterException("missing 'geometries' field");
         }
         BasicDBList geometries = toList(bson.get(GEOMETRIES_KEY));
         Geometry[] geoms = new Geometry[geometries.size()];
@@ -347,4 +322,15 @@ public class GeometryConverter extends TypeConverter implements SimpleValueConve
         }
         return factory.createGeometryCollection(geoms);
     }
+
+    @Override
+    public Geometry decode(BSONObject json) throws GeometryConverterException {
+        return json == null ? null : decodeGeometry(json);
+    }
+
+    @Override
+    public BSONObject encode(Geometry value) {
+        return value == null ? null : encode(value);
+    }
+
 }

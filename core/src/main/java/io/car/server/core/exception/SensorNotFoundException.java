@@ -15,12 +15,15 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.core;
+package io.car.server.core.exception;
 
-import io.car.server.core.util.UpCastingIterable;
+/**
+ * @author Christian Autermann <c.autermann@52north.org>
+ */
+public class SensorNotFoundException extends ResourceNotFoundException {
+    private static final long serialVersionUID = 2221771870292382627L;
 
-public class Measurements extends UpCastingIterable<Measurement> {
-    public Measurements(Iterable<? extends Measurement> delegate) {
-        super(delegate);
+    public SensorNotFoundException(String sensor) {
+        super(String.format("The sensor '%s' was not found", sensor));
     }
 }

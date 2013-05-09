@@ -21,11 +21,15 @@ import com.google.inject.AbstractModule;
 
 import io.car.server.core.db.GroupDao;
 import io.car.server.core.db.MeasurementDao;
+import io.car.server.core.db.PhenomenonDao;
+import io.car.server.core.db.SensorDao;
 import io.car.server.core.db.StatisticsDao;
 import io.car.server.core.db.TrackDao;
 import io.car.server.core.db.UserDao;
 import io.car.server.mongo.dao.MongoGroupDao;
 import io.car.server.mongo.dao.MongoMeasurementDao;
+import io.car.server.mongo.dao.MongoPhenomenonDao;
+import io.car.server.mongo.dao.MongoSensorDao;
 import io.car.server.mongo.dao.MongoStatisticsDao;
 import io.car.server.mongo.dao.MongoTrackDao;
 import io.car.server.mongo.dao.MongoUserDao;
@@ -41,6 +45,8 @@ public class MongoDaoModule extends AbstractModule {
         bind(GroupDao.class).to(MongoGroupDao.class);
         bind(TrackDao.class).to(MongoTrackDao.class);
         bind(MeasurementDao.class).to(MongoMeasurementDao.class);
+        bind(SensorDao.class).to(MongoSensorDao.class);
         bind(StatisticsDao.class).to(MongoStatisticsDao.class);
+        bind(PhenomenonDao.class).to(MongoPhenomenonDao.class);
     }
 }

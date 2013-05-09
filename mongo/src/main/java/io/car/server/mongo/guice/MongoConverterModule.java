@@ -17,15 +17,20 @@
  */
 package io.car.server.mongo.guice;
 
+import org.bson.BSONObject;
+
 import com.github.jmkgreen.morphia.converters.TypeConverter;
 import com.google.inject.AbstractModule;
+import com.google.inject.TypeLiteral;
 import com.google.inject.multibindings.Multibinder;
 
+import io.car.server.core.util.GeometryConverter;
 import io.car.server.mongo.convert.DateTimeConverter;
 import io.car.server.mongo.convert.DurationConverter;
 import io.car.server.mongo.convert.FileConverter;
-import io.car.server.mongo.convert.GeometryConverter;
+import io.car.server.mongo.convert.JTSConverter;
 import io.car.server.mongo.convert.URLConverter;
+import io.car.server.mongo.guice.util.GeoBSON;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
@@ -35,10 +40,12 @@ public class MongoConverterModule extends AbstractModule {
     @Override
     protected void configure() {
         Multibinder<TypeConverter> mb = Multibinder.newSetBinder(binder(), TypeConverter.class);
+        bind(new TypeLiteral<GeometryConverter<BSONObject>>() {
+        }).to(GeoBSON.class);
         mb.addBinding().to(DateTimeConverter.class);
         mb.addBinding().to(DurationConverter.class);
         mb.addBinding().to(FileConverter.class);
-        mb.addBinding().to(GeometryConverter.class);
+        mb.addBinding().to(JTSConverter.class);
         mb.addBinding().to(URLConverter.class);
     }
 }

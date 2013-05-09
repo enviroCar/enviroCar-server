@@ -19,8 +19,11 @@ package io.car.server.core;
 
 import io.car.server.core.util.UpCastingIterable;
 
-public class Tracks extends UpCastingIterable<Track> {
-    public Tracks(Iterable<? extends Track> delegate) {
+/**
+ * @author Christian Autermann <c.autermann@52north.org>
+ */
+public class MeasurementValues extends UpCastingIterable<MeasurementValue> {
+    public MeasurementValues(Iterable<? extends MeasurementValue> delegate) {
         super(delegate);
     }
 }

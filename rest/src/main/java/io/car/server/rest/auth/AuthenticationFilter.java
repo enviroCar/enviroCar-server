@@ -28,7 +28,7 @@ import com.sun.jersey.spi.container.ContainerRequest;
 import com.sun.jersey.spi.container.ContainerRequestFilter;
 
 import io.car.server.core.PasswordEncoder;
-import io.car.server.core.User;
+import io.car.server.core.entities.User;
 import io.car.server.core.Service;
 import io.car.server.core.exception.UserNotFoundException;
 

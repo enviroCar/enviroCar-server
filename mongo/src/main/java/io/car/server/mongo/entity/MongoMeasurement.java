@@ -17,63 +17,68 @@
  */
 package io.car.server.mongo.entity;
 
-import java.util.Collections;
-import java.util.Map;
+import java.util.Set;
+
+import org.bson.types.ObjectId;
+import org.joda.time.DateTime;
 
 import com.github.jmkgreen.morphia.annotations.Embedded;
 import com.github.jmkgreen.morphia.annotations.Entity;
+import com.github.jmkgreen.morphia.annotations.Indexed;
 import com.github.jmkgreen.morphia.annotations.Property;
 import com.github.jmkgreen.morphia.annotations.Reference;
-import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.geom.Geometry;
 
-import io.car.server.core.Measurement;
 import io.car.server.core.MeasurementValue;
-import io.car.server.core.User;
+import io.car.server.core.MeasurementValues;
+import io.car.server.core.entities.Measurement;
+import io.car.server.core.entities.Sensor;
+import io.car.server.core.entities.User;
 
 /**
  *
  * @author Arne de Wall
  *
  */
-@Entity("measurement")
+@Entity("measurements")
 public class MongoMeasurement extends MongoBaseEntity<MongoMeasurement> implements Measurement {
     public static final String PHENOMENONS = "phenomenons";
     public static final String VALUES = "values";
-    public static final String LOCATION = "location";
+    public static final String GEOMETRY = "geometry";
     public static final String USER = "user";
+    public static final String SENSOR = "sensor";
+    public static final String TIME = "time";
     @Reference
     private MongoUser user;
-    @Property(LOCATION)
-    private Point location;
+    @Property(GEOMETRY)
+    private Geometry geometry;
+    @Reference(SENSOR)
+    private MongoSensor sensor;
     @Embedded(PHENOMENONS)
-    private Map<String, MeasurementValue<?>> phenomenonMap;
+    private Set<MongoMeasurementValue> values;
+    @Indexed
+    @Property(TIME)
+    private DateTime time;
 
     @Override
-    public Map<String, MeasurementValue<?>> getPhenomenons() {
-        return Collections.unmodifiableMap(this.phenomenonMap);
+    public MeasurementValues getValues() {
+        return new MeasurementValues(this.values);
     }
 
     @Override
-    public Measurement setPhenomenon(String phenomenon,
-                                     MeasurementValue<?> value) {
-        this.phenomenonMap.put(phenomenon, (MongoMeasurementValue) value);
-        return this;
+    public Geometry getGeometry() {
+        return this.geometry;
     }
 
     @Override
-    public Point getLocation() {
-        return this.location;
-    }
-
-    @Override
-    public MongoMeasurement setLocation(Point location) {
-        this.location = location;
+    public MongoMeasurement setGeometry(Geometry location) {
+        this.geometry = location;
         return this;
     }
 
     @Override
     public int compareTo(Measurement o) {
-        return this.getCreationDate().compareTo(o.getCreationDate());
+        return this.getTime().compareTo(o.getTime());
     }
 
     @Override
@@ -84,6 +89,50 @@ public class MongoMeasurement extends MongoBaseEntity<MongoMeasurement> implemen
     @Override
     public Measurement setUser(User user) {
         this.user = (MongoUser) user;
+        return this;
+    }
+
+    @Override
+    public Measurement addValue(MeasurementValue value) {
+        this.values.add((MongoMeasurementValue) value);
+        return this;
+    }
+
+    @Override
+    public Measurement removeValue(MeasurementValue value) {
+        this.values.remove((MongoMeasurementValue) value);
+        return this;
+    }
+
+    @Override
+    public MongoSensor getSensor() {
+        return sensor;
+    }
+
+    @Override
+    public MongoMeasurement setSensor(Sensor sensor) {
+        this.sensor = (MongoSensor) sensor;
+        return this;
+    }
+
+    @Override
+    public String getIdentifier() {
+        return getId().toString();
+    }
+
+    @Override
+    public MongoMeasurement setIdentifier(String identifier) {
+        return setId(new ObjectId(identifier));
+    }
+
+    @Override
+    public DateTime getTime() {
+        return this.time;
+    }
+
+    @Override
+    public MongoMeasurement setTime(DateTime time) {
+        this.time = time;
         return this;
     }
 }

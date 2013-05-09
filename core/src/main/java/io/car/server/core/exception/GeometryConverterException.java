@@ -15,22 +15,23 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.core;
-
-import java.util.Map;
-
-import com.vividsolutions.jts.geom.Point;
+package io.car.server.core.exception;
 
 /**
- * 
- * @author Arne de Wall <a.dewall@52north.org>
- *
+ * @author Christian Autermann <c.autermann@52north.org>
  */
-public interface Measurement extends BaseEntity, Comparable<Measurement>  {
-	Map<String, MeasurementValue<?>> getPhenomenons();
-	Measurement setPhenomenon(String phenomenon, MeasurementValue<?> value);
-	Point getLocation();
-    Measurement setLocation(Point location);
-    Measurement setUser(User user);
-    User getUser();
+public class GeometryConverterException extends Exception {
+    private static final long serialVersionUID = -3922994720240573692L;
+
+    public GeometryConverterException(Throwable cause) {
+        super(cause);
+    }
+
+    public GeometryConverterException(String message) {
+        super(message);
+    }
+
+    public GeometryConverterException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

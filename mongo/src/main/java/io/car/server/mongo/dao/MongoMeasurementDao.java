@@ -17,11 +17,6 @@
  */
 package io.car.server.mongo.dao;
 
-import io.car.server.core.Measurement;
-import io.car.server.core.Measurements;
-import io.car.server.core.Track;
-import io.car.server.core.db.MeasurementDao;
-
 import com.github.jmkgreen.morphia.Datastore;
 import com.github.jmkgreen.morphia.dao.BasicDAO;
 import com.github.jmkgreen.morphia.query.Query;
@@ -29,8 +24,11 @@ import com.google.inject.Inject;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 
+import io.car.server.core.db.MeasurementDao;
+import io.car.server.core.entities.Measurement;
+import io.car.server.core.entities.Measurements;
+import io.car.server.core.entities.Track;
 import io.car.server.mongo.entity.MongoMeasurement;
-import io.car.server.mongo.entity.MongoTrack;
 
 /**
  * 
@@ -84,7 +82,7 @@ public class MongoMeasurementDao extends BasicDAO<MongoMeasurement, String> impl
 	public Measurements getByBbox(double minx, double miny, double maxx,
 			double maxy) {
 		Query<MongoMeasurement> q = createQuery();
-		q.field(MongoMeasurement.LOCATION).within(minx, miny, maxx, maxy);
+        q.field(MongoMeasurement.GEOMETRY).within(minx, miny, maxx, maxy);
 		return fetch(q);
 	}
 

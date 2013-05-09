@@ -15,15 +15,15 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.core;
+package io.car.server.core.db;
 
-import io.car.server.core.util.UpCastingIterable;
+import io.car.server.core.entities.Sensor;
+import io.car.server.core.entities.Sensors;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public class Users extends UpCastingIterable<User> {
-    public Users(Iterable<? extends User> delegate) {
-        super(delegate);
-    }
+public interface SensorDao {
+    Sensor getByName(String name);
+    Sensors getAll();
 }

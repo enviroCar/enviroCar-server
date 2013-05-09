@@ -17,14 +17,6 @@
  */
 package io.car.server.rest.provider;
 
-import io.car.server.core.EntityFactory;
-import io.car.server.core.Measurement;
-import io.car.server.core.MeasurementValue;
-import io.car.server.rest.MediaTypes;
-
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -34,59 +26,90 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.ISODateTimeFormat;
 
 import com.google.inject.Inject;
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.GeometryFactory;
+
+import io.car.server.core.EntityFactory;
+import io.car.server.core.MeasurementValue;
+import io.car.server.core.db.PhenomenonDao;
+import io.car.server.core.entities.Measurement;
+import io.car.server.core.exception.GeometryConverterException;
+import io.car.server.rest.MediaTypes;
 
 /**
- * 
- * @author @author Arne de Wall <a.dewall@52north.org>
- * 
+ * @author Arne de Wall <a.dewall@52north.org>
+ * @author Christian Autermann <c.autermann@52north.org>
  */
 @Provider
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class MeasurementProvider extends
-		AbstractJsonEntityProvider<Measurement> {
-
+public class MeasurementProvider extends AbstractJsonEntityProvider<Measurement> {
     @Inject
     private DateTimeFormatter formatter;
-	@Inject
-	private EntityFactory factory;
-	@Inject
-	private GeometryFactory geometry;
+    @Inject
+    private EntityFactory factory;
+    @Inject
+    private GeoJSON geoJSON;
+    @Inject
+    private UserProvider userProvider;
+    @Inject
+    private SensorProvider sensorProvider;
+    @Inject
+    private PhenomenonProvider phenomenonProvider;
+    @Inject
+    private PhenomenonDao phenomenonDao;
 
-	public MeasurementProvider() {
-		super(Measurement.class, MediaTypes.MEASUREMENT_TYPE,
-				MediaTypes.MEASUREMENT_CREATE_TYPE,
-				MediaTypes.MEASUREMENT_MODIFY_TYPE);
-	}
+    public MeasurementProvider() {
+        super(Measurement.class, MediaTypes.MEASUREMENT_TYPE, MediaTypes.MEASUREMENT_CREATE_TYPE);
+    }
 
-	@Override
-	public Measurement read(JSONObject j, MediaType mediaType)
-			throws JSONException {
-		// XXX check which direction of lon lat =) ?
-		Measurement measurement = factory.createMeasurement();
-		JSONArray location = j.getJSONArray(JSONConstants.LOCATION_KEY);
-		measurement.setLocation(geometry.createPoint(new Coordinate(location
-				.getDouble(0), location.getDouble(1))));
+    @Override
+    public Measurement read(JSONObject j, MediaType mediaType)
+            throws JSONException {
+        try {
+            Measurement measurement = factory.createMeasurement();
+            if (j.has(JSONConstants.TIME_KEY)) {
+                measurement.setTime(formatter.parseDateTime(j.getString(JSONConstants.TIME_KEY)));
+            }
+            if (j.has(JSONConstants.GEOMETRY_KEY)) {
+                measurement.setGeometry(geoJSON.decode(j.getJSONObject(JSONConstants.GEOMETRY_KEY)));
+            }
+            if (j.has(JSONConstants.PHENOMENONS_KEY)) {
+                JSONArray array = j.getJSONArray(JSONConstants.PHENOMENONS_KEY);
+                for (int i = 0; i < array.length(); ++i) {
+                    measurement.addValue(
+                            factory.createMeasurementValue().setValue(j.get(JSONConstants.VALUE_KEY))
+                            .setPhenomenon(phenomenonDao.getByName(j.getJSONObject(JSONConstants.PHENOMENON_KEY)
+                            .getString(JSONConstants.NAME_KEY))));
+                }
+            }
+            return null;
+        } catch (GeometryConverterException ex) {
+            throw new JSONException(ex);
+        }
+    }
 
-		JSONArray array = j.getJSONArray(JSONConstants.PHENOMENONS_KEY);
-		for (int i = 0; i < array.length(); i++) {
-			// measurement.addPhenomenon(array.get(i), value);
-			// measurement. XXX TODO
-		}
-		return null;
-	}
-
-	@Override
-	public JSONObject write(Measurement t, MediaType mediaType)
-			throws JSONException {
-		JSONObject object = new JSONObject();
-		// object.put(JSONConstants.lo, value)
-		return null;
-	}
-
+    @Override
+    public JSONObject write(Measurement t, MediaType mediaType) throws JSONException {
+        try {
+            //FIXME just encode references to user/sensor
+            JSONObject j = new JSONObject()
+                    .put(JSONConstants.IDENTIFIER_KEY, t.getIdentifier())
+                    .put(JSONConstants.TIME_KEY, formatter.print(t.getTime()))
+                    .put(JSONConstants.SENSOR_KEY, sensorProvider.write(t.getSensor(), mediaType))
+                    .put(JSONConstants.USER_KEY, userProvider.write(t.getUser(), mediaType))
+                    .put(JSONConstants.GEOMETRY_KEY, geoJSON.encode(t.getGeometry()))
+                    .put(JSONConstants.MODIFIED_KEY, formatter.print(t.getLastModificationDate()))
+                    .put(JSONConstants.CREATED_KEY, formatter.print(t.getCreationDate()));
+            JSONArray values = new JSONArray();
+            for (MeasurementValue mv : t.getValues()) {
+                values.put(new JSONObject()
+                        .put(JSONConstants.PHENOMENON_KEY, phenomenonProvider.write(mv.getPhenomenon(), mediaType))
+                        .put(JSONConstants.VALUE_KEY, mv.getValue()));
+            }
+            return j.put(JSONConstants.PHENOMENONS_KEY, values);
+        } catch (GeometryConverterException ex) {
+            throw new JSONException(ex);
+        }
+    }
 }

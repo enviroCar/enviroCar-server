@@ -17,11 +17,11 @@
  */
 package io.car.server.core.db;
 
-import io.car.server.core.Measurement;
-import io.car.server.core.Measurements;
-import io.car.server.core.Track;
-
 import com.vividsolutions.jts.geom.Geometry;
+
+import io.car.server.core.entities.Measurement;
+import io.car.server.core.entities.Measurements;
+import io.car.server.core.entities.Track;
 
 /**
  * 
@@ -32,15 +32,11 @@ public interface MeasurementDao {
 	Measurement create(Measurement measurement);
 	Measurement save(Measurement measurement);
 	void delete(Measurement measurement);
-	
 	Measurement getById(String id);
-	
 	Measurements getByPhenomenon(String string);
 	Measurements getByTrack(Track track);
 	Measurements getByBbox(Geometry bbox);
 	Measurements getByBbox(double minx, double miny, double maxx, double maxy);
-	
 	Measurements getAll();
 	Measurements getAll(int limit);
-
 }

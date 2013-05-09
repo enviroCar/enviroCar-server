@@ -29,7 +29,7 @@ import org.joda.time.format.DateTimeFormatter;
 import com.google.inject.Inject;
 
 import io.car.server.core.EntityFactory;
-import io.car.server.core.Group;
+import io.car.server.core.entities.Group;
 import io.car.server.rest.MediaTypes;
 
 /**

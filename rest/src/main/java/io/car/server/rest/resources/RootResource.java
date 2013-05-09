@@ -35,15 +35,24 @@ public class RootResource extends AbstractResource {
     public static final String USERS_PATH = "users";
     public static final String GROUPS_PATH = "groups";
     public static final String TRACKS_PATH = "tracks";
+    public static final String PHENOMENONS_PATH = "phenomenons";
+    public static final String SENSORS_PATH = "sensors";
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public JSONObject get() {
         try {
             return new JSONObject()
-                    .put(JSONConstants.USERS_KEY, getUriInfo().getRequestUriBuilder().path(USERS_PATH).build())
-                    .put(JSONConstants.GROUPS_KEY, getUriInfo().getRequestUriBuilder().path(GROUPS_PATH).build())
-                    .put(JSONConstants.TRACKS_KEY, getUriInfo().getRequestUriBuilder().path(TRACKS_PATH).build());
+                    .put(JSONConstants.USERS_KEY,
+                         getUriInfo().getRequestUriBuilder().path(USERS_PATH).build())
+                    .put(JSONConstants.GROUPS_KEY,
+                         getUriInfo().getRequestUriBuilder().path(GROUPS_PATH).build())
+                    .put(JSONConstants.TRACKS_KEY,
+                         getUriInfo().getRequestUriBuilder().path(TRACKS_PATH).build())
+                    .put(JSONConstants.SENSORS_KEY,
+                         getUriInfo().getRequestUriBuilder().path(SENSORS_PATH).build())
+                    .put(JSONConstants.PHENOMENONS_KEY,
+                         getUriInfo().getRequestUriBuilder().path(PHENOMENONS_PATH).build());
         } catch (JSONException ex) {
             throw new WebApplicationException(ex, Status.INTERNAL_SERVER_ERROR);
         }
@@ -62,5 +71,15 @@ public class RootResource extends AbstractResource {
     @Path(TRACKS_PATH)
     public TracksResource tracks() {
     	return getResourceFactory().createTracksResource();
+    }
+
+    @Path(PHENOMENONS_PATH)
+    public PhenomenonsResource phenomenons() {
+        return getResourceFactory().createPhenomenonsResource();
+    }
+
+    @Path(SENSORS_PATH)
+    public SensorsResource sensors() {
+        return getResourceFactory().createSensorsResource();
     }
 }

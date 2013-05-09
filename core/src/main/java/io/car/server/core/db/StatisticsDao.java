@@ -6,8 +6,8 @@ package io.car.server.core.db;
 
 import io.car.server.core.Statistic;
 import io.car.server.core.Statistics;
-import io.car.server.core.Track;
-import io.car.server.core.User;
+import io.car.server.core.entities.Track;
+import io.car.server.core.entities.User;
 
 /**
  *

@@ -24,100 +24,89 @@ import org.bson.types.ObjectId;
 
 import com.github.jmkgreen.morphia.annotations.Embedded;
 import com.github.jmkgreen.morphia.annotations.Entity;
-import com.github.jmkgreen.morphia.annotations.Property;
+import com.github.jmkgreen.morphia.annotations.Indexed;
 import com.github.jmkgreen.morphia.annotations.Reference;
+import com.github.jmkgreen.morphia.utils.IndexDirection;
 import com.google.inject.Inject;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 
-import io.car.server.core.Measurement;
-import io.car.server.core.Measurements;
-import io.car.server.core.Track;
-import io.car.server.core.User;
+import io.car.server.core.entities.Measurement;
+import io.car.server.core.entities.Measurements;
+import io.car.server.core.entities.Sensor;
+import io.car.server.core.entities.Track;
+import io.car.server.core.entities.User;
 
-@Entity("track")
+@Entity("tracks")
 public class MongoTrack extends MongoBaseEntity<MongoTrack> implements Track {
-	public static final String BBOX = "bbox";
-	public static final String MEASUREMENTS = "measurements";
-    public static final String CAR = "car";
+    public static final String BBOX = "bbox";
+    public static final String MEASUREMENTS = "measurements";
+    public static final String SENSOR = "sensor";
     public static final String USER = "user";
-
-	@Embedded(BBOX)
-	private Geometry bbox;
-	@Property(CAR)
-    private String car;
+    @Indexed(IndexDirection.GEO2D)
+    @Embedded(BBOX)
+    private Geometry bbox;
     @Reference(USER)
     private MongoUser user;
-	@Inject
-	private GeometryFactory factory;
-	
+    @Reference(SENSOR)
+    private MongoSensor sensor;
+    @Reference(value = MEASUREMENTS, lazy = true)
+    private List<MongoMeasurement> measurements = new ArrayList<MongoMeasurement>();
+    @Inject
+    private GeometryFactory factory;
 
-	@Reference(value = MEASUREMENTS, lazy = true)
-	private List<MongoMeasurement> measurements = new ArrayList<MongoMeasurement>();
+    @Override
+    public MongoTrack addMeasurement(Measurement measurement) {
+        this.measurements.add((MongoMeasurement) measurement);
+        return this;
+    }
 
-	@Override
-	public Track setCar(String car) {
-		this.car = car;
-		return this;
-	}
+    @Override
+    public MongoTrack removeMeasurement(Measurement measurement) {
+        this.measurements.remove((MongoMeasurement) measurement);
+        return this;
+    }
 
-	@Override
-	public String getCar() {
-		return this.car;
-	}
-	
-	@Override
-	public MongoTrack addMeasurement(Measurement measurement) {
-		this.measurements.add((MongoMeasurement) measurement);
-		return this;
-	}
+    @Override
+    public Measurements getMeasurements() {
+        return new Measurements(this.measurements);
+    }
 
-	@Override
-	public MongoTrack removeMeasurement(Measurement measurement) {
-		this.measurements.remove((MongoMeasurement) measurement);
-		return this;
-	}
+    public MongoTrack setMeasurements(Measurements measurements) {
+        this.measurements.clear();
+        for (Measurement m : measurements) {
+            this.measurements.add((MongoMeasurement) m);
+        }
+        return this;
+    }
 
-	@Override
-	public Measurements getMeasurements() {
-		return new Measurements(this.measurements);
-	}
+    @Override
+    public MongoTrack addMeasurements(Measurements measurements) {
+        for (Measurement m : measurements) {
+            this.measurements.add((MongoMeasurement) m);
+        }
+        return this;
+    }
 
-	public MongoTrack setMeasurements(Measurements measurements) {
-		this.measurements.clear();
-		for (Measurement m : measurements) {
-			this.measurements.add((MongoMeasurement) m);
-		}
-		return this;
-	}
+    @Override
+    public MongoTrack setBbox(Geometry bbox) {
+        this.bbox = bbox;
+        return this;
+    }
 
-	@Override
-	public MongoTrack addMeasurements(Measurements measurements) {
-		for (Measurement m : measurements) {
-			this.measurements.add((MongoMeasurement) m);
-		}
-		return this;
-	}
+    @Override
+    public Geometry getBbox() {
+        return this.bbox;
+    }
 
-	@Override
-	public MongoTrack setBbox(Geometry bbox) {
-		this.bbox = bbox;
-		return this;
-	}
-
-	@Override
-	public Geometry getBbox() {
-		return this.bbox;
-	}
-
-	@Override
-	public MongoTrack setBbox(double minx, double miny, double maxx, double maxy) {
-		Coordinate[] coords = new Coordinate[] { new Coordinate(minx, miny),
-				new Coordinate(maxx, maxy) };
-		this.bbox = factory.createPolygon(coords);
-		return this;
-	}
+    @Override
+    public MongoTrack setBbox(double minx, double miny, double maxx, double maxy) {
+        Coordinate[] coords = new Coordinate[] { new Coordinate(minx, miny),
+                                                 new Coordinate(maxx, maxy) };
+        this.bbox = factory.createPolygon(coords);
+        return this;
+    }
 
     @Override
     public String getIdentifier() {
@@ -126,8 +115,7 @@ public class MongoTrack extends MongoBaseEntity<MongoTrack> implements Track {
 
     @Override
     public MongoTrack setIdentifier(String id) {
-        setId(new ObjectId(id));
-        return this;
+        return setId(new ObjectId(id));
     }
 
     @Override
@@ -138,6 +126,17 @@ public class MongoTrack extends MongoBaseEntity<MongoTrack> implements Track {
     @Override
     public Track setUser(User user) {
         this.user = (MongoUser) user;
+        return this;
+    }
+
+    @Override
+    public MongoSensor getSensor() {
+        return sensor;
+    }
+
+    @Override
+    public MongoTrack setSensor(Sensor sensor) {
+        this.sensor = (MongoSensor) sensor;
         return this;
     }
 }

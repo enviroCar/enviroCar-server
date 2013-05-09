@@ -17,11 +17,12 @@
  */
 package io.car.server.core.db;
 
-import io.car.server.core.Track;
-import io.car.server.core.Tracks;
-import io.car.server.core.User;
-
 import com.vividsolutions.jts.geom.Geometry;
+
+import io.car.server.core.entities.Sensor;
+import io.car.server.core.entities.Track;
+import io.car.server.core.entities.Tracks;
+import io.car.server.core.entities.User;
 
 /**
  * 
@@ -32,11 +33,9 @@ public interface TrackDao {
 	Track create(Track track);
 	Track save(Track track);
 	void delete(Track track);
-	
 	Track getById(String id);
-	
 	Tracks getByUser(User user);
-	Tracks getByCar(String car);
+    Tracks getBySensor(Sensor sensor);
 	Tracks getByBbox(double minx, double miny, double maxx, double maxy);
 	Tracks getByBbox(Geometry bbox);
 	Tracks getAll();

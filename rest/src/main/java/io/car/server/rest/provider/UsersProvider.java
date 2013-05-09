@@ -30,8 +30,8 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import io.car.server.core.User;
-import io.car.server.core.Users;
+import io.car.server.core.entities.User;
+import io.car.server.core.entities.Users;
 import io.car.server.rest.MediaTypes;
 
 /**

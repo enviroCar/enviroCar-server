@@ -17,6 +17,13 @@
  */
 package io.car.server.core;
 
+import io.car.server.core.entities.Group;
+import io.car.server.core.entities.Measurement;
+import io.car.server.core.entities.Phenomenon;
+import io.car.server.core.entities.Sensor;
+import io.car.server.core.entities.Track;
+import io.car.server.core.entities.User;
+
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  * @author Arne de Wall <a.dewall@52north.org>
@@ -25,5 +32,8 @@ public interface EntityFactory {
     User createUser();
     Group createGroup();
     Track createTrack();
-	Measurement createMeasurement();
+    Measurement createMeasurement();
+    MeasurementValue createMeasurementValue();
+    Sensor createSensor();
+    Phenomenon createPhenomenon();
 }

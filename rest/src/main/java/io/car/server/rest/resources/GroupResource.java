@@ -34,7 +34,7 @@ import javax.ws.rs.core.UriBuilder;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
-import io.car.server.core.Group;
+import io.car.server.core.entities.Group;
 import io.car.server.core.exception.GroupNotFoundException;
 import io.car.server.core.exception.IllegalModificationException;
 import io.car.server.core.exception.UserNotFoundException;
