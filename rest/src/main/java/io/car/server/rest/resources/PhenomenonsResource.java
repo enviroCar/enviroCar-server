@@ -17,6 +17,7 @@
  */
 package io.car.server.rest.resources;
 
+import io.car.server.core.entities.Phenomenon;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -26,9 +27,13 @@ import javax.ws.rs.core.MediaType;
 import io.car.server.core.entities.Phenomenons;
 import io.car.server.core.exception.PhenomenonNotFoundException;
 import io.car.server.rest.AbstractResource;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
+import javax.ws.rs.core.Response;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
+ * @author Jan Wirwahn <jan.wirwahn@wwu.de>
  */
 public class PhenomenonsResource extends AbstractResource {
     @GET
@@ -37,6 +42,12 @@ public class PhenomenonsResource extends AbstractResource {
         return getService().getAllPhenomenons();
     }
 
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response create(Phenomenon phenomenon) {
+        return Response.created(getUriInfo().getRequestUriBuilder().path(getService().createPhenomenon(phenomenon).getName()).build()).build();
+    }
+    
     @Path("{id}")
     public PhenomenonResource phenomenon(@PathParam("id") String id) throws PhenomenonNotFoundException {
         return getResourceFactory().createPhenomenonResource(getService().getPhenomenonByName(id));

@@ -26,4 +26,5 @@ import io.car.server.core.entities.Phenomenons;
 public interface PhenomenonDao {
     Phenomenon getByName(String name);
     Phenomenons getAll();
+    Object create(Phenomenon phenomenon);
 }

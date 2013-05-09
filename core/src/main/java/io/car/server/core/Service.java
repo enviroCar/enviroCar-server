@@ -50,6 +50,7 @@ import io.car.server.core.exception.ValidationException;
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  * @author Arne de Wall <a.dewall@52north.org>
+ * @author Jan Wirwahn <jan.wirwahn@wwu.de>
  */
 @Singleton
 public class Service {
@@ -253,4 +254,14 @@ public class Service {
     public Sensors getAllSensors() {
         return this.sensorDao.getAll();
     }
+
+    public Sensor createSensor(Sensor sensor) {
+        return this.sensorDao.create(sensor);
+    }
+
+    public Object createPhenomenon(Phenomenon phenomenon) {
+        return this.phenomenonDao.create(phenomenon);
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }
