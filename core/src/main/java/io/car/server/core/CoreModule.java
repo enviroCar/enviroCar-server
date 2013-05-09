@@ -17,14 +17,25 @@
  */
 package io.car.server.core;
 
+import io.car.server.core.util.BCryptPasswordEncoder;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.PrecisionModel;
+
+import io.car.server.core.entities.Group;
+import io.car.server.core.entities.Measurement;
+import io.car.server.core.entities.Track;
+import io.car.server.core.entities.User;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
+ * @author Arne de Wall
  */
 public class CoreModule extends AbstractModule {
     private static final Logger log = LoggerFactory.getLogger(CoreModule.class);
@@ -35,7 +46,14 @@ public class CoreModule extends AbstractModule {
         bind(new TypeLiteral<EntityValidator<User>>() {}).to(UserValidator.class);
         bind(new TypeLiteral<EntityUpdater<Group>>() {}).to(GroupUpdater.class);
         bind(new TypeLiteral<EntityValidator<Group>>() {}).to(GroupValidator.class);
-        bind(UserService.class);
+        bind(new TypeLiteral<EntityUpdater<Track>>() {}).to(TrackUpdater.class);
+        bind(new TypeLiteral<EntityValidator<Track>>() {}).to(TrackValidator.class);
+        bind(new TypeLiteral<EntityUpdater<Measurement>>() {}).to(MeasurementUpdater.class);
+        bind(new TypeLiteral<EntityValidator<Measurement>>() {}).to(MeasurementValidator.class);
+        bind(Service.class);
         bind(PasswordEncoder.class).to(BCryptPasswordEncoder.class);
+        bind(GeometryFactory.class)
+                .toInstance(new GeometryFactory(new PrecisionModel(PrecisionModel.FLOATING_SINGLE), 4326));
+        bind(DateTimeFormatter.class).toInstance(ISODateTimeFormat.dateTimeNoMillis());
     }
 }

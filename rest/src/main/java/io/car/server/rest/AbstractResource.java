@@ -23,8 +23,8 @@ import javax.ws.rs.core.UriInfo;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
-import io.car.server.core.User;
-import io.car.server.core.UserService;
+import io.car.server.core.Service;
+import io.car.server.core.entities.User;
 import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.rest.auth.AuthConstants;
 
@@ -33,7 +33,7 @@ import io.car.server.rest.auth.AuthConstants;
  */
 public abstract class AbstractResource {
     private Provider<SecurityContext> securityContext;
-    private Provider<UserService> service;
+    private Provider<Service> service;
     private Provider<UriInfo> uriInfo;
     private Provider<ResourceFactory> resourceFactory;
 
@@ -51,7 +51,7 @@ public abstract class AbstractResource {
         return uriInfo.get();
     }
 
-    public UserService getUserService() {
+    public Service getService() {
         return service.get();
     }
 
@@ -60,7 +60,7 @@ public abstract class AbstractResource {
     }
 
     protected User getCurrentUser() throws UserNotFoundException {
-        return getUserService().getUser(getSecurityContext().getUserPrincipal().getName());
+        return getService().getUser(getSecurityContext().getUserPrincipal().getName());
     }
 
     @Inject
@@ -74,7 +74,7 @@ public abstract class AbstractResource {
     }
 
     @Inject
-    public void setUserService(Provider<UserService> service) {
+    public void setUserService(Provider<Service> service) {
         this.service = service;
     }
 

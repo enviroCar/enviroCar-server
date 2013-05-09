@@ -25,12 +25,11 @@ import javax.ws.rs.ext.Provider;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.ISODateTimeFormat;
 
 import com.google.inject.Inject;
 
 import io.car.server.core.EntityFactory;
-import io.car.server.core.Group;
+import io.car.server.core.entities.Group;
 import io.car.server.rest.MediaTypes;
 
 /**
@@ -40,7 +39,8 @@ import io.car.server.rest.MediaTypes;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class GroupProvider extends AbstractJsonEntityProvider<Group> {
-    private final DateTimeFormatter formatter = ISODateTimeFormat.dateTimeNoMillis();
+    @Inject
+    private DateTimeFormatter formatter;
     @Inject
     private EntityFactory factory;
     @Inject

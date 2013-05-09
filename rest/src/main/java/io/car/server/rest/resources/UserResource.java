@@ -35,7 +35,7 @@ import javax.ws.rs.core.UriBuilder;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
-import io.car.server.core.User;
+import io.car.server.core.entities.User;
 import io.car.server.core.exception.IllegalModificationException;
 import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.core.exception.ValidationException;
@@ -45,10 +45,13 @@ import io.car.server.rest.auth.Authenticated;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
+ * @author Arne de Wall <a.dewall@52north.org>
  */
 public class UserResource extends AbstractResource {
     public static final String GROUPS_PATH = "groups";
     public static final String FRIENDS_PATH = "friends";
+    public static final String TRACKS_PATH = "tracks";
+    public static final String MEASUREMENTS_PATH = "measurements";
     protected final User user;
 
     @Inject
@@ -68,7 +71,7 @@ public class UserResource extends AbstractResource {
         if (!canModifyUser(getUser())) {
             throw new WebApplicationException(Status.FORBIDDEN);
         }
-        User modified = getUserService().modifyUser(getUser(), changes);
+        User modified = getService().modifyUser(getUser(), changes);
         if (modified.getName().equals(getUser().getName())) {
             return Response.noContent().build();
         } else {
@@ -95,7 +98,7 @@ public class UserResource extends AbstractResource {
         if (!canModifyUser(getUser())) {
             throw new WebApplicationException(Status.FORBIDDEN);
         }
-        getUserService().deleteUser(getUser());
+        getService().deleteUser(getUser());
     }
 
     @Path(FRIENDS_PATH)
@@ -109,5 +112,16 @@ public class UserResource extends AbstractResource {
     public GroupsResource groups() {
         return getResourceFactory().createGroupsResource(getUser());
     }
-
+    
+    @Path(TRACKS_PATH)
+    @Authenticated
+    public TracksResource tracks(){
+    	return getResourceFactory().createTracksResource(getUser());
+    }
+    
+    @Path(MEASUREMENTS_PATH)
+    @Authenticated
+    public MeasurementsResource measurements(){
+    	return getResourceFactory().createMeasurementsResource(getUser());
+    }
 }

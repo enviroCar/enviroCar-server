@@ -28,9 +28,9 @@ import javax.ws.rs.core.Response.Status;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
-import io.car.server.core.Group;
-import io.car.server.core.User;
-import io.car.server.core.Users;
+import io.car.server.core.entities.Group;
+import io.car.server.core.entities.User;
+import io.car.server.core.entities.Users;
 import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.rest.AbstractResource;
 import io.car.server.rest.MediaTypes;
@@ -57,11 +57,11 @@ public class GroupMembersResource extends AbstractResource {
         if (!canModifyUser(user)) {
             throw new WebApplicationException(Status.FORBIDDEN);
         }
-        getUserService().addGroupMember(group, user);
+        getService().addGroupMember(group, user);
     }
 
     @Path("{member}")
     public GroupMemberResource friend(@PathParam("member") String username) throws UserNotFoundException {
-        return getResourceFactory().createGroupMemberResource(group, getUserService().getUser(username));
+        return getResourceFactory().createGroupMemberResource(group, getService().getUser(username));
     }
 }

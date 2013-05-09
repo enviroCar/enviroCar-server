@@ -34,7 +34,7 @@ import javax.ws.rs.core.UriBuilder;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
-import io.car.server.core.Group;
+import io.car.server.core.entities.Group;
 import io.car.server.core.exception.GroupNotFoundException;
 import io.car.server.core.exception.IllegalModificationException;
 import io.car.server.core.exception.UserNotFoundException;
@@ -67,7 +67,7 @@ public class GroupResource extends AbstractResource {
         if (!group.getOwner().equals(getCurrentUser())) {
             throw new WebApplicationException(Status.FORBIDDEN);
         }
-        Group modified = getUserService().modifyGroup(group, changes);
+        Group modified = getService().modifyGroup(group, changes);
         if (modified.getName().equals(group.getName())) {
             return Response.noContent().build();
         } else {
@@ -87,7 +87,7 @@ public class GroupResource extends AbstractResource {
         if (!group.getOwner().equals(getCurrentUser())) {
             throw new WebApplicationException(Status.FORBIDDEN);
         }
-        getUserService().deleteGroup(group);
+        getService().deleteGroup(group);
     }
 
     @Path("members")

@@ -23,6 +23,6 @@ import io.car.server.core.exception.ValidationException;
  * @author Christian Autermann <c.autermann@52north.org>
  */
 public interface EntityValidator<T> {
-    void validateCreate(T t) throws ValidationException;
-    void validateUpdate(T t) throws ValidationException;
+    T validateCreate(T t) throws ValidationException;
+    T validateUpdate(T t) throws ValidationException;
 }

@@ -17,6 +17,8 @@
  */
 package io.car.server.core;
 
+import io.car.server.core.entities.User;
+
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */

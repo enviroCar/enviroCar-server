@@ -30,8 +30,8 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import io.car.server.core.User;
-import io.car.server.core.Users;
+import io.car.server.core.entities.User;
+import io.car.server.core.entities.Users;
 import io.car.server.rest.MediaTypes;
 
 /**
@@ -58,7 +58,8 @@ public class UsersProvider extends AbstractJsonEntityProvider<Users> {
         JSONArray a = new JSONArray();
         for (User u : t) {
             URI uri = uriInfo.getAbsolutePathBuilder().path(u.getName()).build();
-            a.put(new JSONObject().put(JSONConstants.NAME_KEY, u.getName()).put(JSONConstants.HREF_KEY, uri));
+            a.put(new JSONObject().put(JSONConstants.NAME_KEY, u.getName())
+            		.put(JSONConstants.HREF_KEY, uri));
         }
         return new JSONObject().put(JSONConstants.USERS_KEY, a);
     }

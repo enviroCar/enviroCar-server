@@ -30,8 +30,8 @@ import javax.ws.rs.core.Response.Status;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
-import io.car.server.core.User;
-import io.car.server.core.Users;
+import io.car.server.core.entities.User;
+import io.car.server.core.entities.Users;
 import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.rest.AbstractResource;
 import io.car.server.rest.MediaTypes;
@@ -59,7 +59,7 @@ public class FriendsResource extends AbstractResource {
         if (friend.getName() == null) {
             throw new WebApplicationException(Status.BAD_REQUEST);
         }
-        getUserService().addFriend(user, friend);
+        getService().addFriend(user, friend);
     }
 
     @DELETE
@@ -68,11 +68,11 @@ public class FriendsResource extends AbstractResource {
         if (friend.getName() == null) {
             throw new WebApplicationException(Status.BAD_REQUEST);
         }
-        getUserService().removeFriend(user, friend);
+        getService().removeFriend(user, friend);
     }
 
     @Path("{username}")
     public UserResource friend(@PathParam("username") String username) throws UserNotFoundException {
-        return getResourceFactory().createUserResource(getUserService().getUser(username));
+        return getResourceFactory().createUserResource(getService().getUser(username));
     }
 }

@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 import com.google.inject.AbstractModule;
 
 import io.car.server.core.CoreModule;
-import io.car.server.mongo.MongoModule;
+import io.car.server.mongo.guice.MongoModule;
 import io.car.server.rest.guice.JerseyModule;
 
 /**
