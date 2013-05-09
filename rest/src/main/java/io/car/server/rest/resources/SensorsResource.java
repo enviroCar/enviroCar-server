@@ -17,25 +17,35 @@
  */
 package io.car.server.rest.resources;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Response;
 
+import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.Sensors;
 import io.car.server.core.exception.SensorNotFoundException;
 import io.car.server.rest.AbstractResource;
 import io.car.server.rest.MediaTypes;
 
 /**
- *
  * @author Christian Autermann <c.autermann@52north.org>
+ * @author Jan Wirwahn <jan.wirwahn@wwu.de> 
  */
 public class SensorsResource extends AbstractResource {
     @GET
     @Produces(MediaTypes.SENSORS)
     public Sensors get() {
         return getService().getAllSensors();
+    }
+    
+    @POST
+    @Consumes(MediaTypes.SENSOR)
+    public Response create(Sensor sensor) {
+        return Response.created(getUriInfo().getRequestUriBuilder().path(getService().createSensor(sensor).getName()).build()).build();
     }
 
     @Path("{id}")
