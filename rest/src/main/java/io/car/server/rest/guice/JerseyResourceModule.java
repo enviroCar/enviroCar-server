@@ -17,9 +17,6 @@
  */
 package io.car.server.rest.guice;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 
@@ -37,11 +34,9 @@ import io.car.server.rest.resources.UsersResource;
  * @author Christian Autermann <c.autermann@52north.org>
  */
 public class JerseyResourceModule extends AbstractModule {
-    private static final Logger log = LoggerFactory.getLogger(JerseyResourceModule.class);
 
     @Override
     protected void configure() {
-        log.debug("Installing JerseyResourceModule");
         install(new FactoryModuleBuilder()
                 .implement(UserResource.class, UserResource.class)
                 .implement(UsersResource.class, UsersResource.class)

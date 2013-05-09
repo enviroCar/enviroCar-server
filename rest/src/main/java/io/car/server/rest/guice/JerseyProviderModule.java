@@ -18,8 +18,6 @@
 package io.car.server.rest.guice;
 
 import org.codehaus.jettison.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
@@ -42,11 +40,9 @@ import io.car.server.rest.provider.UsersProvider;
  * @author Christian Autermann <c.autermann@52north.org>
  */
 public class JerseyProviderModule extends AbstractModule {
-    private static final Logger log = LoggerFactory.getLogger(JerseyProviderModule.class);
 
     @Override
     protected void configure() {
-        log.debug("Installing JerseyProviderModule");
         bind(new TypeLiteral<GeometryConverter<JSONObject>>() {}).to(GeoJSON.class);
         bind(GeoJSON.class).in(Scopes.SINGLETON);
         bind(GroupProvider.class).in(Scopes.SINGLETON);

@@ -1,0 +1,3 @@
+io.car.server.core.guice.CoreModule
+io.car.server.core.guice.UpdaterModule
+io.car.server.core.guice.ValidatorModule

@@ -17,9 +17,6 @@
  */
 package io.car.server.mongo.guice;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.github.jmkgreen.morphia.Datastore;
 import com.github.jmkgreen.morphia.Morphia;
 import com.github.jmkgreen.morphia.mapping.Mapper;
@@ -51,10 +48,8 @@ import io.car.server.mongo.entity.MongoUser;
  * @author Christian Autermann <c.autermann@52north.org>
  */
 public class MongoModule extends AbstractModule {
-    private static final Logger log = LoggerFactory.getLogger(MongoModule.class);
     @Override
     protected void configure() {
-        log.debug("Installing MongoModule");
         install(new FactoryModuleBuilder()
                 .implement(User.class, MongoUser.class)
                 .implement(Group.class, MongoGroup.class)
@@ -64,10 +59,6 @@ public class MongoModule extends AbstractModule {
                 .implement(Phenomenon.class, MongoPhenomenon.class)
                 .implement(Sensor.class, MongoSensor.class)
                 .build(EntityFactory.class));
-        install(new MongoConverterModule());
-        install(new MongoConnectionModule());
-        install(new MongoMappedClassesModule());
-        install(new MongoDaoModule());
         bind(MongoDB.class);
     }
 

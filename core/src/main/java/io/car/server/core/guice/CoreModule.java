@@ -15,41 +15,26 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.core;
+package io.car.server.core.guice;
 
-import io.car.server.core.util.BCryptPasswordEncoder;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.inject.AbstractModule;
-import com.google.inject.TypeLiteral;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.PrecisionModel;
 
-import io.car.server.core.entities.Group;
-import io.car.server.core.entities.Measurement;
-import io.car.server.core.entities.Track;
-import io.car.server.core.entities.User;
+import io.car.server.core.PasswordEncoder;
+import io.car.server.core.Service;
+import io.car.server.core.util.BCryptPasswordEncoder;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  * @author Arne de Wall
  */
 public class CoreModule extends AbstractModule {
-    private static final Logger log = LoggerFactory.getLogger(CoreModule.class);
     @Override
     protected void configure() {
-        log.debug("Installing CoreModule");
-        bind(new TypeLiteral<EntityUpdater<User>>() {}).to(UserUpdater.class);
-        bind(new TypeLiteral<EntityValidator<User>>() {}).to(UserValidator.class);
-        bind(new TypeLiteral<EntityUpdater<Group>>() {}).to(GroupUpdater.class);
-        bind(new TypeLiteral<EntityValidator<Group>>() {}).to(GroupValidator.class);
-        bind(new TypeLiteral<EntityUpdater<Track>>() {}).to(TrackUpdater.class);
-        bind(new TypeLiteral<EntityValidator<Track>>() {}).to(TrackValidator.class);
-        bind(new TypeLiteral<EntityUpdater<Measurement>>() {}).to(MeasurementUpdater.class);
-        bind(new TypeLiteral<EntityValidator<Measurement>>() {}).to(MeasurementValidator.class);
         bind(Service.class);
         bind(PasswordEncoder.class).to(BCryptPasswordEncoder.class);
         bind(GeometryFactory.class)

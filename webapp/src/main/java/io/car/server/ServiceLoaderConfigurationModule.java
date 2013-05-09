@@ -17,20 +17,21 @@
  */
 package io.car.server;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.ServiceLoader;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.google.inject.servlet.GuiceServletContextListener;
+import com.google.inject.AbstractModule;
+import com.google.inject.Module;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public class ServletContextListener extends GuiceServletContextListener {
-    private static final Logger log = LoggerFactory.getLogger(ServletContextListener.class);
+public class ServiceLoaderConfigurationModule extends AbstractModule {
+
     @Override
-    protected Injector getInjector() {
-        return Guice.createInjector(new ServiceLoaderConfigurationModule());
+    protected void configure() {
+        for (Module m : ServiceLoader.load(Module.class)) {
+            install(m);
+        }
     }
+
 }

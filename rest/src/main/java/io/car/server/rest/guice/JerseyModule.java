@@ -21,8 +21,6 @@ import java.util.Map;
 import java.util.logging.Handler;
 import java.util.logging.LogManager;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 
 import com.google.common.collect.ImmutableMap;
@@ -39,12 +37,10 @@ import io.car.server.rest.auth.AuthenticationResourceFilterFactory;
  * @author Christian Autermann <c.autermann@52north.org>
  */
 public class JerseyModule extends JerseyServletModule {
-    private static final Logger log = LoggerFactory.getLogger(JerseyModule.class);
     public static final String FALSE = String.valueOf(false);
     public static final String TRUE = String.valueOf(true);
 
     private static String classList(Class<?> clazz, Class<?>... classes) {
-
         StringBuilder sb = new StringBuilder();
         sb.append(clazz.getName());
         for (Class<?> c : classes) {
@@ -53,11 +49,19 @@ public class JerseyModule extends JerseyServletModule {
         return sb.toString();
     }
 
+    public static Map<String, String> getContainerFilterConfig() {
+        return ImmutableMap.of(
+                ResourceConfig.FEATURE_DISABLE_WADL, TRUE,
+                ResourceConfig.PROPERTY_CONTAINER_REQUEST_FILTERS,
+                classList(GZIPContentEncodingFilter.class, AuthenticationFilter.class),
+                ResourceConfig.PROPERTY_CONTAINER_RESPONSE_FILTERS,
+                classList(GZIPContentEncodingFilter.class),
+                ResourceConfig.PROPERTY_RESOURCE_FILTER_FACTORIES,
+                classList(AuthenticationResourceFilterFactory.class));
+    }
+
     @Override
     protected void configureServlets() {
-        log.debug("Installing JerseyModule");
-        install(new JerseyResourceModule());
-        install(new JerseyProviderModule());
         serve("/rest*").with(GuiceContainer.class, getContainerFilterConfig());
         serve("/schema/*").with(SchemaServlet.class);
         configureLogging();
@@ -70,16 +74,5 @@ public class JerseyModule extends JerseyServletModule {
             rootLogger.removeHandler(handlers[i]);
         }
         SLF4JBridgeHandler.install();
-    }
-
-    public static Map<String, String> getContainerFilterConfig() {
-        return ImmutableMap.of(
-                ResourceConfig.FEATURE_DISABLE_WADL, TRUE,
-                ResourceConfig.PROPERTY_CONTAINER_REQUEST_FILTERS,
-                classList(GZIPContentEncodingFilter.class, AuthenticationFilter.class),
-                ResourceConfig.PROPERTY_CONTAINER_RESPONSE_FILTERS,
-                classList(GZIPContentEncodingFilter.class),
-                ResourceConfig.PROPERTY_RESOURCE_FILTER_FACTORIES,
-                classList(AuthenticationResourceFilterFactory.class));
     }
 }

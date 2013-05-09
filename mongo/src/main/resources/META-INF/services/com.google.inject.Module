@@ -1,0 +1,5 @@
+io.car.server.mongo.guice.MongoModule
+io.car.server.mongo.guice.MongoDaoModule
+io.car.server.mongo.guice.MongoConverterModule
+io.car.server.mongo.guice.MongoConnectionModule
+io.car.server.mongo.guice.MongoMappedClassesModule
