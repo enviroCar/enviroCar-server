@@ -78,8 +78,8 @@ public class GroupsResource extends AbstractResource {
     @Authenticated
     public Response createGroup(Group group) throws UserNotFoundException, ResourceAlreadyExistException,
                                                     ValidationException {
-        return Response.created(getUriInfo().getRequestUriBuilder().path(getService().createGroup(group
-                .setOwner(getCurrentUser())).getName()).build()).build();
+        Group g = getService().createGroup(group.setOwner(getCurrentUser()).addMember(getCurrentUser()));
+        return Response.created(getUriInfo().getRequestUriBuilder().path(g.getName()).build()).build();
     }
 
     @Path("{id}")
