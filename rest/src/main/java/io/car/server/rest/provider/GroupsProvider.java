@@ -17,20 +17,15 @@
  */
 package io.car.server.rest.provider;
 
-import java.net.URI;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.ext.Provider;
 
-import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import io.car.server.core.entities.Group;
 import io.car.server.core.entities.Groups;
 import io.car.server.rest.MediaTypes;
 
@@ -41,8 +36,6 @@ import io.car.server.rest.MediaTypes;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class GroupsProvider extends AbstractJsonEntityProvider<Groups> {
-    @Context
-    private UriInfo uriInfo;
 
     public GroupsProvider() {
         super(Groups.class, MediaTypes.GROUPS_TYPE);
@@ -55,11 +48,6 @@ public class GroupsProvider extends AbstractJsonEntityProvider<Groups> {
 
     @Override
     public JSONObject write(Groups t, MediaType mediaType) throws JSONException {
-        JSONArray a = new JSONArray();
-        for (Group u : t) {
-            URI uri = uriInfo.getAbsolutePathBuilder().path(u.getName()).build();
-            a.put(new JSONObject().put(JSONConstants.NAME_KEY, u.getName()).put(JSONConstants.HREF_KEY, uri));
-        }
-        return new JSONObject().put(JSONConstants.GROUPS_KEY, a);
+        return getCodingFactory().createGroupsEncoder().encode(t, mediaType);
     }
 }

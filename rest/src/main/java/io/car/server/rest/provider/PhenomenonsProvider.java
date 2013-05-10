@@ -17,20 +17,15 @@
  */
 package io.car.server.rest.provider;
 
-import java.net.URI;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.ext.Provider;
 
-import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import io.car.server.core.entities.Phenomenon;
 import io.car.server.core.entities.Phenomenons;
 import io.car.server.rest.MediaTypes;
 
@@ -41,9 +36,6 @@ import io.car.server.rest.MediaTypes;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class PhenomenonsProvider extends AbstractJsonEntityProvider<Phenomenons> {
-    @Context
-    private UriInfo uriInfo;
-
     public PhenomenonsProvider() {
         super(Phenomenons.class, MediaTypes.PHENOMENONS_TYPE);
     }
@@ -55,11 +47,6 @@ public class PhenomenonsProvider extends AbstractJsonEntityProvider<Phenomenons>
 
     @Override
     public JSONObject write(Phenomenons t, MediaType mediaType) throws JSONException {
-        JSONArray a = new JSONArray();
-        for (Phenomenon u : t) {
-            URI uri = uriInfo.getRequestUriBuilder().path(u.getName()).build();
-            a.put(new JSONObject().put(JSONConstants.NAME_KEY, u.getName()).put(JSONConstants.HREF_KEY, uri));
-        }
-        return new JSONObject().put(JSONConstants.PHENOMENONS_KEY, a);
+        return getCodingFactory().createPhenomenonsEncoder().encode(t, mediaType);
     }
 }

@@ -24,11 +24,6 @@ import javax.ws.rs.ext.Provider;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
-import org.joda.time.format.DateTimeFormatter;
-
-import com.google.inject.Inject;
-
-import io.car.server.core.EntityFactory;
 import io.car.server.core.entities.Phenomenon;
 import io.car.server.rest.MediaTypes;
 
@@ -39,10 +34,6 @@ import io.car.server.rest.MediaTypes;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class PhenomenonProvider extends AbstractJsonEntityProvider<Phenomenon> {
-    @Inject
-    private DateTimeFormatter formatter;
-    @Inject
-    private EntityFactory factory;
 
     public PhenomenonProvider() {
         super(Phenomenon.class, MediaTypes.PHENOMENON_TYPE,
@@ -51,15 +42,11 @@ public class PhenomenonProvider extends AbstractJsonEntityProvider<Phenomenon> {
 
     @Override
     public Phenomenon read(JSONObject j, MediaType mediaType) throws JSONException {
-        return factory.createPhenomenon()
-                .setName(j.optString(JSONConstants.NAME_KEY, null));
+        return getCodingFactory().createPhenomenonDecoder().decode(j, mediaType);
     }
 
     @Override
     public JSONObject write(Phenomenon t, MediaType mediaType) throws JSONException {
-        return new JSONObject()
-                .put(JSONConstants.NAME_KEY, t.getName())
-                .put(JSONConstants.CREATED_KEY, formatter.print(t.getCreationDate()))
-                .put(JSONConstants.MODIFIED_KEY, formatter.print(t.getLastModificationDate()));
+        return getCodingFactory().createPhenomenonEncoder().encode(t, mediaType);
     }
 }

@@ -15,40 +15,42 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.provider;
+package io.car.server.rest.coding;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.Produces;
+import io.car.server.rest.EntityEncoder;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.ext.Provider;
+import javax.ws.rs.core.UriInfo;
 
+import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
+import com.google.inject.Inject;
+
 import io.car.server.core.entities.Measurement;
-import io.car.server.rest.MediaTypes;
+import io.car.server.core.entities.Measurements;
 
 /**
- * @author Arne de Wall <a.dewall@52north.org>
+ *
  * @author Christian Autermann <c.autermann@52north.org>
+ * @author Arne de Wall <a.dewall@52north.org>
  */
-@Provider
-@Produces(MediaType.APPLICATION_JSON)
-@Consumes(MediaType.APPLICATION_JSON)
-public class MeasurementProvider extends AbstractJsonEntityProvider<Measurement> {
+public class MeasurementsCoder implements EntityEncoder<Measurements> {
+	private UriInfo uriInfo;
 
-    public MeasurementProvider() {
-        super(Measurement.class, MediaTypes.MEASUREMENT_TYPE, MediaTypes.MEASUREMENT_CREATE_TYPE);
+    @Inject
+    public MeasurementsCoder(UriInfo uriInfo) {
+        this.uriInfo = uriInfo;
     }
 
-    @Override
-    public Measurement read(JSONObject j, MediaType mediaType)
-            throws JSONException {
-        return getCodingFactory().createMeasurementDecoder().decode(j, mediaType);
-    }
-
-    @Override
-    public JSONObject write(Measurement t, MediaType mediaType) throws JSONException {
-        return getCodingFactory().createMeasurementEncoder().encode(t, mediaType);
-    }
+	@Override
+    public JSONObject encode(Measurements t, MediaType mediaType) throws JSONException {
+        JSONArray measurements = new JSONArray();
+        for (Measurement m : t) {
+            measurements.put(new JSONObject()
+                    .put(JSONConstants.IDENTIFIER_KEY, m.getIdentifier())
+                    .put(JSONConstants.HREF_KEY, uriInfo.getRequestUriBuilder().path(m.getIdentifier())));
+		}
+        return new JSONObject().put(JSONConstants.MEASUREMENTS_KEY, measurements);
+	}
 }

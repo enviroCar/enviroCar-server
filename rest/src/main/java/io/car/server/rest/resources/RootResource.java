@@ -28,7 +28,7 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import io.car.server.rest.AbstractResource;
-import io.car.server.rest.provider.JSONConstants;
+import io.car.server.rest.coding.JSONConstants;
 
 @Path("/")
 public class RootResource extends AbstractResource {
@@ -37,6 +37,7 @@ public class RootResource extends AbstractResource {
     public static final String TRACKS_PATH = "tracks";
     public static final String PHENOMENONS_PATH = "phenomenons";
     public static final String SENSORS_PATH = "sensors";
+    public static final String MEASUREMENTS_PATH = "measurements";
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -52,7 +53,9 @@ public class RootResource extends AbstractResource {
                     .put(JSONConstants.SENSORS_KEY,
                          getUriInfo().getRequestUriBuilder().path(SENSORS_PATH).build())
                     .put(JSONConstants.PHENOMENONS_KEY,
-                         getUriInfo().getRequestUriBuilder().path(PHENOMENONS_PATH).build());
+                         getUriInfo().getRequestUriBuilder().path(PHENOMENONS_PATH).build())
+                    .put(JSONConstants.MEASUREMENTS_KEY,
+                         getUriInfo().getRequestUriBuilder().path(MEASUREMENTS_PATH).build());
         } catch (JSONException ex) {
             throw new WebApplicationException(ex, Status.INTERNAL_SERVER_ERROR);
         }
@@ -81,5 +84,10 @@ public class RootResource extends AbstractResource {
     @Path(SENSORS_PATH)
     public SensorsResource sensors() {
         return getResourceFactory().createSensorsResource();
+    }
+
+    @Path(MEASUREMENTS_PATH)
+    public MeasurementsResource measurements() {
+        return getResourceFactory().createMeasurementsResource();
     }
 }

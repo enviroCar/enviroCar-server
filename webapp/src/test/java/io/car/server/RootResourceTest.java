@@ -32,7 +32,7 @@ import org.junit.Test;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.ClientResponse.Status;
 
-import io.car.server.rest.provider.JSONConstants;
+import io.car.server.rest.coding.JSONConstants;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>

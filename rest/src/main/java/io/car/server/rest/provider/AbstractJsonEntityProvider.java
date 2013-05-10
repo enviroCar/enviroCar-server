@@ -22,11 +22,16 @@ import java.util.Collections;
 import javax.ws.rs.core.MediaType;
 
 import com.google.common.collect.ImmutableSet;
+import com.google.inject.Inject;
+
+import io.car.server.rest.CodingFactory;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
 public abstract class AbstractJsonEntityProvider<T> extends AbstracJsonProvider<T> {
+    @Inject
+    private CodingFactory codingFactory;
 
     public AbstractJsonEntityProvider(Class<T> classType, MediaType get, MediaType post, MediaType put) {
         super(classType, ImmutableSet.of(post, put), ImmutableSet.of(get));
@@ -38,5 +43,9 @@ public abstract class AbstractJsonEntityProvider<T> extends AbstracJsonProvider<
 
     public AbstractJsonEntityProvider(Class<T> classType, MediaType get) {
         super(classType, Collections.<MediaType>emptySet(), ImmutableSet.of(get));
+    }
+
+    protected CodingFactory getCodingFactory() {
+        return codingFactory;
     }
 }
