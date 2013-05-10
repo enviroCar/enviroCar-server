@@ -92,6 +92,6 @@ public class TrackResource extends AbstractResource {
 	@Path(SENSOR_PATH)
 	@Authenticated
 	public SensorResource sensor(){
-		return getResourceFactory().createSensorResource(track);
+		return getResourceFactory().createSensorResource(track.getSensor());
 	}
 }

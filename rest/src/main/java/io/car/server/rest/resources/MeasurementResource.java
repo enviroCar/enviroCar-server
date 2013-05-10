@@ -87,6 +87,6 @@ public class MeasurementResource extends AbstractResource {
 	@Path(SENSOR_PATH)
 	@Authenticated
 	public SensorResource sensor(){
-		return getResourceFactory().createSensorResource(measurement);
+		return getResourceFactory().createSensorResource(measurement.getSensor());
 	}
 }
