@@ -217,6 +217,11 @@ public class Service {
     public Measurement getMeasurement(String id) {
         return this.measurementDao.getById(id);
     }
+    
+	public void modifyMeasurement(Measurement measurement, Measurement changes) {
+		// TODO Auto-generated method stub
+		
+	}
 
     public void deleteTrack(String id) throws TrackNotFoundException {
         this.trackDao.delete(getTrack(id));
@@ -262,5 +267,7 @@ public class Service {
     public Phenomenon createPhenomenon(Phenomenon phenomenon) {
         return this.phenomenonDao.create(phenomenon);
     }
+
+
 
 }

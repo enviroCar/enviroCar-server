@@ -17,8 +17,46 @@
  */
 package io.car.server.rest.resources;
 
+import io.car.server.core.entities.Measurement;
+import io.car.server.core.exception.MeasurementNotFoundException;
+import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.rest.AbstractResource;
+import io.car.server.rest.MediaTypes;
+import io.car.server.rest.auth.Authenticated;
 
+import javax.ws.rs.Consumes;
+import javax.ws.rs.PUT;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
+
+/**
+ * 
+ * @author Arne de Wall <a.dewall@52north.org>
+ * 
+ */
 public class MeasurementResource extends AbstractResource {
 
+	protected final Measurement measurement;
+
+	@Inject
+	public MeasurementResource(@Assisted Measurement measurement) {
+		this.measurement = measurement;
+	}
+
+	@PUT
+	@Consumes(MediaTypes.MEASUREMENT_MODIFY)
+	@Authenticated
+	public Response modify(Measurement changes)
+			throws MeasurementNotFoundException, UserNotFoundException {
+
+		if (!canModifyUser(getCurrentUser())) {
+			throw new WebApplicationException(Status.FORBIDDEN);
+		}
+		getService().modifyMeasurement(measurement, changes);
+		return null;
+	}
 }

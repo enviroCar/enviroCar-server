@@ -39,33 +39,35 @@ import io.car.server.rest.RESTConstants;
 import io.car.server.rest.auth.Authenticated;
 
 /**
- *
+ * 
  * @author Arne de Wall <a.dewall@52north.org>
- *
+ * 
  */
 public class TracksResource extends AbstractResource {
-    @GET
-    @Produces(MediaTypes.TRACKS)
-    public Tracks get(
-            @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit) {
-        return getService().getAllTracks();
-    }
+	@GET
+	@Produces(MediaTypes.TRACKS)
+	public Tracks get(
+			@QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit) {
+		return getService().getAllTracks();
+	}
 
-    @POST
-    @Consumes(MediaTypes.TRACK_CREATE)
-    @Authenticated
-    public Response create(Track track) throws ValidationException,
-                                               ResourceAlreadyExistException,
-                                               UserNotFoundException {
-        // TODO FIXME XXX any unique id instead of carname =C !?
-        return Response.created(
-                getUriInfo().getRequestUriBuilder()
-                .path(getService().createTrack(track.setUser(getCurrentUser())).getIdentifier())
-                .build()).build();
-    }
+	@POST
+	@Consumes(MediaTypes.TRACK_CREATE)
+	@Authenticated
+	public Response create(Track track) throws ValidationException,
+			ResourceAlreadyExistException, UserNotFoundException {
+		return Response.created(
+				getUriInfo()
+						.getRequestUriBuilder()
+						.path(getService().createTrack(
+								track.setUser(getCurrentUser()))
+								.getIdentifier()).build()).build();
+	}
 
-    @Path("{trackid}")
-    public TrackResource user(@PathParam("trackid") String track) throws TrackNotFoundException {
-        return getResourceFactory().createTrackResource(getService().getTrack(track));
-    }
+	@Path("{trackid}")
+	public TrackResource user(@PathParam("trackid") String track)
+			throws TrackNotFoundException {
+		return getResourceFactory().createTrackResource(
+				getService().getTrack(track));
+	}
 }
