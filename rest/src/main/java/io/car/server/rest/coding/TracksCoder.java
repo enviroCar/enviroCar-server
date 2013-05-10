@@ -15,38 +15,38 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.provider;
+package io.car.server.rest.coding;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.Produces;
+import io.car.server.rest.EntityEncoder;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.ext.Provider;
+import javax.ws.rs.core.UriInfo;
 
+import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import io.car.server.core.entities.Group;
-import io.car.server.rest.MediaTypes;
+import com.google.inject.Inject;
 
-/**
- * @author Christian Autermann <c.autermann@52north.org>
- */
-@Provider
-@Produces(MediaType.APPLICATION_JSON)
-@Consumes(MediaType.APPLICATION_JSON)
-public class GroupProvider extends AbstractJsonEntityProvider<Group> {
+import io.car.server.core.entities.Track;
+import io.car.server.core.entities.Tracks;
 
-    public GroupProvider() {
-        super(Group.class, MediaTypes.GROUP_TYPE, MediaTypes.GROUP_CREATE_TYPE, MediaTypes.GROUP_MODIFY_TYPE);
+public class TracksCoder implements EntityEncoder<Tracks> {
+    private UriInfo uriInfo;
+
+    @Inject
+    public TracksCoder(UriInfo uriInfo) {
+        this.uriInfo = uriInfo;
     }
 
     @Override
-    public Group read(JSONObject j, MediaType mediaType) throws JSONException {
-        return getCodingFactory().createGroupDecoder().decode(j, mediaType);
-    }
+    public JSONObject encode(Tracks t, MediaType mediaType) throws JSONException {
+        JSONArray array = new JSONArray();
+        for (Track track : t) {
 
-    @Override
-    public JSONObject write(Group t, MediaType mediaType) throws JSONException {
-        return getCodingFactory().createGroupEncoder().encode(t, mediaType);
+            array.put(new JSONObject()
+                    .put(JSONConstants.IDENTIFIER_KEY, track.getIdentifier())
+                    .put(JSONConstants.HREF_KEY, uriInfo.getRequestUriBuilder().path(track.getIdentifier()).build()));
+        }
+        return new JSONObject().put(JSONConstants.TRACKS_KEY, array);
     }
 }

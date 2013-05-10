@@ -15,38 +15,45 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.provider;
+package io.car.server.rest.coding;
 
+import io.car.server.rest.EntityDecoder;
+import io.car.server.rest.EntityEncoder;
 import javax.ws.rs.core.MediaType;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
+import org.joda.time.format.DateTimeFormatter;
 
 import com.google.inject.Inject;
 
 import io.car.server.core.EntityFactory;
-import io.car.server.core.entities.Sensor;
-import io.car.server.rest.MediaTypes;
+import io.car.server.core.entities.Phenomenon;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public class SensorProvider extends AbstractJsonEntityProvider<Sensor> {
+public class PhenomenonCoder implements EntityEncoder<Phenomenon>, EntityDecoder<Phenomenon> {
+    private DateTimeFormatter formatter;
     private EntityFactory factory;
 
     @Inject
-    public SensorProvider(EntityFactory factory) {
-        super(Sensor.class, MediaTypes.SENSOR_TYPE, MediaTypes.SENSOR_CREATE_TYPE, MediaTypes.SENSOR_MODIFY_TYPE);
+    public PhenomenonCoder(DateTimeFormatter formatter, EntityFactory factory) {
+        this.formatter = formatter;
         this.factory = factory;
     }
 
     @Override
-    public Sensor read(JSONObject j, MediaType mediaType) throws JSONException {
-        return getCodingFactory().createSensorDecoder().decode(j, mediaType);
+    public Phenomenon decode(JSONObject j, MediaType mediaType) throws JSONException {
+        return factory.createPhenomenon()
+                .setName(j.optString(JSONConstants.NAME_KEY, null));
     }
 
     @Override
-    public JSONObject write(Sensor t, MediaType mediaType) throws JSONException {
-        return getCodingFactory().createSensorEncoder().encode(t, mediaType);
+    public JSONObject encode(Phenomenon t, MediaType mediaType) throws JSONException {
+        return new JSONObject()
+                .put(JSONConstants.NAME_KEY, t.getName())
+                .put(JSONConstants.CREATED_KEY, formatter.print(t.getCreationDate()))
+                .put(JSONConstants.MODIFIED_KEY, formatter.print(t.getLastModificationDate()));
     }
 }

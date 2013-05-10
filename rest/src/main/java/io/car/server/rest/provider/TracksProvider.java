@@ -19,16 +19,12 @@ package io.car.server.rest.provider;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.ext.Provider;
 
-import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import io.car.server.core.entities.Track;
 import io.car.server.core.entities.Tracks;
 import io.car.server.rest.MediaTypes;
 
@@ -36,8 +32,6 @@ import io.car.server.rest.MediaTypes;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class TracksProvider extends AbstractJsonEntityProvider<Tracks> {
-	@Context
-    private UriInfo uriInfo;
 	
 	public TracksProvider() {
 		super(Tracks.class, MediaTypes.TRACKS_TYPE);
@@ -50,14 +44,7 @@ public class TracksProvider extends AbstractJsonEntityProvider<Tracks> {
 
 	@Override
 	public JSONObject write(Tracks t, MediaType mediaType) throws JSONException {
-		JSONArray array = new JSONArray();
-        for (Track track : t) {
-
-            array.put(new JSONObject()
-                    .put(JSONConstants.IDENTIFIER_KEY, track.getIdentifier())
-                    .put(JSONConstants.HREF_KEY, uriInfo.getRequestUriBuilder().path(track.getIdentifier()).build()));
-		}
-        return new JSONObject().put(JSONConstants.TRACKS_KEY, array);
+        return getCodingFactory().createTracksEncoder().encode(t, mediaType);
 	}
 
 }

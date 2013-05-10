@@ -17,7 +17,6 @@
  */
 package io.car.server.rest.provider;
 
-import io.car.server.core.exception.GeometryConverterException;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
@@ -37,6 +36,9 @@ import com.vividsolutions.jts.geom.MultiPoint;
 import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
+
+import io.car.server.core.exception.GeometryConverterException;
+import io.car.server.rest.coding.GeoJSON;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
