@@ -33,24 +33,29 @@ import io.car.server.rest.MediaTypes;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
- * @author Jan Wirwahn <jan.wirwahn@wwu.de> 
+ * @author Jan Wirwahn <jan.wirwahn@wwu.de>
  */
 public class SensorsResource extends AbstractResource {
-    @GET
-    @Produces(MediaTypes.SENSORS)
-    public Sensors get() {
-        return getService().getAllSensors();
-    }
-    
-    @POST
-    @Consumes(MediaTypes.SENSOR)
-    public Response create(Sensor sensor) {
-        return Response.created(getUriInfo().getRequestUriBuilder().path(getService().createSensor(sensor).getName()).build()).build();
-    }
+	@GET
+	@Produces(MediaTypes.SENSORS)
+	public Sensors get() {
+		return getService().getAllSensors();
+	}
 
-    @Path("{id}")
-    public SensorResource sensor(@PathParam("id") String id) throws SensorNotFoundException {
-        return getResourceFactory().createSensorResource(getService().getSensorByName(id));
-    }
+	@POST
+	@Consumes(MediaTypes.SENSOR)
+	public Response create(Sensor sensor) {
+		return Response.created(
+				getUriInfo().getRequestUriBuilder()
+						.path(getService().createSensor(sensor).getName())
+						.build()).build();
+	}
+
+	@Path("{id}")
+	public SensorResource sensor(@PathParam("id") String id)
+			throws SensorNotFoundException {
+		return getResourceFactory().createSensorResource(
+				getService().getSensorByName(id));
+	}
 
 }

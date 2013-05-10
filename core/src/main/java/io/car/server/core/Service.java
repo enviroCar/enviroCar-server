@@ -282,4 +282,8 @@ public class Service {
 		return this.phenomenonDao.create(phenomenon);
 	}
 
+	public Measurement createMeasurement(Measurement measurement) {
+		return this.measurementDao.create(measurement);
+	}
+
 }
