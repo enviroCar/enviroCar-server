@@ -69,5 +69,7 @@ public interface ResourceFactory {
     PhenomenonsResource createPhenomenonsResource();
 
     SensorResource createSensorResource(Sensor sensor);
+    SensorResource createSensorResource(Track track);
+	SensorResource createSensorResource(Measurement measurement);
     SensorsResource createSensorsResource();
 }
