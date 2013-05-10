@@ -1,0 +1,27 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "properties": {
+        "users": {
+            "type": "array",
+            "minItems": 0,
+            "items": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "pattern": "^[_A-Za-z0-9-]{6,}$"
+                    },
+                    "href": {
+                        "type": "string",
+                        "format": "uri"
+                    }
+                },
+                "required": [ "name", "href" ],
+                "additionalProperties": false
+            }
+        }
+    },
+    "required": [ "users" ],
+    "additionalProperties": false
+}

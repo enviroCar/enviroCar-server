@@ -1,0 +1,85 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "required": [ "identifier", "sensor", "time", "geometry",
+                    "phenomenons", "created", "modified", "user"],
+    "properties": {
+        "identifier": {
+            "type": "string"
+        },
+        "created": {
+            "$ref": "#/definitions/date-time"
+        },
+        "modified": {
+            "$ref": "#/definitions/date-time"
+        },
+        "time": {
+            "$ref": "#/definitions/date-time"
+        },
+        "sensor": {
+            "type": "object",
+            "required": [ "name" ],
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "user": {
+            "type": "object",
+            "required": [ "name", "created", "modified" ],
+            "additionalProperties": false,
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "pattern": "^[_A-Za-z0-9-]{6,}$"
+                },
+                "mail": {
+                    "type": "string",
+                    "pattern": "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$"
+                },
+                "created": {
+                    "$ref": "#/definitions/date-time"
+                },
+                "modified": {
+                    "$ref": "#/definitions/date-time"
+                }
+            }
+        },
+        "geometry": {
+            "$ref": "https://github.com/fge/sample-json-schemas/blob/master/geojson/geometry.json"
+        },
+        "phenomenons": {
+            "type": "array",
+            "minItems": 0,
+            "items": {
+                "type": "object",
+                "required": [ "phenomenon", "value" ],
+                "properties": {
+                    "phenomenon": {
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "created": {
+                                "$ref": "#/definitions/date-time"
+                            },
+                            "modified": {
+                                "$ref": "#/definitions/date-time"
+                            }
+                        }
+                    },
+                    "value": {
+                        "type": [ "string", "number", "boolean" ]
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "date-time": {
+            "type": "string",
+            "format": "date-time"
+        }
+    }
+}
