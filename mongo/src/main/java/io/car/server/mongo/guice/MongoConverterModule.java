@@ -40,8 +40,7 @@ public class MongoConverterModule extends AbstractModule {
     @Override
     protected void configure() {
         Multibinder<TypeConverter> mb = Multibinder.newSetBinder(binder(), TypeConverter.class);
-        bind(new TypeLiteral<GeometryConverter<BSONObject>>() {
-        }).to(GeoBSON.class);
+        bind(new TypeLiteral<GeometryConverter<BSONObject>>() {}).to(GeoBSON.class);
         mb.addBinding().to(DateTimeConverter.class);
         mb.addBinding().to(DurationConverter.class);
         mb.addBinding().to(FileConverter.class);

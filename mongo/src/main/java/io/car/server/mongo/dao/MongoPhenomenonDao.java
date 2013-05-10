@@ -31,6 +31,7 @@ import io.car.server.mongo.entity.MongoSensor;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
+ * @author Jan Wirwahn <jan.wirwahn@wwu.de>
  */
 public class MongoPhenomenonDao extends BasicDAO<MongoPhenomenon, ObjectId> implements PhenomenonDao {
     @Inject
@@ -46,5 +47,12 @@ public class MongoPhenomenonDao extends BasicDAO<MongoPhenomenon, ObjectId> impl
     @Override
     public Phenomenons getAll() {
         return new Phenomenons(find().fetch());
+    }
+    
+    @Override
+    public Phenomenon create(Phenomenon phen) {
+        MongoPhenomenon ph = (MongoPhenomenon) phen;
+        save(ph);
+        return ph;
     }
 }

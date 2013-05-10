@@ -15,16 +15,23 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.core.db;
+package io.car.server;
 
-import io.car.server.core.entities.Phenomenon;
-import io.car.server.core.entities.Phenomenons;
+import java.util.ServiceLoader;
+
+import com.google.inject.AbstractModule;
+import com.google.inject.Module;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public interface PhenomenonDao {
-    Phenomenon getByName(String name);
-    Phenomenons getAll();
-    Phenomenon create(Phenomenon phenomenon);
+public class ServiceLoaderConfigurationModule extends AbstractModule {
+
+    @Override
+    protected void configure() {
+        for (Module m : ServiceLoader.load(Module.class)) {
+            install(m);
+        }
+    }
+
 }

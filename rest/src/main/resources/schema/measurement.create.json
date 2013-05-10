@@ -1,0 +1,48 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "required": [ "sensor", "time", "geometry", "phenomenons" ],
+    "properties": {
+        "time": {
+            "$ref": "#/definitions/date-time"
+        },
+        "sensor": {
+            "type": "object",
+            "required": [ "name" ],
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "geometry": {
+            "$ref": "https://github.com/fge/sample-json-schemas/blob/master/geojson/geometry.json"
+        },
+        "phenomenons": {
+            "type": "array",
+            "minItems": 0,
+            "items": {
+                "type": "object",
+                "required": [ "phenomenon", "value" ],
+                "properties": {
+                    "phenomenon": {
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "value": {
+                        "type": [ "string", "number", "boolean" ]
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "date-time": {
+            "type": "string",
+            "format": "date-time"
+        }
+    }
+}

@@ -15,28 +15,31 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+package io.car.server.core.guice;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.TypeLiteral;
 
-import io.car.server.core.CoreModule;
-import io.car.server.mongo.guice.MongoModule;
-import io.car.server.rest.guice.JerseyModule;
+import io.car.server.core.EntityValidator;
+import io.car.server.core.GroupValidator;
+import io.car.server.core.MeasurementValidator;
+import io.car.server.core.TrackValidator;
+import io.car.server.core.UserValidator;
+import io.car.server.core.entities.Group;
+import io.car.server.core.entities.Measurement;
+import io.car.server.core.entities.Track;
+import io.car.server.core.entities.User;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public class DefaultConfigurationModule extends AbstractModule {
-    private static final Logger log = LoggerFactory.getLogger(DefaultConfigurationModule.class);
+public class ValidatorModule extends AbstractModule {
+
     @Override
     protected void configure() {
-        log.debug("Installing DefaultConfigurationModule");
-        install(new CoreModule());
-        install(new MongoModule());
-        install(new JerseyModule());
+        bind(new TypeLiteral<EntityValidator<User>>() {}).to(UserValidator.class);
+        bind(new TypeLiteral<EntityValidator<Group>>() {}).to(GroupValidator.class);
+        bind(new TypeLiteral<EntityValidator<Track>>() {}).to(TrackValidator.class);
+        bind(new TypeLiteral<EntityValidator<Measurement>>() {}).to(MeasurementValidator.class);
     }
-
 }

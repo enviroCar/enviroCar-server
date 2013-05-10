@@ -46,4 +46,11 @@ public class MongoSensorDao extends BasicDAO<MongoSensor, ObjectId> implements S
     public Sensors getAll() {
         return new Sensors(find().fetch());
     }
+
+    @Override
+    public Sensor create(Sensor sensor) {
+        MongoSensor ms = (MongoSensor) sensor;
+        save(ms);
+        return ms;
+    }
 }
