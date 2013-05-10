@@ -49,8 +49,7 @@ public class JerseyProviderModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(new TypeLiteral<GeometryConverter<JSONObject>>() {}).to(GeoJSON.class);
-        bind(GeoJSON.class).in(Scopes.SINGLETON);
+        bind(new TypeLiteral<GeometryConverter<JSONObject>>() {}).to(GeoJSON.class).in(Scopes.SINGLETON);
         bind(GroupProvider.class).in(Scopes.SINGLETON);
         bind(GroupsProvider.class).in(Scopes.SINGLETON);
         bind(UserProvider.class).in(Scopes.SINGLETON);

@@ -21,6 +21,7 @@ import java.net.URI;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.ext.Provider;
@@ -28,8 +29,6 @@ import javax.ws.rs.ext.Provider;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
-
-import com.google.inject.Inject;
 
 import io.car.server.core.entities.Phenomenon;
 import io.car.server.core.entities.Phenomenons;
@@ -42,7 +41,7 @@ import io.car.server.rest.MediaTypes;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class PhenomenonsProvider extends AbstractJsonEntityProvider<Phenomenons> {
-    @Inject
+    @Context
     private UriInfo uriInfo;
 
     public PhenomenonsProvider() {
