@@ -30,6 +30,11 @@ import org.codehaus.jettison.json.JSONObject;
 import io.car.server.rest.AbstractResource;
 import io.car.server.rest.coding.JSONConstants;
 
+/**
+ * 
+ * @author Arne de Wall <a.dewall@52north.org>
+ *
+ */
 @Path("/")
 public class RootResource extends AbstractResource {
     public static final String USERS_PATH = "users";

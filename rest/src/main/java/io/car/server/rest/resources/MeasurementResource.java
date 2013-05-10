@@ -17,8 +17,76 @@
  */
 package io.car.server.rest.resources;
 
+import io.car.server.core.entities.Measurement;
+import io.car.server.core.exception.IllegalModificationException;
+import io.car.server.core.exception.MeasurementNotFoundException;
+import io.car.server.core.exception.UserNotFoundException;
+import io.car.server.core.exception.ValidationException;
 import io.car.server.rest.AbstractResource;
+import io.car.server.rest.MediaTypes;
+import io.car.server.rest.auth.Authenticated;
 
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
+
+/**
+ * 
+ * @author Arne de Wall <a.dewall@52north.org>
+ * 
+ */
 public class MeasurementResource extends AbstractResource {
+	public static final String SENSOR_PATH = "sensor";
 
+	protected final Measurement measurement;
+
+	@Inject
+	public MeasurementResource(@Assisted Measurement measurement) {
+		this.measurement = measurement;
+	}
+
+	@PUT
+	@Consumes(MediaTypes.MEASUREMENT_MODIFY)
+	@Authenticated
+	public Response modify(Measurement changes)
+			throws MeasurementNotFoundException, UserNotFoundException,
+			ValidationException, IllegalModificationException {
+
+		if (!canModifyUser(getCurrentUser())) {
+			throw new WebApplicationException(Status.FORBIDDEN);
+		}
+		getService().modifyMeasurement(measurement, changes);
+		return Response.ok().build();
+	}
+	
+	@GET
+	@Produces(MediaTypes.MEASUREMENT)
+	@Authenticated
+	public Measurement get() throws MeasurementNotFoundException {
+		return measurement;
+	}
+	
+	@DELETE
+	@Authenticated
+	public void delete() throws MeasurementNotFoundException, UserNotFoundException{
+		if(!canModifyUser(getCurrentUser())){
+			throw new WebApplicationException(Status.FORBIDDEN);
+		}
+		getService().deleteMeasurement(measurement);
+	}
+	
+	@Path(SENSOR_PATH)
+	@Authenticated
+	public SensorResource sensor(){
+		return getResourceFactory().createSensorResource(measurement);
+	}
 }
