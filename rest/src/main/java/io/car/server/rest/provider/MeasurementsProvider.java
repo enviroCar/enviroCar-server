@@ -45,7 +45,7 @@ public class MeasurementsProvider extends AbstractJsonEntityProvider<Measurement
 	@Context
 	private UriInfo uriInfo;
 
-	public MeasurementsProvider(Class<Measurements> classType, MediaType get) {
+	public MeasurementsProvider() {
 		super(Measurements.class, MediaTypes.MEASUREMENTS_TYPE);
 	}
 
