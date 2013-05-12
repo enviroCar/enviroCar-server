@@ -17,9 +17,7 @@
  */
 package io.car.server.rest.coding;
 
-import io.car.server.rest.EntityEncoder;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriInfo;
 
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
@@ -29,6 +27,7 @@ import com.google.inject.Inject;
 
 import io.car.server.core.entities.Measurement;
 import io.car.server.core.entities.Measurements;
+import io.car.server.rest.EntityEncoder;
 
 /**
  *
@@ -36,20 +35,18 @@ import io.car.server.core.entities.Measurements;
  * @author Arne de Wall <a.dewall@52north.org>
  */
 public class MeasurementsCoder implements EntityEncoder<Measurements> {
-	private UriInfo uriInfo;
+    private EntityEncoder<Measurement> measurementEncoder;
 
     @Inject
-    public MeasurementsCoder(UriInfo uriInfo) {
-        this.uriInfo = uriInfo;
+    public MeasurementsCoder(EntityEncoder<Measurement> measurementEncoder) {
+        this.measurementEncoder = measurementEncoder;
     }
 
 	@Override
     public JSONObject encode(Measurements t, MediaType mediaType) throws JSONException {
         JSONArray measurements = new JSONArray();
         for (Measurement m : t) {
-            measurements.put(new JSONObject()
-                    .put(JSONConstants.IDENTIFIER_KEY, m.getIdentifier())
-                    .put(JSONConstants.HREF_KEY, uriInfo.getRequestUriBuilder().path(m.getIdentifier())));
+            measurements.put(measurementEncoder.encode(m, mediaType));
 		}
         return new JSONObject().put(JSONConstants.MEASUREMENTS_KEY, measurements);
 	}

@@ -6,18 +6,7 @@
             "type": "array",
             "minItems": 0,
             "items": {
-                "type": "object",
-                "properties": {
-                    "identifier": {
-                        "type": "string"
-                    },
-                    "href": {
-                        "type": "string",
-                        "format": "uri"
-                    }
-                },
-                "required": [ "identifier", "href" ],
-                "additionalProperties": false
+                "$ref": "measurement.json#"
             }
         }
     },

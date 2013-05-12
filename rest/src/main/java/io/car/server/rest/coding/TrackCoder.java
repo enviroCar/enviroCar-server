@@ -17,8 +17,6 @@
  */
 package io.car.server.rest.coding;
 
-import io.car.server.rest.EntityDecoder;
-import io.car.server.rest.EntityEncoder;
 import javax.ws.rs.core.MediaType;
 
 import org.codehaus.jettison.json.JSONException;
@@ -29,25 +27,32 @@ import com.google.inject.Inject;
 
 import io.car.server.core.EntityFactory;
 import io.car.server.core.db.SensorDao;
+import io.car.server.core.entities.Measurements;
 import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
+import io.car.server.rest.EntityDecoder;
+import io.car.server.rest.EntityEncoder;
 
 public class TrackCoder implements EntityEncoder<Track>, EntityDecoder<Track> {
     private DateTimeFormatter formatter;
     private EntityFactory factory;
     private EntityEncoder<Sensor> sensorProvider;
+    private EntityEncoder<Measurements> measurementsProvider;
     private EntityEncoder<User> userProvider;
     private SensorDao sensorDao;
 
     @Inject
     public TrackCoder(DateTimeFormatter formatter, EntityFactory factory,
-                         EntityEncoder<Sensor> sensorProvider,
-                         EntityEncoder<User> userProvider, SensorDao sensorDao) {
+                      EntityEncoder<Sensor> sensorProvider,
+                      EntityEncoder<Measurements> measurementsProvider,
+                      EntityEncoder<User> userProvider,
+                      SensorDao sensorDao) {
         this.formatter = formatter;
         this.factory = factory;
         this.sensorProvider = sensorProvider;
         this.userProvider = userProvider;
+        this.measurementsProvider = measurementsProvider;
         this.sensorDao = sensorDao;
     }
 
@@ -64,6 +69,8 @@ public class TrackCoder implements EntityEncoder<Track>, EntityDecoder<Track> {
                 .put(JSONConstants.CREATED_KEY, formatter.print(t.getCreationDate()))
                 .put(JSONConstants.MODIFIED_KEY, formatter.print(t.getLastModificationDate()))
                 .put(JSONConstants.SENSOR_KEY, sensorProvider.encode(t.getSensor(), mediaType))
-                .put(JSONConstants.USER_KEY, userProvider.encode(t.getUser(), mediaType));
+                .put(JSONConstants.USER_KEY, userProvider.encode(t.getUser(), mediaType))
+                .put(JSONConstants.MEASUREMENTS_KEY, measurementsProvider.encode(t.getMeasurements(), mediaType)
+                .getJSONArray(JSONConstants.MEASUREMENTS_KEY));
     }
 }
