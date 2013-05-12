@@ -41,6 +41,13 @@
                     "$ref": "#/definitions/date-time"
                 }
             }
+        },
+        "measurements": {
+            "type": "array",
+            "minItems": 0,
+            "items": {
+                "$ref": "measurement.json#"
+            }
         }
     },
     "definitions": {
