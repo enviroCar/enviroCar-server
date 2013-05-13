@@ -1,85 +1,133 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "type": "object",
-    "required": [ "identifier", "sensor", "time", "geometry",
-                    "phenomenons", "created", "modified", "user"],
-    "properties": {
-        "identifier": {
+    "definitions": {
+        "date-time": {
+            "format": "date-time",
             "type": "string"
         },
-        "created": {
-            "$ref": "#/definitions/date-time"
-        },
-        "modified": {
-            "$ref": "#/definitions/date-time"
-        },
-        "time": {
-            "$ref": "#/definitions/date-time"
-        },
-        "sensor": {
-            "type": "object",
-            "required": [ "name" ],
+        "phenomenon": {
             "properties": {
-                "name": {
-                    "type": "string"
-                }
-            }
-        },
-        "user": {
-            "type": "object",
-            "required": [ "name", "created", "modified" ],
-            "additionalProperties": false,
-            "properties": {
-                "name": {
-                    "type": "string",
-                    "pattern": "^[_A-Za-z0-9-]{6,}$"
-                },
-                "mail": {
-                    "type": "string",
-                    "pattern": "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$"
-                },
                 "created": {
                     "$ref": "#/definitions/date-time"
                 },
                 "modified": {
                     "$ref": "#/definitions/date-time"
+                },
+                "name": {
+                    "type": "string"
                 }
-            }
+            },
+            "type": "object"
         },
+        "phenomenons": {
+            "items": {
+                "properties": {
+                    "phenomenon": {
+                        "$ref": "#/definitions/phenomenon"
+                    },
+                    "value": {
+                        "type": [
+                            "string",
+                            "number",
+                            "boolean"
+                        ]
+                    }
+                },
+                "required": [
+                    "phenomenon",
+                    "value"
+                ],
+                "type": "object"
+            },
+            "minItems": 0,
+            "type": "array"
+        },
+        "sensor": {
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "name"
+            ],
+            "type": "object"
+        },
+        "user": {
+            "properties": {
+                "created": {
+                    "$ref": "#/definitions/date-time"
+                },
+                "mail": {
+                    "pattern": "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$",
+                    "type": "string"
+                },
+                "modified": {
+                    "$ref": "#/definitions/date-time"
+                },
+                "name": {
+                    "pattern": "^[_A-Za-z0-9-]{6,}$",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "name",
+                "created",
+                "modified"
+            ],
+            "type": "object"
+        }
+    },
+    "properties": {
         "geometry": {
             "$ref": "https://github.com/fge/sample-json-schemas/blob/master/geojson/geometry.json"
         },
-        "phenomenons": {
-            "type": "array",
-            "minItems": 0,
-            "items": {
-                "type": "object",
-                "required": [ "phenomenon", "value" ],
-                "properties": {
-                    "phenomenon": {
-                        "properties": {
-                            "name": {
-                                "type": "string"
-                            },
-                            "created": {
-                                "$ref": "#/definitions/date-time"
-                            },
-                            "modified": {
-                                "$ref": "#/definitions/date-time"
-                            }
-                        }
-                    },
-                    "value": {
-                        "type": [ "string", "number", "boolean" ]
-                    }
+        "properties": {
+            "properties": {
+                "created": {
+                    "$ref": "#/definitions/date-time"
+                },
+                "identifier": {
+                    "type": "string"
+                },
+                "modified": {
+                    "$ref": "#/definitions/date-time"
+                },
+                "phenomenons": {
+                    "$ref": "#/definitions/phenomenons"
+                },
+                "sensor": {
+                    "$ref": "#/definitions/sensor"
+                },
+                "time": {
+                    "$ref": "#/definitions/date-time"
+                },
+                "user": {
+                    "$ref": "#/definitions/user"
                 }
-            }
+            },
+            "required": [
+                "identifier",
+                "sensor",
+                "time",
+                "phenomenons",
+                "created",
+                "modified",
+                "user"
+            ],
+            "type": "object"
+        },
+        "type": {
+            "enum": [
+                "Feature"
+            ],
+            "type": "string"
         }
     },
-    "definitions": {
-        "date-time": {
-            "type": "string",
-            "format": "date-time"
-        }
-    }
+    "required": [
+        "geometry",
+        "type",
+        "properties"
+    ],
+    "type": "object"
 }

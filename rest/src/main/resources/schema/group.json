@@ -1,39 +1,61 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "type": "object",
-    "required": [ "name", "description", "created", "modified", "owner", "members" ],
     "additionalProperties": false,
-    "properties": {
-        "name": { "type": "string" },
-        "description": { "type": "string" },
-        "created": { "$ref": "#/definitions/date-time" },
-        "modified": { "$ref": "#/definitions/date-time" },
-        "owner": { "$ref": "#/definitions/user-ref" },
-        "members": {
-            "type": "array",
-            "minItems": 1,
-            "items": { "$ref": "#/definitions/user-ref" }
-        }
-    },
     "definitions": {
         "date-time": {
-            "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "type": "string"
         },
         "user-ref": {
-            "type": "object",
-            "required": [ "name", "href" ],
             "additionalProperties": false,
             "properties": {
-                "name": {
-                    "type": "string",
-                    "pattern": "^[_A-Za-z0-9-]{6,}$"
-                },
                 "href": {
-                    "type": "string",
-                    "format": "uri"
+                    "format": "uri",
+                    "type": "string"
+                },
+                "name": {
+                    "pattern": "^[_A-Za-z0-9-]{6,}$",
+                    "type": "string"
                 }
-            }
+            },
+            "required": [
+                "name",
+                "href"
+            ],
+            "type": "object"
         }
-    }
+    },
+    "properties": {
+        "created": {
+            "$ref": "#/definitions/date-time"
+        },
+        "description": {
+            "type": "string"
+        },
+        "members": {
+            "items": {
+                "$ref": "#/definitions/user-ref"
+            },
+            "minItems": 1,
+            "type": "array"
+        },
+        "modified": {
+            "$ref": "#/definitions/date-time"
+        },
+        "name": {
+            "type": "string"
+        },
+        "owner": {
+            "$ref": "#/definitions/user-ref"
+        }
+    },
+    "required": [
+        "name",
+        "description",
+        "created",
+        "modified",
+        "owner",
+        "members"
+    ],
+    "type": "object"
 }

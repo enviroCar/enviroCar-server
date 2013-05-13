@@ -1,26 +1,31 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "type": "object",
+    "additionalProperties": false,
     "properties": {
         "tracks": {
-            "type": "array",
-            "minItems": 0,
             "items": {
-                "type": "object",
+                "additionalProperties": false,
                 "properties": {
-                    "identifier": {
+                    "href": {
+                        "format": "uri",
                         "type": "string"
                     },
-                    "href": {
-                        "type": "string",
-                        "format": "uri"
+                    "identifier": {
+                        "type": "string"
                     }
                 },
-                "required": [ "identifier", "href" ],
-                "additionalProperties": false
-            }
+                "required": [
+                    "identifier",
+                    "href"
+                ],
+                "type": "object"
+            },
+            "minItems": 0,
+            "type": "array"
         }
     },
-    "required": [ "tracks" ],
-    "additionalProperties": false
+    "required": [
+        "tracks"
+    ],
+    "type": "object"
 }

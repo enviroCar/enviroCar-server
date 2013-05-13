@@ -17,8 +17,6 @@
  */
 package io.car.server.rest.coding;
 
-import io.car.server.rest.EntityDecoder;
-import io.car.server.rest.EntityEncoder;
 import javax.ws.rs.core.MediaType;
 
 import org.codehaus.jettison.json.JSONArray;
@@ -36,6 +34,9 @@ import io.car.server.core.entities.Phenomenon;
 import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.User;
 import io.car.server.core.exception.GeometryConverterException;
+import io.car.server.core.util.GeoJSONConstants;
+import io.car.server.rest.EntityDecoder;
+import io.car.server.rest.EntityEncoder;
 
 /**
  * @author Arne de Wall <a.dewall@52north.org>
@@ -72,22 +73,27 @@ public class MeasurementCoder implements EntityEncoder<Measurement>, EntityDecod
             throws JSONException {
         try {
             Measurement measurement = factory.createMeasurement();
-            if (j.has(JSONConstants.TIME_KEY)) {
-                measurement.setTime(formatter.parseDateTime(j.getString(JSONConstants.TIME_KEY)));
-            }
             if (j.has(JSONConstants.GEOMETRY_KEY)) {
                 measurement.setGeometry(geoJSON.decode(j.getJSONObject(JSONConstants.GEOMETRY_KEY)));
             }
-            if (j.has(JSONConstants.PHENOMENONS_KEY)) {
-                JSONArray array = j.getJSONArray(JSONConstants.PHENOMENONS_KEY);
-                for (int i = 0; i < array.length(); ++i) {
-                    measurement.addValue(
-                            factory.createMeasurementValue().setValue(j.get(JSONConstants.VALUE_KEY))
-                            .setPhenomenon(phenomenonDao.getByName(j.getJSONObject(JSONConstants.PHENOMENON_KEY)
-                            .getString(JSONConstants.NAME_KEY))));
+            if (j.has(GeoJSONConstants.PROPERTIES_KEY)) {
+                JSONObject p = j.getJSONObject(GeoJSONConstants.PROPERTIES_KEY);
+                if (p.has(JSONConstants.TIME_KEY)) {
+                    measurement.setTime(formatter.parseDateTime(p.getString(JSONConstants.TIME_KEY)));
+                }
+
+                if (p.has(JSONConstants.PHENOMENONS_KEY)) {
+                    JSONArray array = p.getJSONArray(JSONConstants.PHENOMENONS_KEY);
+                    for (int i = 0; i < array.length(); ++i) {
+                        measurement.addValue(
+                                factory.createMeasurementValue().setValue(p.get(JSONConstants.VALUE_KEY))
+                                .setPhenomenon(phenomenonDao.getByName(p.getJSONObject(JSONConstants.PHENOMENON_KEY)
+                                .getString(JSONConstants.NAME_KEY))));
+                    }
                 }
             }
-            return null;
+            
+            return measurement;
         } catch (GeometryConverterException ex) {
             throw new JSONException(ex);
         }
@@ -97,14 +103,17 @@ public class MeasurementCoder implements EntityEncoder<Measurement>, EntityDecod
     public JSONObject encode(Measurement t, MediaType mediaType) throws JSONException {
         try {
             //FIXME just encode references to user/sensor
-            JSONObject j = new JSONObject()
+            JSONObject feature = new JSONObject()
                     .put(JSONConstants.IDENTIFIER_KEY, t.getIdentifier())
                     .put(JSONConstants.TIME_KEY, formatter.print(t.getTime()))
                     .put(JSONConstants.SENSOR_KEY, sensorProvider.encode(t.getSensor(), mediaType))
                     .put(JSONConstants.USER_KEY, userProvider.encode(t.getUser(), mediaType))
-                    .put(JSONConstants.GEOMETRY_KEY, geoJSON.encode(t.getGeometry()))
                     .put(JSONConstants.MODIFIED_KEY, formatter.print(t.getLastModificationDate()))
                     .put(JSONConstants.CREATED_KEY, formatter.print(t.getCreationDate()));
+            JSONObject j = new JSONObject()
+                    .put(GeoJSONConstants.TYPE_KEY, GeoJSONConstants.FEATURE_TYPE)
+                    .put(JSONConstants.GEOMETRY_KEY, geoJSON.encode(t.getGeometry()))
+                    .put(GeoJSONConstants.PROPERTIES_KEY, feature);
             JSONArray values = new JSONArray();
             for (MeasurementValue mv : t.getValues()) {
                 values.put(new JSONObject()

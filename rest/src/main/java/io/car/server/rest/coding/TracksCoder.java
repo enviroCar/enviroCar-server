@@ -17,7 +17,6 @@
  */
 package io.car.server.rest.coding;
 
-import io.car.server.rest.EntityEncoder;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 
@@ -29,6 +28,7 @@ import com.google.inject.Inject;
 
 import io.car.server.core.entities.Track;
 import io.car.server.core.entities.Tracks;
+import io.car.server.rest.EntityEncoder;
 
 public class TracksCoder implements EntityEncoder<Tracks> {
     private UriInfo uriInfo;

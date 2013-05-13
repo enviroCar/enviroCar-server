@@ -1,15 +1,24 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "type": "object",
+    "additionalProperties": false,
     "properties": {
-        "measurements": {
-            "type": "array",
-            "minItems": 0,
+        "features": {
             "items": {
                 "$ref": "measurement.json#"
-            }
+            },
+            "minItems": 0,
+            "type": "array"
+        },
+        "type": {
+            "enum": [
+                "FeatureCollection"
+            ],
+            "type": "string"
         }
     },
-    "required": [ "measurements" ],
-    "additionalProperties": false
+    "required": [
+        "features",
+        "type"
+    ],
+    "type": "object"
 }

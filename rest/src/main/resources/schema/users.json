@@ -1,27 +1,32 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "type": "object",
+    "additionalProperties": false,
     "properties": {
         "users": {
-            "type": "array",
-            "minItems": 0,
             "items": {
-                "type": "object",
+                "additionalProperties": false,
                 "properties": {
-                    "name": {
-                        "type": "string",
-                        "pattern": "^[_A-Za-z0-9-]{6,}$"
-                    },
                     "href": {
-                        "type": "string",
-                        "format": "uri"
+                        "format": "uri",
+                        "type": "string"
+                    },
+                    "name": {
+                        "pattern": "^[_A-Za-z0-9-]{6,}$",
+                        "type": "string"
                     }
                 },
-                "required": [ "name", "href" ],
-                "additionalProperties": false
-            }
+                "required": [
+                    "name",
+                    "href"
+                ],
+                "type": "object"
+            },
+            "minItems": 0,
+            "type": "array"
         }
     },
-    "required": [ "users" ],
-    "additionalProperties": false
+    "required": [
+        "users"
+    ],
+    "type": "object"
 }

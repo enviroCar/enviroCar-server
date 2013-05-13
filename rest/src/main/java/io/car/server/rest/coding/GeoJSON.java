@@ -17,8 +17,8 @@
  */
 package io.car.server.rest.coding;
 
-import io.car.server.rest.EntityDecoder;
-import io.car.server.rest.EntityEncoder;
+import static io.car.server.core.util.GeoJSONConstants.*;
+
 import javax.ws.rs.core.MediaType;
 
 import org.codehaus.jettison.json.JSONArray;
@@ -42,7 +42,8 @@ import com.vividsolutions.jts.geom.Polygon;
 
 import io.car.server.core.exception.GeometryConverterException;
 import io.car.server.core.util.GeometryConverter;
-
+import io.car.server.rest.EntityDecoder;
+import io.car.server.rest.EntityEncoder;
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */

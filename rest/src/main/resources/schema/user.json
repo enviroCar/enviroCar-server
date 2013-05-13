@@ -1,28 +1,33 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "type": "object",
-    "required": [ "name", "created", "modified", "mail" ],
     "additionalProperties": false,
+    "definitions": {
+        "date-time": {
+            "format": "date-time",
+            "type": "string"
+        }
+    },
     "properties": {
-        "name": { 
-            "type": "string",
-            "pattern": "^[_A-Za-z0-9-]{6,}$"
-        },
-        "mail": { 
-            "type": "string",
-            "pattern": "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$"
-        },
         "created": {
             "$ref": "#/definitions/date-time"
         },
+        "mail": {
+            "pattern": "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$",
+            "type": "string"
+        },
         "modified": {
             "$ref": "#/definitions/date-time"
+        },
+        "name": {
+            "pattern": "^[_A-Za-z0-9-]{6,}$",
+            "type": "string"
         }
     },
-    "definitions": {
-        "date-time": {
-            "type": "string",
-            "format": "date-time"
-        }
-    }
+    "required": [
+        "name",
+        "created",
+        "modified",
+        "mail"
+    ],
+    "type": "object"
 }

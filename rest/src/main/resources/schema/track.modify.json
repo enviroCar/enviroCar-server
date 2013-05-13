@@ -1,10 +1,15 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "type": "object",
     "properties": {
-        "sensor": {
-            "type": "string",
-            "comment": "the name of an existing sensor resource"
+        "properties": {
+            "properties": {
+                "sensor": {
+                    "comment": "the name of an existing sensor resource",
+                    "type": "string"
+                }
+            },
+            "type": "object"
         }
-    }
+    },
+    "type": "object"
 }

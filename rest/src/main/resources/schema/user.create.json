@@ -1,17 +1,23 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "type": "object",
-    "properties": {
-        "name": {
-            "type": "string",
-            "pattern": "^[_A-Za-z0-9-]{6,}$"
-        },
-        "mail": {
-            "type": "string",
-            "pattern": "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$"
-        },
-        "token": { "type": "string" }
-    },
     "additionalProperties": false,
-    "required": [ "name", "mail", "token" ]
+    "properties": {
+        "mail": {
+            "pattern": "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$",
+            "type": "string"
+        },
+        "name": {
+            "pattern": "^[_A-Za-z0-9-]{6,}$",
+            "type": "string"
+        },
+        "token": {
+            "type": "string"
+        }
+    },
+    "required": [
+        "name",
+        "mail",
+        "token"
+    ],
+    "type": "object"
 }

@@ -1,11 +1,13 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "type": "object",
-    "required": [ "name" ],
     "additionalProperties": false,
     "properties": {
         "name": {
             "type": "string"
         }
-    }
+    },
+    "required": [
+        "name"
+    ],
+    "type": "object"
 }

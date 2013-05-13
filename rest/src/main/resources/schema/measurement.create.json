@@ -1,48 +1,72 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "type": "object",
-    "required": [ "sensor", "time", "geometry", "phenomenons" ],
+    "definitions": {
+        "date-time": {
+            "format": "date-time",
+            "type": "string"
+        }
+    },
     "properties": {
-        "time": {
-            "$ref": "#/definitions/date-time"
-        },
-        "sensor": {
-            "type": "object",
-            "required": [ "name" ],
-            "properties": {
-                "name": {
-                    "type": "string"
-                }
-            }
-        },
         "geometry": {
             "$ref": "https://github.com/fge/sample-json-schemas/blob/master/geojson/geometry.json"
         },
-        "phenomenons": {
-            "type": "array",
-            "minItems": 0,
-            "items": {
-                "type": "object",
-                "required": [ "phenomenon", "value" ],
-                "properties": {
-                    "phenomenon": {
+        "properties": {
+            "properties": {
+                "phenomenons": {
+                    "items": {
                         "properties": {
-                            "name": {
-                                "type": "string"
+                            "phenomenon": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "value": {
+                                "type": [
+                                    "string",
+                                    "number",
+                                    "boolean"
+                                ]
                             }
+                        },
+                        "required": [
+                            "phenomenon",
+                            "value"
+                        ],
+                        "type": "object"
+                    },
+                    "minItems": 0,
+                    "type": "array"
+                },
+                "sensor": {
+                    "properties": {
+                        "name": {
+                            "type": "string"
                         }
                     },
-                    "value": {
-                        "type": [ "string", "number", "boolean" ]
-                    }
+                    "required": [
+                        "name"
+                    ],
+                    "type": "object"
+                },
+                "time": {
+                    "$ref": "#/definitions/date-time"
                 }
-            }
+            },
+            "required": [
+                "sensor",
+                "time",
+                "phenomenons"
+            ],
+            "type": "object"
+        },
+        "type": {
+            "enum": [
+                "Feature"
+            ],
+            "type": "string"
         }
     },
-    "definitions": {
-        "date-time": {
-            "type": "string",
-            "format": "date-time"
-        }
-    }
+    "type": "object"
 }
