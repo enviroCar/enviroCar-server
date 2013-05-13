@@ -32,17 +32,6 @@ import io.car.server.core.exception.GeometryConverterException;
  * @author Christian Autermann <c.autermann@52north.org>
  */
 public interface GeometryConverter<T> {
-    String COORDINATES_KEY = "coordinates";
-    String GEOMETRIES_KEY = "geometries";
-    String GEOMETRY_COLLECTION_TYPE = "GeometryCollection";
-    String LINE_STRING_TYPE = "LineString";
-    String MULTI_LINE_STRING_TYPE = "MultiLineString";
-    String MULTI_POINT_TYPE = "MultiPoint";
-    String MULTI_POLYGON_TYPE = "MultiPolygon";
-    String POINT_TYPE = "Point";
-    String POLYGON_TYPE = "Polygon";
-    String TYPE_KEY = "type";
-
     Geometry decode(T json) throws GeometryConverterException;
     GeometryCollection decodeGeometryCollection(T json) throws GeometryConverterException;
 

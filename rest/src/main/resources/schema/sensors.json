@@ -1,26 +1,31 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "type": "object",
+    "additionalProperties": false,
     "properties": {
         "sensors": {
-            "type": "array",
-            "minItems": 0,
             "items": {
-                "type": "object",
+                "additionalProperties": false,
                 "properties": {
-                    "name": {
+                    "href": {
+                        "format": "uri",
                         "type": "string"
                     },
-                    "href": {
-                        "type": "string",
-                        "format": "uri"
+                    "name": {
+                        "type": "string"
                     }
                 },
-                "required": [ "name", "href" ],
-                "additionalProperties": false
-            }
+                "required": [
+                    "name",
+                    "href"
+                ],
+                "type": "object"
+            },
+            "minItems": 0,
+            "type": "array"
         }
     },
-    "required": [ "sensors" ],
-    "additionalProperties": false
+    "required": [
+        "sensors"
+    ],
+    "type": "object"
 }

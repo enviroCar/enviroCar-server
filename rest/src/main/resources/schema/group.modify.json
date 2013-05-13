@@ -1,9 +1,13 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "type": "object",
     "additionalProperties": false,
     "properties": {
-        "name": { "type": "string" },
-        "description": { "type": "string" }
-    }
+        "description": {
+            "type": "string"
+        },
+        "name": {
+            "type": "string"
+        }
+    },
+    "type": "object"
 }

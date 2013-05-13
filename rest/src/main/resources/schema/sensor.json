@@ -1,23 +1,27 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "type": "object",
-    "required": [ "name", "created", "modified" ],
     "additionalProperties": false,
-    "properties": {
-        "name": {
+    "definitions": {
+        "date-time": {
+            "format": "date-time",
             "type": "string"
-        },
+        }
+    },
+    "properties": {
         "created": {
             "$ref": "#/definitions/date-time"
         },
         "modified": {
             "$ref": "#/definitions/date-time"
+        },
+        "name": {
+            "type": "string"
         }
     },
-    "definitions": {
-        "date-time": {
-            "type": "string",
-            "format": "date-time"
-        }
-    }
+    "required": [
+        "name",
+        "created",
+        "modified"
+    ],
+    "type": "object"
 }

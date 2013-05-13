@@ -30,7 +30,7 @@ import io.car.server.mongo.convert.DurationConverter;
 import io.car.server.mongo.convert.FileConverter;
 import io.car.server.mongo.convert.JTSConverter;
 import io.car.server.mongo.convert.URLConverter;
-import io.car.server.mongo.guice.util.GeoBSON;
+import io.car.server.mongo.util.GeoBSON;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>

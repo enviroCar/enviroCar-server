@@ -15,7 +15,9 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.mongo.guice.util;
+package io.car.server.mongo.util;
+
+import static io.car.server.core.util.GeoJSONConstants.*;
 
 import org.bson.BSONObject;
 import org.bson.types.BasicBSONList;
@@ -39,7 +41,6 @@ import com.vividsolutions.jts.geom.Polygon;
 
 import io.car.server.core.exception.GeometryConverterException;
 import io.car.server.core.util.GeometryConverter;
-
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */

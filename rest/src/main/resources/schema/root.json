@@ -1,12 +1,14 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "type": "object",
+    "additionalProperties": false,
     "properties": {
         "users": {
-            "type": "string",
-            "format": "uri"
+            "format": "uri",
+            "type": "string"
         }
     },
-    "additionalProperties": false,
-    "required": [ "users" ]
+    "required": [
+        "users"
+    ],
+    "type": "object"
 }

@@ -31,6 +31,7 @@ import io.car.server.core.entities.Measurements;
 import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
+import io.car.server.core.util.GeoJSONConstants;
 import io.car.server.rest.EntityDecoder;
 import io.car.server.rest.EntityEncoder;
 
@@ -64,13 +65,16 @@ public class TrackCoder implements EntityEncoder<Track>, EntityDecoder<Track> {
 
     @Override
     public JSONObject encode(Track t, MediaType mediaType) throws JSONException {
-        return new JSONObject()
+        JSONObject properties = new JSONObject()
                 .put(JSONConstants.IDENTIFIER_KEY, t.getIdentifier())
                 .put(JSONConstants.CREATED_KEY, formatter.print(t.getCreationDate()))
                 .put(JSONConstants.MODIFIED_KEY, formatter.print(t.getLastModificationDate()))
                 .put(JSONConstants.SENSOR_KEY, sensorProvider.encode(t.getSensor(), mediaType))
-                .put(JSONConstants.USER_KEY, userProvider.encode(t.getUser(), mediaType))
-                .put(JSONConstants.MEASUREMENTS_KEY, measurementsProvider.encode(t.getMeasurements(), mediaType)
-                .getJSONArray(JSONConstants.MEASUREMENTS_KEY));
+                .put(JSONConstants.USER_KEY, userProvider.encode(t.getUser(), mediaType));
+        return new JSONObject()
+                .put(GeoJSONConstants.TYPE_KEY, GeoJSONConstants.FEATURE_COLLECTION_TYPE)
+                .put(GeoJSONConstants.PROPERTIES_KEY, properties)
+                .put(GeoJSONConstants.FEATURES_KEY, measurementsProvider.encode(t.getMeasurements(), mediaType)
+                .getJSONArray(GeoJSONConstants.FEATURES_KEY));
     }
 }

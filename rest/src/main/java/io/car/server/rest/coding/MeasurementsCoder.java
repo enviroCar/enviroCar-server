@@ -27,6 +27,7 @@ import com.google.inject.Inject;
 
 import io.car.server.core.entities.Measurement;
 import io.car.server.core.entities.Measurements;
+import io.car.server.core.util.GeoJSONConstants;
 import io.car.server.rest.EntityEncoder;
 
 /**
@@ -48,6 +49,8 @@ public class MeasurementsCoder implements EntityEncoder<Measurements> {
         for (Measurement m : t) {
             measurements.put(measurementEncoder.encode(m, mediaType));
 		}
-        return new JSONObject().put(JSONConstants.MEASUREMENTS_KEY, measurements);
+        return new JSONObject()
+                .put(GeoJSONConstants.TYPE_KEY, GeoJSONConstants.FEATURE_COLLECTION_TYPE)
+                .put(GeoJSONConstants.FEATURES_KEY, measurements);
 	}
 }
