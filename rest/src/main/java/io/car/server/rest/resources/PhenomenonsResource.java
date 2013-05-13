@@ -30,6 +30,7 @@ import io.car.server.core.entities.Phenomenons;
 import io.car.server.core.exception.PhenomenonNotFoundException;
 import io.car.server.rest.AbstractResource;
 import io.car.server.rest.MediaTypes;
+import io.car.server.rest.auth.Authenticated;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
@@ -43,6 +44,7 @@ public class PhenomenonsResource extends AbstractResource {
     }
 
     @POST
+    @Authenticated
     @Consumes(MediaTypes.PHENOMENON_CREATE)
     public Response create(Phenomenon phenomenon) {
         return Response.created(getUriInfo().getRequestUriBuilder().path(getService().createPhenomenon(phenomenon).getName()).build()).build();

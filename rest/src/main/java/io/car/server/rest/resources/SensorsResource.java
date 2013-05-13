@@ -30,6 +30,7 @@ import io.car.server.core.entities.Sensors;
 import io.car.server.core.exception.SensorNotFoundException;
 import io.car.server.rest.AbstractResource;
 import io.car.server.rest.MediaTypes;
+import io.car.server.rest.auth.Authenticated;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
@@ -43,6 +44,7 @@ public class SensorsResource extends AbstractResource {
     }
     
     @POST
+    @Authenticated
     @Consumes(MediaTypes.SENSOR)
     public Response create(Sensor sensor) {
         return Response.created(getUriInfo().getRequestUriBuilder().path(getService().createSensor(sensor).getName()).build()).build();

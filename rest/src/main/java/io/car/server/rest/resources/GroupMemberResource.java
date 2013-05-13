@@ -27,6 +27,7 @@ import com.google.inject.assistedinject.Assisted;
 import io.car.server.core.entities.Group;
 import io.car.server.core.entities.User;
 import io.car.server.core.exception.UserNotFoundException;
+import io.car.server.rest.auth.Authenticated;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
@@ -42,6 +43,7 @@ public class GroupMemberResource extends UserResource {
 
     @DELETE
     @Override
+    @Authenticated
     public void delete() throws UserNotFoundException {
         if (!canModifyUser(getUser())) {
             throw new WebApplicationException(Status.FORBIDDEN);

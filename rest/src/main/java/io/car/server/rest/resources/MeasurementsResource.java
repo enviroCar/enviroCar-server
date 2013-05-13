@@ -36,6 +36,7 @@ import io.car.server.core.exception.ValidationException;
 import io.car.server.rest.AbstractResource;
 import io.car.server.rest.MediaTypes;
 import io.car.server.rest.RESTConstants;
+import io.car.server.rest.auth.Authenticated;
 
 /**
  *
@@ -55,12 +56,12 @@ public class MeasurementsResource extends AbstractResource {
 
     @GET
     @Produces(MediaTypes.MEASUREMENTS)
-    public Measurements get(
-            @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit) {
+    public Measurements get(@QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit) {
         return getService().getAllMeasurements(limit);
     }
 
     @POST
+    @Authenticated
     @Consumes(MediaTypes.MEASUREMENT_CREATE)
     public Response create(Measurement measurement) throws ResourceAlreadyExistException, ValidationException {
 

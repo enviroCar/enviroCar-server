@@ -35,6 +35,7 @@ import io.car.server.core.entities.Users;
 import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.rest.AbstractResource;
 import io.car.server.rest.MediaTypes;
+import io.car.server.rest.auth.Authenticated;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
@@ -54,6 +55,7 @@ public class FriendsResource extends AbstractResource {
     }
 
     @POST
+    @Authenticated
     @Consumes(MediaTypes.USER_REF)
     public void add(User friend) throws UserNotFoundException {
         if (friend.getName() == null) {
@@ -63,6 +65,7 @@ public class FriendsResource extends AbstractResource {
     }
 
     @DELETE
+    @Authenticated
     @Consumes(MediaTypes.USER_REF)
     public void remove(User friend) throws UserNotFoundException {
         if (friend.getName() == null) {

@@ -68,7 +68,6 @@ public class TrackResource extends AbstractResource {
 
 	@GET
 	@Produces(MediaTypes.TRACK)
-	@Authenticated
     public Track get() throws TrackNotFoundException {
         return track;
 	}
@@ -83,7 +82,6 @@ public class TrackResource extends AbstractResource {
 	}
 
 	@Path(MEASUREMENTS_PATH)
-	@Authenticated
 	public MeasurementsResource measurements() {
         return getResourceFactory().createMeasurementsResource(track);
 	}
