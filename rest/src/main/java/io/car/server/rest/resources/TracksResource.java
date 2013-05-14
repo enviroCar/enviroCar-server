@@ -57,7 +57,6 @@ public class TracksResource extends AbstractResource {
     public Response create(Track track) throws ValidationException,
                                                ResourceAlreadyExistException,
                                                UserNotFoundException {
-        // TODO FIXME XXX any unique id instead of carname =C !?
         return Response.created(
                 getUriInfo().getRequestUriBuilder()
                 .path(getService().createTrack(track.setUser(getCurrentUser())).getIdentifier())
