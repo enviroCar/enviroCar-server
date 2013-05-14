@@ -18,10 +18,6 @@
 package io.car.server.rest.guice;
 
 import java.util.Map;
-import java.util.logging.Handler;
-import java.util.logging.LogManager;
-
-import org.slf4j.bridge.SLF4JBridgeHandler;
 
 import com.google.common.collect.ImmutableMap;
 import com.sun.jersey.api.container.filter.GZIPContentEncodingFilter;
@@ -64,15 +60,15 @@ public class JerseyModule extends JerseyServletModule {
     protected void configureServlets() {
         serve("/rest*").with(GuiceContainer.class, getContainerFilterConfig());
         serve("/schema/*").with(SchemaServlet.class);
-        configureLogging();
+//        configureLogging();
     }
 
-    protected void configureLogging() throws SecurityException {
-        java.util.logging.Logger rootLogger = LogManager.getLogManager().getLogger("");
-        Handler[] handlers = rootLogger.getHandlers();
-        for (int i = 0; i < handlers.length; i++) {
-            rootLogger.removeHandler(handlers[i]);
-        }
-        SLF4JBridgeHandler.install();
-    }
+//    protected void configureLogging() throws SecurityException {
+//        java.util.logging.Logger rootLogger = LogManager.getLogManager().getLogger("");
+//        Handler[] handlers = rootLogger.getHandlers();
+//        for (int i = 0; i < handlers.length; i++) {
+//            rootLogger.removeHandler(handlers[i]);
+//        }
+//        SLF4JBridgeHandler.install();
+//    }
 }
