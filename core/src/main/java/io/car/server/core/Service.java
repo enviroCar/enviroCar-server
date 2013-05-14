@@ -263,4 +263,7 @@ public class Service {
         return this.phenomenonDao.create(phenomenon);
     }
 
+    public Tracks getTracks(User user) {
+        return this.trackDao.getByUser(user);
+    }
 }

@@ -27,8 +27,12 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
+import com.google.inject.assistedinject.Assisted;
+import com.google.inject.assistedinject.AssistedInject;
+
 import io.car.server.core.entities.Track;
 import io.car.server.core.entities.Tracks;
+import io.car.server.core.entities.User;
 import io.car.server.core.exception.ResourceAlreadyExistException;
 import io.car.server.core.exception.TrackNotFoundException;
 import io.car.server.core.exception.UserNotFoundException;
@@ -44,11 +48,23 @@ import io.car.server.rest.auth.Authenticated;
  *
  */
 public class TracksResource extends AbstractResource {
+    private User user;
+
+    @AssistedInject
+    public TracksResource(@Assisted User user) {
+        this.user = user;
+    }
+
+    @AssistedInject
+    public TracksResource() {
+        this(null);
+    }
+
     @GET
     @Produces(MediaTypes.TRACKS)
-    public Tracks get(
-            @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit) {
-        return getService().getAllTracks();
+    public Tracks get(@QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit) {
+        return user != null ? getService().getTracks(user) : getService().getAllTracks();
+        
     }
 
     @POST
