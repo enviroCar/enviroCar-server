@@ -59,8 +59,14 @@ public class TrackCoder implements EntityEncoder<Track>, EntityDecoder<Track> {
 
     @Override
     public Track decode(JSONObject j, MediaType mediaType) throws JSONException {
-        return factory.createTrack()
-                .setSensor(sensorDao.getByName(j.getString(JSONConstants.SENSOR_KEY)));
+        Track track = factory.createTrack();
+        if (j.has(GeoJSONConstants.PROPERTIES_KEY)) {
+            JSONObject p = j.getJSONObject(GeoJSONConstants.PROPERTIES_KEY);
+            if (j.has(JSONConstants.SENSOR_KEY)) {
+                track.setSensor(sensorDao.getByName(j.getString(JSONConstants.SENSOR_KEY)));
+            }
+        }
+        return track;
     }
 
     @Override
