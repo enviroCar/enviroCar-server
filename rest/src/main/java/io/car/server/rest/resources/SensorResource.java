@@ -17,14 +17,14 @@
  */
 package io.car.server.rest.resources;
 
+import io.car.server.core.entities.Sensor;
+import io.car.server.rest.MediaTypes;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Produces;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
-
-import io.car.server.core.entities.Sensor;
-import io.car.server.rest.MediaTypes;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
@@ -36,7 +36,7 @@ public class SensorResource {
     public SensorResource(@Assisted Sensor sensor) {
         this.sensor = sensor;
     }
-
+    
     @GET
     @Produces(MediaTypes.SENSOR)
     public Sensor get() {

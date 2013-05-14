@@ -25,7 +25,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
@@ -43,9 +45,7 @@ import io.car.server.rest.RESTConstants;
 import io.car.server.rest.auth.Authenticated;
 
 /**
- *
  * @author Arne de Wall <a.dewall@52north.org>
- *
  */
 public class TracksResource extends AbstractResource {
     private User user;
@@ -60,27 +60,31 @@ public class TracksResource extends AbstractResource {
         this(null);
     }
 
-    @GET
-    @Produces(MediaTypes.TRACKS)
-    public Tracks get(@QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit) {
+	@GET
+	@Produces(MediaTypes.TRACKS)
+	public Tracks get(@QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit) {
         return user != null ? getService().getTracks(user) : getService().getAllTracks();
-        
-    }
+	}
 
-    @POST
-    @Consumes(MediaTypes.TRACK_CREATE)
-    @Authenticated
-    public Response create(Track track) throws ValidationException,
-                                               ResourceAlreadyExistException,
-                                               UserNotFoundException {
-        return Response.created(
-                getUriInfo().getRequestUriBuilder()
-                .path(getService().createTrack(track.setUser(getCurrentUser())).getIdentifier())
-                .build()).build();
-    }
+	@POST
+	@Consumes(MediaTypes.TRACK_CREATE)
+	@Authenticated
+    public Response create(Track track) throws ValidationException, ResourceAlreadyExistException, UserNotFoundException {
+        if (user != null && !canModifyUser(user)) {
+            throw new WebApplicationException(Status.FORBIDDEN);
+        }
+		return Response.created(
+				getUriInfo()
+						.getRequestUriBuilder()
+						.path(getService().createTrack(
+								track.setUser(getCurrentUser()))
+								.getIdentifier()).build()).build();
+	}
 
-    @Path("{trackid}")
-    public TrackResource user(@PathParam("trackid") String track) throws TrackNotFoundException {
-        return getResourceFactory().createTrackResource(getService().getTrack(track));
-    }
+	@Path("{trackid}")
+	public TrackResource user(@PathParam("trackid") String track)
+			throws TrackNotFoundException {
+		return getResourceFactory().createTrackResource(
+				getService().getTrack(track));
+	}
 }
