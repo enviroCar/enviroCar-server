@@ -1,16 +1,19 @@
 /**
- * Copyright (C) 2013 Christian Autermann, Jan Alexander Wirwahn, Arne De Wall, Dustin Demuth, Saqib Rasheed
+ * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
+ *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
- * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General
- * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
- * later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
- * details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Affero General Public License along with this program. If not, see
- * <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package io.car.server.rest.resources;
 
@@ -24,11 +27,13 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
+import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 
 import io.car.server.core.entities.Measurement;
 import io.car.server.core.entities.Measurements;
 import io.car.server.core.entities.Track;
+import io.car.server.core.entities.User;
 import io.car.server.core.exception.MeasurementNotFoundException;
 import io.car.server.core.exception.ResourceAlreadyExistException;
 import io.car.server.core.exception.ValidationException;
@@ -42,22 +47,38 @@ import io.car.server.rest.auth.Authenticated;
  */
 public class MeasurementsResource extends AbstractResource {
     private final Track track;
+    private final User user;
 
     @AssistedInject
     public MeasurementsResource() {
-        this(null);
+        this(null, null);
     }
 
     @AssistedInject
-    public MeasurementsResource(Track track) {
+    public MeasurementsResource(@Assisted Track track) {
+        this(track, null);
+    }
+
+    @AssistedInject
+    public MeasurementsResource(@Assisted User user) {
+        this(null, user);
+    }
+
+    @AssistedInject
+    public MeasurementsResource(@Assisted Track track, @Assisted User user) {
         this.track = track;
+        this.user = user;
     }
 
     @GET
     @Produces(MediaTypes.MEASUREMENTS)
     public Measurements get(@QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit) {
         if (track == null) {
-            return getService().getAllMeasurements(limit);
+            if (user == null) {
+                return getService().getMeasurements(limit);
+            } else {
+                return getService().getMeasurements(user);
+            }
         } else {
             return track.getMeasurements();
         }

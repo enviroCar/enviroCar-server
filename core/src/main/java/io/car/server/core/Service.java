@@ -215,9 +215,13 @@ public class Service {
 		return this.trackDao.create(this.trackValidator.validateCreate(track));
 	}
 
-	public Measurements getAllMeasurements(int limit) {
+    public Measurements getMeasurements(int limit) {
 		return this.measurementDao.getAll(limit);
-	}
+    }
+
+    public Measurements getMeasurements(User user) {
+        return this.measurementDao.getByUser(user);
+    }
 
 	public Measurement getMeasurement(String id) {
 		return this.measurementDao.getById(id);
