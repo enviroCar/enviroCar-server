@@ -26,6 +26,7 @@ import com.github.jmkgreen.morphia.annotations.Embedded;
 import com.github.jmkgreen.morphia.annotations.Entity;
 import com.github.jmkgreen.morphia.annotations.Indexed;
 import com.github.jmkgreen.morphia.annotations.Reference;
+import com.github.jmkgreen.morphia.annotations.Transient;
 import com.github.jmkgreen.morphia.utils.IndexDirection;
 import com.google.inject.Inject;
 import com.vividsolutions.jts.geom.Coordinate;
@@ -54,6 +55,7 @@ public class MongoTrack extends MongoBaseEntity<MongoTrack> implements Track {
     @Reference(value = MEASUREMENTS, lazy = true)
     private List<MongoMeasurement> measurements = new ArrayList<MongoMeasurement>();
     @Inject
+    @Transient
     private GeometryFactory factory;
 
     @Override
