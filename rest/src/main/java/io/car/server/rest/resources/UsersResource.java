@@ -42,6 +42,7 @@ import io.car.server.rest.auth.Anonymous;
  * @author Christian Autermann <c.autermann@52north.org>
  */
 public class UsersResource extends AbstractResource {
+    public static final String USER_PATH = "{username}";
 
     @GET
     @Produces(MediaTypes.USERS)
@@ -59,7 +60,7 @@ public class UsersResource extends AbstractResource {
                 .build()).build();
     }
 
-    @Path("{username}")
+    @Path(USER_PATH)
     public UserResource user(@PathParam("username") String username) throws UserNotFoundException {
         return getResourceFactory().createUserResource(getService().getUser(username));
     }

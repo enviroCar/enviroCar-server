@@ -37,6 +37,7 @@ import io.car.server.rest.auth.Authenticated;
  * @author Jan Wirwahn <jan.wirwahn@wwu.de>
  */
 public class PhenomenonsResource extends AbstractResource {
+    public static final String PHENOMENON_PATH = "{phenomenon}";
     @GET
     @Produces(MediaTypes.PHENOMENONS)
     public Phenomenons get() {
@@ -50,8 +51,8 @@ public class PhenomenonsResource extends AbstractResource {
         return Response.created(getUriInfo().getRequestUriBuilder().path(getService().createPhenomenon(phenomenon).getName()).build()).build();
     }
     
-    @Path("{id}")
-    public PhenomenonResource phenomenon(@PathParam("id") String id) throws PhenomenonNotFoundException {
+    @Path(PHENOMENON_PATH)
+    public PhenomenonResource phenomenon(@PathParam("phenomenon") String id) throws PhenomenonNotFoundException {
         return getResourceFactory().createPhenomenonResource(getService().getPhenomenonByName(id));
     }
 }
