@@ -11,12 +11,12 @@
                         "format": "uri",
                         "type": "string"
                     },
-                    "identifier": {
+                    "id": {
                         "type": "string"
                     }
                 },
                 "required": [
-                    "identifier",
+                "id",
                     "href"
                 ],
                 "type": "object"
