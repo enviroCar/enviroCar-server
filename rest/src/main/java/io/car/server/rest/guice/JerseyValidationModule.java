@@ -17,18 +17,11 @@
  */
 package io.car.server.rest.guice;
 
-import static com.github.fge.jsonschema.util.JsonLoader.fromResource;
-
-import java.io.IOException;
 
 import org.codehaus.jettison.json.JSONObject;
 
-import com.github.fge.jsonschema.cfg.LoadingConfiguration;
-import com.github.fge.jsonschema.cfg.LoadingConfigurationBuilder;
 import com.github.fge.jsonschema.main.JsonSchemaFactory;
 import com.google.inject.AbstractModule;
-import com.google.inject.Provider;
-import com.google.inject.ProvisionException;
 import com.google.inject.Scopes;
 import com.google.inject.TypeLiteral;
 
