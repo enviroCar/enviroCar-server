@@ -18,6 +18,7 @@
 package io.car.server.rest.provider;
 
 import java.util.Collections;
+import java.util.Set;
 
 import javax.ws.rs.core.MediaType;
 
@@ -33,16 +34,21 @@ public abstract class AbstractJsonEntityProvider<T> extends AbstracJsonProvider<
     @Inject
     private CodingFactory codingFactory;
 
+    public AbstractJsonEntityProvider(Class<T> classType, Set<MediaType> readableMediaTypes,
+                                      Set<MediaType> writableMediaTypes) {
+        super(classType, readableMediaTypes, writableMediaTypes);
+    }
+
     public AbstractJsonEntityProvider(Class<T> classType, MediaType get, MediaType post, MediaType put) {
-        super(classType, ImmutableSet.of(post, put), ImmutableSet.of(get));
+        this(classType, ImmutableSet.of(post, put), ImmutableSet.of(get));
     }
 
     public AbstractJsonEntityProvider(Class<T> classType, MediaType get, MediaType post) {
-        super(classType, ImmutableSet.of(post), ImmutableSet.of(get));
+        this(classType, ImmutableSet.of(post), ImmutableSet.of(get));
     }
 
     public AbstractJsonEntityProvider(Class<T> classType, MediaType get) {
-        super(classType, Collections.<MediaType>emptySet(), ImmutableSet.of(get));
+        this(classType, Collections.<MediaType>emptySet(), ImmutableSet.of(get));
     }
 
     protected CodingFactory getCodingFactory() {
