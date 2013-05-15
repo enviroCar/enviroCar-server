@@ -34,11 +34,8 @@
             "type": "string"
         },
         "members": {
-            "items": {
-                "$ref": "#/definitions/user-ref"
-            },
-            "minItems": 1,
-            "type": "array"
+            "type": "string",
+            "format": "uri"
         },
         "modified": {
             "$ref": "#/definitions/date-time"

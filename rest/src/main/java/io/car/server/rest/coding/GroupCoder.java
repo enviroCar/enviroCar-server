@@ -17,9 +17,8 @@
  */
 package io.car.server.rest.coding;
 
-import io.car.server.rest.EntityDecoder;
-import io.car.server.rest.EntityEncoder;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriInfo;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -30,6 +29,8 @@ import com.google.inject.Inject;
 import io.car.server.core.EntityFactory;
 import io.car.server.core.entities.Group;
 import io.car.server.core.entities.User;
+import io.car.server.rest.EntityDecoder;
+import io.car.server.rest.EntityEncoder;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
@@ -37,14 +38,16 @@ import io.car.server.core.entities.User;
 public class GroupCoder implements EntityDecoder<Group>, EntityEncoder<Group> {
     private DateTimeFormatter formatter;
     private EntityFactory factory;
-    private EntityEncoder<User> userProvider;
+    private EntityEncoder<User> userEncoder;
+    private UriInfo uriInfo;
 
     @Inject
     public GroupCoder(DateTimeFormatter formatter, EntityFactory factory,
-                      EntityEncoder<User> userProvider) {
+                      EntityEncoder<User> userProvider, UriInfo uriInfo) {
         this.formatter = formatter;
         this.factory = factory;
-        this.userProvider = userProvider;
+        this.uriInfo = uriInfo;
+        this.userEncoder = userProvider;
     }
 
     @Override
@@ -61,6 +64,7 @@ public class GroupCoder implements EntityDecoder<Group>, EntityEncoder<Group> {
                 .put(JSONConstants.DESCRIPTION_KEY, t.getDescription())
                 .put(JSONConstants.CREATED_KEY, formatter.print(t.getCreationDate()))
                 .put(JSONConstants.MODIFIED_KEY, formatter.print(t.getLastModificationDate()))
-                .put(JSONConstants.OWNER_KEY, userProvider.encode(t.getOwner(), mediaType));
+                .put(JSONConstants.OWNER_KEY, userEncoder.encode(t.getOwner(), mediaType))
+                .put(JSONConstants.MEMBERS_KEY, uriInfo.getRequestUriBuilder().path(JSONConstants.MEMBERS_KEY).build());
     }
 }
