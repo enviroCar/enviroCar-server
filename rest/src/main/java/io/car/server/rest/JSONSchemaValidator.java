@@ -78,7 +78,7 @@ public class JSONSchemaValidator implements Validator<JSONObject> {
             try {
                 JSONArray errors = new JSONArray();
                 for (ProcessingMessage message : report) {
-                    errors.put(new JSONObject(message.getMessage()));
+                    errors.put(new JSONObject(message.toString()));
                 }
                 throw new JSONValidationException(new JSONObject().put(JSONConstants.ERRORS, errors));
             } catch (JSONException ex) {
