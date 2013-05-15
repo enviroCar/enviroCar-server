@@ -1,0 +1,62 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "id": "http://schema.envirocar.org/group.json#",
+    "additionalProperties": false,
+    "definitions": {
+        "date-time": {
+            "format": "date-time",
+            "type": "string"
+        },
+        "user-ref": {
+            "additionalProperties": false,
+            "properties": {
+                "href": {
+                    "format": "uri",
+                    "type": "string"
+                },
+                "name": {
+                    "pattern": "^[_A-Za-z0-9-]{6,}$",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "name",
+                "href"
+            ],
+            "type": "object"
+        }
+    },
+    "properties": {
+        "created": {
+            "$ref": "#/definitions/date-time"
+        },
+        "description": {
+            "type": "string"
+        },
+        "members": {
+            "items": {
+                "$ref": "#/definitions/user-ref"
+            },
+            "minItems": 1,
+            "type": "array"
+        },
+        "modified": {
+            "$ref": "#/definitions/date-time"
+        },
+        "name": {
+            "type": "string"
+        },
+        "owner": {
+            "$ref": "#/definitions/user-ref"
+        }
+    },
+    "required": [
+        "name",
+        "description",
+        "created",
+        "modified",
+        "owner",
+        "members"
+    ],
+    "type": "object"
+}

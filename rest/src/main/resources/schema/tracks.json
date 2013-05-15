@@ -1,0 +1,32 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "id": "http://schema.envirocar.org/tracks.json#",
+    "additionalProperties": false,
+    "properties": {
+        "tracks": {
+            "items": {
+                "additionalProperties": false,
+                "properties": {
+                    "href": {
+                        "format": "uri",
+                        "type": "string"
+                    },
+                    "identifier": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "identifier",
+                    "href"
+                ],
+                "type": "object"
+            },
+            "minItems": 0,
+            "type": "array"
+        }
+    },
+    "required": [
+        "tracks"
+    ],
+    "type": "object"
+}

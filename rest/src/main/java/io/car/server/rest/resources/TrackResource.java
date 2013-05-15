@@ -46,6 +46,7 @@ import io.car.server.rest.auth.Authenticated;
  */
 public class TrackResource extends AbstractResource {
     public static final String MEASUREMENTS_PATH = "measurements";
+    public static final String SENSOR_PATH = "sensor";
 	protected final Track track;
 
 	@Inject
@@ -68,7 +69,6 @@ public class TrackResource extends AbstractResource {
 
 	@GET
 	@Produces(MediaTypes.TRACK)
-	@Authenticated
     public Track get() throws TrackNotFoundException {
         return track;
 	}
@@ -83,8 +83,13 @@ public class TrackResource extends AbstractResource {
 	}
 
 	@Path(MEASUREMENTS_PATH)
-	@Authenticated
 	public MeasurementsResource measurements() {
         return getResourceFactory().createMeasurementsResource(track);
+	}
+	
+	@Path(SENSOR_PATH)
+	@Authenticated
+	public SensorResource sensor(){
+		return getResourceFactory().createSensorResource(track.getSensor());
 	}
 }

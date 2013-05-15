@@ -35,16 +35,27 @@ import javax.ws.rs.core.Response.Status;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import com.google.inject.Inject;
 import com.sun.jersey.core.provider.AbstractMessageReaderWriterProvider;
+
+import io.car.server.core.exception.ValidationException;
+import io.car.server.rest.JSONValidationException;
+import io.car.server.rest.Validator;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
 public abstract class AbstracJsonProvider<T> extends AbstractMessageReaderWriterProvider<T> {
+    private static final Logger log = LoggerFactory.getLogger(AbstracJsonProvider.class);
     private final Class<T> classType;
     private final Set<MediaType> readableMediaTypes;
     private final Set<MediaType> writableMediaTypes;
+
+    @Inject
+    private Validator<JSONObject> validator;
 
     public AbstracJsonProvider(Class<T> classType, Set<MediaType> readableMediaTypes, Set<MediaType> writableMediaTypes) {
         this.classType = classType;
@@ -66,7 +77,9 @@ public abstract class AbstracJsonProvider<T> extends AbstractMessageReaderWriter
     public T readFrom(Class<T> c, Type gt, Annotation[] a, MediaType mt, MultivaluedMap<String, String> h,
                       InputStream in) throws IOException, WebApplicationException {
         try {
-            return read(new JSONObject(readFromAsString(in, mt)), mt);
+            JSONObject j = new JSONObject(readFromAsString(in, mt));
+            validator.validate(j, mt);
+            return read(j, mt);
         } catch (JSONException ex) {
             throw new WebApplicationException(ex, Status.BAD_REQUEST);
         }
@@ -77,7 +90,19 @@ public abstract class AbstracJsonProvider<T> extends AbstractMessageReaderWriter
                         OutputStream out) throws IOException, WebApplicationException {
         try {
             OutputStreamWriter writer = new OutputStreamWriter(out, getCharset(mt));
-            write(t, mt).write(writer);
+            JSONObject j = write(t, mt);
+            try {
+                validator.validate(j, mt);
+            } catch (JSONValidationException v) {
+                log.error("Created invalid response: Error:\n" + v.getError().toString(4) +
+                          "\nGenerated Response:\n" + j.toString(4) + "\n", v);
+                throw new WebApplicationException(v, Status.INTERNAL_SERVER_ERROR);
+            } catch (ValidationException v) {
+                log.error("Created invalid response: Error:\n" + v.getMessage() +
+                          "\nGenerated Response:\n" + j.toString(4) + "\n", v);
+                throw new WebApplicationException(v, Status.INTERNAL_SERVER_ERROR);
+            }
+            j.write(writer);
             writer.flush();
         } catch (JSONException ex) {
             throw new WebApplicationException(ex, Status.INTERNAL_SERVER_ERROR);

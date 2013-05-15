@@ -27,7 +27,6 @@ import io.car.server.core.entities.Phenomenon;
 import io.car.server.rest.MediaTypes;
 
 /**
- * TODO JavaDoc
  * @author Christian Autermann <c.autermann@52north.org>
  */
 public class PhenomenonResource {

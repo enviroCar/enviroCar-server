@@ -1,0 +1,22 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "id": "http://schema.envirocar.org/track.create.json#",
+    "properties": {
+        "properties": {
+            "properties": {
+                "sensor": {
+                    "comment": "the name of an existing sensor resource",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "sensor"
+            ],
+            "type": "object"
+        }
+    },
+    "required": [
+        "properties"
+    ],
+    "type": "object"
+}

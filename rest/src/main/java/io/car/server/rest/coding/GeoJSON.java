@@ -15,7 +15,11 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.provider;
+package io.car.server.rest.coding;
+
+import static io.car.server.core.util.GeoJSONConstants.*;
+
+import javax.ws.rs.core.MediaType;
 
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
@@ -38,11 +42,12 @@ import com.vividsolutions.jts.geom.Polygon;
 
 import io.car.server.core.exception.GeometryConverterException;
 import io.car.server.core.util.GeometryConverter;
-
+import io.car.server.rest.EntityDecoder;
+import io.car.server.rest.EntityEncoder;
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public class GeoJSON implements GeometryConverter<JSONObject> {
+public class GeoJSON implements GeometryConverter<JSONObject>, EntityDecoder<Geometry>, EntityEncoder<Geometry> {
     private final GeometryFactory factory;
 
     @Inject
@@ -65,6 +70,32 @@ public class GeoJSON implements GeometryConverter<JSONObject> {
             return null;
         } else {
             return decodeGeometry(json);
+        }
+    }
+
+    @Override
+    public Geometry decode(JSONObject j, MediaType mt) throws JSONException {
+        try {
+            return decode(j);
+        } catch (GeometryConverterException ex) {
+            if (ex.getCause() != null && ex.getCause() instanceof JSONException) {
+                throw (JSONException) ex.getCause();
+            } else {
+                throw new JSONException(ex);
+            }
+        }
+    }
+
+    @Override
+    public JSONObject encode(Geometry t, MediaType mt) throws JSONException {
+        try {
+            return encode(t);
+        } catch (GeometryConverterException ex) {
+            if (ex.getCause() != null && ex.getCause() instanceof JSONException) {
+                throw (JSONException) ex.getCause();
+            } else {
+                throw new JSONException(ex);
+            }
         }
     }
 

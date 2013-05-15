@@ -15,12 +15,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.provider;
+package io.car.server.rest.coding;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
 public interface JSONConstants {
+    String ERRORS = "errors";
     String TIME_KEY = "time";
     String IDENTIFIER_KEY = "id";
     String MEASUREMENTS_KEY = "measurements";

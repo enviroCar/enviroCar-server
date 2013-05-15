@@ -17,7 +17,6 @@
  */
 package io.car.server.rest.provider;
 
-import java.net.URI;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
@@ -26,11 +25,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.ext.Provider;
 
-import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import io.car.server.core.entities.User;
 import io.car.server.core.entities.Users;
 import io.car.server.rest.MediaTypes;
 
@@ -55,12 +52,6 @@ public class UsersProvider extends AbstractJsonEntityProvider<Users> {
 
     @Override
     public JSONObject write(Users t, MediaType mediaType) throws JSONException {
-        JSONArray a = new JSONArray();
-        for (User u : t) {
-            URI uri = uriInfo.getAbsolutePathBuilder().path(u.getName()).build();
-            a.put(new JSONObject().put(JSONConstants.NAME_KEY, u.getName())
-            		.put(JSONConstants.HREF_KEY, uri));
-        }
-        return new JSONObject().put(JSONConstants.USERS_KEY, a);
+        return getCodingFactory().createUsersEncoder().encode(t, mediaType);
     }
 }

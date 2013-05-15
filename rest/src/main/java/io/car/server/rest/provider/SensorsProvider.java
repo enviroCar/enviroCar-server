@@ -17,21 +17,15 @@
  */
 package io.car.server.rest.provider;
 
-import java.net.URI;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.ext.Provider;
 
-import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import com.google.inject.Inject;
-
-import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.Sensors;
 import io.car.server.rest.MediaTypes;
 
@@ -42,8 +36,6 @@ import io.car.server.rest.MediaTypes;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class SensorsProvider extends AbstractJsonEntityProvider<Sensors> {
-    @Inject
-    private UriInfo uriInfo;
 
     public SensorsProvider() {
         super(Sensors.class, MediaTypes.SENSORS_TYPE);
@@ -56,11 +48,6 @@ public class SensorsProvider extends AbstractJsonEntityProvider<Sensors> {
 
     @Override
     public JSONObject write(Sensors t, MediaType mediaType) throws JSONException {
-        JSONArray a = new JSONArray();
-        for (Sensor u : t) {
-            URI uri = uriInfo.getRequestUriBuilder().path(u.getName()).build();
-            a.put(new JSONObject().put(JSONConstants.NAME_KEY, u.getName()).put(JSONConstants.HREF_KEY, uri));
-        }
-        return new JSONObject().put(JSONConstants.SENSORS_KEY, a);
+        return getCodingFactory().createSensorsEncoder().encode(t, mediaType);
     }
 }

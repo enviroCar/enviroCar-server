@@ -1,0 +1,32 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "id": "http://schema.envirocar.org/phenomenons.json#",
+    "additionalProperties": false,
+    "properties": {
+        "phenomenons": {
+            "items": {
+                "additionalProperties": false,
+                "properties": {
+                    "href": {
+                        "format": "uri",
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "name",
+                    "href"
+                ],
+                "type": "object"
+            },
+            "minItems": 0,
+            "type": "array"
+        }
+    },
+    "required": [
+        "phenomenons"
+    ],
+    "type": "object"
+}

@@ -22,8 +22,12 @@ import io.car.server.core.entities.Sensors;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
+ * @author Jan Wirwahn <jan.wirwahn@wwu.de>
  */
 public interface SensorDao {
-    Sensor getByName(String name);
-    Sensors getAll();
+	Sensor getByName(String name);
+
+	Sensors getAll();
+
+	Sensor create(Sensor sensor);
 }

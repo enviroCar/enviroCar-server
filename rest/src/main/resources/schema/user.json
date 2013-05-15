@@ -1,0 +1,34 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "id": "http://schema.envirocar.org/user.json#",
+    "additionalProperties": false,
+    "definitions": {
+        "date-time": {
+            "format": "date-time",
+            "type": "string"
+        }
+    },
+    "properties": {
+        "created": {
+            "$ref": "#/definitions/date-time"
+        },
+        "mail": {
+            "pattern": "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$",
+            "type": "string"
+        },
+        "modified": {
+            "$ref": "#/definitions/date-time"
+        },
+        "name": {
+            "pattern": "^[_A-Za-z0-9-]{6,}$",
+            "type": "string"
+        }
+    },
+    "required": [
+        "name",
+        "created",
+        "modified",
+        "mail"
+    ],
+    "type": "object"
+}

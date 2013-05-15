@@ -87,7 +87,6 @@ public class UserResource extends AbstractResource {
 
     @GET
     @Produces(MediaTypes.USER)
-    @Authenticated
     public User get() throws UserNotFoundException {
         return getUser();
     }
@@ -102,25 +101,21 @@ public class UserResource extends AbstractResource {
     }
 
     @Path(FRIENDS_PATH)
-    @Authenticated
     public FriendsResource friends() {
         return getResourceFactory().createFriendsResource(getUser());
     }
 
     @Path(GROUPS_PATH)
-    @Authenticated
     public GroupsResource groups() {
         return getResourceFactory().createGroupsResource(getUser());
     }
     
     @Path(TRACKS_PATH)
-    @Authenticated
     public TracksResource tracks(){
     	return getResourceFactory().createTracksResource(getUser());
     }
     
     @Path(MEASUREMENTS_PATH)
-    @Authenticated
     public MeasurementsResource measurements(){
     	return getResourceFactory().createMeasurementsResource(getUser());
     }

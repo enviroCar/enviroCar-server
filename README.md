@@ -2,7 +2,7 @@
 
 ## Schema ##
 
-The [JSON Schema](http://json-schema.org/) is maintained in a different [schema repository](https://github.com/car-io/car.io-schema).
+The [JSON Schema](http://json-schema.org/) is maintained in [`rest/src/main/resources/schema`](https://github.com/car-io/car.io-server/tree/master/rest/src/main/resources/schema).
 
 ## API Reference ##
 

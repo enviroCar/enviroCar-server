@@ -18,12 +18,6 @@
 package io.car.server.rest.guice;
 
 import java.util.Map;
-import java.util.logging.Handler;
-import java.util.logging.LogManager;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.slf4j.bridge.SLF4JBridgeHandler;
 
 import com.google.common.collect.ImmutableMap;
 import com.sun.jersey.api.container.filter.GZIPContentEncodingFilter;
@@ -32,6 +26,7 @@ import com.sun.jersey.guice.JerseyServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 
 import io.car.server.rest.SchemaServlet;
+import io.car.server.rest.ContentTypeCorrectionResourceFilterFactory;
 import io.car.server.rest.auth.AuthenticationFilter;
 import io.car.server.rest.auth.AuthenticationResourceFilterFactory;
 
@@ -39,37 +34,16 @@ import io.car.server.rest.auth.AuthenticationResourceFilterFactory;
  * @author Christian Autermann <c.autermann@52north.org>
  */
 public class JerseyModule extends JerseyServletModule {
-    private static final Logger log = LoggerFactory.getLogger(JerseyModule.class);
     public static final String FALSE = String.valueOf(false);
     public static final String TRUE = String.valueOf(true);
 
     private static String classList(Class<?> clazz, Class<?>... classes) {
-
         StringBuilder sb = new StringBuilder();
         sb.append(clazz.getName());
         for (Class<?> c : classes) {
             sb.append(",").append(c.getName());
         }
         return sb.toString();
-    }
-
-    @Override
-    protected void configureServlets() {
-        log.debug("Installing JerseyModule");
-        install(new JerseyResourceModule());
-        install(new JerseyProviderModule());
-        serve("/rest*").with(GuiceContainer.class, getContainerFilterConfig());
-        serve("/schema/*").with(SchemaServlet.class);
-        configureLogging();
-    }
-
-    protected void configureLogging() throws SecurityException {
-        java.util.logging.Logger rootLogger = LogManager.getLogManager().getLogger("");
-        Handler[] handlers = rootLogger.getHandlers();
-        for (int i = 0; i < handlers.length; i++) {
-            rootLogger.removeHandler(handlers[i]);
-        }
-        SLF4JBridgeHandler.install();
     }
 
     public static Map<String, String> getContainerFilterConfig() {
@@ -80,6 +54,23 @@ public class JerseyModule extends JerseyServletModule {
                 ResourceConfig.PROPERTY_CONTAINER_RESPONSE_FILTERS,
                 classList(GZIPContentEncodingFilter.class),
                 ResourceConfig.PROPERTY_RESOURCE_FILTER_FACTORIES,
-                classList(AuthenticationResourceFilterFactory.class));
+                classList(AuthenticationResourceFilterFactory.class,
+                          ContentTypeCorrectionResourceFilterFactory.class));
     }
+
+    @Override
+    protected void configureServlets() {
+        serve("/rest*").with(GuiceContainer.class, getContainerFilterConfig());
+        serve("/schema/*").with(SchemaServlet.class);
+//        configureLogging();
+    }
+
+//    protected void configureLogging() throws SecurityException {
+//        java.util.logging.Logger rootLogger = LogManager.getLogManager().getLogger("");
+//        Handler[] handlers = rootLogger.getHandlers();
+//        for (int i = 0; i < handlers.length; i++) {
+//            rootLogger.removeHandler(handlers[i]);
+//        }
+//        SLF4JBridgeHandler.install();
+//    }
 }

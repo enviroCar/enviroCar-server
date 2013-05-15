@@ -34,6 +34,7 @@ import io.car.server.core.entities.Users;
 import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.rest.AbstractResource;
 import io.car.server.rest.MediaTypes;
+import io.car.server.rest.auth.Authenticated;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
@@ -52,6 +53,7 @@ public class GroupMembersResource extends AbstractResource {
     }
 
     @POST
+    @Authenticated
     @Consumes(MediaTypes.USER_REF)
     public void add(User user) throws UserNotFoundException {
         if (!canModifyUser(user)) {

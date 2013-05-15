@@ -24,12 +24,7 @@ import javax.ws.rs.ext.Provider;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
-import org.joda.time.format.DateTimeFormatter;
 
-import com.google.inject.Inject;
-
-import io.car.server.core.EntityFactory;
-import io.car.server.core.db.SensorDao;
 import io.car.server.core.entities.Track;
 import io.car.server.rest.MediaTypes;
 
@@ -37,16 +32,6 @@ import io.car.server.rest.MediaTypes;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class TrackProvider extends AbstractJsonEntityProvider<Track> {
-    @Inject
-    private DateTimeFormatter formatter;
-	@Inject
-    private EntityFactory factory;
-    @Inject
-    private SensorProvider sensorProvider;
-    @Inject
-    private UserProvider userProvider;
-    @Inject
-    private SensorDao sensorDao;
 
     public TrackProvider() {
         super(Track.class, MediaTypes.TRACK_TYPE, MediaTypes.TRACK_CREATE_TYPE, MediaTypes.TRACK_MODIFY_TYPE);
@@ -54,17 +39,11 @@ public class TrackProvider extends AbstractJsonEntityProvider<Track> {
 
     @Override
     public Track read(JSONObject j, MediaType mediaType) throws JSONException {
-        return factory.createTrack()
-                .setSensor(sensorDao.getByName(j.getString(JSONConstants.SENSOR_KEY)));
+        return getCodingFactory().createTrackDecoder().decode(j, mediaType);
     }
 
     @Override
     public JSONObject write(Track t, MediaType mediaType) throws JSONException {
-        return new JSONObject()
-                .put(JSONConstants.IDENTIFIER_KEY, t.getIdentifier())
-                .put(JSONConstants.CREATED_KEY, formatter.print(t.getCreationDate()))
-                .put(JSONConstants.MODIFIED_KEY, formatter.print(t.getLastModificationDate()))
-                .put(JSONConstants.SENSOR_KEY, sensorProvider.write(t.getSensor(), mediaType))
-                .put(JSONConstants.USER_KEY, userProvider.write(t.getUser(), mediaType));
+        return getCodingFactory().createTrackEncoder().encode(t, mediaType);
     }
 }

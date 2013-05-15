@@ -1,0 +1,15 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "id": "http://schema.envirocar.org/root.json#",
+    "additionalProperties": false,
+    "properties": {
+        "users": {
+            "format": "uri",
+            "type": "string"
+        }
+    },
+    "required": [
+        "users"
+    ],
+    "type": "object"
+}

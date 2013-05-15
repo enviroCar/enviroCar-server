@@ -1,0 +1,28 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "id": "http://schema.envirocar.org/sensor.json#",
+    "additionalProperties": false,
+    "definitions": {
+        "date-time": {
+            "format": "date-time",
+            "type": "string"
+        }
+    },
+    "properties": {
+        "created": {
+            "$ref": "#/definitions/date-time"
+        },
+        "modified": {
+            "$ref": "#/definitions/date-time"
+        },
+        "name": {
+            "type": "string"
+        }
+    },
+    "required": [
+        "name",
+        "created",
+        "modified"
+    ],
+    "type": "object"
+}

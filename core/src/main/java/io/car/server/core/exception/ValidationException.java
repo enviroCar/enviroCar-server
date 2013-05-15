@@ -20,7 +20,7 @@ package io.car.server.core.exception;
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public class ValidationException extends Exception {
+public class ValidationException extends RuntimeException {
     private static final long serialVersionUID = -6183358575669855777L;
 
     public ValidationException() {

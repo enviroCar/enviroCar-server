@@ -30,7 +30,7 @@ import io.car.server.mongo.convert.DurationConverter;
 import io.car.server.mongo.convert.FileConverter;
 import io.car.server.mongo.convert.JTSConverter;
 import io.car.server.mongo.convert.URLConverter;
-import io.car.server.mongo.guice.util.GeoBSON;
+import io.car.server.mongo.util.GeoBSON;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
@@ -40,8 +40,7 @@ public class MongoConverterModule extends AbstractModule {
     @Override
     protected void configure() {
         Multibinder<TypeConverter> mb = Multibinder.newSetBinder(binder(), TypeConverter.class);
-        bind(new TypeLiteral<GeometryConverter<BSONObject>>() {
-        }).to(GeoBSON.class);
+        bind(new TypeLiteral<GeometryConverter<BSONObject>>() {}).to(GeoBSON.class);
         mb.addBinding().to(DateTimeConverter.class);
         mb.addBinding().to(DurationConverter.class);
         mb.addBinding().to(FileConverter.class);

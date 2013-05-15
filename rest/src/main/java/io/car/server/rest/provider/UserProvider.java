@@ -24,11 +24,7 @@ import javax.ws.rs.ext.Provider;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
-import org.joda.time.format.DateTimeFormatter;
 
-import com.google.inject.Inject;
-
-import io.car.server.core.EntityFactory;
 import io.car.server.core.entities.User;
 import io.car.server.rest.MediaTypes;
 
@@ -40,10 +36,6 @@ import io.car.server.rest.MediaTypes;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class UserProvider extends AbstractJsonEntityProvider<User> {
-    @Inject
-    private DateTimeFormatter formatter;
-    @Inject
-    private EntityFactory factory;
 
     public UserProvider() {
         super(User.class, MediaTypes.USER_TYPE, MediaTypes.USER_CREATE_TYPE, MediaTypes.USER_MODIFY_TYPE);
@@ -51,18 +43,11 @@ public class UserProvider extends AbstractJsonEntityProvider<User> {
 
     @Override
     public User read(JSONObject j, MediaType mediaType) throws JSONException {
-        return factory.createUser()
-                .setName(j.optString(JSONConstants.NAME_KEY, null))
-                .setMail(j.optString(JSONConstants.MAIL_KEY, null))
-                .setToken(j.optString(JSONConstants.TOKEN_KEY, null));
+        return getCodingFactory().createUserDecoder().decode(j, mediaType);
     }
 
     @Override
     public JSONObject write(User t, MediaType mediaType) throws JSONException {
-        return new JSONObject()
-                .put(JSONConstants.NAME_KEY, t.getName())
-                .put(JSONConstants.MAIL_KEY, t.getMail())
-                .put(JSONConstants.CREATED_KEY, formatter.print(t.getCreationDate()))
-                .put(JSONConstants.MODIFIED_KEY, formatter.print(t.getLastModificationDate()));
+        return getCodingFactory().createUserEncoder().encode(t, mediaType);
     }
 }
