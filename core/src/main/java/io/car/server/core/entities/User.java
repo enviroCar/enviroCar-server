@@ -34,8 +34,4 @@ public interface User extends BaseEntity {
     Users getFriends();
     User addFriend(User user);
     User removeFriend(User user);
-    // track stuff
-    Tracks getTracks();
-    User addTrack(Track track);
-    User removeTrack(Track track);
 }
