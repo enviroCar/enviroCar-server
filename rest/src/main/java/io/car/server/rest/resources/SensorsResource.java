@@ -45,7 +45,7 @@ public class SensorsResource extends AbstractResource {
     
     @POST
     @Authenticated
-	@Consumes(MediaTypes.SENSOR)
+    @Consumes(MediaTypes.SENSOR_CREATE)
 	public Response create(Sensor sensor) {
 		return Response.created(
 				getUriInfo().getRequestUriBuilder()
