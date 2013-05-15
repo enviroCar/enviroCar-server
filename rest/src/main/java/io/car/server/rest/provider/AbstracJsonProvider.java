@@ -35,17 +35,21 @@ import javax.ws.rs.core.Response.Status;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
 import com.sun.jersey.core.provider.AbstractMessageReaderWriterProvider;
 
 import io.car.server.core.exception.ValidationException;
+import io.car.server.rest.JSONValidationException;
 import io.car.server.rest.Validator;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
 public abstract class AbstracJsonProvider<T> extends AbstractMessageReaderWriterProvider<T> {
+    private static final Logger log = LoggerFactory.getLogger(AbstracJsonProvider.class);
     private final Class<T> classType;
     private final Set<MediaType> readableMediaTypes;
     private final Set<MediaType> writableMediaTypes;
@@ -87,13 +91,21 @@ public abstract class AbstracJsonProvider<T> extends AbstractMessageReaderWriter
         try {
             OutputStreamWriter writer = new OutputStreamWriter(out, getCharset(mt));
             JSONObject j = write(t, mt);
-            validator.validate(j, mt);
+            try {
+                validator.validate(j, mt);
+            } catch (JSONValidationException v) {
+                log.error("Created invalid response: Error:\n" + v.getError().toString(4) +
+                          "\nGenerated Response:\n" + j.toString(4) + "\n", v);
+                throw new WebApplicationException(v, Status.INTERNAL_SERVER_ERROR);
+            } catch (ValidationException v) {
+                log.error("Created invalid response: Error:\n" + v.getMessage() +
+                          "\nGenerated Response:\n" + j.toString(4) + "\n", v);
+                throw new WebApplicationException(v, Status.INTERNAL_SERVER_ERROR);
+            }
             j.write(writer);
             writer.flush();
         } catch (JSONException ex) {
             throw new WebApplicationException(ex, Status.INTERNAL_SERVER_ERROR);
-        } catch (ValidationException v) {
-            throw new WebApplicationException(v, Status.INTERNAL_SERVER_ERROR);
         }
     }
 
