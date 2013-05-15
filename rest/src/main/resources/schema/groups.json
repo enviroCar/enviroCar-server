@@ -7,9 +7,6 @@
             "items": {
                 "additionalProperties": false,
                 "properties": {
-                    "description": {
-                        "type": "string"
-                    },
                     "href": {
                         "format": "uri",
                         "type": "string"
@@ -20,7 +17,6 @@
                 },
                 "required": [
                     "name",
-                    "description",
                     "href"
                 ],
                 "type": "object"
