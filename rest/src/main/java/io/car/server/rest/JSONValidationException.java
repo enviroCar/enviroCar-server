@@ -18,37 +18,20 @@ package io.car.server.rest;
 
 import org.codehaus.jettison.json.JSONObject;
 
+import io.car.server.core.exception.ValidationException;
+
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public class ValidationException extends Exception {
+public class JSONValidationException extends ValidationException {
     private static final long serialVersionUID = -235700358046047325L;
     private JSONObject error = null;
 
-    public ValidationException() {
-    }
-
-    public ValidationException(JSONObject error) {
+    public JSONValidationException(JSONObject error) {
         this.error = error;
     }
 
-    public ValidationException(String message) {
-        super(message);
-    }
-
-    public ValidationException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public ValidationException(Throwable cause) {
-        super(cause);
-    }
-
-    boolean hasJsonError() {
-        return error != null;
-    }
-
-    public JSONObject getJsonError() {
+    public JSONObject getError() {
         return error;
     }
 }

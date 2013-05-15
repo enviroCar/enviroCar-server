@@ -22,15 +22,25 @@
  * visit the Free Software Foundation web page, http://www.fsf.org.
  */
 
-package io.car.server.rest;
+package io.car.server.rest.mapper;
 
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.ext.ExceptionMapper;
+import javax.ws.rs.ext.Provider;
 
-import io.car.server.core.exception.ValidationException;
+import io.car.server.rest.JSONValidationException;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public interface Validator<T> {
-    void validate(T t, MediaType mt) throws ValidationException;
+@Provider
+public class JsonValidationExceptionMapper implements ExceptionMapper<JSONValidationException> {
+
+    @Override
+    public Response toResponse(JSONValidationException exception) {
+        return Response.status(Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON_TYPE)
+                .entity(exception.getError()).build();
+    }
 }

@@ -26,6 +26,7 @@ import com.google.inject.TypeLiteral;
 import io.car.server.core.util.GeometryConverter;
 import io.car.server.rest.coding.GeoJSON;
 import io.car.server.rest.mapper.IllegalModificationExceptionMapper;
+import io.car.server.rest.mapper.JsonValidationExceptionMapper;
 import io.car.server.rest.mapper.ResourceAlreadyExistExceptionMapper;
 import io.car.server.rest.mapper.ResourceNotFoundExceptionMapper;
 import io.car.server.rest.mapper.ValidationExceptionMapper;
@@ -67,6 +68,7 @@ public class JerseyProviderModule extends AbstractModule {
         bind(ResourceNotFoundExceptionMapper.class).in(Scopes.SINGLETON);
         bind(ValidationExceptionMapper.class).in(Scopes.SINGLETON);
         bind(ResourceAlreadyExistExceptionMapper.class).in(Scopes.SINGLETON);
+        bind(JsonValidationExceptionMapper.class).in(Scopes.SINGLETON);
     }
 
 }
