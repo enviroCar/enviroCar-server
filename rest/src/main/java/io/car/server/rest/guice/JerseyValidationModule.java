@@ -44,49 +44,5 @@ public class JerseyValidationModule extends AbstractModule {
         bind(JsonSchemaFactory.class).toProvider(JsonSchemaFactoryProvider.class).in(Scopes.SINGLETON);
         bind(new TypeLiteral<Validator<JSONObject>>() {}).to(JSONSchemaValidator.class);
     }
-
-    private class JsonSchemaFactoryProvider implements Provider<JsonSchemaFactory> {
-        private LoadingConfigurationBuilder cfg;
-
-        @Override
-        public JsonSchemaFactory get() {
-            cfg = LoadingConfiguration.newBuilder();
-            load("/schema/group.create.json");
-            load("/schema/group.json");
-            load("/schema/group.modify.json");
-            load("/schema/groups.json");
-            load("/schema/measurement.create.json");
-            load("/schema/measurement.json");
-            load("/schema/measurements.json");
-            load("/schema/phenomenon.create.json");
-            load("/schema/phenomenon.json");
-            load("/schema/phenomenon.modify.json");
-            load("/schema/phenomenons.json");
-            load("/schema/root.json");
-            load("/schema/sensor.create.json");
-            load("/schema/sensor.json");
-            load("/schema/sensor.modify.json");
-            load("/schema/sensors.json");
-            load("/schema/track.create.json");
-            load("/schema/track.json");
-            load("/schema/track.modify.json");
-            load("/schema/tracks.json");
-            load("/schema/user.create.json");
-            load("/schema/user.json");
-            load("/schema/user.modify.json");
-            load("/schema/user.ref.json");
-            load("/schema/users.json");
-            return JsonSchemaFactory.newBuilder()
-                    .setLoadingConfiguration(cfg.freeze()).freeze();
-        }
-
-        private void load(String schema) {
-            try {
-                cfg.preloadSchema(fromResource(schema));
-            } catch (IOException ex) {
-                throw new ProvisionException("Error loading " + schema, ex);
-            }
-        }
-    }
     
 }
