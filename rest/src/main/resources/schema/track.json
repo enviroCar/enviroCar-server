@@ -52,21 +52,31 @@
             "type": "array"
         },
         "properties": {
-            "created": {
-                "$ref": "#/definitions/date-time"
-            },
-            "identifier": {
-                "type": "string"
-            },
-            "modified": {
-                "$ref": "#/definitions/date-time"
-            },
-            "sensor": {
-                "$ref": "#/definitions/sensor"
-            },
             "type": "object",
-            "user": {
-                "$ref": "#/definitions/user"
+            "required": [
+            "id",
+                "sensor",
+                "created",
+                "modified",
+                "user"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "created": {
+                    "$ref": "#/definitions/date-time"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "modified": {
+                    "$ref": "#/definitions/date-time"
+                },
+                "sensor": {
+                    "$ref": "#/definitions/sensor"
+                },
+                "user": {
+                    "$ref": "#/definitions/user"
+                }
             }
         },
         "type": {
@@ -77,11 +87,9 @@
         }
     },
     "required": [
-        "identifier",
-        "sensor",
-        "created",
-        "modified",
-        "user"
+    "properties",
+    "features",
+    "type"
     ],
     "type": "object"
 }
