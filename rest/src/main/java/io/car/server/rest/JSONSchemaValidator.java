@@ -34,6 +34,7 @@ import com.github.fge.jsonschema.main.JsonSchemaFactory;
 import com.github.fge.jsonschema.report.ProcessingMessage;
 import com.github.fge.jsonschema.report.ProcessingReport;
 import com.github.fge.jsonschema.util.JsonLoader;
+import com.google.inject.Inject;
 
 import io.car.server.core.exception.ValidationException;
 import io.car.server.rest.coding.JSONConstants;
@@ -44,6 +45,7 @@ import io.car.server.rest.coding.JSONConstants;
 public class JSONSchemaValidator implements Validator<JSONObject> {
     private final JsonSchemaFactory factory;
 
+    @Inject
     public JSONSchemaValidator(JsonSchemaFactory factory) {
         this.factory = factory;
     }
