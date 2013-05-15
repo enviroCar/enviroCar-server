@@ -57,12 +57,14 @@ public class JSONSchemaValidator implements Validator<JSONObject> {
 
     @Override
     public void validate(JSONObject t, MediaType mt) throws ValidationException {
-        String schemaId = mt.getParameters().get("schema");
-        if (schemaId != null) {
-            try {
-                validate(t, factory.getJsonSchema(schemaId));
-            } catch (ProcessingException ex) {
-                throw new ValidationException(ex);
+        if (mt.isCompatible(MediaType.APPLICATION_JSON_TYPE)) {
+            String schemaId = mt.getParameters().get("schema");
+            if (schemaId != null) {
+                try {
+                    validate(t, factory.getJsonSchema(schemaId));
+                } catch (ProcessingException ex) {
+                    throw new ValidationException(ex);
+                }
             }
         }
     }
