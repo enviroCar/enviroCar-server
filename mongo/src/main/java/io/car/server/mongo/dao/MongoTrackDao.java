@@ -50,8 +50,8 @@ public class MongoTrackDao extends BasicDAO<MongoTrack, ObjectId> implements Tra
 	}
 
 	@Override
-	public Tracks getByUser(User user) {
-		return user.getTracks();
+    public Tracks getByUser(User user) {
+        return fetch(createQuery().field(MongoTrack.USER).equal(user));
 	}
 
 	@Override

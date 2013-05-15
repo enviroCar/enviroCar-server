@@ -1,15 +1,12 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "id": "http://schema.envirocar.org/groups.json#",
     "additionalProperties": false,
+    "id": "http://schema.envirocar.org/groups.json#",
     "properties": {
         "groups": {
             "items": {
                 "additionalProperties": false,
                 "properties": {
-                    "description": {
-                        "type": "string"
-                    },
                     "href": {
                         "format": "uri",
                         "type": "string"
@@ -20,7 +17,6 @@
                 },
                 "required": [
                     "name",
-                    "description",
                     "href"
                 ],
                 "type": "object"

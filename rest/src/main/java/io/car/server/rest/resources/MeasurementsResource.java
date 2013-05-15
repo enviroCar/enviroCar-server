@@ -46,6 +46,7 @@ import io.car.server.rest.auth.Authenticated;
  * @author Arne de Wall <a.dewall@52north.org>
  */
 public class MeasurementsResource extends AbstractResource {
+    public static final String MEASUREMENT_PATH = "{measurement}";
     private final Track track;
     private final User user;
 
@@ -96,7 +97,7 @@ public class MeasurementsResource extends AbstractResource {
                 .getIdentifier()).build()).build();
     }
 
-    @Path("{measurement}")
+    @Path(MEASUREMENT_PATH)
     public MeasurementResource measurement(@PathParam("measurement") String id)
             throws MeasurementNotFoundException {
         return getResourceFactory().createMeasurementResource(getService().getMeasurement(id));

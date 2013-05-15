@@ -24,6 +24,7 @@ import com.github.jmkgreen.morphia.annotations.Indexed;
 import com.github.jmkgreen.morphia.annotations.Property;
 import com.github.jmkgreen.morphia.annotations.Reference;
 import com.google.common.base.Objects;
+import com.google.common.collect.Sets;
 
 import io.car.server.core.entities.Group;
 import io.car.server.core.entities.User;
@@ -32,7 +33,7 @@ import io.car.server.core.entities.Users;
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-@Entity("userGroups")
+@Entity("groups")
 public class MongoGroup extends MongoBaseEntity<MongoGroup> implements Group {
     public static final String NAME = "name";
     public static final String DESCRIPTION = "desc";
@@ -44,7 +45,7 @@ public class MongoGroup extends MongoBaseEntity<MongoGroup> implements Group {
     @Property(DESCRIPTION)
     private String description;
     @Reference(value = MEMBERS, lazy = true)
-    private Set<MongoUser> members;
+    private Set<MongoUser> members = Sets.newHashSet();
     @Reference(value = OWNER, lazy = true)
     private MongoUser owner;
 

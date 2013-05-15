@@ -1,6 +1,5 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "id": "http://schema.envirocar.org/group.json#",
     "additionalProperties": false,
     "definitions": {
         "date-time": {
@@ -26,6 +25,7 @@
             "type": "object"
         }
     },
+    "id": "http://schema.envirocar.org/group.json#",
     "properties": {
         "created": {
             "$ref": "#/definitions/date-time"
@@ -34,11 +34,8 @@
             "type": "string"
         },
         "members": {
-            "items": {
-                "$ref": "#/definitions/user-ref"
-            },
-            "minItems": 1,
-            "type": "array"
+            "format": "uri",
+            "type": "string"
         },
         "modified": {
             "$ref": "#/definitions/date-time"

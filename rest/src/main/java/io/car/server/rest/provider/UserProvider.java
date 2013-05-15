@@ -25,6 +25,8 @@ import javax.ws.rs.ext.Provider;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
+import com.google.common.collect.ImmutableSet;
+
 import io.car.server.core.entities.User;
 import io.car.server.rest.MediaTypes;
 
@@ -38,7 +40,8 @@ import io.car.server.rest.MediaTypes;
 public class UserProvider extends AbstractJsonEntityProvider<User> {
 
     public UserProvider() {
-        super(User.class, MediaTypes.USER_TYPE, MediaTypes.USER_CREATE_TYPE, MediaTypes.USER_MODIFY_TYPE);
+        super(User.class, ImmutableSet.of(MediaTypes.USER_TYPE), ImmutableSet
+                .of(MediaTypes.USER_CREATE_TYPE, MediaTypes.USER_MODIFY_TYPE, MediaTypes.USER_REF_TYPE));
     }
 
     @Override

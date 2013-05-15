@@ -31,6 +31,8 @@ public class TrackValidator extends AbstractValidator<Track> {
         isNull("bbox", t.getBbox());
         isNull("created", t.getCreationDate());
         isNull("modified", t.getLastModificationDate());
+        isNotNull("sensor", t.getSensor());
+        isNotNull("user", t.getUser());
         return t;
     }
 
@@ -38,6 +40,7 @@ public class TrackValidator extends AbstractValidator<Track> {
     public Track validateUpdate(Track t) throws ValidationException {
         isNull("created", t.getCreationDate());
         isNull("modified", t.getLastModificationDate());
+        isNull("user", t.getUser());
         return t;
     }
 }

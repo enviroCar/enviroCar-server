@@ -1,6 +1,5 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "id": "http://schema.envirocar.org/track.json#",
     "definitions": {
         "date-time": {
             "format": "date-time",
@@ -43,6 +42,7 @@
             "type": "object"
         }
     },
+    "id": "http://schema.envirocar.org/track.json#",
     "properties": {
         "features": {
             "items": {
@@ -52,22 +52,32 @@
             "type": "array"
         },
         "properties": {
-            "created": {
-                "$ref": "#/definitions/date-time"
+            "additionalProperties": false,
+            "properties": {
+                "created": {
+                    "$ref": "#/definitions/date-time"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "modified": {
+                    "$ref": "#/definitions/date-time"
+                },
+                "sensor": {
+                    "$ref": "#/definitions/sensor"
+                },
+                "user": {
+                    "$ref": "#/definitions/user"
+                }
             },
-            "identifier": {
-                "type": "string"
-            },
-            "modified": {
-                "$ref": "#/definitions/date-time"
-            },
-            "sensor": {
-                "$ref": "#/definitions/sensor"
-            },
-            "type": "object",
-            "user": {
-                "$ref": "#/definitions/user"
-            }
+            "required": [
+                "id",
+                "sensor",
+                "created",
+                "modified",
+                "user"
+            ],
+            "type": "object"
         },
         "type": {
             "enum": [
@@ -77,11 +87,9 @@
         }
     },
     "required": [
-        "identifier",
-        "sensor",
-        "created",
-        "modified",
-        "user"
+        "properties",
+        "features",
+        "type"
     ],
     "type": "object"
 }

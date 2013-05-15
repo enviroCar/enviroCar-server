@@ -17,9 +17,10 @@
  */
 package io.car.server.rest.coding;
 
-import io.car.server.rest.EntityDecoder;
-import io.car.server.rest.EntityEncoder;
+import java.net.URI;
+
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriInfo;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -29,6 +30,11 @@ import com.google.inject.Inject;
 
 import io.car.server.core.EntityFactory;
 import io.car.server.core.entities.User;
+import io.car.server.rest.EntityDecoder;
+import io.car.server.rest.EntityEncoder;
+import io.car.server.rest.MediaTypes;
+import io.car.server.rest.resources.RootResource;
+import io.car.server.rest.resources.UsersResource;
 
 
 /**
@@ -37,11 +43,13 @@ import io.car.server.core.entities.User;
 public class UserCoder implements EntityEncoder<User>, EntityDecoder<User> {
     private DateTimeFormatter formatter;
     private EntityFactory factory;
+    private UriInfo uriInfo;
 
     @Inject
-    public UserCoder(DateTimeFormatter formatter, EntityFactory factory) {
+    public UserCoder(DateTimeFormatter formatter, EntityFactory factory, UriInfo uriInfo) {
         this.formatter = formatter;
         this.factory = factory;
+        this.uriInfo = uriInfo;
     }
 
     @Override
@@ -54,6 +62,15 @@ public class UserCoder implements EntityEncoder<User>, EntityDecoder<User> {
 
     @Override
     public JSONObject encode(User t, MediaType mediaType) throws JSONException {
+        if (mediaType.equals(MediaTypes.GROUP_TYPE)) {
+            URI uri = uriInfo.getBaseUriBuilder()
+                    .path(RootResource.class)
+                    .path(RootResource.USERS_PATH)
+                    .path(UsersResource.USER_PATH).build(t.getName());
+            return new JSONObject()
+                    .put(JSONConstants.NAME_KEY, t.getName())
+                    .put(JSONConstants.HREF_KEY, uri);
+        }
         return new JSONObject()
                 .put(JSONConstants.NAME_KEY, t.getName())
                 .put(JSONConstants.MAIL_KEY, t.getMail())

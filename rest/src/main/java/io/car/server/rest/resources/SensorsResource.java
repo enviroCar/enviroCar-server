@@ -37,6 +37,7 @@ import io.car.server.rest.auth.Authenticated;
  * @author Jan Wirwahn <jan.wirwahn@wwu.de>
  */
 public class SensorsResource extends AbstractResource {
+    public static final String SENSOR_PATH = "{sensor}";
     @GET
     @Produces(MediaTypes.SENSORS)
     public Sensors get() {
@@ -45,7 +46,7 @@ public class SensorsResource extends AbstractResource {
     
     @POST
     @Authenticated
-	@Consumes(MediaTypes.SENSOR)
+    @Consumes(MediaTypes.SENSOR_CREATE)
 	public Response create(Sensor sensor) {
 		return Response.created(
 				getUriInfo().getRequestUriBuilder()
@@ -53,9 +54,9 @@ public class SensorsResource extends AbstractResource {
 						.build()).build();
 	}
 
-	@Path("{id}")
-	public SensorResource sensor(@PathParam("id") String id)
-			throws SensorNotFoundException {
+    @Path(SENSOR_PATH)
+    public SensorResource sensor(@PathParam("sensor") String id)
+         			throws SensorNotFoundException {
 		return getResourceFactory().createSensorResource(
 				getService().getSensorByName(id));
 	}
