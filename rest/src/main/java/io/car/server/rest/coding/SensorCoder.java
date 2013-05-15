@@ -17,27 +17,30 @@
  */
 package io.car.server.rest.coding;
 
-import io.car.server.rest.EntityDecoder;
-import io.car.server.rest.EntityEncoder;
 import javax.ws.rs.core.MediaType;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
+import org.joda.time.format.DateTimeFormatter;
 
 import com.google.inject.Inject;
 
 import io.car.server.core.EntityFactory;
 import io.car.server.core.entities.Sensor;
+import io.car.server.rest.EntityDecoder;
+import io.car.server.rest.EntityEncoder;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
 public class SensorCoder implements EntityEncoder<Sensor>, EntityDecoder<Sensor> {
     private EntityFactory factory;
+    private DateTimeFormatter format;
 
     @Inject
-    public SensorCoder(EntityFactory factory) {
+    public SensorCoder(EntityFactory factory, DateTimeFormatter format) {
         this.factory = factory;
+        this.format = format;
     }
 
     @Override
@@ -47,6 +50,9 @@ public class SensorCoder implements EntityEncoder<Sensor>, EntityDecoder<Sensor>
 
     @Override
     public JSONObject encode(Sensor t, MediaType mediaType) throws JSONException {
-        return new JSONObject().put(JSONConstants.NAME_KEY, t.getName());
+        return new JSONObject()
+                .put(JSONConstants.NAME_KEY, t.getName())
+                .put(JSONConstants.CREATED_KEY, format.print(t.getCreationDate()))
+                .put(JSONConstants.MODIFIED_KEY, format.print(t.getLastModificationDate()));
     }
 }
