@@ -31,25 +31,4 @@ import javax.ws.rs.core.MediaType;
  */
 public interface Validator<T> {
     void validate(T t, MediaType mt) throws ValidationException;
-
-    public static void main(String[] args) throws IOException, ProcessingException {
-        JsonSchema userSchema = jsonSchemaFactory.getJsonSchema("http://envirocar.org/schema/user.json");
-        String user =
-               "{\"name\":\"server\",\"mail\":\"server@autermann.org\",\"creasted\":\"2013-05-14T17:27:31+02:00\",\"modified\":\"2013-05-14T17:27:31+02:00\"}";
-        ProcessingReport report = userSchema.validate(JsonLoader.fromString(user));
-        printReport(report);
-    }
-
-    protected static void printReport(final ProcessingReport report) {
-        final boolean success = report.isSuccess();
-        System.out.println("Validation " + (success ? "succeeded" : "failed"));
-
-        if (!success) {
-            System.out.println("---- BEGIN REPORT ----");
-            for (final ProcessingMessage message : report) {
-                System.out.println(message);
-            }
-            System.out.println("---- END REPORT ----");
-        }
-    }
 }
