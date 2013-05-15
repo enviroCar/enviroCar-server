@@ -1,5 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
+    "id": "http://schema.envirocar.org/phenomenons.json#",
     "additionalProperties": false,
     "properties": {
         "phenomenons": {

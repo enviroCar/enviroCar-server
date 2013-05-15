@@ -1,5 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
+    "id": "http://schema.envirocar.org/measurements.json#",
     "additionalProperties": false,
     "properties": {
         "features": {
