@@ -17,6 +17,7 @@
  */
 package io.car.server.mongo.entity;
 
+import com.github.jmkgreen.morphia.annotations.Entity;
 import com.github.jmkgreen.morphia.annotations.Property;
 
 import io.car.server.core.entities.Sensor;
@@ -24,6 +25,7 @@ import io.car.server.core.entities.Sensor;
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
+@Entity("sensors")
 public class MongoSensor extends MongoBaseEntity<MongoSensor> implements Sensor {
     public static final String NAME = "name";
     @Property(NAME)

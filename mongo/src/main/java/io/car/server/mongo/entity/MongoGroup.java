@@ -32,7 +32,7 @@ import io.car.server.core.entities.Users;
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-@Entity("userGroups")
+@Entity("groups")
 public class MongoGroup extends MongoBaseEntity<MongoGroup> implements Group {
     public static final String NAME = "name";
     public static final String DESCRIPTION = "desc";
