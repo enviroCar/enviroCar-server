@@ -17,27 +17,26 @@
  */
 package io.car.server.rest.provider;
 
+import javax.ws.rs.Consumes;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.Provider;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import com.google.inject.Inject;
-
-import io.car.server.core.EntityFactory;
 import io.car.server.core.entities.Sensor;
 import io.car.server.rest.MediaTypes;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
+@Provider
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public class SensorProvider extends AbstractJsonEntityProvider<Sensor> {
-    private EntityFactory factory;
-
-    @Inject
-    public SensorProvider(EntityFactory factory) {
+    public SensorProvider() {
         super(Sensor.class, MediaTypes.SENSOR_TYPE, MediaTypes.SENSOR_CREATE_TYPE, MediaTypes.SENSOR_MODIFY_TYPE);
-        this.factory = factory;
     }
 
     @Override

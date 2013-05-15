@@ -15,19 +15,27 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.core.db;
+package io.car.server.rest.guice;
 
-import io.car.server.core.entities.Sensor;
-import io.car.server.core.entities.Sensors;
+
+import org.codehaus.jettison.json.JSONObject;
+
+import com.github.fge.jsonschema.main.JsonSchemaFactory;
+import com.google.inject.AbstractModule;
+import com.google.inject.Scopes;
+import com.google.inject.TypeLiteral;
+
+import io.car.server.rest.JSONSchemaValidator;
+import io.car.server.rest.Validator;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
- * @author Jan Wirwahn <jan.wirwahn@wwu.de>
  */
-public interface SensorDao {
-	Sensor getByName(String name);
-
-	Sensors getAll();
-
-	Sensor create(Sensor sensor);
+public class JerseyValidationModule extends AbstractModule {
+    @Override
+    protected void configure() {
+        bind(JsonSchemaFactory.class).toProvider(JsonSchemaFactoryProvider.class).in(Scopes.SINGLETON);
+        bind(new TypeLiteral<Validator<JSONObject>>() {}).to(JSONSchemaValidator.class);
+    }
+    
 }

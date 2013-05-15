@@ -15,19 +15,25 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.core.db;
+package io.car.server.rest.mapper;
 
-import io.car.server.core.entities.Sensor;
-import io.car.server.core.entities.Sensors;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.ext.ExceptionMapper;
+import javax.ws.rs.ext.Provider;
+
+import io.car.server.rest.JSONValidationException;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
- * @author Jan Wirwahn <jan.wirwahn@wwu.de>
  */
-public interface SensorDao {
-	Sensor getByName(String name);
+@Provider
+public class JsonValidationExceptionMapper implements ExceptionMapper<JSONValidationException> {
 
-	Sensors getAll();
-
-	Sensor create(Sensor sensor);
+    @Override
+    public Response toResponse(JSONValidationException exception) {
+        return Response.status(Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON_TYPE)
+                .entity(exception.getError()).build();
+    }
 }

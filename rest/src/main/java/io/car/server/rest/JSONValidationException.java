@@ -15,19 +15,24 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.core.db;
+package io.car.server.rest;
 
-import io.car.server.core.entities.Sensor;
-import io.car.server.core.entities.Sensors;
+import org.codehaus.jettison.json.JSONObject;
+
+import io.car.server.core.exception.ValidationException;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
- * @author Jan Wirwahn <jan.wirwahn@wwu.de>
  */
-public interface SensorDao {
-	Sensor getByName(String name);
+public class JSONValidationException extends ValidationException {
+    private static final long serialVersionUID = -235700358046047325L;
+    private JSONObject error = null;
 
-	Sensors getAll();
+    public JSONValidationException(JSONObject error) {
+        this.error = error;
+    }
 
-	Sensor create(Sensor sensor);
+    public JSONObject getError() {
+        return error;
+    }
 }

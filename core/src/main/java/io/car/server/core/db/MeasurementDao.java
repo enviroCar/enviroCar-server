@@ -22,6 +22,7 @@ import com.vividsolutions.jts.geom.Geometry;
 import io.car.server.core.entities.Measurement;
 import io.car.server.core.entities.Measurements;
 import io.car.server.core.entities.Track;
+import io.car.server.core.entities.User;
 
 /**
  * 
@@ -39,4 +40,6 @@ public interface MeasurementDao {
 	Measurements getByBbox(double minx, double miny, double maxx, double maxy);
 	Measurements getAll();
 	Measurements getAll(int limit);
+
+    public Measurements getByUser(User user);
 }

@@ -27,9 +27,13 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
+import com.google.inject.assistedinject.Assisted;
+import com.google.inject.assistedinject.AssistedInject;
+
 import io.car.server.core.entities.Measurement;
 import io.car.server.core.entities.Measurements;
 import io.car.server.core.entities.Track;
+import io.car.server.core.entities.User;
 import io.car.server.core.exception.MeasurementNotFoundException;
 import io.car.server.core.exception.ResourceAlreadyExistException;
 import io.car.server.core.exception.ValidationException;
@@ -39,44 +43,62 @@ import io.car.server.rest.RESTConstants;
 import io.car.server.rest.auth.Authenticated;
 
 /**
- *
  * @author Arne de Wall <a.dewall@52north.org>
- *
  */
 public class MeasurementsResource extends AbstractResource {
     private final Track track;
+    private final User user;
 
+    @AssistedInject
     public MeasurementsResource() {
-        this(null);
+        this(null, null);
     }
 
-    public MeasurementsResource(Track track) {
+    @AssistedInject
+    public MeasurementsResource(@Assisted Track track) {
+        this(track, null);
+    }
+
+    @AssistedInject
+    public MeasurementsResource(@Assisted User user) {
+        this(null, user);
+    }
+
+    @AssistedInject
+    public MeasurementsResource(@Assisted Track track, @Assisted User user) {
         this.track = track;
+        this.user = user;
     }
 
     @GET
     @Produces(MediaTypes.MEASUREMENTS)
     public Measurements get(@QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit) {
-        return getService().getAllMeasurements(limit);
+        if (track == null) {
+            if (user == null) {
+                return getService().getMeasurements(limit);
+            } else {
+                return getService().getMeasurements(user);
+            }
+        } else {
+            return track.getMeasurements();
+        }
+
     }
 
     @POST
     @Authenticated
     @Consumes(MediaTypes.MEASUREMENT_CREATE)
     public Response create(Measurement measurement) throws ResourceAlreadyExistException, ValidationException {
-
-        getService().addMeasurement(track, measurement);
-
-        // TODO XXX not discussed yet
-        // return
-        // Response.created(getUriInfo().getRequestUriBuilder().path(getService().createMeasurement(measurement.toString()));
-        return null;
+        return Response.created(
+                getUriInfo()
+                .getRequestUriBuilder()
+                .path(getService().createMeasurement(measurement)
+                .getIdentifier()).build()).build();
     }
 
-    @Path("{measurementid}")
-    public MeasurementResource measurement(@PathParam("measurementid") String id)
+    @Path("{measurement}")
+    public MeasurementResource measurement(@PathParam("measurement") String id)
             throws MeasurementNotFoundException {
-        return getResourceFactory().createMeasurementResource(
-                getService().getMeasurement(id));
+        return getResourceFactory().createMeasurementResource(getService().getMeasurement(id));
     }
 }

@@ -55,5 +55,13 @@
           <artifactId>jul-to-slf4j</artifactId>
           <scope>compile</scope>
       </dependency>
+      <dependency>
+          <groupId>com.github.fge</groupId>
+          <artifactId>json-schema-validator</artifactId>
+      </dependency>
+      <dependency>
+          <artifactId>json-schema-core</artifactId>
+          <groupId>com.github.fge</groupId>
+      </dependency>
   </dependencies>
 </project>

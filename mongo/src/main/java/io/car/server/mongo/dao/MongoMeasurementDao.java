@@ -28,6 +28,7 @@ import io.car.server.core.db.MeasurementDao;
 import io.car.server.core.entities.Measurement;
 import io.car.server.core.entities.Measurements;
 import io.car.server.core.entities.Track;
+import io.car.server.core.entities.User;
 import io.car.server.mongo.entity.MongoMeasurement;
 
 /**
@@ -104,4 +105,9 @@ public class MongoMeasurementDao extends BasicDAO<MongoMeasurement, String> impl
 	public Measurement getById(String id) {
 		return find(createQuery().field(MongoMeasurement.ID).equal(id)).get();
 	}
+
+    @Override
+    public Measurements getByUser(User user) {
+        return fetch(createQuery().field(MongoMeasurement.USER).equal(user).order(MongoMeasurement.TIME));
+    }
 }
