@@ -1,7 +1,7 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "id": "http://schema.envirocar.org/phenomenon.create.json#",
     "additionalProperties": false,
+    "id": "http://schema.envirocar.org/phenomenon.create.json#",
     "properties": {
         "name": {
             "type": "string"

@@ -1,6 +1,5 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "id": "http://schema.envirocar.org/track.json#",
     "definitions": {
         "date-time": {
             "format": "date-time",
@@ -43,6 +42,7 @@
             "type": "object"
         }
     },
+    "id": "http://schema.envirocar.org/track.json#",
     "properties": {
         "features": {
             "items": {
@@ -52,14 +52,6 @@
             "type": "array"
         },
         "properties": {
-            "type": "object",
-            "required": [
-            "id",
-                "sensor",
-                "created",
-                "modified",
-                "user"
-            ],
             "additionalProperties": false,
             "properties": {
                 "created": {
@@ -77,7 +69,15 @@
                 "user": {
                     "$ref": "#/definitions/user"
                 }
-            }
+            },
+            "required": [
+                "id",
+                "sensor",
+                "created",
+                "modified",
+                "user"
+            ],
+            "type": "object"
         },
         "type": {
             "enum": [
@@ -87,9 +87,9 @@
         }
     },
     "required": [
-    "properties",
-    "features",
-    "type"
+        "properties",
+        "features",
+        "type"
     ],
     "type": "object"
 }

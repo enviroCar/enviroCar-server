@@ -1,6 +1,5 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "id": "http://schema.envirocar.org/measurement.json#",
     "definitions": {
         "date-time": {
             "format": "date-time",
@@ -79,6 +78,7 @@
             "type": "object"
         }
     },
+    "id": "http://schema.envirocar.org/measurement.json#",
     "properties": {
         "geometry": {
             "$ref": "https://github.com/fge/sample-json-schemas/blob/master/geojson/geometry.json"

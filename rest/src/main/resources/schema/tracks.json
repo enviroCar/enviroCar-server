@@ -1,7 +1,7 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "id": "http://schema.envirocar.org/tracks.json#",
     "additionalProperties": false,
+    "id": "http://schema.envirocar.org/tracks.json#",
     "properties": {
         "tracks": {
             "items": {
@@ -16,7 +16,7 @@
                     }
                 },
                 "required": [
-                "id",
+                    "id",
                     "href"
                 ],
                 "type": "object"

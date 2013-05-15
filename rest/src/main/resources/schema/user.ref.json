@@ -1,7 +1,7 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "id": "http://schema.envirocar.org/user.ref.json#",
     "additionalProperties": false,
+    "id": "http://schema.envirocar.org/user.ref.json#",
     "properties": {
         "name": {
             "pattern": "^[_A-Za-z0-9-]{6,}$",
