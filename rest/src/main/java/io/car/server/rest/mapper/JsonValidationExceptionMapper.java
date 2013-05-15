@@ -15,26 +15,25 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.core.exception;
+package io.car.server.rest.mapper;
+
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.ext.ExceptionMapper;
+import javax.ws.rs.ext.Provider;
+
+import io.car.server.rest.JSONValidationException;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public class ValidationException extends RuntimeException {
-    private static final long serialVersionUID = -6183358575669855777L;
+@Provider
+public class JsonValidationExceptionMapper implements ExceptionMapper<JSONValidationException> {
 
-    public ValidationException() {
-    }
-
-    public ValidationException(String message) {
-        super(message);
-    }
-
-    public ValidationException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public ValidationException(Throwable cause) {
-        super(cause);
+    @Override
+    public Response toResponse(JSONValidationException exception) {
+        return Response.status(Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON_TYPE)
+                .entity(exception.getError()).build();
     }
 }

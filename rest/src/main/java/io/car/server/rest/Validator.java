@@ -15,26 +15,15 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.core.exception;
+package io.car.server.rest;
+
+import javax.ws.rs.core.MediaType;
+
+import io.car.server.core.exception.ValidationException;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public class ValidationException extends RuntimeException {
-    private static final long serialVersionUID = -6183358575669855777L;
-
-    public ValidationException() {
-    }
-
-    public ValidationException(String message) {
-        super(message);
-    }
-
-    public ValidationException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public ValidationException(Throwable cause) {
-        super(cause);
-    }
+public interface Validator<T> {
+    void validate(T t, MediaType mt) throws ValidationException;
 }

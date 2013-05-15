@@ -15,26 +15,27 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.core.exception;
+package io.car.server.rest.guice;
+
+
+import org.codehaus.jettison.json.JSONObject;
+
+import com.github.fge.jsonschema.main.JsonSchemaFactory;
+import com.google.inject.AbstractModule;
+import com.google.inject.Scopes;
+import com.google.inject.TypeLiteral;
+
+import io.car.server.rest.JSONSchemaValidator;
+import io.car.server.rest.Validator;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public class ValidationException extends RuntimeException {
-    private static final long serialVersionUID = -6183358575669855777L;
-
-    public ValidationException() {
+public class JerseyValidationModule extends AbstractModule {
+    @Override
+    protected void configure() {
+        bind(JsonSchemaFactory.class).toProvider(JsonSchemaFactoryProvider.class).in(Scopes.SINGLETON);
+        bind(new TypeLiteral<Validator<JSONObject>>() {}).to(JSONSchemaValidator.class);
     }
-
-    public ValidationException(String message) {
-        super(message);
-    }
-
-    public ValidationException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public ValidationException(Throwable cause) {
-        super(cause);
-    }
+    
 }
