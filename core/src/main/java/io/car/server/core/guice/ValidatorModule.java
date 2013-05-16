@@ -20,11 +20,11 @@ package io.car.server.core.guice;
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
 
-import io.car.server.core.EntityValidator;
-import io.car.server.core.GroupValidator;
-import io.car.server.core.MeasurementValidator;
-import io.car.server.core.TrackValidator;
-import io.car.server.core.UserValidator;
+import io.car.server.core.validation.EntityValidator;
+import io.car.server.core.validation.GroupValidator;
+import io.car.server.core.validation.MeasurementValidator;
+import io.car.server.core.validation.TrackValidator;
+import io.car.server.core.validation.UserValidator;
 import io.car.server.core.entities.Group;
 import io.car.server.core.entities.Measurement;
 import io.car.server.core.entities.Track;

@@ -39,7 +39,6 @@ import io.car.server.core.exception.ResourceAlreadyExistException;
 import io.car.server.core.exception.TrackNotFoundException;
 import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.core.exception.ValidationException;
-import io.car.server.rest.AbstractResource;
 import io.car.server.rest.MediaTypes;
 import io.car.server.rest.RESTConstants;
 import io.car.server.rest.auth.Authenticated;
@@ -48,6 +47,7 @@ import io.car.server.rest.auth.Authenticated;
  * @author Arne de Wall <a.dewall@52north.org>
  */
 public class TracksResource extends AbstractResource {
+    public static final String TRACK_PATH = "{track}";
     private User user;
 
     @AssistedInject
@@ -63,7 +63,7 @@ public class TracksResource extends AbstractResource {
 	@GET
 	@Produces(MediaTypes.TRACKS)
 	public Tracks get(@QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit) {
-        return user != null ? getService().getTracks(user) : getService().getAllTracks();
+        return user != null ? getService().getTracks(user) : getService().getTracks();
 	}
 
 	@POST
@@ -81,8 +81,8 @@ public class TracksResource extends AbstractResource {
 								.getIdentifier()).build()).build();
 	}
 
-	@Path("{trackid}")
-	public TrackResource user(@PathParam("trackid") String track)
+    @Path(TRACK_PATH)
+	public TrackResource user(@PathParam("track") String track)
 			throws TrackNotFoundException {
 		return getResourceFactory().createTrackResource(
 				getService().getTrack(track));

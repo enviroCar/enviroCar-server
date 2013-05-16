@@ -17,9 +17,10 @@
  */
 package io.car.server.rest.coding;
 
-import io.car.server.rest.EntityDecoder;
-import io.car.server.rest.EntityEncoder;
+import java.net.URI;
+
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriInfo;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -27,8 +28,12 @@ import org.joda.time.format.DateTimeFormatter;
 
 import com.google.inject.Inject;
 
-import io.car.server.core.EntityFactory;
+import io.car.server.core.entities.EntityFactory;
 import io.car.server.core.entities.User;
+import io.car.server.rest.MediaTypes;
+import io.car.server.rest.resources.RootResource;
+import io.car.server.rest.resources.UserResource;
+import io.car.server.rest.resources.UsersResource;
 
 
 /**
@@ -37,11 +42,13 @@ import io.car.server.core.entities.User;
 public class UserCoder implements EntityEncoder<User>, EntityDecoder<User> {
     private DateTimeFormatter formatter;
     private EntityFactory factory;
+    private UriInfo uriInfo;
 
     @Inject
-    public UserCoder(DateTimeFormatter formatter, EntityFactory factory) {
+    public UserCoder(DateTimeFormatter formatter, EntityFactory factory, UriInfo uriInfo) {
         this.formatter = formatter;
         this.factory = factory;
+        this.uriInfo = uriInfo;
     }
 
     @Override
@@ -54,10 +61,27 @@ public class UserCoder implements EntityEncoder<User>, EntityDecoder<User> {
 
     @Override
     public JSONObject encode(User t, MediaType mediaType) throws JSONException {
-        return new JSONObject()
-                .put(JSONConstants.NAME_KEY, t.getName())
-                .put(JSONConstants.MAIL_KEY, t.getMail())
-                .put(JSONConstants.CREATED_KEY, formatter.print(t.getCreationDate()))
-                .put(JSONConstants.MODIFIED_KEY, formatter.print(t.getLastModificationDate()));
+        JSONObject j = new JSONObject().put(JSONConstants.NAME_KEY, t.getName());
+        if (mediaType.equals(MediaTypes.USER_TYPE)) {
+            URI measurements = uriInfo.getRequestUriBuilder().path(UserResource.MEASUREMENTS_PATH).build();
+            j.put(JSONConstants.MEASUREMENTS_KEY, measurements);
+            URI groups = uriInfo.getRequestUriBuilder().path(UserResource.GROUPS_PATH).build();
+            j.put(JSONConstants.GROUPS_KEY, groups);
+            URI friends = uriInfo.getRequestUriBuilder().path(UserResource.FRIENDS_PATH).build();
+            j.put(JSONConstants.FRIENDS_KEY, friends);
+            URI tracks = uriInfo.getRequestUriBuilder().path(UserResource.TRACKS_PATH).build();
+            j.put(JSONConstants.TRACKS_KEY, tracks);
+            j.put(JSONConstants.MAIL_KEY, t.getMail());
+            j.put(JSONConstants.CREATED_KEY, formatter.print(t.getCreationDate()));
+            j.put(JSONConstants.MODIFIED_KEY, formatter.print(t.getLastModificationDate()));
+        } else {
+            URI uri = uriInfo.getBaseUriBuilder()
+                    .path(RootResource.class)
+                    .path(RootResource.USERS_PATH)
+                    .path(UsersResource.USER_PATH).build(t.getName());
+            return j.put(JSONConstants.HREF_KEY, uri);
+
+        }
+        return j;
     }
 }

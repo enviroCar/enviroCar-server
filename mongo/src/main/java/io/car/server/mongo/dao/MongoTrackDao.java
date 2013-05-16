@@ -25,7 +25,7 @@ import com.github.jmkgreen.morphia.query.Query;
 import com.google.inject.Inject;
 import com.vividsolutions.jts.geom.Geometry;
 
-import io.car.server.core.db.TrackDao;
+import io.car.server.core.dao.TrackDao;
 import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.Track;
 import io.car.server.core.entities.Tracks;
@@ -46,12 +46,18 @@ public class MongoTrackDao extends BasicDAO<MongoTrack, ObjectId> implements Tra
 	
 	@Override
     public Track getById(String id) {
-        return get(new ObjectId(id));
+        ObjectId oid;
+        try {
+            oid = new ObjectId(id);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+        return get(oid);
 	}
 
 	@Override
-	public Tracks getByUser(User user) {
-		return user.getTracks();
+    public Tracks getByUser(User user) {
+        return fetch(createQuery().field(MongoTrack.USER).equal(user));
 	}
 
 	@Override
@@ -85,12 +91,12 @@ public class MongoTrackDao extends BasicDAO<MongoTrack, ObjectId> implements Tra
 	}
 
 	@Override
-	public Tracks getAll() {
-		return getAll(0);
+	public Tracks get() {
+		return get(0);
 	}
 
 	@Override
-	public Tracks getAll(int limit) {
+	public Tracks get(int limit) {
 		return fetch(createQuery().limit(limit).order(MongoTrack.CREATION_DATE));
 	}
 	

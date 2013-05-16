@@ -17,6 +17,11 @@
  */
 package io.car.server;
 
+import java.util.logging.Handler;
+import java.util.logging.LogManager;
+
+import org.slf4j.bridge.SLF4JBridgeHandler;
+
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.servlet.GuiceServletContextListener;
@@ -27,6 +32,18 @@ import com.google.inject.servlet.GuiceServletContextListener;
 public class ServletContextListener extends GuiceServletContextListener {
     @Override
     protected Injector getInjector() {
-        return Guice.createInjector(new ServiceLoaderConfigurationModule());
+        Injector i = Guice.createInjector(new ServiceLoaderConfigurationModule());
+        configureLogging();
+        return i;
+
+    }
+
+    protected void configureLogging() throws SecurityException {
+        java.util.logging.Logger rootLogger = LogManager.getLogManager().getLogger("");
+        Handler[] handlers = rootLogger.getHandlers();
+        for (int i = 0; i < handlers.length; i++) {
+            rootLogger.removeHandler(handlers[i]);
+        }
+        SLF4JBridgeHandler.install();
     }
 }

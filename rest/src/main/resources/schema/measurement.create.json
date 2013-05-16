@@ -1,28 +1,46 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
     "id": "http://schema.envirocar.org/measurement.create.json#",
-    "definitions": {
-        "date-time": {
-            "format": "date-time",
-            "type": "string"
-        }
-    },
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "type",
+        "geometry",
+        "properties"
+    ],
     "properties": {
+        "type": {
+            "type": "string",
+            "enum": [
+                "Feature"
+            ]
+        },
         "geometry": {
-            "$ref": "https://github.com/fge/sample-json-schemas/blob/master/geojson/geometry.json"
+            "$ref": "http://schema.envirocar.org/geometry.json#"
         },
         "properties": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "time",
+                "phenomenons"
+            ],
             "properties": {
+                "sensor": {
+                    "$ref": "#/definitions/value-ref"
+                },
+                "time": {
+                    "$ref": "http://schema.envirocar.org/definitions.json#/date-time"
+                },
                 "phenomenons": {
-                    "items": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                            "value"
+                        ],
                         "properties": {
-                            "phenomenon": {
-                                "properties": {
-                                    "name": {
-                                        "type": "string"
-                                    }
-                                }
-                            },
                             "value": {
                                 "type": [
                                     "string",
@@ -30,44 +48,24 @@
                                     "boolean"
                                 ]
                             }
-                        },
-                        "required": [
-                            "phenomenon",
-                            "value"
-                        ],
-                        "type": "object"
-                    },
-                    "minItems": 0,
-                    "type": "array"
-                },
-                "sensor": {
-                    "properties": {
-                        "name": {
-                            "type": "string"
                         }
-                    },
-                    "required": [
-                        "name"
-                    ],
-                    "type": "object"
-                },
-                "time": {
-                    "$ref": "#/definitions/date-time"
+                    }
                 }
-            },
-            "required": [
-                "sensor",
-                "time",
-                "phenomenons"
-            ],
-            "type": "object"
-        },
-        "type": {
-            "enum": [
-                "Feature"
-            ],
-            "type": "string"
+            }
         }
     },
-    "type": "object"
+    "definitions": {
+        "value-ref": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "name"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            }
+        }
+    }
 }

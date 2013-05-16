@@ -35,7 +35,6 @@ import io.car.server.core.exception.IllegalModificationException;
 import io.car.server.core.exception.MeasurementNotFoundException;
 import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.core.exception.ValidationException;
-import io.car.server.rest.AbstractResource;
 import io.car.server.rest.MediaTypes;
 import io.car.server.rest.auth.Authenticated;
 
@@ -70,7 +69,6 @@ public class MeasurementResource extends AbstractResource {
 	
 	@GET
 	@Produces(MediaTypes.MEASUREMENT)
-	@Authenticated
 	public Measurement get() throws MeasurementNotFoundException {
 		return measurement;
 	}
@@ -85,7 +83,6 @@ public class MeasurementResource extends AbstractResource {
 	}
 	
 	@Path(SENSOR_PATH)
-	@Authenticated
 	public SensorResource sensor(){
 		return getResourceFactory().createSensorResource(measurement.getSensor());
 	}

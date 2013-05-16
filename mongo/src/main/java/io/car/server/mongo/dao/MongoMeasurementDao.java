@@ -17,6 +17,8 @@
  */
 package io.car.server.mongo.dao;
 
+import org.bson.types.ObjectId;
+
 import com.github.jmkgreen.morphia.Datastore;
 import com.github.jmkgreen.morphia.dao.BasicDAO;
 import com.github.jmkgreen.morphia.query.Query;
@@ -24,7 +26,7 @@ import com.google.inject.Inject;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 
-import io.car.server.core.db.MeasurementDao;
+import io.car.server.core.dao.MeasurementDao;
 import io.car.server.core.entities.Measurement;
 import io.car.server.core.entities.Measurements;
 import io.car.server.core.entities.Track;
@@ -88,12 +90,12 @@ public class MongoMeasurementDao extends BasicDAO<MongoMeasurement, String> impl
 	}
 
 	@Override
-	public Measurements getAll() {
-		return getAll(0);
+	public Measurements get() {
+		return get(0);
 	}
 
 	@Override
-	public Measurements getAll(int limit) {
+	public Measurements get(int limit) {
 		return fetch(createQuery().limit(limit).order(MongoMeasurement.CREATION_DATE));
 	}
 
@@ -102,8 +104,14 @@ public class MongoMeasurementDao extends BasicDAO<MongoMeasurement, String> impl
     }
 
 	@Override
-	public Measurement getById(String id) {
-		return find(createQuery().field(MongoMeasurement.ID).equal(id)).get();
+    public Measurement getById(String id) {
+        ObjectId oid;
+        try {
+            oid = new ObjectId(id);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+        return find(createQuery().field(MongoMeasurement.ID).equal(oid)).get();
 	}
 
     @Override

@@ -17,12 +17,16 @@
  */
 package io.car.server.core.entities;
 
-import io.car.server.core.BaseEntity;
-
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
 public interface User extends BaseEntity {
+    String NAME = "name";
+    String MAIL = "mail";
+    String TOKEN = "token";
+    String IS_ADMIN = "isAdmin";
+    String FRIENDS = "friends";
+    String TRACKS = "tracks";
     String getName();
     User setName(String name);
     String getMail();
@@ -34,8 +38,4 @@ public interface User extends BaseEntity {
     Users getFriends();
     User addFriend(User user);
     User removeFriend(User user);
-    // track stuff
-    Tracks getTracks();
-    User addTrack(Track track);
-    User removeTrack(Track track);
 }

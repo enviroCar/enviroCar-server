@@ -23,7 +23,7 @@ import com.github.jmkgreen.morphia.Datastore;
 import com.github.jmkgreen.morphia.dao.BasicDAO;
 import com.google.inject.Inject;
 
-import io.car.server.core.db.SensorDao;
+import io.car.server.core.dao.SensorDao;
 import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.Sensors;
 import io.car.server.mongo.entity.MongoSensor;
@@ -43,7 +43,7 @@ public class MongoSensorDao extends BasicDAO<MongoSensor, ObjectId> implements S
     }
 
     @Override
-    public Sensors getAll() {
+    public Sensors get() {
         return new Sensors(find().fetch());
     }
 

@@ -28,7 +28,6 @@ import javax.ws.rs.core.Response;
 import io.car.server.core.entities.Phenomenon;
 import io.car.server.core.entities.Phenomenons;
 import io.car.server.core.exception.PhenomenonNotFoundException;
-import io.car.server.rest.AbstractResource;
 import io.car.server.rest.MediaTypes;
 import io.car.server.rest.auth.Authenticated;
 
@@ -37,10 +36,11 @@ import io.car.server.rest.auth.Authenticated;
  * @author Jan Wirwahn <jan.wirwahn@wwu.de>
  */
 public class PhenomenonsResource extends AbstractResource {
+    public static final String PHENOMENON_PATH = "{phenomenon}";
     @GET
     @Produces(MediaTypes.PHENOMENONS)
     public Phenomenons get() {
-        return getService().getAllPhenomenons();
+        return getService().getPhenomenons();
     }
 
     @POST
@@ -50,8 +50,8 @@ public class PhenomenonsResource extends AbstractResource {
         return Response.created(getUriInfo().getRequestUriBuilder().path(getService().createPhenomenon(phenomenon).getName()).build()).build();
     }
     
-    @Path("{id}")
-    public PhenomenonResource phenomenon(@PathParam("id") String id) throws PhenomenonNotFoundException {
+    @Path(PHENOMENON_PATH)
+    public PhenomenonResource phenomenon(@PathParam("phenomenon") String id) throws PhenomenonNotFoundException {
         return getResourceFactory().createPhenomenonResource(getService().getPhenomenonByName(id));
     }
 }

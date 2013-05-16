@@ -39,7 +39,6 @@ import io.car.server.core.exception.GroupNotFoundException;
 import io.car.server.core.exception.IllegalModificationException;
 import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.core.exception.ValidationException;
-import io.car.server.rest.AbstractResource;
 import io.car.server.rest.MediaTypes;
 import io.car.server.rest.auth.Authenticated;
 

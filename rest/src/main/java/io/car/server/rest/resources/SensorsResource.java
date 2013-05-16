@@ -28,7 +28,6 @@ import javax.ws.rs.core.Response;
 import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.Sensors;
 import io.car.server.core.exception.SensorNotFoundException;
-import io.car.server.rest.AbstractResource;
 import io.car.server.rest.MediaTypes;
 import io.car.server.rest.auth.Authenticated;
 
@@ -37,15 +36,16 @@ import io.car.server.rest.auth.Authenticated;
  * @author Jan Wirwahn <jan.wirwahn@wwu.de>
  */
 public class SensorsResource extends AbstractResource {
+    public static final String SENSOR_PATH = "{sensor}";
     @GET
     @Produces(MediaTypes.SENSORS)
     public Sensors get() {
-        return getService().getAllSensors();
+        return getService().getSensors();
     }
     
     @POST
     @Authenticated
-	@Consumes(MediaTypes.SENSOR)
+    @Consumes(MediaTypes.SENSOR_CREATE)
 	public Response create(Sensor sensor) {
 		return Response.created(
 				getUriInfo().getRequestUriBuilder()
@@ -53,9 +53,9 @@ public class SensorsResource extends AbstractResource {
 						.build()).build();
 	}
 
-	@Path("{id}")
-	public SensorResource sensor(@PathParam("id") String id)
-			throws SensorNotFoundException {
+    @Path(SENSOR_PATH)
+    public SensorResource sensor(@PathParam("sensor") String id)
+         			throws SensorNotFoundException {
 		return getResourceFactory().createSensorResource(
 				getService().getSensorByName(id));
 	}

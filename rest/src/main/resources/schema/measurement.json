@@ -1,134 +1,78 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
     "id": "http://schema.envirocar.org/measurement.json#",
-    "definitions": {
-        "date-time": {
-            "format": "date-time",
-            "type": "string"
-        },
-        "phenomenon": {
-            "properties": {
-                "created": {
-                    "$ref": "#/definitions/date-time"
-                },
-                "modified": {
-                    "$ref": "#/definitions/date-time"
-                },
-                "name": {
-                    "type": "string"
-                }
-            },
-            "type": "object"
-        },
-        "phenomenons": {
-            "items": {
-                "properties": {
-                    "phenomenon": {
-                        "$ref": "#/definitions/phenomenon"
-                    },
-                    "value": {
-                        "type": [
-                            "string",
-                            "number",
-                            "boolean"
-                        ]
-                    }
-                },
-                "required": [
-                    "phenomenon",
-                    "value"
-                ],
-                "type": "object"
-            },
-            "minItems": 0,
-            "type": "array"
-        },
-        "sensor": {
-            "properties": {
-                "name": {
-                    "type": "string"
-                }
-            },
-            "required": [
-                "name"
-            ],
-            "type": "object"
-        },
-        "user": {
-            "properties": {
-                "created": {
-                    "$ref": "#/definitions/date-time"
-                },
-                "mail": {
-                    "pattern": "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$",
-                    "type": "string"
-                },
-                "modified": {
-                    "$ref": "#/definitions/date-time"
-                },
-                "name": {
-                    "pattern": "^[_A-Za-z0-9-]{6,}$",
-                    "type": "string"
-                }
-            },
-            "required": [
-                "name",
-                "created",
-                "modified"
-            ],
-            "type": "object"
-        }
-    },
-    "properties": {
-        "geometry": {
-            "$ref": "https://github.com/fge/sample-json-schemas/blob/master/geojson/geometry.json"
-        },
-        "properties": {
-            "properties": {
-                "created": {
-                    "$ref": "#/definitions/date-time"
-                },
-                "identifier": {
-                    "type": "string"
-                },
-                "modified": {
-                    "$ref": "#/definitions/date-time"
-                },
-                "phenomenons": {
-                    "$ref": "#/definitions/phenomenons"
-                },
-                "sensor": {
-                    "$ref": "#/definitions/sensor"
-                },
-                "time": {
-                    "$ref": "#/definitions/date-time"
-                },
-                "user": {
-                    "$ref": "#/definitions/user"
-                }
-            },
-            "required": [
-                "identifier",
-                "sensor",
-                "time",
-                "phenomenons",
-                "created",
-                "modified",
-                "user"
-            ],
-            "type": "object"
-        },
-        "type": {
-            "enum": [
-                "Feature"
-            ],
-            "type": "string"
-        }
-    },
+    "type": "object",
+    "additionalProperties": false,
     "required": [
-        "geometry",
         "type",
+        "geometry",
         "properties"
     ],
-    "type": "object"
+    "properties": {
+        "type": {
+            "type": "string",
+            "enum": [
+                "Feature"
+            ]
+        },
+        "geometry": {
+            "$ref": "http://schema.envirocar.org/geometry.json#"
+        },
+        "properties": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "id",
+                "time",
+                "phenomenons"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "created": {
+                    "$ref": "http://schema.envirocar.org/definitions.json#/date-time"
+                },
+                "modified": {
+                    "$ref": "http://schema.envirocar.org/definitions.json#/date-time"
+                },
+                "sensor": {
+                    "$ref": "http://schema.envirocar.org/definitions.json#/sensor-ref"
+                },
+                "time": {
+                    "$ref": "http://schema.envirocar.org/definitions.json#/date-time"
+                },
+                "user": {
+                    "$ref": "http://schema.envirocar.org/definitions.json#/user-ref"
+                },
+                "href": {
+                    "$ref": "http://schema.envirocar.org/definitions.json#/href"
+                },
+                "phenomenons": {
+                    "type": "object",
+                    "additionalItems": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "allOf": [
+                            {
+                                "$ref": "http://schema.envirocar.org/definitions.json#/phenomenon-ref"
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "value": {
+                                        "type": [
+                                            "string",
+                                            "number",
+                                            "boolean"
+                                        ]
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+    }
 }

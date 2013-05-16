@@ -1,15 +1,34 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
     "id": "http://schema.envirocar.org/root.json#",
+    "type": "object",
     "additionalProperties": false,
+    "required": [
+        "users",
+        "tracks",
+        "groups",
+        "sensors",
+        "phenomenons",
+        "measurements"
+    ],
     "properties": {
         "users": {
-            "format": "uri",
-            "type": "string"
+            "$ref": "http://schema.envirocar.org/definitions.json#/href"
+        },
+        "tracks": {
+            "$ref": "http://schema.envirocar.org/definitions.json#/href"
+        },
+        "groups": {
+            "$ref": "http://schema.envirocar.org/definitions.json#/href"
+        },
+        "sensors": {
+            "$ref": "http://schema.envirocar.org/definitions.json#/href"
+        },
+        "phenomenons": {
+            "$ref": "http://schema.envirocar.org/definitions.json#/href"
+        },
+        "measurements": {
+            "$ref": "http://schema.envirocar.org/definitions.json#/href"
         }
-    },
-    "required": [
-        "users"
-    ],
-    "type": "object"
+    }
 }

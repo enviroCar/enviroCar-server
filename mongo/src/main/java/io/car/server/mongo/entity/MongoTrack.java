@@ -41,10 +41,6 @@ import io.car.server.core.entities.User;
 
 @Entity("tracks")
 public class MongoTrack extends MongoBaseEntity<MongoTrack> implements Track {
-    public static final String BBOX = "bbox";
-    public static final String MEASUREMENTS = "measurements";
-    public static final String SENSOR = "sensor";
-    public static final String USER = "user";
     @Indexed(IndexDirection.GEO2D)
     @Embedded(BBOX)
     private Geometry bbox;

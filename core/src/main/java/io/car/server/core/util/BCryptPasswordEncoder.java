@@ -17,7 +17,6 @@
  */
 package io.car.server.core.util;
 
-import io.car.server.core.PasswordEncoder;
 import org.mindrot.jbcrypt.BCrypt;
 
 /**

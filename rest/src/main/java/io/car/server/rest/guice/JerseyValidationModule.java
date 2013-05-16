@@ -25,8 +25,8 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
 import com.google.inject.TypeLiteral;
 
-import io.car.server.rest.JSONSchemaValidator;
-import io.car.server.rest.Validator;
+import io.car.server.rest.validation.JSONSchemaValidator;
+import io.car.server.rest.validation.Validator;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
@@ -34,7 +34,7 @@ import io.car.server.rest.Validator;
 public class JerseyValidationModule extends AbstractModule {
     @Override
     protected void configure() {
-        bind(JsonSchemaFactory.class).toProvider(JsonSchemaFactoryProvider.class).in(Scopes.SINGLETON);
+        bind(JsonSchemaFactory.class).toProvider(JSONSchemaFactoryProvider.class).in(Scopes.SINGLETON);
         bind(new TypeLiteral<Validator<JSONObject>>() {}).to(JSONSchemaValidator.class);
     }
     

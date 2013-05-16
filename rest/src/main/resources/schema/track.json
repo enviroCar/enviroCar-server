@@ -1,87 +1,55 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
     "id": "http://schema.envirocar.org/track.json#",
-    "definitions": {
-        "date-time": {
-            "format": "date-time",
-            "type": "string"
-        },
-        "sensor": {
-            "properties": {
-                "name": {
-                    "type": "string"
-                }
-            },
-            "required": [
-                "name"
-            ],
-            "type": "object"
-        },
-        "user": {
-            "additionalProperties": false,
-            "properties": {
-                "created": {
-                    "$ref": "#/definitions/date-time"
-                },
-                "mail": {
-                    "pattern": "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$",
-                    "type": "string"
-                },
-                "modified": {
-                    "$ref": "#/definitions/date-time"
-                },
-                "name": {
-                    "pattern": "^[_A-Za-z0-9-]{6,}$",
-                    "type": "string"
-                }
-            },
-            "required": [
-                "name",
-                "created",
-                "modified"
-            ],
-            "type": "object"
-        }
-    },
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "properties",
+        "features",
+        "type"
+    ],
     "properties": {
-        "features": {
-            "items": {
-                "$ref": "measurement.json#"
-            },
-            "minItems": 0,
-            "type": "array"
-        },
-        "properties": {
-            "created": {
-                "$ref": "#/definitions/date-time"
-            },
-            "identifier": {
-                "type": "string"
-            },
-            "modified": {
-                "$ref": "#/definitions/date-time"
-            },
-            "sensor": {
-                "$ref": "#/definitions/sensor"
-            },
-            "type": "object",
-            "user": {
-                "$ref": "#/definitions/user"
-            }
-        },
         "type": {
+            "type": "string",
             "enum": [
                 "FeatureCollection"
+            ]
+        },
+        "features": {
+            "type": "array",
+            "minItems": 0,
+            "items": {
+                "$ref": "http://schema.envirocar.org/measurement.json#"
+            }
+        },
+        "properties": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "id",
+                "sensor",
+                "created",
+                "modified",
+                "user"
             ],
-            "type": "string"
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "created": {
+                    "$ref": "http://schema.envirocar.org/definitions.json#/date-time"
+                },
+                "modified": {
+                    "$ref": "http://schema.envirocar.org/definitions.json#/date-time"
+                },
+                "sensor": {
+                    "$ref": "http://schema.envirocar.org/definitions.json#/sensor-ref"
+                },
+                "user": {
+                    "$ref": "http://schema.envirocar.org/definitions.json#/user-ref"
+                }
+            }
+
         }
-    },
-    "required": [
-        "identifier",
-        "sensor",
-        "created",
-        "modified",
-        "user"
-    ],
-    "type": "object"
+    }
 }

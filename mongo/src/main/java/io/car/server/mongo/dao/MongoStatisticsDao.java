@@ -10,10 +10,10 @@ import com.mongodb.DBCollection;
 
 import io.car.server.core.Statistic;
 import io.car.server.core.Statistics;
-import io.car.server.core.db.MeasurementDao;
+import io.car.server.core.dao.MeasurementDao;
+import io.car.server.core.dao.TrackDao;
+import io.car.server.core.dao.UserDao;
 import io.car.server.core.db.StatisticsDao;
-import io.car.server.core.db.TrackDao;
-import io.car.server.core.db.UserDao;
 import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
 

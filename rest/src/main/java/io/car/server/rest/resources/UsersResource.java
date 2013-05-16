@@ -33,7 +33,6 @@ import io.car.server.core.entities.Users;
 import io.car.server.core.exception.ResourceAlreadyExistException;
 import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.core.exception.ValidationException;
-import io.car.server.rest.AbstractResource;
 import io.car.server.rest.MediaTypes;
 import io.car.server.rest.RESTConstants;
 import io.car.server.rest.auth.Anonymous;
@@ -42,11 +41,12 @@ import io.car.server.rest.auth.Anonymous;
  * @author Christian Autermann <c.autermann@52north.org>
  */
 public class UsersResource extends AbstractResource {
+    public static final String USER_PATH = "{username}";
 
     @GET
     @Produces(MediaTypes.USERS)
     public Users get(@QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit) {
-        return getService().getAllUsers(limit);
+        return getService().getUsers(limit);
     }
 
     @POST
@@ -59,7 +59,7 @@ public class UsersResource extends AbstractResource {
                 .build()).build();
     }
 
-    @Path("{username}")
+    @Path(USER_PATH)
     public UserResource user(@PathParam("username") String username) throws UserNotFoundException {
         return getResourceFactory().createUserResource(getService().getUser(username));
     }

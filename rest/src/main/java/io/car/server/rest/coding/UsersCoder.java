@@ -17,7 +17,6 @@
  */
 package io.car.server.rest.coding;
 
-import io.car.server.rest.EntityEncoder;
 import java.net.URI;
 
 import javax.ws.rs.core.MediaType;

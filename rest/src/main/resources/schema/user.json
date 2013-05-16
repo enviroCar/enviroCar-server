@@ -1,34 +1,38 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
     "id": "http://schema.envirocar.org/user.json#",
+    "type": "object",
     "additionalProperties": false,
-    "definitions": {
-        "date-time": {
-            "format": "date-time",
-            "type": "string"
-        }
-    },
-    "properties": {
-        "created": {
-            "$ref": "#/definitions/date-time"
-        },
-        "mail": {
-            "pattern": "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$",
-            "type": "string"
-        },
-        "modified": {
-            "$ref": "#/definitions/date-time"
-        },
-        "name": {
-            "pattern": "^[_A-Za-z0-9-]{6,}$",
-            "type": "string"
-        }
-    },
     "required": [
         "name",
         "created",
         "modified",
         "mail"
     ],
-    "type": "object"
+    "properties": {
+        "created": {
+            "$ref": "http://schema.envirocar.org/definitions.json#/date-time"
+        },
+        "mail": {
+            "$ref": "http://schema.envirocar.org/definitions.json#/mail"
+        },
+        "modified": {
+            "$ref": "http://schema.envirocar.org/definitions.json#/date-time"
+        },
+        "name": {
+            "$ref": "http://schema.envirocar.org/definitions.json#/username"
+        },
+        "measurements": {
+            "$ref": "http://schema.envirocar.org/definitions.json#/href"
+        },
+        "friends": {
+            "$ref": "http://schema.envirocar.org/definitions.json#/href"
+        },
+        "groups": {
+            "$ref": "http://schema.envirocar.org/definitions.json#/href"
+        },
+        "tracks": {
+            "$ref": "http://schema.envirocar.org/definitions.json#/href"
+        }
+    }
 }

@@ -32,6 +32,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriBuilder;
 
+import com.google.common.base.Preconditions;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
@@ -39,7 +40,6 @@ import io.car.server.core.entities.User;
 import io.car.server.core.exception.IllegalModificationException;
 import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.core.exception.ValidationException;
-import io.car.server.rest.AbstractResource;
 import io.car.server.rest.MediaTypes;
 import io.car.server.rest.auth.Authenticated;
 
@@ -56,7 +56,7 @@ public class UserResource extends AbstractResource {
 
     @Inject
     public UserResource(@Assisted User user) {
-        this.user = user;
+        this.user = Preconditions.checkNotNull(user);
     }
 
     protected User getUser() {
@@ -68,6 +68,7 @@ public class UserResource extends AbstractResource {
     @Authenticated
     public Response modify(User changes) throws
             UserNotFoundException, IllegalModificationException, ValidationException {
+        Preconditions.checkNotNull(user);
         if (!canModifyUser(getUser())) {
             throw new WebApplicationException(Status.FORBIDDEN);
         }

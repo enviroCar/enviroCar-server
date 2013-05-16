@@ -22,16 +22,19 @@ import org.joda.time.DateTime;
 
 import com.vividsolutions.jts.geom.Geometry;
 
-import io.car.server.core.BaseEntity;
-import io.car.server.core.MeasurementValue;
-import io.car.server.core.MeasurementValues;
 
 /**
  * 
  * @author Arne de Wall <a.dewall@52north.org>
  *
  */
-public interface Measurement extends BaseEntity, Comparable<Measurement>  {
+public interface Measurement extends BaseEntity, Comparable<Measurement> {
+    String PHENOMENONS = "phenomenons";
+    String GEOMETRY = "geometry";
+    String USER = "user";
+    String SENSOR = "sensor";
+    String TIME = "time";
+    String TRACK = "track";
     MeasurementValues getValues();
     Measurement addValue(MeasurementValue value);
     Measurement removeValue(MeasurementValue value);
@@ -45,4 +48,6 @@ public interface Measurement extends BaseEntity, Comparable<Measurement>  {
     DateTime getTime();
     Measurement setTime(DateTime time);
     Measurement setIdentifier(String identifier);
+    Measurement setTrack(Track track);
+    Track getTrack();
 }

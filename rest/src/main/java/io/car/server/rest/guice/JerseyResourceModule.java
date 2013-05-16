@@ -20,7 +20,7 @@ package io.car.server.rest.guice;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 
-import io.car.server.rest.ResourceFactory;
+import io.car.server.rest.resources.ResourceFactory;
 import io.car.server.rest.resources.FriendsResource;
 import io.car.server.rest.resources.GroupMemberResource;
 import io.car.server.rest.resources.GroupMembersResource;

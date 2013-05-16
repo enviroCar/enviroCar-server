@@ -17,17 +17,14 @@
  */
 package io.car.server.rest.coding;
 
-import io.car.server.rest.EntityEncoder;
-import java.net.URI;
-
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriInfo;
 
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import com.google.inject.Inject;
+
 import io.car.server.core.entities.Phenomenon;
 import io.car.server.core.entities.Phenomenons;
 
@@ -35,19 +32,17 @@ import io.car.server.core.entities.Phenomenons;
  * @author Christian Autermann <c.autermann@52north.org>
  */
 public class PhenomenonsCoder implements EntityEncoder<Phenomenons> {
-    private UriInfo uriInfo;
+    private final EntityEncoder<Phenomenon> phenomenonEncoder;
 
     @Inject
-    public PhenomenonsCoder(UriInfo uriInfo) {
-        this.uriInfo = uriInfo;
+    public PhenomenonsCoder(EntityEncoder<Phenomenon> phenomenonEncoder) {
+        this.phenomenonEncoder = phenomenonEncoder;
     }
-
     @Override
     public JSONObject encode(Phenomenons t, MediaType mediaType) throws JSONException {
         JSONArray a = new JSONArray();
         for (Phenomenon u : t) {
-            URI uri = uriInfo.getRequestUriBuilder().path(u.getName()).build();
-            a.put(new JSONObject().put(JSONConstants.NAME_KEY, u.getName()).put(JSONConstants.HREF_KEY, uri));
+            a.put(phenomenonEncoder.encode(u, mediaType));
         }
         return new JSONObject().put(JSONConstants.PHENOMENONS_KEY, a);
     }

@@ -28,7 +28,6 @@ import com.google.inject.Inject;
 
 import io.car.server.core.entities.Track;
 import io.car.server.core.entities.Tracks;
-import io.car.server.rest.EntityEncoder;
 
 public class TracksCoder implements EntityEncoder<Tracks> {
     private UriInfo uriInfo;

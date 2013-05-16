@@ -51,17 +51,23 @@
           <artifactId>javax.servlet-api</artifactId>
       </dependency>
       <dependency>
-          <groupId>org.slf4j</groupId>
-          <artifactId>jul-to-slf4j</artifactId>
-          <scope>compile</scope>
-      </dependency>
-      <dependency>
           <groupId>com.github.fge</groupId>
           <artifactId>json-schema-validator</artifactId>
       </dependency>
       <dependency>
           <artifactId>json-schema-core</artifactId>
           <groupId>com.github.fge</groupId>
+      </dependency>
+      <dependency>
+          <groupId>com.google.inject.extensions</groupId>
+          <artifactId>guice-multibindings</artifactId>
+          <version>3.0</version>
+          <type>jar</type>
+      </dependency>
+      <dependency>
+          <groupId>ch.qos.logback</groupId>
+          <artifactId>logback-classic</artifactId>
+          <scope>test</scope>
       </dependency>
   </dependencies>
 </project>

@@ -1,24 +1,22 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
     "id": "http://schema.envirocar.org/user.create.json#",
+    "type": "object",
     "additionalProperties": false,
-    "properties": {
-        "mail": {
-            "pattern": "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$",
-            "type": "string"
-        },
-        "name": {
-            "pattern": "^[_A-Za-z0-9-]{6,}$",
-            "type": "string"
-        },
-        "token": {
-            "type": "string"
-        }
-    },
     "required": [
         "name",
         "mail",
         "token"
     ],
-    "type": "object"
+    "properties": {
+        "name": {
+            "$ref": "http://schema.envirocar.org/definitions.json#/username"
+        },
+        "mail": {
+            "$ref": "http://schema.envirocar.org/definitions.json#/mail"
+        },
+        "token": {
+            "type": "string"
+        }
+    }
 }

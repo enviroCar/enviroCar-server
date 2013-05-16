@@ -37,7 +37,6 @@ import io.car.server.core.exception.GroupNotFoundException;
 import io.car.server.core.exception.ResourceAlreadyExistException;
 import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.core.exception.ValidationException;
-import io.car.server.rest.AbstractResource;
 import io.car.server.rest.MediaTypes;
 import io.car.server.rest.RESTConstants;
 import io.car.server.rest.auth.Authenticated;
@@ -46,6 +45,7 @@ import io.car.server.rest.auth.Authenticated;
  * @author Christian Autermann <c.autermann@52north.org>
  */
 public class GroupsResource extends AbstractResource {
+    public static final String GROUP_PATH = "{group}";
     private User user;
 
     @AssistedInject
@@ -66,7 +66,7 @@ public class GroupsResource extends AbstractResource {
             if (search != null && !search.trim().isEmpty()) {
                 return getService().searchGroups(search, limit);
             } else {
-                return getService().getAllGroups(limit);
+                return getService().getGroups(limit);
             }
         } else {
             return getService().getGroupsOfUser(user, limit);
@@ -82,8 +82,8 @@ public class GroupsResource extends AbstractResource {
         return Response.created(getUriInfo().getRequestUriBuilder().path(g.getName()).build()).build();
     }
 
-    @Path("{id}")
-    public GroupResource group(@PathParam("id") String groupname) throws GroupNotFoundException {
+    @Path(GROUP_PATH)
+    public GroupResource group(@PathParam("group") String groupname) throws GroupNotFoundException {
         return getResourceFactory().createGroupResource(getService().getGroup(groupname));
     }
 }

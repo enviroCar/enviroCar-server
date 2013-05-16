@@ -25,22 +25,20 @@ import org.joda.time.format.DateTimeFormatter;
 
 import com.google.inject.Inject;
 
-import io.car.server.core.EntityFactory;
-import io.car.server.core.db.SensorDao;
+import io.car.server.core.entities.EntityFactory;
+import io.car.server.core.dao.SensorDao;
 import io.car.server.core.entities.Measurements;
 import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
 import io.car.server.core.util.GeoJSONConstants;
-import io.car.server.rest.EntityDecoder;
-import io.car.server.rest.EntityEncoder;
 
 public class TrackCoder implements EntityEncoder<Track>, EntityDecoder<Track> {
     private DateTimeFormatter formatter;
     private EntityFactory factory;
-    private EntityEncoder<Sensor> sensorProvider;
-    private EntityEncoder<Measurements> measurementsProvider;
-    private EntityEncoder<User> userProvider;
+    private EntityEncoder<Sensor> sensorEncoder;
+    private EntityEncoder<Measurements> measurementsEncoder;
+    private EntityEncoder<User> userEncoder;
     private SensorDao sensorDao;
 
     @Inject
@@ -51,9 +49,9 @@ public class TrackCoder implements EntityEncoder<Track>, EntityDecoder<Track> {
                       SensorDao sensorDao) {
         this.formatter = formatter;
         this.factory = factory;
-        this.sensorProvider = sensorProvider;
-        this.userProvider = userProvider;
-        this.measurementsProvider = measurementsProvider;
+        this.sensorEncoder = sensorProvider;
+        this.userEncoder = userProvider;
+        this.measurementsEncoder = measurementsProvider;
         this.sensorDao = sensorDao;
     }
 
@@ -62,8 +60,8 @@ public class TrackCoder implements EntityEncoder<Track>, EntityDecoder<Track> {
         Track track = factory.createTrack();
         if (j.has(GeoJSONConstants.PROPERTIES_KEY)) {
             JSONObject p = j.getJSONObject(GeoJSONConstants.PROPERTIES_KEY);
-            if (j.has(JSONConstants.SENSOR_KEY)) {
-                track.setSensor(sensorDao.getByName(j.getString(JSONConstants.SENSOR_KEY)));
+            if (p.has(JSONConstants.SENSOR_KEY)) {
+                track.setSensor(sensorDao.getByName(p.getString(JSONConstants.SENSOR_KEY)));
             }
         }
         return track;
@@ -75,12 +73,12 @@ public class TrackCoder implements EntityEncoder<Track>, EntityDecoder<Track> {
                 .put(JSONConstants.IDENTIFIER_KEY, t.getIdentifier())
                 .put(JSONConstants.CREATED_KEY, formatter.print(t.getCreationDate()))
                 .put(JSONConstants.MODIFIED_KEY, formatter.print(t.getLastModificationDate()))
-                .put(JSONConstants.SENSOR_KEY, sensorProvider.encode(t.getSensor(), mediaType))
-                .put(JSONConstants.USER_KEY, userProvider.encode(t.getUser(), mediaType));
+                .put(JSONConstants.SENSOR_KEY, sensorEncoder.encode(t.getSensor(), mediaType))
+                .put(JSONConstants.USER_KEY, userEncoder.encode(t.getUser(), mediaType));
         return new JSONObject()
                 .put(GeoJSONConstants.TYPE_KEY, GeoJSONConstants.FEATURE_COLLECTION_TYPE)
                 .put(GeoJSONConstants.PROPERTIES_KEY, properties)
-                .put(GeoJSONConstants.FEATURES_KEY, measurementsProvider.encode(t.getMeasurements(), mediaType)
+                .put(GeoJSONConstants.FEATURES_KEY, measurementsEncoder.encode(t.getMeasurements(), mediaType)
                 .getJSONArray(GeoJSONConstants.FEATURES_KEY));
     }
 }
