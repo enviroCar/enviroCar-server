@@ -45,4 +45,6 @@ public interface Measurement extends BaseEntity, Comparable<Measurement>  {
     DateTime getTime();
     Measurement setTime(DateTime time);
     Measurement setIdentifier(String identifier);
+    Measurement setTrack(Track track);
+    Track getTrack();
 }
