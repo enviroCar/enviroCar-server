@@ -118,7 +118,6 @@ public class MeasurementCoder implements EntityEncoder<Measurement>, EntityDecod
             properties.put(JSONConstants.IDENTIFIER_KEY, t.getIdentifier())
                     .put(JSONConstants.TIME_KEY, formatter.print(t.getTime()));
             if (!mediaType.equals(MediaTypes.TRACK_TYPE)) {
-                //FIXME just encode references to user/sensor
                 properties.put(JSONConstants.SENSOR_KEY, sensorProvider.encode(t.getSensor(), mediaType))
                         .put(JSONConstants.USER_KEY, userProvider.encode(t.getUser(), mediaType))
                         .put(JSONConstants.MODIFIED_KEY, formatter.print(t.getLastModificationDate()))
