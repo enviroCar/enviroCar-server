@@ -17,7 +17,6 @@
  */
 package io.car.server.rest.coding;
 
-import io.car.server.rest.EntityEncoder;
 import java.net.URI;
 
 import javax.ws.rs.core.MediaType;
@@ -28,6 +27,7 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import com.google.inject.Inject;
+
 import io.car.server.core.entities.Group;
 import io.car.server.core.entities.Groups;
 

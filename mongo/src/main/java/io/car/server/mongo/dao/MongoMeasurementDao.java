@@ -26,7 +26,7 @@ import com.google.inject.Inject;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 
-import io.car.server.core.db.MeasurementDao;
+import io.car.server.core.dao.MeasurementDao;
 import io.car.server.core.entities.Measurement;
 import io.car.server.core.entities.Measurements;
 import io.car.server.core.entities.Track;
@@ -90,12 +90,12 @@ public class MongoMeasurementDao extends BasicDAO<MongoMeasurement, String> impl
 	}
 
 	@Override
-	public Measurements getAll() {
-		return getAll(0);
+	public Measurements get() {
+		return get(0);
 	}
 
 	@Override
-	public Measurements getAll(int limit) {
+	public Measurements get(int limit) {
 		return fetch(createQuery().limit(limit).order(MongoMeasurement.CREATION_DATE));
 	}
 

@@ -46,8 +46,8 @@ import com.google.inject.Inject;
 import com.sun.jersey.core.provider.AbstractMessageReaderWriterProvider;
 
 import io.car.server.core.exception.ValidationException;
-import io.car.server.rest.JSONValidationException;
-import io.car.server.rest.Validator;
+import io.car.server.rest.validation.JSONValidationException;
+import io.car.server.rest.validation.Validator;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>

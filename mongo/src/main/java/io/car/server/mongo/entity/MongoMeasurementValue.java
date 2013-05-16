@@ -21,14 +21,12 @@ import com.github.jmkgreen.morphia.annotations.Embedded;
 import com.github.jmkgreen.morphia.annotations.Property;
 import com.github.jmkgreen.morphia.annotations.Reference;
 
-import io.car.server.core.MeasurementValue;
+import io.car.server.core.entities.MeasurementValue;
 import io.car.server.core.entities.Phenomenon;
 
 @Embedded
 public class MongoMeasurementValue implements MeasurementValue {
-	public static final String VALUE = "value";
-    public static final String PHENOMENON = "phen";
-	@Property(VALUE)
+    @Property(VALUE)
     private Object value;
     @Reference(PHENOMENON)
     private Phenomenon phenomenon;

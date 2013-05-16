@@ -27,18 +27,16 @@ import org.joda.time.format.DateTimeFormatter;
 
 import com.google.inject.Inject;
 
-import io.car.server.core.EntityFactory;
-import io.car.server.core.MeasurementValue;
-import io.car.server.core.db.PhenomenonDao;
-import io.car.server.core.db.SensorDao;
+import io.car.server.core.entities.EntityFactory;
+import io.car.server.core.entities.MeasurementValue;
+import io.car.server.core.dao.PhenomenonDao;
+import io.car.server.core.dao.SensorDao;
 import io.car.server.core.entities.Measurement;
 import io.car.server.core.entities.Phenomenon;
 import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.User;
 import io.car.server.core.exception.GeometryConverterException;
 import io.car.server.core.util.GeoJSONConstants;
-import io.car.server.rest.EntityDecoder;
-import io.car.server.rest.EntityEncoder;
 import io.car.server.rest.MediaTypes;
 import io.car.server.rest.resources.MeasurementsResource;
 import io.car.server.rest.resources.TrackResource;

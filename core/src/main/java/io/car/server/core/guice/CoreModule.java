@@ -24,7 +24,7 @@ import com.google.inject.AbstractModule;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.PrecisionModel;
 
-import io.car.server.core.PasswordEncoder;
+import io.car.server.core.util.PasswordEncoder;
 import io.car.server.core.Service;
 import io.car.server.core.util.BCryptPasswordEncoder;
 

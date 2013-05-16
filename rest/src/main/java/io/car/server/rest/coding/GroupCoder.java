@@ -26,11 +26,9 @@ import org.joda.time.format.DateTimeFormatter;
 
 import com.google.inject.Inject;
 
-import io.car.server.core.EntityFactory;
+import io.car.server.core.entities.EntityFactory;
 import io.car.server.core.entities.Group;
 import io.car.server.core.entities.User;
-import io.car.server.rest.EntityDecoder;
-import io.car.server.rest.EntityEncoder;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>

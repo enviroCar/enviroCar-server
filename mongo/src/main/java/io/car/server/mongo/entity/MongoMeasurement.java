@@ -30,8 +30,8 @@ import com.github.jmkgreen.morphia.annotations.Reference;
 import com.google.common.collect.Sets;
 import com.vividsolutions.jts.geom.Geometry;
 
-import io.car.server.core.MeasurementValue;
-import io.car.server.core.MeasurementValues;
+import io.car.server.core.entities.MeasurementValue;
+import io.car.server.core.entities.MeasurementValues;
 import io.car.server.core.entities.Measurement;
 import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.Track;
@@ -44,12 +44,6 @@ import io.car.server.core.entities.User;
  */
 @Entity("measurements")
 public class MongoMeasurement extends MongoBaseEntity<MongoMeasurement> implements Measurement {
-    public static final String PHENOMENONS = "phenomenons";
-    public static final String GEOMETRY = "geometry";
-    public static final String USER = "user";
-    public static final String SENSOR = "sensor";
-    public static final String TIME = "time";
-    public static final String TRACK = "track";
     @Reference
     private MongoUser user;
     @Property(GEOMETRY)

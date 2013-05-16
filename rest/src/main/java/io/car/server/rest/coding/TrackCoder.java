@@ -25,15 +25,13 @@ import org.joda.time.format.DateTimeFormatter;
 
 import com.google.inject.Inject;
 
-import io.car.server.core.EntityFactory;
-import io.car.server.core.db.SensorDao;
+import io.car.server.core.entities.EntityFactory;
+import io.car.server.core.dao.SensorDao;
 import io.car.server.core.entities.Measurements;
 import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
 import io.car.server.core.util.GeoJSONConstants;
-import io.car.server.rest.EntityDecoder;
-import io.car.server.rest.EntityEncoder;
 
 public class TrackCoder implements EntityEncoder<Track>, EntityDecoder<Track> {
     private DateTimeFormatter formatter;

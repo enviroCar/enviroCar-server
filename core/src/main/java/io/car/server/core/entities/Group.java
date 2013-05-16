@@ -17,12 +17,14 @@
  */
 package io.car.server.core.entities;
 
-import io.car.server.core.BaseEntity;
-
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
 public interface Group extends BaseEntity {
+    String NAME = "name";
+    String DESCRIPTION = "desc";
+    String MEMBERS = "members";
+    String OWNER = "owner";
     Group setName(String name);
     String getName();
     Group setDescription(String description);

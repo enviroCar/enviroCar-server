@@ -35,10 +35,6 @@ import io.car.server.core.entities.Users;
  */
 @Entity("groups")
 public class MongoGroup extends MongoBaseEntity<MongoGroup> implements Group {
-    public static final String NAME = "name";
-    public static final String DESCRIPTION = "desc";
-    public static final String MEMBERS = "members";
-    public static final String OWNER = "owner";
     @Indexed(unique = true)
     @Property(NAME)
     private String name;

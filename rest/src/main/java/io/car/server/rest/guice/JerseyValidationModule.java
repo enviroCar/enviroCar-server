@@ -25,8 +25,8 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
 import com.google.inject.TypeLiteral;
 
-import io.car.server.rest.JSONSchemaValidator;
-import io.car.server.rest.Validator;
+import io.car.server.rest.validation.JSONSchemaValidator;
+import io.car.server.rest.validation.Validator;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>

@@ -36,12 +36,6 @@ import io.car.server.core.entities.Users;
  */
 @Entity("users")
 public class MongoUser extends MongoBaseEntity<MongoUser> implements User {
-    public static final String NAME = "name";
-    public static final String MAIL = "mail";
-    public static final String TOKEN = "token";
-    public static final String IS_ADMIN = "isAdmin";
-    public static final String FRIENDS = "friends";
-    public static final String TRACKS = "tracks";
     @Indexed(unique = true)
     @Property(NAME)
     private String name;

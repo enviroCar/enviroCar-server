@@ -25,7 +25,7 @@ import javax.ws.rs.core.MediaType;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Inject;
 
-import io.car.server.rest.CodingFactory;
+import io.car.server.rest.coding.CodingFactory;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>

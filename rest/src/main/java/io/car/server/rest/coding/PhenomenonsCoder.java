@@ -27,7 +27,6 @@ import com.google.inject.Inject;
 
 import io.car.server.core.entities.Phenomenon;
 import io.car.server.core.entities.Phenomenons;
-import io.car.server.rest.EntityEncoder;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>

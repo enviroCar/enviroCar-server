@@ -28,7 +28,6 @@ import javax.ws.rs.core.Response;
 import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.Sensors;
 import io.car.server.core.exception.SensorNotFoundException;
-import io.car.server.rest.AbstractResource;
 import io.car.server.rest.MediaTypes;
 import io.car.server.rest.auth.Authenticated;
 
@@ -41,7 +40,7 @@ public class SensorsResource extends AbstractResource {
     @GET
     @Produces(MediaTypes.SENSORS)
     public Sensors get() {
-        return getService().getAllSensors();
+        return getService().getSensors();
     }
     
     @POST

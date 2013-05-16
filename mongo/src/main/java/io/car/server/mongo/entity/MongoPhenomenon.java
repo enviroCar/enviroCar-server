@@ -28,7 +28,7 @@ import io.car.server.core.entities.Phenomenon;
  */
 @Entity("phenomenons")
 public class MongoPhenomenon extends MongoBaseEntity<MongoPhenomenon> implements Phenomenon {
-    public static final String NAME = "name";
+    
     @Indexed(unique = true)
     @Property(NAME)
     private String name;

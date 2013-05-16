@@ -42,8 +42,6 @@ import com.vividsolutions.jts.geom.Polygon;
 
 import io.car.server.core.exception.GeometryConverterException;
 import io.car.server.core.util.GeometryConverter;
-import io.car.server.rest.EntityDecoder;
-import io.car.server.rest.EntityEncoder;
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */

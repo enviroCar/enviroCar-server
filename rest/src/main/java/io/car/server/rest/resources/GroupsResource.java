@@ -37,7 +37,6 @@ import io.car.server.core.exception.GroupNotFoundException;
 import io.car.server.core.exception.ResourceAlreadyExistException;
 import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.core.exception.ValidationException;
-import io.car.server.rest.AbstractResource;
 import io.car.server.rest.MediaTypes;
 import io.car.server.rest.RESTConstants;
 import io.car.server.rest.auth.Authenticated;
@@ -67,7 +66,7 @@ public class GroupsResource extends AbstractResource {
             if (search != null && !search.trim().isEmpty()) {
                 return getService().searchGroups(search, limit);
             } else {
-                return getService().getAllGroups(limit);
+                return getService().getGroups(limit);
             }
         } else {
             return getService().getGroupsOfUser(user, limit);

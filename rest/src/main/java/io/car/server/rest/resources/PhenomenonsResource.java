@@ -28,7 +28,6 @@ import javax.ws.rs.core.Response;
 import io.car.server.core.entities.Phenomenon;
 import io.car.server.core.entities.Phenomenons;
 import io.car.server.core.exception.PhenomenonNotFoundException;
-import io.car.server.rest.AbstractResource;
 import io.car.server.rest.MediaTypes;
 import io.car.server.rest.auth.Authenticated;
 
@@ -41,7 +40,7 @@ public class PhenomenonsResource extends AbstractResource {
     @GET
     @Produces(MediaTypes.PHENOMENONS)
     public Phenomenons get() {
-        return getService().getAllPhenomenons();
+        return getService().getPhenomenons();
     }
 
     @POST

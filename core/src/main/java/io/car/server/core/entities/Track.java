@@ -19,7 +19,6 @@ package io.car.server.core.entities;
 
 import com.vividsolutions.jts.geom.Geometry;
 
-import io.car.server.core.BaseEntity;
 
 /**
  * 
@@ -27,6 +26,10 @@ import io.car.server.core.BaseEntity;
  *
  */
 public interface Track extends BaseEntity {
+    String BBOX = "bbox";
+    String MEASUREMENTS = "measurements";
+    String SENSOR = "sensor";
+    String USER = "user";
     String getIdentifier();
     Track setIdentifier(String id);
     User getUser();

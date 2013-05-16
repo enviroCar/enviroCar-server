@@ -28,7 +28,6 @@ import com.google.inject.Inject;
 import io.car.server.core.entities.Measurement;
 import io.car.server.core.entities.Measurements;
 import io.car.server.core.util.GeoJSONConstants;
-import io.car.server.rest.EntityEncoder;
 
 /**
  *
