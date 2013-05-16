@@ -25,7 +25,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
@@ -36,6 +38,7 @@ import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
 import io.car.server.core.exception.MeasurementNotFoundException;
 import io.car.server.core.exception.ResourceAlreadyExistException;
+import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.core.exception.ValidationException;
 import io.car.server.rest.AbstractResource;
 import io.car.server.rest.MediaTypes;
@@ -89,12 +92,22 @@ public class MeasurementsResource extends AbstractResource {
     @POST
     @Authenticated
     @Consumes(MediaTypes.MEASUREMENT_CREATE)
-    public Response create(Measurement measurement) throws ResourceAlreadyExistException, ValidationException {
+    public Response create(Measurement measurement) throws ResourceAlreadyExistException, ValidationException,
+                                                           UserNotFoundException {
+        Measurement m = measurement;
+        if (track != null) {
+            if (!canModifyUser(track.getUser())) {
+                throw new WebApplicationException(Status.FORBIDDEN);
+            }
+            m.setTrack(track).setUser(track.getUser());
+        } else {
+            m.setUser(getCurrentUser());
+        }
+        m = getService().createMeasurement(measurement);
         return Response.created(
                 getUriInfo()
                 .getRequestUriBuilder()
-                .path(getService().createMeasurement(measurement)
-                .getIdentifier()).build()).build();
+                .path(m.getIdentifier()).build()).build();
     }
 
     @Path(MEASUREMENT_PATH)
