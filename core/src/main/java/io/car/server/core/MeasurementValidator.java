@@ -29,7 +29,9 @@ public class MeasurementValidator extends AbstractValidator<Measurement>{
 
 	@Override
     public Measurement validateCreate(Measurement t) throws ValidationException {
-		isNotNull("location", t.getGeometry());
+        isNotNull("location", t.getGeometry());
+        isNotNull("user", t.getUser());
+        isNotNull("sensor", t.getSensor());
         isNull("created", t.getCreationDate());
         isNull("modified", t.getLastModificationDate());
         return t;
@@ -37,9 +39,11 @@ public class MeasurementValidator extends AbstractValidator<Measurement>{
 
 	@Override
     public Measurement validateUpdate(Measurement t) throws ValidationException {
-		isNotNull("location", t.getGeometry());
         isNull("created", t.getCreationDate());
         isNull("modified", t.getLastModificationDate());
+        isNull("location", t.getGeometry());
+        isNull("user", t.getUser());
+        isNull("sensor", t.getSensor());
         return t;
 	}
 
