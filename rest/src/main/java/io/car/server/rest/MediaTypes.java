@@ -28,6 +28,8 @@ import javax.ws.rs.core.MediaType;
  * @author Arne de Wall
  */
 public interface MediaTypes {
+    String ROOT = "application/json; schema=\"http://schema.envirocar.org/root.json\"";
+    MediaType ROOT_TYPE = MediaType.valueOf(ROOT);
     String USERS = "application/json; schema=\"http://schema.envirocar.org/users.json\"";
     MediaType USERS_TYPE = MediaType.valueOf(USERS);
     String USER = "application/json; schema=\"http://schema.envirocar.org/user.json\"";
