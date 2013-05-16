@@ -49,7 +49,6 @@
     },
     "phenomenon-ref": {
         "type": "object",
-        "additionalProperties": false,
         "required": [
             "name", "href"
         ],

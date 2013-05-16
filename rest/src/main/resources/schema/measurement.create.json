@@ -33,19 +33,14 @@
                     "$ref": "http://schema.envirocar.org/definitions.json#/date-time"
                 },
                 "phenomenons": {
-                    "type": "array",
-                    "minItems": 0,
-                    "items": {
+                    "type": "object",
+                    "additionalProperties": {
                         "type": "object",
                         "additionalProperties": false,
                         "required": [
-                            "phenomenon",
                             "value"
                         ],
                         "properties": {
-                            "phenomenon": {
-                                "$ref": "#/definitions/value-ref"
-                            },
                             "value": {
                                 "type": [
                                     "string",

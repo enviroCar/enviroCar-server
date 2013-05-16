@@ -49,27 +49,27 @@
                     "$ref": "http://schema.envirocar.org/definitions.json#/href"
                 },
                 "phenomenons": {
-                    "type": "array",
-                    "minItems": 0,
-                    "items": {
+                    "type": "object",
+                    "additionalItems": {
                         "type": "object",
                         "additionalProperties": false,
-                        "required": [
-                            "phenomenon",
-                            "value"
-                        ],
-                        "properties": {
-                            "phenomenon": {
+                        "allOf": [
+                            {
                                 "$ref": "http://schema.envirocar.org/definitions.json#/phenomenon-ref"
                             },
-                            "value": {
-                                "type": [
-                                    "string",
-                                    "number",
-                                    "boolean"
-                                ]
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "value": {
+                                        "type": [
+                                            "string",
+                                            "number",
+                                            "boolean"
+                                        ]
+                                    }
+                                }
                             }
-                        }
+                        ]
                     }
                 }
             }
