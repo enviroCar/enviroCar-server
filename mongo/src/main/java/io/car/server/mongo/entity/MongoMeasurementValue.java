@@ -25,7 +25,7 @@ import io.car.server.core.MeasurementValue;
 import io.car.server.core.entities.Phenomenon;
 
 @Embedded
-public class MongoMeasurementValue extends MongoBaseEntity<MongoMeasurementValue> implements MeasurementValue {
+public class MongoMeasurementValue implements MeasurementValue {
 	public static final String VALUE = "value";
     public static final String PHENOMENON = "phen";
 	@Property(VALUE)
