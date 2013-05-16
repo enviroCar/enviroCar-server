@@ -17,9 +17,10 @@
  */
 package io.car.server.rest.coding;
 
-import io.car.server.rest.EntityDecoder;
-import io.car.server.rest.EntityEncoder;
+import java.net.URI;
+
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriInfo;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -29,18 +30,25 @@ import com.google.inject.Inject;
 
 import io.car.server.core.EntityFactory;
 import io.car.server.core.entities.Phenomenon;
+import io.car.server.rest.EntityDecoder;
+import io.car.server.rest.EntityEncoder;
+import io.car.server.rest.MediaTypes;
+import io.car.server.rest.resources.PhenomenonsResource;
+import io.car.server.rest.resources.RootResource;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
 public class PhenomenonCoder implements EntityEncoder<Phenomenon>, EntityDecoder<Phenomenon> {
-    private DateTimeFormatter formatter;
-    private EntityFactory factory;
+    private final DateTimeFormatter formatter;
+    private final EntityFactory factory;
+    private final UriInfo uriInfo;
 
     @Inject
-    public PhenomenonCoder(DateTimeFormatter formatter, EntityFactory factory) {
+    public PhenomenonCoder(DateTimeFormatter formatter, EntityFactory factory, UriInfo uriInfo) {
         this.formatter = formatter;
         this.factory = factory;
+        this.uriInfo = uriInfo;
     }
 
     @Override
@@ -51,9 +59,18 @@ public class PhenomenonCoder implements EntityEncoder<Phenomenon>, EntityDecoder
 
     @Override
     public JSONObject encode(Phenomenon t, MediaType mediaType) throws JSONException {
-        return new JSONObject()
-                .put(JSONConstants.NAME_KEY, t.getName())
-                .put(JSONConstants.CREATED_KEY, formatter.print(t.getCreationDate()))
-                .put(JSONConstants.MODIFIED_KEY, formatter.print(t.getLastModificationDate()));
+        JSONObject j = new JSONObject().put(JSONConstants.NAME_KEY, t.getName());
+        if (mediaType.equals(MediaTypes.PHENOMENON_TYPE)) {
+            j.put(JSONConstants.CREATED_KEY, formatter.print(t.getCreationDate()));
+            j.put(JSONConstants.MODIFIED_KEY, formatter.print(t.getLastModificationDate()));
+        } else {
+            URI href = uriInfo.getBaseUriBuilder()
+                    .path(RootResource.class)
+                    .path(RootResource.PHENOMENONS_PATH)
+                    .path(PhenomenonsResource.PHENOMENON_PATH)
+                    .build(t.getName());
+            j.put(JSONConstants.HREF_KEY, href);
+        }
+        return j;
     }
 }
