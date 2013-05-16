@@ -29,6 +29,7 @@ import com.google.inject.Inject;
 import io.car.server.core.EntityFactory;
 import io.car.server.core.MeasurementValue;
 import io.car.server.core.db.PhenomenonDao;
+import io.car.server.core.db.SensorDao;
 import io.car.server.core.entities.Measurement;
 import io.car.server.core.entities.Phenomenon;
 import io.car.server.core.entities.Sensor;
@@ -50,15 +51,17 @@ public class MeasurementCoder implements EntityEncoder<Measurement>, EntityDecod
     private EntityEncoder<Sensor> sensorProvider;
     private EntityEncoder<Phenomenon> phenomenonProvider;
     private PhenomenonDao phenomenonDao;
+    private SensorDao sensorDao;
 
     @Inject
     public MeasurementCoder(DateTimeFormatter formatter,
-                               EntityFactory factory,
-                               GeoJSON geoJSON,
-                               EntityEncoder<User> userProvider,
-                               EntityEncoder<Sensor> sensorProvider,
-                               EntityEncoder<Phenomenon> phenomenonProvider,
-                               PhenomenonDao phenomenonDao) {
+                            EntityFactory factory,
+                            GeoJSON geoJSON,
+                            EntityEncoder<User> userProvider,
+                            EntityEncoder<Sensor> sensorProvider,
+                            EntityEncoder<Phenomenon> phenomenonProvider,
+                            PhenomenonDao phenomenonDao,
+                            SensorDao sensorDao) {
         this.formatter = formatter;
         this.factory = factory;
         this.geoJSON = geoJSON;
@@ -66,6 +69,7 @@ public class MeasurementCoder implements EntityEncoder<Measurement>, EntityDecod
         this.sensorProvider = sensorProvider;
         this.phenomenonProvider = phenomenonProvider;
         this.phenomenonDao = phenomenonDao;
+        this.sensorDao = sensorDao;
     }
 
     @Override
@@ -78,6 +82,10 @@ public class MeasurementCoder implements EntityEncoder<Measurement>, EntityDecod
             }
             if (j.has(GeoJSONConstants.PROPERTIES_KEY)) {
                 JSONObject p = j.getJSONObject(GeoJSONConstants.PROPERTIES_KEY);
+                if (p.has(JSONConstants.SENSOR_KEY)) {
+                    measurement.setSensor(sensorDao.getByName(p.getJSONObject(JSONConstants.SENSOR_KEY)
+                            .getString(JSONConstants.NAME_KEY)));
+                }
                 if (p.has(JSONConstants.TIME_KEY)) {
                     measurement.setTime(formatter.parseDateTime(p.getString(JSONConstants.TIME_KEY)));
                 }
@@ -85,10 +93,7 @@ public class MeasurementCoder implements EntityEncoder<Measurement>, EntityDecod
                 if (p.has(JSONConstants.PHENOMENONS_KEY)) {
                     JSONArray array = p.getJSONArray(JSONConstants.PHENOMENONS_KEY);
                     for (int i = 0; i < array.length(); ++i) {
-                        measurement.addValue(
-                                factory.createMeasurementValue().setValue(p.get(JSONConstants.VALUE_KEY))
-                                .setPhenomenon(phenomenonDao.getByName(p.getJSONObject(JSONConstants.PHENOMENON_KEY)
-                                .getString(JSONConstants.NAME_KEY))));
+                        measurement.addValue(decodeMeasurementValue(array.getJSONObject(i)));
                     }
                 }
             }
@@ -103,26 +108,38 @@ public class MeasurementCoder implements EntityEncoder<Measurement>, EntityDecod
     public JSONObject encode(Measurement t, MediaType mediaType) throws JSONException {
         try {
             //FIXME just encode references to user/sensor
-            JSONObject feature = new JSONObject()
+            JSONObject properties = new JSONObject()
                     .put(JSONConstants.IDENTIFIER_KEY, t.getIdentifier())
                     .put(JSONConstants.TIME_KEY, formatter.print(t.getTime()))
                     .put(JSONConstants.SENSOR_KEY, sensorProvider.encode(t.getSensor(), mediaType))
                     .put(JSONConstants.USER_KEY, userProvider.encode(t.getUser(), mediaType))
                     .put(JSONConstants.MODIFIED_KEY, formatter.print(t.getLastModificationDate()))
                     .put(JSONConstants.CREATED_KEY, formatter.print(t.getCreationDate()));
-            JSONObject j = new JSONObject()
-                    .put(GeoJSONConstants.TYPE_KEY, GeoJSONConstants.FEATURE_TYPE)
-                    .put(JSONConstants.GEOMETRY_KEY, geoJSON.encode(t.getGeometry()))
-                    .put(GeoJSONConstants.PROPERTIES_KEY, feature);
             JSONArray values = new JSONArray();
             for (MeasurementValue mv : t.getValues()) {
                 values.put(new JSONObject()
                         .put(JSONConstants.PHENOMENON_KEY, phenomenonProvider.encode(mv.getPhenomenon(), mediaType))
                         .put(JSONConstants.VALUE_KEY, mv.getValue()));
             }
-            return j.put(JSONConstants.PHENOMENONS_KEY, values);
+            properties.put(JSONConstants.PHENOMENONS_KEY, values);
+            return new JSONObject()
+                    .put(GeoJSONConstants.TYPE_KEY, GeoJSONConstants.FEATURE_TYPE)
+                    .put(JSONConstants.GEOMETRY_KEY, geoJSON.encode(t.getGeometry()))
+                    .put(GeoJSONConstants.PROPERTIES_KEY, properties);
+            
         } catch (GeometryConverterException ex) {
             throw new JSONException(ex);
         }
+    }
+
+    protected MeasurementValue decodeMeasurementValue(JSONObject j) throws JSONException {
+        String phenomenonName = j
+                .getJSONObject(JSONConstants.PHENOMENON_KEY)
+                .getString(JSONConstants.NAME_KEY);
+        Phenomenon phenomenon = phenomenonDao.getByName(phenomenonName);
+        Object value = j.get(JSONConstants.VALUE_KEY);
+        return factory.createMeasurementValue()
+                .setValue(value)
+                .setPhenomenon(phenomenon);
     }
 }
