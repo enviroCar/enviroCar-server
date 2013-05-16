@@ -1,15 +1,14 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "additionalProperties": false,
     "id": "http://schema.envirocar.org/user.ref.json#",
-    "properties": {
-        "name": {
-            "pattern": "^[_A-Za-z0-9-]{6,}$",
-            "type": "string"
-        }
-    },
+    "type": "object",
+    "additionalProperties": false,
     "required": [
         "name"
     ],
-    "type": "object"
+    "properties": {
+        "name": {
+            "$ref": "http://schema.envirocar.org/definitions.json#/username"
+        }
+    }
 }

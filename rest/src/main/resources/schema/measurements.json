@@ -1,25 +1,25 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "additionalProperties": false,
     "id": "http://schema.envirocar.org/measurements.json#",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "type",
+        "features"
+    ],
     "properties": {
-        "features": {
-            "items": {
-                "$ref": "http://schema.envirocar.org/measurement.json#"
-            },
-            "minItems": 0,
-            "type": "array"
-        },
         "type": {
+            "type": "string",
             "enum": [
                 "FeatureCollection"
-            ],
-            "type": "string"
+            ]
+        },
+        "features": {
+            "type": "array",
+            "minItems": 0,
+            "items": {
+                "$ref": "http://schema.envirocar.org/measurement.json#"
+            }
         }
-    },
-    "required": [
-        "features",
-        "type"
-    ],
-    "type": "object"
+    }
 }

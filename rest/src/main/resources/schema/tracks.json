@@ -1,32 +1,18 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "additionalProperties": false,
     "id": "http://schema.envirocar.org/tracks.json#",
-    "properties": {
-        "tracks": {
-            "items": {
-                "additionalProperties": false,
-                "properties": {
-                    "href": {
-                        "format": "uri",
-                        "type": "string"
-                    },
-                    "id": {
-                        "type": "string"
-                    }
-                },
-                "required": [
-                    "id",
-                    "href"
-                ],
-                "type": "object"
-            },
-            "minItems": 0,
-            "type": "array"
-        }
-    },
+    "type": "object",
+    "additionalProperties": false,
     "required": [
         "tracks"
     ],
-    "type": "object"
+    "properties": {
+        "tracks": {
+            "type": "array",
+            "minItems": 0,
+            "items": {
+                "$ref": "http://schema.envirocar.org/definitions.json#/track-ref"
+            }
+        }
+    }
 }
