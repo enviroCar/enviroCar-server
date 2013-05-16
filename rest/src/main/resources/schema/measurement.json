@@ -1,5 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
+    "additionalProperties": false,
     "definitions": {
         "date-time": {
             "format": "date-time",
@@ -88,7 +89,7 @@
                 "created": {
                     "$ref": "#/definitions/date-time"
                 },
-                "identifier": {
+                "id": {
                     "type": "string"
                 },
                 "modified": {
