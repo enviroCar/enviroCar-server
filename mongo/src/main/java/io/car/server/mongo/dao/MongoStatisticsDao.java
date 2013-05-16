@@ -23,7 +23,6 @@ package io.car.server.mongo.dao;
 
 import com.github.jmkgreen.morphia.Datastore;
 import com.google.inject.Inject;
-import com.mongodb.DBCollection;
 
 import io.car.server.core.Statistic;
 import io.car.server.core.Statistics;
@@ -31,8 +30,12 @@ import io.car.server.core.dao.MeasurementDao;
 import io.car.server.core.dao.TrackDao;
 import io.car.server.core.dao.UserDao;
 import io.car.server.core.db.StatisticsDao;
+import io.car.server.core.entities.Phenomenons;
 import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
+import io.car.server.mongo.entity.MongoMeasurement;
+import io.car.server.mongo.entity.MongoTrack;
+import io.car.server.mongo.entity.MongoUser;
 
 /**
  *
@@ -60,68 +63,64 @@ public class MongoStatisticsDao implements StatisticsDao{
 
     @Override
     public long getNumberOfMeasurements() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return this.measurementDao.count();
     }
 
     @Override
     public long getNumberOfMeasurements(User user) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return this.measurementDao.count(this.measurementDao.createQuery()
+                .field(MongoMeasurement.USER).equal((MongoUser) user));
     }
 
     @Override
     public long getNumberOfMeasurements(Track track) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return this.measurementDao.count(this.measurementDao.createQuery()
+                .field(MongoMeasurement.TRACK).equal((MongoTrack) track));
     }
 
     @Override
     public Statistics getStatistics(Track track) {
-        
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public Statistics getStatistics(User user) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public Statistics getStatistics() {
-        final DBCollection col = this.measurementDao.getCollection();
-//        MongoMeasurement.PHENOMENONS
-//        col.group(null, null, null, null)
-        
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public Statistic getStatistics(Track track, String phenomenon) {
-//        db.mapReduce(MapreduceType.MERGE, null, null, null)
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public Statistic getStatistics(User user, String phenomenon) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public Statistic getStatistics(String phenomenon) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public Statistic getStatistics(Track track, Iterable<String> phenomenon) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Statistic getStatistics(Track track, Phenomenons phenomenon) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public Statistic getStatistics(User user, Iterable<String> phenomenon) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Statistic getStatistics(User user, Phenomenons phenomenon) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public Statistic getStatistics(Iterable<String> phenomenon) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Statistic getStatistics(Phenomenons phenomenon) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
     
 }

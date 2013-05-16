@@ -21,23 +21,25 @@
  */
 package io.car.server.core;
 
+import io.car.server.core.entities.Phenomenon;
+
 /**
  *
  * @author jan
  */
 public class Statistic {
 
-    private String phenomenon;
+    private Phenomenon phenomenon;
     private int measurements;
     private double mean;
     private double min;
     private double max;
 
-    public String getPhenomenon() {
+    public Phenomenon getPhenomenon() {
         return phenomenon;
     }
 
-    public Statistic setPhenomenon(String phenomenon) {
+    public Statistic setPhenomenon(Phenomenon phenomenon) {
         this.phenomenon = phenomenon;
         return this;
     }
