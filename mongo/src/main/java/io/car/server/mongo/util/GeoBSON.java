@@ -330,8 +330,8 @@ public class GeoBSON implements GeometryConverter<BSONObject> {
     }
 
     @Override
-    public BSONObject encode(Geometry value) {
-        return value == null ? null : encode(value);
+    public BSONObject encode(Geometry value) throws GeometryConverterException {
+        return value == null ? null : encodeGeometry(value);
     }
 
 }

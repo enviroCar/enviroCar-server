@@ -40,6 +40,5 @@ public interface MeasurementDao {
 	Measurements getByBbox(double minx, double miny, double maxx, double maxy);
 	Measurements getAll();
 	Measurements getAll(int limit);
-
-    public Measurements getByUser(User user);
+    Measurements getByUser(User user);
 }

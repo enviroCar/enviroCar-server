@@ -17,6 +17,8 @@
  */
 package io.car.server.mongo.dao;
 
+import org.bson.types.ObjectId;
+
 import com.github.jmkgreen.morphia.Datastore;
 import com.github.jmkgreen.morphia.dao.BasicDAO;
 import com.github.jmkgreen.morphia.query.Query;
@@ -102,8 +104,14 @@ public class MongoMeasurementDao extends BasicDAO<MongoMeasurement, String> impl
     }
 
 	@Override
-	public Measurement getById(String id) {
-		return find(createQuery().field(MongoMeasurement.ID).equal(id)).get();
+    public Measurement getById(String id) {
+        ObjectId oid;
+        try {
+            oid = new ObjectId(id);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+        return find(createQuery().field(MongoMeasurement.ID).equal(oid)).get();
 	}
 
     @Override

@@ -25,8 +25,8 @@ import com.sun.jersey.api.core.ResourceConfig;
 import com.sun.jersey.guice.JerseyServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 
-import io.car.server.rest.SchemaServlet;
 import io.car.server.rest.ContentTypeCorrectionResourceFilterFactory;
+import io.car.server.rest.SchemaServlet;
 import io.car.server.rest.auth.AuthenticationFilter;
 import io.car.server.rest.auth.AuthenticationResourceFilterFactory;
 
@@ -50,7 +50,8 @@ public class JerseyModule extends JerseyServletModule {
         return ImmutableMap.of(
                 ResourceConfig.FEATURE_DISABLE_WADL, TRUE,
                 ResourceConfig.PROPERTY_CONTAINER_REQUEST_FILTERS,
-                classList(GZIPContentEncodingFilter.class, AuthenticationFilter.class),
+                classList(GZIPContentEncodingFilter.class,
+                          AuthenticationFilter.class),
                 ResourceConfig.PROPERTY_CONTAINER_RESPONSE_FILTERS,
                 classList(GZIPContentEncodingFilter.class),
                 ResourceConfig.PROPERTY_RESOURCE_FILTER_FACTORIES,
@@ -62,15 +63,5 @@ public class JerseyModule extends JerseyServletModule {
     protected void configureServlets() {
         serve("/rest*").with(GuiceContainer.class, getContainerFilterConfig());
         serve("/schema/*").with(SchemaServlet.class);
-//        configureLogging();
     }
-
-//    protected void configureLogging() throws SecurityException {
-//        java.util.logging.Logger rootLogger = LogManager.getLogManager().getLogger("");
-//        Handler[] handlers = rootLogger.getHandlers();
-//        for (int i = 0; i < handlers.length; i++) {
-//            rootLogger.removeHandler(handlers[i]);
-//        }
-//        SLF4JBridgeHandler.install();
-//    }
 }

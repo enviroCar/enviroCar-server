@@ -46,7 +46,7 @@
     "properties": {
         "features": {
             "items": {
-                "$ref": "measurement.json#"
+                "$ref": "http://schema.envirocar.org/measurement.json#"
             },
             "minItems": 0,
             "type": "array"

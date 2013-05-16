@@ -46,7 +46,13 @@ public class MongoTrackDao extends BasicDAO<MongoTrack, ObjectId> implements Tra
 	
 	@Override
     public Track getById(String id) {
-        return get(new ObjectId(id));
+        ObjectId oid;
+        try {
+            oid = new ObjectId(id);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+        return get(oid);
 	}
 
 	@Override

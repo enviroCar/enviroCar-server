@@ -40,6 +40,7 @@ import io.car.server.core.entities.User;
 import io.car.server.core.entities.Users;
 import io.car.server.core.exception.GroupNotFoundException;
 import io.car.server.core.exception.IllegalModificationException;
+import io.car.server.core.exception.MeasurementNotFoundException;
 import io.car.server.core.exception.PhenomenonNotFoundException;
 import io.car.server.core.exception.ResourceAlreadyExistException;
 import io.car.server.core.exception.SensorNotFoundException;
@@ -223,8 +224,12 @@ public class Service {
         return this.measurementDao.getByUser(user);
     }
 
-	public Measurement getMeasurement(String id) {
-		return this.measurementDao.getById(id);
+    public Measurement getMeasurement(String id) throws MeasurementNotFoundException {
+        Measurement m = this.measurementDao.getById(id);
+        if (m == null) {
+            throw new MeasurementNotFoundException(id);
+        }
+        return m;
 	}
 
 	public Measurement modifyMeasurement(Measurement measurement,
@@ -292,5 +297,12 @@ public class Service {
 
     public Tracks getTracks(User user) {
         return this.trackDao.getByUser(user);
+    }
+
+    public Measurement createMeasurement(Track track, Measurement measurement) {
+        measurement.setTrack(track);
+        measurement = createMeasurement(measurement);
+        this.trackDao.save(track.addMeasurement(measurement));
+        return measurement;
     }
 }

@@ -9,7 +9,7 @@
     "id": "http://schema.envirocar.org/measurement.create.json#",
     "properties": {
         "geometry": {
-            "$ref": "https://github.com/fge/sample-json-schemas/blob/master/geojson/geometry.json"
+            "$ref": "http://schema.envirocar.org/geometry.json#"
         },
         "properties": {
             "properties": {

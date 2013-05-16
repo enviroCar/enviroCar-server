@@ -1,5 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
+    "additionalProperties": false,
     "definitions": {
         "date-time": {
             "format": "date-time",
@@ -81,14 +82,14 @@
     "id": "http://schema.envirocar.org/measurement.json#",
     "properties": {
         "geometry": {
-            "$ref": "https://github.com/fge/sample-json-schemas/blob/master/geojson/geometry.json"
+            "$ref": "http://schema.envirocar.org/geometry.json#"
         },
         "properties": {
             "properties": {
                 "created": {
                     "$ref": "#/definitions/date-time"
                 },
-                "identifier": {
+                "id": {
                     "type": "string"
                 },
                 "modified": {
@@ -108,7 +109,7 @@
                 }
             },
             "required": [
-                "identifier",
+            "id",
                 "sensor",
                 "time",
                 "phenomenons",
