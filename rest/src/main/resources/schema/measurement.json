@@ -109,7 +109,7 @@
                 }
             },
             "required": [
-                "identifier",
+            "id",
                 "sensor",
                 "time",
                 "phenomenons",
