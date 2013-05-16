@@ -48,6 +48,7 @@ public class JsonSchemaFactoryProvider implements Provider<JsonSchemaFactory> {
     }
 
     protected LoadingConfigurationBuilder load(LoadingConfigurationBuilder cfg) {
+        load(cfg, "/schema/geometry.json");
         load(cfg, "/schema/group.create.json");
         load(cfg, "/schema/group.json");
         load(cfg, "/schema/group.modify.json");
