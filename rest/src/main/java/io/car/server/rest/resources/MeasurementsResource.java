@@ -94,16 +94,15 @@ public class MeasurementsResource extends AbstractResource {
     @Consumes(MediaTypes.MEASUREMENT_CREATE)
     public Response create(Measurement measurement) throws ResourceAlreadyExistException, ValidationException,
                                                            UserNotFoundException {
-        Measurement m = measurement;
+        Measurement m;
         if (track != null) {
             if (!canModifyUser(track.getUser())) {
                 throw new WebApplicationException(Status.FORBIDDEN);
             }
-            m.setTrack(track).setUser(track.getUser());
+            m = getService().createMeasurement(track, measurement.setUser(track.getUser()));
         } else {
-            m.setUser(getCurrentUser());
+            m = getService().createMeasurement(measurement.setUser(getCurrentUser()));
         }
-        m = getService().createMeasurement(measurement);
         return Response.created(
                 getUriInfo()
                 .getRequestUriBuilder()

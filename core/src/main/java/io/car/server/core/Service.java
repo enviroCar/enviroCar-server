@@ -293,4 +293,11 @@ public class Service {
     public Tracks getTracks(User user) {
         return this.trackDao.getByUser(user);
     }
+
+    public Measurement createMeasurement(Track track, Measurement measurement) {
+        measurement.setTrack(track);
+        measurement = createMeasurement(measurement);
+        this.trackDao.save(track.addMeasurement(measurement));
+        return measurement;
+    }
 }
