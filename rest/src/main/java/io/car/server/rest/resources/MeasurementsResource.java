@@ -110,8 +110,7 @@ public class MeasurementsResource extends AbstractResource {
     }
 
     @Path(MEASUREMENT_PATH)
-    public MeasurementResource measurement(@PathParam("measurement") String id)
-            throws MeasurementNotFoundException {
+    public MeasurementResource measurement(@PathParam("measurement") String id) throws MeasurementNotFoundException {
         return getResourceFactory().createMeasurementResource(getService().getMeasurement(id));
     }
 }
