@@ -1,5 +1,109 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
+    "id": "http://schema.envirocar.org/geometry.json#",
+    "type": "object",
+    "required": [
+        "type",
+        "coordinates"
+    ],
+    "oneOf": [
+    {
+        "title": "Point",
+        "type": "object",
+        "properties": {
+            "type": {
+                "type": "string",
+                "enum": [
+                    "Point"
+                ]
+            },
+                "coordinates": {
+                    "$ref": "#/definitions/position"
+                }
+            }
+        },
+    {
+        "title": "MultiPoint",
+        "type": "object",
+        "properties": {
+            "type": {
+                "type": "string",
+                "enum": [
+                    "MultiPoint"
+                ]
+            },
+            "coordinates": {
+                    "$ref": "#/definitions/positionArray"
+            }
+        }
+        },
+        {
+        "title": "LineString",
+        "type": "object",
+        "properties": {
+            "type": {
+                "type": "string",
+                "enum": [
+                    "LineString"
+                ]
+            },
+                "coordinates": {
+                    "$ref": "#/definitions/lineString"
+                }
+            }
+        },
+    {
+        "title": "MultiLineString",
+        "type": "object",
+        "properties": {
+            "type": {
+                "type": "string",
+                "enum": [
+                    "MultiLineString"
+                ]
+            },
+            "coordinates": {
+                "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/lineString"
+                    }
+                }
+            }
+        },
+    {
+        "title": "Polygon",
+        "type": "object",
+        "properties": {
+            "type": {
+                "type": "string",
+                "enum": [
+                    "Polygon"
+                ]
+            },
+                "coordinates": {
+                    "$ref": "#/definitions/polygon"
+                }
+            }
+        },
+    {
+        "title": "MultiPolygon",
+        "type": "object",
+        "properties": {
+            "type": {
+                "type": "string",
+                "enum": [
+                    "MultiPolygon"
+                ]
+            },
+            "coordinates": {
+                "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/polygon"
+                    }
+                }
+            }
+        }
+    ],
     "definitions": {
         "lineString": {
             "allOf": [
@@ -22,12 +126,14 @@
             ]
         },
         "polygon": {
+            "type": "array",
             "items": {
                 "$ref": "#/definitions/linearRing"
-            },
-            "type": "array"
+            }
         },
         "position": {
+            "type": "array",
+            "minItems": 2,
             "additionalItems": false,
             "items": [
                 {
@@ -36,107 +142,16 @@
                 {
                     "type": "number"
                 }
-            ],
-            "minItems": 2,
-            "type": "array"
+            ]
+
+
         },
         "positionArray": {
+            "type": "array",
             "items": {
                 "$ref": "#/definitions/position"
-            },
-            "type": "array"
+            }
+
         }
-    },
-    "id": "http://schema.envirocar.org/geometry.json#",
-    "oneOf": [
-        {
-            "properties": {
-                "coordinates": {
-                    "$ref": "#/definitions/position"
-                },
-                "type": {
-                    "enum": [
-                        "Point"
-                    ]
-                }
-            },
-            "title": "Point"
-        },
-        {
-            "properties": {
-                "coordinates": {
-                    "$ref": "#/definitions/positionArray"
-                },
-                "type": {
-                    "enum": [
-                        "MultiPoint"
-                    ]
-                }
-            },
-            "title": "MultiPoint"
-        },
-        {
-            "properties": {
-                "coordinates": {
-                    "$ref": "#/definitions/lineString"
-                },
-                "type": {
-                    "enum": [
-                        "LineString"
-                    ]
-                }
-            },
-            "title": "LineString"
-        },
-        {
-            "properties": {
-                "coordinates": {
-                    "items": {
-                        "$ref": "#/definitions/lineString"
-                    },
-                    "type": "array"
-                },
-                "type": {
-                    "enum": [
-                        "MultiLineString"
-                    ]
-                }
-            },
-            "title": "MultiLineString"
-        },
-        {
-            "properties": {
-                "coordinates": {
-                    "$ref": "#/definitions/polygon"
-                },
-                "type": {
-                    "enum": [
-                        "Polygon"
-                    ]
-                }
-            },
-            "title": "Polygon"
-        },
-        {
-            "properties": {
-                "coordinates": {
-                    "items": {
-                        "$ref": "#/definitions/polygon"
-                    },
-                    "type": "array"
-                },
-                "type": {
-                    "enum": [
-                        "MultiPolygon"
-                    ]
-                }
-            },
-            "title": "MultiPolygon"
-        }
-    ],
-    "required": [
-        "type",
-        "coordinates"
-    ],
-    "type": "object"
+    }
 }

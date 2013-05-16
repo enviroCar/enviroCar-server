@@ -1,4 +1,5 @@
 io.car.server.rest.guice.JerseyProviderModule
+io.car.server.rest.guice.JSONSchemaModule
 io.car.server.rest.guice.JerseyModule
 io.car.server.rest.guice.JerseyResourceModule
 io.car.server.rest.guice.JerseyCodingModule

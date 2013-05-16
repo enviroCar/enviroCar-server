@@ -1,18 +1,18 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "additionalProperties": false,
     "id": "http://schema.envirocar.org/group.create.json#",
-    "properties": {
-        "description": {
-            "type": "string"
-        },
-        "name": {
-            "type": "string"
-        }
-    },
+    "type": "object",
+    "additionalProperties": false,
     "required": [
         "name",
         "description"
     ],
-    "type": "object"
+    "properties": {
+        "name": {
+            "type": "string"
+        },
+        "description": {
+            "type": "string"
+        }
+    }
 }

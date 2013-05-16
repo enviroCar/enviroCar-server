@@ -1,14 +1,14 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "additionalProperties": false,
     "id": "http://schema.envirocar.org/sensor.create.json#",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "name"
+    ],
     "properties": {
         "name": {
             "type": "string"
         }
-    },
-    "required": [
-        "name"
-    ],
-    "type": "object"
+    }
 }

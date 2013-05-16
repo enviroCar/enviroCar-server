@@ -17,7 +17,10 @@
  */
 package io.car.server.rest.coding;
 
+import java.net.URI;
+
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriInfo;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -29,18 +32,24 @@ import io.car.server.core.EntityFactory;
 import io.car.server.core.entities.Sensor;
 import io.car.server.rest.EntityDecoder;
 import io.car.server.rest.EntityEncoder;
+import io.car.server.rest.MediaTypes;
+import io.car.server.rest.resources.RootResource;
+import io.car.server.rest.resources.SensorsResource;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
 public class SensorCoder implements EntityEncoder<Sensor>, EntityDecoder<Sensor> {
-    private EntityFactory factory;
-    private DateTimeFormatter format;
+    private final EntityFactory factory;
+    private final DateTimeFormatter format;
+    private final UriInfo uriInfo;
+
 
     @Inject
-    public SensorCoder(EntityFactory factory, DateTimeFormatter format) {
+    public SensorCoder(EntityFactory factory, DateTimeFormatter format, UriInfo uriInfo) {
         this.factory = factory;
         this.format = format;
+        this.uriInfo = uriInfo;
     }
 
     @Override
@@ -50,9 +59,18 @@ public class SensorCoder implements EntityEncoder<Sensor>, EntityDecoder<Sensor>
 
     @Override
     public JSONObject encode(Sensor t, MediaType mediaType) throws JSONException {
-        return new JSONObject()
-                .put(JSONConstants.NAME_KEY, t.getName())
-                .put(JSONConstants.CREATED_KEY, format.print(t.getCreationDate()))
-                .put(JSONConstants.MODIFIED_KEY, format.print(t.getLastModificationDate()));
+        JSONObject j = new JSONObject().put(JSONConstants.NAME_KEY, t.getName());
+        if (mediaType.equals(MediaTypes.SENSOR_TYPE)) {
+            j.put(JSONConstants.CREATED_KEY, format.print(t.getCreationDate()));
+            j.put(JSONConstants.MODIFIED_KEY, format.print(t.getLastModificationDate()));
+        } else {
+            URI href = uriInfo.getBaseUriBuilder()
+                    .path(RootResource.class)
+                    .path(RootResource.SENSORS_PATH)
+                    .path(SensorsResource.SENSOR_PATH)
+                    .build(t.getName());
+            j.put(JSONConstants.HREF_KEY, href);
+        }
+        return j;
     }
 }

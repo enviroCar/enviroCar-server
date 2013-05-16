@@ -1,28 +1,22 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "additionalProperties": false,
-    "definitions": {
-        "date-time": {
-            "format": "date-time",
-            "type": "string"
-        }
-    },
     "id": "http://schema.envirocar.org/phenomenon.json#",
-    "properties": {
-        "created": {
-            "$ref": "#/definitions/date-time"
-        },
-        "modified": {
-            "$ref": "#/definitions/date-time"
-        },
-        "name": {
-            "type": "string"
-        }
-    },
+    "type": "object",
+    "additionalProperties": false,
     "required": [
         "name",
         "created",
         "modified"
     ],
-    "type": "object"
+    "properties": {
+        "name": {
+            "type": "string"
+        },
+        "created": {
+            "$ref": "http://schema.envirocar.org/definitions.json#/date-time"
+        },
+        "modified": {
+            "$ref": "http://schema.envirocar.org/definitions.json#/date-time"
+        }
+    }
 }

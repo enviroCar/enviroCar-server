@@ -34,6 +34,7 @@ import io.car.server.rest.EntityDecoder;
 import io.car.server.rest.EntityEncoder;
 import io.car.server.rest.MediaTypes;
 import io.car.server.rest.resources.RootResource;
+import io.car.server.rest.resources.UserResource;
 import io.car.server.rest.resources.UsersResource;
 
 
@@ -62,19 +63,27 @@ public class UserCoder implements EntityEncoder<User>, EntityDecoder<User> {
 
     @Override
     public JSONObject encode(User t, MediaType mediaType) throws JSONException {
-        if (mediaType.equals(MediaTypes.GROUP_TYPE)) {
+        JSONObject j = new JSONObject().put(JSONConstants.NAME_KEY, t.getName());
+        if (mediaType.equals(MediaTypes.USER_TYPE)) {
+            URI measurements = uriInfo.getRequestUriBuilder().path(UserResource.MEASUREMENTS_PATH).build();
+            j.put(JSONConstants.MEASUREMENTS_KEY, measurements);
+            URI groups = uriInfo.getRequestUriBuilder().path(UserResource.GROUPS_PATH).build();
+            j.put(JSONConstants.GROUPS_KEY, groups);
+            URI friends = uriInfo.getRequestUriBuilder().path(UserResource.FRIENDS_PATH).build();
+            j.put(JSONConstants.FRIENDS_KEY, friends);
+            URI tracks = uriInfo.getRequestUriBuilder().path(UserResource.TRACKS_PATH).build();
+            j.put(JSONConstants.TRACKS_KEY, tracks);
+            j.put(JSONConstants.MAIL_KEY, t.getMail());
+            j.put(JSONConstants.CREATED_KEY, formatter.print(t.getCreationDate()));
+            j.put(JSONConstants.MODIFIED_KEY, formatter.print(t.getLastModificationDate()));
+        } else {
             URI uri = uriInfo.getBaseUriBuilder()
                     .path(RootResource.class)
                     .path(RootResource.USERS_PATH)
                     .path(UsersResource.USER_PATH).build(t.getName());
-            return new JSONObject()
-                    .put(JSONConstants.NAME_KEY, t.getName())
-                    .put(JSONConstants.HREF_KEY, uri);
+            return j.put(JSONConstants.HREF_KEY, uri);
+
         }
-        return new JSONObject()
-                .put(JSONConstants.NAME_KEY, t.getName())
-                .put(JSONConstants.MAIL_KEY, t.getMail())
-                .put(JSONConstants.CREATED_KEY, formatter.print(t.getCreationDate()))
-                .put(JSONConstants.MODIFIED_KEY, formatter.print(t.getLastModificationDate()));
+        return j;
     }
 }

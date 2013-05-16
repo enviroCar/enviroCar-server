@@ -21,13 +21,13 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response.Status;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import io.car.server.rest.AbstractResource;
+import io.car.server.rest.MediaTypes;
 import io.car.server.rest.coding.JSONConstants;
 
 /**
@@ -45,7 +45,7 @@ public class RootResource extends AbstractResource {
     public static final String MEASUREMENTS_PATH = "measurements";
 
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces(MediaTypes.ROOT)
     public JSONObject get() {
         try {
             return new JSONObject()

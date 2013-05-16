@@ -18,10 +18,8 @@
 package io.car.server.rest.coding;
 
 import io.car.server.rest.EntityEncoder;
-import java.net.URI;
 
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriInfo;
 
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
@@ -36,19 +34,18 @@ import io.car.server.core.entities.Sensors;
  * @author Christian Autermann <c.autermann@52north.org>
  */
 public class SensorsCoder implements EntityEncoder<Sensors> {
-    private UriInfo uriInfo;
+    private final EntityEncoder<Sensor> sensorEncoder;
 
     @Inject
-    public SensorsCoder(UriInfo uriInfo) {
-        this.uriInfo = uriInfo;
+    public SensorsCoder(EntityEncoder<Sensor> sensorEncoder) {
+        this.sensorEncoder = sensorEncoder;
     }
 
     @Override
     public JSONObject encode(Sensors t, MediaType mediaType) throws JSONException {
         JSONArray a = new JSONArray();
         for (Sensor u : t) {
-            URI uri = uriInfo.getRequestUriBuilder().path(u.getName()).build();
-            a.put(new JSONObject().put(JSONConstants.NAME_KEY, u.getName()).put(JSONConstants.HREF_KEY, uri));
+            a.put(sensorEncoder.encode(u, mediaType));
         }
         return new JSONObject().put(JSONConstants.SENSORS_KEY, a);
     }

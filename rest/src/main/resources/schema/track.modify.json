@@ -1,16 +1,28 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
     "id": "http://schema.envirocar.org/track.modify.json#",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "type",
+        "properties"
+    ],
     "properties": {
+        "type": {
+            "type": "string",
+            "enum": [
+                "FeatureCollection"
+            ]
+        },
         "properties": {
+            "type": "object",
+            "additionalProperties": false,
             "properties": {
                 "sensor": {
-                    "comment": "the name of an existing sensor resource",
-                    "type": "string"
+                    "type": "string",
+                    "description": "the name of an existing sensor resource"
                 }
-            },
-            "type": "object"
+            }
         }
-    },
-    "type": "object"
+    }
 }

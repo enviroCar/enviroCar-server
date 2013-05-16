@@ -1,7 +1,8 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "additionalProperties": false,
     "id": "http://schema.envirocar.org/group.modify.json#",
+    "type": "object",
+    "additionalProperties": false,
     "properties": {
         "description": {
             "type": "string"
@@ -9,6 +10,5 @@
         "name": {
             "type": "string"
         }
-    },
-    "type": "object"
+    }
 }

@@ -1,12 +1,11 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "additionalProperties": false,
     "id": "http://schema.envirocar.org/user.modify.json#",
+    "type": "object",
+    "additionalProperties": false,
     "properties": {
         "mail": {
-            "pattern": "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$",
-            "type": "string"
+            "$ref": "http://schema.envirocar.org/definitions.json#/mail"
         }
-    },
-    "type": "object"
+    }
 }
