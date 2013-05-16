@@ -32,7 +32,7 @@ public interface GeoJSONConstants {
     String POLYGON_TYPE = "Polygon";
     String TYPE_KEY = "type";
     String FEATURE_COLLECTION_TYPE = "FeatureCollection";
-    String FEATURE_TYPE = "FeatureCollection";
+    String FEATURE_TYPE = "Feature";
     String FEATURES_KEY = "features";
     String PROPERTIES_KEY = "properties";
 }
