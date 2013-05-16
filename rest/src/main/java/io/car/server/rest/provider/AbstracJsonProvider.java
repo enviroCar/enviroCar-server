@@ -26,11 +26,15 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
+import java.util.List;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
 
 import org.codehaus.jettison.json.JSONException;
@@ -96,7 +100,17 @@ public abstract class AbstracJsonProvider<T> extends AbstractMessageReaderWriter
             } catch (JSONValidationException v) {
                 log.error("Created invalid response: Error:\n" + v.getError().toString(4) +
                           "\nGenerated Response:\n" + j.toString(4) + "\n", v);
-                throw new WebApplicationException(v, Status.INTERNAL_SERVER_ERROR);
+                ResponseBuilder builder = Response.status(Status.INTERNAL_SERVER_ERROR);
+                // possible bug in jersey: the response does not inherit the
+                // content-encoding header when transferred as gzip, so copy the headers
+                for (Entry<String, List<Object>> headers : h.entrySet()) {
+                    for (Object header : headers.getValue()) {
+                        builder.header(headers.getKey(), header);
+                    }
+                }
+                Response headers = builder.type(MediaType.APPLICATION_JSON_TYPE)
+                        .entity(v.getError()).build();
+                throw new WebApplicationException(headers);
             } catch (ValidationException v) {
                 log.error("Created invalid response: Error:\n" + v.getMessage() +
                           "\nGenerated Response:\n" + j.toString(4) + "\n", v);
