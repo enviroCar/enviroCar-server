@@ -21,7 +21,6 @@ import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
 import com.sun.jersey.api.container.filter.GZIPContentEncodingFilter;
-import com.sun.jersey.api.container.filter.LoggingFilter;
 import com.sun.jersey.api.core.ResourceConfig;
 import com.sun.jersey.guice.JerseyServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
@@ -52,11 +51,9 @@ public class JerseyModule extends JerseyServletModule {
                 ResourceConfig.FEATURE_DISABLE_WADL, TRUE,
                 ResourceConfig.PROPERTY_CONTAINER_REQUEST_FILTERS,
                 classList(GZIPContentEncodingFilter.class,
-                          LoggingFilter.class,
                           AuthenticationFilter.class),
                 ResourceConfig.PROPERTY_CONTAINER_RESPONSE_FILTERS,
-                classList(LoggingFilter.class,
-                          GZIPContentEncodingFilter.class),
+                classList(GZIPContentEncodingFilter.class),
                 ResourceConfig.PROPERTY_RESOURCE_FILTER_FACTORIES,
                 classList(AuthenticationResourceFilterFactory.class,
                           ContentTypeCorrectionResourceFilterFactory.class));
