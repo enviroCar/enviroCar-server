@@ -34,7 +34,7 @@ import io.car.server.rest.Validator;
 public class JerseyValidationModule extends AbstractModule {
     @Override
     protected void configure() {
-        bind(JsonSchemaFactory.class).toProvider(JsonSchemaFactoryProvider.class).in(Scopes.SINGLETON);
+        bind(JsonSchemaFactory.class).toProvider(JSONSchemaFactoryProvider.class).in(Scopes.SINGLETON);
         bind(new TypeLiteral<Validator<JSONObject>>() {}).to(JSONSchemaValidator.class);
     }
     
