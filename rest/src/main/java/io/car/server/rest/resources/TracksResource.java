@@ -49,7 +49,7 @@ import io.car.server.rest.validation.Schema;
  * @author Arne de Wall <a.dewall@52north.org>
  */
 public class TracksResource extends AbstractResource {
-    public static final String TRACK_PATH = "{track}";
+    public static final String TRACK = "{track}";
     private User user;
 
     @AssistedInject
@@ -85,7 +85,7 @@ public class TracksResource extends AbstractResource {
 								.getIdentifier()).build()).build();
 	}
 
-    @Path(TRACK_PATH)
+    @Path(TRACK)
 	public TrackResource user(@PathParam("track") String track)
 			throws TrackNotFoundException {
 		return getResourceFactory().createTrackResource(

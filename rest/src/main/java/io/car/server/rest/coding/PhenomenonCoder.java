@@ -64,8 +64,8 @@ public class PhenomenonCoder implements EntityEncoder<Phenomenon>, EntityDecoder
         } else {
             URI href = uriInfo.getBaseUriBuilder()
                     .path(RootResource.class)
-                    .path(RootResource.PHENOMENONS_PATH)
-                    .path(PhenomenonsResource.PHENOMENON_PATH)
+                    .path(RootResource.PHENOMENONS)
+                    .path(PhenomenonsResource.PHENOMENON)
                     .build(t.getName());
             j.put(JSONConstants.HREF_KEY, href);
         }

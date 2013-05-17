@@ -64,8 +64,8 @@ public class SensorCoder implements EntityEncoder<Sensor>, EntityDecoder<Sensor>
         } else {
             URI href = uriInfo.getBaseUriBuilder()
                     .path(RootResource.class)
-                    .path(RootResource.SENSORS_PATH)
-                    .path(SensorsResource.SENSOR_PATH)
+                    .path(RootResource.SENSORS)
+                    .path(SensorsResource.SENSOR)
                     .build(t.getName());
             j.put(JSONConstants.HREF_KEY, href);
         }

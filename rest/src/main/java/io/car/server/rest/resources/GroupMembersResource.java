@@ -41,6 +41,7 @@ import io.car.server.rest.validation.Schema;
  * @author Christian Autermann <c.autermann@52north.org>
  */
 public class GroupMembersResource extends AbstractResource {
+    public static final String MEMBER = "{member}";
     private Group group;
 
     @Inject
@@ -65,7 +66,7 @@ public class GroupMembersResource extends AbstractResource {
         getService().addGroupMember(group, user);
     }
 
-    @Path("{member}")
+    @Path(MEMBER)
     public GroupMemberResource friend(@PathParam("member") String username) throws UserNotFoundException {
         return getResourceFactory().createGroupMemberResource(group, getService().getUser(username));
     }

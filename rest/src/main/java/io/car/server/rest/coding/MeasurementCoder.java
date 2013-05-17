@@ -126,8 +126,8 @@ public class MeasurementCoder implements EntityEncoder<Measurement>, EntityDecod
                         .put(JSONConstants.CREATED_KEY, formatter.print(t.getCreationDate()));
             } else {
                 properties.put(JSONConstants.HREF_KEY, uriInfo.getRequestUriBuilder()
-                        .path(TrackResource.MEASUREMENTS_PATH)
-                        .path(MeasurementsResource.MEASUREMENT_PATH)
+                        .path(TrackResource.MEASUREMENTS)
+                        .path(MeasurementsResource.MEASUREMENT)
                         .build(t.getIdentifier()));
             }
             

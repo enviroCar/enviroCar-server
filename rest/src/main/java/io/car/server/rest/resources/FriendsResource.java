@@ -42,6 +42,7 @@ import io.car.server.rest.validation.Schema;
  * @author Christian Autermann <c.autermann@52north.org>
  */
 public class FriendsResource extends AbstractResource {
+    public static final String FRIEND = "{friend}";
     private final User user;
 
     @Inject
@@ -78,8 +79,9 @@ public class FriendsResource extends AbstractResource {
         getService().removeFriend(user, friend);
     }
 
-    @Path("{username}")
-    public UserResource friend(@PathParam("username") String username) throws UserNotFoundException {
+    @Path(FRIEND)
+    public UserResource friend(@PathParam("friend") String username) throws UserNotFoundException {
+        //TODO throw 404 for users that are not friends
         return getResourceFactory().createUserResource(getService().getUser(username));
     }
 }

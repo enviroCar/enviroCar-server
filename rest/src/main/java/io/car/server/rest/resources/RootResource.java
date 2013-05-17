@@ -38,12 +38,12 @@ import io.car.server.rest.validation.Schema;
  */
 @Path("/")
 public class RootResource extends AbstractResource {
-    public static final String USERS_PATH = "users";
-    public static final String GROUPS_PATH = "groups";
-    public static final String TRACKS_PATH = "tracks";
-    public static final String PHENOMENONS_PATH = "phenomenons";
-    public static final String SENSORS_PATH = "sensors";
-    public static final String MEASUREMENTS_PATH = "measurements";
+    public static final String USERS = "users";
+    public static final String GROUPS = "groups";
+    public static final String TRACKS = "tracks";
+    public static final String PHENOMENONS = "phenomenons";
+    public static final String SENSORS = "sensors";
+    public static final String MEASUREMENTS = "measurements";
 
     @GET
     @Schema(response = Schemas.ROOT)
@@ -52,48 +52,48 @@ public class RootResource extends AbstractResource {
         try {
             return new JSONObject()
                     .put(JSONConstants.USERS_KEY,
-                         getUriInfo().getRequestUriBuilder().path(USERS_PATH).build())
+                         getUriInfo().getRequestUriBuilder().path(USERS).build())
                     .put(JSONConstants.GROUPS_KEY,
-                         getUriInfo().getRequestUriBuilder().path(GROUPS_PATH).build())
+                         getUriInfo().getRequestUriBuilder().path(GROUPS).build())
                     .put(JSONConstants.TRACKS_KEY,
-                         getUriInfo().getRequestUriBuilder().path(TRACKS_PATH).build())
+                         getUriInfo().getRequestUriBuilder().path(TRACKS).build())
                     .put(JSONConstants.SENSORS_KEY,
-                         getUriInfo().getRequestUriBuilder().path(SENSORS_PATH).build())
+                         getUriInfo().getRequestUriBuilder().path(SENSORS).build())
                     .put(JSONConstants.PHENOMENONS_KEY,
-                         getUriInfo().getRequestUriBuilder().path(PHENOMENONS_PATH).build())
+                         getUriInfo().getRequestUriBuilder().path(PHENOMENONS).build())
                     .put(JSONConstants.MEASUREMENTS_KEY,
-                         getUriInfo().getRequestUriBuilder().path(MEASUREMENTS_PATH).build());
+                         getUriInfo().getRequestUriBuilder().path(MEASUREMENTS).build());
         } catch (JSONException ex) {
             throw new WebApplicationException(ex, Status.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @Path(USERS_PATH)
+    @Path(USERS)
     public UsersResource users() {
         return getResourceFactory().createUsersResource();
     }
 
-    @Path(GROUPS_PATH)
+    @Path(GROUPS)
     public GroupsResource groups() {
         return getResourceFactory().createGroupsResource();
     }
     
-    @Path(TRACKS_PATH)
+    @Path(TRACKS)
     public TracksResource tracks() {
     	return getResourceFactory().createTracksResource();
     }
 
-    @Path(PHENOMENONS_PATH)
+    @Path(PHENOMENONS)
     public PhenomenonsResource phenomenons() {
         return getResourceFactory().createPhenomenonsResource();
     }
 
-    @Path(SENSORS_PATH)
+    @Path(SENSORS)
     public SensorsResource sensors() {
         return getResourceFactory().createSensorsResource();
     }
 
-    @Path(MEASUREMENTS_PATH)
+    @Path(MEASUREMENTS)
     public MeasurementsResource measurements() {
         return getResourceFactory().createMeasurementsResource();
     }

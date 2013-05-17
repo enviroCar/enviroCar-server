@@ -49,6 +49,7 @@ import io.car.server.rest.validation.Schema;
  * @author Christian Autermann <c.autermann@52north.org>
  */
 public class GroupResource extends AbstractResource {
+    public static final String MEMBERS = "members";
     private Group group;
 
     @Inject
@@ -95,7 +96,7 @@ public class GroupResource extends AbstractResource {
         getService().deleteGroup(group);
     }
 
-    @Path("members")
+    @Path(MEMBERS)
     public GroupMembersResource members() {
         return getResourceFactory().createGroupMembersResource(group);
     }

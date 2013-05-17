@@ -31,7 +31,7 @@ import io.car.server.rest.validation.Schema;
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public class PhenomenonResource {
+public class PhenomenonResource extends AbstractResource {
     private Phenomenon phenomenon;
 
     @Inject
