@@ -106,6 +106,29 @@ public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
         return null;
     }
 
+    protected void validate(String entity, String schema) throws ValidationException, IOException {
+        try {
+            validate(JsonLoader.fromString(entity), schemaFactory.getJsonSchema(schema));
+        } catch (ProcessingException ex) {
+            throw new ValidationException(ex);
+        }
+    }
+
+    protected void validate(JsonNode t, JsonSchema schema) throws ValidationException, ProcessingException {
+        ProcessingReport report = schema.validate(t);
+        if (!report.isSuccess()) {
+            try {
+                JSONArray errors = new JSONArray();
+                for (ProcessingMessage message : report) {
+                    errors.put(new JSONObject(message.toString()));
+                }
+                throw new JSONValidationException(new JSONObject().put(JSONConstants.ERRORS, errors));
+            } catch (JSONException ex) {
+                throw new WebApplicationException(ex, Status.INTERNAL_SERVER_ERROR);
+            }
+        }
+    }
+
     private class JSONSchemaResourceFilter implements ResourceFilter {
         private String request;
         private String response;
@@ -159,33 +182,11 @@ public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
                     ReaderWriter.writeTo(in, out);
                     byte[] requestEntity = out.toByteArray();
                     request.setEntityInputStream(new ByteArrayInputStream(requestEntity));
-                    validate(new String(requestEntity, ReaderWriter.getCharset(request.getMediaType())));
+                    String enitity = new String(requestEntity, ReaderWriter.getCharset(request.getMediaType()));
+                    JSONSchemaResourceFilterFactory.this.validate(enitity, schema);
                 }
             } catch (IOException ex) {
                 throw new ContainerException(ex);
-            }
-        }
-
-        public void validate(String entity) throws ValidationException, IOException {
-            try {
-                validate(JsonLoader.fromString(entity), schemaFactory.getJsonSchema(schema));
-            } catch (ProcessingException ex) {
-                throw new ValidationException(ex);
-            }
-        }
-
-        protected void validate(JsonNode t, JsonSchema schema) throws ValidationException, ProcessingException {
-            ProcessingReport report = schema.validate(t);
-            if (!report.isSuccess()) {
-                try {
-                    JSONArray errors = new JSONArray();
-                    for (ProcessingMessage message : report) {
-                        errors.put(new JSONObject(message.toString()));
-                    }
-                    throw new JSONValidationException(new JSONObject().put(JSONConstants.ERRORS, errors));
-                } catch (JSONException ex) {
-                    throw new WebApplicationException(ex, Status.INTERNAL_SERVER_ERROR);
-                }
             }
         }
     }
@@ -275,7 +276,7 @@ public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
         protected void validate(byte[] bytes) throws IOException, WebApplicationException {
             String entity = new String(bytes, ReaderWriter.getCharset(mediaType));
             try {
-                validate(entity);
+                JSONSchemaResourceFilterFactory.this.validate(entity, schema);
             } catch (JSONValidationException v) {
                 try {
                     log.error("Created invalid response: Error:\n" + v.getError().toString(4) +
@@ -286,29 +287,6 @@ public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
                 log.error("Created invalid response: Error:\n" + v.getMessage() +
                           "\nGenerated Response:\n" + entity + "\n", v);
                 throw new WebApplicationException(v, Status.INTERNAL_SERVER_ERROR);
-            }
-        }
-
-        protected void validate(String entity) throws ValidationException, IOException {
-            try {
-                validate(JsonLoader.fromString(entity), schemaFactory.getJsonSchema(schema));
-            } catch (ProcessingException ex) {
-                throw new ValidationException(ex);
-            }
-        }
-
-        protected void validate(JsonNode t, JsonSchema schema) throws ValidationException, ProcessingException {
-            ProcessingReport report = schema.validate(t);
-            if (!report.isSuccess()) {
-                try {
-                    JSONArray errors = new JSONArray();
-                    for (ProcessingMessage message : report) {
-                        errors.put(new JSONObject(message.toString()));
-                    }
-                    throw new JSONValidationException(new JSONObject().put(JSONConstants.ERRORS, errors));
-                } catch (JSONException ex) {
-                    throw new WebApplicationException(ex, Status.INTERNAL_SERVER_ERROR);
-                }
             }
         }
     }
