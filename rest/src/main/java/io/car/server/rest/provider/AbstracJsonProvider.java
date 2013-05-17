@@ -17,24 +17,21 @@
  */
 package io.car.server.rest.provider;
 
-import static com.sun.jersey.core.provider.AbstractMessageReaderWriterProvider.getCharset;
-import static com.sun.jersey.core.provider.AbstractMessageReaderWriterProvider.readFromAsString;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.Response.Status;
 
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
-
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.JsonSerializable;
+import com.fasterxml.jackson.databind.ObjectReader;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.google.inject.Inject;
 import com.sun.jersey.core.provider.AbstractMessageReaderWriterProvider;
 
 
@@ -42,6 +39,10 @@ import com.sun.jersey.core.provider.AbstractMessageReaderWriterProvider;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public abstract class AbstracJsonProvider<T> extends AbstractMessageReaderWriterProvider<T> {
+    @Inject
+    private ObjectReader reader;
+    @Inject
+    private ObjectWriter writer;
     private final Class<T> classType;
 
     public AbstracJsonProvider(Class<T> classType) {
@@ -61,25 +62,17 @@ public abstract class AbstracJsonProvider<T> extends AbstractMessageReaderWriter
     @Override
     public T readFrom(Class<T> c, Type gt, Annotation[] a, MediaType mt, MultivaluedMap<String, String> h,
                       InputStream in) throws IOException, WebApplicationException {
-        try {
-            return read(new JSONObject(readFromAsString(in, mt)), mt);
-        } catch (JSONException ex) {
-            throw new WebApplicationException(ex, Status.BAD_REQUEST);
-        }
+        return read(reader.readTree(in), mt);
     }
 
     @Override
     public void writeTo(T t, Class<?> c, Type gt, Annotation[] a, MediaType mt, MultivaluedMap<String, Object> h,
                         OutputStream out) throws IOException, WebApplicationException {
-        try {
-            OutputStreamWriter writer = new OutputStreamWriter(out, getCharset(mt));
-            write(t, mt).write(writer);
-            writer.flush();
-        } catch (JSONException ex) {
-            throw new WebApplicationException(ex, Status.INTERNAL_SERVER_ERROR);
-        }
+        writer.writeValue(out, write(t, mt));
+        out.flush();
     }
 
-    public abstract T read(JSONObject j, MediaType mediaType) throws JSONException;
-    public abstract JSONObject write(T t, MediaType mediaType) throws JSONException;
+    public abstract T read(JsonNode j, MediaType mediaType);
+
+    public abstract JsonSerializable write(T t, MediaType mediaType);
 }

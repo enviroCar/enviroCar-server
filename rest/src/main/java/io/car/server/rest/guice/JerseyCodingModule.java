@@ -17,7 +17,14 @@
  */
 package io.car.server.rest.guice;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.google.inject.AbstractModule;
+import com.google.inject.Provides;
+import com.google.inject.Singleton;
 import com.google.inject.TypeLiteral;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 
@@ -55,6 +62,9 @@ import io.car.server.rest.coding.UsersCoder;
 public class JerseyCodingModule extends AbstractModule {
     @Override
     protected void configure() {
+        configureCodingFactory();
+    }
+    protected void configureCodingFactory() {
         FactoryModuleBuilder fmb = new FactoryModuleBuilder();
         implementAndBind(fmb, new TypeLiteral<EntityEncoder<User>>() {}, UserCoder.class);
         implementAndBind(fmb, new TypeLiteral<EntityDecoder<User>>() {}, UserCoder.class);
@@ -78,15 +88,42 @@ public class JerseyCodingModule extends AbstractModule {
     }
 
     protected <T> TypeLiteral<EntityEncoder<T>> encoder(Class<T> c) {
-        return new TypeLiteral<EntityEncoder<T>>() {};
+        return new TypeLiteral<EntityEncoder<T>>() {
+        };
     }
 
     protected <T> TypeLiteral<EntityDecoder<T>> decoder(Class<T> c) {
-        return new TypeLiteral<EntityDecoder<T>>() {};
+        return new TypeLiteral<EntityDecoder<T>>() {
+        };
     }
 
     protected <T> void implementAndBind(FactoryModuleBuilder fmb, TypeLiteral<T> source, Class<? extends T> target) {
         fmb.implement(source, target);
         bind(source).to(target);
+    }
+
+    @Provides
+    @Singleton
+    public JsonNodeFactory jsonNodeFactory() {
+        return JsonNodeFactory.withExactBigDecimals(false);
+    }
+
+    @Provides
+    @Singleton
+    public ObjectReader objectReader(ObjectMapper mapper) {
+        return mapper.reader();
+    }
+
+    @Provides
+    @Singleton
+    public ObjectWriter objectWriter(ObjectMapper mapper) {
+        return mapper.writerWithDefaultPrettyPrinter();
+    }
+
+    @Provides
+    @Singleton
+    public ObjectMapper objectMapper(JsonNodeFactory factory) {
+        return new ObjectMapper().setNodeFactory(factory)
+                .enable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS);
     }
 }

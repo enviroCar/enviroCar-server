@@ -19,12 +19,11 @@ package io.car.server.rest.coding;
 
 import javax.ws.rs.core.MediaType;
 
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
+import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface EntityEncoder<T> {
-    JSONObject encode(T t, MediaType mt) throws JSONException;
+    JsonNode encode(T t, MediaType mt);
 }
