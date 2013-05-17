@@ -26,7 +26,6 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
-import java.util.Set;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
@@ -44,23 +43,19 @@ import com.sun.jersey.core.provider.AbstractMessageReaderWriterProvider;
  */
 public abstract class AbstracJsonProvider<T> extends AbstractMessageReaderWriterProvider<T> {
     private final Class<T> classType;
-    private final Set<MediaType> readableMediaTypes;
-    private final Set<MediaType> writableMediaTypes;
 
-    public AbstracJsonProvider(Class<T> classType, Set<MediaType> readableMediaTypes, Set<MediaType> writableMediaTypes) {
+    public AbstracJsonProvider(Class<T> classType) {
         this.classType = classType;
-        this.readableMediaTypes = readableMediaTypes;
-        this.writableMediaTypes = writableMediaTypes;
     }
 
     @Override
     public boolean isReadable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
-        return this.classType.isAssignableFrom(type) && isCompatible(this.readableMediaTypes, mediaType);
+        return this.classType.isAssignableFrom(type) && mediaType.isCompatible(MediaType.APPLICATION_JSON_TYPE);
     }
 
     @Override
     public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
-        return this.classType.isAssignableFrom(type) && isCompatible(this.writableMediaTypes, mediaType);
+        return this.classType.isAssignableFrom(type) && mediaType.isCompatible(MediaType.APPLICATION_JSON_TYPE);
     }
 
     @Override
@@ -83,15 +78,6 @@ public abstract class AbstracJsonProvider<T> extends AbstractMessageReaderWriter
         } catch (JSONException ex) {
             throw new WebApplicationException(ex, Status.INTERNAL_SERVER_ERROR);
         }
-    }
-
-    private boolean isCompatible(Set<MediaType> types, MediaType mediaType) {
-        for (MediaType t : types) {
-            if (t.isCompatible(mediaType)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     public abstract T read(JSONObject j, MediaType mediaType) throws JSONException;

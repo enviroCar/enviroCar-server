@@ -27,7 +27,6 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import io.car.server.core.entities.Sensors;
-import io.car.server.rest.MediaTypes;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
@@ -38,7 +37,7 @@ import io.car.server.rest.MediaTypes;
 public class SensorsProvider extends AbstractJsonEntityProvider<Sensors> {
 
     public SensorsProvider() {
-        super(Sensors.class, MediaTypes.SENSORS_TYPE);
+        super(Sensors.class);
     }
 
     @Override

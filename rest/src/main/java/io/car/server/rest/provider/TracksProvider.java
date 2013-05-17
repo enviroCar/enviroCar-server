@@ -26,7 +26,6 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import io.car.server.core.entities.Tracks;
-import io.car.server.rest.MediaTypes;
 
 @Provider
 @Produces(MediaType.APPLICATION_JSON)
@@ -34,7 +33,7 @@ import io.car.server.rest.MediaTypes;
 public class TracksProvider extends AbstractJsonEntityProvider<Tracks> {
 	
 	public TracksProvider() {
-		super(Tracks.class, MediaTypes.TRACKS_TYPE);
+		super(Tracks.class);
 	}
 
 	@Override

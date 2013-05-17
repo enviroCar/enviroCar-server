@@ -26,7 +26,6 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import io.car.server.core.entities.Measurements;
-import io.car.server.rest.MediaTypes;
 
 /**
  *
@@ -39,7 +38,7 @@ import io.car.server.rest.MediaTypes;
 public class MeasurementsProvider extends AbstractJsonEntityProvider<Measurements> {
 
 	public MeasurementsProvider() {
-		super(Measurements.class, MediaTypes.MEASUREMENTS_TYPE);
+		super(Measurements.class);
 	}
 
 	@Override

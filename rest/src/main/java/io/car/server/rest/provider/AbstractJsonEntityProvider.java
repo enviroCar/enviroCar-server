@@ -17,12 +17,6 @@
  */
 package io.car.server.rest.provider;
 
-import java.util.Collections;
-import java.util.Set;
-
-import javax.ws.rs.core.MediaType;
-
-import com.google.common.collect.ImmutableSet;
 import com.google.inject.Inject;
 
 import io.car.server.rest.coding.CodingFactory;
@@ -34,21 +28,8 @@ public abstract class AbstractJsonEntityProvider<T> extends AbstracJsonProvider<
     @Inject
     private CodingFactory codingFactory;
 
-    public AbstractJsonEntityProvider(Class<T> classType, Set<MediaType> readableMediaTypes,
-                                      Set<MediaType> writableMediaTypes) {
-        super(classType, readableMediaTypes, writableMediaTypes);
-    }
-
-    public AbstractJsonEntityProvider(Class<T> classType, MediaType get, MediaType post, MediaType put) {
-        this(classType, ImmutableSet.of(post, put), ImmutableSet.of(get));
-    }
-
-    public AbstractJsonEntityProvider(Class<T> classType, MediaType get, MediaType post) {
-        this(classType, ImmutableSet.of(post), ImmutableSet.of(get));
-    }
-
-    public AbstractJsonEntityProvider(Class<T> classType, MediaType get) {
-        this(classType, Collections.<MediaType>emptySet(), ImmutableSet.of(get));
+    public AbstractJsonEntityProvider(Class<T> classType) {
+        super(classType);
     }
 
     protected CodingFactory getCodingFactory() {
