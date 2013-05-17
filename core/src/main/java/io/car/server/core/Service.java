@@ -52,7 +52,7 @@ import io.car.server.core.update.EntityUpdater;
 import io.car.server.core.validation.EntityValidator;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  * @author Arne de Wall <a.dewall@52north.org>
  * @author Jan Wirwahn <jan.wirwahn@wwu.de>
  */

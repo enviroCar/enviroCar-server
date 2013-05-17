@@ -18,7 +18,7 @@
 package io.car.server.rest.coding;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface JSONConstants {
     String BBOX_KEY = "bbox";

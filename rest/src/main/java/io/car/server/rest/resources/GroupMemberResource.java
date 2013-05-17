@@ -30,7 +30,7 @@ import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.rest.auth.Authenticated;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class GroupMemberResource extends UserResource {
     private Group group;

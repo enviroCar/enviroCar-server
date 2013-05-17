@@ -29,7 +29,7 @@ import io.car.server.core.entities.Sensors;
 import io.car.server.mongo.entity.MongoSensor;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class MongoSensorDao extends BasicDAO<MongoSensor, ObjectId> implements SensorDao {
     @Inject

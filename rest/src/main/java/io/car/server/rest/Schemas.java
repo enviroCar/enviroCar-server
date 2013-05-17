@@ -18,7 +18,7 @@
 package io.car.server.rest;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class Schemas {
     private static final String PREFIX = "http://schema.envirocar.org/";

@@ -26,7 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class AbstractExceptionMapper<T extends Throwable> implements ExceptionMapper<T> {
     private static final Logger log = LoggerFactory.getLogger(AbstractExceptionMapper.class);

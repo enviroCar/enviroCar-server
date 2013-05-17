@@ -29,7 +29,7 @@ import io.car.server.core.dao.GroupDao;
 import io.car.server.mongo.entity.MongoGroup;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class MongoGroupDao extends BasicDAO<MongoGroup, String> implements GroupDao {
     @Inject

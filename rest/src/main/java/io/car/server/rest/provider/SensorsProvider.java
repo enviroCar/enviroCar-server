@@ -29,7 +29,7 @@ import org.codehaus.jettison.json.JSONObject;
 import io.car.server.core.entities.Sensors;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
 @Produces(MediaType.APPLICATION_JSON)

@@ -22,7 +22,7 @@ import org.codehaus.jettison.json.JSONObject;
 import io.car.server.core.exception.ValidationException;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class JSONValidationException extends ValidationException {
     private static final long serialVersionUID = -235700358046047325L;

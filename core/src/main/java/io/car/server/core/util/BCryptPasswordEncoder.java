@@ -20,7 +20,7 @@ package io.car.server.core.util;
 import org.mindrot.jbcrypt.BCrypt;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class BCryptPasswordEncoder implements PasswordEncoder {
     private static final int ROUNDS = 10;

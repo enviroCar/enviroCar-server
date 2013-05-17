@@ -18,7 +18,7 @@
 package io.car.server.core.exception;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class GroupNotFoundException extends ResourceNotFoundException {
     private static final long serialVersionUID = -2965141243070029269L;

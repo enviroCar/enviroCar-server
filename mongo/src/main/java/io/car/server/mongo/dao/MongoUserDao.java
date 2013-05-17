@@ -30,7 +30,7 @@ import io.car.server.core.dao.UserDao;
 import io.car.server.mongo.entity.MongoUser;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  * @author Arne de Wall
  */
 public class MongoUserDao extends BasicDAO<MongoUser, String> implements UserDao {

@@ -40,7 +40,7 @@ import io.car.server.rest.auth.Anonymous;
 import io.car.server.rest.validation.Schema;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class UsersResource extends AbstractResource {
     public static final String USER = "{username}";

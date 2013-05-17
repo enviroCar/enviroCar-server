@@ -31,7 +31,7 @@ import io.car.server.rest.auth.AuthenticationResourceFilterFactory;
 import io.car.server.rest.validation.JSONSchemaResourceFilterFactory;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class JerseyModule extends JerseyServletModule {
     public static final String FALSE = String.valueOf(false);

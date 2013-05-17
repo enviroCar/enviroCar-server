@@ -23,7 +23,7 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class UpCastingIterable<T> implements Iterable<T> {
     private final Iterable<? extends T> delegate;

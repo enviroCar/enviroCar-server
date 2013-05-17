@@ -35,7 +35,7 @@ import io.car.server.rest.resources.PhenomenonsResource;
 import io.car.server.rest.resources.RootResource;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class PhenomenonCoder implements EntityEncoder<Phenomenon>, EntityDecoder<Phenomenon> {
     private final DateTimeFormatter formatter;

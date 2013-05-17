@@ -30,7 +30,7 @@ import io.car.server.mongo.entity.MongoPhenomenon;
 import io.car.server.mongo.entity.MongoSensor;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  * @author Jan Wirwahn <jan.wirwahn@wwu.de>
  */
 public class MongoPhenomenonDao extends BasicDAO<MongoPhenomenon, ObjectId> implements PhenomenonDao {

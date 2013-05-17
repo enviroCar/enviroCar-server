@@ -35,7 +35,7 @@ import io.car.server.rest.resources.RootResource;
 import io.car.server.rest.resources.SensorsResource;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class SensorCoder implements EntityEncoder<Sensor>, EntityDecoder<Sensor> {
     private final EntityFactory factory;

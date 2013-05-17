@@ -18,7 +18,7 @@
 package io.car.server.core.entities;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface Group extends BaseEntity {
     String NAME = "name";
