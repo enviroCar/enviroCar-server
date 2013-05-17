@@ -25,6 +25,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.google.inject.assistedinject.Assisted;
@@ -37,9 +38,10 @@ import io.car.server.core.exception.GroupNotFoundException;
 import io.car.server.core.exception.ResourceAlreadyExistException;
 import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.core.exception.ValidationException;
-import io.car.server.rest.MediaTypes;
 import io.car.server.rest.RESTConstants;
+import io.car.server.rest.Schemas;
 import io.car.server.rest.auth.Authenticated;
+import io.car.server.rest.validation.Schema;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
@@ -59,7 +61,8 @@ public class GroupsResource extends AbstractResource {
     }
 
     @GET
-    @Produces(MediaTypes.GROUPS)
+    @Schema(response = Schemas.GROUPS)
+    @Produces(MediaType.APPLICATION_JSON)
     public Groups get(@QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit,
                       @QueryParam(RESTConstants.SEARCH) String search) {
         if (user == null) {
@@ -74,8 +77,9 @@ public class GroupsResource extends AbstractResource {
     }
 
     @POST
-    @Consumes(MediaTypes.GROUP_CREATE)
     @Authenticated
+    @Schema(request = Schemas.GROUP_CREATE)
+    @Consumes(MediaType.APPLICATION_JSON)
     public Response createGroup(Group group) throws UserNotFoundException, ResourceAlreadyExistException,
                                                     ValidationException {
         Group g = getService().createGroup(group.setOwner(getCurrentUser()).addMember(getCurrentUser()));

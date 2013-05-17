@@ -19,12 +19,14 @@ package io.car.server.rest.resources;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
 import io.car.server.core.entities.Phenomenon;
-import io.car.server.rest.MediaTypes;
+import io.car.server.rest.Schemas;
+import io.car.server.rest.validation.Schema;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
@@ -38,7 +40,8 @@ public class PhenomenonResource {
     }
 
     @GET
-    @Produces(MediaTypes.PHENOMENON)
+    @Schema(response = Schemas.PHENOMENON)
+    @Produces(MediaType.APPLICATION_JSON)
     public Phenomenon getPhenomenon() {
         return phenomenon;
     }

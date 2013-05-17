@@ -24,8 +24,8 @@ import javax.ws.rs.ext.Provider;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
+
 import io.car.server.core.entities.Phenomenon;
-import io.car.server.rest.MediaTypes;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
@@ -36,8 +36,7 @@ import io.car.server.rest.MediaTypes;
 public class PhenomenonProvider extends AbstractJsonEntityProvider<Phenomenon> {
 
     public PhenomenonProvider() {
-        super(Phenomenon.class, MediaTypes.PHENOMENON_TYPE,
-              MediaTypes.PHENOMENON_CREATE_TYPE, MediaTypes.PHENOMENON_MODIFY_TYPE);
+        super(Phenomenon.class);
     }
 
     @Override

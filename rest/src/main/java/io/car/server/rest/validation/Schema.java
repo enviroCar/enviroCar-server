@@ -17,13 +17,17 @@
  */
 package io.car.server.rest.validation;
 
-import javax.ws.rs.core.MediaType;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import io.car.server.core.exception.ValidationException;
 
-/**
- * @author Christian Autermann <c.autermann@52north.org>
- */
-public interface Validator<T> {
-    void validate(T t, MediaType mt) throws ValidationException;
+@Documented
+@Target({ ElementType.METHOD })
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Schema {
+    public String request() default "";
+    public String response() default "";
 }

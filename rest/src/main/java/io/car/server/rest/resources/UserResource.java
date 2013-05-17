@@ -27,6 +27,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -40,8 +41,9 @@ import io.car.server.core.entities.User;
 import io.car.server.core.exception.IllegalModificationException;
 import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.core.exception.ValidationException;
-import io.car.server.rest.MediaTypes;
+import io.car.server.rest.Schemas;
 import io.car.server.rest.auth.Authenticated;
+import io.car.server.rest.validation.Schema;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
@@ -64,7 +66,8 @@ public class UserResource extends AbstractResource {
     }
 
     @PUT
-    @Consumes(MediaTypes.USER_MODIFY)
+    @Schema(request = Schemas.USER_MODIFY)
+    @Consumes(MediaType.APPLICATION_JSON)
     @Authenticated
     public Response modify(User changes) throws
             UserNotFoundException, IllegalModificationException, ValidationException {
@@ -87,7 +90,8 @@ public class UserResource extends AbstractResource {
     }
 
     @GET
-    @Produces(MediaTypes.USER)
+    @Schema(response = Schemas.USER)
+    @Produces(MediaType.APPLICATION_JSON)
     public User get() throws UserNotFoundException {
         return getUser();
     }

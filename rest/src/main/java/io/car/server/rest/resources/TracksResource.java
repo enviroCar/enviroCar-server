@@ -26,6 +26,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
@@ -39,9 +40,10 @@ import io.car.server.core.exception.ResourceAlreadyExistException;
 import io.car.server.core.exception.TrackNotFoundException;
 import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.core.exception.ValidationException;
-import io.car.server.rest.MediaTypes;
 import io.car.server.rest.RESTConstants;
+import io.car.server.rest.Schemas;
 import io.car.server.rest.auth.Authenticated;
+import io.car.server.rest.validation.Schema;
 
 /**
  * @author Arne de Wall <a.dewall@52north.org>
@@ -60,14 +62,16 @@ public class TracksResource extends AbstractResource {
         this(null);
     }
 
-	@GET
-	@Produces(MediaTypes.TRACKS)
+    @GET
+    @Schema(response = Schemas.TRACKS)
+    @Produces(MediaType.APPLICATION_JSON)
 	public Tracks get(@QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit) {
         return user != null ? getService().getTracks(user) : getService().getTracks();
 	}
 
-	@POST
-	@Consumes(MediaTypes.TRACK_CREATE)
+    @POST
+    @Schema(request = Schemas.TRACK_CREATE)
+    @Consumes(MediaType.APPLICATION_JSON)
 	@Authenticated
     public Response create(Track track) throws ValidationException, ResourceAlreadyExistException, UserNotFoundException {
         if (user != null && !canModifyUser(user)) {

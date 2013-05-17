@@ -26,7 +26,6 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import io.car.server.core.entities.Measurement;
-import io.car.server.rest.MediaTypes;
 
 /**
  * @author Arne de Wall <a.dewall@52north.org>
@@ -38,7 +37,7 @@ import io.car.server.rest.MediaTypes;
 public class MeasurementProvider extends AbstractJsonEntityProvider<Measurement> {
 
     public MeasurementProvider() {
-        super(Measurement.class, MediaTypes.MEASUREMENT_TYPE, MediaTypes.MEASUREMENT_CREATE_TYPE);
+        super(Measurement.class);
     }
 
     @Override

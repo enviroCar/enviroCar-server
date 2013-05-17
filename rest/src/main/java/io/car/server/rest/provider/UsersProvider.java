@@ -20,16 +20,13 @@ package io.car.server.rest.provider;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.ext.Provider;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import io.car.server.core.entities.Users;
-import io.car.server.rest.MediaTypes;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
@@ -38,11 +35,9 @@ import io.car.server.rest.MediaTypes;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class UsersProvider extends AbstractJsonEntityProvider<Users> {
-    @Context
-    private UriInfo uriInfo;
 
     public UsersProvider() {
-        super(Users.class, MediaTypes.USERS_TYPE);
+        super(Users.class);
     }
 
     @Override
