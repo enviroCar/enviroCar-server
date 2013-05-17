@@ -24,7 +24,7 @@ import com.google.inject.Inject;
 import io.car.server.core.entities.EntityFactory;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public abstract class AbstractEntityCoder<T> extends AbstractEntityEncoder<T> implements EntityDecoder<T> {
     private EntityFactory entityFactory;
