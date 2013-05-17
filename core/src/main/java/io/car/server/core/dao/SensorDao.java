@@ -21,7 +21,7 @@ import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.Sensors;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  * @author Jan Wirwahn <jan.wirwahn@wwu.de>
  */
 public interface SensorDao {

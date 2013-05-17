@@ -22,7 +22,7 @@ import com.google.inject.Inject;
 import io.car.server.rest.coding.CodingFactory;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public abstract class AbstractJsonEntityProvider<T> extends AbstracJsonProvider<T> {
     @Inject

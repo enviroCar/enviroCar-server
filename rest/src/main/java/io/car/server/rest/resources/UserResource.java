@@ -46,14 +46,14 @@ import io.car.server.rest.auth.Authenticated;
 import io.car.server.rest.validation.Schema;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  * @author Arne de Wall <a.dewall@52north.org>
  */
 public class UserResource extends AbstractResource {
-    public static final String GROUPS_PATH = "groups";
-    public static final String FRIENDS_PATH = "friends";
-    public static final String TRACKS_PATH = "tracks";
-    public static final String MEASUREMENTS_PATH = "measurements";
+    public static final String GROUPS = "groups";
+    public static final String FRIENDS = "friends";
+    public static final String TRACKS = "tracks";
+    public static final String MEASUREMENTS = "measurements";
     protected final User user;
 
     @Inject
@@ -105,22 +105,22 @@ public class UserResource extends AbstractResource {
         getService().deleteUser(getUser());
     }
 
-    @Path(FRIENDS_PATH)
+    @Path(FRIENDS)
     public FriendsResource friends() {
         return getResourceFactory().createFriendsResource(getUser());
     }
 
-    @Path(GROUPS_PATH)
+    @Path(GROUPS)
     public GroupsResource groups() {
         return getResourceFactory().createGroupsResource(getUser());
     }
     
-    @Path(TRACKS_PATH)
+    @Path(TRACKS)
     public TracksResource tracks(){
     	return getResourceFactory().createTracksResource(getUser());
     }
     
-    @Path(MEASUREMENTS_PATH)
+    @Path(MEASUREMENTS)
     public MeasurementsResource measurements(){
     	return getResourceFactory().createMeasurementsResource(getUser());
     }

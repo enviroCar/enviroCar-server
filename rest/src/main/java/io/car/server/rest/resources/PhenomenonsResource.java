@@ -34,11 +34,11 @@ import io.car.server.rest.auth.Authenticated;
 import io.car.server.rest.validation.Schema;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  * @author Jan Wirwahn <jan.wirwahn@wwu.de>
  */
 public class PhenomenonsResource extends AbstractResource {
-    public static final String PHENOMENON_PATH = "{phenomenon}";
+    public static final String PHENOMENON = "{phenomenon}";
     @GET
     @Schema(response = Schemas.PHENOMENONS)
     @Produces(MediaType.APPLICATION_JSON)
@@ -54,7 +54,7 @@ public class PhenomenonsResource extends AbstractResource {
         return Response.created(getUriInfo().getRequestUriBuilder().path(getService().createPhenomenon(phenomenon).getName()).build()).build();
     }
     
-    @Path(PHENOMENON_PATH)
+    @Path(PHENOMENON)
     public PhenomenonResource phenomenon(@PathParam("phenomenon") String id) throws PhenomenonNotFoundException {
         return getResourceFactory().createPhenomenonResource(getService().getPhenomenonByName(id));
     }

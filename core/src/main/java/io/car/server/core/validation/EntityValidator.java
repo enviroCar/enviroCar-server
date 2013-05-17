@@ -20,7 +20,7 @@ package io.car.server.core.validation;
 import io.car.server.core.exception.ValidationException;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface EntityValidator<T> {
     T validateCreate(T t) throws ValidationException;

@@ -31,7 +31,7 @@ import io.car.server.rest.resources.UserResource;
 import io.car.server.rest.resources.UsersResource;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class JerseyResourceModule extends AbstractModule {
 

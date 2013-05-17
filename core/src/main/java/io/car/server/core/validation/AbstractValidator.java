@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 import io.car.server.core.exception.ValidationException;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public abstract class AbstractValidator<T> implements EntityValidator<T> {
     protected void isNotNull(String name, Object o) throws ValidationException {

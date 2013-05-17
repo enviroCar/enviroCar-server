@@ -34,11 +34,11 @@ import io.car.server.rest.auth.Authenticated;
 import io.car.server.rest.validation.Schema;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  * @author Jan Wirwahn <jan.wirwahn@wwu.de>
  */
 public class SensorsResource extends AbstractResource {
-    public static final String SENSOR_PATH = "{sensor}";
+    public static final String SENSOR = "{sensor}";
     @GET
     @Schema(response = Schemas.SENSORS)
     @Produces(MediaType.APPLICATION_JSON)
@@ -57,7 +57,7 @@ public class SensorsResource extends AbstractResource {
 						.build()).build();
 	}
 
-    @Path(SENSOR_PATH)
+    @Path(SENSOR)
     public SensorResource sensor(@PathParam("sensor") String id)
          			throws SensorNotFoundException {
 		return getResourceFactory().createSensorResource(

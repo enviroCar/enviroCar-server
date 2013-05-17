@@ -18,7 +18,7 @@
 package io.car.server.core.util;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface PasswordEncoder {
     String encode(String rawPassword);

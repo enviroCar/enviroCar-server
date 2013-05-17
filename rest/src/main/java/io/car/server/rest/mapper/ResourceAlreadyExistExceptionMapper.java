@@ -23,7 +23,7 @@ import javax.ws.rs.ext.Provider;
 import io.car.server.core.exception.ResourceAlreadyExistException;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
 public class ResourceAlreadyExistExceptionMapper extends AbstractExceptionMapper<ResourceAlreadyExistException> {

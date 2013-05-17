@@ -41,7 +41,7 @@ import io.car.server.core.exception.GeometryConverterException;
 import io.car.server.rest.coding.GeoJSON;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class GeoJSONTest {
     private final Random random = new Random();

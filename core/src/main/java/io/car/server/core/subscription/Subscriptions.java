@@ -20,7 +20,7 @@ package io.car.server.core.subscription;
 import io.car.server.core.util.UpCastingIterable;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class Subscriptions extends UpCastingIterable<Subscription> {
     public Subscriptions(Iterable<? extends Subscription> delegate) {

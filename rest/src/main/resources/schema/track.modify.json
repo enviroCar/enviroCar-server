@@ -21,6 +21,12 @@
                 "sensor": {
                     "type": "string",
                     "description": "the name of an existing sensor resource"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
                 }
             }
         }

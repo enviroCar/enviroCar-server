@@ -44,7 +44,7 @@ import io.car.server.rest.provider.UserProvider;
 import io.car.server.rest.provider.UsersProvider;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class JerseyProviderModule extends AbstractModule {
 

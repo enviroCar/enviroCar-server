@@ -44,10 +44,10 @@ import io.car.server.rest.auth.Authenticated;
 import io.car.server.rest.validation.Schema;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class GroupsResource extends AbstractResource {
-    public static final String GROUP_PATH = "{group}";
+    public static final String GROUP = "{group}";
     private User user;
 
     @AssistedInject
@@ -86,7 +86,7 @@ public class GroupsResource extends AbstractResource {
         return Response.created(getUriInfo().getRequestUriBuilder().path(g.getName()).build()).build();
     }
 
-    @Path(GROUP_PATH)
+    @Path(GROUP)
     public GroupResource group(@PathParam("group") String groupname) throws GroupNotFoundException {
         return getResourceFactory().createGroupResource(getService().getGroup(groupname));
     }

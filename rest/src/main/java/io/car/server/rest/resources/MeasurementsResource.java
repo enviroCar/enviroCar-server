@@ -50,7 +50,7 @@ import io.car.server.rest.validation.Schema;
  * @author Arne de Wall <a.dewall@52north.org>
  */
 public class MeasurementsResource extends AbstractResource {
-    public static final String MEASUREMENT_PATH = "{measurement}";
+    public static final String MEASUREMENT = "{measurement}";
     private final Track track;
     private final User user;
 
@@ -112,7 +112,7 @@ public class MeasurementsResource extends AbstractResource {
                 .path(m.getIdentifier()).build()).build();
     }
 
-    @Path(MEASUREMENT_PATH)
+    @Path(MEASUREMENT)
     public MeasurementResource measurement(@PathParam("measurement") String id) throws MeasurementNotFoundException {
         Measurement m = getService().getMeasurement(id);
         if (track != null) {

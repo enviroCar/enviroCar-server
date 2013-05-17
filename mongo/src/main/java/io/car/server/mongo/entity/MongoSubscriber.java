@@ -29,7 +29,7 @@ import io.car.server.core.subscription.Subscription;
 import io.car.server.core.subscription.Subscriptions;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Entity("subscribers")
 public class MongoSubscriber extends MongoBaseEntity<MongoSubscriber> implements Subscriber {

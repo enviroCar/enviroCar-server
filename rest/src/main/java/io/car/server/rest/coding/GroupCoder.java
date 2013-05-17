@@ -29,9 +29,10 @@ import com.google.inject.Inject;
 import io.car.server.core.entities.EntityFactory;
 import io.car.server.core.entities.Group;
 import io.car.server.core.entities.User;
+import io.car.server.rest.resources.GroupResource;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class GroupCoder implements EntityDecoder<Group>, EntityEncoder<Group> {
     private DateTimeFormatter formatter;
@@ -63,6 +64,6 @@ public class GroupCoder implements EntityDecoder<Group>, EntityEncoder<Group> {
                 .put(JSONConstants.CREATED_KEY, formatter.print(t.getCreationDate()))
                 .put(JSONConstants.MODIFIED_KEY, formatter.print(t.getLastModificationDate()))
                 .put(JSONConstants.OWNER_KEY, userEncoder.encode(t.getOwner(), mediaType))
-                .put(JSONConstants.MEMBERS_KEY, uriInfo.getRequestUriBuilder().path(JSONConstants.MEMBERS_KEY).build());
+                .put(JSONConstants.MEMBERS_KEY, uriInfo.getRequestUriBuilder().path(GroupResource.MEMBERS).build());
     }
 }

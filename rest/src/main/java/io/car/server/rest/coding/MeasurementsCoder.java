@@ -31,7 +31,7 @@ import io.car.server.core.util.GeoJSONConstants;
 
 /**
  *
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  * @author Arne de Wall <a.dewall@52north.org>
  */
 public class MeasurementsCoder implements EntityEncoder<Measurements> {

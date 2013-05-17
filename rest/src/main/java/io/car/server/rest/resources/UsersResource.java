@@ -40,10 +40,10 @@ import io.car.server.rest.auth.Anonymous;
 import io.car.server.rest.validation.Schema;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class UsersResource extends AbstractResource {
-    public static final String USER_PATH = "{username}";
+    public static final String USER = "{username}";
 
     @GET
     @Schema(response = Schemas.USERS)
@@ -63,7 +63,7 @@ public class UsersResource extends AbstractResource {
                 .build()).build();
     }
 
-    @Path(USER_PATH)
+    @Path(USER)
     public UserResource user(@PathParam("username") String username) throws UserNotFoundException {
         return getResourceFactory().createUserResource(getService().getUser(username));
     }

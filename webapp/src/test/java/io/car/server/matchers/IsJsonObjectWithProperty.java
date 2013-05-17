@@ -23,7 +23,7 @@ import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class IsJsonObjectWithProperty extends BaseMatcher<JSONObject> {
 

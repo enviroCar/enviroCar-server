@@ -31,7 +31,7 @@ import com.google.inject.ProvisionException;
 import com.google.inject.name.Named;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class JSONSchemaFactoryProvider implements Provider<JsonSchemaFactory> {
     public static final String SCHEMAS = "schemas";

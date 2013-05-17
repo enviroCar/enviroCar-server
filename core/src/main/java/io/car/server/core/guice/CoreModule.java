@@ -29,7 +29,7 @@ import io.car.server.core.Service;
 import io.car.server.core.util.BCryptPasswordEncoder;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  * @author Arne de Wall
  */
 public class CoreModule extends AbstractModule {

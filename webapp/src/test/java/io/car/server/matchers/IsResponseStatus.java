@@ -25,7 +25,7 @@ import org.hamcrest.Description;
 import com.sun.jersey.api.client.ClientResponse;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class IsResponseStatus extends BaseMatcher<ClientResponse> {
     private final StatusType status;

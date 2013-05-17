@@ -25,8 +25,8 @@ import org.joda.time.format.DateTimeFormatter;
 
 import com.google.inject.Inject;
 
-import io.car.server.core.entities.EntityFactory;
 import io.car.server.core.dao.SensorDao;
+import io.car.server.core.entities.EntityFactory;
 import io.car.server.core.entities.Measurements;
 import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.Track;
@@ -63,6 +63,8 @@ public class TrackCoder implements EntityEncoder<Track>, EntityDecoder<Track> {
             if (p.has(JSONConstants.SENSOR_KEY)) {
                 track.setSensor(sensorDao.getByName(p.getString(JSONConstants.SENSOR_KEY)));
             }
+            track.setName(p.optString(JSONConstants.NAME_KEY, null));
+            track.setDescription(p.optString(JSONConstants.DESCRIPTION_KEY, null));
         }
         return track;
     }
@@ -71,6 +73,8 @@ public class TrackCoder implements EntityEncoder<Track>, EntityDecoder<Track> {
     public JSONObject encode(Track t, MediaType mediaType) throws JSONException {
         JSONObject properties = new JSONObject()
                 .put(JSONConstants.IDENTIFIER_KEY, t.getIdentifier())
+                .put(JSONConstants.NAME_KEY, t.getName())
+                .put(JSONConstants.DESCRIPTION_KEY, t.getDescription())
                 .put(JSONConstants.CREATED_KEY, formatter.print(t.getCreationDate()))
                 .put(JSONConstants.MODIFIED_KEY, formatter.print(t.getLastModificationDate()))
                 .put(JSONConstants.SENSOR_KEY, sensorEncoder.encode(t.getSensor(), mediaType))

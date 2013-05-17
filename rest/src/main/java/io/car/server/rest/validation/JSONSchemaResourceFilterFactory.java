@@ -64,7 +64,7 @@ import io.car.server.rest.MediaTypes;
 import io.car.server.rest.coding.JSONConstants;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
     private static final Logger log = LoggerFactory.getLogger(JSONSchemaResourceFilterFactory.class);

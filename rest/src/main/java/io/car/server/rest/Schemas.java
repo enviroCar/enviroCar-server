@@ -18,34 +18,38 @@
 package io.car.server.rest;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public interface Schemas {
-    String ROOT = "http://schema.envirocar.org/root.json#";
-    String USERS = "http://schema.envirocar.org/users.json#";
-    String USER = "http://schema.envirocar.org/user.json#";
-    String USER_MODIFY = "http://schema.envirocar.org/user.modify.json#";
-    String USER_CREATE = "http://schema.envirocar.org/user.create.json#";
-    String USER_REF = "http://schema.envirocar.org/user.ref.json#";
-    String GROUPS = "http://schema.envirocar.org/groups.json#";
-    String GROUP = "http://schema.envirocar.org/group.json#";
-    String GROUP_MODIFY = "http://schema.envirocar.org/group.modify.json#";
-    String GROUP_CREATE = "http://schema.envirocar.org/group.create.json#";
-    String GROUP_REF = "http://schema.envirocar.org/group.ref.json#";
-    String TRACK = "http://schema.envirocar.org/track.json#";
-    String TRACKS = "http://schema.envirocar.org/tracks.json#";
-    String TRACK_CREATE = "http://schema.envirocar.org/track.create.json#";
-    String TRACK_MODIFY = "http://schema.envirocar.org/track.modify.json#";
-    String MEASUREMENT = "http://schema.envirocar.org/measurement.json#";
-    String MEASUREMENTS = "http://schema.envirocar.org/measurements.json#";
-    String MEASUREMENT_CREATE = "http://schema.envirocar.org/measurement.create.json#";
-    String MEASUREMENT_MODIFY = "http://schema.envirocar.org/measurement.modify.json#";
-    String SENSOR = "http://schema.envirocar.org/sensor.json#";
-    String SENSORS = "http://schema.envirocar.org/sensors.json#";
-    String SENSOR_CREATE = "http://schema.envirocar.org/sensor.create.json#";
-    String SENSOR_MODIFY = "http://schema.envirocar.org/sensor.modify.json#";
-    String PHENOMENON = "http://schema.envirocar.org/phenomenon.json#";
-    String PHENOMENONS = "http://schema.envirocar.org/phenomenons.json#";
-    String PHENOMENON_CREATE = "http://schema.envirocar.org/phenomenon.create.json#";
-    String PHENOMENON_MODIFY = "http://schema.envirocar.org/phenomenon.modify.json#";
+public class Schemas {
+    private static final String PREFIX = "http://schema.envirocar.org/";
+    public static final String ROOT = PREFIX + "root.json#";
+    public static final String USERS = PREFIX + "users.json#";
+    public static final String USER = PREFIX + "user.json#";
+    public static final String USER_MODIFY = PREFIX + "user.modify.json#";
+    public static final String USER_CREATE = PREFIX + "user.create.json#";
+    public static final String USER_REF = PREFIX + "user.ref.json#";
+    public static final String GROUPS = PREFIX + "groups.json#";
+    public static final String GROUP = PREFIX + "group.json#";
+    public static final String GROUP_MODIFY = PREFIX + "group.modify.json#";
+    public static final String GROUP_CREATE = PREFIX + "group.create.json#";
+    public static final String GROUP_REF = PREFIX + "group.ref.json#";
+    public static final String TRACK = PREFIX + "track.json#";
+    public static final String TRACKS = PREFIX + "tracks.json#";
+    public static final String TRACK_CREATE = PREFIX + "track.create.json#";
+    public static final String TRACK_MODIFY = PREFIX + "track.modify.json#";
+    public static final String MEASUREMENT = PREFIX + "measurement.json#";
+    public static final String MEASUREMENTS = PREFIX + "measurements.json#";
+    public static final String MEASUREMENT_CREATE = PREFIX + "measurement.create.json#";
+    public static final String MEASUREMENT_MODIFY = PREFIX + "measurement.modify.json#";
+    public static final String SENSOR = PREFIX + "sensor.json#";
+    public static final String SENSORS = PREFIX + "sensors.json#";
+    public static final String SENSOR_CREATE = PREFIX + "sensor.create.json#";
+    public static final String SENSOR_MODIFY = PREFIX + "sensor.modify.json#";
+    public static final String PHENOMENON = PREFIX + "phenomenon.json#";
+    public static final String PHENOMENONS = PREFIX + "phenomenons.json#";
+    public static final String PHENOMENON_CREATE = PREFIX + "phenomenon.create.json#";
+    public static final String PHENOMENON_MODIFY = PREFIX + "phenomenon.modify.json#";
+
+    private Schemas() {
+    }
 }

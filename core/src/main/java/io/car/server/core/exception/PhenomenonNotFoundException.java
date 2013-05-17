@@ -18,7 +18,7 @@
 package io.car.server.core.exception;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class PhenomenonNotFoundException extends ResourceNotFoundException {
     private static final long serialVersionUID = 1311418967057928565L;

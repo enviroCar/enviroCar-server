@@ -22,7 +22,7 @@ import com.github.jmkgreen.morphia.annotations.Entity;
 import io.car.server.core.subscription.SubscriptionFilterParameter;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Entity("filters")
 public class MongoSubscriptionFilter extends MongoBaseEntity<MongoSubscriptionFilter> implements

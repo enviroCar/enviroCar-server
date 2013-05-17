@@ -35,7 +35,7 @@ import io.car.server.rest.resources.RootResource;
 import io.car.server.rest.resources.SensorsResource;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class SensorCoder implements EntityEncoder<Sensor>, EntityDecoder<Sensor> {
     private final EntityFactory factory;
@@ -64,8 +64,8 @@ public class SensorCoder implements EntityEncoder<Sensor>, EntityDecoder<Sensor>
         } else {
             URI href = uriInfo.getBaseUriBuilder()
                     .path(RootResource.class)
-                    .path(RootResource.SENSORS_PATH)
-                    .path(SensorsResource.SENSOR_PATH)
+                    .path(RootResource.SENSORS)
+                    .path(SensorsResource.SENSOR)
                     .build(t.getName());
             j.put(JSONConstants.HREF_KEY, href);
         }

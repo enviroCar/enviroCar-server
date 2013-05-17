@@ -29,7 +29,7 @@ import com.vividsolutions.jts.geom.Polygon;
 import io.car.server.core.exception.GeometryConverterException;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface GeometryConverter<T> {
     Geometry decode(T json) throws GeometryConverterException;

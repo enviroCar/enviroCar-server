@@ -37,7 +37,7 @@ import io.car.server.core.exception.GeometryConverterException;
 import io.car.server.core.util.GeometryConverter;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class JTSConverter extends TypeConverter implements SimpleValueConverter {
     private final GeometryConverter<BSONObject> geoJSON;

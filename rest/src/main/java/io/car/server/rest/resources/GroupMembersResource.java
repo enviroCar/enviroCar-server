@@ -22,6 +22,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response.Status;
@@ -38,9 +39,10 @@ import io.car.server.rest.auth.Authenticated;
 import io.car.server.rest.validation.Schema;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class GroupMembersResource extends AbstractResource {
+    public static final String MEMBER = "{member}";
     private Group group;
 
     @Inject
@@ -50,6 +52,7 @@ public class GroupMembersResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.USERS)
+    @Produces(MediaType.APPLICATION_JSON)
     public Users get() {
         return group.getMembers();
     }
@@ -65,7 +68,7 @@ public class GroupMembersResource extends AbstractResource {
         getService().addGroupMember(group, user);
     }
 
-    @Path("{member}")
+    @Path(MEMBER)
     public GroupMemberResource friend(@PathParam("member") String username) throws UserNotFoundException {
         return getResourceFactory().createGroupMemberResource(group, getService().getUser(username));
     }
