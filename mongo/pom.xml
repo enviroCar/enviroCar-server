@@ -54,5 +54,9 @@
           <groupId>com.google.inject.extensions</groupId>
           <artifactId>guice-multibindings</artifactId>
       </dependency>
+      <dependency>
+          <artifactId>mongo-java-driver</artifactId>
+          <groupId>org.mongodb</groupId>
+      </dependency>
   </dependencies>
 </project>
