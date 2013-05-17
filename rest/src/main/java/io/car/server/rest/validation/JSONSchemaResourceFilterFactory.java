@@ -68,6 +68,7 @@ import io.car.server.rest.coding.JSONConstants;
  */
 public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
     private static final Logger log = LoggerFactory.getLogger(JSONSchemaResourceFilterFactory.class);
+    private static final boolean VALIDATE_REQUESTS = true;
     private static final boolean VALIDATE_RESPONSES = true;
     private final JsonSchemaFactory schemaFactory;
 
@@ -140,7 +141,7 @@ public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
 
         @Override
         public ContainerRequestFilter getRequestFilter() {
-            return request == null ? null : new JSONSchemaRequestFilter(request);
+            return request == null || !VALIDATE_REQUESTS ? null : new JSONSchemaRequestFilter(request);
         }
 
         @Override
