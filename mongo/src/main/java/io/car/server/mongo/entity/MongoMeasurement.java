@@ -27,25 +27,27 @@ import com.github.jmkgreen.morphia.annotations.Entity;
 import com.github.jmkgreen.morphia.annotations.Indexed;
 import com.github.jmkgreen.morphia.annotations.Property;
 import com.github.jmkgreen.morphia.annotations.Reference;
+import com.github.jmkgreen.morphia.utils.IndexDirection;
 import com.google.common.collect.Sets;
 import com.vividsolutions.jts.geom.Geometry;
 
+import io.car.server.core.entities.Measurement;
 import io.car.server.core.entities.MeasurementValue;
 import io.car.server.core.entities.MeasurementValues;
-import io.car.server.core.entities.Measurement;
 import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
 
 /**
- *
+ * @author Christian Autermann <c.autermann@52north.org>
  * @author Arne de Wall
- *
  */
 @Entity("measurements")
 public class MongoMeasurement extends MongoBaseEntity<MongoMeasurement> implements Measurement {
+    @Indexed
     @Reference
     private MongoUser user;
+    @Indexed(IndexDirection.GEO2D)
     @Property(GEOMETRY)
     private Geometry geometry;
     @Reference(SENSOR)
@@ -55,6 +57,7 @@ public class MongoMeasurement extends MongoBaseEntity<MongoMeasurement> implemen
     @Indexed
     @Property(TIME)
     private DateTime time;
+    @Indexed
     @Reference(TRACK)
     private MongoTrack track;
 
