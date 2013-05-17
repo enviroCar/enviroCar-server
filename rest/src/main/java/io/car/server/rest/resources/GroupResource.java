@@ -20,12 +20,14 @@ package io.car.server.rest.resources;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -39,8 +41,9 @@ import io.car.server.core.exception.GroupNotFoundException;
 import io.car.server.core.exception.IllegalModificationException;
 import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.core.exception.ValidationException;
-import io.car.server.rest.MediaTypes;
+import io.car.server.rest.Schemas;
 import io.car.server.rest.auth.Authenticated;
+import io.car.server.rest.validation.Schema;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
@@ -54,13 +57,16 @@ public class GroupResource extends AbstractResource {
     }
 
     @GET
-    @Produces(MediaTypes.GROUP)
+    @Schema(response = Schemas.GROUP)
+    @Produces(MediaType.APPLICATION_JSON)
     public Group get() {
         return group;
     }
 
     @PUT
     @Authenticated
+    @Schema(request = Schemas.GROUP_MODIFY)
+    @Consumes(MediaType.APPLICATION_JSON)
     public Response modify(Group changes) throws UserNotFoundException, ValidationException,
                                                  IllegalModificationException {
         if (!group.getOwner().equals(getCurrentUser())) {

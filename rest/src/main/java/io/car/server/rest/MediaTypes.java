@@ -21,70 +21,49 @@
  */
 package io.car.server.rest;
 
+
 import javax.ws.rs.core.MediaType;
+
+import com.google.common.collect.ImmutableMap;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  * @author Arne de Wall
  */
-public interface MediaTypes {
-    String ROOT = "application/json; schema=\"http://schema.envirocar.org/root.json\"";
-    MediaType ROOT_TYPE = MediaType.valueOf(ROOT);
-    String USERS = "application/json; schema=\"http://schema.envirocar.org/users.json\"";
-    MediaType USERS_TYPE = MediaType.valueOf(USERS);
-    String USER = "application/json; schema=\"http://schema.envirocar.org/user.json\"";
-    MediaType USER_TYPE = MediaType.valueOf(USER);
-    String USER_MODIFY = "application/json; schema=\"http://schema.envirocar.org/user.modify.json\"";
-    MediaType USER_MODIFY_TYPE = MediaType.valueOf(USER_MODIFY);
-    String USER_CREATE = "application/json; schema=\"http://schema.envirocar.org/user.create.json\"";
-    MediaType USER_CREATE_TYPE = MediaType.valueOf(USER_CREATE);
-    String USER_REF = "application/json; schema=\"http://schema.envirocar.org/user.ref.json\"";
-    MediaType USER_REF_TYPE = MediaType.valueOf(USER_REF);
-    
-    String GROUPS = "application/json; schema=\"http://schema.envirocar.org/groups.json\"";
-    MediaType GROUPS_TYPE = MediaType.valueOf(GROUPS);
-    String GROUP = "application/json; schema=\"http://schema.envirocar.org/group.json\"";
-    MediaType GROUP_TYPE = MediaType.valueOf(GROUP);
-    String GROUP_MODIFY = "application/json; schema=\"http://schema.envirocar.org/group.modify.json\"";
-    MediaType GROUP_MODIFY_TYPE = MediaType.valueOf(GROUP_MODIFY);
-    String GROUP_CREATE = "application/json; schema=\"http://schema.envirocar.org/group.create.json\"";
-    MediaType GROUP_CREATE_TYPE = MediaType.valueOf(GROUP_CREATE);
-    String GROUP_REF = "application/json; schema=\"http://schema.envirocar.org/group.ref.json\"";
-    MediaType GROUP_REF_TYPE = MediaType.valueOf(GROUP_REF);
-    
-    String TRACK = "application/json; schema=\"http://schema.envirocar.org/track.json\"";
-    MediaType TRACK_TYPE = MediaType.valueOf(TRACK);
-    String TRACKS = "application/json; schema=\"http://schema.envirocar.org/tracks.json\"";
-    MediaType TRACKS_TYPE = MediaType.valueOf(TRACKS);
-    String TRACK_CREATE = "application/json; schema=\"http://schema.envirocar.org/track.create.json\"";
-    MediaType TRACK_CREATE_TYPE = MediaType.valueOf(TRACK_CREATE);
-    String TRACK_MODIFY = "application/json; schema=\"http://schema.envirocar.org/track.modify.json\"";
-    MediaType TRACK_MODIFY_TYPE = MediaType.valueOf(TRACK_MODIFY);
+public class MediaTypes {
+    public static final String SCHEMA_ATTRIBUTE = "schema";
+    public static final MediaType ROOT_TYPE = withSchema(Schemas.ROOT);
+    public static final MediaType USERS_TYPE = withSchema(Schemas.USERS);
+    public static final MediaType USER_TYPE = withSchema(Schemas.USER);
+    public static final MediaType USER_MODIFY_TYPE = withSchema(Schemas.USER_MODIFY);
+    public static final MediaType USER_CREATE_TYPE = withSchema(Schemas.USER_CREATE);
+    public static final MediaType USER_REF_TYPE = withSchema(Schemas.USER_REF);
+    public static final MediaType GROUPS_TYPE = withSchema(Schemas.GROUPS);
+    public static final MediaType GROUP_TYPE = withSchema(Schemas.GROUP);
+    public static final MediaType GROUP_MODIFY_TYPE = withSchema(Schemas.GROUP_MODIFY);
+    public static final MediaType GROUP_CREATE_TYPE = withSchema(Schemas.GROUP_CREATE);
+    public static final MediaType GROUP_REF_TYPE = withSchema(Schemas.GROUP_REF);
+    public static final MediaType TRACK_TYPE = withSchema(Schemas.TRACK);
+    public static final MediaType TRACKS_TYPE = withSchema(Schemas.TRACKS);
+    public static final MediaType TRACK_CREATE_TYPE = withSchema(Schemas.TRACK_CREATE);
+    public static final MediaType TRACK_MODIFY_TYPE = withSchema(Schemas.TRACK_MODIFY);
+    public static final MediaType MEASUREMENT_TYPE = withSchema(Schemas.MEASUREMENT);
+    public static final MediaType MEASUREMENTS_TYPE = withSchema(Schemas.MEASUREMENTS);
+    public static final MediaType MEASUREMENT_CREATE_TYPE = withSchema(Schemas.MEASUREMENT_CREATE);
+    public static final MediaType MEASUREMENT_MODIFY_TYPE = withSchema(Schemas.MEASUREMENT_MODIFY);
+    public static final MediaType SENSOR_TYPE = withSchema(Schemas.SENSOR);
+    public static final MediaType SENSORS_TYPE = withSchema(Schemas.SENSORS);
+    public static final MediaType SENSOR_CREATE_TYPE = withSchema(Schemas.SENSOR_CREATE);
+    public static final MediaType SENSOR_MODIFY_TYPE = withSchema(Schemas.SENSOR_MODIFY);
+    public static final MediaType PHENOMENON_TYPE = withSchema(Schemas.PHENOMENON);
+    public static final MediaType PHENOMENONS_TYPE = withSchema(Schemas.PHENOMENONS);
+    public static final MediaType PHENOMENON_CREATE_TYPE = withSchema(Schemas.PHENOMENON_CREATE);
+    public static final MediaType PHENOMENON_MODIFY_TYPE = withSchema(Schemas.PHENOMENON_MODIFY);
 
-    String MEASUREMENT = "application/json; schema=\"http://schema.envirocar.org/measurement.json\"";
-    MediaType MEASUREMENT_TYPE = MediaType.valueOf(MEASUREMENT);
-    String MEASUREMENTS = "application/json; schema=\"http://schema.envirocar.org/measurements.json\"";
-	MediaType MEASUREMENTS_TYPE = MediaType.valueOf(MEASUREMENTS);
-    String MEASUREMENT_CREATE = "application/json; schema=\"http://schema.envirocar.org/measurement.create.json\"";
-	MediaType MEASUREMENT_CREATE_TYPE = MediaType.valueOf(MEASUREMENT_CREATE);
-    String MEASUREMENT_MODIFY = "application/json; schema=\"http://schema.envirocar.org/measurement.modify.json\"";
-	MediaType MEASUREMENT_MODIFY_TYPE = MediaType.valueOf(MEASUREMENT_MODIFY);
-	
-    String SENSOR = "application/json; schema=\"http://schema.envirocar.org/sensor.json\"";
-    MediaType SENSOR_TYPE = MediaType.valueOf(SENSOR);
-    String SENSORS = "application/json; schema=\"http://schema.envirocar.org/sensors.json\"";
-    MediaType SENSORS_TYPE = MediaType.valueOf(SENSORS);
-    String SENSOR_CREATE = "application/json; schema=\"http://schema.envirocar.org/sensor.create.json\"";
-    MediaType SENSOR_CREATE_TYPE = MediaType.valueOf(SENSOR_CREATE);
-    String SENSOR_MODIFY = "application/json; schema=\"http://schema.envirocar.org/sensor.modify.json\"";
-    MediaType SENSOR_MODIFY_TYPE = MediaType.valueOf(SENSOR_MODIFY);
-    String PHENOMENON = "application/json; schema=\"http://schema.envirocar.org/phenomenon.json\"";
-    MediaType PHENOMENON_TYPE = MediaType.valueOf(PHENOMENON);
-    String PHENOMENONS = "application/json; schema=\"http://schema.envirocar.org/phenomenons.json\"";
-    MediaType PHENOMENONS_TYPE = MediaType.valueOf(PHENOMENONS);
-    String PHENOMENON_CREATE = "application/json; schema=\"http://schema.envirocar.org/phenomenon.create.json\"";
-    MediaType PHENOMENON_CREATE_TYPE = MediaType.valueOf(PHENOMENON_CREATE);
-    String PHENOMENON_MODIFY = "application/json; schema=\"http://schema.envirocar.org/phenomenon.modify.json\"";
-    MediaType PHENOMENON_MODIFY_TYPE = MediaType.valueOf(PHENOMENON_MODIFY);
+    public static MediaType withSchema(String schema) {
+        return new MediaType("application", "json", ImmutableMap.of(SCHEMA_ATTRIBUTE, schema));
+    }
 
+    private MediaTypes() {
+    }
 }

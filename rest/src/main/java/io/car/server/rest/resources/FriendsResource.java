@@ -25,6 +25,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response.Status;
 
 import com.google.inject.Inject;
@@ -33,8 +34,9 @@ import com.google.inject.assistedinject.Assisted;
 import io.car.server.core.entities.User;
 import io.car.server.core.entities.Users;
 import io.car.server.core.exception.UserNotFoundException;
-import io.car.server.rest.MediaTypes;
+import io.car.server.rest.Schemas;
 import io.car.server.rest.auth.Authenticated;
+import io.car.server.rest.validation.Schema;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
@@ -48,15 +50,17 @@ public class FriendsResource extends AbstractResource {
     }
 
     @GET
-    @Produces(MediaTypes.USERS)
+    @Schema(response = Schemas.USERS)
+    @Produces(MediaType.APPLICATION_JSON)
     public Users get() {
         return new Users(user.getFriends());
     }
 
     @POST
     @Authenticated
-    @Consumes(MediaTypes.USER_REF)
-    public void add(User friend) throws UserNotFoundException {
+    @Schema(request = Schemas.USER_REF)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void add( User friend) throws UserNotFoundException {
         if (friend.getName() == null) {
             throw new WebApplicationException(Status.BAD_REQUEST);
         }
@@ -65,7 +69,8 @@ public class FriendsResource extends AbstractResource {
 
     @DELETE
     @Authenticated
-    @Consumes(MediaTypes.USER_REF)
+    @Schema(request = Schemas.USER_REF)
+    @Consumes(MediaType.APPLICATION_JSON)
     public void remove(User friend) throws UserNotFoundException {
         if (friend.getName() == null) {
             throw new WebApplicationException(Status.BAD_REQUEST);

@@ -23,6 +23,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response.Status;
 
 import com.google.inject.Inject;
@@ -32,8 +33,9 @@ import io.car.server.core.entities.Group;
 import io.car.server.core.entities.User;
 import io.car.server.core.entities.Users;
 import io.car.server.core.exception.UserNotFoundException;
-import io.car.server.rest.MediaTypes;
+import io.car.server.rest.Schemas;
 import io.car.server.rest.auth.Authenticated;
+import io.car.server.rest.validation.Schema;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
@@ -47,13 +49,15 @@ public class GroupMembersResource extends AbstractResource {
     }
 
     @GET
+    @Schema(response = Schemas.USERS)
     public Users get() {
         return group.getMembers();
     }
 
     @POST
     @Authenticated
-    @Consumes(MediaTypes.USER_REF)
+    @Schema(request = Schemas.USER)
+    @Consumes(MediaType.APPLICATION_JSON)
     public void add(User user) throws UserNotFoundException {
         if (!canModifyUser(user)) {
             throw new WebApplicationException(Status.FORBIDDEN);

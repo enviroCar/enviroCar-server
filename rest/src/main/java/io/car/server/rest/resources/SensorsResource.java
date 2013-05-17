@@ -23,13 +23,15 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.Sensors;
 import io.car.server.core.exception.SensorNotFoundException;
-import io.car.server.rest.MediaTypes;
+import io.car.server.rest.Schemas;
 import io.car.server.rest.auth.Authenticated;
+import io.car.server.rest.validation.Schema;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
@@ -38,14 +40,16 @@ import io.car.server.rest.auth.Authenticated;
 public class SensorsResource extends AbstractResource {
     public static final String SENSOR_PATH = "{sensor}";
     @GET
-    @Produces(MediaTypes.SENSORS)
+    @Schema(response = Schemas.SENSORS)
+    @Produces(MediaType.APPLICATION_JSON)
     public Sensors get() {
         return getService().getSensors();
     }
     
     @POST
     @Authenticated
-    @Consumes(MediaTypes.SENSOR_CREATE)
+    @Schema(request = Schemas.SENSOR_CREATE)
+    @Consumes(MediaType.APPLICATION_JSON)
 	public Response create(Sensor sensor) {
 		return Response.created(
 				getUriInfo().getRequestUriBuilder()
