@@ -32,19 +32,19 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response.Status;
 
-import org.codehaus.jettison.json.JSONArray;
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectReader;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.github.fge.jsonschema.exceptions.ProcessingException;
 import com.github.fge.jsonschema.main.JsonSchema;
 import com.github.fge.jsonschema.main.JsonSchemaFactory;
 import com.github.fge.jsonschema.report.ProcessingMessage;
 import com.github.fge.jsonschema.report.ProcessingReport;
-import com.github.fge.jsonschema.util.JsonLoader;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.io.Closeables;
 import com.google.inject.Inject;
@@ -71,11 +71,19 @@ public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
     private static final boolean VALIDATE_REQUESTS = true;
     private static final boolean VALIDATE_RESPONSES = true;
     private final JsonSchemaFactory schemaFactory;
-
+    private final ObjectReader reader;
+    private final ObjectWriter writer;
+    private final JsonNodeFactory factory;
 
     @Inject
-    public JSONSchemaResourceFilterFactory(JsonSchemaFactory schemaFactory) {
+    public JSONSchemaResourceFilterFactory(JsonSchemaFactory schemaFactory,
+                                           ObjectReader reader,
+                                           ObjectWriter writer,
+                                           JsonNodeFactory factory) {
         this.schemaFactory = schemaFactory;
+        this.reader = reader;
+        this.writer = writer;
+        this.factory = factory;
     }
 
     @Override
@@ -109,7 +117,7 @@ public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
 
     protected void validate(String entity, String schema) throws ValidationException, IOException {
         try {
-            validate(JsonLoader.fromString(entity), schemaFactory.getJsonSchema(schema));
+            validate(reader.readTree(entity), schemaFactory.getJsonSchema(schema));
         } catch (ProcessingException ex) {
             throw new ValidationException(ex);
         }
@@ -118,15 +126,11 @@ public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
     protected void validate(JsonNode t, JsonSchema schema) throws ValidationException, ProcessingException {
         ProcessingReport report = schema.validate(t);
         if (!report.isSuccess()) {
-            try {
-                JSONArray errors = new JSONArray();
-                for (ProcessingMessage message : report) {
-                    errors.put(new JSONObject(message.toString()));
-                }
-                throw new JSONValidationException(new JSONObject().put(JSONConstants.ERRORS, errors));
-            } catch (JSONException ex) {
-                throw new WebApplicationException(ex, Status.INTERNAL_SERVER_ERROR);
+            ArrayNode errors = factory.arrayNode();
+            for (ProcessingMessage message : report) {
+                errors.add(message.asJson());
             }
+            throw new JSONValidationException(factory.objectNode().put(JSONConstants.ERRORS, errors));
         }
     }
 
@@ -279,11 +283,8 @@ public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
             try {
                 JSONSchemaResourceFilterFactory.this.validate(entity, schema);
             } catch (JSONValidationException v) {
-                try {
-                    log.error("Created invalid response: Error:\n" + v.getError().toString(4) +
-                              "\nGenerated Response:\n" + entity + "\n", v);
-                } catch (JSONException ex) {
-                }
+                log.error("Created invalid response: Error:\n" + writer.writeValueAsString(v.getError()) +
+                          "\nGenerated Response:\n" + entity + "\n", v);
             } catch (ValidationException v) {
                 log.error("Created invalid response: Error:\n" + v.getMessage() +
                           "\nGenerated Response:\n" + entity + "\n", v);
