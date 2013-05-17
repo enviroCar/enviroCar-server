@@ -30,6 +30,12 @@ public interface Track extends BaseEntity {
     String MEASUREMENTS = "measurements";
     String SENSOR = "sensor";
     String USER = "user";
+    String NAME = "name";
+    String DESCIPTION = "description";
+    String getName();
+    Track setName(String name);
+    String getDescription();
+    Track setDescription(String description);
     String getIdentifier();
     Track setIdentifier(String id);
     User getUser();
