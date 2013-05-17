@@ -28,7 +28,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.JsonSerializable;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.google.inject.Inject;
@@ -74,5 +73,5 @@ public abstract class AbstracJsonProvider<T> extends AbstractMessageReaderWriter
 
     public abstract T read(JsonNode j, MediaType mediaType);
 
-    public abstract JsonSerializable write(T t, MediaType mediaType);
+    public abstract JsonNode write(T t, MediaType mediaType);
 }

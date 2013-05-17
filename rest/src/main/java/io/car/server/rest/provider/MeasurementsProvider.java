@@ -22,8 +22,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import io.car.server.core.entities.Measurements;
 
@@ -42,12 +41,12 @@ public class MeasurementsProvider extends AbstractJsonEntityProvider<Measurement
 	}
 
 	@Override
-    public Measurements read(JSONObject j, MediaType mediaType) throws JSONException {
+    public Measurements read(JsonNode j, MediaType mediaType) {
         throw new UnsupportedOperationException();
 	}
 
 	@Override
-    public JSONObject write(Measurements t, MediaType mediaType) throws JSONException {
+    public JsonNode write(Measurements t, MediaType mediaType) {
         return getCodingFactory().createMeasurementsEncoder().encode(t, mediaType);
 	}
 }
