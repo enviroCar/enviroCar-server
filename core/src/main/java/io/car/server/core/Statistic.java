@@ -30,7 +30,7 @@ import io.car.server.core.entities.Phenomenon;
 public class Statistic {
 
     private Phenomenon phenomenon;
-    private int measurements;
+    private long measurements;
     private double mean;
     private double min;
     private double max;
@@ -44,11 +44,11 @@ public class Statistic {
         return this;
     }
 
-    public int getMeasurements() {
+    public long getMeasurements() {
         return measurements;
     }
 
-    public Statistic setMeasurements(int measurements) {
+    public Statistic setMeasurements(long measurements) {
         this.measurements = measurements;
         return this;
     }
