@@ -239,12 +239,12 @@ public class GeoJSON extends AbstractEntityCoder<Geometry> implements GeometryCo
         if (list.size() != 2) {
             throw new GeometryConverterException("coordinates may only have 2 dimensions");
         }
-        Object x = list.get(0);
-        Object y = list.get(1);
-        if (!(x instanceof Number) || !(y instanceof Number)) {
+        Number x = list.get(0).numberValue();
+        Number y = list.get(1).numberValue();
+        if (x == null || y == null) {
             throw new GeometryConverterException("x and y have to be numbers");
         }
-        return new Coordinate(((Number) x).doubleValue(), ((Number) y).doubleValue());
+        return new Coordinate(x.doubleValue(), y.doubleValue());
     }
 
     protected ArrayNode toList(Object o) throws
@@ -283,7 +283,7 @@ public class GeoJSON extends AbstractEntityCoder<Geometry> implements GeometryCo
         if (!json.has(TYPE_KEY)) {
             throw new GeometryConverterException("Can not determine geometry type (missing 'type' field)");
         }
-        Object to = json.get(TYPE_KEY);
+        Object to = json.path(TYPE_KEY).textValue();
         if (!(to instanceof String)) {
             throw new GeometryConverterException("'type' field has to be a string");
         }
