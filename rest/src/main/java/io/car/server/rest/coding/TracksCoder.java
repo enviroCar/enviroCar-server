@@ -20,33 +20,24 @@ package io.car.server.rest.coding;
 import java.net.URI;
 
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriInfo;
 
 import org.codehaus.jettison.json.JSONArray;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.inject.Inject;
 
 import io.car.server.core.entities.Track;
 import io.car.server.core.entities.Tracks;
 
 public class TracksCoder extends AbstractEntityEncoder<Tracks> {
-    private UriInfo uriInfo;
-
-    @Inject
-    public TracksCoder(UriInfo uriInfo) {
-        this.uriInfo = uriInfo;
-    }
-
     @Override
     public JsonNode encode(Tracks t, MediaType mediaType) {
         ObjectNode root = getJsonFactory().objectNode();
         ArrayNode tracks = root.putArray(JSONConstants.HREF_KEY);
         JSONArray array = new JSONArray();
         for (Track track : t) {
-            URI uri = uriInfo.getRequestUriBuilder().path(track.getIdentifier()).build();
+            URI uri = getUriInfo().getRequestUriBuilder().path(track.getIdentifier()).build();
             tracks.addObject()
                     .put(JSONConstants.IDENTIFIER_KEY, track.getIdentifier())
                     .put(JSONConstants.MODIFIED_KEY, getDateTimeFormat().print(track.getLastModificationDate()))

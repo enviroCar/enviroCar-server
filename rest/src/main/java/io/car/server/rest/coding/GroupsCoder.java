@@ -20,14 +20,12 @@ package io.car.server.rest.coding;
 import java.net.URI;
 
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriInfo;
 
 import org.codehaus.jettison.json.JSONArray;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.inject.Inject;
 
 import io.car.server.core.entities.Group;
 import io.car.server.core.entities.Groups;
@@ -36,12 +34,6 @@ import io.car.server.core.entities.Groups;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class GroupsCoder extends AbstractEntityEncoder<Groups> {
-    private UriInfo uriInfo;
-
-    @Inject
-    public GroupsCoder(UriInfo uriInfo) {
-        this.uriInfo = uriInfo;
-    }
 
 
     @Override
@@ -50,7 +42,7 @@ public class GroupsCoder extends AbstractEntityEncoder<Groups> {
         ArrayNode groups = root.putArray(JSONConstants.GROUPS_KEY);
         JSONArray a = new JSONArray();
         for (Group u : t) {
-            URI uri = uriInfo.getAbsolutePathBuilder().path(u.getName()).build();
+            URI uri = getUriInfo().getAbsolutePathBuilder().path(u.getName()).build();
             groups.addObject()
                     .put(JSONConstants.NAME_KEY, u.getName())
                     .put(JSONConstants.HREF_KEY, uri.toString());
