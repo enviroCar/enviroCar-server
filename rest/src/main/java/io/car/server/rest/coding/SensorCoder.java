@@ -26,8 +26,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import io.car.server.core.entities.Sensor;
 import io.car.server.rest.MediaTypes;
-import io.car.server.rest.resources.PhenomenonsResource;
 import io.car.server.rest.resources.RootResource;
+import io.car.server.rest.resources.SensorsResource;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
@@ -47,8 +47,8 @@ public class SensorCoder extends AbstractEntityCoder<Sensor> {
         } else {
             URI href = getUriInfo().getBaseUriBuilder()
                     .path(RootResource.class)
-                    .path(RootResource.PHENOMENONS)
-                    .path(PhenomenonsResource.PHENOMENON)
+                    .path(RootResource.SENSORS)
+                    .path(SensorsResource.SENSOR)
                     .build(t.getName());
             user.put(JSONConstants.HREF_KEY, href.toString());
         }
