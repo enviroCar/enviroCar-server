@@ -92,9 +92,19 @@ public class MeasurementCoder extends AbstractEntityCoder<Measurement> {
                     while (fields.hasNext()) {
                         Entry<String, JsonNode> field = fields.next();
                         Phenomenon phenomenon = phenomenonDao.getByName(field.getKey());
-                        Object value = field.getValue().get(JSONConstants.VALUE_KEY);
-                        measurement.addValue(getEntityFactory().createMeasurementValue()
-                                .setValue(value).setPhenomenon(phenomenon));
+                        JsonNode valueNode = field.getValue().get(JSONConstants.VALUE_KEY);
+                        if (valueNode.isValueNode()) {
+                            Object value = null;
+                            if (valueNode.isNumber()) {
+                                value = valueNode.numberValue();
+                            } else if (valueNode.isBoolean()) {
+                                value = valueNode.booleanValue();
+                            } else if (valueNode.isTextual()) {
+                                value = valueNode.textValue();
+                            }
+                            measurement.addValue(getEntityFactory().createMeasurementValue()
+                                    .setValue(value).setPhenomenon(phenomenon));
+                        }
                     }
                 }
             }
