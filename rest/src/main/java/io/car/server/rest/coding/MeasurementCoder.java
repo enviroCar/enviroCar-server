@@ -96,7 +96,7 @@ public class MeasurementCoder extends AbstractEntityCoder<Measurement> {
                         if (valueNode.isValueNode()) {
                             Object value = null;
                             if (valueNode.isNumber()) {
-                                value = valueNode.numberValue();
+                                value = valueNode.asDouble();
                             } else if (valueNode.isBoolean()) {
                                 value = valueNode.booleanValue();
                             } else if (valueNode.isTextual()) {
