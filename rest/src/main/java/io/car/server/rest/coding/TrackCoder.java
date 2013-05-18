@@ -72,8 +72,12 @@ public class TrackCoder extends AbstractEntityCoder<Track> {
         track.put(GeoJSONConstants.FEATURES_KEY, features);
         ObjectNode properties = track.putObject(GeoJSONConstants.PROPERTIES_KEY);
         properties.put(JSONConstants.IDENTIFIER_KEY, t.getIdentifier());
-        properties.put(JSONConstants.NAME_KEY, t.getName());
-        properties.put(JSONConstants.DESCRIPTION_KEY, t.getDescription());
+        if (t.getName() != null) {
+            properties.put(JSONConstants.NAME_KEY, t.getName());
+        }
+        if (t.getDescription() != null) {
+            properties.put(JSONConstants.DESCRIPTION_KEY, t.getDescription());
+        }
         properties.put(JSONConstants.CREATED_KEY, getDateTimeFormat().print(t.getCreationDate()));
         properties.put(JSONConstants.MODIFIED_KEY, getDateTimeFormat().print(t.getLastModificationDate()));
         properties.put(JSONConstants.SENSOR_KEY, sensorEncoder.encode(t.getSensor(), mediaType));
