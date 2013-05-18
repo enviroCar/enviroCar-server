@@ -44,6 +44,8 @@ public class TracksCoder implements EntityEncoder<Tracks> {
 
             array.put(new JSONObject()
                     .put(JSONConstants.IDENTIFIER_KEY, track.getIdentifier())
+                    .put(JSONConstants.MODIFIED_KEY, track.getLastModificationDate())
+                    .put(JSONConstants.NAME_KEY, track.getName())
                     .put(JSONConstants.HREF_KEY, uriInfo.getRequestUriBuilder().path(track.getIdentifier()).build()));
         }
         return new JSONObject().put(JSONConstants.TRACKS_KEY, array);
