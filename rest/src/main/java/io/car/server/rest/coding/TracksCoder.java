@@ -32,13 +32,15 @@ public class TracksCoder extends AbstractEntityEncoder<Tracks> {
     public ObjectNode encode(Tracks t, MediaType mediaType) {
         ObjectNode root = getJsonFactory().objectNode();
         ArrayNode tracks = root.putArray(JSONConstants.TRACKS_KEY);
-        for (Track track : t) {
-            URI uri = getUriInfo().getRequestUriBuilder().path(track.getIdentifier()).build();
-            tracks.addObject()
-                    .put(JSONConstants.IDENTIFIER_KEY, track.getIdentifier())
-                    .put(JSONConstants.MODIFIED_KEY, getDateTimeFormat().print(track.getLastModificationDate()))
-                    .put(JSONConstants.NAME_KEY, track.getName())
-                    .put(JSONConstants.HREF_KEY, uri.toString());
+        for (Track u : t) {
+            URI uri = getUriInfo().getRequestUriBuilder().path(u.getIdentifier()).build();
+            ObjectNode track = tracks.addObject();
+            track.put(JSONConstants.IDENTIFIER_KEY, u.getIdentifier());
+            track.put(JSONConstants.MODIFIED_KEY, getDateTimeFormat().print(u.getLastModificationDate()));
+            if (u.getName() != null) {
+                track.put(JSONConstants.NAME_KEY, u.getName());
+            }
+            track.put(JSONConstants.HREF_KEY, uri.toString());
         }
         return root;
     }
