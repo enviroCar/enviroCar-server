@@ -40,6 +40,7 @@ import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.fge.jsonschema.exceptions.ProcessingException;
 import com.github.fge.jsonschema.main.JsonSchema;
 import com.github.fge.jsonschema.main.JsonSchemaFactory;
@@ -126,11 +127,12 @@ public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
     protected void validate(JsonNode t, JsonSchema schema) throws ValidationException, ProcessingException {
         ProcessingReport report = schema.validate(t);
         if (!report.isSuccess()) {
-            ArrayNode errors = factory.arrayNode();
+            ObjectNode error = factory.objectNode();
+            ArrayNode errors = error.putArray(JSONConstants.ERRORS);
             for (ProcessingMessage message : report) {
                 errors.add(message.asJson());
             }
-            throw new JSONValidationException(factory.objectNode().put(JSONConstants.ERRORS, errors));
+            throw new JSONValidationException(error);
         }
     }
 
