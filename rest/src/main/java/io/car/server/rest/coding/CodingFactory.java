@@ -17,8 +17,6 @@
  */
 package io.car.server.rest.coding;
 
-import io.car.server.rest.coding.EntityEncoder;
-import io.car.server.rest.coding.EntityDecoder;
 import io.car.server.core.entities.Group;
 import io.car.server.core.entities.Groups;
 import io.car.server.core.entities.Measurement;

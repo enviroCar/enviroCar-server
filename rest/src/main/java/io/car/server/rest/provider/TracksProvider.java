@@ -22,8 +22,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import io.car.server.core.entities.Tracks;
 
@@ -37,12 +36,12 @@ public class TracksProvider extends AbstractJsonEntityProvider<Tracks> {
 	}
 
 	@Override
-	public Tracks read(JSONObject j, MediaType mediaType) throws JSONException {
+    public Tracks read(JsonNode j, MediaType mediaType) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public JSONObject write(Tracks t, MediaType mediaType) throws JSONException {
+    public JsonNode write(Tracks t, MediaType mediaType) {
         return getCodingFactory().createTracksEncoder().encode(t, mediaType);
 	}
 

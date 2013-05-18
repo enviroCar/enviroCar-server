@@ -17,32 +17,45 @@
  */
 package io.car.server.rest.coding;
 
-import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriInfo;
 
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.joda.time.format.DateTimeFormatter;
+
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.google.inject.Inject;
-
-import io.car.server.core.entities.Phenomenon;
-import io.car.server.core.entities.Phenomenons;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class PhenomenonsCoder extends AbstractEntityEncoder<Phenomenons> {
-    private final EntityEncoder<Phenomenon> phenomenonEncoder;
+public abstract class AbstractEntityEncoder<T> implements EntityEncoder<T> {
+    private UriInfo uriInfo;
+    private JsonNodeFactory jsonFactory;
+    private DateTimeFormatter dateTimeFormat;
+
+    public UriInfo getUriInfo() {
+        return uriInfo;
+    }
 
     @Inject
-    public PhenomenonsCoder(EntityEncoder<Phenomenon> phenomenonEncoder) {
-        this.phenomenonEncoder = phenomenonEncoder;
+    public void setUriInfo(UriInfo uriInfo) {
+        this.uriInfo = uriInfo;
     }
-    @Override
-    public ObjectNode encode(Phenomenons t, MediaType mediaType) {
-        ObjectNode root = getJsonFactory().objectNode();
-        ArrayNode phenomenons = root.putArray(JSONConstants.PHENOMENONS_KEY);
-        for (Phenomenon u : t) {
-            phenomenons.add(phenomenonEncoder.encode(u, mediaType));
-        }
-        return root;
+
+    public JsonNodeFactory getJsonFactory() {
+        return jsonFactory;
+    }
+
+    @Inject
+    public void setJsonFactory(JsonNodeFactory jsonFactory) {
+        this.jsonFactory = jsonFactory;
+    }
+
+    public DateTimeFormatter getDateTimeFormat() {
+        return dateTimeFormat;
+    }
+
+    @Inject
+    public void setDateTimeFormat(DateTimeFormatter dateTimeFormat) {
+        this.dateTimeFormat = dateTimeFormat;
     }
 }

@@ -17,7 +17,7 @@
  */
 package io.car.server.rest.validation;
 
-import org.codehaus.jettison.json.JSONObject;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import io.car.server.core.exception.ValidationException;
 
@@ -26,13 +26,13 @@ import io.car.server.core.exception.ValidationException;
  */
 public class JSONValidationException extends ValidationException {
     private static final long serialVersionUID = -235700358046047325L;
-    private JSONObject error = null;
+    private JsonNode error = null;
 
-    public JSONValidationException(JSONObject error) {
+    public JSONValidationException(JsonNode error) {
         this.error = error;
     }
 
-    public JSONObject getError() {
+    public JsonNode getError() {
         return error;
     }
 }

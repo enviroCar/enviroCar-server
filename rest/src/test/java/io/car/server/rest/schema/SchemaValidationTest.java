@@ -23,14 +23,16 @@ import static com.github.fge.jsonschema.report.LogLevel.NONE;
 import java.io.IOException;
 import java.util.Set;
 
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.github.fge.jsonschema.exceptions.ProcessingException;
 import com.github.fge.jsonschema.main.JsonSchema;
 import com.github.fge.jsonschema.main.JsonSchemaFactory;
@@ -61,14 +63,16 @@ public class SchemaValidationTest {
     }
 
     @Test
-    public void validate() throws ProcessingException, IOException, JSONException {
+    public void validate() throws ProcessingException, IOException {
+        ObjectWriter writer = new ObjectMapper().setNodeFactory(JsonNodeFactory.withExactBigDecimals(false))
+                .enable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS).writer();
         JsonSchemaFactory fac = JsonSchemaFactory.byDefault();
         JsonSchema schemaV4 = fac.getJsonSchema("resource:/draftv4/schema");
         for (String schema : schemas) {
             log.info("Validating: {}", schema);
             ProcessingReport result = schemaV4.validate(JsonLoader.fromResource(schema));
             for (ProcessingMessage m : result) {
-                String message = new JSONObject(m.toString()).toString(4);
+                String message = writer.writeValueAsString(m.asJson());;
                 switch (m.getLogLevel()) {
                     case DEBUG:
                         log.debug("Result: {}", message);

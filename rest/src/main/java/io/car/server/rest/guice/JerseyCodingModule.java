@@ -17,9 +17,17 @@
  */
 package io.car.server.rest.guice;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.google.inject.AbstractModule;
+import com.google.inject.Provides;
+import com.google.inject.Singleton;
 import com.google.inject.TypeLiteral;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
+import com.vividsolutions.jts.geom.Geometry;
 
 import io.car.server.core.entities.Group;
 import io.car.server.core.entities.Groups;
@@ -36,6 +44,7 @@ import io.car.server.core.entities.Users;
 import io.car.server.rest.coding.CodingFactory;
 import io.car.server.rest.coding.EntityDecoder;
 import io.car.server.rest.coding.EntityEncoder;
+import io.car.server.rest.coding.GeoJSON;
 import io.car.server.rest.coding.GroupCoder;
 import io.car.server.rest.coding.GroupsCoder;
 import io.car.server.rest.coding.MeasurementCoder;
@@ -55,6 +64,9 @@ import io.car.server.rest.coding.UsersCoder;
 public class JerseyCodingModule extends AbstractModule {
     @Override
     protected void configure() {
+        configureCodingFactory();
+    }
+    protected void configureCodingFactory() {
         FactoryModuleBuilder fmb = new FactoryModuleBuilder();
         implementAndBind(fmb, new TypeLiteral<EntityEncoder<User>>() {}, UserCoder.class);
         implementAndBind(fmb, new TypeLiteral<EntityDecoder<User>>() {}, UserCoder.class);
@@ -74,19 +86,38 @@ public class JerseyCodingModule extends AbstractModule {
         implementAndBind(fmb, new TypeLiteral<EntityEncoder<Group>>() {}, GroupCoder.class);
         implementAndBind(fmb, new TypeLiteral<EntityDecoder<Group>>() {}, GroupCoder.class);
         implementAndBind(fmb, new TypeLiteral<EntityEncoder<Groups>>() {}, GroupsCoder.class);
+        bind(new TypeLiteral<EntityDecoder<Geometry>>() {}).to(GeoJSON.class);
+        bind(new TypeLiteral<EntityEncoder<Geometry>>() {}).to(GeoJSON.class);
         install(fmb.build(CodingFactory.class));
-    }
-
-    protected <T> TypeLiteral<EntityEncoder<T>> encoder(Class<T> c) {
-        return new TypeLiteral<EntityEncoder<T>>() {};
-    }
-
-    protected <T> TypeLiteral<EntityDecoder<T>> decoder(Class<T> c) {
-        return new TypeLiteral<EntityDecoder<T>>() {};
     }
 
     protected <T> void implementAndBind(FactoryModuleBuilder fmb, TypeLiteral<T> source, Class<? extends T> target) {
         fmb.implement(source, target);
         bind(source).to(target);
+    }
+
+    @Provides
+    @Singleton
+    public JsonNodeFactory jsonNodeFactory() {
+        return JsonNodeFactory.withExactBigDecimals(false);
+    }
+
+    @Provides
+    @Singleton
+    public ObjectReader objectReader(ObjectMapper mapper) {
+        return mapper.reader();
+    }
+
+    @Provides
+    @Singleton
+    public ObjectWriter objectWriter(ObjectMapper mapper) {
+        return mapper.writerWithDefaultPrettyPrinter();
+    }
+
+    @Provides
+    @Singleton
+    public ObjectMapper objectMapper(JsonNodeFactory factory) {
+        return new ObjectMapper().setNodeFactory(factory)
+                .enable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS);
     }
 }

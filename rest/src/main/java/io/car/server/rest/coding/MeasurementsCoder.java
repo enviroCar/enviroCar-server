@@ -19,10 +19,9 @@ package io.car.server.rest.coding;
 
 import javax.ws.rs.core.MediaType;
 
-import org.codehaus.jettison.json.JSONArray;
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
-
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 
 import io.car.server.core.entities.Measurement;
@@ -35,21 +34,23 @@ import io.car.server.core.util.GeoJSONConstants;
  * @author Arne de Wall <a.dewall@52north.org>
  */
 public class MeasurementsCoder implements EntityEncoder<Measurements> {
-    private EntityEncoder<Measurement> measurementEncoder;
+    private final EntityEncoder<Measurement> measurementEncoder;
+    private final JsonNodeFactory factory;
 
     @Inject
-    public MeasurementsCoder(EntityEncoder<Measurement> measurementEncoder) {
+    public MeasurementsCoder(JsonNodeFactory factory, EntityEncoder<Measurement> measurementEncoder) {
         this.measurementEncoder = measurementEncoder;
+        this.factory = factory;
     }
 
-	@Override
-    public JSONObject encode(Measurements t, MediaType mediaType) throws JSONException {
-        JSONArray measurements = new JSONArray();
-        for (Measurement m : t) {
-            measurements.put(measurementEncoder.encode(m, mediaType));
-		}
-        return new JSONObject()
-                .put(GeoJSONConstants.TYPE_KEY, GeoJSONConstants.FEATURE_COLLECTION_TYPE)
-                .put(GeoJSONConstants.FEATURES_KEY, measurements);
-	}
+    @Override
+    public ObjectNode encode(Measurements t, MediaType mediaType) {
+        ObjectNode on = factory.objectNode();
+        ArrayNode an = on.putArray(GeoJSONConstants.FEATURES_KEY);
+        for (Measurement measurement : t) {
+            an.add(measurementEncoder.encode(measurement, mediaType));
+        }
+        on.put(GeoJSONConstants.TYPE_KEY, GeoJSONConstants.FEATURE_COLLECTION_TYPE);
+        return on;
+    }
 }

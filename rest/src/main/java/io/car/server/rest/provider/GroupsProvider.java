@@ -23,8 +23,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import io.car.server.core.entities.Groups;
 
@@ -41,12 +40,12 @@ public class GroupsProvider extends AbstractJsonEntityProvider<Groups> {
     }
 
     @Override
-    public Groups read(JSONObject j, MediaType mediaType) throws JSONException {
+    public Groups read(JsonNode j, MediaType mediaType) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public JSONObject write(Groups t, MediaType mediaType) throws JSONException {
+    public JsonNode write(Groups t, MediaType mediaType) {
         return getCodingFactory().createGroupsEncoder().encode(t, mediaType);
     }
 }

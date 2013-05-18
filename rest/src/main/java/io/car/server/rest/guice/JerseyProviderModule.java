@@ -17,8 +17,8 @@
  */
 package io.car.server.rest.guice;
 
-import org.codehaus.jettison.json.JSONObject;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
 import com.google.inject.TypeLiteral;
@@ -32,6 +32,7 @@ import io.car.server.rest.mapper.ResourceNotFoundExceptionMapper;
 import io.car.server.rest.mapper.ValidationExceptionMapper;
 import io.car.server.rest.provider.GroupProvider;
 import io.car.server.rest.provider.GroupsProvider;
+import io.car.server.rest.provider.JsonNodeProvider;
 import io.car.server.rest.provider.MeasurementProvider;
 import io.car.server.rest.provider.MeasurementsProvider;
 import io.car.server.rest.provider.PhenomenonProvider;
@@ -50,7 +51,8 @@ public class JerseyProviderModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(new TypeLiteral<GeometryConverter<JSONObject>>() {}).to(GeoJSON.class).in(Scopes.SINGLETON);
+        bind(new TypeLiteral<GeometryConverter<JsonNode>>() {
+        }).to(GeoJSON.class).in(Scopes.SINGLETON);
         bind(GroupProvider.class).in(Scopes.SINGLETON);
         bind(GroupsProvider.class).in(Scopes.SINGLETON);
         bind(UserProvider.class).in(Scopes.SINGLETON);
@@ -63,6 +65,8 @@ public class JerseyProviderModule extends AbstractModule {
         bind(PhenomenonsProvider.class).in(Scopes.SINGLETON);
         bind(MeasurementProvider.class).in(Scopes.SINGLETON);
         bind(MeasurementsProvider.class).in(Scopes.SINGLETON);
+
+        bind(JsonNodeProvider.class).in(Scopes.SINGLETON);
 
         bind(IllegalModificationExceptionMapper.class).in(Scopes.SINGLETON);
         bind(ResourceNotFoundExceptionMapper.class).in(Scopes.SINGLETON);

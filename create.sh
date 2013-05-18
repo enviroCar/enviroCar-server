@@ -3,11 +3,11 @@
 #URL=http://giv-car.uni-muenster.de:8080/dev
 URL=http://localhost:8080/webapp
 
-USERS=20
-GROUPS=5
-TRACKS=3
-MEASUREMENTS=15
-SENSORS=5
+USERS=10
+GROUPS=2
+TRACKS=2
+MEASUREMENTS=10
+SENSORS=2
 
 # users
 for i in {1..$USERS}; do 
@@ -17,7 +17,7 @@ for i in {1..$USERS}; do
 	"{
 		\"name\": \"testuser$i\",
 		\"mail\": \"testuser$i@example.org\",
-		\"token\": \"testuser$i\",
+		\"token\": \"testuser$i\"
 	}"
 done
 
@@ -30,7 +30,7 @@ for i in {1..$GROUPS}; do
 		$URL/rest/groups -d \
 	"{
 		\"name\": \"testgroup$i\",
-		\"description\": \"this is the testgroup $i\",
+		\"description\": \"this is the testgroup $i\"
 	}"
 done
 
@@ -75,6 +75,8 @@ for user in {1..$USERS}; do
 		"{
 			\"type\": \"FeatureCollection\",
 			\"properties\": {
+				\"name\": \"Track #$track of testuser$user\",
+				\"description\": \"Track #$track of testuser$user\",
 				\"sensor\": \"testsensor$(((($i - 1) % $SENSORS) + 1))\"
 			}
 		}"
