@@ -19,6 +19,8 @@ package io.car.server.rest.coding;
 
 import javax.ws.rs.core.UriInfo;
 
+import org.joda.time.format.DateTimeFormatter;
+
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.google.inject.Inject;
 
@@ -28,6 +30,7 @@ import com.google.inject.Inject;
 public abstract class AbstractEntityEncoder<T> implements EntityEncoder<T> {
     private UriInfo uriInfo;
     private JsonNodeFactory jsonFactory;
+    private DateTimeFormatter dateTimeFormat;
 
     public UriInfo getUriInfo() {
         return uriInfo;
@@ -45,5 +48,14 @@ public abstract class AbstractEntityEncoder<T> implements EntityEncoder<T> {
     @Inject
     public void setJsonFactory(JsonNodeFactory jsonFactory) {
         this.jsonFactory = jsonFactory;
+    }
+
+    public DateTimeFormatter getDateTimeFormat() {
+        return dateTimeFormat;
+    }
+
+    @Inject
+    public void setDateTimeFormat(DateTimeFormatter dateTimeFormat) {
+        this.dateTimeFormat = dateTimeFormat;
     }
 }

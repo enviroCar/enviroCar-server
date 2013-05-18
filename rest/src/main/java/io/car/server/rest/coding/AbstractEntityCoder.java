@@ -17,7 +17,6 @@
  */
 package io.car.server.rest.coding;
 
-import org.joda.time.format.DateTimeFormatter;
 
 import com.google.inject.Inject;
 
@@ -28,8 +27,6 @@ import io.car.server.core.entities.EntityFactory;
  */
 public abstract class AbstractEntityCoder<T> extends AbstractEntityEncoder<T> implements EntityDecoder<T> {
     private EntityFactory entityFactory;
-    private DateTimeFormatter dateTimeFormat;
-
     public EntityFactory getEntityFactory() {
         return entityFactory;
     }
@@ -37,14 +34,5 @@ public abstract class AbstractEntityCoder<T> extends AbstractEntityEncoder<T> im
     @Inject
     public void setEntityFactory(EntityFactory entityFactory) {
         this.entityFactory = entityFactory;
-    }
-
-    public DateTimeFormatter getDateTimeFormat() {
-        return dateTimeFormat;
-    }
-
-    @Inject
-    public void setDateTimeFormat(DateTimeFormatter dateTimeFormat) {
-        this.dateTimeFormat = dateTimeFormat;
     }
 }

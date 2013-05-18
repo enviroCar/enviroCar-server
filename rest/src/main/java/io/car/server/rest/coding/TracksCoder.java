@@ -17,19 +17,22 @@
  */
 package io.car.server.rest.coding;
 
+import java.net.URI;
+
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 
 import org.codehaus.jettison.json.JSONArray;
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 
 import io.car.server.core.entities.Track;
 import io.car.server.core.entities.Tracks;
 
-public class TracksCoder implements EntityEncoder<Tracks> {
+public class TracksCoder extends AbstractEntityEncoder<Tracks> {
     private UriInfo uriInfo;
 
     @Inject
@@ -38,16 +41,18 @@ public class TracksCoder implements EntityEncoder<Tracks> {
     }
 
     @Override
-    public JSONObject encode(Tracks t, MediaType mediaType) throws JSONException {
+    public JsonNode encode(Tracks t, MediaType mediaType) {
+        ObjectNode root = getJsonFactory().objectNode();
+        ArrayNode tracks = root.putArray(JSONConstants.HREF_KEY);
         JSONArray array = new JSONArray();
         for (Track track : t) {
-
-            array.put(new JSONObject()
+            URI uri = uriInfo.getRequestUriBuilder().path(track.getIdentifier()).build();
+            tracks.addObject()
                     .put(JSONConstants.IDENTIFIER_KEY, track.getIdentifier())
-                    .put(JSONConstants.MODIFIED_KEY, track.getLastModificationDate())
+                    .put(JSONConstants.MODIFIED_KEY, getDateTimeFormat().print(track.getLastModificationDate()))
                     .put(JSONConstants.NAME_KEY, track.getName())
-                    .put(JSONConstants.HREF_KEY, uriInfo.getRequestUriBuilder().path(track.getIdentifier()).build()));
+                    .put(JSONConstants.HREF_KEY, uri.toString());
         }
-        return new JSONObject().put(JSONConstants.TRACKS_KEY, array);
+        return root;
     }
 }
