@@ -22,9 +22,9 @@ import static org.junit.Assert.*;
 
 import java.util.Random;
 
-import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryCollection;
@@ -107,7 +107,7 @@ public class GeoJSONTest {
         Geometry col = fac.createGeometryCollection(new Geometry[] { randomGeometryCollection(fac),
                                                                      randomGeometryCollection(fac) });
         GeoJSON conv = new GeoJSON(fac);
-        JSONObject json = conv.encode(col);
+        JsonNode json = conv.encode(col);
         Geometry geom = conv.decode(json);
         assertThat(geom, is(equalTo(col)));
 
