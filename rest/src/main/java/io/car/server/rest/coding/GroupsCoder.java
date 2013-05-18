@@ -23,9 +23,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 
 import org.codehaus.jettison.json.JSONArray;
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 
 import io.car.server.core.entities.Group;
@@ -34,7 +35,7 @@ import io.car.server.core.entities.Groups;
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class GroupsCoder implements EntityEncoder<Groups> {
+public class GroupsCoder extends AbstractEntityEncoder<Groups> {
     private UriInfo uriInfo;
 
     @Inject
@@ -44,12 +45,16 @@ public class GroupsCoder implements EntityEncoder<Groups> {
 
 
     @Override
-    public JSONObject encode(Groups t, MediaType mediaType) throws JSONException {
+    public JsonNode encode(Groups t, MediaType mediaType) {
+        ObjectNode root = getJsonFactory().objectNode();
+        ArrayNode groups = root.putArray(JSONConstants.GROUPS_KEY);
         JSONArray a = new JSONArray();
         for (Group u : t) {
             URI uri = uriInfo.getAbsolutePathBuilder().path(u.getName()).build();
-            a.put(new JSONObject().put(JSONConstants.NAME_KEY, u.getName()).put(JSONConstants.HREF_KEY, uri));
+            groups.addObject()
+                    .put(JSONConstants.NAME_KEY, u.getName())
+                    .put(JSONConstants.HREF_KEY, uri.toString());
         }
-        return new JSONObject().put(JSONConstants.GROUPS_KEY, a);
+        return root;
     }
 }
