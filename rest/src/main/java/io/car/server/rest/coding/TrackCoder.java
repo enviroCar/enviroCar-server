@@ -18,6 +18,7 @@
 package io.car.server.rest.coding;
 
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriBuilder;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -29,6 +30,7 @@ import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
 import io.car.server.core.util.GeoJSONConstants;
+import io.car.server.rest.resources.TrackResource;
 
 public class TrackCoder extends AbstractEntityCoder<Track> {
     private EntityEncoder<Sensor> sensorEncoder;
@@ -76,6 +78,8 @@ public class TrackCoder extends AbstractEntityCoder<Track> {
         properties.put(JSONConstants.MODIFIED_KEY, getDateTimeFormat().print(t.getLastModificationDate()));
         properties.put(JSONConstants.SENSOR_KEY, sensorEncoder.encode(t.getSensor(), mediaType));
         properties.put(JSONConstants.USER_KEY, userEncoder.encode(t.getUser(), mediaType));
+        UriBuilder measurements = getUriInfo().getRequestUriBuilder().path(TrackResource.MEASUREMENTS);
+        properties.put(JSONConstants.MEASUREMENTS_KEY, measurements.build().toString());
         return track;
     }
 }
