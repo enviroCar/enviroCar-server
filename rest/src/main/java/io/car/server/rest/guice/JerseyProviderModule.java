@@ -17,8 +17,8 @@
  */
 package io.car.server.rest.guice;
 
-import org.codehaus.jettison.json.JSONObject;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
 import com.google.inject.TypeLiteral;
@@ -50,7 +50,8 @@ public class JerseyProviderModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(new TypeLiteral<GeometryConverter<JSONObject>>() {}).to(GeoJSON.class).in(Scopes.SINGLETON);
+        bind(new TypeLiteral<GeometryConverter<JsonNode>>() {
+        }).to(GeoJSON.class).in(Scopes.SINGLETON);
         bind(GroupProvider.class).in(Scopes.SINGLETON);
         bind(GroupsProvider.class).in(Scopes.SINGLETON);
         bind(UserProvider.class).in(Scopes.SINGLETON);
