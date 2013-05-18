@@ -20,10 +20,9 @@ package io.car.server.rest.coding;
 
 import javax.ws.rs.core.MediaType;
 
-import org.codehaus.jettison.json.JSONArray;
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
 
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 
 import io.car.server.core.entities.Sensor;
@@ -32,7 +31,7 @@ import io.car.server.core.entities.Sensors;
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class SensorsCoder implements EntityEncoder<Sensors> {
+public class SensorsCoder extends AbstractEntityEncoder<Sensors> {
     private final EntityEncoder<Sensor> sensorEncoder;
 
     @Inject
@@ -41,11 +40,12 @@ public class SensorsCoder implements EntityEncoder<Sensors> {
     }
 
     @Override
-    public JSONObject encode(Sensors t, MediaType mediaType) throws JSONException {
-        JSONArray a = new JSONArray();
+    public ObjectNode encode(Sensors t, MediaType mediaType) {
+        ObjectNode root = getJsonFactory().objectNode();
+        ArrayNode sensors = root.putArray(JSONConstants.SENSORS_KEY);
         for (Sensor u : t) {
-            a.put(sensorEncoder.encode(u, mediaType));
+            sensors.add(sensorEncoder.encode(u, mediaType));
         }
-        return new JSONObject().put(JSONConstants.SENSORS_KEY, a);
+        return root;
     }
 }

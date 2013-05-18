@@ -20,15 +20,10 @@ package io.car.server.rest.coding;
 import java.net.URI;
 
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriInfo;
 
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
-import org.joda.time.format.DateTimeFormatter;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import com.google.inject.Inject;
-
-import io.car.server.core.entities.EntityFactory;
 import io.car.server.core.entities.User;
 import io.car.server.rest.MediaTypes;
 import io.car.server.rest.resources.RootResource;
@@ -39,47 +34,38 @@ import io.car.server.rest.resources.UsersResource;
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class UserCoder implements EntityEncoder<User>, EntityDecoder<User> {
-    private DateTimeFormatter formatter;
-    private EntityFactory factory;
-    private UriInfo uriInfo;
+public class UserCoder extends AbstractEntityCoder<User> {
 
-    @Inject
-    public UserCoder(DateTimeFormatter formatter, EntityFactory factory, UriInfo uriInfo) {
-        this.formatter = formatter;
-        this.factory = factory;
-        this.uriInfo = uriInfo;
+    @Override
+    public User decode(JsonNode j, MediaType mediaType) {
+        return getEntityFactory().createUser()
+                .setName(j.path(JSONConstants.NAME_KEY).textValue())
+                .setMail(j.path(JSONConstants.MAIL_KEY).textValue())
+                .setToken(j.path(JSONConstants.TOKEN_KEY).textValue());
     }
 
     @Override
-    public User decode(JSONObject j, MediaType mediaType) throws JSONException {
-        return factory.createUser()
-                .setName(j.optString(JSONConstants.NAME_KEY, null))
-                .setMail(j.optString(JSONConstants.MAIL_KEY, null))
-                .setToken(j.optString(JSONConstants.TOKEN_KEY, null));
-    }
-
-    @Override
-    public JSONObject encode(User t, MediaType mediaType) throws JSONException {
-        JSONObject j = new JSONObject().put(JSONConstants.NAME_KEY, t.getName());
+    public ObjectNode encode(User t, MediaType mediaType) {
+        ObjectNode j = getJsonFactory().objectNode().put(JSONConstants.NAME_KEY, t.getName());
         if (mediaType.equals(MediaTypes.USER_TYPE)) {
-            URI measurements = uriInfo.getRequestUriBuilder().path(UserResource.MEASUREMENTS).build();
-            j.put(JSONConstants.MEASUREMENTS_KEY, measurements);
-            URI groups = uriInfo.getRequestUriBuilder().path(UserResource.GROUPS).build();
-            j.put(JSONConstants.GROUPS_KEY, groups);
-            URI friends = uriInfo.getRequestUriBuilder().path(UserResource.FRIENDS).build();
-            j.put(JSONConstants.FRIENDS_KEY, friends);
-            URI tracks = uriInfo.getRequestUriBuilder().path(UserResource.TRACKS).build();
-            j.put(JSONConstants.TRACKS_KEY, tracks);
+            URI measurements = getUriInfo().getRequestUriBuilder().path(UserResource.MEASUREMENTS).build();
+            URI groups = getUriInfo().getRequestUriBuilder().path(UserResource.GROUPS).build();
+            URI friends = getUriInfo().getRequestUriBuilder().path(UserResource.FRIENDS).build();
+            URI tracks = getUriInfo().getRequestUriBuilder().path(UserResource.TRACKS).build();
+
+            j.put(JSONConstants.MEASUREMENTS_KEY, measurements.toString());
+            j.put(JSONConstants.GROUPS_KEY, groups.toString());
+            j.put(JSONConstants.FRIENDS_KEY, friends.toString());
+            j.put(JSONConstants.TRACKS_KEY, tracks.toString());
             j.put(JSONConstants.MAIL_KEY, t.getMail());
-            j.put(JSONConstants.CREATED_KEY, formatter.print(t.getCreationDate()));
-            j.put(JSONConstants.MODIFIED_KEY, formatter.print(t.getLastModificationDate()));
+            j.put(JSONConstants.CREATED_KEY, getDateTimeFormat().print(t.getCreationDate()));
+            j.put(JSONConstants.MODIFIED_KEY, getDateTimeFormat().print(t.getLastModificationDate()));
         } else {
-            URI uri = uriInfo.getBaseUriBuilder()
+            URI uri = getUriInfo().getBaseUriBuilder()
                     .path(RootResource.class)
                     .path(RootResource.USERS)
                     .path(UsersResource.USER).build(t.getName());
-            return j.put(JSONConstants.HREF_KEY, uri);
+            return j.put(JSONConstants.HREF_KEY, uri.toString());
 
         }
         return j;

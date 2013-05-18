@@ -23,16 +23,21 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.junit.BeforeClass;
 
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 import com.google.inject.servlet.GuiceFilter;
 import com.mongodb.DB;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
+import com.sun.jersey.api.client.config.DefaultClientConfig;
+
+import io.car.server.rest.provider.JsonNodeProvider;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class ResourceTestBase {
     private static Server server;
+    private static Injector injector;
 
     @BeforeClass
     public static void start() throws Exception {
@@ -40,7 +45,9 @@ public class ResourceTestBase {
         server.setStopAtShutdown(true);
         ServletContextHandler sch = new ServletContextHandler(server, "/");
         sch.addFilter(GuiceFilter.class, "/*", null);
-        sch.addEventListener(new ServletContextListener());
+        ServletContextListener servletContextListener = new ServletContextListener();
+        injector = servletContextListener.getInjector();
+        sch.addEventListener(servletContextListener);
         sch.addServlet(DefaultServlet.class, "/");
         server.start();
     }
@@ -48,7 +55,9 @@ public class ResourceTestBase {
     private DB db;
 
     protected WebResource resource() {
-        return Client.create().resource("http://localhost:9998");
+        DefaultClientConfig defaultClientConfig = new DefaultClientConfig();
+        defaultClientConfig.getSingletons().add(injector.getInstance(JsonNodeProvider.class));
+        return Client.create(defaultClientConfig).resource("http://localhost:9998");
     }
 
     protected void clearDatabase() {

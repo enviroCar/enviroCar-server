@@ -17,7 +17,6 @@
  */
 package io.car.server.rest.provider;
 
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -25,27 +24,25 @@ import javax.ws.rs.ext.Provider;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-import io.car.server.core.entities.Sensors;
-
 /**
- * @author Christian Autermann <autermann@uni-muenster.de>
+ * @author Christian Autermann <c.autermann@52north.org>
  */
 @Provider
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class SensorsProvider extends AbstractJsonEntityProvider<Sensors> {
+public class JsonNodeProvider extends AbstractJsonEntityProvider<JsonNode> {
 
-    public SensorsProvider() {
-        super(Sensors.class);
+    public JsonNodeProvider() {
+        super(JsonNode.class);
     }
 
     @Override
-    public Sensors read(JsonNode j, MediaType mediaType) {
-        throw new UnsupportedOperationException();
+    public JsonNode read(JsonNode j, MediaType mediaType) {
+        return j;
     }
 
     @Override
-    public JsonNode write(Sensors t, MediaType mediaType) {
-        return getCodingFactory().createSensorsEncoder().encode(t, mediaType);
+    public JsonNode write(JsonNode t, MediaType mediaType) {
+        return t;
     }
 }

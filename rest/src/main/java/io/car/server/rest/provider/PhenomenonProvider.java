@@ -22,8 +22,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import io.car.server.core.entities.Phenomenon;
 
@@ -40,12 +39,12 @@ public class PhenomenonProvider extends AbstractJsonEntityProvider<Phenomenon> {
     }
 
     @Override
-    public Phenomenon read(JSONObject j, MediaType mediaType) throws JSONException {
+    public Phenomenon read(JsonNode j, MediaType mediaType) {
         return getCodingFactory().createPhenomenonDecoder().decode(j, mediaType);
     }
 
     @Override
-    public JSONObject write(Phenomenon t, MediaType mediaType) throws JSONException {
+    public JsonNode write(Phenomenon t, MediaType mediaType) {
         return getCodingFactory().createPhenomenonEncoder().encode(t, mediaType);
     }
 }

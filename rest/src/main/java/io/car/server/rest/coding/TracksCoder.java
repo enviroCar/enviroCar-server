@@ -17,35 +17,31 @@
  */
 package io.car.server.rest.coding;
 
+import java.net.URI;
+
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriInfo;
 
-import org.codehaus.jettison.json.JSONArray;
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
-
-import com.google.inject.Inject;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import io.car.server.core.entities.Track;
 import io.car.server.core.entities.Tracks;
 
-public class TracksCoder implements EntityEncoder<Tracks> {
-    private UriInfo uriInfo;
-
-    @Inject
-    public TracksCoder(UriInfo uriInfo) {
-        this.uriInfo = uriInfo;
-    }
-
+public class TracksCoder extends AbstractEntityEncoder<Tracks> {
     @Override
-    public JSONObject encode(Tracks t, MediaType mediaType) throws JSONException {
-        JSONArray array = new JSONArray();
-        for (Track track : t) {
-
-            array.put(new JSONObject()
-                    .put(JSONConstants.IDENTIFIER_KEY, track.getIdentifier())
-                    .put(JSONConstants.HREF_KEY, uriInfo.getRequestUriBuilder().path(track.getIdentifier()).build()));
+    public ObjectNode encode(Tracks t, MediaType mediaType) {
+        ObjectNode root = getJsonFactory().objectNode();
+        ArrayNode tracks = root.putArray(JSONConstants.TRACKS_KEY);
+        for (Track u : t) {
+            URI uri = getUriInfo().getRequestUriBuilder().path(u.getIdentifier()).build();
+            ObjectNode track = tracks.addObject();
+            track.put(JSONConstants.IDENTIFIER_KEY, u.getIdentifier());
+            track.put(JSONConstants.MODIFIED_KEY, getDateTimeFormat().print(u.getLastModificationDate()));
+            if (u.getName() != null) {
+                track.put(JSONConstants.NAME_KEY, u.getName());
+            }
+            track.put(JSONConstants.HREF_KEY, uri.toString());
         }
-        return new JSONObject().put(JSONConstants.TRACKS_KEY, array);
+        return root;
     }
 }

@@ -20,13 +20,9 @@ package io.car.server.rest.coding;
 import java.net.URI;
 
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriInfo;
 
-import org.codehaus.jettison.json.JSONArray;
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
-
-import com.google.inject.Inject;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import io.car.server.core.entities.User;
 import io.car.server.core.entities.Users;
@@ -34,22 +30,18 @@ import io.car.server.core.entities.Users;
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class UsersCoder implements EntityEncoder<Users> {
-    private UriInfo uriInfo;
-
-    @Inject
-    public UsersCoder(UriInfo uriInfo) {
-        this.uriInfo = uriInfo;
-    }
+public class UsersCoder extends AbstractEntityEncoder<Users> {
 
     @Override
-    public JSONObject encode(Users t, MediaType mediaType) throws JSONException {
-        JSONArray a = new JSONArray();
+    public ObjectNode encode(Users t, MediaType mediaType) {
+        ObjectNode root = getJsonFactory().objectNode();
+        ArrayNode users = root.putArray(JSONConstants.USERS_KEY);
         for (User u : t) {
-            URI uri = uriInfo.getAbsolutePathBuilder().path(u.getName()).build();
-            a.put(new JSONObject().put(JSONConstants.NAME_KEY, u.getName())
-            		.put(JSONConstants.HREF_KEY, uri));
+            URI uri = getUriInfo().getAbsolutePathBuilder().path(u.getName()).build();
+            users.addObject()
+                    .put(JSONConstants.NAME_KEY, u.getName())
+                    .put(JSONConstants.HREF_KEY, uri.toString());
         }
-        return new JSONObject().put(JSONConstants.USERS_KEY, a);
+        return root;
     }
 }

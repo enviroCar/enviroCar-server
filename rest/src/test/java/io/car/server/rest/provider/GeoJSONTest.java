@@ -20,11 +20,16 @@ package io.car.server.rest.provider;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
+import java.io.IOException;
 import java.util.Random;
 
-import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryCollection;
@@ -102,12 +107,18 @@ public class GeoJSONTest {
     }
 
     @Test
-    public void readWriteTest() throws GeometryConverterException {
+    public void readWriteTest() throws GeometryConverterException, IOException {
         GeometryFactory fac = new GeometryFactory();
         Geometry col = fac.createGeometryCollection(new Geometry[] { randomGeometryCollection(fac),
                                                                      randomGeometryCollection(fac) });
+        JsonNodeFactory jsonNodeFactory = new JsonNodeFactory(false);
+        ObjectMapper mapr = new ObjectMapper().setNodeFactory(jsonNodeFactory)
+                .enable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS);
+        ObjectWriter writer = mapr.writer().withDefaultPrettyPrinter();
         GeoJSON conv = new GeoJSON(fac);
-        JSONObject json = conv.encode(col);
+        conv.setJsonFactory(jsonNodeFactory);
+        JsonNode json = conv.encode(col);
+        writer.writeValue(System.out, json);
         Geometry geom = conv.decode(json);
         assertThat(geom, is(equalTo(col)));
 

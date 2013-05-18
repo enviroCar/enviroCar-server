@@ -17,16 +17,14 @@
  */
 package io.car.server.rest.coding;
 
+import java.net.URI;
+
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriInfo;
 
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
-import org.joda.time.format.DateTimeFormatter;
-
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 
-import io.car.server.core.entities.EntityFactory;
 import io.car.server.core.entities.Group;
 import io.car.server.core.entities.User;
 import io.car.server.rest.resources.GroupResource;
@@ -34,36 +32,32 @@ import io.car.server.rest.resources.GroupResource;
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class GroupCoder implements EntityDecoder<Group>, EntityEncoder<Group> {
-    private DateTimeFormatter formatter;
-    private EntityFactory factory;
+public class GroupCoder extends AbstractEntityCoder<Group> {
     private EntityEncoder<User> userEncoder;
-    private UriInfo uriInfo;
 
     @Inject
-    public GroupCoder(DateTimeFormatter formatter, EntityFactory factory,
-                      EntityEncoder<User> userProvider, UriInfo uriInfo) {
-        this.formatter = formatter;
-        this.factory = factory;
-        this.uriInfo = uriInfo;
+    public GroupCoder(EntityEncoder<User> userProvider) {
         this.userEncoder = userProvider;
     }
 
     @Override
-    public Group decode(JSONObject j, MediaType mediaType) throws JSONException {
-        return factory.createGroup()
-                .setName(j.optString(JSONConstants.NAME_KEY, null))
-                .setDescription(j.optString(JSONConstants.DESCRIPTION_KEY, null));
+    public Group decode(JsonNode j, MediaType mediaType) {
+        Group group = getEntityFactory().createGroup();
+        group.setName(j.path(JSONConstants.NAME_KEY).textValue());
+        group.setDescription(j.path(JSONConstants.DESCRIPTION_KEY).textValue());
+        return group;
     }
 
     @Override
-    public JSONObject encode(Group t, MediaType mediaType) throws JSONException {
-        return new JSONObject()
-                .put(JSONConstants.NAME_KEY, t.getName())
-                .put(JSONConstants.DESCRIPTION_KEY, t.getDescription())
-                .put(JSONConstants.CREATED_KEY, formatter.print(t.getCreationDate()))
-                .put(JSONConstants.MODIFIED_KEY, formatter.print(t.getLastModificationDate()))
-                .put(JSONConstants.OWNER_KEY, userEncoder.encode(t.getOwner(), mediaType))
-                .put(JSONConstants.MEMBERS_KEY, uriInfo.getRequestUriBuilder().path(GroupResource.MEMBERS).build());
+    public ObjectNode encode(Group t, MediaType mediaType) {
+        ObjectNode group = getJsonFactory().objectNode();
+        group.put(JSONConstants.NAME_KEY, t.getName());
+        group.put(JSONConstants.DESCRIPTION_KEY, t.getDescription());
+        group.put(JSONConstants.CREATED_KEY, getDateTimeFormat().print(t.getCreationDate()));
+        group.put(JSONConstants.MODIFIED_KEY, getDateTimeFormat().print(t.getLastModificationDate()));
+        group.put(JSONConstants.OWNER_KEY, userEncoder.encode(t.getOwner(), mediaType));
+        URI uri = getUriInfo().getRequestUriBuilder().path(GroupResource.MEMBERS).build();
+        group.put(JSONConstants.MEMBERS_KEY, uri.toString());
+        return group;
     }
 }

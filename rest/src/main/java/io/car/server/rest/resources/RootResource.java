@@ -20,12 +20,12 @@ package io.car.server.rest.resources;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response.Status;
 
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.inject.Inject;
 
 import io.car.server.rest.Schemas;
 import io.car.server.rest.coding.JSONConstants;
@@ -44,28 +44,27 @@ public class RootResource extends AbstractResource {
     public static final String PHENOMENONS = "phenomenons";
     public static final String SENSORS = "sensors";
     public static final String MEASUREMENTS = "measurements";
+    @Inject
+    private JsonNodeFactory factory;
 
     @GET
     @Schema(response = Schemas.ROOT)
     @Produces(MediaType.APPLICATION_JSON)
-    public JSONObject get() {
-        try {
-            return new JSONObject()
-                    .put(JSONConstants.USERS_KEY,
-                         getUriInfo().getRequestUriBuilder().path(USERS).build())
-                    .put(JSONConstants.GROUPS_KEY,
-                         getUriInfo().getRequestUriBuilder().path(GROUPS).build())
-                    .put(JSONConstants.TRACKS_KEY,
-                         getUriInfo().getRequestUriBuilder().path(TRACKS).build())
-                    .put(JSONConstants.SENSORS_KEY,
-                         getUriInfo().getRequestUriBuilder().path(SENSORS).build())
-                    .put(JSONConstants.PHENOMENONS_KEY,
-                         getUriInfo().getRequestUriBuilder().path(PHENOMENONS).build())
-                    .put(JSONConstants.MEASUREMENTS_KEY,
-                         getUriInfo().getRequestUriBuilder().path(MEASUREMENTS).build());
-        } catch (JSONException ex) {
-            throw new WebApplicationException(ex, Status.INTERNAL_SERVER_ERROR);
-        }
+    public JsonNode get() {
+        ObjectNode root = factory.objectNode();
+        root.put(JSONConstants.USERS_KEY,
+                 getUriInfo().getRequestUriBuilder().path(USERS).build().toString());
+        root.put(JSONConstants.GROUPS_KEY,
+                 getUriInfo().getRequestUriBuilder().path(GROUPS).build().toString());
+        root.put(JSONConstants.TRACKS_KEY,
+                 getUriInfo().getRequestUriBuilder().path(TRACKS).build().toString());
+        root.put(JSONConstants.SENSORS_KEY,
+                 getUriInfo().getRequestUriBuilder().path(SENSORS).build().toString());
+        root.put(JSONConstants.PHENOMENONS_KEY,
+                 getUriInfo().getRequestUriBuilder().path(PHENOMENONS).build().toString());
+        root.put(JSONConstants.MEASUREMENTS_KEY,
+                 getUriInfo().getRequestUriBuilder().path(MEASUREMENTS).build().toString());
+        return root;
     }
 
     @Path(USERS)

@@ -20,13 +20,9 @@ package io.car.server.rest.coding;
 import java.net.URI;
 
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriInfo;
 
-import org.codehaus.jettison.json.JSONArray;
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
-
-import com.google.inject.Inject;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import io.car.server.core.entities.Group;
 import io.car.server.core.entities.Groups;
@@ -34,22 +30,19 @@ import io.car.server.core.entities.Groups;
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class GroupsCoder implements EntityEncoder<Groups> {
-    private UriInfo uriInfo;
-
-    @Inject
-    public GroupsCoder(UriInfo uriInfo) {
-        this.uriInfo = uriInfo;
-    }
+public class GroupsCoder extends AbstractEntityEncoder<Groups> {
 
 
     @Override
-    public JSONObject encode(Groups t, MediaType mediaType) throws JSONException {
-        JSONArray a = new JSONArray();
+    public ObjectNode encode(Groups t, MediaType mediaType) {
+        ObjectNode root = getJsonFactory().objectNode();
+        ArrayNode groups = root.putArray(JSONConstants.GROUPS_KEY);
         for (Group u : t) {
-            URI uri = uriInfo.getAbsolutePathBuilder().path(u.getName()).build();
-            a.put(new JSONObject().put(JSONConstants.NAME_KEY, u.getName()).put(JSONConstants.HREF_KEY, uri));
+            URI uri = getUriInfo().getAbsolutePathBuilder().path(u.getName()).build();
+            groups.addObject()
+                    .put(JSONConstants.NAME_KEY, u.getName())
+                    .put(JSONConstants.HREF_KEY, uri.toString());
         }
-        return new JSONObject().put(JSONConstants.GROUPS_KEY, a);
+        return root;
     }
 }

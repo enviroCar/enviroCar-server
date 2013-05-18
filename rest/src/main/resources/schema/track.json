@@ -48,6 +48,9 @@
                 "user": {
                     "$ref": "http://schema.envirocar.org/definitions.json#/user-ref"
                 },
+                "measurements": {
+                    "$ref": "http://schema.envirocar.org/definitions.json#/href"
+                },
                 "name": {
                     "type": "string"
                 },
