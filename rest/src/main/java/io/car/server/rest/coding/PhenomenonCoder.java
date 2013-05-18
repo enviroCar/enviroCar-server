@@ -40,7 +40,7 @@ public class PhenomenonCoder extends AbstractEntityCoder<Phenomenon> {
     }
 
     @Override
-    public JsonNode encode(Phenomenon t, MediaType mediaType) {
+    public ObjectNode encode(Phenomenon t, MediaType mediaType) {
         ObjectNode user = getJsonFactory().objectNode().put(JSONConstants.NAME_KEY, t.getName());
         if (mediaType.equals(MediaTypes.PHENOMENON_TYPE)) {
             user.put(JSONConstants.CREATED_KEY, getDateTimeFormat().print(t.getCreationDate()));

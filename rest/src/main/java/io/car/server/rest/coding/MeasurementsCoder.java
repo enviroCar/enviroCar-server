@@ -19,7 +19,6 @@ package io.car.server.rest.coding;
 
 import javax.ws.rs.core.MediaType;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -45,7 +44,7 @@ public class MeasurementsCoder implements EntityEncoder<Measurements> {
     }
 
     @Override
-    public JsonNode encode(Measurements t, MediaType mediaType) {
+    public ObjectNode encode(Measurements t, MediaType mediaType) {
         ObjectNode on = factory.objectNode();
         ArrayNode an = on.putArray(GeoJSONConstants.FEATURES_KEY);
         for (Measurement measurement : t) {

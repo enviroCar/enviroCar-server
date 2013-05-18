@@ -21,7 +21,6 @@ import java.net.URI;
 
 import javax.ws.rs.core.MediaType;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -34,7 +33,7 @@ import io.car.server.core.entities.Users;
 public class UsersCoder extends AbstractEntityEncoder<Users> {
 
     @Override
-    public JsonNode encode(Users t, MediaType mediaType) {
+    public ObjectNode encode(Users t, MediaType mediaType) {
         ObjectNode root = getJsonFactory().objectNode();
         ArrayNode users = root.putArray(JSONConstants.USERS_KEY);
         for (User u : t) {

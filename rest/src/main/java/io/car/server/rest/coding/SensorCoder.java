@@ -39,7 +39,7 @@ public class SensorCoder extends AbstractEntityCoder<Sensor> {
     }
 
     @Override
-    public JsonNode encode(Sensor t, MediaType mediaType) {
+    public ObjectNode encode(Sensor t, MediaType mediaType) {
         ObjectNode user = getJsonFactory().objectNode().put(JSONConstants.NAME_KEY, t.getName());
         if (mediaType.equals(MediaTypes.PHENOMENON_TYPE)) {
             user.put(JSONConstants.CREATED_KEY, getDateTimeFormat().print(t.getCreationDate()));

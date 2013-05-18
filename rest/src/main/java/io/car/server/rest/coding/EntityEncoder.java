@@ -19,11 +19,11 @@ package io.car.server.rest.coding;
 
 import javax.ws.rs.core.MediaType;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface EntityEncoder<T> {
-    JsonNode encode(T t, MediaType mt);
+    ObjectNode encode(T t, MediaType mt);
 }

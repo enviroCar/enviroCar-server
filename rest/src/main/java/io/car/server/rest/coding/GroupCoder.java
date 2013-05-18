@@ -49,7 +49,7 @@ public class GroupCoder extends AbstractEntityCoder<Group> {
     }
 
     @Override
-    public JsonNode encode(Group t, MediaType mediaType) {
+    public ObjectNode encode(Group t, MediaType mediaType) {
         ObjectNode group = getJsonFactory().objectNode();
         group.put(JSONConstants.NAME_KEY, t.getName());
         group.put(JSONConstants.DESCRIPTION_KEY, t.getDescription());

@@ -45,7 +45,7 @@ public class UserCoder extends AbstractEntityCoder<User> {
     }
 
     @Override
-    public JsonNode encode(User t, MediaType mediaType) {
+    public ObjectNode encode(User t, MediaType mediaType) {
         ObjectNode j = getJsonFactory().objectNode().put(JSONConstants.NAME_KEY, t.getName());
         if (mediaType.equals(MediaTypes.USER_TYPE)) {
             URI measurements = getUriInfo().getRequestUriBuilder().path(UserResource.MEASUREMENTS).build();

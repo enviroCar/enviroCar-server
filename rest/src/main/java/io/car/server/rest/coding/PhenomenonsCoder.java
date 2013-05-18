@@ -19,7 +19,6 @@ package io.car.server.rest.coding;
 
 import javax.ws.rs.core.MediaType;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
@@ -38,7 +37,7 @@ public class PhenomenonsCoder extends AbstractEntityEncoder<Phenomenons> {
         this.phenomenonEncoder = phenomenonEncoder;
     }
     @Override
-    public JsonNode encode(Phenomenons t, MediaType mediaType) {
+    public ObjectNode encode(Phenomenons t, MediaType mediaType) {
         ObjectNode root = getJsonFactory().objectNode();
         ArrayNode phenomenons = root.putArray(JSONConstants.PHENOMENONS_KEY);
         for (Phenomenon u : t) {

@@ -21,7 +21,6 @@ package io.car.server.rest.coding;
 import javax.ws.rs.core.MediaType;
 
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
@@ -41,7 +40,7 @@ public class SensorsCoder extends AbstractEntityEncoder<Sensors> {
     }
 
     @Override
-    public JsonNode encode(Sensors t, MediaType mediaType) {
+    public ObjectNode encode(Sensors t, MediaType mediaType) {
         ObjectNode root = getJsonFactory().objectNode();
         ArrayNode sensors = root.putArray(JSONConstants.SENSORS_KEY);
         for (Sensor u : t) {

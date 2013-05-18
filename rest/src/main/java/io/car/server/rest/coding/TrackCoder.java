@@ -62,7 +62,7 @@ public class TrackCoder extends AbstractEntityCoder<Track> {
     }
 
     @Override
-    public JsonNode encode(Track t, MediaType mediaType) {
+    public ObjectNode encode(Track t, MediaType mediaType) {
         ObjectNode track = getJsonFactory().objectNode();
         track.put(GeoJSONConstants.TYPE_KEY, GeoJSONConstants.FEATURE_COLLECTION_TYPE);
         JsonNode features = measurementsEncoder.encode(t.getMeasurements(), mediaType)

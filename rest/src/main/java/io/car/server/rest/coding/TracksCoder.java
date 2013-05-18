@@ -23,7 +23,6 @@ import javax.ws.rs.core.MediaType;
 
 import org.codehaus.jettison.json.JSONArray;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -32,7 +31,7 @@ import io.car.server.core.entities.Tracks;
 
 public class TracksCoder extends AbstractEntityEncoder<Tracks> {
     @Override
-    public JsonNode encode(Tracks t, MediaType mediaType) {
+    public ObjectNode encode(Tracks t, MediaType mediaType) {
         ObjectNode root = getJsonFactory().objectNode();
         ArrayNode tracks = root.putArray(JSONConstants.HREF_KEY);
         JSONArray array = new JSONArray();
