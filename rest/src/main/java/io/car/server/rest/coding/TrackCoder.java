@@ -19,36 +19,28 @@ package io.car.server.rest.coding;
 
 import javax.ws.rs.core.MediaType;
 
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
-import org.joda.time.format.DateTimeFormatter;
-
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 
 import io.car.server.core.dao.SensorDao;
-import io.car.server.core.entities.EntityFactory;
 import io.car.server.core.entities.Measurements;
 import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
 import io.car.server.core.util.GeoJSONConstants;
 
-public class TrackCoder implements EntityEncoder<Track>, EntityDecoder<Track> {
-    private DateTimeFormatter formatter;
-    private EntityFactory factory;
+public class TrackCoder extends AbstractEntityCoder<Track> {
     private EntityEncoder<Sensor> sensorEncoder;
     private EntityEncoder<Measurements> measurementsEncoder;
     private EntityEncoder<User> userEncoder;
     private SensorDao sensorDao;
 
     @Inject
-    public TrackCoder(DateTimeFormatter formatter, EntityFactory factory,
-                      EntityEncoder<Sensor> sensorProvider,
+    public TrackCoder(EntityEncoder<Sensor> sensorProvider,
                       EntityEncoder<Measurements> measurementsProvider,
                       EntityEncoder<User> userProvider,
                       SensorDao sensorDao) {
-        this.formatter = formatter;
-        this.factory = factory;
         this.sensorEncoder = sensorProvider;
         this.userEncoder = userProvider;
         this.measurementsEncoder = measurementsProvider;
@@ -56,33 +48,34 @@ public class TrackCoder implements EntityEncoder<Track>, EntityDecoder<Track> {
     }
 
     @Override
-    public Track decode(JSONObject j, MediaType mediaType) throws JSONException {
-        Track track = factory.createTrack();
+    public Track decode(JsonNode j, MediaType mediaType) {
+        Track track = getEntityFactory().createTrack();
         if (j.has(GeoJSONConstants.PROPERTIES_KEY)) {
-            JSONObject p = j.getJSONObject(GeoJSONConstants.PROPERTIES_KEY);
+            JsonNode p = j.path(GeoJSONConstants.PROPERTIES_KEY);
             if (p.has(JSONConstants.SENSOR_KEY)) {
-                track.setSensor(sensorDao.getByName(p.getString(JSONConstants.SENSOR_KEY)));
+                track.setSensor(sensorDao.getByName(p.get(JSONConstants.SENSOR_KEY).asText()));
             }
-            track.setName(p.optString(JSONConstants.NAME_KEY, null));
-            track.setDescription(p.optString(JSONConstants.DESCRIPTION_KEY, null));
+            track.setName(p.path(JSONConstants.NAME_KEY).textValue());
+            track.setDescription(p.path(JSONConstants.DESCRIPTION_KEY).textValue());
         }
         return track;
     }
 
     @Override
-    public JSONObject encode(Track t, MediaType mediaType) throws JSONException {
-        JSONObject properties = new JSONObject()
-                .put(JSONConstants.IDENTIFIER_KEY, t.getIdentifier())
-                .put(JSONConstants.NAME_KEY, t.getName())
-                .put(JSONConstants.DESCRIPTION_KEY, t.getDescription())
-                .put(JSONConstants.CREATED_KEY, formatter.print(t.getCreationDate()))
-                .put(JSONConstants.MODIFIED_KEY, formatter.print(t.getLastModificationDate()))
-                .put(JSONConstants.SENSOR_KEY, sensorEncoder.encode(t.getSensor(), mediaType))
-                .put(JSONConstants.USER_KEY, userEncoder.encode(t.getUser(), mediaType));
-        return new JSONObject()
-                .put(GeoJSONConstants.TYPE_KEY, GeoJSONConstants.FEATURE_COLLECTION_TYPE)
-                .put(GeoJSONConstants.PROPERTIES_KEY, properties)
-                .put(GeoJSONConstants.FEATURES_KEY, measurementsEncoder.encode(t.getMeasurements(), mediaType)
-                .getJSONArray(GeoJSONConstants.FEATURES_KEY));
+    public JsonNode encode(Track t, MediaType mediaType) {
+        ObjectNode track = getJsonFactory().objectNode();
+        track.put(GeoJSONConstants.TYPE_KEY, GeoJSONConstants.FEATURE_COLLECTION_TYPE);
+        JsonNode features = measurementsEncoder.encode(t.getMeasurements(), mediaType)
+                .path(GeoJSONConstants.FEATURES_KEY);
+        track.put(GeoJSONConstants.FEATURES_KEY, features);
+        ObjectNode properties = track.putObject(GeoJSONConstants.PROPERTIES_KEY);
+        properties.put(JSONConstants.IDENTIFIER_KEY, t.getIdentifier());
+        properties.put(JSONConstants.NAME_KEY, t.getName());
+        properties.put(JSONConstants.DESCRIPTION_KEY, t.getDescription());
+        properties.put(JSONConstants.CREATED_KEY, getDateTimeFormat().print(t.getCreationDate()));
+        properties.put(JSONConstants.MODIFIED_KEY, getDateTimeFormat().print(t.getLastModificationDate()));
+        properties.put(JSONConstants.SENSOR_KEY, sensorEncoder.encode(t.getSensor(), mediaType));
+        properties.put(JSONConstants.USER_KEY, userEncoder.encode(t.getUser(), mediaType));
+        return track;
     }
 }
