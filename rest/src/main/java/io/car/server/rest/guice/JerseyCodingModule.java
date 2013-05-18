@@ -27,6 +27,7 @@ import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.google.inject.TypeLiteral;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
+import com.vividsolutions.jts.geom.Geometry;
 
 import io.car.server.core.entities.Group;
 import io.car.server.core.entities.Groups;
@@ -43,6 +44,7 @@ import io.car.server.core.entities.Users;
 import io.car.server.rest.coding.CodingFactory;
 import io.car.server.rest.coding.EntityDecoder;
 import io.car.server.rest.coding.EntityEncoder;
+import io.car.server.rest.coding.GeoJSON;
 import io.car.server.rest.coding.GroupCoder;
 import io.car.server.rest.coding.GroupsCoder;
 import io.car.server.rest.coding.MeasurementCoder;
@@ -84,17 +86,9 @@ public class JerseyCodingModule extends AbstractModule {
         implementAndBind(fmb, new TypeLiteral<EntityEncoder<Group>>() {}, GroupCoder.class);
         implementAndBind(fmb, new TypeLiteral<EntityDecoder<Group>>() {}, GroupCoder.class);
         implementAndBind(fmb, new TypeLiteral<EntityEncoder<Groups>>() {}, GroupsCoder.class);
+        bind(new TypeLiteral<EntityDecoder<Geometry>>() {}).to(GeoJSON.class);
+        bind(new TypeLiteral<EntityEncoder<Geometry>>() {}).to(GeoJSON.class);
         install(fmb.build(CodingFactory.class));
-    }
-
-    protected <T> TypeLiteral<EntityEncoder<T>> encoder(Class<T> c) {
-        return new TypeLiteral<EntityEncoder<T>>() {
-        };
-    }
-
-    protected <T> TypeLiteral<EntityDecoder<T>> decoder(Class<T> c) {
-        return new TypeLiteral<EntityDecoder<T>>() {
-        };
     }
 
     protected <T> void implementAndBind(FactoryModuleBuilder fmb, TypeLiteral<T> source, Class<? extends T> target) {
