@@ -25,11 +25,11 @@ import com.google.inject.Inject;
 import io.car.server.core.entities.Group;
 import io.car.server.core.entities.Groups;
 import io.car.server.core.entities.User;
-import io.car.server.core.db.GroupDao;
+import io.car.server.core.dao.GroupDao;
 import io.car.server.mongo.entity.MongoGroup;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class MongoGroupDao extends BasicDAO<MongoGroup, String> implements GroupDao {
     @Inject
@@ -57,12 +57,12 @@ public class MongoGroupDao extends BasicDAO<MongoGroup, String> implements Group
     }
 
     @Override
-    public Groups getAll() {
-        return getAll(0);
+    public Groups get() {
+        return get(0);
     }
 
     @Override
-    public Groups getAll(int limit) {
+    public Groups get(int limit) {
         return fetch(createQuery().limit(limit).order(MongoGroup.LAST_MODIFIED));
     }
 

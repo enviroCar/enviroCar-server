@@ -28,15 +28,13 @@ import com.github.jmkgreen.morphia.annotations.Property;
 import com.github.jmkgreen.morphia.mapping.Mapper;
 import com.google.common.base.Objects;
 
-import io.car.server.core.BaseEntity;
+import io.car.server.core.entities.BaseEntity;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class MongoBaseEntity<T> implements BaseEntity {
     public static final String ID = Mapper.ID_KEY;
-    public static final String CREATION_DATE = "created";
-    public static final String LAST_MODIFIED = "modified";
     @Id
     private ObjectId id = new ObjectId();
     @Indexed

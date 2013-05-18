@@ -23,11 +23,10 @@ import com.github.jmkgreen.morphia.annotations.Property;
 import io.car.server.core.entities.Sensor;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Entity("sensors")
 public class MongoSensor extends MongoBaseEntity<MongoSensor> implements Sensor {
-    public static final String NAME = "name";
     @Property(NAME)
     private String name;
 

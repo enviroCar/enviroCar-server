@@ -32,7 +32,7 @@ import com.google.inject.util.Providers;
 import io.car.server.mongo.MongoDB;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class MongoConnectionModule extends AbstractModule {
     private static final String PROPERTIES_FILE = "/mongo.properties";

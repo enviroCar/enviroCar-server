@@ -27,25 +27,23 @@ import org.joda.time.format.DateTimeFormatter;
 
 import com.google.inject.Inject;
 
-import io.car.server.core.EntityFactory;
-import io.car.server.core.MeasurementValue;
-import io.car.server.core.db.PhenomenonDao;
-import io.car.server.core.db.SensorDao;
+import io.car.server.core.dao.PhenomenonDao;
+import io.car.server.core.dao.SensorDao;
+import io.car.server.core.entities.EntityFactory;
 import io.car.server.core.entities.Measurement;
+import io.car.server.core.entities.MeasurementValue;
 import io.car.server.core.entities.Phenomenon;
 import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.User;
 import io.car.server.core.exception.GeometryConverterException;
 import io.car.server.core.util.GeoJSONConstants;
-import io.car.server.rest.EntityDecoder;
-import io.car.server.rest.EntityEncoder;
 import io.car.server.rest.MediaTypes;
 import io.car.server.rest.resources.MeasurementsResource;
 import io.car.server.rest.resources.TrackResource;
 
 /**
  * @author Arne de Wall <a.dewall@52north.org>
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class MeasurementCoder implements EntityEncoder<Measurement>, EntityDecoder<Measurement> {
     private DateTimeFormatter formatter;
@@ -121,6 +119,7 @@ public class MeasurementCoder implements EntityEncoder<Measurement>, EntityDecod
             JSONObject properties = new JSONObject();
             properties.put(JSONConstants.IDENTIFIER_KEY, t.getIdentifier())
                     .put(JSONConstants.TIME_KEY, formatter.print(t.getTime()));
+
             if (!mediaType.equals(MediaTypes.TRACK_TYPE)) {
                 properties.put(JSONConstants.SENSOR_KEY, sensorProvider.encode(t.getSensor(), mediaType))
                         .put(JSONConstants.USER_KEY, userProvider.encode(t.getUser(), mediaType))
@@ -128,8 +127,8 @@ public class MeasurementCoder implements EntityEncoder<Measurement>, EntityDecod
                         .put(JSONConstants.CREATED_KEY, formatter.print(t.getCreationDate()));
             } else {
                 properties.put(JSONConstants.HREF_KEY, uriInfo.getRequestUriBuilder()
-                        .path(TrackResource.MEASUREMENTS_PATH)
-                        .path(MeasurementsResource.MEASUREMENT_PATH)
+                        .path(TrackResource.MEASUREMENTS)
+                        .path(MeasurementsResource.MEASUREMENT)
                         .build(t.getIdentifier()));
             }
             

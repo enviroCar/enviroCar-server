@@ -17,7 +17,6 @@
  */
 package io.car.server.rest.coding;
 
-import io.car.server.rest.EntityEncoder;
 
 import javax.ws.rs.core.MediaType;
 
@@ -31,7 +30,7 @@ import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.Sensors;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class SensorsCoder implements EntityEncoder<Sensors> {
     private final EntityEncoder<Sensor> sensorEncoder;

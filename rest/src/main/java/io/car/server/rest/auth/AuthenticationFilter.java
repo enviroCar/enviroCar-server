@@ -27,13 +27,13 @@ import com.google.inject.Inject;
 import com.sun.jersey.spi.container.ContainerRequest;
 import com.sun.jersey.spi.container.ContainerRequestFilter;
 
-import io.car.server.core.PasswordEncoder;
+import io.car.server.core.util.PasswordEncoder;
 import io.car.server.core.Service;
 import io.car.server.core.entities.User;
 import io.car.server.core.exception.UserNotFoundException;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class AuthenticationFilter implements ContainerRequestFilter {
     

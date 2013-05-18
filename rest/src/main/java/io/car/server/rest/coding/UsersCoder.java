@@ -17,7 +17,6 @@
  */
 package io.car.server.rest.coding;
 
-import io.car.server.rest.EntityEncoder;
 import java.net.URI;
 
 import javax.ws.rs.core.MediaType;
@@ -33,7 +32,7 @@ import io.car.server.core.entities.User;
 import io.car.server.core.entities.Users;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class UsersCoder implements EntityEncoder<Users> {
     private UriInfo uriInfo;

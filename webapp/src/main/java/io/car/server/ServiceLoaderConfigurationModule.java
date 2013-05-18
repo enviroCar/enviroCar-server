@@ -23,7 +23,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Module;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class ServiceLoaderConfigurationModule extends AbstractModule {
 

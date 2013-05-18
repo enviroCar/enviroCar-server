@@ -24,11 +24,11 @@ import com.github.jmkgreen.morphia.annotations.Property;
 import io.car.server.core.entities.Phenomenon;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Entity("phenomenons")
 public class MongoPhenomenon extends MongoBaseEntity<MongoPhenomenon> implements Phenomenon {
-    public static final String NAME = "name";
+    
     @Indexed(unique = true)
     @Property(NAME)
     private String name;

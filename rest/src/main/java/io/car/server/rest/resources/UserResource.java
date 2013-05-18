@@ -27,6 +27,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -40,19 +41,19 @@ import io.car.server.core.entities.User;
 import io.car.server.core.exception.IllegalModificationException;
 import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.core.exception.ValidationException;
-import io.car.server.rest.AbstractResource;
-import io.car.server.rest.MediaTypes;
+import io.car.server.rest.Schemas;
 import io.car.server.rest.auth.Authenticated;
+import io.car.server.rest.validation.Schema;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  * @author Arne de Wall <a.dewall@52north.org>
  */
 public class UserResource extends AbstractResource {
-    public static final String GROUPS_PATH = "groups";
-    public static final String FRIENDS_PATH = "friends";
-    public static final String TRACKS_PATH = "tracks";
-    public static final String MEASUREMENTS_PATH = "measurements";
+    public static final String GROUPS = "groups";
+    public static final String FRIENDS = "friends";
+    public static final String TRACKS = "tracks";
+    public static final String MEASUREMENTS = "measurements";
     protected final User user;
 
     @Inject
@@ -65,7 +66,8 @@ public class UserResource extends AbstractResource {
     }
 
     @PUT
-    @Consumes(MediaTypes.USER_MODIFY)
+    @Schema(request = Schemas.USER_MODIFY)
+    @Consumes(MediaType.APPLICATION_JSON)
     @Authenticated
     public Response modify(User changes) throws
             UserNotFoundException, IllegalModificationException, ValidationException {
@@ -88,7 +90,8 @@ public class UserResource extends AbstractResource {
     }
 
     @GET
-    @Produces(MediaTypes.USER)
+    @Schema(response = Schemas.USER)
+    @Produces(MediaType.APPLICATION_JSON)
     public User get() throws UserNotFoundException {
         return getUser();
     }
@@ -102,22 +105,22 @@ public class UserResource extends AbstractResource {
         getService().deleteUser(getUser());
     }
 
-    @Path(FRIENDS_PATH)
+    @Path(FRIENDS)
     public FriendsResource friends() {
         return getResourceFactory().createFriendsResource(getUser());
     }
 
-    @Path(GROUPS_PATH)
+    @Path(GROUPS)
     public GroupsResource groups() {
         return getResourceFactory().createGroupsResource(getUser());
     }
     
-    @Path(TRACKS_PATH)
+    @Path(TRACKS)
     public TracksResource tracks(){
     	return getResourceFactory().createTracksResource(getUser());
     }
     
-    @Path(MEASUREMENTS_PATH)
+    @Path(MEASUREMENTS)
     public MeasurementsResource measurements(){
     	return getResourceFactory().createMeasurementsResource(getUser());
     }

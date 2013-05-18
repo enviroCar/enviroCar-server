@@ -26,6 +26,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import io.car.server.core.entities.User;
@@ -33,26 +34,28 @@ import io.car.server.core.entities.Users;
 import io.car.server.core.exception.ResourceAlreadyExistException;
 import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.core.exception.ValidationException;
-import io.car.server.rest.AbstractResource;
-import io.car.server.rest.MediaTypes;
 import io.car.server.rest.RESTConstants;
+import io.car.server.rest.Schemas;
 import io.car.server.rest.auth.Anonymous;
+import io.car.server.rest.validation.Schema;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class UsersResource extends AbstractResource {
-    public static final String USER_PATH = "{username}";
+    public static final String USER = "{username}";
 
     @GET
-    @Produces(MediaTypes.USERS)
+    @Schema(response = Schemas.USERS)
+    @Produces(MediaType.APPLICATION_JSON)
     public Users get(@QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit) {
-        return getService().getAllUsers(limit);
+        return getService().getUsers(limit);
     }
 
     @POST
-    @Consumes(MediaTypes.USER_CREATE)
     @Anonymous
+    @Schema(request = Schemas.USER_CREATE)
+    @Consumes(MediaType.APPLICATION_JSON)
     public Response create(User user) throws ValidationException, ResourceAlreadyExistException {
         return Response.created(
                 getUriInfo().getRequestUriBuilder()
@@ -60,7 +63,7 @@ public class UsersResource extends AbstractResource {
                 .build()).build();
     }
 
-    @Path(USER_PATH)
+    @Path(USER)
     public UserResource user(@PathParam("username") String username) throws UserNotFoundException {
         return getResourceFactory().createUserResource(getService().getUser(username));
     }

@@ -24,6 +24,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
@@ -35,9 +36,9 @@ import io.car.server.core.exception.IllegalModificationException;
 import io.car.server.core.exception.MeasurementNotFoundException;
 import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.core.exception.ValidationException;
-import io.car.server.rest.AbstractResource;
-import io.car.server.rest.MediaTypes;
+import io.car.server.rest.Schemas;
 import io.car.server.rest.auth.Authenticated;
+import io.car.server.rest.validation.Schema;
 
 /**
  * 
@@ -45,7 +46,7 @@ import io.car.server.rest.auth.Authenticated;
  * 
  */
 public class MeasurementResource extends AbstractResource {
-	public static final String SENSOR_PATH = "sensor";
+	public static final String SENSOR = "sensor";
 
 	protected final Measurement measurement;
 
@@ -54,8 +55,9 @@ public class MeasurementResource extends AbstractResource {
 		this.measurement = measurement;
 	}
 
-	@PUT
-	@Consumes(MediaTypes.MEASUREMENT_MODIFY)
+    @PUT
+    @Schema(request = Schemas.MEASUREMENT_MODIFY)
+    @Consumes(MediaType.APPLICATION_JSON)
 	@Authenticated
 	public Response modify(Measurement changes)
 			throws MeasurementNotFoundException, UserNotFoundException,
@@ -68,8 +70,9 @@ public class MeasurementResource extends AbstractResource {
 		return Response.ok().build();
 	}
 	
-	@GET
-	@Produces(MediaTypes.MEASUREMENT)
+    @GET
+    @Schema(response = Schemas.MEASUREMENT)
+    @Produces(MediaType.APPLICATION_JSON)
 	public Measurement get() throws MeasurementNotFoundException {
 		return measurement;
 	}
@@ -83,7 +86,7 @@ public class MeasurementResource extends AbstractResource {
 		getService().deleteMeasurement(measurement);
 	}
 	
-	@Path(SENSOR_PATH)
+	@Path(SENSOR)
 	public SensorResource sensor(){
 		return getResourceFactory().createSensorResource(measurement.getSensor());
 	}

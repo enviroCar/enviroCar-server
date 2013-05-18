@@ -26,10 +26,9 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import io.car.server.core.entities.Group;
-import io.car.server.rest.MediaTypes;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
 @Produces(MediaType.APPLICATION_JSON)
@@ -37,7 +36,7 @@ import io.car.server.rest.MediaTypes;
 public class GroupProvider extends AbstractJsonEntityProvider<Group> {
 
     public GroupProvider() {
-        super(Group.class, MediaTypes.GROUP_TYPE, MediaTypes.GROUP_CREATE_TYPE, MediaTypes.GROUP_MODIFY_TYPE);
+        super(Group.class);
     }
 
     @Override

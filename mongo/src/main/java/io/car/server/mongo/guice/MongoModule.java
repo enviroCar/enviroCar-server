@@ -27,8 +27,8 @@ import com.mongodb.DB;
 import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
 
-import io.car.server.core.EntityFactory;
-import io.car.server.core.MeasurementValue;
+import io.car.server.core.entities.EntityFactory;
+import io.car.server.core.entities.MeasurementValue;
 import io.car.server.core.entities.Group;
 import io.car.server.core.entities.Measurement;
 import io.car.server.core.entities.Phenomenon;
@@ -45,7 +45,7 @@ import io.car.server.mongo.entity.MongoTrack;
 import io.car.server.mongo.entity.MongoUser;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class MongoModule extends AbstractModule {
     @Override

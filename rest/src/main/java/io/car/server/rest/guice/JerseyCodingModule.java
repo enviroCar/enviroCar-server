@@ -33,9 +33,9 @@ import io.car.server.core.entities.Track;
 import io.car.server.core.entities.Tracks;
 import io.car.server.core.entities.User;
 import io.car.server.core.entities.Users;
-import io.car.server.rest.CodingFactory;
-import io.car.server.rest.EntityDecoder;
-import io.car.server.rest.EntityEncoder;
+import io.car.server.rest.coding.CodingFactory;
+import io.car.server.rest.coding.EntityDecoder;
+import io.car.server.rest.coding.EntityEncoder;
 import io.car.server.rest.coding.GroupCoder;
 import io.car.server.rest.coding.GroupsCoder;
 import io.car.server.rest.coding.MeasurementCoder;
@@ -50,7 +50,7 @@ import io.car.server.rest.coding.UserCoder;
 import io.car.server.rest.coding.UsersCoder;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class JerseyCodingModule extends AbstractModule {
     @Override

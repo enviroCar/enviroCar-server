@@ -17,19 +17,21 @@
  */
 package io.car.server.rest.resources;
 
-import io.car.server.core.entities.Sensor;
-import io.car.server.rest.MediaTypes;
-
 import javax.ws.rs.GET;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
+import io.car.server.core.entities.Sensor;
+import io.car.server.rest.Schemas;
+import io.car.server.rest.validation.Schema;
+
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class SensorResource {
+public class SensorResource extends AbstractResource {
     private Sensor sensor;
 
     @Inject
@@ -38,7 +40,8 @@ public class SensorResource {
     }
     
     @GET
-    @Produces(MediaTypes.SENSOR)
+    @Schema(response = Schemas.SENSOR)
+    @Produces(MediaType.APPLICATION_JSON)
     public Sensor get() {
         return this.sensor;
     }

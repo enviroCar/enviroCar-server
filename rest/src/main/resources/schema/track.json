@@ -47,6 +47,12 @@
                 },
                 "user": {
                     "$ref": "http://schema.envirocar.org/definitions.json#/user-ref"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
                 }
             }
 

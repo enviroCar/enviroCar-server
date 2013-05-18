@@ -18,24 +18,18 @@
 package io.car.server.rest.guice;
 
 
-import org.codehaus.jettison.json.JSONObject;
 
 import com.github.fge.jsonschema.main.JsonSchemaFactory;
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
-import com.google.inject.TypeLiteral;
-
-import io.car.server.rest.JSONSchemaValidator;
-import io.car.server.rest.Validator;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class JerseyValidationModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(JsonSchemaFactory.class).toProvider(JSONSchemaFactoryProvider.class).in(Scopes.SINGLETON);
-        bind(new TypeLiteral<Validator<JSONObject>>() {}).to(JSONSchemaValidator.class);
     }
     
 }

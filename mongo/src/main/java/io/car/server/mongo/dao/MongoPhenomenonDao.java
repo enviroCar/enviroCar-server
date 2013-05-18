@@ -23,14 +23,14 @@ import com.github.jmkgreen.morphia.Datastore;
 import com.github.jmkgreen.morphia.dao.BasicDAO;
 import com.google.inject.Inject;
 
-import io.car.server.core.db.PhenomenonDao;
+import io.car.server.core.dao.PhenomenonDao;
 import io.car.server.core.entities.Phenomenon;
 import io.car.server.core.entities.Phenomenons;
 import io.car.server.mongo.entity.MongoPhenomenon;
 import io.car.server.mongo.entity.MongoSensor;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  * @author Jan Wirwahn <jan.wirwahn@wwu.de>
  */
 public class MongoPhenomenonDao extends BasicDAO<MongoPhenomenon, ObjectId> implements PhenomenonDao {
@@ -45,7 +45,7 @@ public class MongoPhenomenonDao extends BasicDAO<MongoPhenomenon, ObjectId> impl
     }
 
     @Override
-    public Phenomenons getAll() {
+    public Phenomenons get() {
         return new Phenomenons(find().fetch());
     }
     

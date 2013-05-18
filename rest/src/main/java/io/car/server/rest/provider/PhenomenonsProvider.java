@@ -27,17 +27,16 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import io.car.server.core.entities.Phenomenons;
-import io.car.server.rest.MediaTypes;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class PhenomenonsProvider extends AbstractJsonEntityProvider<Phenomenons> {
     public PhenomenonsProvider() {
-        super(Phenomenons.class, MediaTypes.PHENOMENONS_TYPE);
+        super(Phenomenons.class);
     }
 
     @Override

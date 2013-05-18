@@ -28,16 +28,14 @@ import org.joda.time.format.DateTimeFormatter;
 
 import com.google.inject.Inject;
 
-import io.car.server.core.EntityFactory;
+import io.car.server.core.entities.EntityFactory;
 import io.car.server.core.entities.Phenomenon;
-import io.car.server.rest.EntityDecoder;
-import io.car.server.rest.EntityEncoder;
 import io.car.server.rest.MediaTypes;
 import io.car.server.rest.resources.PhenomenonsResource;
 import io.car.server.rest.resources.RootResource;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class PhenomenonCoder implements EntityEncoder<Phenomenon>, EntityDecoder<Phenomenon> {
     private final DateTimeFormatter formatter;
@@ -66,8 +64,8 @@ public class PhenomenonCoder implements EntityEncoder<Phenomenon>, EntityDecoder
         } else {
             URI href = uriInfo.getBaseUriBuilder()
                     .path(RootResource.class)
-                    .path(RootResource.PHENOMENONS_PATH)
-                    .path(PhenomenonsResource.PHENOMENON_PATH)
+                    .path(RootResource.PHENOMENONS)
+                    .path(PhenomenonsResource.PHENOMENON)
                     .build(t.getName());
             j.put(JSONConstants.HREF_KEY, href);
         }

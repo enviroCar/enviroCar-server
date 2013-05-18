@@ -23,10 +23,10 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
-import io.car.server.rest.JSONValidationException;
+import io.car.server.rest.validation.JSONValidationException;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
 public class JsonValidationExceptionMapper implements ExceptionMapper<JSONValidationException> {

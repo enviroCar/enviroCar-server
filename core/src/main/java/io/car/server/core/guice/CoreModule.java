@@ -24,12 +24,12 @@ import com.google.inject.AbstractModule;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.PrecisionModel;
 
-import io.car.server.core.PasswordEncoder;
+import io.car.server.core.util.PasswordEncoder;
 import io.car.server.core.Service;
 import io.car.server.core.util.BCryptPasswordEncoder;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  * @author Arne de Wall
  */
 public class CoreModule extends AbstractModule {

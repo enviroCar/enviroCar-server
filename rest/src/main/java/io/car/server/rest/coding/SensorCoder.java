@@ -28,16 +28,14 @@ import org.joda.time.format.DateTimeFormatter;
 
 import com.google.inject.Inject;
 
-import io.car.server.core.EntityFactory;
+import io.car.server.core.entities.EntityFactory;
 import io.car.server.core.entities.Sensor;
-import io.car.server.rest.EntityDecoder;
-import io.car.server.rest.EntityEncoder;
 import io.car.server.rest.MediaTypes;
 import io.car.server.rest.resources.RootResource;
 import io.car.server.rest.resources.SensorsResource;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class SensorCoder implements EntityEncoder<Sensor>, EntityDecoder<Sensor> {
     private final EntityFactory factory;
@@ -66,8 +64,8 @@ public class SensorCoder implements EntityEncoder<Sensor>, EntityDecoder<Sensor>
         } else {
             URI href = uriInfo.getBaseUriBuilder()
                     .path(RootResource.class)
-                    .path(RootResource.SENSORS_PATH)
-                    .path(SensorsResource.SENSOR_PATH)
+                    .path(RootResource.SENSORS)
+                    .path(SensorsResource.SENSOR)
                     .build(t.getName());
             j.put(JSONConstants.HREF_KEY, href);
         }

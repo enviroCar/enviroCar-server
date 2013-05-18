@@ -88,6 +88,12 @@
             "id": {
                 "type": "string"
             },
+            "name": {
+                "type": "string"
+            },
+            "modified": {
+                "$ref": "#/date-time"
+            },
             "href": {
                 "$ref": "#/href"
             }

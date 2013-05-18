@@ -23,7 +23,7 @@ import com.google.inject.multibindings.Multibinder;
 import com.google.inject.name.Names;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class JSONSchemaModule extends AbstractModule {
     @Override

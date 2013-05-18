@@ -20,18 +20,18 @@ package io.car.server.core.guice;
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
 
-import io.car.server.core.EntityUpdater;
-import io.car.server.core.GroupUpdater;
-import io.car.server.core.MeasurementUpdater;
-import io.car.server.core.TrackUpdater;
-import io.car.server.core.UserUpdater;
+import io.car.server.core.update.EntityUpdater;
+import io.car.server.core.update.GroupUpdater;
+import io.car.server.core.update.MeasurementUpdater;
+import io.car.server.core.update.TrackUpdater;
+import io.car.server.core.update.UserUpdater;
 import io.car.server.core.entities.Group;
 import io.car.server.core.entities.Measurement;
 import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class UpdaterModule extends AbstractModule {
 

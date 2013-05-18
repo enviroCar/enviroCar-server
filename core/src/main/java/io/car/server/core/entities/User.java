@@ -17,12 +17,16 @@
  */
 package io.car.server.core.entities;
 
-import io.car.server.core.BaseEntity;
-
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface User extends BaseEntity {
+    String NAME = "name";
+    String MAIL = "mail";
+    String TOKEN = "token";
+    String IS_ADMIN = "isAdmin";
+    String FRIENDS = "friends";
+    String TRACKS = "tracks";
     String getName();
     User setName(String name);
     String getMail();

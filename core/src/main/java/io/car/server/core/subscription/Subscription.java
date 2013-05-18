@@ -17,10 +17,10 @@
  */
 package io.car.server.core.subscription;
 
-import io.car.server.core.BaseEntity;
+import io.car.server.core.entities.BaseEntity;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface Subscription extends BaseEntity {
     Subscriber getSubscriber();

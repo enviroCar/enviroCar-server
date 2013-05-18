@@ -26,6 +26,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
@@ -40,16 +41,16 @@ import io.car.server.core.exception.MeasurementNotFoundException;
 import io.car.server.core.exception.ResourceAlreadyExistException;
 import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.core.exception.ValidationException;
-import io.car.server.rest.AbstractResource;
-import io.car.server.rest.MediaTypes;
 import io.car.server.rest.RESTConstants;
+import io.car.server.rest.Schemas;
 import io.car.server.rest.auth.Authenticated;
+import io.car.server.rest.validation.Schema;
 
 /**
  * @author Arne de Wall <a.dewall@52north.org>
  */
 public class MeasurementsResource extends AbstractResource {
-    public static final String MEASUREMENT_PATH = "{measurement}";
+    public static final String MEASUREMENT = "{measurement}";
     private final Track track;
     private final User user;
 
@@ -75,7 +76,8 @@ public class MeasurementsResource extends AbstractResource {
     }
 
     @GET
-    @Produces(MediaTypes.MEASUREMENTS)
+    @Schema(response = Schemas.MEASUREMENTS)
+    @Produces(MediaType.APPLICATION_JSON)
     public Measurements get(@QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit) {
         if (track == null) {
             if (user == null) {
@@ -91,7 +93,8 @@ public class MeasurementsResource extends AbstractResource {
 
     @POST
     @Authenticated
-    @Consumes(MediaTypes.MEASUREMENT_CREATE)
+    @Schema(request = Schemas.MEASUREMENT_CREATE)
+    @Consumes(MediaType.APPLICATION_JSON)
     public Response create(Measurement measurement) throws ResourceAlreadyExistException, ValidationException,
                                                            UserNotFoundException {
         Measurement m;
@@ -109,7 +112,7 @@ public class MeasurementsResource extends AbstractResource {
                 .path(m.getIdentifier()).build()).build();
     }
 
-    @Path(MEASUREMENT_PATH)
+    @Path(MEASUREMENT)
     public MeasurementResource measurement(@PathParam("measurement") String id) throws MeasurementNotFoundException {
         Measurement m = getService().getMeasurement(id);
         if (track != null) {

@@ -17,7 +17,6 @@
  */
 package io.car.server.mongo.entity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.bson.types.ObjectId;
@@ -25,9 +24,11 @@ import org.bson.types.ObjectId;
 import com.github.jmkgreen.morphia.annotations.Embedded;
 import com.github.jmkgreen.morphia.annotations.Entity;
 import com.github.jmkgreen.morphia.annotations.Indexed;
+import com.github.jmkgreen.morphia.annotations.Property;
 import com.github.jmkgreen.morphia.annotations.Reference;
 import com.github.jmkgreen.morphia.annotations.Transient;
 import com.github.jmkgreen.morphia.utils.IndexDirection;
+import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
@@ -41,10 +42,6 @@ import io.car.server.core.entities.User;
 
 @Entity("tracks")
 public class MongoTrack extends MongoBaseEntity<MongoTrack> implements Track {
-    public static final String BBOX = "bbox";
-    public static final String MEASUREMENTS = "measurements";
-    public static final String SENSOR = "sensor";
-    public static final String USER = "user";
     @Indexed(IndexDirection.GEO2D)
     @Embedded(BBOX)
     private Geometry bbox;
@@ -53,10 +50,14 @@ public class MongoTrack extends MongoBaseEntity<MongoTrack> implements Track {
     @Reference(SENSOR)
     private MongoSensor sensor;
     @Reference(value = MEASUREMENTS, lazy = true)
-    private List<MongoMeasurement> measurements = new ArrayList<MongoMeasurement>();
+    private List<MongoMeasurement> measurements = Lists.newLinkedList();
     @Inject
     @Transient
     private GeometryFactory factory;
+    @Property(DESCIPTION)
+    private String description;
+    @Property(NAME)
+    private String name;
 
     @Override
     public MongoTrack addMeasurement(Measurement measurement) {
@@ -121,12 +122,12 @@ public class MongoTrack extends MongoBaseEntity<MongoTrack> implements Track {
     }
 
     @Override
-    public User getUser() {
+    public MongoUser getUser() {
         return this.user;
     }
 
     @Override
-    public Track setUser(User user) {
+    public MongoTrack setUser(User user) {
         this.user = (MongoUser) user;
         return this;
     }
@@ -139,6 +140,28 @@ public class MongoTrack extends MongoBaseEntity<MongoTrack> implements Track {
     @Override
     public MongoTrack setSensor(Sensor sensor) {
         this.sensor = (MongoSensor) sensor;
+        return this;
+    }
+
+    @Override
+    public String getName() {
+        return this.name;
+    }
+
+    @Override
+    public MongoTrack setName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    @Override
+    public String getDescription() {
+        return this.description;
+    }
+
+    @Override
+    public MongoTrack setDescription(String description) {
+        this.description = description;
         return this;
     }
 }

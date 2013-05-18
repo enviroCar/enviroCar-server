@@ -17,12 +17,11 @@
  */
 package io.car.server.core.entities;
 
-import io.car.server.core.BaseEntity;
-
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface Sensor extends BaseEntity {
+    String NAME = "name";
     String getName();
     Sensor setName(String name);
 }

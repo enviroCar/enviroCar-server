@@ -47,31 +47,31 @@ for user in {1..$USERS}; do
 done
 
 # sensors
-for i in {1..$SENSORS}; do
+for user in {1..$SENSORS}; do
 	curl -X POST -H "Content-Type: application/json" \
-		-H "X-Token: testuser$i" \
-		-H "X-User: testuser$i" \
+		-H "X-Token: testuser$user" \
+		-H "X-User: testuser$user" \
 		$URL/rest/sensors -d \
-	"{ \"name\": \"testsensor$i\" }"
+	"{ \"name\": \"testsensor$user\" }"
 done
 
 # phenomenons
-for i in {1..5}; do
+for user in {1..5}; do
 	curl -X POST -H "Content-Type: application/json" \
-		-H "X-Token: testuser$i" \
-		-H "X-User: testuser$i" \
+		-H "X-Token: testuser$user" \
+		-H "X-User: testuser$user" \
 		$URL/rest/phenomenons -d \
-	"{ \"name\": \"testphenomenon$i\" }"
+	"{ \"name\": \"testphenomenon$user\" }"
 done
 
 # tracks
-for i in {1..$USERS}; do 
-	for i in {1..$TRACKS}; do
+for user in {1..$USERS}; do 
+	for track in {1..$TRACKS}; do
 		curl -X POST \
 			-H "Content-Type: application/json" \
-			-H "X-Token: testuser$i" \
-			-H "X-User: testuser$i" \
-			$URL/rest/users/testuser$i/tracks -d \
+			-H "X-Token: testuser$user" \
+			-H "X-User: testuser$user" \
+			$URL/rest/users/testuser$user/tracks -d \
 		"{
 			\"type\": \"FeatureCollection\",
 			\"properties\": {
@@ -83,32 +83,34 @@ done
 
 
 # measurements
-for i in {1..$USERS}; do 
-	curl -s $URL/rest/users/testuser$i/tracks \
+for user in {1..$USERS}; do 
+	curl -s $URL/rest/users/testuser$user/tracks \
 		| python -m json.tool | grep href | cut -d '"' -f4 \
 		| while read track; do
 
 		for m in {1..$MEASUREMENTS}; do
 			t=$(date  --iso-8601=seconds --date "-1 hour +$m minutes")
 			curl -X POST -H "Content-Type: application/json" \
-				-H "X-Token: testuser$i" -H "X-User: testuser$i" $track/measurements -d \
+				-H "X-Token: testuser$user" \
+				-H "X-User: testuser$user" \
+				$track/measurements -d \
 				"{
-			        \"type\": \"Feature\",
-			        \"geometry\": {
-		                \"type\": \"Point\", 
-		                \"coordinates\": [ $(($RANDOM / 1000.0)), $(($RANDOM / 1000.0)) ]
-			        },
-			        \"properties\": {
-		                \"time\": \"$t\",
-		                \"sensor\": { \"name\": \"testsensor$(((($i - 1) % $SENSORS) + 1))\" },
-		                \"phenomenons\": {
-		                    \"testphenomenon1\": { \"value\": $(($RANDOM / 1000.0)) },
-		                    \"testphenomenon2\": { \"value\": $(($RANDOM / 1000.0)) },
-		                    \"testphenomenon3\": { \"value\": $(($RANDOM / 1000.0)) },
-		                    \"testphenomenon4\": { \"value\": $(($RANDOM / 1000.0)) },
-		                    \"testphenomenon5\": { \"value\": $(($RANDOM / 1000.0)) }
-			            }
-			        }
+					\"type\": \"Feature\",
+					\"geometry\": {
+						\"type\": \"Point\", 
+						\"coordinates\": [ $(($RANDOM / 1000.0)), $(($RANDOM / 1000.0)) ]
+					},
+					\"properties\": {
+						\"time\": \"$t\",
+						\"sensor\": { \"name\": \"testsensor$(((($user - 1) % $SENSORS) + 1))\" },
+						\"phenomenons\": {
+							\"testphenomenon1\": { \"value\": $(($RANDOM / 1000.0)) },
+							\"testphenomenon2\": { \"value\": $(($RANDOM / 1000.0)) },
+							\"testphenomenon3\": { \"value\": $(($RANDOM / 1000.0)) },
+							\"testphenomenon4\": { \"value\": $(($RANDOM / 1000.0)) },
+							\"testphenomenon5\": { \"value\": $(($RANDOM / 1000.0)) }
+						}
+					}
 				}"
 		done
 	done

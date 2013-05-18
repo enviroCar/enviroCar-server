@@ -28,10 +28,8 @@ import org.joda.time.format.DateTimeFormatter;
 
 import com.google.inject.Inject;
 
-import io.car.server.core.EntityFactory;
+import io.car.server.core.entities.EntityFactory;
 import io.car.server.core.entities.User;
-import io.car.server.rest.EntityDecoder;
-import io.car.server.rest.EntityEncoder;
 import io.car.server.rest.MediaTypes;
 import io.car.server.rest.resources.RootResource;
 import io.car.server.rest.resources.UserResource;
@@ -39,7 +37,7 @@ import io.car.server.rest.resources.UsersResource;
 
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class UserCoder implements EntityEncoder<User>, EntityDecoder<User> {
     private DateTimeFormatter formatter;
@@ -65,13 +63,13 @@ public class UserCoder implements EntityEncoder<User>, EntityDecoder<User> {
     public JSONObject encode(User t, MediaType mediaType) throws JSONException {
         JSONObject j = new JSONObject().put(JSONConstants.NAME_KEY, t.getName());
         if (mediaType.equals(MediaTypes.USER_TYPE)) {
-            URI measurements = uriInfo.getRequestUriBuilder().path(UserResource.MEASUREMENTS_PATH).build();
+            URI measurements = uriInfo.getRequestUriBuilder().path(UserResource.MEASUREMENTS).build();
             j.put(JSONConstants.MEASUREMENTS_KEY, measurements);
-            URI groups = uriInfo.getRequestUriBuilder().path(UserResource.GROUPS_PATH).build();
+            URI groups = uriInfo.getRequestUriBuilder().path(UserResource.GROUPS).build();
             j.put(JSONConstants.GROUPS_KEY, groups);
-            URI friends = uriInfo.getRequestUriBuilder().path(UserResource.FRIENDS_PATH).build();
+            URI friends = uriInfo.getRequestUriBuilder().path(UserResource.FRIENDS).build();
             j.put(JSONConstants.FRIENDS_KEY, friends);
-            URI tracks = uriInfo.getRequestUriBuilder().path(UserResource.TRACKS_PATH).build();
+            URI tracks = uriInfo.getRequestUriBuilder().path(UserResource.TRACKS).build();
             j.put(JSONConstants.TRACKS_KEY, tracks);
             j.put(JSONConstants.MAIL_KEY, t.getMail());
             j.put(JSONConstants.CREATED_KEY, formatter.print(t.getCreationDate()));
@@ -79,8 +77,8 @@ public class UserCoder implements EntityEncoder<User>, EntityDecoder<User> {
         } else {
             URI uri = uriInfo.getBaseUriBuilder()
                     .path(RootResource.class)
-                    .path(RootResource.USERS_PATH)
-                    .path(UsersResource.USER_PATH).build(t.getName());
+                    .path(RootResource.USERS)
+                    .path(UsersResource.USER).build(t.getName());
             return j.put(JSONConstants.HREF_KEY, uri);
 
         }

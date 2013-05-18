@@ -26,11 +26,11 @@ import io.car.server.core.entities.Group;
 import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
 import io.car.server.core.entities.Users;
-import io.car.server.core.db.UserDao;
+import io.car.server.core.dao.UserDao;
 import io.car.server.mongo.entity.MongoUser;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  * @author Arne de Wall
  */
 public class MongoUserDao extends BasicDAO<MongoUser, String> implements UserDao {
@@ -51,12 +51,12 @@ public class MongoUserDao extends BasicDAO<MongoUser, String> implements UserDao
     }
 
     @Override
-    public Users getAll() {
-        return getAll(0);
+    public Users get() {
+        return get(0);
     }
 
     @Override
-    public Users getAll(int limit) {
+    public Users get(int limit) {
         return fetch(createQuery().limit(limit).order(MongoUser.CREATION_DATE));
     }
 
