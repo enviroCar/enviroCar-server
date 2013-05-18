@@ -15,37 +15,24 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.provider;
+package io.car.server.rest.coding;
 
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.ext.Provider;
+import com.google.inject.Inject;
 
-import com.fasterxml.jackson.databind.JsonNode;
-
-import io.car.server.core.entities.Sensors;
+import io.car.server.core.entities.EntityFactory;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-@Provider
-@Produces(MediaType.APPLICATION_JSON)
-@Consumes(MediaType.APPLICATION_JSON)
-public class SensorsProvider extends AbstractJsonEntityProvider<Sensors> {
-
-    public SensorsProvider() {
-        super(Sensors.class);
+public abstract class AbstractEntityCoder<T> extends AbstractEntityEncoder<T> implements EntityDecoder<T> {
+    private EntityFactory entityFactory;
+    public EntityFactory getEntityFactory() {
+        return entityFactory;
     }
 
-    @Override
-    public Sensors read(JsonNode j, MediaType mediaType) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public JsonNode write(Sensors t, MediaType mediaType) {
-        return getCodingFactory().createSensorsEncoder().encode(t, mediaType);
+    @Inject
+    public void setEntityFactory(EntityFactory entityFactory) {
+        this.entityFactory = entityFactory;
     }
 }

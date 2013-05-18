@@ -22,8 +22,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import io.car.server.core.entities.User;
 
@@ -41,12 +40,12 @@ public class UserProvider extends AbstractJsonEntityProvider<User> {
     }
 
     @Override
-    public User read(JSONObject j, MediaType mediaType) throws JSONException {
+    public User read(JsonNode j, MediaType mediaType) {
         return getCodingFactory().createUserDecoder().decode(j, mediaType);
     }
 
     @Override
-    public JSONObject write(User t, MediaType mediaType) throws JSONException {
+    public JsonNode write(User t, MediaType mediaType) {
         return getCodingFactory().createUserEncoder().encode(t, mediaType);
     }
 }

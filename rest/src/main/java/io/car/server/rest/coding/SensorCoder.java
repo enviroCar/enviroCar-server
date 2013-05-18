@@ -20,15 +20,10 @@ package io.car.server.rest.coding;
 import java.net.URI;
 
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriInfo;
 
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
-import org.joda.time.format.DateTimeFormatter;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import com.google.inject.Inject;
-
-import io.car.server.core.entities.EntityFactory;
 import io.car.server.core.entities.Sensor;
 import io.car.server.rest.MediaTypes;
 import io.car.server.rest.resources.RootResource;
@@ -37,38 +32,26 @@ import io.car.server.rest.resources.SensorsResource;
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class SensorCoder implements EntityEncoder<Sensor>, EntityDecoder<Sensor> {
-    private final EntityFactory factory;
-    private final DateTimeFormatter format;
-    private final UriInfo uriInfo;
-
-
-    @Inject
-    public SensorCoder(EntityFactory factory, DateTimeFormatter format, UriInfo uriInfo) {
-        this.factory = factory;
-        this.format = format;
-        this.uriInfo = uriInfo;
+public class SensorCoder extends AbstractEntityCoder<Sensor> {
+    @Override
+    public Sensor decode(JsonNode j, MediaType mediaType) {
+        return getEntityFactory().createSensor().setName(j.path(JSONConstants.NAME_KEY).textValue());
     }
 
     @Override
-    public Sensor decode(JSONObject j, MediaType mediaType) throws JSONException {
-        return factory.createSensor().setName(j.getString(JSONConstants.NAME_KEY));
-    }
-
-    @Override
-    public JSONObject encode(Sensor t, MediaType mediaType) throws JSONException {
-        JSONObject j = new JSONObject().put(JSONConstants.NAME_KEY, t.getName());
-        if (mediaType.equals(MediaTypes.SENSOR_TYPE)) {
-            j.put(JSONConstants.CREATED_KEY, format.print(t.getCreationDate()));
-            j.put(JSONConstants.MODIFIED_KEY, format.print(t.getLastModificationDate()));
+    public ObjectNode encode(Sensor t, MediaType mediaType) {
+        ObjectNode user = getJsonFactory().objectNode().put(JSONConstants.NAME_KEY, t.getName());
+        if (mediaType.equals(MediaTypes.PHENOMENON_TYPE)) {
+            user.put(JSONConstants.CREATED_KEY, getDateTimeFormat().print(t.getCreationDate()));
+            user.put(JSONConstants.MODIFIED_KEY, getDateTimeFormat().print(t.getLastModificationDate()));
         } else {
-            URI href = uriInfo.getBaseUriBuilder()
+            URI href = getUriInfo().getBaseUriBuilder()
                     .path(RootResource.class)
                     .path(RootResource.SENSORS)
                     .path(SensorsResource.SENSOR)
                     .build(t.getName());
-            j.put(JSONConstants.HREF_KEY, href);
+            user.put(JSONConstants.HREF_KEY, href.toString());
         }
-        return j;
+        return user;
     }
 }

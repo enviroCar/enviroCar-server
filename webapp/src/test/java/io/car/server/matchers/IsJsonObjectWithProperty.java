@@ -17,15 +17,15 @@
  */
 package io.car.server.matchers;
 
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
+
+import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class IsJsonObjectWithProperty extends BaseMatcher<JSONObject> {
+public class IsJsonObjectWithProperty extends BaseMatcher<JsonNode> {
 
     private String key;
 
@@ -35,13 +35,9 @@ public class IsJsonObjectWithProperty extends BaseMatcher<JSONObject> {
 
     @Override
     public boolean matches(Object item) {
-        if (item instanceof JSONObject) {
-            JSONObject json = (JSONObject) item;
-            try {
-                return json.has(key) && json.get(key) != JSONObject.NULL;
-            } catch (JSONException ex) {
-                return false;
-            }
+        if (item instanceof JsonNode) {
+            JsonNode json = (JsonNode) item;
+            return !json.path(key).isMissingNode();
         } else {
             return false;
         }

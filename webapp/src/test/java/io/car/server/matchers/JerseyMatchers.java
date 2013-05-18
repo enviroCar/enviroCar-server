@@ -20,9 +20,9 @@ package io.car.server.matchers;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response.StatusType;
 
-import org.codehaus.jettison.json.JSONObject;
 import org.hamcrest.Matcher;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.sun.jersey.api.client.ClientResponse;
 
 /**
@@ -33,7 +33,7 @@ public class JerseyMatchers {
         return new IsCompatibleMediaType(type);
     }
 
-    public static Matcher<JSONObject> hasProperty(String key) {
+    public static Matcher<JsonNode> hasProperty(String key) {
         return new IsJsonObjectWithProperty(key);
     }
 
