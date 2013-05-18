@@ -21,8 +21,6 @@ import java.net.URI;
 
 import javax.ws.rs.core.MediaType;
 
-import org.codehaus.jettison.json.JSONArray;
-
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -39,7 +37,6 @@ public class GroupsCoder extends AbstractEntityEncoder<Groups> {
     public ObjectNode encode(Groups t, MediaType mediaType) {
         ObjectNode root = getJsonFactory().objectNode();
         ArrayNode groups = root.putArray(JSONConstants.GROUPS_KEY);
-        JSONArray a = new JSONArray();
         for (Group u : t) {
             URI uri = getUriInfo().getAbsolutePathBuilder().path(u.getName()).build();
             groups.addObject()
