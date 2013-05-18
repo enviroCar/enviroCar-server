@@ -30,11 +30,14 @@ import com.google.inject.servlet.GuiceServletContextListener;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class ServletContextListener extends GuiceServletContextListener {
+    private Injector injector;
     @Override
     protected Injector getInjector() {
-        Injector i = Guice.createInjector(new ServiceLoaderConfigurationModule());
-        configureLogging();
-        return i;
+        if (injector == null) {
+            injector = Guice.createInjector(new ServiceLoaderConfigurationModule());
+            configureLogging();
+        }
+        return injector;
 
     }
 
