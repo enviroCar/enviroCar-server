@@ -26,12 +26,19 @@ import java.lang.reflect.Type;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 import com.sun.jersey.core.provider.AbstractMessageReaderWriterProvider;
+
+import io.car.server.rest.coding.JSONConstants;
 
 
 /**
@@ -43,6 +50,8 @@ public abstract class AbstracJsonProvider<T> extends AbstractMessageReaderWriter
     @Inject
     private ObjectWriter writer;
     private final Class<T> classType;
+    @Inject
+    private JsonNodeFactory factory;
 
     public AbstracJsonProvider(Class<T> classType) {
         this.classType = classType;
@@ -61,7 +70,16 @@ public abstract class AbstracJsonProvider<T> extends AbstractMessageReaderWriter
     @Override
     public T readFrom(Class<T> c, Type gt, Annotation[] a, MediaType mt, MultivaluedMap<String, String> h,
                       InputStream in) throws IOException, WebApplicationException {
-        return read(reader.readTree(in), mt);
+        try {
+            return read(reader.readTree(in), mt);
+        } catch (JsonParseException e) {
+            ObjectNode error = factory.objectNode();
+            error.put(JSONConstants.ERROR, e.getMessage());
+            throw new WebApplicationException(Response
+                    .status(Status.BAD_REQUEST)
+                    .type(MediaType.APPLICATION_JSON_TYPE)
+                    .entity(error).build());
+        }
     }
 
     @Override
