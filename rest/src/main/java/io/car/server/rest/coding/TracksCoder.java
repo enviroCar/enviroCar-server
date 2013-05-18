@@ -21,8 +21,6 @@ import java.net.URI;
 
 import javax.ws.rs.core.MediaType;
 
-import org.codehaus.jettison.json.JSONArray;
-
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -33,8 +31,7 @@ public class TracksCoder extends AbstractEntityEncoder<Tracks> {
     @Override
     public ObjectNode encode(Tracks t, MediaType mediaType) {
         ObjectNode root = getJsonFactory().objectNode();
-        ArrayNode tracks = root.putArray(JSONConstants.HREF_KEY);
-        JSONArray array = new JSONArray();
+        ArrayNode tracks = root.putArray(JSONConstants.TRACKS_KEY);
         for (Track track : t) {
             URI uri = getUriInfo().getRequestUriBuilder().path(track.getIdentifier()).build();
             tracks.addObject()
