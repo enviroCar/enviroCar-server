@@ -1,8 +1,8 @@
-# car.io Server #
+# car.io Server [![Build Status](https://travis-ci.org/car-io/car.io-server.png)](https://travis-ci.org/car-io/car.io-server) #
 
 ## Schema ##
 
-The [JSON Schema](http://json-schema.org/) is maintained in [`rest/src/main/resources/schema`](https://github.com/car-io/car.io-server/tree/master/rest/src/main/resources/schema).
+The [JSON Schema](http://json-schema.org/) is maintained in [`rest/src/main/resources/schema`](rest/src/main/resources/schema).
 
 ## API Reference ##
 
