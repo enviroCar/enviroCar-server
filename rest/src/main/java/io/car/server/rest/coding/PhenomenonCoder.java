@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -33,18 +33,21 @@ import io.car.server.rest.resources.RootResource;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class PhenomenonCoder extends AbstractEntityCoder<Phenomenon> {
-
     @Override
     public Phenomenon decode(JsonNode j, MediaType mediaType) {
-        return getEntityFactory().createPhenomenon().setName(j.path(JSONConstants.NAME_KEY).textValue());
+        return getEntityFactory().createPhenomenon().setName(j
+                .path(JSONConstants.NAME_KEY).textValue());
     }
 
     @Override
     public ObjectNode encode(Phenomenon t, MediaType mediaType) {
-        ObjectNode user = getJsonFactory().objectNode().put(JSONConstants.NAME_KEY, t.getName());
+        ObjectNode user = getJsonFactory().objectNode()
+                .put(JSONConstants.NAME_KEY, t.getName());
         if (mediaType.equals(MediaTypes.PHENOMENON_TYPE)) {
-            user.put(JSONConstants.CREATED_KEY, getDateTimeFormat().print(t.getCreationDate()));
-            user.put(JSONConstants.MODIFIED_KEY, getDateTimeFormat().print(t.getLastModificationDate()));
+            user.put(JSONConstants.CREATED_KEY, getDateTimeFormat().print(t
+                    .getCreationDate()));
+            user.put(JSONConstants.MODIFIED_KEY, getDateTimeFormat().print(t
+                    .getLastModificationDate()));
         } else {
             URI href = getUriInfo().getBaseUriBuilder()
                     .path(RootResource.class)

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -30,17 +30,17 @@ public class MongoMeasurementValue implements MeasurementValue {
     private Object value;
     @Reference(PHENOMENON)
     private Phenomenon phenomenon;
-	
-	@Override
-	public Object getValue() {
-		return this.value;
-	}
 
-	@Override
-	public MeasurementValue setValue(Object value) {
-		this.value = value;
-		return this;
-	}
+    @Override
+    public Object getValue() {
+        return this.value;
+    }
+
+    @Override
+    public MeasurementValue setValue(Object value) {
+        this.value = value;
+        return this;
+    }
 
     @Override
     public Phenomenon getPhenomenon() {

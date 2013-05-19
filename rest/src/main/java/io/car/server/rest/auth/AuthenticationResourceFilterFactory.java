@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -33,8 +33,8 @@ import com.sun.jersey.spi.container.ResourceFilterFactory;
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class AuthenticationResourceFilterFactory implements ResourceFilterFactory {
-
+public class AuthenticationResourceFilterFactory implements
+        ResourceFilterFactory {
     @Override
     public List<ResourceFilter> create(AbstractMethod am) {
         Authenticated authenticated = am.getAnnotation(Authenticated.class);
@@ -44,13 +44,13 @@ public class AuthenticationResourceFilterFactory implements ResourceFilterFactor
         }
         Anonymous anonymous = am.getAnnotation(Anonymous.class);
         if (anonymous != null) {
-            return Collections.<ResourceFilter>singletonList(new AnonymousResourceFilter());
+            return Collections
+                    .<ResourceFilter>singletonList(new AnonymousResourceFilter());
         }
         return null;
     }
 
     private class AuthenticatedResourceFilter implements ResourceFilter {
-
         @Override
         public ContainerRequestFilter getRequestFilter() {
             return new AuthenticatedRequestFilter();
@@ -85,13 +85,14 @@ public class AuthenticationResourceFilterFactory implements ResourceFilterFactor
     }
 
     private class AuthenticatedRequestFilter implements ContainerRequestFilter {
-
         @Override
         public ContainerRequest filter(ContainerRequest request) {
-            if (request.getSecurityContext().isUserInRole(AuthConstants.ADMIN_ROLE)) {
+            if (request.getSecurityContext()
+                    .isUserInRole(AuthConstants.ADMIN_ROLE)) {
                 return request;
             }
-            if (!request.getSecurityContext().isUserInRole(AuthConstants.USER_ROLE)) {
+            if (!request.getSecurityContext()
+                    .isUserInRole(AuthConstants.USER_ROLE)) {
                 throw new WebApplicationException(Status.UNAUTHORIZED);
             }
             return request;

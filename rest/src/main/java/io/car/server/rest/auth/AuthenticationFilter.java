@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -27,16 +27,15 @@ import com.google.inject.Inject;
 import com.sun.jersey.spi.container.ContainerRequest;
 import com.sun.jersey.spi.container.ContainerRequestFilter;
 
-import io.car.server.core.util.PasswordEncoder;
 import io.car.server.core.Service;
 import io.car.server.core.entities.User;
 import io.car.server.core.exception.UserNotFoundException;
+import io.car.server.core.util.PasswordEncoder;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class AuthenticationFilter implements ContainerRequestFilter {
-    
     private final Service service;
     private final PasswordEncoder passwordEncoder;
 
@@ -48,8 +47,10 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 
     @Override
     public ContainerRequest filter(ContainerRequest request) {
-        String username = request.getRequestHeaders().getFirst(AuthConstants.USERNAME_HEADER);
-        String token = request.getRequestHeaders().getFirst(AuthConstants.TOKEN_HEADER);
+        String username = request.getRequestHeaders()
+                .getFirst(AuthConstants.USERNAME_HEADER);
+        String token = request.getRequestHeaders()
+                .getFirst(AuthConstants.TOKEN_HEADER);
 
         if (username != null) {
             if (username.isEmpty() || token == null || token.isEmpty()) {
@@ -58,7 +59,9 @@ public class AuthenticationFilter implements ContainerRequestFilter {
             try {
                 User user = service.getUser(username);
                 if (passwordEncoder.verify(token, user.getToken())) {
-                    request.setSecurityContext(new CustomSecurityContext(username, request.isSecure(), user.isAdmin()));
+                    request
+                            .setSecurityContext(new CustomSecurityContext(username, request
+                            .isSecure(), user.isAdmin()));
                 } else {
                     throw new WebApplicationException(Status.FORBIDDEN);
                 }

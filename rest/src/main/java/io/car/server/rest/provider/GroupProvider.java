@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -33,7 +33,6 @@ import io.car.server.core.entities.Group;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class GroupProvider extends AbstractJsonEntityProvider<Group> {
-
     public GroupProvider() {
         super(Group.class);
     }

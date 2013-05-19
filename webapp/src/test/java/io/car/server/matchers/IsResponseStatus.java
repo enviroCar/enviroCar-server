@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -44,7 +44,8 @@ public class IsResponseStatus extends BaseMatcher<ClientResponse> {
 
     @Override
     public void describeTo(Description description) {
-        description.appendText("has status ").appendValue(status.getStatusCode())
+        description.appendText("has status ")
+                .appendValue(status.getStatusCode())
                 .appendText(" ").appendValue(status.getReasonPhrase());
     }
 }

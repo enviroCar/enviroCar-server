@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -52,7 +52,8 @@ import io.car.server.rest.guice.JSONSchemaModule;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class SchemaValidationTest {
-    private static final Logger log = LoggerFactory.getLogger(SchemaValidationTest.class);
+    private static final Logger log = LoggerFactory
+            .getLogger(SchemaValidationTest.class);
     private static Set<String> schemas;
 
     @BeforeClass
@@ -64,13 +65,16 @@ public class SchemaValidationTest {
 
     @Test
     public void validate() throws ProcessingException, IOException {
-        ObjectWriter writer = new ObjectMapper().setNodeFactory(JsonNodeFactory.withExactBigDecimals(false))
-                .enable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS).writer();
+        ObjectWriter writer = new ObjectMapper().setNodeFactory(JsonNodeFactory
+                .withExactBigDecimals(false))
+                .enable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS)
+                .writer();
         JsonSchemaFactory fac = JsonSchemaFactory.byDefault();
         JsonSchema schemaV4 = fac.getJsonSchema("resource:/draftv4/schema");
         for (String schema : schemas) {
             log.info("Validating: {}", schema);
-            ProcessingReport result = schemaV4.validate(JsonLoader.fromResource(schema));
+            ProcessingReport result = schemaV4.validate(JsonLoader
+                    .fromResource(schema));
             for (ProcessingMessage m : result) {
                 String message = writer.writeValueAsString(m.asJson());;
                 switch (m.getLogLevel()) {

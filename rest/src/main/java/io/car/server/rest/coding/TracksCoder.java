@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -33,10 +33,12 @@ public class TracksCoder extends AbstractEntityEncoder<Tracks> {
         ObjectNode root = getJsonFactory().objectNode();
         ArrayNode tracks = root.putArray(JSONConstants.TRACKS_KEY);
         for (Track u : t) {
-            URI uri = getUriInfo().getRequestUriBuilder().path(u.getIdentifier()).build();
+            URI uri = getUriInfo().getRequestUriBuilder()
+                    .path(u.getIdentifier()).build();
             ObjectNode track = tracks.addObject();
             track.put(JSONConstants.IDENTIFIER_KEY, u.getIdentifier());
-            track.put(JSONConstants.MODIFIED_KEY, getDateTimeFormat().print(u.getLastModificationDate()));
+            track.put(JSONConstants.MODIFIED_KEY, getDateTimeFormat().print(u
+                    .getLastModificationDate()));
             if (u.getName() != null) {
                 track.put(JSONConstants.NAME_KEY, u.getName());
             }

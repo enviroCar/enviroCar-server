@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -33,7 +33,8 @@ import io.car.server.core.subscription.SubscriptionFilterParameters;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Entity("subscriptions")
-public class MongoSubscription extends MongoBaseEntity<MongoSubscription> implements Subscription {
+public class MongoSubscription extends MongoBaseEntity<MongoSubscription>
+        implements Subscription {
     public static final String SUBSCRIBER = "subscriber";
     public static final String SUBSCRIPTION_FILTERS = "filters";
     @Reference(value = SUBSCRIBER, lazy = true)

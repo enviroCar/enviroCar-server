@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -25,6 +25,8 @@ import org.joda.time.DateTime;
 public interface BaseEntity {
     String CREATION_DATE = "created";
     String LAST_MODIFIED = "modified";
+
     DateTime getCreationDate();
+
     DateTime getLastModificationDate();
 }

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -106,5 +106,4 @@ public class MongoGroup extends MongoBaseEntity<MongoGroup> implements Group {
                 .add(MEMBERS, getMembers())
                 .toString();
     }
-
 }

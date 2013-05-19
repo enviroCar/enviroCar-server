@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -69,7 +69,9 @@ public class GroupMembersResource extends AbstractResource {
     }
 
     @Path(MEMBER)
-    public GroupMemberResource friend(@PathParam("member") String username) throws UserNotFoundException {
-        return getResourceFactory().createGroupMemberResource(group, getService().getUser(username));
+    public GroupMemberResource friend(@PathParam("member") String username)
+            throws UserNotFoundException {
+        return getResourceFactory()
+                .createGroupMemberResource(group, getService().getUser(username));
     }
 }

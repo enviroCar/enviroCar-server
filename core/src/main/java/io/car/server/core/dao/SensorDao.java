@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -25,7 +25,9 @@ import io.car.server.core.entities.Sensors;
  * @author Jan Wirwahn <jan.wirwahn@wwu.de>
  */
 public interface SensorDao {
-	Sensor getByName(String name);
+    Sensor getByName(String name);
+
     Sensors get();
-	Sensor create(Sensor sensor);
+
+    Sensor create(Sensor sensor);
 }

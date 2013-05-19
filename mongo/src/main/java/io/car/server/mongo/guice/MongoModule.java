@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -28,9 +28,9 @@ import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
 
 import io.car.server.core.entities.EntityFactory;
-import io.car.server.core.entities.MeasurementValue;
 import io.car.server.core.entities.Group;
 import io.car.server.core.entities.Measurement;
+import io.car.server.core.entities.MeasurementValue;
 import io.car.server.core.entities.Phenomenon;
 import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.Track;

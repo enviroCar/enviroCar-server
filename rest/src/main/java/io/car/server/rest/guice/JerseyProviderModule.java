@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -16,7 +16,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package io.car.server.rest.guice;
-
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.AbstractModule;
@@ -48,7 +47,6 @@ import io.car.server.rest.provider.UsersProvider;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class JerseyProviderModule extends AbstractModule {
-
     @Override
     protected void configure() {
         bind(new TypeLiteral<GeometryConverter<JsonNode>>() {
@@ -74,5 +72,4 @@ public class JerseyProviderModule extends AbstractModule {
         bind(ResourceAlreadyExistExceptionMapper.class).in(Scopes.SINGLETON);
         bind(JsonValidationExceptionMapper.class).in(Scopes.SINGLETON);
     }
-
 }

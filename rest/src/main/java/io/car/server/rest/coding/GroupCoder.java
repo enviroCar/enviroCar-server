@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -53,10 +53,14 @@ public class GroupCoder extends AbstractEntityCoder<Group> {
         ObjectNode group = getJsonFactory().objectNode();
         group.put(JSONConstants.NAME_KEY, t.getName());
         group.put(JSONConstants.DESCRIPTION_KEY, t.getDescription());
-        group.put(JSONConstants.CREATED_KEY, getDateTimeFormat().print(t.getCreationDate()));
-        group.put(JSONConstants.MODIFIED_KEY, getDateTimeFormat().print(t.getLastModificationDate()));
-        group.put(JSONConstants.OWNER_KEY, userEncoder.encode(t.getOwner(), mediaType));
-        URI uri = getUriInfo().getRequestUriBuilder().path(GroupResource.MEMBERS).build();
+        group.put(JSONConstants.CREATED_KEY,
+                  getDateTimeFormat().print(t.getCreationDate()));
+        group.put(JSONConstants.MODIFIED_KEY,
+                  getDateTimeFormat().print(t.getLastModificationDate()));
+        group.put(JSONConstants.OWNER_KEY,
+                  userEncoder.encode(t.getOwner(), mediaType));
+        URI uri = getUriInfo().getRequestUriBuilder()
+                .path(GroupResource.MEMBERS).build();
         group.put(JSONConstants.MEMBERS_KEY, uri.toString());
         return group;
     }

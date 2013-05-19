@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -26,12 +26,10 @@ import com.google.inject.Module;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class ServiceLoaderConfigurationModule extends AbstractModule {
-
     @Override
     protected void configure() {
         for (Module m : ServiceLoader.load(Module.class)) {
             install(m);
         }
     }
-
 }

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -17,24 +17,22 @@
  */
 package io.car.server.core.entities;
 
-import io.car.server.core.entities.Group;
-import io.car.server.core.entities.Measurement;
-import io.car.server.core.entities.MeasurementValue;
-import io.car.server.core.entities.Phenomenon;
-import io.car.server.core.entities.Sensor;
-import io.car.server.core.entities.Track;
-import io.car.server.core.entities.User;
-
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  * @author Arne de Wall <a.dewall@52north.org>
  */
 public interface EntityFactory {
     User createUser();
+
     Group createGroup();
+
     Track createTrack();
+
     Measurement createMeasurement();
+
     MeasurementValue createMeasurementValue();
+
     Sensor createSensor();
+
     Phenomenon createPhenomenon();
 }

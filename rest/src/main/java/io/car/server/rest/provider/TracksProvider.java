@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -30,19 +30,17 @@ import io.car.server.core.entities.Tracks;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class TracksProvider extends AbstractJsonEntityProvider<Tracks> {
-	
-	public TracksProvider() {
-		super(Tracks.class);
-	}
+    public TracksProvider() {
+        super(Tracks.class);
+    }
 
-	@Override
+    @Override
     public Tracks read(JsonNode j, MediaType mediaType) {
-		throw new UnsupportedOperationException();
-	}
+        throw new UnsupportedOperationException();
+    }
 
-	@Override
+    @Override
     public JsonNode write(Tracks t, MediaType mediaType) {
         return getCodingFactory().createTracksEncoder().encode(t, mediaType);
-	}
-
+    }
 }

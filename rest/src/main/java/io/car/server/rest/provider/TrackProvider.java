@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -30,7 +30,6 @@ import io.car.server.core.entities.Track;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class TrackProvider extends AbstractJsonEntityProvider<Track> {
-
     public TrackProvider() {
         super(Track.class);
     }

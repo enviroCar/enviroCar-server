@@ -21,7 +21,8 @@
         "type": "object",
         "additionalProperties": false,
         "required": [
-        "name", "href"
+        "name",
+        "href"
         ],
         "properties": {
             "href": {
@@ -36,7 +37,8 @@
         "type": "object",
         "additionalProperties": false,
         "required": [
-            "name", "href"
+        "name",
+        "href"
         ],
         "properties": {
             "href": {
@@ -50,7 +52,8 @@
     "phenomenon-ref": {
         "type": "object",
         "required": [
-            "name", "href"
+        "name",
+        "href"
         ],
         "properties": {
             "name": {

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -65,30 +65,33 @@ public class TracksResource extends AbstractResource {
     @GET
     @Schema(response = Schemas.TRACKS)
     @Produces(MediaType.APPLICATION_JSON)
-	public Tracks get(@QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit) {
-        return user != null ? getService().getTracks(user) : getService().getTracks();
-	}
+    public Tracks get(
+            @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit) {
+        return user != null ? getService().getTracks(user) : getService()
+                .getTracks();
+    }
 
     @POST
     @Schema(request = Schemas.TRACK_CREATE)
     @Consumes(MediaType.APPLICATION_JSON)
-	@Authenticated
-    public Response create(Track track) throws ValidationException, ResourceAlreadyExistException, UserNotFoundException {
+    @Authenticated
+    public Response create(Track track) throws ValidationException,
+                                               ResourceAlreadyExistException,
+                                               UserNotFoundException {
         if (user != null && !canModifyUser(user)) {
             throw new WebApplicationException(Status.FORBIDDEN);
         }
-		return Response.created(
-				getUriInfo()
-						.getRequestUriBuilder()
-						.path(getService().createTrack(
-								track.setUser(getCurrentUser()))
-								.getIdentifier()).build()).build();
-	}
+        return Response.created(
+                getUriInfo()
+                .getRequestUriBuilder()
+                .path(getService().createTrack(track.setUser(getCurrentUser()))
+                .getIdentifier()).build()).build();
+    }
 
     @Path(TRACK)
-	public TrackResource user(@PathParam("track") String track)
-			throws TrackNotFoundException {
-		return getResourceFactory().createTrackResource(
-				getService().getTrack(track));
-	}
+    public TrackResource user(@PathParam("track") String track)
+            throws TrackNotFoundException {
+        return getResourceFactory().createTrackResource(
+                getService().getTrack(track));
+    }
 }

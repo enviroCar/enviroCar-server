@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -18,16 +18,14 @@
 package io.car.server.core.exception;
 
 /**
- * 
+ *
  * @author Arne de Wall <a.dewall@52north.org>
  *
  */
 public class MeasurementNotFoundException extends ResourceNotFoundException {
+    private static final long serialVersionUID = 8868660032711428006L;
 
-	private static final long serialVersionUID = 8868660032711428006L;
-
-	public MeasurementNotFoundException(String measurement) {
+    public MeasurementNotFoundException(String measurement) {
         super(String.format("The measurement '%s' was not found", measurement));
-	}
-
+    }
 }

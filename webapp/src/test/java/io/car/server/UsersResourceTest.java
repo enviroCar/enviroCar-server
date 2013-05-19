@@ -36,11 +36,13 @@ import io.car.server.rest.coding.JSONConstants;
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class RootResourceTest extends ResourceTestBase {
+public class UsersResourceTest extends ResourceTestBase {
     @Test
-    public void testGetRoot() {
-        ClientResponse response = resource().path("/rest")
-                .accept(MediaType.APPLICATION_JSON).get(ClientResponse.class);
+    public void testGetUsers() {
+        ClientResponse response = resource()
+                .path("/rest/users")
+                .accept(MediaType.APPLICATION_JSON)
+                .get(ClientResponse.class);
 
         assertThat(response, hasStatus(Status.OK));
         assertThat(response.getType(), isCompatible(MediaType.APPLICATION_JSON_TYPE));
@@ -48,28 +50,23 @@ public class RootResourceTest extends ResourceTestBase {
         JsonNode root = response.getEntity(JsonNode.class);
         assertThat(root, is(notNullValue()));
 
-        assertThat(root, hasProperty(JSONConstants.GROUPS_KEY));
-        assertThat(root.get(JSONConstants.GROUPS_KEY).asText(), instanceOf(String.class));
-
         assertThat(root, hasProperty(JSONConstants.USERS_KEY));
-        assertThat(root.get(JSONConstants.USERS_KEY).asText(), instanceOf(String.class));
+        assertThat(root.get(JSONConstants.USERS_KEY).isArray(), is(true));
     }
 
     @Test
-    public void testPostRoot() {
-        assertThat(resource().path("/rest").post(ClientResponse.class)
-                .getStatus(), is(405));
+    public void testPostUsers() {
     }
 
     @Test
-    public void testPutRoot() {
-        assertThat(resource().path("/rest").put(ClientResponse.class)
-                .getStatus(), is(405));
+    public void testPutUsers() {
+        assertThat(resource().path("/rest/users")
+                .put(ClientResponse.class).getStatus(), is(405));
     }
 
     @Test
-    public void testDeleteRoot() {
-        assertThat(resource().path("/rest").delete(ClientResponse.class)
-                .getStatus(), is(405));
+    public void testDeleteUsers() {
+        assertThat(resource().path("/rest/users")
+                .delete(ClientResponse.class).getStatus(), is(405));
     }
 }

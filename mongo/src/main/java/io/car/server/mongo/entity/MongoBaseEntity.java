@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -104,6 +104,7 @@ public class MongoBaseEntity<T> implements BaseEntity {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this).omitNullValues().add(ID, getId()).toString();
+        return Objects.toStringHelper(this).omitNullValues().add(ID, getId())
+                .toString();
     }
 }

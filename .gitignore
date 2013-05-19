@@ -4,3 +4,4 @@
 **/target
 **/nb-*.xml
 **/webapp/META-INF/context.xml
+/target/

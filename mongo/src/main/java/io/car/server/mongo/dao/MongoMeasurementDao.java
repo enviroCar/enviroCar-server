@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -34,76 +34,77 @@ import io.car.server.core.entities.User;
 import io.car.server.mongo.entity.MongoMeasurement;
 
 /**
- * 
+ *
  * @author Arne de Wall
  *
  */
-public class MongoMeasurementDao extends BasicDAO<MongoMeasurement, String> implements MeasurementDao {
+public class MongoMeasurementDao extends BasicDAO<MongoMeasurement, String>
+        implements MeasurementDao {
+    @Inject
+    protected MongoMeasurementDao(Datastore ds) {
+        super(MongoMeasurement.class, ds);
+    }
 
-	@Inject
-	protected MongoMeasurementDao(Datastore ds) {
-		super(MongoMeasurement.class, ds);
-	}
+    @Override
+    public MongoMeasurement create(Measurement measurement) {
+        return save(measurement);
+    }
 
-	@Override
-	public MongoMeasurement create(Measurement measurement) {
-		return save(measurement);
-	}
+    @Override
+    public MongoMeasurement save(Measurement measurement) {
+        MongoMeasurement mongoMeasurement = (MongoMeasurement) measurement;
+        save(mongoMeasurement);
+        return mongoMeasurement;
+    }
 
-	@Override
-	public MongoMeasurement save(Measurement measurement) {
-		MongoMeasurement mongoMeasurement = (MongoMeasurement) measurement;
-		save(mongoMeasurement);
-		return mongoMeasurement;
-	}
+    @Override
+    public void delete(Measurement measurement) {
+        delete((MongoMeasurement) measurement);
+    }
 
-	@Override
-	public void delete(Measurement measurement) {
-		delete((MongoMeasurement) measurement);
-	}
+    @Override
+    public Measurements getByPhenomenon(String phenomenon) {
+        Query<MongoMeasurement> q = createQuery();
+        q.field(MongoMeasurement.PHENOMENONS).equal(phenomenon);
+        return fetch(q);
+    }
 
-	@Override
-	public Measurements getByPhenomenon(String phenomenon) {
-		Query<MongoMeasurement> q = createQuery();
-		q.field(MongoMeasurement.PHENOMENONS).equal(phenomenon);
-		return fetch(q);
-	}
+    @Override
+    public Measurements getByTrack(Track track) {
+        return track.getMeasurements();
+    }
 
-	@Override
-	public Measurements getByTrack(Track track) {
-		return track.getMeasurements();
-	}
+    @Override
+    public Measurements getByBbox(Geometry bbox) {
+        // XXX TODO
+        Coordinate[] coords = bbox.getBoundary().getCoordinates();
+        return null;
+    }
 
-	@Override
-	public Measurements getByBbox(Geometry bbox) {
-		// XXX TODO
-		Coordinate[] coords = bbox.getBoundary().getCoordinates();
-		return null;
-	}
-
-	@Override
-	public Measurements getByBbox(double minx, double miny, double maxx,
-			double maxy) {
-		Query<MongoMeasurement> q = createQuery();
+    @Override
+    public Measurements getByBbox(double minx, double miny, double maxx,
+                                  double maxy) {
+        Query<MongoMeasurement> q = createQuery();
         q.field(MongoMeasurement.GEOMETRY).within(minx, miny, maxx, maxy);
-		return fetch(q);
-	}
+        return fetch(q);
+    }
 
-	@Override
-	public Measurements get() {
-		return get(0);
-	}
+    @Override
+    public Measurements get() {
+        return get(0);
+    }
 
-	@Override
-	public Measurements get(int limit) {
-		return fetch(createQuery().limit(limit).order(MongoMeasurement.CREATION_DATE));
-	}
+    @Override
+    public Measurements get(int limit) {
+        return fetch(createQuery().limit(limit)
+                .order(MongoMeasurement.CREATION_DATE));
+    }
 
     protected Measurements fetch(Query<MongoMeasurement> q) {
         return new Measurements(find(q).fetch());
     }
 
-	@Override
+    @Override
     public Measurement getById(String id) {
         ObjectId oid;
         try {
@@ -112,10 +113,11 @@ public class MongoMeasurementDao extends BasicDAO<MongoMeasurement, String> impl
             return null;
         }
         return find(createQuery().field(MongoMeasurement.ID).equal(oid)).get();
-	}
+    }
 
     @Override
     public Measurements getByUser(User user) {
-        return fetch(createQuery().field(MongoMeasurement.USER).equal(user).order(MongoMeasurement.TIME));
+        return fetch(createQuery().field(MongoMeasurement.USER).equal(user)
+                .order(MongoMeasurement.TIME));
     }
 }

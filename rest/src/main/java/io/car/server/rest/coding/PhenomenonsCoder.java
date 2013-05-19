@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -36,6 +36,7 @@ public class PhenomenonsCoder extends AbstractEntityEncoder<Phenomenons> {
     public PhenomenonsCoder(EntityEncoder<Phenomenon> phenomenonEncoder) {
         this.phenomenonEncoder = phenomenonEncoder;
     }
+
     @Override
     public ObjectNode encode(Phenomenons t, MediaType mediaType) {
         ObjectNode root = getJsonFactory().objectNode();

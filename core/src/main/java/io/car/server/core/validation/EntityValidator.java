@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -24,5 +24,6 @@ import io.car.server.core.exception.ValidationException;
  */
 public interface EntityValidator<T> {
     T validateCreate(T t) throws ValidationException;
+
     T validateUpdate(T t) throws ValidationException;
 }
