@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -32,19 +32,19 @@ import io.car.server.core.entities.Tracks;
 import io.car.server.core.entities.User;
 import io.car.server.mongo.entity.MongoTrack;
 
-/** 
- * 
+/**
+ *
  * @author Arne de Wall <a.dewall@52north.org>
  *
  */
-public class MongoTrackDao extends BasicDAO<MongoTrack, ObjectId> implements TrackDao {
+public class MongoTrackDao extends BasicDAO<MongoTrack, ObjectId> implements
+        TrackDao {
+    @Inject
+    public MongoTrackDao(Datastore ds) {
+        super(MongoTrack.class, ds);
+    }
 
-	@Inject
-	public MongoTrackDao(Datastore ds) {
-		super(MongoTrack.class, ds);
-	}
-	
-	@Override
+    @Override
     public Track getById(String id) {
         ObjectId oid;
         try {
@@ -53,61 +53,59 @@ public class MongoTrackDao extends BasicDAO<MongoTrack, ObjectId> implements Tra
             return null;
         }
         return get(oid);
-	}
+    }
 
-	@Override
+    @Override
     public Tracks getByUser(User user) {
         return fetch(createQuery().field(MongoTrack.USER).equal(user));
-	}
+    }
 
-	@Override
-	public Track create(Track track) {
-		return save(track);
-	}
+    @Override
+    public Track create(Track track) {
+        return save(track);
+    }
 
-	@Override
-	public MongoTrack save(Track track) {
-		MongoTrack mongoTrack = (MongoTrack) track;
-		save(mongoTrack);
-		return mongoTrack;
-	}
+    @Override
+    public MongoTrack save(Track track) {
+        MongoTrack mongoTrack = (MongoTrack) track;
+        save(mongoTrack);
+        return mongoTrack;
+    }
 
-	@Override
-	public void delete(Track track) {
-		delete((MongoTrack) track);
-	}
+    @Override
+    public void delete(Track track) {
+        delete((MongoTrack) track);
+    }
 
-	@Override
-	public Tracks getByBbox(double minx, double miny, double maxx, double maxy) {
-		Query<MongoTrack> q = createQuery();
-		q.field("measurements.location").within(minx, miny, maxx, maxy);
-		return fetch(q);
-	}
+    @Override
+    public Tracks getByBbox(double minx, double miny, double maxx, double maxy) {
+        Query<MongoTrack> q = createQuery();
+        q.field("measurements.location").within(minx, miny, maxx, maxy);
+        return fetch(q);
+    }
 
-	@Override
+    @Override
     public Tracks getByBbox(Geometry bbox) {
         //FIXME implement
         throw new UnsupportedOperationException("not yet implemented");
-	}
+    }
 
-	@Override
-	public Tracks get() {
-		return get(0);
-	}
+    @Override
+    public Tracks get() {
+        return get(0);
+    }
 
-	@Override
-	public Tracks get(int limit) {
-		return fetch(createQuery().limit(limit).order(MongoTrack.CREATION_DATE));
-	}
-	
-	protected Tracks fetch(Query<MongoTrack> q){
-		return new Tracks(find(q).fetch());
-	}
+    @Override
+    public Tracks get(int limit) {
+        return fetch(createQuery().limit(limit).order(MongoTrack.CREATION_DATE));
+    }
 
-	@Override
+    protected Tracks fetch(Query<MongoTrack> q) {
+        return new Tracks(find(q).fetch());
+    }
+
+    @Override
     public Tracks getBySensor(Sensor car) {
         return fetch(createQuery().field(MongoTrack.SENSOR).equal(car));
-	}
-
-
+    }
 }

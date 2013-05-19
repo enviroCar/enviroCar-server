@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -18,16 +18,14 @@
 package io.car.server.core.exception;
 
 /**
- * 
+ *
  * @author Arne de Wall <a.dewall@52north.org>
  *
  */
 public class TrackNotFoundException extends ResourceNotFoundException {
+    private static final long serialVersionUID = 9183814565661472011L;
 
-	private static final long serialVersionUID = 9183814565661472011L;
-
-	public TrackNotFoundException(String track) {
-		super(String.format("The track '%s' was not found", track));
-	}
-
+    public TrackNotFoundException(String track) {
+        super(String.format("The track '%s' was not found", track));
+    }
 }

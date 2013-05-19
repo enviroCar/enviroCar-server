@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -21,13 +21,12 @@ import io.car.server.core.entities.Measurement;
 import io.car.server.core.exception.ValidationException;
 
 /**
- * 
+ *
  * @author Arne de Wall <a.dewall@52north.org>
  *
  */
-public class MeasurementValidator extends AbstractValidator<Measurement>{
-
-	@Override
+public class MeasurementValidator extends AbstractValidator<Measurement> {
+    @Override
     public Measurement validateCreate(Measurement t) throws ValidationException {
         isNotNull("location", t.getGeometry());
         isNotNull("user", t.getUser());
@@ -35,9 +34,9 @@ public class MeasurementValidator extends AbstractValidator<Measurement>{
         isNull("created", t.getCreationDate());
         isNull("modified", t.getLastModificationDate());
         return t;
-	}
+    }
 
-	@Override
+    @Override
     public Measurement validateUpdate(Measurement t) throws ValidationException {
         isNull("created", t.getCreationDate());
         isNull("modified", t.getLastModificationDate());
@@ -45,6 +44,5 @@ public class MeasurementValidator extends AbstractValidator<Measurement>{
         isNull("user", t.getUser());
         isNull("sensor", t.getSensor());
         return t;
-	}
-
+    }
 }

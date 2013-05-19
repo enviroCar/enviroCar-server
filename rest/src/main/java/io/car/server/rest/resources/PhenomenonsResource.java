@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -39,6 +39,7 @@ import io.car.server.rest.validation.Schema;
  */
 public class PhenomenonsResource extends AbstractResource {
     public static final String PHENOMENON = "{phenomenon}";
+
     @GET
     @Schema(response = Schemas.PHENOMENONS)
     @Produces(MediaType.APPLICATION_JSON)
@@ -51,11 +52,15 @@ public class PhenomenonsResource extends AbstractResource {
     @Schema(request = Schemas.PHENOMENON_CREATE)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response create(Phenomenon phenomenon) {
-        return Response.created(getUriInfo().getRequestUriBuilder().path(getService().createPhenomenon(phenomenon).getName()).build()).build();
+        return Response.created(getUriInfo().getRequestUriBuilder()
+                .path(getService().createPhenomenon(phenomenon)
+                .getName()).build()).build();
     }
-    
+
     @Path(PHENOMENON)
-    public PhenomenonResource phenomenon(@PathParam("phenomenon") String id) throws PhenomenonNotFoundException {
-        return getResourceFactory().createPhenomenonResource(getService().getPhenomenonByName(id));
+    public PhenomenonResource phenomenon(@PathParam("phenomenon") String id)
+            throws PhenomenonNotFoundException {
+        return getResourceFactory().createPhenomenonResource(getService()
+                .getPhenomenonByName(id));
     }
 }

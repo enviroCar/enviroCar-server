@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -33,7 +33,6 @@ import io.car.server.core.entities.Phenomenon;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class PhenomenonProvider extends AbstractJsonEntityProvider<Phenomenon> {
-
     public PhenomenonProvider() {
         super(Phenomenon.class);
     }

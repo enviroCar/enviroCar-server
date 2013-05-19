@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -31,7 +31,8 @@ import io.car.server.mongo.entity.MongoSensor;
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class MongoSensorDao extends BasicDAO<MongoSensor, ObjectId> implements SensorDao {
+public class MongoSensorDao extends BasicDAO<MongoSensor, ObjectId> implements
+        SensorDao {
     @Inject
     public MongoSensorDao(Datastore ds) {
         super(MongoSensor.class, ds);

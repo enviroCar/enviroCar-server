@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -24,10 +24,16 @@ import io.car.server.core.entities.BaseEntity;
  */
 public interface Subscriber extends BaseEntity {
     String getName();
+
     Subscriber setName(String name);
+
     String getSecret();
+
     Subscriber setSecret(String secret);
+
     Subscriptions getSubscriptions();
+
     Subscriber addSubscription(Subscription subscription);
+
     Subscriber removeSubscription(Subscription subscription);
 }

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -32,7 +32,8 @@ public abstract class AbstractValidator<T> implements EntityValidator<T> {
         }
     }
 
-    protected void isNotNullOrEmpty(String name, String o) throws ValidationException {
+    protected void isNotNullOrEmpty(String name, String o) throws
+            ValidationException {
         isNotNull(name, o);
         if (o.isEmpty()) {
             throw new ValidationException(String.format("invalid %s", name));
@@ -47,28 +48,34 @@ public abstract class AbstractValidator<T> implements EntityValidator<T> {
 
     protected void isNull(String name, Object o) throws ValidationException {
         if (o != null) {
-            throw new ValidationException(String.format("%s may not be changed", name));
+            throw new ValidationException(String
+                    .format("%s may not be changed", name));
         }
     }
 
-    protected void isNullOrMatches(String name, String o, Pattern pattern) throws ValidationException {
+    protected void isNullOrMatches(String name, String o, Pattern pattern)
+            throws ValidationException {
         if (o != null) {
             matches(name, o, pattern);
         }
     }
 
-    protected void isEmpty(String name, Collection<?> o) throws ValidationException {
+    protected void isEmpty(String name, Collection<?> o) throws
+            ValidationException {
         if (o != null && !o.isEmpty()) {
             throw new ValidationException(String.format("%s is not empty", name));
         }
     }
 
-    protected void isEmpty(String name, Iterable<?> o) throws ValidationException {
+    protected void isEmpty(String name, Iterable<?> o) throws
+            ValidationException {
         if (o != null && !o.iterator().hasNext()) {
             throw new ValidationException(String.format("%s is not empty", name));
         }
     }
-    protected void matches(String name, String o, Pattern pattern) throws ValidationException {
+
+    protected void matches(String name, String o, Pattern pattern) throws
+            ValidationException {
         isNotNull(name, o);
         if (!pattern.matcher(o).matches()) {
             throw new ValidationException(String

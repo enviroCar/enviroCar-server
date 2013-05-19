@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -17,8 +17,9 @@
  */
 package io.car.server.rest.coding;
 
+import java.net.URI;
+
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriBuilder;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -55,10 +56,12 @@ public class TrackCoder extends AbstractEntityCoder<Track> {
         if (j.has(GeoJSONConstants.PROPERTIES_KEY)) {
             JsonNode p = j.path(GeoJSONConstants.PROPERTIES_KEY);
             if (p.has(JSONConstants.SENSOR_KEY)) {
-                track.setSensor(sensorDao.getByName(p.get(JSONConstants.SENSOR_KEY).asText()));
+                track.setSensor(sensorDao.getByName(p
+                        .get(JSONConstants.SENSOR_KEY).asText()));
             }
             track.setName(p.path(JSONConstants.NAME_KEY).textValue());
-            track.setDescription(p.path(JSONConstants.DESCRIPTION_KEY).textValue());
+            track.setDescription(p.path(JSONConstants.DESCRIPTION_KEY)
+                    .textValue());
         }
         return track;
     }
@@ -66,8 +69,10 @@ public class TrackCoder extends AbstractEntityCoder<Track> {
     @Override
     public ObjectNode encode(Track t, MediaType mediaType) {
         ObjectNode track = getJsonFactory().objectNode();
-        track.put(GeoJSONConstants.TYPE_KEY, GeoJSONConstants.FEATURE_COLLECTION_TYPE);
-        JsonNode features = measurementsEncoder.encode(t.getMeasurements(), mediaType)
+        track.put(GeoJSONConstants.TYPE_KEY,
+                  GeoJSONConstants.FEATURE_COLLECTION_TYPE);
+        JsonNode features = measurementsEncoder
+                .encode(t.getMeasurements(), mediaType)
                 .path(GeoJSONConstants.FEATURES_KEY);
         track.put(GeoJSONConstants.FEATURES_KEY, features);
         ObjectNode properties = track.putObject(GeoJSONConstants.PROPERTIES_KEY);
@@ -78,12 +83,18 @@ public class TrackCoder extends AbstractEntityCoder<Track> {
         if (t.getDescription() != null) {
             properties.put(JSONConstants.DESCRIPTION_KEY, t.getDescription());
         }
-        properties.put(JSONConstants.CREATED_KEY, getDateTimeFormat().print(t.getCreationDate()));
-        properties.put(JSONConstants.MODIFIED_KEY, getDateTimeFormat().print(t.getLastModificationDate()));
-        properties.put(JSONConstants.SENSOR_KEY, sensorEncoder.encode(t.getSensor(), mediaType));
-        properties.put(JSONConstants.USER_KEY, userEncoder.encode(t.getUser(), mediaType));
-        UriBuilder measurements = getUriInfo().getRequestUriBuilder().path(TrackResource.MEASUREMENTS);
-        properties.put(JSONConstants.MEASUREMENTS_KEY, measurements.build().toString());
+        properties.put(JSONConstants.CREATED_KEY,
+                       getDateTimeFormat().print(t.getCreationDate()));
+        properties.put(JSONConstants.MODIFIED_KEY,
+                       getDateTimeFormat().print(t.getLastModificationDate()));
+        properties.put(JSONConstants.SENSOR_KEY,
+                       sensorEncoder.encode(t.getSensor(), mediaType));
+        properties.put(JSONConstants.USER_KEY,
+                       userEncoder.encode(t.getUser(), mediaType));
+        URI measurements = getUriInfo().getRequestUriBuilder()
+                .path(TrackResource.MEASUREMENTS).build();
+        properties.put(JSONConstants.MEASUREMENTS_KEY,
+                       measurements.toString());
         return track;
     }
 }

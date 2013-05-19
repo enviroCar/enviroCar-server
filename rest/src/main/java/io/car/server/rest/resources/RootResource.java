@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -17,6 +17,8 @@
  */
 package io.car.server.rest.resources;
 
+import java.net.URI;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -32,7 +34,7 @@ import io.car.server.rest.coding.JSONConstants;
 import io.car.server.rest.validation.Schema;
 
 /**
- * 
+ *
  * @author Arne de Wall <a.dewall@52north.org>
  *
  */
@@ -52,18 +54,20 @@ public class RootResource extends AbstractResource {
     @Produces(MediaType.APPLICATION_JSON)
     public JsonNode get() {
         ObjectNode root = factory.objectNode();
-        root.put(JSONConstants.USERS_KEY,
-                 getUriInfo().getRequestUriBuilder().path(USERS).build().toString());
-        root.put(JSONConstants.GROUPS_KEY,
-                 getUriInfo().getRequestUriBuilder().path(GROUPS).build().toString());
-        root.put(JSONConstants.TRACKS_KEY,
-                 getUriInfo().getRequestUriBuilder().path(TRACKS).build().toString());
-        root.put(JSONConstants.SENSORS_KEY,
-                 getUriInfo().getRequestUriBuilder().path(SENSORS).build().toString());
-        root.put(JSONConstants.PHENOMENONS_KEY,
-                 getUriInfo().getRequestUriBuilder().path(PHENOMENONS).build().toString());
-        root.put(JSONConstants.MEASUREMENTS_KEY,
-                 getUriInfo().getRequestUriBuilder().path(MEASUREMENTS).build().toString());
+        URI users = getUriInfo().getRequestUriBuilder().path(USERS).build();
+        URI groups = getUriInfo().getRequestUriBuilder().path(GROUPS).build();
+        URI tracks = getUriInfo().getRequestUriBuilder().path(TRACKS).build();
+        URI sensors = getUriInfo().getRequestUriBuilder().path(SENSORS).build();
+        URI phenomenons = getUriInfo().getRequestUriBuilder()
+                .path(PHENOMENONS).build();
+        URI measurements = getUriInfo().getRequestUriBuilder()
+                .path(MEASUREMENTS).build();
+        root.put(JSONConstants.USERS_KEY, users.toString());
+        root.put(JSONConstants.GROUPS_KEY, groups.toString());
+        root.put(JSONConstants.TRACKS_KEY, tracks.toString());
+        root.put(JSONConstants.SENSORS_KEY, sensors.toString());
+        root.put(JSONConstants.PHENOMENONS_KEY, phenomenons.toString());
+        root.put(JSONConstants.MEASUREMENTS_KEY, measurements.toString());
         return root;
     }
 
@@ -76,10 +80,10 @@ public class RootResource extends AbstractResource {
     public GroupsResource groups() {
         return getResourceFactory().createGroupsResource();
     }
-    
+
     @Path(TRACKS)
     public TracksResource tracks() {
-    	return getResourceFactory().createTracksResource();
+        return getResourceFactory().createTracksResource();
     }
 
     @Path(PHENOMENONS)

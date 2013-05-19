@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -36,7 +36,8 @@ import io.car.server.mongo.MongoDB;
  */
 public class MongoConnectionModule extends AbstractModule {
     private static final String PROPERTIES_FILE = "/mongo.properties";
-    private static final Logger log = LoggerFactory.getLogger(MongoConnectionModule.class);
+    private static final Logger log = LoggerFactory
+            .getLogger(MongoConnectionModule.class);
 
     @Override
     protected void configure() {
@@ -54,7 +55,8 @@ public class MongoConnectionModule extends AbstractModule {
                 host = p.getProperty(MongoDB.HOST_PROPERTY).trim();
             }
             if (p.containsKey(MongoDB.PORT_PROPERTY)) {
-                port = Integer.valueOf(p.getProperty(MongoDB.PORT_PROPERTY).trim());
+                port = Integer.valueOf(p.getProperty(MongoDB.PORT_PROPERTY)
+                        .trim());
             }
             if (p.containsKey(MongoDB.USER_PROPERTY)) {
                 user = p.getProperty(MongoDB.USER_PROPERTY).trim();
@@ -63,13 +65,19 @@ public class MongoConnectionModule extends AbstractModule {
                 pass = p.getProperty(MongoDB.PASS_PROPERTY).trim().toCharArray();
             }
         } catch (IOException ex) {
-            log.error("Error reading mongo.properties. Using default values", ex);
+            log
+                    .error("Error reading mongo.properties. Using default values", ex);
         }
-        bind(String.class).annotatedWith(Names.named(MongoDB.DATABASE_PROPERTY)).toInstance(database);
-        bind(String.class).annotatedWith(Names.named(MongoDB.HOST_PROPERTY)).toInstance(host);
-        bind(Integer.class).annotatedWith(Names.named(MongoDB.PORT_PROPERTY)).toInstance(port);
-        bind(String.class).annotatedWith(Names.named(MongoDB.USER_PROPERTY)).toProvider(Providers.of(user));
-        bind(char[].class).annotatedWith(Names.named(MongoDB.PASS_PROPERTY)).toProvider(Providers.of(pass));
+        bind(String.class).annotatedWith(Names.named(MongoDB.DATABASE_PROPERTY))
+                .toInstance(database);
+        bind(String.class).annotatedWith(Names.named(MongoDB.HOST_PROPERTY))
+                .toInstance(host);
+        bind(Integer.class).annotatedWith(Names.named(MongoDB.PORT_PROPERTY))
+                .toInstance(port);
+        bind(String.class).annotatedWith(Names.named(MongoDB.USER_PROPERTY))
+                .toProvider(Providers.of(user));
+        bind(char[].class).annotatedWith(Names.named(MongoDB.PASS_PROPERTY))
+                .toProvider(Providers.of(pass));
     }
 
     private Properties getProperties() throws IOException {

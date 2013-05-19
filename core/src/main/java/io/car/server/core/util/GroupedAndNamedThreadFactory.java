@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -24,7 +24,6 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class GroupedAndNamedThreadFactory implements ThreadFactory {
-
     private final String groupName;
     private final AtomicInteger count;
     private final ThreadGroup group;
@@ -39,5 +38,4 @@ public class GroupedAndNamedThreadFactory implements ThreadFactory {
     public Thread newThread(Runnable r) {
         return new Thread(group, r, groupName + "-" + count.getAndIncrement());
     }
-
 }

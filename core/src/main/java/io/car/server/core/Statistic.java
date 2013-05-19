@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -28,7 +28,6 @@ import io.car.server.core.entities.Phenomenon;
  * @author jan
  */
 public class Statistic {
-
     private Phenomenon phenomenon;
     private long measurements;
     private double mean;

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -24,7 +24,8 @@ import com.github.jmkgreen.morphia.converters.TypeConverter;
 import com.github.jmkgreen.morphia.mapping.MappedField;
 import com.github.jmkgreen.morphia.mapping.MappingException;
 
-public class DurationConverter extends TypeConverter implements SimpleValueConverter {
+public class DurationConverter extends TypeConverter implements
+        SimpleValueConverter {
     public DurationConverter() {
         super(Duration.class);
     }
@@ -36,7 +37,8 @@ public class DurationConverter extends TypeConverter implements SimpleValueConve
 
     @Override
     @SuppressWarnings("rawtypes")
-    public Object decode(Class c, Object o, MappedField i) throws MappingException {
+    public Object decode(Class c, Object o, MappedField i) throws
+            MappingException {
         if (o == null) {
             return null;
         } else if (o instanceof Duration) {

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -117,7 +117,7 @@ public class MongoUser extends MongoBaseEntity<MongoUser> implements User {
         }
         return this;
     }
-    
+
     @Override
     public String toString() {
         return Objects.toStringHelper(this)

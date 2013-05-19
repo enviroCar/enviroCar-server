@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -27,8 +27,8 @@ import io.car.server.core.entities.Phenomenon;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Entity("phenomenons")
-public class MongoPhenomenon extends MongoBaseEntity<MongoPhenomenon> implements Phenomenon {
-    
+public class MongoPhenomenon extends MongoBaseEntity<MongoPhenomenon> implements
+        Phenomenon {
     @Indexed(unique = true)
     @Property(NAME)
     private String name;

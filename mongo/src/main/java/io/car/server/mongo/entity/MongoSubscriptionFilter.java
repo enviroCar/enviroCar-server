@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -25,7 +25,7 @@ import io.car.server.core.subscription.SubscriptionFilterParameter;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Entity("filters")
-public class MongoSubscriptionFilter extends MongoBaseEntity<MongoSubscriptionFilter> implements
+public class MongoSubscriptionFilter extends MongoBaseEntity<MongoSubscriptionFilter>
+        implements
         SubscriptionFilterParameter {
-
 }

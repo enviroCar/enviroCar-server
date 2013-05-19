@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -25,6 +25,8 @@ import io.car.server.core.entities.Phenomenons;
  */
 public interface PhenomenonDao {
     Phenomenon getByName(String name);
+
     Phenomenons get();
+
     Phenomenon create(Phenomenon phenomenon);
 }

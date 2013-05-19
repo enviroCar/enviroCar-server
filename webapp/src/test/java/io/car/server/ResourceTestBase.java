@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -17,17 +17,14 @@
  */
 package io.car.server;
 
-import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.servlet.DefaultServlet;
-import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.junit.Before;
 import org.junit.BeforeClass;
 
 import com.google.inject.Inject;
-import com.google.inject.Injector;
-import com.google.inject.servlet.GuiceFilter;
 import com.mongodb.DB;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
+import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 
 import io.car.server.rest.provider.JsonNodeProvider;
@@ -36,38 +33,29 @@ import io.car.server.rest.provider.JsonNodeProvider;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class ResourceTestBase {
-    private static Server server;
-    private static Injector injector;
-
     @BeforeClass
     public static void start() throws Exception {
-        server = new Server(9998);
-        server.setStopAtShutdown(true);
-        ServletContextHandler sch = new ServletContextHandler(server, "/");
-        sch.addFilter(GuiceFilter.class, "/*", null);
-        ServletContextListener servletContextListener = new ServletContextListener();
-        injector = servletContextListener.getInjector();
-        sch.addEventListener(servletContextListener);
-        sch.addServlet(DefaultServlet.class, "/");
-        server.start();
+        CarIoServer.getInstance();
+    }
+    @Inject
+    private DB db;
+    @Inject
+    private JsonNodeProvider jsonNodeProvider;
+
+    @Before
+    public void inject() throws Exception {
+        CarIoServer.getInstance().getInjector().injectMembers(this);
     }
 
-    private DB db;
-
     protected WebResource resource() {
-        DefaultClientConfig defaultClientConfig = new DefaultClientConfig();
-        defaultClientConfig.getSingletons().add(injector.getInstance(JsonNodeProvider.class));
-        return Client.create(defaultClientConfig).resource("http://localhost:9998");
+        ClientConfig cc = new DefaultClientConfig();
+        cc.getSingletons().add(jsonNodeProvider);
+        return Client.create(cc).resource("http://localhost:9998");
     }
 
     protected void clearDatabase() {
         for (String name : db.getCollectionNames()) {
             db.getCollection(name).drop();
         }
-    }
-
-    @Inject
-    public void setDb(DB db) {
-        this.db = db;
     }
 }

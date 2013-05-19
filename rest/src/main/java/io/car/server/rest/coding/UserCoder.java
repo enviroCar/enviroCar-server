@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -30,12 +30,10 @@ import io.car.server.rest.resources.RootResource;
 import io.car.server.rest.resources.UserResource;
 import io.car.server.rest.resources.UsersResource;
 
-
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class UserCoder extends AbstractEntityCoder<User> {
-
     @Override
     public User decode(JsonNode j, MediaType mediaType) {
         return getEntityFactory().createUser()
@@ -46,20 +44,26 @@ public class UserCoder extends AbstractEntityCoder<User> {
 
     @Override
     public ObjectNode encode(User t, MediaType mediaType) {
-        ObjectNode j = getJsonFactory().objectNode().put(JSONConstants.NAME_KEY, t.getName());
+        ObjectNode j = getJsonFactory().objectNode()
+                .put(JSONConstants.NAME_KEY, t.getName());
         if (mediaType.equals(MediaTypes.USER_TYPE)) {
-            URI measurements = getUriInfo().getRequestUriBuilder().path(UserResource.MEASUREMENTS).build();
-            URI groups = getUriInfo().getRequestUriBuilder().path(UserResource.GROUPS).build();
-            URI friends = getUriInfo().getRequestUriBuilder().path(UserResource.FRIENDS).build();
-            URI tracks = getUriInfo().getRequestUriBuilder().path(UserResource.TRACKS).build();
-
+            URI measurements = getUriInfo().getRequestUriBuilder()
+                    .path(UserResource.MEASUREMENTS).build();
+            URI groups = getUriInfo().getRequestUriBuilder()
+                    .path(UserResource.GROUPS).build();
+            URI friends = getUriInfo().getRequestUriBuilder()
+                    .path(UserResource.FRIENDS).build();
+            URI tracks = getUriInfo().getRequestUriBuilder()
+                    .path(UserResource.TRACKS).build();
             j.put(JSONConstants.MEASUREMENTS_KEY, measurements.toString());
             j.put(JSONConstants.GROUPS_KEY, groups.toString());
             j.put(JSONConstants.FRIENDS_KEY, friends.toString());
             j.put(JSONConstants.TRACKS_KEY, tracks.toString());
             j.put(JSONConstants.MAIL_KEY, t.getMail());
-            j.put(JSONConstants.CREATED_KEY, getDateTimeFormat().print(t.getCreationDate()));
-            j.put(JSONConstants.MODIFIED_KEY, getDateTimeFormat().print(t.getLastModificationDate()));
+            j.put(JSONConstants.CREATED_KEY,
+                  getDateTimeFormat().print(t.getCreationDate()));
+            j.put(JSONConstants.MODIFIED_KEY,
+                  getDateTimeFormat().print(t.getLastModificationDate()));
         } else {
             URI uri = getUriInfo().getBaseUriBuilder()
                     .path(RootResource.class)

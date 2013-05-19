@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -17,8 +17,6 @@
  */
 package io.car.server.rest.guice;
 
-
-
 import com.github.fge.jsonschema.main.JsonSchemaFactory;
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
@@ -29,7 +27,8 @@ import com.google.inject.Scopes;
 public class JerseyValidationModule extends AbstractModule {
     @Override
     protected void configure() {
-        bind(JsonSchemaFactory.class).toProvider(JSONSchemaFactoryProvider.class).in(Scopes.SINGLETON);
+        bind(JsonSchemaFactory.class)
+                .toProvider(JSONSchemaFactoryProvider.class)
+                .in(Scopes.SINGLETON);
     }
-    
 }

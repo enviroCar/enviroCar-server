@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -22,11 +22,11 @@ import com.github.jmkgreen.morphia.dao.BasicDAO;
 import com.github.jmkgreen.morphia.query.Query;
 import com.google.inject.Inject;
 
+import io.car.server.core.dao.UserDao;
 import io.car.server.core.entities.Group;
 import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
 import io.car.server.core.entities.Users;
-import io.car.server.core.dao.UserDao;
 import io.car.server.mongo.entity.MongoUser;
 
 /**
@@ -34,7 +34,6 @@ import io.car.server.mongo.entity.MongoUser;
  * @author Arne de Wall
  */
 public class MongoUserDao extends BasicDAO<MongoUser, String> implements UserDao {
-
     @Inject
     public MongoUserDao(Datastore datastore) {
         super(MongoUser.class, datastore);
@@ -86,8 +85,8 @@ public class MongoUserDao extends BasicDAO<MongoUser, String> implements UserDao
         return new Users(find(q).fetch());
     }
 
-	@Override
-	public Users getByTrack(Track track) {
-		return fetch(createQuery().field(MongoUser.TRACKS).hasThisElement(track));
-	}
+    @Override
+    public Users getByTrack(Track track) {
+        return fetch(createQuery().field(MongoUser.TRACKS).hasThisElement(track));
+    }
 }

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -25,19 +25,28 @@ import io.car.server.core.entities.Tracks;
 import io.car.server.core.entities.User;
 
 /**
- * 
+ *
  * @author Arne de Wall <a.dewall@52north.org>
  *
  */
 public interface TrackDao {
-	Track create(Track track);
-	Track save(Track track);
-	void delete(Track track);
-	Track getById(String id);
-	Tracks getByUser(User user);
+    Track create(Track track);
+
+    Track save(Track track);
+
+    void delete(Track track);
+
+    Track getById(String id);
+
+    Tracks getByUser(User user);
+
     Tracks getBySensor(Sensor sensor);
-	Tracks getByBbox(double minx, double miny, double maxx, double maxy);
-	Tracks getByBbox(Geometry bbox);
-	Tracks get();
-	Tracks get(int limit);
+
+    Tracks getByBbox(double minx, double miny, double maxx, double maxy);
+
+    Tracks getByBbox(Geometry bbox);
+
+    Tracks get();
+
+    Tracks get(int limit);
 }

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -33,7 +33,8 @@ import io.car.server.mongo.entity.MongoSensor;
  * @author Christian Autermann <autermann@uni-muenster.de>
  * @author Jan Wirwahn <jan.wirwahn@wwu.de>
  */
-public class MongoPhenomenonDao extends BasicDAO<MongoPhenomenon, ObjectId> implements PhenomenonDao {
+public class MongoPhenomenonDao extends BasicDAO<MongoPhenomenon, ObjectId>
+        implements PhenomenonDao {
     @Inject
     public MongoPhenomenonDao(Datastore datastore) {
         super(MongoPhenomenon.class, datastore);
@@ -48,7 +49,7 @@ public class MongoPhenomenonDao extends BasicDAO<MongoPhenomenon, ObjectId> impl
     public Phenomenons get() {
         return new Phenomenons(find().fetch());
     }
-    
+
     @Override
     public Phenomenon create(Phenomenon phen) {
         MongoPhenomenon ph = (MongoPhenomenon) phen;

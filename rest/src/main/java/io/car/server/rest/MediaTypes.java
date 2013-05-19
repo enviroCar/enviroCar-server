@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -21,7 +21,6 @@
  */
 package io.car.server.rest;
 
-
 import javax.ws.rs.core.MediaType;
 
 import com.google.common.collect.ImmutableMap;
@@ -32,36 +31,64 @@ import com.google.common.collect.ImmutableMap;
  */
 public class MediaTypes {
     public static final String SCHEMA_ATTRIBUTE = "schema";
-    public static final MediaType ROOT_TYPE = withSchema(Schemas.ROOT);
-    public static final MediaType USERS_TYPE = withSchema(Schemas.USERS);
-    public static final MediaType USER_TYPE = withSchema(Schemas.USER);
-    public static final MediaType USER_MODIFY_TYPE = withSchema(Schemas.USER_MODIFY);
-    public static final MediaType USER_CREATE_TYPE = withSchema(Schemas.USER_CREATE);
-    public static final MediaType USER_REF_TYPE = withSchema(Schemas.USER_REF);
-    public static final MediaType GROUPS_TYPE = withSchema(Schemas.GROUPS);
-    public static final MediaType GROUP_TYPE = withSchema(Schemas.GROUP);
-    public static final MediaType GROUP_MODIFY_TYPE = withSchema(Schemas.GROUP_MODIFY);
-    public static final MediaType GROUP_CREATE_TYPE = withSchema(Schemas.GROUP_CREATE);
-    public static final MediaType GROUP_REF_TYPE = withSchema(Schemas.GROUP_REF);
-    public static final MediaType TRACK_TYPE = withSchema(Schemas.TRACK);
-    public static final MediaType TRACKS_TYPE = withSchema(Schemas.TRACKS);
-    public static final MediaType TRACK_CREATE_TYPE = withSchema(Schemas.TRACK_CREATE);
-    public static final MediaType TRACK_MODIFY_TYPE = withSchema(Schemas.TRACK_MODIFY);
-    public static final MediaType MEASUREMENT_TYPE = withSchema(Schemas.MEASUREMENT);
-    public static final MediaType MEASUREMENTS_TYPE = withSchema(Schemas.MEASUREMENTS);
-    public static final MediaType MEASUREMENT_CREATE_TYPE = withSchema(Schemas.MEASUREMENT_CREATE);
-    public static final MediaType MEASUREMENT_MODIFY_TYPE = withSchema(Schemas.MEASUREMENT_MODIFY);
-    public static final MediaType SENSOR_TYPE = withSchema(Schemas.SENSOR);
-    public static final MediaType SENSORS_TYPE = withSchema(Schemas.SENSORS);
-    public static final MediaType SENSOR_CREATE_TYPE = withSchema(Schemas.SENSOR_CREATE);
-    public static final MediaType SENSOR_MODIFY_TYPE = withSchema(Schemas.SENSOR_MODIFY);
-    public static final MediaType PHENOMENON_TYPE = withSchema(Schemas.PHENOMENON);
-    public static final MediaType PHENOMENONS_TYPE = withSchema(Schemas.PHENOMENONS);
-    public static final MediaType PHENOMENON_CREATE_TYPE = withSchema(Schemas.PHENOMENON_CREATE);
-    public static final MediaType PHENOMENON_MODIFY_TYPE = withSchema(Schemas.PHENOMENON_MODIFY);
+    public static final MediaType ROOT_TYPE =
+            withSchema(Schemas.ROOT);
+    public static final MediaType USERS_TYPE =
+            withSchema(Schemas.USERS);
+    public static final MediaType USER_TYPE =
+            withSchema(Schemas.USER);
+    public static final MediaType USER_MODIFY_TYPE =
+            withSchema(Schemas.USER_MODIFY);
+    public static final MediaType USER_CREATE_TYPE =
+            withSchema(Schemas.USER_CREATE);
+    public static final MediaType USER_REF_TYPE =
+            withSchema(Schemas.USER_REF);
+    public static final MediaType GROUPS_TYPE =
+            withSchema(Schemas.GROUPS);
+    public static final MediaType GROUP_TYPE =
+            withSchema(Schemas.GROUP);
+    public static final MediaType GROUP_MODIFY_TYPE =
+            withSchema(Schemas.GROUP_MODIFY);
+    public static final MediaType GROUP_CREATE_TYPE =
+            withSchema(Schemas.GROUP_CREATE);
+    public static final MediaType GROUP_REF_TYPE =
+            withSchema(Schemas.GROUP_REF);
+    public static final MediaType TRACK_TYPE =
+            withSchema(Schemas.TRACK);
+    public static final MediaType TRACKS_TYPE =
+            withSchema(Schemas.TRACKS);
+    public static final MediaType TRACK_CREATE_TYPE =
+            withSchema(Schemas.TRACK_CREATE);
+    public static final MediaType TRACK_MODIFY_TYPE =
+            withSchema(Schemas.TRACK_MODIFY);
+    public static final MediaType MEASUREMENT_TYPE =
+            withSchema(Schemas.MEASUREMENT);
+    public static final MediaType MEASUREMENTS_TYPE =
+            withSchema(Schemas.MEASUREMENTS);
+    public static final MediaType MEASUREMENT_CREATE_TYPE =
+            withSchema(Schemas.MEASUREMENT_CREATE);
+    public static final MediaType MEASUREMENT_MODIFY_TYPE =
+            withSchema(Schemas.MEASUREMENT_MODIFY);
+    public static final MediaType SENSOR_TYPE =
+            withSchema(Schemas.SENSOR);
+    public static final MediaType SENSORS_TYPE =
+            withSchema(Schemas.SENSORS);
+    public static final MediaType SENSOR_CREATE_TYPE =
+            withSchema(Schemas.SENSOR_CREATE);
+    public static final MediaType SENSOR_MODIFY_TYPE =
+            withSchema(Schemas.SENSOR_MODIFY);
+    public static final MediaType PHENOMENON_TYPE =
+            withSchema(Schemas.PHENOMENON);
+    public static final MediaType PHENOMENONS_TYPE =
+            withSchema(Schemas.PHENOMENONS);
+    public static final MediaType PHENOMENON_CREATE_TYPE =
+            withSchema(Schemas.PHENOMENON_CREATE);
+    public static final MediaType PHENOMENON_MODIFY_TYPE =
+            withSchema(Schemas.PHENOMENON_MODIFY);
 
     public static MediaType withSchema(String schema) {
-        return new MediaType("application", "json", ImmutableMap.of(SCHEMA_ATTRIBUTE, schema));
+        return new MediaType("application", "json",
+                             ImmutableMap.of(SCHEMA_ATTRIBUTE, schema));
     }
 
     private MediaTypes() {

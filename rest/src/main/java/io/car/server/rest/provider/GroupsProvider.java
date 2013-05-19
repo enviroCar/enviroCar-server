@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -17,7 +17,6 @@
  */
 package io.car.server.rest.provider;
 
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -34,7 +33,6 @@ import io.car.server.core.entities.Groups;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class GroupsProvider extends AbstractJsonEntityProvider<Groups> {
-
     public GroupsProvider() {
         super(Groups.class);
     }

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -17,7 +17,6 @@
  */
 package io.car.server.core;
 
-import io.car.server.core.util.PasswordEncoder;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -49,6 +48,7 @@ import io.car.server.core.exception.TrackNotFoundException;
 import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.core.exception.ValidationException;
 import io.car.server.core.update.EntityUpdater;
+import io.car.server.core.util.PasswordEncoder;
 import io.car.server.core.validation.EntityValidator;
 
 /**
@@ -249,7 +249,8 @@ public class Service {
         return this.measurementDao.getByUser(user);
     }
 
-    public Measurement getMeasurement(String id) throws MeasurementNotFoundException {
+    public Measurement getMeasurement(String id) throws
+            MeasurementNotFoundException {
         Measurement m = this.measurementDao.getById(id);
         if (m == null) {
             throw new MeasurementNotFoundException(id);
@@ -258,8 +259,9 @@ public class Service {
     }
 
     public Measurement modifyMeasurement(Measurement measurement,
-                                         Measurement changes) throws ValidationException,
-                                                                     IllegalModificationException {
+                                         Measurement changes) throws
+            ValidationException,
+            IllegalModificationException {
         measurementValidator.validateCreate(measurement);
         return this.measurementDao.save(this.measurementUpdater.update(changes,
                                                                        measurement));

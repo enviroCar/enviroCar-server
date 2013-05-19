@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -39,15 +39,18 @@ public class SchemaServlet extends HttpServlet {
     private static final long serialVersionUID = -8109532675882820381L;
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String file = req.getRequestURI().replace(req.getContextPath(), "").replace(req.getServletPath(), "");
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+        String file = req.getRequestURI().replace(req.getContextPath(), "")
+                .replace(req.getServletPath(), "");
         InputStream is = null;
         try {
             is = SchemaServlet.class.getResourceAsStream("/schema" + file);
             if (is == null) {
                 resp.sendError(HttpServletResponse.SC_NOT_FOUND);
             } else {
-                resp.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON);
+                resp
+                        .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON);
                 ByteStreams.copy(is, resp.getOutputStream());
             }
         } finally {

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -26,7 +26,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import io.car.server.core.entities.User;
 
-
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
@@ -34,7 +33,6 @@ import io.car.server.core.entities.User;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class UserProvider extends AbstractJsonEntityProvider<User> {
-
     public UserProvider() {
         super(User.class);
     }

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -44,5 +44,4 @@ public class IsCompatibleMediaType extends BaseMatcher<MediaType> {
     public void describeTo(Description description) {
         description.appendText("is compatiple to ").appendValue(this.type);
     }
-
 }

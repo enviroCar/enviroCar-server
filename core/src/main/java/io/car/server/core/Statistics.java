@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -27,8 +27,7 @@ import io.car.server.core.util.UpCastingIterable;
  *
  * @author jan
  */
-public class Statistics extends UpCastingIterable<Statistic>{
-
+public class Statistics extends UpCastingIterable<Statistic> {
     public Statistics(Iterable<? extends Statistic> delegate) {
         super(delegate);
     }

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -47,7 +47,8 @@ import io.car.server.core.util.GeometryConverter;
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class GeoJSON extends AbstractEntityCoder<Geometry> implements GeometryConverter<JsonNode> {
+public class GeoJSON extends AbstractEntityCoder<Geometry> implements
+        GeometryConverter<JsonNode> {
     private final GeometryFactory factory;
 
     @Inject
@@ -91,7 +92,8 @@ public class GeoJSON extends AbstractEntityCoder<Geometry> implements GeometryCo
         }
     }
 
-    protected ObjectNode encodeGeometry(Geometry geometry) throws GeometryConverterException {
+    protected ObjectNode encodeGeometry(Geometry geometry) throws
+            GeometryConverterException {
         Preconditions.checkNotNull(geometry);
         if (geometry.isEmpty()) {
             return null;
@@ -110,7 +112,8 @@ public class GeoJSON extends AbstractEntityCoder<Geometry> implements GeometryCo
         } else if (geometry instanceof GeometryCollection) {
             return encode((GeometryCollection) geometry);
         } else {
-            throw new GeometryConverterException("unknown geometry type " + geometry.getGeometryType());
+            throw new GeometryConverterException("unknown geometry type " +
+                                                 geometry.getGeometryType());
         }
     }
 
@@ -124,7 +127,8 @@ public class GeoJSON extends AbstractEntityCoder<Geometry> implements GeometryCo
     }
 
     @Override
-    public ObjectNode encode(LineString geometry) throws GeometryConverterException {
+    public ObjectNode encode(LineString geometry) throws
+            GeometryConverterException {
         Preconditions.checkNotNull(geometry);
         ObjectNode json = getJsonFactory().objectNode();
         json.put(TYPE_KEY, LINE_STRING_TYPE);
@@ -142,7 +146,8 @@ public class GeoJSON extends AbstractEntityCoder<Geometry> implements GeometryCo
     }
 
     @Override
-    public ObjectNode encode(MultiPoint geometry) throws GeometryConverterException {
+    public ObjectNode encode(MultiPoint geometry) throws
+            GeometryConverterException {
         Preconditions.checkNotNull(geometry);
         ObjectNode json = getJsonFactory().objectNode();
         json.put(TYPE_KEY, MULTI_POINT_TYPE);
@@ -155,7 +160,8 @@ public class GeoJSON extends AbstractEntityCoder<Geometry> implements GeometryCo
     }
 
     @Override
-    public ObjectNode encode(MultiLineString geometry) throws GeometryConverterException {
+    public ObjectNode encode(MultiLineString geometry) throws
+            GeometryConverterException {
         Preconditions.checkNotNull(geometry);
         ObjectNode json = getJsonFactory().objectNode();
         json.put(TYPE_KEY, MULTI_LINE_STRING_TYPE);
@@ -168,7 +174,8 @@ public class GeoJSON extends AbstractEntityCoder<Geometry> implements GeometryCo
     }
 
     @Override
-    public ObjectNode encode(MultiPolygon geometry) throws GeometryConverterException {
+    public ObjectNode encode(MultiPolygon geometry) throws
+            GeometryConverterException {
         Preconditions.checkNotNull(geometry);
         ObjectNode json = getJsonFactory().objectNode();
         json.put(TYPE_KEY, MULTI_POLYGON_TYPE);
@@ -181,7 +188,8 @@ public class GeoJSON extends AbstractEntityCoder<Geometry> implements GeometryCo
     }
 
     @Override
-    public ObjectNode encode(GeometryCollection geometry) throws GeometryConverterException {
+    public ObjectNode encode(GeometryCollection geometry) throws
+            GeometryConverterException {
         Preconditions.checkNotNull(geometry);
         ObjectNode json = getJsonFactory().objectNode();
         json.put(TYPE_KEY, GEOMETRY_COLLECTION_TYPE);
@@ -193,14 +201,16 @@ public class GeoJSON extends AbstractEntityCoder<Geometry> implements GeometryCo
         return json;
     }
 
-    protected ArrayNode encodeCoordinate(Coordinate coordinate) throws GeometryConverterException {
+    protected ArrayNode encodeCoordinate(Coordinate coordinate) throws
+            GeometryConverterException {
         ArrayNode list = getJsonFactory().arrayNode();
         list.add(coordinate.x);
         list.add(coordinate.y);
         return list;
     }
 
-    protected ArrayNode encodeCoordinates(CoordinateSequence coordinates) throws GeometryConverterException {
+    protected ArrayNode encodeCoordinates(CoordinateSequence coordinates) throws
+            GeometryConverterException {
         ArrayNode list = getJsonFactory().arrayNode();
         for (int i = 0; i < coordinates.size(); ++i) {
             ArrayNode coordinate = getJsonFactory().arrayNode();
@@ -211,15 +221,18 @@ public class GeoJSON extends AbstractEntityCoder<Geometry> implements GeometryCo
         return list;
     }
 
-    protected ArrayNode encodeCoordinates(Point geometry) throws GeometryConverterException {
+    protected ArrayNode encodeCoordinates(Point geometry) throws
+            GeometryConverterException {
         return encodeCoordinate(geometry.getCoordinate());
     }
 
-    protected ArrayNode encodeCoordinates(LineString geometry) throws GeometryConverterException {
+    protected ArrayNode encodeCoordinates(LineString geometry) throws
+            GeometryConverterException {
         return encodeCoordinates(geometry.getCoordinateSequence());
     }
 
-    protected ArrayNode encodeCoordinates(Polygon geometry) throws GeometryConverterException {
+    protected ArrayNode encodeCoordinates(Polygon geometry) throws
+            GeometryConverterException {
         ArrayNode list = getJsonFactory().arrayNode();
         list.add(encodeCoordinates(geometry.getExteriorRing()));
         for (int i = 0; i < geometry.getNumInteriorRing(); ++i) {
@@ -228,14 +241,16 @@ public class GeoJSON extends AbstractEntityCoder<Geometry> implements GeometryCo
         return list;
     }
 
-    protected ArrayNode requireCoordinates(JsonNode json) throws GeometryConverterException {
+    protected ArrayNode requireCoordinates(JsonNode json) throws
+            GeometryConverterException {
         if (!json.has(COORDINATES_KEY)) {
             throw new GeometryConverterException("missing 'coordinates' field");
         }
         return toList(json.get(COORDINATES_KEY));
     }
 
-    protected Coordinate decodeCoordinate(ArrayNode list) throws GeometryConverterException {
+    protected Coordinate decodeCoordinate(ArrayNode list) throws
+            GeometryConverterException {
         if (list.size() != 2) {
             throw new GeometryConverterException("coordinates may only have 2 dimensions");
         }
@@ -255,7 +270,8 @@ public class GeoJSON extends AbstractEntityCoder<Geometry> implements GeometryCo
         return (ArrayNode) o;
     }
 
-    protected Coordinate[] decodeCoordinates(ArrayNode list) throws GeometryConverterException {
+    protected Coordinate[] decodeCoordinates(ArrayNode list) throws
+            GeometryConverterException {
         Coordinate[] coordinates = new Coordinate[list.size()];
         for (int i = 0; i < list.size(); ++i) {
             coordinates[i] = decodeCoordinate(toList(list.get(i)));
@@ -263,19 +279,24 @@ public class GeoJSON extends AbstractEntityCoder<Geometry> implements GeometryCo
         return coordinates;
     }
 
-    protected Polygon decodePolygonCoordinates(ArrayNode coordinates) throws GeometryConverterException {
+    protected Polygon decodePolygonCoordinates(ArrayNode coordinates) throws
+            GeometryConverterException {
         if (coordinates.size() < 1) {
             throw new GeometryConverterException("missing polygon shell");
         }
-        LinearRing shell = factory.createLinearRing(decodeCoordinates(toList(coordinates.get(0))));
+        LinearRing shell = factory
+                .createLinearRing(decodeCoordinates(toList(coordinates.get(0))));
         LinearRing[] holes = new LinearRing[coordinates.size() - 1];
         for (int i = 1; i < coordinates.size(); ++i) {
-            holes[i - 1] = factory.createLinearRing(decodeCoordinates(toList(coordinates.get(i))));
+            holes[i - 1] = factory
+                    .createLinearRing(decodeCoordinates(toList(coordinates
+                    .get(i))));
         }
         return factory.createPolygon(shell, holes);
     }
 
-    protected Geometry decodeGeometry(Object o) throws GeometryConverterException {
+    protected Geometry decodeGeometry(Object o) throws
+            GeometryConverterException {
         if (!(o instanceof ObjectNode)) {
             throw new GeometryConverterException("Cannot decode " + o);
         }
@@ -308,24 +329,28 @@ public class GeoJSON extends AbstractEntityCoder<Geometry> implements GeometryCo
     }
 
     @Override
-    public MultiLineString decodeMultiLineString(JsonNode json) throws GeometryConverterException {
+    public MultiLineString decodeMultiLineString(JsonNode json) throws
+            GeometryConverterException {
         ArrayNode coordinates = requireCoordinates(json);
         LineString[] lineStrings = new LineString[coordinates.size()];
         for (int i = 0; i < coordinates.size(); ++i) {
             Object coords = coordinates.get(i);
-            lineStrings[i] = factory.createLineString(decodeCoordinates(toList(coords)));
+            lineStrings[i] = factory
+                    .createLineString(decodeCoordinates(toList(coords)));
         }
         return factory.createMultiLineString(lineStrings);
     }
 
     @Override
-    public LineString decodeLineString(JsonNode json) throws GeometryConverterException {
+    public LineString decodeLineString(JsonNode json) throws
+            GeometryConverterException {
         Coordinate[] coordinates = decodeCoordinates(requireCoordinates(json));
         return factory.createLineString(coordinates);
     }
 
     @Override
-    public MultiPoint decodeMultiPoint(JsonNode json) throws GeometryConverterException {
+    public MultiPoint decodeMultiPoint(JsonNode json) throws
+            GeometryConverterException {
         Coordinate[] coordinates = decodeCoordinates(requireCoordinates(json));
         return factory.createMultiPoint(coordinates);
     }
@@ -337,13 +362,15 @@ public class GeoJSON extends AbstractEntityCoder<Geometry> implements GeometryCo
     }
 
     @Override
-    public Polygon decodePolygon(JsonNode json) throws GeometryConverterException {
+    public Polygon decodePolygon(JsonNode json) throws
+            GeometryConverterException {
         ArrayNode coordinates = requireCoordinates(json);
         return decodePolygonCoordinates(coordinates);
     }
 
     @Override
-    public MultiPolygon decodeMultiPolygon(JsonNode json) throws GeometryConverterException {
+    public MultiPolygon decodeMultiPolygon(JsonNode json) throws
+            GeometryConverterException {
         ArrayNode coordinates = requireCoordinates(json);
         Polygon[] polygons = new Polygon[coordinates.size()];
         for (int i = 0; i < coordinates.size(); ++i) {
@@ -353,7 +380,8 @@ public class GeoJSON extends AbstractEntityCoder<Geometry> implements GeometryCo
     }
 
     @Override
-    public GeometryCollection decodeGeometryCollection(JsonNode json) throws GeometryConverterException {
+    public GeometryCollection decodeGeometryCollection(JsonNode json) throws
+            GeometryConverterException {
         if (!json.has(GEOMETRIES_KEY)) {
             throw new GeometryConverterException("missing 'geometries' field");
         }

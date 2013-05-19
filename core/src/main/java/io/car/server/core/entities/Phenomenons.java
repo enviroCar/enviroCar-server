@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -23,7 +23,6 @@ import io.car.server.core.util.UpCastingIterable;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class Phenomenons extends UpCastingIterable<Phenomenon> {
-
     public Phenomenons(Iterable<? extends Phenomenon> delegate) {
         super(delegate);
     }

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -68,7 +68,8 @@ public class GroupResource extends AbstractResource {
     @Authenticated
     @Schema(request = Schemas.GROUP_MODIFY)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response modify(Group changes) throws UserNotFoundException, ValidationException,
+    public Response modify(Group changes) throws UserNotFoundException,
+                                                 ValidationException,
                                                  IllegalModificationException {
         if (!group.getOwner().equals(getCurrentUser())) {
             throw new WebApplicationException(Status.FORBIDDEN);

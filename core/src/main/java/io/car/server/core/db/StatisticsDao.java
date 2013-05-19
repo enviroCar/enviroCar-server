@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -34,16 +34,28 @@ import io.car.server.core.entities.User;
  */
 public interface StatisticsDao {
     long getNumberOfTracks();
+
     long getNumberOfMeasurements();
+
     long getNumberOfMeasurements(User user);
+
     long getNumberOfMeasurements(Track track);
+
     Statistics getStatistics(Track track);
+
     Statistics getStatistics(User user);
+
     Statistics getStatistics();
+
     Statistic getStatistics(Track track, Phenomenon phenomenon);
+
     Statistic getStatistics(User user, Phenomenon phenomenon);
+
     Statistic getStatistics(Phenomenon phenomenon);
+
     Statistics getStatistics(Track track, Phenomenons phenomenon);
+
     Statistics getStatistics(User user, Phenomenons phenomenon);
+
     Statistics getStatistics(Phenomenons phenomenon);
 }

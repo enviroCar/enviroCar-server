@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -38,12 +38,11 @@ public class SensorResource extends AbstractResource {
     public SensorResource(@Assisted Sensor sensor) {
         this.sensor = sensor;
     }
-    
+
     @GET
     @Schema(response = Schemas.SENSOR)
     @Produces(MediaType.APPLICATION_JSON)
     public Sensor get() {
         return this.sensor;
     }
-
 }

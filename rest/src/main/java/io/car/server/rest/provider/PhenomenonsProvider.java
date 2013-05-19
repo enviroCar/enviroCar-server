@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -16,7 +16,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package io.car.server.rest.provider;
-
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
@@ -45,6 +44,7 @@ public class PhenomenonsProvider extends AbstractJsonEntityProvider<Phenomenons>
 
     @Override
     public JsonNode write(Phenomenons t, MediaType mediaType) {
-        return getCodingFactory().createPhenomenonsEncoder().encode(t, mediaType);
+        return getCodingFactory().createPhenomenonsEncoder()
+                .encode(t, mediaType);
     }
 }

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -17,7 +17,6 @@
  */
 package io.car.server.rest.resources;
 
-import io.car.server.rest.resources.ResourceFactory;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
@@ -41,7 +40,8 @@ public abstract class AbstractResource {
     protected boolean canModifyUser(User user) {
         return getSecurityContext().isUserInRole(AuthConstants.ADMIN_ROLE) ||
                (getSecurityContext().getUserPrincipal() != null &&
-                getSecurityContext().getUserPrincipal().getName().equals(user.getName()));
+                getSecurityContext().getUserPrincipal().getName().equals(user
+                .getName()));
     }
 
     public SecurityContext getSecurityContext() {
@@ -61,7 +61,8 @@ public abstract class AbstractResource {
     }
 
     protected User getCurrentUser() throws UserNotFoundException {
-        return getService().getUser(getSecurityContext().getUserPrincipal().getName());
+        return getService().getUser(getSecurityContext().getUserPrincipal()
+                .getName());
     }
 
     @Inject

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -70,7 +70,6 @@ public class MongoStatisticsDao implements StatisticsDao {
     protected static String path(String first, String second, String... paths) {
         return Joiner.on(".").join(first, second, (Object[]) paths);
     }
-
     private final MongoMeasurementDao measurements;
     private final MongoTrackDao tracks;
     private final Datastore db;
@@ -99,22 +98,26 @@ public class MongoStatisticsDao implements StatisticsDao {
 
     @Override
     public long getNumberOfMeasurements(User user) {
-        return measurements.count(measurements.createQuery().field(MongoMeasurement.USER).equal((MongoUser) user));
+        return measurements.count(measurements.createQuery()
+                .field(MongoMeasurement.USER).equal((MongoUser) user));
     }
 
     @Override
     public long getNumberOfMeasurements(Track track) {
-        return measurements.count(measurements.createQuery().field(MongoMeasurement.TRACK).equal((MongoTrack) track));
+        return measurements.count(measurements.createQuery()
+                .field(MongoMeasurement.TRACK).equal((MongoTrack) track));
     }
 
     @Override
     public Statistics getStatistics(Track track) {
-        return parseStatistics(aggregate(matches(track), project(), unwind(), group()).results());
+        return parseStatistics(aggregate(matches(track), project(), unwind(), group())
+                .results());
     }
 
     @Override
     public Statistics getStatistics(User user) {
-        return parseStatistics(aggregate(matches(user), project(), unwind(), group()).results());
+        return parseStatistics(aggregate(matches(user), project(), unwind(), group())
+                .results());
     }
 
     @Override
@@ -124,36 +127,44 @@ public class MongoStatisticsDao implements StatisticsDao {
 
     @Override
     public Statistic getStatistics(Track track, Phenomenon phenomenon) {
-        return parseStatistic(aggregate(matches(track), project(), unwind(), matches(phenomenon), group()).results());
+        return parseStatistic(aggregate(matches(track), project(), unwind(), matches(phenomenon), group())
+                .results());
     }
 
     @Override
     public Statistic getStatistics(User user, Phenomenon phenomenon) {
-        return parseStatistic(aggregate(matches(user), project(), unwind(), matches(phenomenon), group()).results());
+        return parseStatistic(aggregate(matches(user), project(), unwind(), matches(phenomenon), group())
+                .results());
     }
 
     @Override
     public Statistic getStatistics(Phenomenon phenomenon) {
-        return parseStatistic(aggregate(project(), unwind(), matches(phenomenon), group()).results());
+        return parseStatistic(aggregate(project(), unwind(), matches(phenomenon), group())
+                .results());
     }
 
     @Override
     public Statistics getStatistics(Track track, Phenomenons phenomenons) {
-        return parseStatistics(aggregate(matches(track), project(), unwind(), matches(phenomenons), group()).results());
+        return parseStatistics(aggregate(matches(track), project(), unwind(), matches(phenomenons), group())
+                .results());
     }
 
     @Override
     public Statistics getStatistics(User user, Phenomenons phenomenons) {
-        return parseStatistics(aggregate(matches(user), project(), unwind(), matches(phenomenons), group()).results());
+        return parseStatistics(aggregate(matches(user), project(), unwind(), matches(phenomenons), group())
+                .results());
     }
 
     @Override
     public Statistics getStatistics(Phenomenons phenomenons) {
-        return parseStatistics(aggregate(project(), unwind(), matches(phenomenons), group()).results());
+        return parseStatistics(aggregate(project(), unwind(), matches(phenomenons), group())
+                .results());
     }
 
-    protected AggregationOutput aggregate(DBObject firstOp, DBObject... additionalOps) {
-        AggregationOutput result = measurements.getCollection().aggregate(firstOp, additionalOps);
+    protected AggregationOutput aggregate(DBObject firstOp,
+                                          DBObject... additionalOps) {
+        AggregationOutput result = measurements.getCollection()
+                .aggregate(firstOp, additionalOps);
         result.getCommandResult().throwOnError();
         return result;
     }
@@ -174,18 +185,23 @@ public class MongoStatisticsDao implements StatisticsDao {
 
     protected Statistic parseStatistic(DBObject result) {
         DBObject phenDbo = ((DBRef) result.get(ID_KEY)).fetch();
-        Phenomenon phenomenon = (Phenomenon) mapr.fromDBObject(MongoPhenomenon.class, phenDbo, mapr.createEntityCache());
+        Phenomenon phenomenon = (Phenomenon) mapr
+                .fromDBObject(MongoPhenomenon.class, phenDbo, mapr
+                .createEntityCache());
         long count = ((Number) result.get(COUNT_KEY)).longValue();
         double max = ((Number) result.get(MAX_KEY)).doubleValue();
         double min = ((Number) result.get(MIN_KEY)).doubleValue();
         double mean = ((Number) result.get(AVG_KEY)).doubleValue();
-        return new Statistic().setPhenomenon(phenomenon).setMeasurements(count).setMax(max).setMin(min).setMean(mean);
+        return new Statistic().setPhenomenon(phenomenon).setMeasurements(count)
+                .setMax(max).setMin(min).setMean(mean);
     }
 
     protected DBObject group() {
         BasicDBObject fields = new BasicDBObject();
-        String value = valueOf(path(MongoMeasurement.PHENOMENONS, MongoMeasurementValue.VALUE));
-        fields.put(ID_KEY, valueOf(path(MongoMeasurement.PHENOMENONS, MongoMeasurementValue.PHENOMENON)));
+        String value =
+                valueOf(path(MongoMeasurement.PHENOMENONS, MongoMeasurementValue.VALUE));
+        fields
+                .put(ID_KEY, valueOf(path(MongoMeasurement.PHENOMENONS, MongoMeasurementValue.PHENOMENON)));
         fields.put(AVG_KEY, new BasicDBObject(Ops.AVG, value));
         fields.put(MIN_KEY, new BasicDBObject(Ops.MIN, value));
         fields.put(MAX_KEY, new BasicDBObject(Ops.MAX, value));

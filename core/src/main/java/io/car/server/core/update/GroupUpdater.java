@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -24,9 +24,9 @@ import io.car.server.core.exception.IllegalModificationException;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class GroupUpdater implements EntityUpdater<Group> {
-
     @Override
-    public Group update(Group changes, Group original) throws IllegalModificationException {
+    public Group update(Group changes, Group original) throws
+            IllegalModificationException {
         if (changes.getDescription() != null) {
             original.setDescription(changes.getDescription());
         }

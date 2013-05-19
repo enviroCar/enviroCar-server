@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -19,6 +19,7 @@ package io.car.server;
 
 import java.util.logging.Handler;
 import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
 import org.slf4j.bridge.SLF4JBridgeHandler;
 
@@ -31,18 +32,20 @@ import com.google.inject.servlet.GuiceServletContextListener;
  */
 public class ServletContextListener extends GuiceServletContextListener {
     private Injector injector;
+
     @Override
     protected Injector getInjector() {
         if (injector == null) {
-            injector = Guice.createInjector(new ServiceLoaderConfigurationModule());
+            injector = Guice
+                    .createInjector(new ServiceLoaderConfigurationModule());
             configureLogging();
         }
         return injector;
 
     }
 
-    protected void configureLogging() throws SecurityException {
-        java.util.logging.Logger rootLogger = LogManager.getLogManager().getLogger("");
+    protected void configureLogging() {
+        Logger rootLogger = LogManager.getLogManager().getLogger("");
         Handler[] handlers = rootLogger.getHandlers();
         for (int i = 0; i < handlers.length; i++) {
             rootLogger.removeHandler(handlers[i]);

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -24,9 +24,9 @@ import com.google.inject.AbstractModule;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.PrecisionModel;
 
-import io.car.server.core.util.PasswordEncoder;
 import io.car.server.core.Service;
 import io.car.server.core.util.BCryptPasswordEncoder;
+import io.car.server.core.util.PasswordEncoder;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
@@ -39,6 +39,7 @@ public class CoreModule extends AbstractModule {
         bind(PasswordEncoder.class).to(BCryptPasswordEncoder.class);
         bind(GeometryFactory.class)
                 .toInstance(new GeometryFactory(new PrecisionModel(PrecisionModel.FLOATING_SINGLE), 4326));
-        bind(DateTimeFormatter.class).toInstance(ISODateTimeFormat.dateTimeNoMillis());
+        bind(DateTimeFormatter.class).toInstance(ISODateTimeFormat
+                .dateTimeNoMillis());
     }
 }

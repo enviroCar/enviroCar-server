@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -22,16 +22,17 @@ import com.github.jmkgreen.morphia.dao.BasicDAO;
 import com.github.jmkgreen.morphia.query.Query;
 import com.google.inject.Inject;
 
+import io.car.server.core.dao.GroupDao;
 import io.car.server.core.entities.Group;
 import io.car.server.core.entities.Groups;
 import io.car.server.core.entities.User;
-import io.car.server.core.dao.GroupDao;
 import io.car.server.mongo.entity.MongoGroup;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class MongoGroupDao extends BasicDAO<MongoGroup, String> implements GroupDao {
+public class MongoGroupDao extends BasicDAO<MongoGroup, String> implements
+        GroupDao {
     @Inject
     public MongoGroupDao(Datastore ds) {
         super(MongoGroup.class, ds);
@@ -85,7 +86,8 @@ public class MongoGroupDao extends BasicDAO<MongoGroup, String> implements Group
 
     @Override
     public Groups getByMember(User member) {
-        return fetch(createQuery().field(MongoGroup.MEMBERS).hasThisElement(member));
+        return fetch(createQuery().field(MongoGroup.MEMBERS)
+                .hasThisElement(member));
     }
 
     @Override

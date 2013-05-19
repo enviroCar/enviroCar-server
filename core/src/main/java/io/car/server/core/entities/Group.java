@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -25,13 +25,22 @@ public interface Group extends BaseEntity {
     String DESCRIPTION = "desc";
     String MEMBERS = "members";
     String OWNER = "owner";
+
     Group setName(String name);
+
     String getName();
+
     Group setDescription(String description);
+
     String getDescription();
+
     Users getMembers();
+
     Group addMember(User user);
+
     Group removeMember(User user);
+
     Group setOwner(User user);
+
     User getOwner();
 }

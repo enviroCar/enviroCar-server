@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -22,6 +22,7 @@ package io.car.server.core.exception;
  */
 public class PhenomenonNotFoundException extends ResourceNotFoundException {
     private static final long serialVersionUID = 1311418967057928565L;
+
     public PhenomenonNotFoundException(String phenomenon) {
         super(String.format("The phenomenon '%s' was not found", phenomenon));
     }

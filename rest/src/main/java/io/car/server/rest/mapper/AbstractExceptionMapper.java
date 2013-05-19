@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -28,8 +28,10 @@ import org.slf4j.LoggerFactory;
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class AbstractExceptionMapper<T extends Throwable> implements ExceptionMapper<T> {
-    private static final Logger log = LoggerFactory.getLogger(AbstractExceptionMapper.class);
+public class AbstractExceptionMapper<T extends Throwable> implements
+        ExceptionMapper<T> {
+    private static final Logger log = LoggerFactory
+            .getLogger(AbstractExceptionMapper.class);
     private final Status status;
 
     public AbstractExceptionMapper(Status status) {

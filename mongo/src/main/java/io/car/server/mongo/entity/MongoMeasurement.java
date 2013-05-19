@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -43,7 +43,8 @@ import io.car.server.core.entities.User;
  * @author Arne de Wall
  */
 @Entity("measurements")
-public class MongoMeasurement extends MongoBaseEntity<MongoMeasurement> implements Measurement {
+public class MongoMeasurement extends MongoBaseEntity<MongoMeasurement>
+        implements Measurement {
     @Indexed
     @Reference
     private MongoUser user;
@@ -144,7 +145,7 @@ public class MongoMeasurement extends MongoBaseEntity<MongoMeasurement> implemen
     }
 
     @Override
-    public Track getTrack() {
+    public MongoTrack getTrack() {
         return this.track;
     }
 }

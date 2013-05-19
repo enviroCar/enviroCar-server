@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -38,7 +38,6 @@ import io.car.server.mongo.dao.MongoUserDao;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class MongoDaoModule extends AbstractModule {
-
     @Override
     protected void configure() {
         bind(UserDao.class).to(MongoUserDao.class);

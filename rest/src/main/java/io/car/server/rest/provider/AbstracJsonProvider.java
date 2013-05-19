@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -40,7 +40,6 @@ import com.sun.jersey.core.provider.AbstractMessageReaderWriterProvider;
 
 import io.car.server.rest.coding.JSONConstants;
 
-
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
@@ -58,18 +57,24 @@ public abstract class AbstracJsonProvider<T> extends AbstractMessageReaderWriter
     }
 
     @Override
-    public boolean isReadable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
-        return this.classType.isAssignableFrom(type) && mediaType.isCompatible(MediaType.APPLICATION_JSON_TYPE);
+    public boolean isReadable(Class<?> type, Type genericType,
+                              Annotation[] annotations, MediaType mediaType) {
+        return this.classType.isAssignableFrom(type) && mediaType
+                .isCompatible(MediaType.APPLICATION_JSON_TYPE);
     }
 
     @Override
-    public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
-        return this.classType.isAssignableFrom(type) && mediaType.isCompatible(MediaType.APPLICATION_JSON_TYPE);
+    public boolean isWriteable(Class<?> type, Type genericType,
+                               Annotation[] annotations, MediaType mediaType) {
+        return this.classType.isAssignableFrom(type) && mediaType
+                .isCompatible(MediaType.APPLICATION_JSON_TYPE);
     }
 
     @Override
-    public T readFrom(Class<T> c, Type gt, Annotation[] a, MediaType mt, MultivaluedMap<String, String> h,
-                      InputStream in) throws IOException, WebApplicationException {
+    public T readFrom(Class<T> c, Type gt, Annotation[] a, MediaType mt,
+                      MultivaluedMap<String, String> h,
+                      InputStream in) throws IOException,
+                                             WebApplicationException {
         try {
             return read(reader.readTree(in), mt);
         } catch (JsonParseException e) {
@@ -83,8 +88,10 @@ public abstract class AbstracJsonProvider<T> extends AbstractMessageReaderWriter
     }
 
     @Override
-    public void writeTo(T t, Class<?> c, Type gt, Annotation[] a, MediaType mt, MultivaluedMap<String, Object> h,
-                        OutputStream out) throws IOException, WebApplicationException {
+    public void writeTo(T t, Class<?> c, Type gt, Annotation[] a, MediaType mt,
+                        MultivaluedMap<String, Object> h,
+                        OutputStream out) throws IOException,
+                                                 WebApplicationException {
         writer.writeValue(out, write(t, mt));
         out.flush();
     }

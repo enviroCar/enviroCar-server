@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -37,12 +37,12 @@ import io.car.server.mongo.entity.MongoUser;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class MongoMappedClassesModule extends AbstractModule {
-
     @Override
     @SuppressWarnings("rawtypes")
     protected void configure() {
-        Multibinder<Class<?>> mb = Multibinder.newSetBinder(binder(), new TypeLiteral<Class<?>>() {},
-                                                            Names.named(MongoDB.MAPPED_CLASSES));
+        Multibinder<Class<?>> mb = Multibinder.newSetBinder(
+                binder(), new TypeLiteral<Class<?>>() {},
+                Names.named(MongoDB.MAPPED_CLASSES));
         mb.addBinding().toInstance(MongoUser.class);
         mb.addBinding().toInstance(MongoGroup.class);
         mb.addBinding().toInstance(MongoSubscriber.class);
