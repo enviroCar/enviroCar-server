@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -63,8 +63,9 @@ public class GroupsResource extends AbstractResource {
     @GET
     @Schema(response = Schemas.GROUPS)
     @Produces(MediaType.APPLICATION_JSON)
-    public Groups get(@QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit,
-                      @QueryParam(RESTConstants.SEARCH) String search) {
+    public Groups get(
+            @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit,
+            @QueryParam(RESTConstants.SEARCH) String search) {
         if (user == null) {
             if (search != null && !search.trim().isEmpty()) {
                 return getService().searchGroups(search, limit);
@@ -80,14 +81,19 @@ public class GroupsResource extends AbstractResource {
     @Authenticated
     @Schema(request = Schemas.GROUP_CREATE)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createGroup(Group group) throws UserNotFoundException, ResourceAlreadyExistException,
+    public Response createGroup(Group group) throws UserNotFoundException,
+                                                    ResourceAlreadyExistException,
                                                     ValidationException {
-        Group g = getService().createGroup(group.setOwner(getCurrentUser()).addMember(getCurrentUser()));
-        return Response.created(getUriInfo().getRequestUriBuilder().path(g.getName()).build()).build();
+        Group g = getService().createGroup(group.setOwner(getCurrentUser())
+                .addMember(getCurrentUser()));
+        return Response.created(getUriInfo().getRequestUriBuilder().path(g
+                .getName()).build()).build();
     }
 
     @Path(GROUP)
-    public GroupResource group(@PathParam("group") String groupname) throws GroupNotFoundException {
-        return getResourceFactory().createGroupResource(getService().getGroup(groupname));
+    public GroupResource group(@PathParam("group") String groupname) throws
+            GroupNotFoundException {
+        return getResourceFactory().createGroupResource(getService()
+                .getGroup(groupname));
     }
 }

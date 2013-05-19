@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -41,58 +41,59 @@ import io.car.server.rest.auth.Authenticated;
 import io.car.server.rest.validation.Schema;
 
 /**
- * 
+ *
  * @author Arne de Wall <a.dewall@52north.org>
- * 
+ *
  */
 public class TrackResource extends AbstractResource {
     public static final String MEASUREMENTS = "measurements";
     public static final String SENSOR = "sensor";
-	protected final Track track;
+    protected final Track track;
 
-	@Inject
-	public TrackResource(@Assisted Track track) {
-		this.track = track;
-	}
+    @Inject
+    public TrackResource(@Assisted Track track) {
+        this.track = track;
+    }
 
     @PUT
     @Schema(request = Schemas.TRACK_MODIFY)
     @Consumes(MediaType.APPLICATION_JSON)
-	@Authenticated
-	public Response modify(Track changes) throws TrackNotFoundException,
-			UserNotFoundException, IllegalModificationException,
-			ValidationException {
+    @Authenticated
+    public Response modify(Track changes) throws TrackNotFoundException,
+                                                 UserNotFoundException,
+                                                 IllegalModificationException,
+                                                 ValidationException {
         if (!canModifyUser(getCurrentUser())) {
             throw new WebApplicationException(Status.FORBIDDEN);
         }
         getService().modifyTrack(track, changes);
         return Response.ok().build();
-	}
+    }
 
     @GET
     @Schema(response = Schemas.TRACK)
     @Produces(MediaType.APPLICATION_JSON)
     public Track get() throws TrackNotFoundException {
         return track;
-	}
+    }
 
-	@DELETE
-	@Authenticated
-	public void delete() throws TrackNotFoundException, UserNotFoundException {
+    @DELETE
+    @Authenticated
+    public void delete() throws TrackNotFoundException, UserNotFoundException {
         if (!canModifyUser(getCurrentUser())) {
             throw new WebApplicationException(Status.FORBIDDEN);
         }
-		getService().deleteTrack(track);
-	}
+        getService().deleteTrack(track);
+    }
 
-	@Path(MEASUREMENTS)
-	public MeasurementsResource measurements() {
+    @Path(MEASUREMENTS)
+    public MeasurementsResource measurements() {
         return getResourceFactory().createMeasurementsResource(track);
-	}
-	
-	@Path(SENSOR)
-	@Authenticated
-	public SensorResource sensor(){
-		return getResourceFactory().createSensorResource(track.getSensor());
-	}
+    }
+
+    @Path(SENSOR)
+    @Authenticated
+    public SensorResource sensor() {
+        return getResourceFactory().createSensorResource(track.getSensor());
+    }
 }

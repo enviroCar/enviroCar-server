@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -36,11 +36,12 @@ import io.car.server.mongo.util.GeoBSON;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class MongoConverterModule extends AbstractModule {
-
     @Override
     protected void configure() {
-        Multibinder<TypeConverter> mb = Multibinder.newSetBinder(binder(), TypeConverter.class);
-        bind(new TypeLiteral<GeometryConverter<BSONObject>>() {}).to(GeoBSON.class);
+        Multibinder<TypeConverter> mb = Multibinder
+                .newSetBinder(binder(), TypeConverter.class);
+        bind(new TypeLiteral<GeometryConverter<BSONObject>>() {
+        }).to(GeoBSON.class);
         mb.addBinding().to(DateTimeConverter.class);
         mb.addBinding().to(DurationConverter.class);
         mb.addBinding().to(FileConverter.class);

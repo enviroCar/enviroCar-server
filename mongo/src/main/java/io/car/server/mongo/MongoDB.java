@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -63,7 +63,8 @@ public class MongoDB {
             new GuiceExtension(morphia, injector);
             addConverters(converters);
             addMappedClasses(mappedClasses);
-            datastore = morphia.createDatastore(mongo, database, username, password);
+            datastore = morphia
+                    .createDatastore(mongo, database, username, password);
             datastore.ensureIndexes();
             datastore.ensureCaps();
         } catch (Exception e) {

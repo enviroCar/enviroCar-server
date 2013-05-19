@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -66,32 +66,55 @@ public class JerseyCodingModule extends AbstractModule {
     protected void configure() {
         configureCodingFactory();
     }
+
     protected void configureCodingFactory() {
         FactoryModuleBuilder fmb = new FactoryModuleBuilder();
-        implementAndBind(fmb, new TypeLiteral<EntityEncoder<User>>() {}, UserCoder.class);
-        implementAndBind(fmb, new TypeLiteral<EntityDecoder<User>>() {}, UserCoder.class);
-        implementAndBind(fmb, new TypeLiteral<EntityEncoder<Users>>() {}, UsersCoder.class);
-        implementAndBind(fmb, new TypeLiteral<EntityEncoder<Sensor>>() {}, SensorCoder.class);
-        implementAndBind(fmb, new TypeLiteral<EntityDecoder<Sensor>>() {}, SensorCoder.class);
-        implementAndBind(fmb, new TypeLiteral<EntityEncoder<Sensors>>() {}, SensorsCoder.class);
-        implementAndBind(fmb, new TypeLiteral<EntityEncoder<Track>>() {}, TrackCoder.class);
-        implementAndBind(fmb, new TypeLiteral<EntityDecoder<Track>>() {}, TrackCoder.class);
-        implementAndBind(fmb, new TypeLiteral<EntityEncoder<Tracks>>() {}, TracksCoder.class);
-        implementAndBind(fmb, new TypeLiteral<EntityEncoder<Measurement>>() {}, MeasurementCoder.class);
-        implementAndBind(fmb, new TypeLiteral<EntityDecoder<Measurement>>() {}, MeasurementCoder.class);
-        implementAndBind(fmb, new TypeLiteral<EntityEncoder<Measurements>>() {}, MeasurementsCoder.class);
-        implementAndBind(fmb, new TypeLiteral<EntityEncoder<Phenomenon>>() {}, PhenomenonCoder.class);
-        implementAndBind(fmb, new TypeLiteral<EntityDecoder<Phenomenon>>() {}, PhenomenonCoder.class);
-        implementAndBind(fmb, new TypeLiteral<EntityEncoder<Phenomenons>>() {}, PhenomenonsCoder.class);
-        implementAndBind(fmb, new TypeLiteral<EntityEncoder<Group>>() {}, GroupCoder.class);
-        implementAndBind(fmb, new TypeLiteral<EntityDecoder<Group>>() {}, GroupCoder.class);
-        implementAndBind(fmb, new TypeLiteral<EntityEncoder<Groups>>() {}, GroupsCoder.class);
-        bind(new TypeLiteral<EntityDecoder<Geometry>>() {}).to(GeoJSON.class);
-        bind(new TypeLiteral<EntityEncoder<Geometry>>() {}).to(GeoJSON.class);
+        implementAndBind(fmb, new TypeLiteral<EntityEncoder<User>>() {
+        }, UserCoder.class);
+        implementAndBind(fmb, new TypeLiteral<EntityDecoder<User>>() {
+        }, UserCoder.class);
+        implementAndBind(fmb, new TypeLiteral<EntityEncoder<Users>>() {
+        }, UsersCoder.class);
+        implementAndBind(fmb, new TypeLiteral<EntityEncoder<Sensor>>() {
+        }, SensorCoder.class);
+        implementAndBind(fmb, new TypeLiteral<EntityDecoder<Sensor>>() {
+        }, SensorCoder.class);
+        implementAndBind(fmb, new TypeLiteral<EntityEncoder<Sensors>>() {
+        }, SensorsCoder.class);
+        implementAndBind(fmb, new TypeLiteral<EntityEncoder<Track>>() {
+        }, TrackCoder.class);
+        implementAndBind(fmb, new TypeLiteral<EntityDecoder<Track>>() {
+        }, TrackCoder.class);
+        implementAndBind(fmb, new TypeLiteral<EntityEncoder<Tracks>>() {
+        }, TracksCoder.class);
+        implementAndBind(fmb, new TypeLiteral<EntityEncoder<Measurement>>() {
+        }, MeasurementCoder.class);
+        implementAndBind(fmb, new TypeLiteral<EntityDecoder<Measurement>>() {
+        }, MeasurementCoder.class);
+        implementAndBind(fmb, new TypeLiteral<EntityEncoder<Measurements>>() {
+        }, MeasurementsCoder.class);
+        implementAndBind(fmb, new TypeLiteral<EntityEncoder<Phenomenon>>() {
+        }, PhenomenonCoder.class);
+        implementAndBind(fmb, new TypeLiteral<EntityDecoder<Phenomenon>>() {
+        }, PhenomenonCoder.class);
+        implementAndBind(fmb, new TypeLiteral<EntityEncoder<Phenomenons>>() {
+        }, PhenomenonsCoder.class);
+        implementAndBind(fmb, new TypeLiteral<EntityEncoder<Group>>() {
+        }, GroupCoder.class);
+        implementAndBind(fmb, new TypeLiteral<EntityDecoder<Group>>() {
+        }, GroupCoder.class);
+        implementAndBind(fmb, new TypeLiteral<EntityEncoder<Groups>>() {
+        }, GroupsCoder.class);
+        bind(new TypeLiteral<EntityDecoder<Geometry>>() {
+        }).to(GeoJSON.class);
+        bind(new TypeLiteral<EntityEncoder<Geometry>>() {
+        }).to(GeoJSON.class);
         install(fmb.build(CodingFactory.class));
     }
 
-    protected <T> void implementAndBind(FactoryModuleBuilder fmb, TypeLiteral<T> source, Class<? extends T> target) {
+    protected <T> void implementAndBind(FactoryModuleBuilder fmb,
+                                        TypeLiteral<T> source,
+                                        Class<? extends T> target) {
         fmb.implement(source, target);
         bind(source).to(target);
     }

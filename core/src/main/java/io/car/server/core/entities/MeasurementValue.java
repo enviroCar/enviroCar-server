@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -17,13 +17,15 @@
  */
 package io.car.server.core.entities;
 
-import io.car.server.core.entities.Phenomenon;
-
 public interface MeasurementValue {
     String VALUE = "value";
     String PHENOMENON = "phen";
+
     Object getValue();
+
     MeasurementValue setValue(Object value);
+
     Phenomenon getPhenomenon();
+
     MeasurementValue setPhenomenon(Phenomenon phenomenon);
 }

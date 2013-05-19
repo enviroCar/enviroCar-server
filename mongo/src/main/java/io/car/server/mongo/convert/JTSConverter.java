@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -68,7 +68,8 @@ public class JTSConverter extends TypeConverter implements SimpleValueConverter 
 
     @Override
     @SuppressWarnings("rawtypes")
-    public Geometry decode(Class targetClass, Object db, MappedField optionalExtraInfo) {
+    public Geometry decode(Class targetClass, Object db,
+                           MappedField optionalExtraInfo) {
         if (db == null) {
             return null;
         } else if (db instanceof BSONObject) {

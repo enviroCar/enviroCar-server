@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -31,13 +31,13 @@ import io.car.server.core.entities.Users;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class UsersCoder extends AbstractEntityEncoder<Users> {
-
     @Override
     public ObjectNode encode(Users t, MediaType mediaType) {
         ObjectNode root = getJsonFactory().objectNode();
         ArrayNode users = root.putArray(JSONConstants.USERS_KEY);
         for (User u : t) {
-            URI uri = getUriInfo().getAbsolutePathBuilder().path(u.getName()).build();
+            URI uri = getUriInfo().getAbsolutePathBuilder().path(u.getName())
+                    .build();
             users.addObject()
                     .put(JSONConstants.NAME_KEY, u.getName())
                     .put(JSONConstants.HREF_KEY, uri.toString());

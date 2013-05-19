@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -26,7 +26,8 @@ public class IllegalModificationException extends Exception {
     private final String cause;
 
     public IllegalModificationException(String field, String cause) {
-        super(String.format("Invalid modification of field '%s': %s", field, cause));
+        super(String
+                .format("Invalid modification of field '%s': %s", field, cause));
         this.field = field;
         this.cause = cause;
     }

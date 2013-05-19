@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -16,7 +16,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package io.car.server.rest.resources;
-
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
@@ -48,7 +47,8 @@ public class UsersResource extends AbstractResource {
     @GET
     @Schema(response = Schemas.USERS)
     @Produces(MediaType.APPLICATION_JSON)
-    public Users get(@QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit) {
+    public Users get(
+            @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit) {
         return getService().getUsers(limit);
     }
 
@@ -56,7 +56,8 @@ public class UsersResource extends AbstractResource {
     @Anonymous
     @Schema(request = Schemas.USER_CREATE)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response create(User user) throws ValidationException, ResourceAlreadyExistException {
+    public Response create(User user) throws ValidationException,
+                                             ResourceAlreadyExistException {
         return Response.created(
                 getUriInfo().getRequestUriBuilder()
                 .path(getService().createUser(user).getName())
@@ -64,7 +65,9 @@ public class UsersResource extends AbstractResource {
     }
 
     @Path(USER)
-    public UserResource user(@PathParam("username") String username) throws UserNotFoundException {
-        return getResourceFactory().createUserResource(getService().getUser(username));
+    public UserResource user(@PathParam("username") String username) throws
+            UserNotFoundException {
+        return getResourceFactory().createUserResource(getService()
+                .getUser(username));
     }
 }

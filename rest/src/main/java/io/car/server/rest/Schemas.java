@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -39,16 +39,20 @@ public class Schemas {
     public static final String TRACK_MODIFY = PREFIX + "track.modify.json#";
     public static final String MEASUREMENT = PREFIX + "measurement.json#";
     public static final String MEASUREMENTS = PREFIX + "measurements.json#";
-    public static final String MEASUREMENT_CREATE = PREFIX + "measurement.create.json#";
-    public static final String MEASUREMENT_MODIFY = PREFIX + "measurement.modify.json#";
+    public static final String MEASUREMENT_CREATE = PREFIX +
+                                                    "measurement.create.json#";
+    public static final String MEASUREMENT_MODIFY = PREFIX +
+                                                    "measurement.modify.json#";
     public static final String SENSOR = PREFIX + "sensor.json#";
     public static final String SENSORS = PREFIX + "sensors.json#";
     public static final String SENSOR_CREATE = PREFIX + "sensor.create.json#";
     public static final String SENSOR_MODIFY = PREFIX + "sensor.modify.json#";
     public static final String PHENOMENON = PREFIX + "phenomenon.json#";
     public static final String PHENOMENONS = PREFIX + "phenomenons.json#";
-    public static final String PHENOMENON_CREATE = PREFIX + "phenomenon.create.json#";
-    public static final String PHENOMENON_MODIFY = PREFIX + "phenomenon.modify.json#";
+    public static final String PHENOMENON_CREATE = PREFIX +
+                                                   "phenomenon.create.json#";
+    public static final String PHENOMENON_MODIFY = PREFIX +
+                                                   "phenomenon.modify.json#";
 
     private Schemas() {
     }

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -30,9 +30,9 @@ import com.github.jmkgreen.morphia.annotations.Reference;
 import com.google.common.collect.Sets;
 import com.vividsolutions.jts.geom.Geometry;
 
+import io.car.server.core.entities.Measurement;
 import io.car.server.core.entities.MeasurementValue;
 import io.car.server.core.entities.MeasurementValues;
-import io.car.server.core.entities.Measurement;
 import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
@@ -43,7 +43,8 @@ import io.car.server.core.entities.User;
  *
  */
 @Entity("measurements")
-public class MongoMeasurement extends MongoBaseEntity<MongoMeasurement> implements Measurement {
+public class MongoMeasurement extends MongoBaseEntity<MongoMeasurement>
+        implements Measurement {
     @Reference
     private MongoUser user;
     @Property(GEOMETRY)

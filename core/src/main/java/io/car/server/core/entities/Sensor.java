@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -22,6 +22,8 @@ package io.car.server.core.entities;
  */
 public interface Sensor extends BaseEntity {
     String NAME = "name";
+
     String getName();
+
     Sensor setName(String name);
 }

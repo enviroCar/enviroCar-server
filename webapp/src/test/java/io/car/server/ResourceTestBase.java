@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -45,19 +45,21 @@ public class ResourceTestBase {
         server.setStopAtShutdown(true);
         ServletContextHandler sch = new ServletContextHandler(server, "/");
         sch.addFilter(GuiceFilter.class, "/*", null);
-        ServletContextListener servletContextListener = new ServletContextListener();
+        ServletContextListener servletContextListener =
+                new ServletContextListener();
         injector = servletContextListener.getInjector();
         sch.addEventListener(servletContextListener);
         sch.addServlet(DefaultServlet.class, "/");
         server.start();
     }
-
     private DB db;
 
     protected WebResource resource() {
         DefaultClientConfig defaultClientConfig = new DefaultClientConfig();
-        defaultClientConfig.getSingletons().add(injector.getInstance(JsonNodeProvider.class));
-        return Client.create(defaultClientConfig).resource("http://localhost:9998");
+        defaultClientConfig.getSingletons().add(injector
+                .getInstance(JsonNodeProvider.class));
+        return Client.create(defaultClientConfig)
+                .resource("http://localhost:9998");
     }
 
     protected void clearDatabase() {

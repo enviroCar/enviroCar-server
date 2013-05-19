@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -27,12 +27,20 @@ import io.car.server.core.entities.Users;
  */
 public interface UserDao {
     User getByName(String name);
+
     User getByMail(String mail);
+
     Users get();
+
     Users get(int limit);
+
     User create(User user);
+
     User save(User user);
+
     void delete(User user);
+
     Users getByGroup(Group group);
+
     Users getByTrack(Track track);
 }

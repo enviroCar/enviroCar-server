@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -61,7 +61,7 @@ public class FriendsResource extends AbstractResource {
     @Authenticated
     @Schema(request = Schemas.USER_REF)
     @Consumes(MediaType.APPLICATION_JSON)
-    public void add( User friend) throws UserNotFoundException {
+    public void add(User friend) throws UserNotFoundException {
         if (friend.getName() == null) {
             throw new WebApplicationException(Status.BAD_REQUEST);
         }
@@ -80,8 +80,10 @@ public class FriendsResource extends AbstractResource {
     }
 
     @Path(FRIEND)
-    public UserResource friend(@PathParam("friend") String username) throws UserNotFoundException {
+    public UserResource friend(@PathParam("friend") String username) throws
+            UserNotFoundException {
         //TODO throw 404 for users that are not friends
-        return getResourceFactory().createUserResource(getService().getUser(username));
+        return getResourceFactory().createUserResource(getService()
+                .getUser(username));
     }
 }

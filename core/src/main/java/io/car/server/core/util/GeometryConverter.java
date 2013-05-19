@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -33,24 +33,36 @@ import io.car.server.core.exception.GeometryConverterException;
  */
 public interface GeometryConverter<T> {
     Geometry decode(T json) throws GeometryConverterException;
-    GeometryCollection decodeGeometryCollection(T json) throws GeometryConverterException;
+
+    GeometryCollection decodeGeometryCollection(T json) throws
+            GeometryConverterException;
 
     Point decodePoint(T json) throws GeometryConverterException;
+
     LineString decodeLineString(T json) throws GeometryConverterException;
+
     Polygon decodePolygon(T json) throws GeometryConverterException;
+
     MultiPoint decodeMultiPoint(T json) throws GeometryConverterException;
-    MultiLineString decodeMultiLineString(T json) throws GeometryConverterException;
+
+    MultiLineString decodeMultiLineString(T json) throws
+            GeometryConverterException;
+
     MultiPolygon decodeMultiPolygon(T json) throws GeometryConverterException;
-    
 
     T encode(Geometry value) throws GeometryConverterException;
+
     T encode(GeometryCollection geometry) throws GeometryConverterException;
-    
+
     T encode(Point geometry) throws GeometryConverterException;
+
     T encode(LineString geometry) throws GeometryConverterException;
+
     T encode(Polygon geometry) throws GeometryConverterException;
 
     T encode(MultiLineString geometry) throws GeometryConverterException;
+
     T encode(MultiPoint geometry) throws GeometryConverterException;
+
     T encode(MultiPolygon geometry) throws GeometryConverterException;
 }

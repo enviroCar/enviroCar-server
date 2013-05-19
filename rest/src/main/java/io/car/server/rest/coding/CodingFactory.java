@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -35,26 +35,38 @@ import io.car.server.core.entities.Users;
  */
 public interface CodingFactory {
     EntityEncoder<Group> createGroupEncoder();
+
     EntityDecoder<Group> createGroupDecoder();
+
     EntityEncoder<Groups> createGroupsEncoder();
 
     EntityEncoder<User> createUserEncoder();
+
     EntityDecoder<User> createUserDecoder();
+
     EntityEncoder<Users> createUsersEncoder();
 
     EntityEncoder<Phenomenon> createPhenomenonEncoder();
+
     EntityDecoder<Phenomenon> createPhenomenonDecoder();
+
     EntityEncoder<Phenomenons> createPhenomenonsEncoder();
 
     EntityEncoder<Sensor> createSensorEncoder();
+
     EntityDecoder<Sensor> createSensorDecoder();
+
     EntityEncoder<Sensors> createSensorsEncoder();
 
     EntityEncoder<Track> createTrackEncoder();
+
     EntityDecoder<Track> createTrackDecoder();
+
     EntityEncoder<Tracks> createTracksEncoder();
 
     EntityEncoder<Measurement> createMeasurementEncoder();
+
     EntityDecoder<Measurement> createMeasurementDecoder();
+
     EntityEncoder<Measurements> createMeasurementsEncoder();
 }

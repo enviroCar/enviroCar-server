@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -27,15 +27,26 @@ public interface User extends BaseEntity {
     String IS_ADMIN = "isAdmin";
     String FRIENDS = "friends";
     String TRACKS = "tracks";
+
     String getName();
+
     User setName(String name);
+
     String getMail();
+
     User setMail(String mail);
+
     String getToken();
+
     User setToken(String token);
+
     boolean isAdmin();
+
     User setAdmin(boolean isAdmin);
+
     Users getFriends();
+
     User addFriend(User user);
+
     User removeFriend(User user);
 }

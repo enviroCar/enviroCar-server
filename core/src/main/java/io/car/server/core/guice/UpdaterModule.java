@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -20,26 +20,29 @@ package io.car.server.core.guice;
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
 
+import io.car.server.core.entities.Group;
+import io.car.server.core.entities.Measurement;
+import io.car.server.core.entities.Track;
+import io.car.server.core.entities.User;
 import io.car.server.core.update.EntityUpdater;
 import io.car.server.core.update.GroupUpdater;
 import io.car.server.core.update.MeasurementUpdater;
 import io.car.server.core.update.TrackUpdater;
 import io.car.server.core.update.UserUpdater;
-import io.car.server.core.entities.Group;
-import io.car.server.core.entities.Measurement;
-import io.car.server.core.entities.Track;
-import io.car.server.core.entities.User;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class UpdaterModule extends AbstractModule {
-
     @Override
     protected void configure() {
-        bind(new TypeLiteral<EntityUpdater<User>>() {}).to(UserUpdater.class);
-        bind(new TypeLiteral<EntityUpdater<Group>>() {}).to(GroupUpdater.class);
-        bind(new TypeLiteral<EntityUpdater<Track>>() {}).to(TrackUpdater.class);
-        bind(new TypeLiteral<EntityUpdater<Measurement>>() {}).to(MeasurementUpdater.class);
+        bind(new TypeLiteral<EntityUpdater<User>>() {
+        }).to(UserUpdater.class);
+        bind(new TypeLiteral<EntityUpdater<Group>>() {
+        }).to(GroupUpdater.class);
+        bind(new TypeLiteral<EntityUpdater<Track>>() {
+        }).to(TrackUpdater.class);
+        bind(new TypeLiteral<EntityUpdater<Measurement>>() {
+        }).to(MeasurementUpdater.class);
     }
 }

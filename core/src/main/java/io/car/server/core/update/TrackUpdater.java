@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -21,18 +21,17 @@ import io.car.server.core.entities.Track;
 import io.car.server.core.exception.IllegalModificationException;
 
 /**
- * 
+ *
  * @author Arne de Wall <a.dewall@52north.org>
  *
  */
-public class TrackUpdater implements EntityUpdater<Track>{
-
-	@Override
-	public Track update(Track changes, Track original)
-			throws IllegalModificationException {
+public class TrackUpdater implements EntityUpdater<Track> {
+    @Override
+    public Track update(Track changes, Track original)
+            throws IllegalModificationException {
         if (changes.getBbox() != null) {
             original.setBbox(changes.getBbox());
         }
-		return original;
-	}
+        return original;
+    }
 }

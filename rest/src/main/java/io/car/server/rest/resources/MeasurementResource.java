@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -41,53 +41,54 @@ import io.car.server.rest.auth.Authenticated;
 import io.car.server.rest.validation.Schema;
 
 /**
- * 
+ *
  * @author Arne de Wall <a.dewall@52north.org>
- * 
+ *
  */
 public class MeasurementResource extends AbstractResource {
-	public static final String SENSOR = "sensor";
+    public static final String SENSOR = "sensor";
+    protected final Measurement measurement;
 
-	protected final Measurement measurement;
-
-	@Inject
-	public MeasurementResource(@Assisted Measurement measurement) {
-		this.measurement = measurement;
-	}
+    @Inject
+    public MeasurementResource(@Assisted Measurement measurement) {
+        this.measurement = measurement;
+    }
 
     @PUT
     @Schema(request = Schemas.MEASUREMENT_MODIFY)
     @Consumes(MediaType.APPLICATION_JSON)
-	@Authenticated
-	public Response modify(Measurement changes)
-			throws MeasurementNotFoundException, UserNotFoundException,
-			ValidationException, IllegalModificationException {
+    @Authenticated
+    public Response modify(Measurement changes)
+            throws MeasurementNotFoundException, UserNotFoundException,
+                   ValidationException, IllegalModificationException {
 
-		if (!canModifyUser(getCurrentUser())) {
-			throw new WebApplicationException(Status.FORBIDDEN);
-		}
-		getService().modifyMeasurement(measurement, changes);
-		return Response.ok().build();
-	}
-	
+        if (!canModifyUser(getCurrentUser())) {
+            throw new WebApplicationException(Status.FORBIDDEN);
+        }
+        getService().modifyMeasurement(measurement, changes);
+        return Response.ok().build();
+    }
+
     @GET
     @Schema(response = Schemas.MEASUREMENT)
     @Produces(MediaType.APPLICATION_JSON)
-	public Measurement get() throws MeasurementNotFoundException {
-		return measurement;
-	}
-	
-	@DELETE
-	@Authenticated
-	public void delete() throws MeasurementNotFoundException, UserNotFoundException{
-		if(!canModifyUser(getCurrentUser())){
-			throw new WebApplicationException(Status.FORBIDDEN);
-		}
-		getService().deleteMeasurement(measurement);
-	}
-	
-	@Path(SENSOR)
-	public SensorResource sensor(){
-		return getResourceFactory().createSensorResource(measurement.getSensor());
-	}
+    public Measurement get() throws MeasurementNotFoundException {
+        return measurement;
+    }
+
+    @DELETE
+    @Authenticated
+    public void delete() throws MeasurementNotFoundException,
+                                UserNotFoundException {
+        if (!canModifyUser(getCurrentUser())) {
+            throw new WebApplicationException(Status.FORBIDDEN);
+        }
+        getService().deleteMeasurement(measurement);
+    }
+
+    @Path(SENSOR)
+    public SensorResource sensor() {
+        return getResourceFactory()
+                .createSensorResource(measurement.getSensor());
+    }
 }

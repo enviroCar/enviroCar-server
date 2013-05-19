@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -30,29 +30,40 @@ import io.car.server.core.entities.User;
  */
 public interface ResourceFactory {
     UserResource createUserResource(User user);
+
     UsersResource createUsersResource();
 
     FriendsResource createFriendsResource(User user);
 
     GroupResource createGroupResource(Group group);
+
     GroupsResource createGroupsResource();
+
     GroupsResource createGroupsResource(User user);
-    
+
     GroupMemberResource createGroupMemberResource(Group group, User member);
+
     GroupMembersResource createGroupMembersResource(Group group);
-    
+
     TrackResource createTrackResource(Track track);
+
     TracksResource createTracksResource();
+
     TracksResource createTracksResource(User user);
-    
+
     MeasurementResource createMeasurementResource(Measurement measuurement);
+
     MeasurementsResource createMeasurementsResource();
+
     MeasurementsResource createMeasurementsResource(User user);
+
     MeasurementsResource createMeasurementsResource(Track track);
 
     PhenomenonResource createPhenomenonResource(Phenomenon phenomenon);
+
     PhenomenonsResource createPhenomenonsResource();
 
     SensorResource createSensorResource(Sensor sensor);
+
     SensorsResource createSensorsResource();
 }

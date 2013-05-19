@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -41,6 +41,7 @@ import com.vividsolutions.jts.geom.Polygon;
 
 import io.car.server.core.exception.GeometryConverterException;
 import io.car.server.core.util.GeometryConverter;
+
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
@@ -52,7 +53,8 @@ public class GeoBSON implements GeometryConverter<BSONObject> {
         this.factory = factory;
     }
 
-    protected BSONObject encodeGeometry(Geometry geometry) throws GeometryConverterException {
+    protected BSONObject encodeGeometry(Geometry geometry) throws
+            GeometryConverterException {
         Preconditions.checkNotNull(geometry);
         if (geometry.isEmpty()) {
             return null;
@@ -71,7 +73,8 @@ public class GeoBSON implements GeometryConverter<BSONObject> {
         } else if (geometry instanceof GeometryCollection) {
             return encode((GeometryCollection) geometry);
         } else {
-            throw new GeometryConverterException("unknown geometry type " + geometry.getGeometryType());
+            throw new GeometryConverterException("unknown geometry type " +
+                                                 geometry.getGeometryType());
         }
     }
 
@@ -143,7 +146,8 @@ public class GeoBSON implements GeometryConverter<BSONObject> {
     }
 
     @Override
-    public BSONObject encode(GeometryCollection geometry) throws GeometryConverterException {
+    public BSONObject encode(GeometryCollection geometry) throws
+            GeometryConverterException {
         Preconditions.checkNotNull(geometry);
         BSONObject bson = new BasicDBObject();
         bson.put(TYPE_KEY, GEOMETRY_COLLECTION_TYPE);
@@ -190,14 +194,16 @@ public class GeoBSON implements GeometryConverter<BSONObject> {
         return list;
     }
 
-    protected BasicDBList requireCoordinates(BSONObject bson) throws GeometryConverterException {
+    protected BasicDBList requireCoordinates(BSONObject bson) throws
+            GeometryConverterException {
         if (!bson.containsField(COORDINATES_KEY)) {
             throw new GeometryConverterException("missing 'coordinates' field");
         }
         return toList(bson.get(COORDINATES_KEY));
     }
 
-    protected Coordinate decodeCoordinate(BasicDBList list) throws GeometryConverterException {
+    protected Coordinate decodeCoordinate(BasicDBList list) throws
+            GeometryConverterException {
         if (list.size() != 2) {
             throw new GeometryConverterException("coordinates may only have 2 dimensions");
         }
@@ -206,7 +212,8 @@ public class GeoBSON implements GeometryConverter<BSONObject> {
         if (!(x instanceof Number) || !(y instanceof Number)) {
             throw new GeometryConverterException("x and y have to be numbers");
         }
-        return new Coordinate(((Number) x).doubleValue(), ((Number) y).doubleValue());
+        return new Coordinate(((Number) x).doubleValue(),
+                              ((Number) y).doubleValue());
     }
 
     protected BasicDBList toList(Object o) throws GeometryConverterException {
@@ -216,7 +223,8 @@ public class GeoBSON implements GeometryConverter<BSONObject> {
         return (BasicDBList) o;
     }
 
-    protected Coordinate[] decodeCoordinates(BasicDBList list) throws GeometryConverterException {
+    protected Coordinate[] decodeCoordinates(BasicDBList list) throws
+            GeometryConverterException {
         Coordinate[] coordinates = new Coordinate[list.size()];
         for (int i = 0; i < list.size(); ++i) {
             coordinates[i] = decodeCoordinate(toList(list.get(i)));
@@ -229,15 +237,19 @@ public class GeoBSON implements GeometryConverter<BSONObject> {
         if (coordinates.size() < 1) {
             throw new GeometryConverterException("missing polygon shell");
         }
-        LinearRing shell = factory.createLinearRing(decodeCoordinates(toList(coordinates.get(0))));
+        LinearRing shell = factory
+                .createLinearRing(decodeCoordinates(toList(coordinates.get(0))));
         LinearRing[] holes = new LinearRing[coordinates.size() - 1];
         for (int i = 1; i < coordinates.size(); ++i) {
-            holes[i - 1] = factory.createLinearRing(decodeCoordinates(toList(coordinates.get(i))));
+            holes[i - 1] = factory
+                    .createLinearRing(decodeCoordinates(toList(coordinates
+                    .get(i))));
         }
         return factory.createPolygon(shell, holes);
     }
 
-    protected Geometry decodeGeometry(Object db) throws GeometryConverterException {
+    protected Geometry decodeGeometry(Object db) throws
+            GeometryConverterException {
         BSONObject bson = (BSONObject) db;
         if (!bson.containsField(TYPE_KEY)) {
             throw new GeometryConverterException("Can not determine geometry type (missing 'type' field)");
@@ -267,24 +279,28 @@ public class GeoBSON implements GeometryConverter<BSONObject> {
     }
 
     @Override
-    public MultiLineString decodeMultiLineString(BSONObject bson) throws GeometryConverterException {
+    public MultiLineString decodeMultiLineString(BSONObject bson) throws
+            GeometryConverterException {
         BasicDBList coordinates = requireCoordinates(bson);
         LineString[] lineStrings = new LineString[coordinates.size()];
         for (int i = 0; i < coordinates.size(); ++i) {
             Object coords = coordinates.get(i);
-            lineStrings[i] = factory.createLineString(decodeCoordinates(toList(coords)));
+            lineStrings[i] = factory
+                    .createLineString(decodeCoordinates(toList(coords)));
         }
         return factory.createMultiLineString(lineStrings);
     }
 
     @Override
-    public LineString decodeLineString(BSONObject bson) throws GeometryConverterException {
+    public LineString decodeLineString(BSONObject bson) throws
+            GeometryConverterException {
         Coordinate[] coordinates = decodeCoordinates(requireCoordinates(bson));
         return factory.createLineString(coordinates);
     }
 
     @Override
-    public MultiPoint decodeMultiPoint(BSONObject bson) throws GeometryConverterException {
+    public MultiPoint decodeMultiPoint(BSONObject bson) throws
+            GeometryConverterException {
         Coordinate[] coordinates = decodeCoordinates(requireCoordinates(bson));
         return factory.createMultiPoint(coordinates);
     }
@@ -296,13 +312,15 @@ public class GeoBSON implements GeometryConverter<BSONObject> {
     }
 
     @Override
-    public Polygon decodePolygon(BSONObject bson) throws GeometryConverterException {
+    public Polygon decodePolygon(BSONObject bson) throws
+            GeometryConverterException {
         BasicDBList coordinates = requireCoordinates(bson);
         return decodePolygonCoordinates(coordinates);
     }
 
     @Override
-    public MultiPolygon decodeMultiPolygon(BSONObject bson) throws GeometryConverterException {
+    public MultiPolygon decodeMultiPolygon(BSONObject bson) throws
+            GeometryConverterException {
         BasicDBList coordinates = requireCoordinates(bson);
         Polygon[] polygons = new Polygon[coordinates.size()];
         for (int i = 0; i < coordinates.size(); ++i) {
@@ -312,7 +330,8 @@ public class GeoBSON implements GeometryConverter<BSONObject> {
     }
 
     @Override
-    public GeometryCollection decodeGeometryCollection(BSONObject bson) throws GeometryConverterException {
+    public GeometryCollection decodeGeometryCollection(BSONObject bson) throws
+            GeometryConverterException {
         if (!bson.containsField(GEOMETRIES_KEY)) {
             throw new GeometryConverterException("missing 'geometries' field");
         }
@@ -333,5 +352,4 @@ public class GeoBSON implements GeometryConverter<BSONObject> {
     public BSONObject encode(Geometry value) throws GeometryConverterException {
         return value == null ? null : encodeGeometry(value);
     }
-
 }

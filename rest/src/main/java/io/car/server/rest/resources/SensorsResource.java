@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -39,29 +39,29 @@ import io.car.server.rest.validation.Schema;
  */
 public class SensorsResource extends AbstractResource {
     public static final String SENSOR = "{sensor}";
+
     @GET
     @Schema(response = Schemas.SENSORS)
     @Produces(MediaType.APPLICATION_JSON)
     public Sensors get() {
         return getService().getSensors();
     }
-    
+
     @POST
     @Authenticated
     @Schema(request = Schemas.SENSOR_CREATE)
     @Consumes(MediaType.APPLICATION_JSON)
-	public Response create(Sensor sensor) {
-		return Response.created(
-				getUriInfo().getRequestUriBuilder()
-						.path(getService().createSensor(sensor).getName())
-						.build()).build();
-	}
+    public Response create(Sensor sensor) {
+        return Response.created(
+                getUriInfo().getRequestUriBuilder()
+                .path(getService().createSensor(sensor).getName())
+                .build()).build();
+    }
 
     @Path(SENSOR)
     public SensorResource sensor(@PathParam("sensor") String id)
-         			throws SensorNotFoundException {
-		return getResourceFactory().createSensorResource(
-				getService().getSensorByName(id));
-	}
-
+            throws SensorNotFoundException {
+        return getResourceFactory().createSensorResource(
+                getService().getSensorByName(id));
+    }
 }

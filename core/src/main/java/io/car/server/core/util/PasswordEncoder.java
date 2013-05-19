@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -22,5 +22,6 @@ package io.car.server.core.util;
  */
 public interface PasswordEncoder {
     String encode(String rawPassword);
+
     boolean verify(String rawPassword, String encodedPassword);
 }

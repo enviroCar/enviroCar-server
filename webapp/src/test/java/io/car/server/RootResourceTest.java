@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -37,10 +37,10 @@ import io.car.server.rest.coding.JSONConstants;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class RootResourceTest extends ResourceTestBase {
-
     @Test
     public void testGetRoot() {
-        ClientResponse response = resource().path("/rest").accept(MediaType.APPLICATION_JSON).get(ClientResponse.class);
+        ClientResponse response = resource().path("/rest")
+                .accept(MediaType.APPLICATION_JSON).get(ClientResponse.class);
 
         assertThat(response, hasStatus(Status.OK));
         assertThat(response.getType(), isCompatible(MediaType.APPLICATION_JSON_TYPE));
@@ -57,16 +57,19 @@ public class RootResourceTest extends ResourceTestBase {
 
     @Test
     public void testPostRoot() {
-        assertThat(resource().path("/rest").post(ClientResponse.class).getStatus(), is(405));
+        assertThat(resource().path("/rest").post(ClientResponse.class)
+                .getStatus(), is(405));
     }
 
     @Test
     public void testPutRoot() {
-        assertThat(resource().path("/rest").put(ClientResponse.class).getStatus(), is(405));
+        assertThat(resource().path("/rest").put(ClientResponse.class)
+                .getStatus(), is(405));
     }
 
     @Test
     public void testDeleteRoot() {
-        assertThat(resource().path("/rest").delete(ClientResponse.class).getStatus(), is(405));
+        assertThat(resource().path("/rest").delete(ClientResponse.class)
+                .getStatus(), is(405));
     }
 }

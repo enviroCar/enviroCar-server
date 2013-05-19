@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -32,7 +32,8 @@ import io.car.server.core.subscription.Subscriptions;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Entity("subscribers")
-public class MongoSubscriber extends MongoBaseEntity<MongoSubscriber> implements Subscriber {
+public class MongoSubscriber extends MongoBaseEntity<MongoSubscriber> implements
+        Subscriber {
     public static final String NAME = "name";
     public static final String SECRET = "secret";
     public static final String SUBSCRIPTIONS = "subscriptions";
@@ -92,5 +93,4 @@ public class MongoSubscriber extends MongoBaseEntity<MongoSubscriber> implements
                 .add(SUBSCRIPTIONS, getSubscriptions())
                 .toString();
     }
-
 }

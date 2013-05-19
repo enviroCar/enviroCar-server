@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -44,7 +44,8 @@ public class JSONSchemaFactoryProvider implements Provider<JsonSchemaFactory> {
 
     @Override
     public JsonSchemaFactory get() {
-        return JsonSchemaFactory.newBuilder().setLoadingConfiguration(loadingConfiguration()).freeze();
+        return JsonSchemaFactory.newBuilder()
+                .setLoadingConfiguration(loadingConfiguration()).freeze();
     }
 
     private LoadingConfiguration loadingConfiguration() {

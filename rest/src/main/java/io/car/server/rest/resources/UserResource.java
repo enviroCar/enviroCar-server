@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -70,7 +70,8 @@ public class UserResource extends AbstractResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Authenticated
     public Response modify(User changes) throws
-            UserNotFoundException, IllegalModificationException, ValidationException {
+            UserNotFoundException, IllegalModificationException,
+            ValidationException {
         Preconditions.checkNotNull(user);
         if (!canModifyUser(getUser())) {
             throw new WebApplicationException(Status.FORBIDDEN);
@@ -114,14 +115,14 @@ public class UserResource extends AbstractResource {
     public GroupsResource groups() {
         return getResourceFactory().createGroupsResource(getUser());
     }
-    
+
     @Path(TRACKS)
-    public TracksResource tracks(){
-    	return getResourceFactory().createTracksResource(getUser());
+    public TracksResource tracks() {
+        return getResourceFactory().createTracksResource(getUser());
     }
-    
+
     @Path(MEASUREMENTS)
-    public MeasurementsResource measurements(){
-    	return getResourceFactory().createMeasurementsResource(getUser());
+    public MeasurementsResource measurements() {
+        return getResourceFactory().createMeasurementsResource(getUser());
     }
 }

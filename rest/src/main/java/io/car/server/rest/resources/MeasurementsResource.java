@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -78,7 +78,8 @@ public class MeasurementsResource extends AbstractResource {
     @GET
     @Schema(response = Schemas.MEASUREMENTS)
     @Produces(MediaType.APPLICATION_JSON)
-    public Measurements get(@QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit) {
+    public Measurements get(
+            @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit) {
         if (track == null) {
             if (user == null) {
                 return getService().getMeasurements(limit);
@@ -95,16 +96,19 @@ public class MeasurementsResource extends AbstractResource {
     @Authenticated
     @Schema(request = Schemas.MEASUREMENT_CREATE)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response create(Measurement measurement) throws ResourceAlreadyExistException, ValidationException,
-                                                           UserNotFoundException {
+    public Response create(Measurement measurement) throws
+            ResourceAlreadyExistException, ValidationException,
+            UserNotFoundException {
         Measurement m;
         if (track != null) {
             if (!canModifyUser(track.getUser())) {
                 throw new WebApplicationException(Status.FORBIDDEN);
             }
-            m = getService().createMeasurement(track, measurement.setUser(track.getUser()));
+            m = getService().createMeasurement(track, measurement.setUser(track
+                    .getUser()));
         } else {
-            m = getService().createMeasurement(measurement.setUser(getCurrentUser()));
+            m = getService().createMeasurement(measurement
+                    .setUser(getCurrentUser()));
         }
         return Response.created(
                 getUriInfo()
@@ -113,7 +117,8 @@ public class MeasurementsResource extends AbstractResource {
     }
 
     @Path(MEASUREMENT)
-    public MeasurementResource measurement(@PathParam("measurement") String id) throws MeasurementNotFoundException {
+    public MeasurementResource measurement(@PathParam("measurement") String id)
+            throws MeasurementNotFoundException {
         Measurement m = getService().getMeasurement(id);
         if (track != null) {
             if (!m.getTrack().equals(track)) {

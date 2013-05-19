@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -26,7 +26,6 @@ import com.fasterxml.jackson.databind.JsonNode;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class IsJsonObjectWithProperty extends BaseMatcher<JsonNode> {
-
     private String key;
 
     public IsJsonObjectWithProperty(String key) {
@@ -47,5 +46,4 @@ public class IsJsonObjectWithProperty extends BaseMatcher<JsonNode> {
     public void describeTo(Description description) {
         description.appendText("has property ").appendValue(this.key);
     }
-
 }

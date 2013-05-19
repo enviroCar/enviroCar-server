@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -17,7 +17,6 @@
  */
 package io.car.server.rest.coding;
 
-
 import com.google.inject.Inject;
 
 import io.car.server.core.entities.EntityFactory;
@@ -25,8 +24,10 @@ import io.car.server.core.entities.EntityFactory;
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public abstract class AbstractEntityCoder<T> extends AbstractEntityEncoder<T> implements EntityDecoder<T> {
+public abstract class AbstractEntityCoder<T> extends AbstractEntityEncoder<T>
+        implements EntityDecoder<T> {
     private EntityFactory entityFactory;
+
     public EntityFactory getEntityFactory() {
         return entityFactory;
     }

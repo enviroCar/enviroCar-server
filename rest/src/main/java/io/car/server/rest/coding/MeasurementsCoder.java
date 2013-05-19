@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -38,7 +38,8 @@ public class MeasurementsCoder implements EntityEncoder<Measurements> {
     private final JsonNodeFactory factory;
 
     @Inject
-    public MeasurementsCoder(JsonNodeFactory factory, EntityEncoder<Measurement> measurementEncoder) {
+    public MeasurementsCoder(JsonNodeFactory factory,
+                             EntityEncoder<Measurement> measurementEncoder) {
         this.measurementEncoder = measurementEncoder;
         this.factory = factory;
     }
@@ -50,7 +51,8 @@ public class MeasurementsCoder implements EntityEncoder<Measurements> {
         for (Measurement measurement : t) {
             an.add(measurementEncoder.encode(measurement, mediaType));
         }
-        on.put(GeoJSONConstants.TYPE_KEY, GeoJSONConstants.FEATURE_COLLECTION_TYPE);
+        on.put(GeoJSONConstants.TYPE_KEY,
+               GeoJSONConstants.FEATURE_COLLECTION_TYPE);
         return on;
     }
 }

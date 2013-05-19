@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -26,29 +26,29 @@ import com.github.jmkgreen.morphia.mapping.MappedField;
 import com.github.jmkgreen.morphia.mapping.MappingException;
 
 public class URLConverter extends TypeConverter implements SimpleValueConverter {
-	public URLConverter() {
-		super(URL.class);
-	}
+    public URLConverter() {
+        super(URL.class);
+    }
 
-	@Override
-	public Object encode(Object value, MappedField optionalExtraInfo) {
+    @Override
+    public Object encode(Object value, MappedField optionalExtraInfo) {
         if (value == null) {
             return null;
         }
-		return ((URL) value).toString();
-	}
+        return ((URL) value).toString();
+    }
 
     @Override
     @SuppressWarnings("rawtypes")
-    public Object decode(Class c, Object o, MappedField i) throws MappingException {
+    public Object decode(Class c, Object o, MappedField i) throws
+            MappingException {
         if (o == null) {
             return null;
         }
-		try {
-			return new URL((String) o);
+        try {
+            return new URL((String) o);
         } catch (MalformedURLException e) {
             throw new MappingException("Invalid URL", e);
-		}
-	}
-
+        }
+    }
 }

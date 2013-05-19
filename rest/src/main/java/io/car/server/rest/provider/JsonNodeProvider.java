@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -25,13 +25,12 @@ import javax.ws.rs.ext.Provider;
 import com.fasterxml.jackson.databind.JsonNode;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class JsonNodeProvider extends AbstractJsonEntityProvider<JsonNode> {
-
     public JsonNodeProvider() {
         super(JsonNode.class);
     }

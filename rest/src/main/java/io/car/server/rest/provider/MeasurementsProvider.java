@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -35,18 +35,18 @@ import io.car.server.core.entities.Measurements;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class MeasurementsProvider extends AbstractJsonEntityProvider<Measurements> {
+    public MeasurementsProvider() {
+        super(Measurements.class);
+    }
 
-	public MeasurementsProvider() {
-		super(Measurements.class);
-	}
-
-	@Override
+    @Override
     public Measurements read(JsonNode j, MediaType mediaType) {
         throw new UnsupportedOperationException();
-	}
+    }
 
-	@Override
+    @Override
     public JsonNode write(Measurements t, MediaType mediaType) {
-        return getCodingFactory().createMeasurementsEncoder().encode(t, mediaType);
-	}
+        return getCodingFactory().createMeasurementsEncoder()
+                .encode(t, mediaType);
+    }
 }

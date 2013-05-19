@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -50,9 +50,11 @@ import io.car.server.rest.coding.GeoJSON;
  */
 public class GeoJSONTest {
     private final Random random = new Random();
+
     private Coordinate randomCoordinate() {
         return new Coordinate(random.nextInt(), random.nextInt());
     }
+
     protected LineString randomLineString(GeometryFactory fac) {
         return fac.createLineString(new Coordinate[] { randomCoordinate(),
                                                        randomCoordinate(),
@@ -60,9 +62,10 @@ public class GeoJSONTest {
     }
 
     protected MultiLineString randomMultiLineString(GeometryFactory fac) {
-        return fac.createMultiLineString(new LineString[] { randomLineString(fac),
-                                                            randomLineString(fac),
-                                                            randomLineString(fac) });
+        return fac.createMultiLineString(new LineString[] {
+            randomLineString(fac),
+            randomLineString(fac),
+            randomLineString(fac) });
     }
 
     protected Point randomPoint(GeometryFactory fac) {
@@ -80,9 +83,10 @@ public class GeoJSONTest {
     }
 
     protected Polygon randomPolygon(GeometryFactory fac) {
-        return fac.createPolygon(randomLinearRing(fac), new LinearRing[] { randomLinearRing(fac),
-                                                                           randomLinearRing(fac),
-                                                                           randomLinearRing(fac) });
+        return fac.createPolygon(randomLinearRing(fac), new LinearRing[] {
+            randomLinearRing(fac),
+            randomLinearRing(fac),
+            randomLinearRing(fac) });
     }
 
     protected MultiPoint randomMultiPoint(GeometryFactory fac) {
@@ -101,16 +105,20 @@ public class GeoJSONTest {
     }
 
     protected GeometryCollection randomGeometryCollection(GeometryFactory fac) {
-        return fac.createGeometryCollection(new Geometry[] { randomPoint(fac), randomMultiPoint(fac),
-                                                             randomLineString(fac), randomMultiLineString(fac),
-                                                             randomPolygon(fac), randomMultiPolygon(fac) });
+        return fac.createGeometryCollection(new Geometry[] { randomPoint(fac),
+                                                             randomMultiPoint(fac),
+                                                             randomLineString(fac),
+                                                             randomMultiLineString(fac),
+                                                             randomPolygon(fac),
+                                                             randomMultiPolygon(fac) });
     }
 
     @Test
     public void readWriteTest() throws GeometryConverterException, IOException {
         GeometryFactory fac = new GeometryFactory();
-        Geometry col = fac.createGeometryCollection(new Geometry[] { randomGeometryCollection(fac),
-                                                                     randomGeometryCollection(fac) });
+        Geometry col = fac.createGeometryCollection(new Geometry[] {
+            randomGeometryCollection(fac),
+            randomGeometryCollection(fac) });
         JsonNodeFactory jsonNodeFactory = new JsonNodeFactory(false);
         ObjectMapper mapr = new ObjectMapper().setNodeFactory(jsonNodeFactory)
                 .enable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS);

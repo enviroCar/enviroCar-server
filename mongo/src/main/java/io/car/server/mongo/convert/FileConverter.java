@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -25,25 +25,25 @@ import com.github.jmkgreen.morphia.mapping.MappedField;
 import com.github.jmkgreen.morphia.mapping.MappingException;
 
 public class FileConverter extends TypeConverter implements SimpleValueConverter {
-	public FileConverter() {
-		super(File.class);
-	}
+    public FileConverter() {
+        super(File.class);
+    }
 
-	@Override
-	public Object encode(Object value, MappedField optionalExtraInfo) {
+    @Override
+    public Object encode(Object value, MappedField optionalExtraInfo) {
         return value == null ? null : ((File) value).getAbsolutePath();
-	}
+    }
 
     @Override
     @SuppressWarnings("rawtypes")
-    public Object decode(Class c, Object o, MappedField i) throws MappingException {
-		if (o == null) {
-			return null;
-		} else if (o instanceof File) {
-			return o;
-		} else {
-			return new File((String) o);
-		}
-	}
-
+    public Object decode(Class c, Object o, MappedField i) throws
+            MappingException {
+        if (o == null) {
+            return null;
+        } else if (o instanceof File) {
+            return o;
+        } else {
+            return new File((String) o);
+        }
+    }
 }

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
  *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
@@ -31,13 +31,22 @@ import io.car.server.core.entities.User;
  */
 public interface GroupDao {
     Group getByName(String name);
+
     Groups search(String search);
+
     Groups search(String search, int limit);
+
     Groups getByOwner(User owner);
+
     Groups getByMember(User member);
+
     Groups get();
+
     Groups get(int limit);
+
     Group create(Group group);
+
     Group save(Group group);
+
     void delete(Group group);
 }
