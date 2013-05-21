@@ -33,7 +33,6 @@ import io.car.server.rest.provider.JsonNodeProvider;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class ResourceTestBase {
-
     @BeforeClass
     public static void start() throws Exception {
         CarIoServer.getInstance();

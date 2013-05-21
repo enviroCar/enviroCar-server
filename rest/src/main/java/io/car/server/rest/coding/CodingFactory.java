@@ -29,6 +29,8 @@ import io.car.server.core.entities.Track;
 import io.car.server.core.entities.Tracks;
 import io.car.server.core.entities.User;
 import io.car.server.core.entities.Users;
+import io.car.server.core.statistics.Statistic;
+import io.car.server.core.statistics.Statistics;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
@@ -69,4 +71,8 @@ public interface CodingFactory {
     EntityDecoder<Measurement> createMeasurementDecoder();
 
     EntityEncoder<Measurements> createMeasurementsEncoder();
+
+    EntityEncoder<Statistics> createStatisticsEncoder();
+
+    EntityEncoder<Statistic> createStatisticEncoder();
 }

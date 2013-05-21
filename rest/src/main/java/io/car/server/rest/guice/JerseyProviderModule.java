@@ -38,6 +38,8 @@ import io.car.server.rest.provider.PhenomenonProvider;
 import io.car.server.rest.provider.PhenomenonsProvider;
 import io.car.server.rest.provider.SensorProvider;
 import io.car.server.rest.provider.SensorsProvider;
+import io.car.server.rest.provider.StatisticProvider;
+import io.car.server.rest.provider.StatisticsProvider;
 import io.car.server.rest.provider.TrackProvider;
 import io.car.server.rest.provider.TracksProvider;
 import io.car.server.rest.provider.UserProvider;
@@ -63,6 +65,8 @@ public class JerseyProviderModule extends AbstractModule {
         bind(PhenomenonsProvider.class).in(Scopes.SINGLETON);
         bind(MeasurementProvider.class).in(Scopes.SINGLETON);
         bind(MeasurementsProvider.class).in(Scopes.SINGLETON);
+        bind(StatisticsProvider.class).in(Scopes.SINGLETON);
+        bind(StatisticProvider.class).in(Scopes.SINGLETON);
 
         bind(JsonNodeProvider.class).in(Scopes.SINGLETON);
 

@@ -21,10 +21,14 @@ import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.Provides;
+import com.google.inject.Singleton;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.PrecisionModel;
 
 import io.car.server.core.Service;
+import io.car.server.core.statistics.StatisticsService;
+import io.car.server.core.statistics.StatisticsServiceImpl;
 import io.car.server.core.util.BCryptPasswordEncoder;
 import io.car.server.core.util.PasswordEncoder;
 
@@ -36,10 +40,25 @@ public class CoreModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(Service.class);
+        bind(StatisticsService.class).to(StatisticsServiceImpl.class);
         bind(PasswordEncoder.class).to(BCryptPasswordEncoder.class);
-        bind(GeometryFactory.class)
-                .toInstance(new GeometryFactory(new PrecisionModel(PrecisionModel.FLOATING_SINGLE), 4326));
-        bind(DateTimeFormatter.class).toInstance(ISODateTimeFormat
-                .dateTimeNoMillis());
+    }
+
+    @Provides
+    @Singleton
+    public GeometryFactory geometryFactory(PrecisionModel precisionModel) {
+        return new GeometryFactory(precisionModel, 4326);
+    }
+
+    @Provides
+    @Singleton
+    public PrecisionModel precisionModel() {
+        return new PrecisionModel(PrecisionModel.FLOATING_SINGLE);
+    }
+
+    @Provides
+    @Singleton
+    protected DateTimeFormatter formatter() {
+        return ISODateTimeFormat.dateTimeNoMillis();
     }
 }

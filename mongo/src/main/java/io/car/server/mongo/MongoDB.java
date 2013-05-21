@@ -30,8 +30,12 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBCollection;
 import com.mongodb.MongoClient;
 import com.mongodb.ServerAddress;
+
+import io.car.server.mongo.entity.MongoMeasurement;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
@@ -66,6 +70,7 @@ public class MongoDB {
             datastore = morphia
                     .createDatastore(mongo, database, username, password);
             datastore.ensureIndexes();
+            ensureIndexes();
             datastore.ensureCaps();
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -95,5 +100,15 @@ public class MongoDB {
         for (Class<?> c : mappedClasses) {
             morphia.getMapper().addMappedClass(c);
         }
+    }
+
+    /*
+     * FIXME remove this once 2dsphere indexes are supported by morphia
+     */
+    protected void ensureIndexes() {
+        DBCollection collection = datastore
+                .getCollection(MongoMeasurement.class);
+        collection.ensureIndex(new BasicDBObject(MongoMeasurement.GEOMETRY,
+                                                 "2dsphere"));
     }
 }

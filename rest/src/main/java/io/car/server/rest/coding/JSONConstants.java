@@ -21,7 +21,11 @@ package io.car.server.rest.coding;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface JSONConstants {
-    String ERROR = "error";
+    String MIN_KEY = "min";
+    String AVG_KEY = "avg";
+    String MAX_KEY = "max";
+    String STATISTICS_KEY = "statistics";
+    String ERROR_KEY = "error";
     String BBOX_KEY = "bbox";
     String CREATED_KEY = "created";
     String DESCRIPTION_KEY = "description";

@@ -1,0 +1,18 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "id": "http://schema.envirocar.org/statistics.json#",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "statistics"
+    ],
+    "properties": {
+        "statistics": {
+            "type": "array",
+            "minItems": 0,
+            "items": {
+                "$ref": "http://schema.envirocar.org/statistic.json#"
+            }
+        }
+    }
+}

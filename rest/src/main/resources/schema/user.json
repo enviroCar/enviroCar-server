@@ -33,6 +33,9 @@
         },
         "tracks": {
             "$ref": "http://schema.envirocar.org/definitions.json#/href"
+        },
+        "statistics": {
+            "$ref": "http://schema.envirocar.org/definitions.json#/href"
         }
     }
 }

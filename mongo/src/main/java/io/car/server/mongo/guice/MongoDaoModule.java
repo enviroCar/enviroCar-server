@@ -25,10 +25,12 @@ import io.car.server.core.dao.PhenomenonDao;
 import io.car.server.core.dao.SensorDao;
 import io.car.server.core.dao.TrackDao;
 import io.car.server.core.dao.UserDao;
+import io.car.server.core.dao.StatisticsDao;
 import io.car.server.mongo.dao.MongoGroupDao;
 import io.car.server.mongo.dao.MongoMeasurementDao;
 import io.car.server.mongo.dao.MongoPhenomenonDao;
 import io.car.server.mongo.dao.MongoSensorDao;
+import io.car.server.mongo.dao.MongoStatisticsDao;
 import io.car.server.mongo.dao.MongoTrackDao;
 import io.car.server.mongo.dao.MongoUserDao;
 
@@ -43,6 +45,7 @@ public class MongoDaoModule extends AbstractModule {
         bind(TrackDao.class).to(MongoTrackDao.class);
         bind(MeasurementDao.class).to(MongoMeasurementDao.class);
         bind(SensorDao.class).to(MongoSensorDao.class);
+        bind(StatisticsDao.class).to(MongoStatisticsDao.class);
         bind(PhenomenonDao.class).to(MongoPhenomenonDao.class);
     }
 }
