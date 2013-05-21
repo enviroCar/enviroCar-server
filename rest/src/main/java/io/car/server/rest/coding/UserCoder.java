@@ -55,15 +55,18 @@ public class UserCoder extends AbstractEntityCoder<User> {
                     .path(UserResource.FRIENDS).build();
             URI tracks = getUriInfo().getRequestUriBuilder()
                     .path(UserResource.TRACKS).build();
-            j.put(JSONConstants.MEASUREMENTS_KEY, measurements.toString());
-            j.put(JSONConstants.GROUPS_KEY, groups.toString());
-            j.put(JSONConstants.FRIENDS_KEY, friends.toString());
-            j.put(JSONConstants.TRACKS_KEY, tracks.toString());
+            URI statistics = getUriInfo().getRequestUriBuilder()
+                    .path(UserResource.STATISTICS).build();
             j.put(JSONConstants.MAIL_KEY, t.getMail());
             j.put(JSONConstants.CREATED_KEY,
                   getDateTimeFormat().print(t.getCreationDate()));
             j.put(JSONConstants.MODIFIED_KEY,
                   getDateTimeFormat().print(t.getLastModificationDate()));
+            j.put(JSONConstants.MEASUREMENTS_KEY, measurements.toString());
+            j.put(JSONConstants.GROUPS_KEY, groups.toString());
+            j.put(JSONConstants.FRIENDS_KEY, friends.toString());
+            j.put(JSONConstants.TRACKS_KEY, tracks.toString());
+            j.put(JSONConstants.STATISTICS_KEY, statistics.toString());
         } else {
             URI uri = getUriInfo().getBaseUriBuilder()
                     .path(RootResource.class)
