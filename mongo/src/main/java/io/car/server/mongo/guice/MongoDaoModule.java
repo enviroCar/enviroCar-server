@@ -25,7 +25,7 @@ import io.car.server.core.dao.PhenomenonDao;
 import io.car.server.core.dao.SensorDao;
 import io.car.server.core.dao.TrackDao;
 import io.car.server.core.dao.UserDao;
-import io.car.server.core.db.StatisticsDao;
+import io.car.server.core.dao.StatisticsDao;
 import io.car.server.mongo.dao.MongoGroupDao;
 import io.car.server.mongo.dao.MongoMeasurementDao;
 import io.car.server.mongo.dao.MongoPhenomenonDao;

@@ -39,7 +39,7 @@ import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
 
 /**
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  * @author Arne de Wall
  */
 @Entity("measurements")

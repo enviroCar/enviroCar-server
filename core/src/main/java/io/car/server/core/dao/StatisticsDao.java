@@ -19,10 +19,10 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package io.car.server.core.db;
+package io.car.server.core.dao;
 
-import io.car.server.core.Statistic;
-import io.car.server.core.Statistics;
+import io.car.server.core.statistics.Statistic;
+import io.car.server.core.statistics.Statistics;
 import io.car.server.core.entities.Phenomenon;
 import io.car.server.core.entities.Phenomenons;
 import io.car.server.core.entities.Track;

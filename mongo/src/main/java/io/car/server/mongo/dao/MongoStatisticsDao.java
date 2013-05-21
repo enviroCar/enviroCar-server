@@ -35,11 +35,11 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 
-import io.car.server.core.Statistic;
-import io.car.server.core.Statistics;
+import io.car.server.core.statistics.Statistic;
+import io.car.server.core.statistics.Statistics;
 import io.car.server.core.dao.MeasurementDao;
 import io.car.server.core.dao.TrackDao;
-import io.car.server.core.db.StatisticsDao;
+import io.car.server.core.dao.StatisticsDao;
 import io.car.server.core.entities.Phenomenon;
 import io.car.server.core.entities.Phenomenons;
 import io.car.server.core.entities.Track;
@@ -54,7 +54,7 @@ import io.car.server.mongo.util.Ops;
 
 /**
  * @author jan
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class MongoStatisticsDao implements StatisticsDao {
     public static final String ID_KEY = Mapper.ID_KEY;

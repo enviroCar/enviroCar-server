@@ -19,7 +19,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package io.car.server.core;
+package io.car.server.core.statistics;
 
 import io.car.server.core.entities.Phenomenon;
 
