@@ -17,7 +17,9 @@
  */
 package io.car.server.rest.provider;
 
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.Provider;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -26,6 +28,8 @@ import io.car.server.core.statistics.Statistics;
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
+@Provider
+@Produces(MediaType.APPLICATION_JSON)
 public class StatisticsProvider extends AbstractJsonEntityProvider<Statistics> {
 
     public StatisticsProvider() {
