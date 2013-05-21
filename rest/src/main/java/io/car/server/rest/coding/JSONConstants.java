@@ -26,6 +26,7 @@ public interface JSONConstants {
     String AVG_KEY = "avg";
     String MAX_KEY = "max";
     String STATISTICS_KEY = "statistics";
+    String STATISTIC_KEY = "statistic";
     String ERROR_KEY = "error";
     String BBOX_KEY = "bbox";
     String CREATED_KEY = "created";

@@ -20,6 +20,9 @@
         },
         "modified": {
             "$ref": "http://schema.envirocar.org/definitions.json#/date-time"
+        },
+        "statistic": {
+            "$ref": "http://schema.envirocar.org/definitions.json#/href"
         }
     }
 }
