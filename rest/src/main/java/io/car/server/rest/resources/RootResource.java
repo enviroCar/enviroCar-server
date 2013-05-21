@@ -46,6 +46,7 @@ public class RootResource extends AbstractResource {
     public static final String PHENOMENONS = "phenomenons";
     public static final String SENSORS = "sensors";
     public static final String MEASUREMENTS = "measurements";
+    public static final String STATISTICS = "statistics";
     @Inject
     private JsonNodeFactory factory;
 
@@ -62,12 +63,15 @@ public class RootResource extends AbstractResource {
                 .path(PHENOMENONS).build();
         URI measurements = getUriInfo().getRequestUriBuilder()
                 .path(MEASUREMENTS).build();
+        URI statistics = getUriInfo().getRequestUriBuilder()
+                .path(STATISTICS).build();
         root.put(JSONConstants.USERS_KEY, users.toString());
         root.put(JSONConstants.GROUPS_KEY, groups.toString());
         root.put(JSONConstants.TRACKS_KEY, tracks.toString());
         root.put(JSONConstants.SENSORS_KEY, sensors.toString());
         root.put(JSONConstants.PHENOMENONS_KEY, phenomenons.toString());
         root.put(JSONConstants.MEASUREMENTS_KEY, measurements.toString());
+        root.put(JSONConstants.STATISTICS_KEY, statistics.toString());
         return root;
     }
 
@@ -99,5 +103,10 @@ public class RootResource extends AbstractResource {
     @Path(MEASUREMENTS)
     public MeasurementsResource measurements() {
         return getResourceFactory().createMeasurementsResource();
+    }
+
+    @Path(STATISTICS)
+    public StatisticsResource statistics() {
+        return getResourceFactory().createStatisticsResource();
     }
 }
