@@ -222,17 +222,17 @@ public class MongoStatisticsDao implements StatisticsDao {
 
     protected DBObject matches(User user) {
         DBRef ref = toRef((MongoUser) user);
-        return new BasicDBObject(Ops.MATCHES, new BasicDBObject(MongoMeasurement.USER, ref));
+        return new BasicDBObject(Ops.MATCH, new BasicDBObject(MongoMeasurement.USER, ref));
     }
 
     protected DBObject matches(Track track) {
         DBRef ref = toRef((MongoTrack) track);
-        return new BasicDBObject(Ops.MATCHES, new BasicDBObject(MongoMeasurement.TRACK, ref));
+        return new BasicDBObject(Ops.MATCH, new BasicDBObject(MongoMeasurement.TRACK, ref));
     }
 
     protected DBObject matches(Phenomenon phenomenon) {
         DBRef ref = toRef((MongoPhenomenon) phenomenon);
-        return new BasicDBObject(Ops.MATCHES, new BasicDBObject(path(MongoMeasurement.PHENOMENONS, MongoMeasurementValue.PHENOMENON), ref));
+        return new BasicDBObject(Ops.MATCH, new BasicDBObject(path(MongoMeasurement.PHENOMENONS, MongoMeasurementValue.PHENOMENON), ref));
     }
 
     protected DBObject matches(Phenomenons phenomenons) {
@@ -241,7 +241,7 @@ public class MongoStatisticsDao implements StatisticsDao {
             refs.add(toRef((MongoPhenomenon) phenomenon));
         }
         BasicDBObject in = new BasicDBObject(Ops.IN, refs);
-        return new BasicDBObject(Ops.MATCHES, new BasicDBObject(path(MongoMeasurement.PHENOMENONS, MongoMeasurementValue.PHENOMENON), in));
+        return new BasicDBObject(Ops.MATCH, new BasicDBObject(path(MongoMeasurement.PHENOMENONS, MongoMeasurementValue.PHENOMENON), in));
     }
 
     protected <T extends MongoBaseEntity<T>> DBRef toRef(T o) {

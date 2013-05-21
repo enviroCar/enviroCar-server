@@ -22,7 +22,7 @@ package io.car.server.mongo.util;
  */
 public interface Ops {
     String IN = "$in";
-    String MATCHES = "$matches";
+    String MATCH = "$match";
     String UNWIND = "$unwind";
     String AVG = "$avg";
     String MIN = "$min";
