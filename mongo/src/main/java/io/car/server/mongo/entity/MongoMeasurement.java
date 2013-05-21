@@ -27,7 +27,6 @@ import com.github.jmkgreen.morphia.annotations.Entity;
 import com.github.jmkgreen.morphia.annotations.Indexed;
 import com.github.jmkgreen.morphia.annotations.Property;
 import com.github.jmkgreen.morphia.annotations.Reference;
-import com.github.jmkgreen.morphia.utils.IndexDirection;
 import com.google.common.collect.Sets;
 import com.vividsolutions.jts.geom.Geometry;
 
@@ -48,7 +47,7 @@ public class MongoMeasurement extends MongoBaseEntity<MongoMeasurement>
     @Indexed
     @Reference
     private MongoUser user;
-    @Indexed(IndexDirection.GEO2D)
+//    @Indexed(IndexDirection.GEO2DSPHERE)
     @Property(GEOMETRY)
     private Geometry geometry;
     @Reference(SENSOR)
