@@ -48,7 +48,8 @@ import io.car.server.rest.validation.Schema;
 public class TrackResource extends AbstractResource {
     public static final String MEASUREMENTS = "measurements";
     public static final String SENSOR = "sensor";
-    protected final Track track;
+    public static final String STATISTICS = "statistics";
+    private final Track track;
 
     @Inject
     public TrackResource(@Assisted Track track) {
@@ -92,8 +93,12 @@ public class TrackResource extends AbstractResource {
     }
 
     @Path(SENSOR)
-    @Authenticated
     public SensorResource sensor() {
         return getResourceFactory().createSensorResource(track.getSensor());
+    }
+
+    @Path(STATISTICS)
+    public StatisticsResource statistics() {
+        return getResourceFactory().createStatisticsResource(track);
     }
 }
