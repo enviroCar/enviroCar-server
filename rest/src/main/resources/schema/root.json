@@ -9,7 +9,8 @@
         "groups",
         "sensors",
         "phenomenons",
-        "measurements"
+    "measurements",
+    "statistics"
     ],
     "properties": {
         "users": {
@@ -28,6 +29,9 @@
             "$ref": "http://schema.envirocar.org/definitions.json#/href"
         },
         "measurements": {
+            "$ref": "http://schema.envirocar.org/definitions.json#/href"
+        },
+        "statistics": {
             "$ref": "http://schema.envirocar.org/definitions.json#/href"
         }
     }

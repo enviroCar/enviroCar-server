@@ -79,7 +79,7 @@ public abstract class AbstracJsonProvider<T> extends AbstractMessageReaderWriter
             return read(reader.readTree(in), mt);
         } catch (JsonParseException e) {
             ObjectNode error = factory.objectNode();
-            error.put(JSONConstants.ERROR, e.getMessage());
+            error.put(JSONConstants.ERROR_KEY, e.getMessage());
             throw new WebApplicationException(Response
                     .status(Status.BAD_REQUEST)
                     .type(MediaType.APPLICATION_JSON_TYPE)

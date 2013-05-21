@@ -54,6 +54,7 @@ public class UserResource extends AbstractResource {
     public static final String FRIENDS = "friends";
     public static final String TRACKS = "tracks";
     public static final String MEASUREMENTS = "measurements";
+    public static final String STATISTICS = "statistics";
     protected final User user;
 
     @Inject
@@ -124,5 +125,10 @@ public class UserResource extends AbstractResource {
     @Path(MEASUREMENTS)
     public MeasurementsResource measurements() {
         return getResourceFactory().createMeasurementsResource(getUser());
+    }
+
+    @Path(STATISTICS)
+    public StatisticsResource statistics() {
+        return getResourceFactory().createStatisticsResource(getUser());
     }
 }

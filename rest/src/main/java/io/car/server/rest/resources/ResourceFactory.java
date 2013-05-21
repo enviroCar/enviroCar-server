@@ -66,4 +66,10 @@ public interface ResourceFactory {
     SensorResource createSensorResource(Sensor sensor);
 
     SensorsResource createSensorsResource();
+
+    StatisticsResource createStatisticsResource();
+
+    StatisticsResource createStatisticsResource(Track track);
+
+    StatisticsResource createStatisticsResource(User user);
 }

@@ -38,15 +38,16 @@ import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
 
 /**
- *
+ * @author Christian Autermann <autermann@uni-muenster.de>
  * @author Arne de Wall
- *
  */
 @Entity("measurements")
 public class MongoMeasurement extends MongoBaseEntity<MongoMeasurement>
         implements Measurement {
+    @Indexed
     @Reference
     private MongoUser user;
+//    @Indexed(IndexDirection.GEO2DSPHERE)
     @Property(GEOMETRY)
     private Geometry geometry;
     @Reference(SENSOR)
@@ -56,6 +57,7 @@ public class MongoMeasurement extends MongoBaseEntity<MongoMeasurement>
     @Indexed
     @Property(TIME)
     private DateTime time;
+    @Indexed
     @Reference(TRACK)
     private MongoTrack track;
 
@@ -142,7 +144,7 @@ public class MongoMeasurement extends MongoBaseEntity<MongoMeasurement>
     }
 
     @Override
-    public Track getTrack() {
+    public MongoTrack getTrack() {
         return this.track;
     }
 }

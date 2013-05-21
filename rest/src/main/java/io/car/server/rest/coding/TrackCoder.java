@@ -95,6 +95,10 @@ public class TrackCoder extends AbstractEntityCoder<Track> {
                 .path(TrackResource.MEASUREMENTS).build();
         properties.put(JSONConstants.MEASUREMENTS_KEY,
                        measurements.toString());
+        URI statistics = getUriInfo().getRequestUriBuilder()
+                .path(TrackResource.STATISTICS).build();
+        properties.put(JSONConstants.STATISTICS_KEY,
+                       statistics.toString());
         return track;
     }
 }

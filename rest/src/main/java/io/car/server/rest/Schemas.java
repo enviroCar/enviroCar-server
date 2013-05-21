@@ -53,6 +53,8 @@ public class Schemas {
                                                    "phenomenon.create.json#";
     public static final String PHENOMENON_MODIFY = PREFIX +
                                                    "phenomenon.modify.json#";
+    public static final String STATISTICS = PREFIX + "statistics.json#";
+    public static final String STATISTIC = PREFIX + "statistic.json#";
 
     private Schemas() {
     }
