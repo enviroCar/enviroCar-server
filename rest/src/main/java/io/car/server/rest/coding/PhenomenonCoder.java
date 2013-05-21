@@ -35,27 +35,31 @@ import io.car.server.rest.resources.RootResource;
 public class PhenomenonCoder extends AbstractEntityCoder<Phenomenon> {
     @Override
     public Phenomenon decode(JsonNode j, MediaType mediaType) {
-        return getEntityFactory().createPhenomenon().setName(j
-                .path(JSONConstants.NAME_KEY).textValue());
+        return getEntityFactory().createPhenomenon()
+                .setName(j.path(JSONConstants.NAME_KEY).textValue())
+                .setUnit(j.path(JSONConstants.UNIT_KEY).textValue());
     }
 
     @Override
     public ObjectNode encode(Phenomenon t, MediaType mediaType) {
-        ObjectNode user = getJsonFactory().objectNode()
+        ObjectNode phenomenon = getJsonFactory().objectNode()
                 .put(JSONConstants.NAME_KEY, t.getName());
         if (mediaType.equals(MediaTypes.PHENOMENON_TYPE)) {
-            user.put(JSONConstants.CREATED_KEY, getDateTimeFormat().print(t
-                    .getCreationDate()));
-            user.put(JSONConstants.MODIFIED_KEY, getDateTimeFormat().print(t
-                    .getLastModificationDate()));
+            if (t.getUnit() != null) {
+                phenomenon.put(JSONConstants.UNIT_KEY, t.getUnit());
+            }
+            phenomenon.put(JSONConstants.CREATED_KEY, getDateTimeFormat()
+                    .print(t.getCreationDate()));
+            phenomenon.put(JSONConstants.MODIFIED_KEY, getDateTimeFormat()
+                    .print(t.getLastModificationDate()));
         } else {
             URI href = getUriInfo().getBaseUriBuilder()
                     .path(RootResource.class)
                     .path(RootResource.PHENOMENONS)
                     .path(PhenomenonsResource.PHENOMENON)
                     .build(t.getName());
-            user.put(JSONConstants.HREF_KEY, href.toString());
+            phenomenon.put(JSONConstants.HREF_KEY, href.toString());
         }
-        return user;
+        return phenomenon;
     }
 }

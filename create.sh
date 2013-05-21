@@ -61,7 +61,10 @@ for user in {1..5}; do
 		-H "X-Token: testuser$user" \
 		-H "X-User: testuser$user" \
 		$URL/rest/phenomenons -d \
-	"{ \"name\": \"testphenomenon$user\" }"
+	"{
+	   \"name\": \"testphenomenon$user\",
+	   \"unit\": \"testunit$user\"
+	}"
 done
 
 # tracks

@@ -4,10 +4,14 @@
     "type": "object",
     "additionalProperties": false,
     "required": [
-        "name"
+    "name",
+    "unit"
     ],
     "properties": {
         "name": {
+            "type": "string"
+        },
+        "unit": {
             "type": "string"
         }
     }

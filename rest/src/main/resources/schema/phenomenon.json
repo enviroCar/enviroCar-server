@@ -12,6 +12,9 @@
         "name": {
             "type": "string"
         },
+        "unit": {
+            "type": "string"
+        },
         "created": {
             "$ref": "http://schema.envirocar.org/definitions.json#/date-time"
         },

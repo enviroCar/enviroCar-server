@@ -32,6 +32,8 @@ public class MongoPhenomenon extends MongoBaseEntity<MongoPhenomenon> implements
     @Indexed(unique = true)
     @Property(NAME)
     private String name;
+    @Property(UNIT)
+    private String unit;
 
     @Override
     public String getName() {
@@ -41,6 +43,17 @@ public class MongoPhenomenon extends MongoBaseEntity<MongoPhenomenon> implements
     @Override
     public MongoPhenomenon setName(String name) {
         this.name = name;
+        return this;
+    }
+
+    @Override
+    public String getUnit() {
+        return unit;
+    }
+
+    @Override
+    public Phenomenon setUnit(String unit) {
+        this.unit = unit;
         return this;
     }
 }

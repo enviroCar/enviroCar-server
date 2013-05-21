@@ -22,8 +22,12 @@ package io.car.server.core.entities;
  */
 public interface Phenomenon extends BaseEntity {
     String NAME = "name";
-
+    String UNIT = "unit";
     String getName();
 
     Phenomenon setName(String name);
+
+    String getUnit();
+
+    Phenomenon setUnit(String unit);
 }

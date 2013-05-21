@@ -3,11 +3,11 @@
     "id": "http://schema.envirocar.org/phenomenon.modify.json#",
     "type": "object",
     "additionalProperties": false,
-    "required": [
-        "name"
-    ],
     "properties": {
         "name": {
+            "type": "string"
+        },
+        "unit": {
             "type": "string"
         }
     }
