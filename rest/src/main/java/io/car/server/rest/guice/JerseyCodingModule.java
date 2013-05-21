@@ -41,6 +41,8 @@ import io.car.server.core.entities.Track;
 import io.car.server.core.entities.Tracks;
 import io.car.server.core.entities.User;
 import io.car.server.core.entities.Users;
+import io.car.server.core.statistics.Statistic;
+import io.car.server.core.statistics.Statistics;
 import io.car.server.rest.coding.CodingFactory;
 import io.car.server.rest.coding.EntityDecoder;
 import io.car.server.rest.coding.EntityEncoder;
@@ -53,6 +55,8 @@ import io.car.server.rest.coding.PhenomenonCoder;
 import io.car.server.rest.coding.PhenomenonsCoder;
 import io.car.server.rest.coding.SensorCoder;
 import io.car.server.rest.coding.SensorsCoder;
+import io.car.server.rest.coding.StatisticEncoder;
+import io.car.server.rest.coding.StatisticsEncoder;
 import io.car.server.rest.coding.TrackCoder;
 import io.car.server.rest.coding.TracksCoder;
 import io.car.server.rest.coding.UserCoder;
@@ -69,42 +73,46 @@ public class JerseyCodingModule extends AbstractModule {
 
     protected void configureCodingFactory() {
         FactoryModuleBuilder fmb = new FactoryModuleBuilder();
-        implementAndBind(fmb, new TypeLiteral<EntityEncoder<User>>() {
+        bind(fmb, new TypeLiteral<EntityEncoder<User>>() {
         }, UserCoder.class);
-        implementAndBind(fmb, new TypeLiteral<EntityDecoder<User>>() {
+        bind(fmb, new TypeLiteral<EntityDecoder<User>>() {
         }, UserCoder.class);
-        implementAndBind(fmb, new TypeLiteral<EntityEncoder<Users>>() {
+        bind(fmb, new TypeLiteral<EntityEncoder<Users>>() {
         }, UsersCoder.class);
-        implementAndBind(fmb, new TypeLiteral<EntityEncoder<Sensor>>() {
+        bind(fmb, new TypeLiteral<EntityEncoder<Sensor>>() {
         }, SensorCoder.class);
-        implementAndBind(fmb, new TypeLiteral<EntityDecoder<Sensor>>() {
+        bind(fmb, new TypeLiteral<EntityDecoder<Sensor>>() {
         }, SensorCoder.class);
-        implementAndBind(fmb, new TypeLiteral<EntityEncoder<Sensors>>() {
+        bind(fmb, new TypeLiteral<EntityEncoder<Sensors>>() {
         }, SensorsCoder.class);
-        implementAndBind(fmb, new TypeLiteral<EntityEncoder<Track>>() {
+        bind(fmb, new TypeLiteral<EntityEncoder<Track>>() {
         }, TrackCoder.class);
-        implementAndBind(fmb, new TypeLiteral<EntityDecoder<Track>>() {
+        bind(fmb, new TypeLiteral<EntityDecoder<Track>>() {
         }, TrackCoder.class);
-        implementAndBind(fmb, new TypeLiteral<EntityEncoder<Tracks>>() {
+        bind(fmb, new TypeLiteral<EntityEncoder<Tracks>>() {
         }, TracksCoder.class);
-        implementAndBind(fmb, new TypeLiteral<EntityEncoder<Measurement>>() {
+        bind(fmb, new TypeLiteral<EntityEncoder<Measurement>>() {
         }, MeasurementCoder.class);
-        implementAndBind(fmb, new TypeLiteral<EntityDecoder<Measurement>>() {
+        bind(fmb, new TypeLiteral<EntityDecoder<Measurement>>() {
         }, MeasurementCoder.class);
-        implementAndBind(fmb, new TypeLiteral<EntityEncoder<Measurements>>() {
+        bind(fmb, new TypeLiteral<EntityEncoder<Measurements>>() {
         }, MeasurementsCoder.class);
-        implementAndBind(fmb, new TypeLiteral<EntityEncoder<Phenomenon>>() {
+        bind(fmb, new TypeLiteral<EntityEncoder<Phenomenon>>() {
         }, PhenomenonCoder.class);
-        implementAndBind(fmb, new TypeLiteral<EntityDecoder<Phenomenon>>() {
+        bind(fmb, new TypeLiteral<EntityDecoder<Phenomenon>>() {
         }, PhenomenonCoder.class);
-        implementAndBind(fmb, new TypeLiteral<EntityEncoder<Phenomenons>>() {
+        bind(fmb, new TypeLiteral<EntityEncoder<Phenomenons>>() {
         }, PhenomenonsCoder.class);
-        implementAndBind(fmb, new TypeLiteral<EntityEncoder<Group>>() {
+        bind(fmb, new TypeLiteral<EntityEncoder<Group>>() {
         }, GroupCoder.class);
-        implementAndBind(fmb, new TypeLiteral<EntityDecoder<Group>>() {
+        bind(fmb, new TypeLiteral<EntityDecoder<Group>>() {
         }, GroupCoder.class);
-        implementAndBind(fmb, new TypeLiteral<EntityEncoder<Groups>>() {
+        bind(fmb, new TypeLiteral<EntityEncoder<Groups>>() {
         }, GroupsCoder.class);
+        bind(fmb, new TypeLiteral<EntityEncoder<Statistic>>() {
+        }, StatisticEncoder.class);
+        bind(fmb, new TypeLiteral<EntityEncoder<Statistics>>() {
+        }, StatisticsEncoder.class);
         bind(new TypeLiteral<EntityDecoder<Geometry>>() {
         }).to(GeoJSON.class);
         bind(new TypeLiteral<EntityEncoder<Geometry>>() {
@@ -112,7 +120,7 @@ public class JerseyCodingModule extends AbstractModule {
         install(fmb.build(CodingFactory.class));
     }
 
-    protected <T> void implementAndBind(FactoryModuleBuilder fmb,
+    protected <T> void bind(FactoryModuleBuilder fmb,
                                         TypeLiteral<T> source,
                                         Class<? extends T> target) {
         fmb.implement(source, target);
