@@ -31,14 +31,6 @@ import io.car.server.core.entities.User;
  */
 public interface StatisticsService {
 
-    long getNumberOfMeasurements();
-
-    long getNumberOfMeasurements(User user);
-
-    long getNumberOfMeasurements(Track track);
-
-    long getNumberOfTracks();
-
     Statistics getStatistics(Track track);
 
     Statistics getStatistics(User user);

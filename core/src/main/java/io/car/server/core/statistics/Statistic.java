@@ -29,6 +29,8 @@ import io.car.server.core.entities.Phenomenon;
  */
 public class Statistic {
     private Phenomenon phenomenon;
+    private long tracks;
+    private long users;
     private long measurements;
     private double mean;
     private double min;
@@ -49,6 +51,24 @@ public class Statistic {
 
     public Statistic setMeasurements(long measurements) {
         this.measurements = measurements;
+        return this;
+    }
+
+    public long getUsers() {
+        return users;
+    }
+
+    public Statistic setUsers(long users) {
+        this.users = users;
+        return this;
+    }
+
+    public long getTracks() {
+        return tracks;
+    }
+
+    public Statistic setTracks(long tracks) {
+        this.tracks = tracks;
         return this;
     }
 

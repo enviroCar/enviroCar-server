@@ -35,15 +35,14 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 
-import io.car.server.core.statistics.Statistic;
-import io.car.server.core.statistics.Statistics;
 import io.car.server.core.dao.MeasurementDao;
-import io.car.server.core.dao.TrackDao;
 import io.car.server.core.dao.StatisticsDao;
 import io.car.server.core.entities.Phenomenon;
 import io.car.server.core.entities.Phenomenons;
 import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
+import io.car.server.core.statistics.Statistic;
+import io.car.server.core.statistics.Statistics;
 import io.car.server.mongo.entity.MongoBaseEntity;
 import io.car.server.mongo.entity.MongoMeasurement;
 import io.car.server.mongo.entity.MongoMeasurementValue;
@@ -61,7 +60,9 @@ public class MongoStatisticsDao implements StatisticsDao {
     public static final String AVG_KEY = "avg";
     public static final String MIN_KEY = "min";
     public static final String MAX_KEY = "max";
-    public static final String COUNT_KEY = "count";
+    public static final String MEASUREMENTS_KEY = "measurements";
+    public static final String TRACKS_KEY = "tracks";
+    public static final String USERS_KEY = "users";
 
     protected static String valueOf(String property) {
         return "$" + property;
@@ -71,41 +72,16 @@ public class MongoStatisticsDao implements StatisticsDao {
         return Joiner.on(".").join(first, second, (Object[]) paths);
     }
     private final MongoMeasurementDao measurements;
-    private final MongoTrackDao tracks;
     private final Datastore db;
     private final Mapper mapr;
 
     @Inject
     public MongoStatisticsDao(Mapper mapr,
                               Datastore db,
-                              MeasurementDao measurementDao,
-                              TrackDao trackDao) {
+                              MeasurementDao measurementDao) {
         this.measurements = (MongoMeasurementDao) measurementDao;
-        this.tracks = (MongoTrackDao) trackDao;
         this.db = db;
         this.mapr = mapr;
-    }
-
-    @Override
-    public long getNumberOfTracks() {
-        return tracks.count();
-    }
-
-    @Override
-    public long getNumberOfMeasurements() {
-        return measurements.count();
-    }
-
-    @Override
-    public long getNumberOfMeasurements(User user) {
-        return measurements.count(measurements.createQuery()
-                .field(MongoMeasurement.USER).equal((MongoUser) user));
-    }
-
-    @Override
-    public long getNumberOfMeasurements(Track track) {
-        return measurements.count(measurements.createQuery()
-                .field(MongoMeasurement.TRACK).equal((MongoTrack) track));
     }
 
     @Override
@@ -188,11 +164,18 @@ public class MongoStatisticsDao implements StatisticsDao {
         Phenomenon phenomenon = (Phenomenon) mapr
                 .fromDBObject(MongoPhenomenon.class, phenDbo, mapr
                 .createEntityCache());
-        long count = ((Number) result.get(COUNT_KEY)).longValue();
+        long numberOfMeasurements = ((Number) result.get(MEASUREMENTS_KEY))
+                .longValue();
+        List<?> tracks = (List<?>) result.get(TRACKS_KEY);
+        List<?> users = (List<?>) result.get(USERS_KEY);
         double max = ((Number) result.get(MAX_KEY)).doubleValue();
         double min = ((Number) result.get(MIN_KEY)).doubleValue();
         double mean = ((Number) result.get(AVG_KEY)).doubleValue();
-        return new Statistic().setPhenomenon(phenomenon).setMeasurements(count)
+        return new Statistic()
+                .setPhenomenon(phenomenon)
+                .setMeasurements(numberOfMeasurements)
+                .setTracks(tracks.size())
+                .setUsers(users.size())
                 .setMax(max).setMin(min).setMean(mean);
     }
 
@@ -205,7 +188,11 @@ public class MongoStatisticsDao implements StatisticsDao {
         fields.put(AVG_KEY, new BasicDBObject(Ops.AVG, value));
         fields.put(MIN_KEY, new BasicDBObject(Ops.MIN, value));
         fields.put(MAX_KEY, new BasicDBObject(Ops.MAX, value));
-        fields.put(COUNT_KEY, new BasicDBObject(Ops.SUM, 1));
+        fields.put(MEASUREMENTS_KEY, new BasicDBObject(Ops.SUM, 1));
+        fields.put(TRACKS_KEY, new BasicDBObject(Ops.ADD_TO_SET,
+                                                 valueOf(MongoMeasurement.TRACK)));
+        fields.put(USERS_KEY, new BasicDBObject(Ops.ADD_TO_SET,
+                                                valueOf(MongoMeasurement.USER)));
         return new BasicDBObject(Ops.GROUP, fields);
     }
 
@@ -217,6 +204,8 @@ public class MongoStatisticsDao implements StatisticsDao {
         BasicDBObject fields = new BasicDBObject();
         fields.put(MongoMeasurement.ID, 0);
         fields.put(MongoMeasurement.PHENOMENONS, 1);
+        fields.put(MongoMeasurement.TRACK, 1);
+        fields.put(MongoMeasurement.USER, 1);
         return new BasicDBObject(Ops.PROJECT, fields);
     }
 

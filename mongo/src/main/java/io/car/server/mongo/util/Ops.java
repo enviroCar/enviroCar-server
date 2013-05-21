@@ -30,4 +30,5 @@ public interface Ops {
     String SUM = "$sum";
     String GROUP = "$group";
     String PROJECT = "$project";
+    String ADD_TO_SET = "$addToSet";
 }

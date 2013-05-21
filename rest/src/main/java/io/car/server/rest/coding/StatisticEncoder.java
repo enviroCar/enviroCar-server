@@ -44,6 +44,8 @@ public class StatisticEncoder extends AbstractEntityEncoder<Statistic> {
         statistic.put(JSONConstants.AVG_KEY, t.getMean());
         statistic.put(JSONConstants.MIN_KEY, t.getMin());
         statistic.put(JSONConstants.MEASUREMENTS_KEY, t.getMeasurements());
+        statistic.put(JSONConstants.TRACKS_KEY, t.getTracks());
+        statistic.put(JSONConstants.USERS_KEY, t.getMeasurements());
         statistic.put(JSONConstants.PHENOMENON_KEY,
                       phenomenonEncoder.encode(t.getPhenomenon(), mt));
         return statistic;

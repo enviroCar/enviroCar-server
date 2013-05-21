@@ -34,26 +34,6 @@ public class StatisticsServiceImpl implements StatisticsService {
     }
 
     @Override
-    public long getNumberOfTracks() {
-        return dao.getNumberOfTracks();
-    }
-
-    @Override
-    public long getNumberOfMeasurements() {
-        return dao.getNumberOfMeasurements();
-    }
-
-    @Override
-    public long getNumberOfMeasurements(User user) {
-        return dao.getNumberOfMeasurements(user);
-    }
-
-    @Override
-    public long getNumberOfMeasurements(Track track) {
-        return dao.getNumberOfMeasurements(track);
-    }
-
-    @Override
     public Statistics getStatistics(Track track) {
         return dao.getStatistics(track);
     }
