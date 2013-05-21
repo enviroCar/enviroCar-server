@@ -58,5 +58,7 @@ public class JSONSchemaModule extends AbstractModule {
         mb.addBinding().toInstance("/schema/user.modify.json");
         mb.addBinding().toInstance("/schema/user.ref.json");
         mb.addBinding().toInstance("/schema/users.json");
+        mb.addBinding().toInstance("/schema/statistics.json");
+        mb.addBinding().toInstance("/schema/statistic.json");
     }
 }

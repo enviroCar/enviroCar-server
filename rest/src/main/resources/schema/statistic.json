@@ -1,0 +1,30 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "id": "http://schema.envirocar.org/statistic.json#",
+    "type": "object",
+    "required": [
+        "min",
+        "max",
+        "avg",
+        "measurements",
+        "phenomenon"
+    ],
+    "properties": {
+        "phenomenon": {
+            "$ref": "http://schema.envirocar.org/definitions.json#/phenomenon-ref"
+        },
+        "measurements": {
+            "type": "integer",
+            "minimum": 0
+        },
+        "min": {
+            "type": "number"
+        },
+        "max": {
+            "type": "number"
+        },
+        "avg": {
+            "type": "number"
+        }
+    }
+}
