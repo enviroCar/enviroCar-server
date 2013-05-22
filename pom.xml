@@ -143,7 +143,6 @@
                 <groupId>com.github.jmkgreen.morphia</groupId>
                 <artifactId>morphia-logging-slf4j</artifactId>
                 <version>${morphia-version}</version>
-                <scope>runtime</scope>
             </dependency>
             <dependency>
                 <artifactId>slf4j-api</artifactId>
