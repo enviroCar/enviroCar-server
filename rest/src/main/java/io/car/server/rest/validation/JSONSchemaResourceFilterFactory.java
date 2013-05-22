@@ -71,7 +71,7 @@ public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
     private static final Logger log = LoggerFactory
             .getLogger(JSONSchemaResourceFilterFactory.class);
     private static final boolean VALIDATE_REQUESTS = true;
-    private static final boolean VALIDATE_RESPONSES = true;
+    private static final boolean VALIDATE_RESPONSES = false;
     private final JsonSchemaFactory schemaFactory;
     private final ObjectReader reader;
     private final ObjectWriter writer;
