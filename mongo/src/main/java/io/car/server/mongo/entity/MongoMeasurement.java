@@ -45,12 +45,12 @@ import io.car.server.core.entities.User;
 public class MongoMeasurement extends MongoBaseEntity<MongoMeasurement>
         implements Measurement {
     @Indexed
-    @Reference
+    @Reference(value = USER, lazy = true)
     private MongoUser user;
 //    @Indexed(IndexDirection.GEO2DSPHERE)
     @Property(GEOMETRY)
     private Geometry geometry;
-    @Reference(SENSOR)
+    @Reference(value = SENSOR, lazy = true)
     private MongoSensor sensor;
     @Embedded(PHENOMENONS)
     private Set<MongoMeasurementValue> values = Sets.newHashSet();
@@ -58,7 +58,7 @@ public class MongoMeasurement extends MongoBaseEntity<MongoMeasurement>
     @Property(TIME)
     private DateTime time;
     @Indexed
-    @Reference(TRACK)
+    @Reference(value = TRACK, lazy = true)
     private MongoTrack track;
 
     @Override

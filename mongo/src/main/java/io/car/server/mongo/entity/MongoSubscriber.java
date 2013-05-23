@@ -41,7 +41,7 @@ public class MongoSubscriber extends MongoBaseEntity<MongoSubscriber> implements
     private String name;
     @Property(SECRET)
     private String secret;
-    @Reference(SUBSCRIPTIONS)
+    @Reference(value = SUBSCRIPTIONS, lazy = true)
     private Set<MongoSubscription> subscriptions;
 
     @Override

@@ -28,8 +28,8 @@ import io.car.server.core.entities.Phenomenon;
 public class MongoMeasurementValue implements MeasurementValue {
     @Property(VALUE)
     private Object value;
-    @Reference(PHENOMENON)
-    private Phenomenon phenomenon;
+    @Reference(value = PHENOMENON, lazy = true)
+    private MongoPhenomenon phenomenon;
 
     @Override
     public Object getValue() {
@@ -49,7 +49,7 @@ public class MongoMeasurementValue implements MeasurementValue {
 
     @Override
     public MeasurementValue setPhenomenon(Phenomenon phenomenon) {
-        this.phenomenon = phenomenon;
+        this.phenomenon = (MongoPhenomenon) phenomenon;
         return this;
     }
 }
