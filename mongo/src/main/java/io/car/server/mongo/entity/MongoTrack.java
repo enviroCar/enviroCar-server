@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.bson.types.ObjectId;
 
+import com.github.jmkgreen.morphia.Key;
 import com.github.jmkgreen.morphia.annotations.Embedded;
 import com.github.jmkgreen.morphia.annotations.Entity;
 import com.github.jmkgreen.morphia.annotations.Indexed;
@@ -39,25 +40,33 @@ import io.car.server.core.entities.Measurements;
 import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
+import io.car.server.mongo.cache.EntityCache;
 
 @Entity("tracks")
 public class MongoTrack extends MongoBaseEntity<MongoTrack> implements Track {
     @Indexed(IndexDirection.GEO2D)
     @Embedded(BBOX)
     private Geometry bbox;
-    @Reference(value = USER, lazy = true)
-    private MongoUser user;
-    @Reference(value = SENSOR, lazy = true)
-    private MongoSensor sensor;
+    @Property(USER)
+    private Key<MongoUser> user;
+    @Property(SENSOR)
+    private Key<MongoSensor> sensor;
     @Reference(value = MEASUREMENTS, lazy = true)
     private List<MongoMeasurement> measurements = Lists.newLinkedList();
-    @Inject
-    @Transient
-    private GeometryFactory factory;
     @Property(DESCIPTION)
     private String description;
     @Property(NAME)
     private String name;
+    @Inject
+    @Transient
+    private EntityCache<MongoSensor> sensorCache;
+    @Inject
+    @Transient
+    private EntityCache<MongoUser> userCache;
+    @Inject
+    @Transient
+    private GeometryFactory factory;
+
 
     @Override
     public MongoTrack addMeasurement(Measurement measurement) {
@@ -123,23 +132,34 @@ public class MongoTrack extends MongoBaseEntity<MongoTrack> implements Track {
 
     @Override
     public MongoUser getUser() {
-        return this.user;
+        if (user == null) {
+            return null;
+        }
+        return this.userCache.get(user);
     }
 
     @Override
     public MongoTrack setUser(User user) {
-        this.user = (MongoUser) user;
+        if (user != null) {
+            this.user = ((MongoUser) user).asKey();
+        } else {
+            this.user = null;
+        }
         return this;
     }
 
     @Override
     public MongoSensor getSensor() {
-        return sensor;
+        return this.sensorCache.get(sensor);
     }
 
     @Override
     public MongoTrack setSensor(Sensor sensor) {
-        this.sensor = (MongoSensor) sensor;
+        if (sensor != null) {
+            this.sensor = ((MongoSensor) sensor).asKey();
+        } else {
+            this.sensor = null;
+        }
         return this;
     }
 
