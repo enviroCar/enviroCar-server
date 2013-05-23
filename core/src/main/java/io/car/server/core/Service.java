@@ -267,10 +267,12 @@ public class Service {
     }
 
     public Measurement createMeasurement(Measurement measurement) {
+        this.measurementValidator.validateCreate(measurement);
         return this.measurementDao.create(measurement);
     }
 
     public Measurement createMeasurement(String track, Measurement measurement) {
+        this.measurementValidator.validateCreate(measurement);
         measurement.setTrack(entityFactory.createTrack().setIdentifier(track));
         this.measurementDao.create(measurement);
         this.trackDao.addMeasurement(track, measurement);
