@@ -24,7 +24,10 @@ package io.car.server.mongo.dao;
 import java.util.Iterator;
 import java.util.List;
 
+import org.bson.types.ObjectId;
+
 import com.github.jmkgreen.morphia.Datastore;
+import com.github.jmkgreen.morphia.Key;
 import com.github.jmkgreen.morphia.mapping.Mapper;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
@@ -36,10 +39,11 @@ import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 
 import io.car.server.core.dao.MeasurementDao;
+import io.car.server.core.dao.PhenomenonDao;
 import io.car.server.core.dao.StatisticsDao;
+import io.car.server.core.dao.UserDao;
 import io.car.server.core.entities.Phenomenon;
 import io.car.server.core.entities.Phenomenons;
-import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
 import io.car.server.core.statistics.Statistic;
 import io.car.server.core.statistics.Statistics;
@@ -72,69 +76,99 @@ public class MongoStatisticsDao implements StatisticsDao {
         return Joiner.on(".").join(first, second, (Object[]) paths);
     }
     private final MongoMeasurementDao measurements;
+    private final MongoUserDao users;
+    private final MongoPhenomenonDao phens;
     private final Datastore db;
     private final Mapper mapr;
 
     @Inject
     public MongoStatisticsDao(Mapper mapr,
                               Datastore db,
+                              PhenomenonDao phenomenonDao,
+                              UserDao userDao,
                               MeasurementDao measurementDao) {
         this.measurements = (MongoMeasurementDao) measurementDao;
+        this.phens = (MongoPhenomenonDao) phenomenonDao;
+        this.users = (MongoUserDao) userDao;
         this.db = db;
         this.mapr = mapr;
     }
 
     @Override
-    public Statistics getStatistics(Track track) {
-        return parseStatistics(aggregate(matches(track), project(), unwind(), group())
-                .results());
+    public Statistics getStatisticsForTrack(String track) {
+        return parseStatistics(aggregate(matchesTrack(track),
+                                         project(),
+                                         unwind(),
+                                         group()).results());
     }
 
     @Override
-    public Statistics getStatistics(User user) {
-        return parseStatistics(aggregate(matches(user), project(), unwind(), group())
-                .results());
+    public Statistics getStatisticsForUser(User user) {
+        return parseStatistics(aggregate(matchesUser(user),
+                                         project(),
+                                         unwind(),
+                                         group()).results());
     }
 
     @Override
     public Statistics getStatistics() {
-        return parseStatistics(aggregate(project(), unwind(), group()).results());
+        return parseStatistics(aggregate(project(),
+                                         unwind(),
+                                         group()).results());
     }
 
     @Override
-    public Statistic getStatistics(Track track, Phenomenon phenomenon) {
-        return parseStatistic(aggregate(matches(track), project(), unwind(), matches(phenomenon), group())
-                .results());
+    public Statistic getStatisticsForTrack(String track, Phenomenon phenomenon) {
+        return parseStatistic(aggregate(matchesTrack(track),
+                                        project(),
+                                        unwind(),
+                                        matchesPhenomenon(phenomenon),
+                                        group()).results());
     }
 
     @Override
-    public Statistic getStatistics(User user, Phenomenon phenomenon) {
-        return parseStatistic(aggregate(matches(user), project(), unwind(), matches(phenomenon), group())
-                .results());
+    public Statistic getStatisticsForUser(User user, Phenomenon phenomenon) {
+        return parseStatistic(aggregate(matchesUser(user),
+                                        project(),
+                                        unwind(),
+                                        matchesPhenomenon(phenomenon),
+                                        group()).results());
     }
 
     @Override
     public Statistic getStatistics(Phenomenon phenomenon) {
-        return parseStatistic(aggregate(project(), unwind(), matches(phenomenon), group())
-                .results());
+        return parseStatistic(aggregate(project(),
+                                        unwind(),
+                                        matchesPhenomenon(phenomenon),
+                                        group()).results());
     }
 
     @Override
-    public Statistics getStatistics(Track track, Phenomenons phenomenons) {
-        return parseStatistics(aggregate(matches(track), project(), unwind(), matches(phenomenons), group())
-                .results());
+    public Statistics getStatisticsForTrack(String track,
+                                            Phenomenons phenomenons) {
+        return parseStatistics(aggregate(matchesTrack(track),
+                                         project(),
+                                         unwind(),
+                                         matchesPhenomenon(phenomenons),
+                                         group()).results());
     }
 
     @Override
-    public Statistics getStatistics(User user, Phenomenons phenomenons) {
-        return parseStatistics(aggregate(matches(user), project(), unwind(), matches(phenomenons), group())
-                .results());
+    public Statistics getStatisticsForUser(User user,
+                                           Phenomenons phenomenons) {
+        return parseStatistics(aggregate(matchesUser(user),
+                                         project(),
+                                         unwind(),
+                                         matchesPhenomenon(phenomenons),
+                                         group()).results());
     }
 
     @Override
     public Statistics getStatistics(Phenomenons phenomenons) {
-        return parseStatistics(aggregate(project(), unwind(), matches(phenomenons), group())
-                .results());
+        return parseStatistics(aggregate(project(),
+                                         unwind(),
+                                         matchesPhenomenon(phenomenons),
+                                         group()).results());
     }
 
     protected AggregationOutput aggregate(DBObject firstOp,
@@ -209,25 +243,29 @@ public class MongoStatisticsDao implements StatisticsDao {
         return new BasicDBObject(Ops.PROJECT, fields);
     }
 
-    protected DBObject matches(User user) {
-        DBRef ref = toRef((MongoUser) user);
+    protected DBObject matchesUser(User user) {
+        DBRef ref = mapr.keyToRef(mapr.getKey((MongoUser) user));
         return new BasicDBObject(Ops.MATCH, new BasicDBObject(MongoMeasurement.USER, ref));
     }
 
-    protected DBObject matches(Track track) {
-        DBRef ref = toRef((MongoTrack) track);
+    protected DBObject matchesTrack(String track) {
+        DBRef ref = mapr
+                .keyToRef(new Key<MongoTrack>(MongoTrack.class, new ObjectId(track)));
         return new BasicDBObject(Ops.MATCH, new BasicDBObject(MongoMeasurement.TRACK, ref));
     }
 
-    protected DBObject matches(Phenomenon phenomenon) {
-        DBRef ref = toRef((MongoPhenomenon) phenomenon);
+    protected DBObject matchesPhenomenon(Phenomenon phenomenon) {
+        Key<MongoPhenomenon> key = mapr.getKey(((MongoPhenomenon) phenomenon));
+        DBRef ref = mapr.keyToRef(key);
         return new BasicDBObject(Ops.MATCH, new BasicDBObject(path(MongoMeasurement.PHENOMENONS, MongoMeasurementValue.PHENOMENON), ref));
     }
 
-    protected DBObject matches(Phenomenons phenomenons) {
+    protected DBObject matchesPhenomenon(Phenomenons phenomenons) {
         BasicDBList refs = new BasicDBList();
         for (Phenomenon phenomenon : phenomenons) {
-            refs.add(toRef((MongoPhenomenon) phenomenon));
+            Key<MongoPhenomenon> key = mapr
+                    .getKey(((MongoPhenomenon) phenomenon));
+            refs.add(mapr.keyToRef(key));
         }
         BasicDBObject in = new BasicDBObject(Ops.IN, refs);
         return new BasicDBObject(Ops.MATCH, new BasicDBObject(path(MongoMeasurement.PHENOMENONS, MongoMeasurementValue.PHENOMENON), in));

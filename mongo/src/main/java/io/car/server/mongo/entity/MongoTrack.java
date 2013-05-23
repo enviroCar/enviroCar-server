@@ -45,9 +45,9 @@ public class MongoTrack extends MongoBaseEntity<MongoTrack> implements Track {
     @Indexed(IndexDirection.GEO2D)
     @Embedded(BBOX)
     private Geometry bbox;
-    @Reference(USER)
+    @Reference(value = USER, lazy = true)
     private MongoUser user;
-    @Reference(SENSOR)
+    @Reference(value = SENSOR, lazy = true)
     private MongoSensor sensor;
     @Reference(value = MEASUREMENTS, lazy = true)
     private List<MongoMeasurement> measurements = Lists.newLinkedList();

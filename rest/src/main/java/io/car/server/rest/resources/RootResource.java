@@ -22,13 +22,13 @@ import java.net.URI;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 
+import io.car.server.rest.MediaTypes;
 import io.car.server.rest.Schemas;
 import io.car.server.rest.coding.JSONConstants;
 import io.car.server.rest.validation.Schema;
@@ -52,7 +52,7 @@ public class RootResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.ROOT)
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces(MediaTypes.ROOT)
     public JsonNode get() {
         ObjectNode root = factory.objectNode();
         URI users = getUriInfo().getRequestUriBuilder().path(USERS).build();
@@ -82,12 +82,12 @@ public class RootResource extends AbstractResource {
 
     @Path(GROUPS)
     public GroupsResource groups() {
-        return getResourceFactory().createGroupsResource();
+        return getResourceFactory().createGroupsResource(null);
     }
 
     @Path(TRACKS)
     public TracksResource tracks() {
-        return getResourceFactory().createTracksResource();
+        return getResourceFactory().createTracksResource(null);
     }
 
     @Path(PHENOMENONS)
@@ -102,11 +102,11 @@ public class RootResource extends AbstractResource {
 
     @Path(MEASUREMENTS)
     public MeasurementsResource measurements() {
-        return getResourceFactory().createMeasurementsResource();
+        return getResourceFactory().createMeasurementsResource(null, null);
     }
 
     @Path(STATISTICS)
     public StatisticsResource statistics() {
-        return getResourceFactory().createStatisticsResource();
+        return getResourceFactory().createStatisticsResource(null, null);
     }
 }

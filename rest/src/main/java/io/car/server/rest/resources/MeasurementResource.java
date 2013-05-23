@@ -24,7 +24,6 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
@@ -36,6 +35,7 @@ import io.car.server.core.exception.IllegalModificationException;
 import io.car.server.core.exception.MeasurementNotFoundException;
 import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.core.exception.ValidationException;
+import io.car.server.rest.MediaTypes;
 import io.car.server.rest.Schemas;
 import io.car.server.rest.auth.Authenticated;
 import io.car.server.rest.validation.Schema;
@@ -56,12 +56,11 @@ public class MeasurementResource extends AbstractResource {
 
     @PUT
     @Schema(request = Schemas.MEASUREMENT_MODIFY)
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Consumes(MediaTypes.MEASUREMENT_MODIFY)
     @Authenticated
     public Response modify(Measurement changes)
             throws MeasurementNotFoundException, UserNotFoundException,
                    ValidationException, IllegalModificationException {
-
         if (!canModifyUser(getCurrentUser())) {
             throw new WebApplicationException(Status.FORBIDDEN);
         }
@@ -71,7 +70,7 @@ public class MeasurementResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.MEASUREMENT)
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces(MediaTypes.MEASUREMENT)
     public Measurement get() throws MeasurementNotFoundException {
         return measurement;
     }
@@ -87,7 +86,7 @@ public class MeasurementResource extends AbstractResource {
     }
 
     @Path(SENSOR)
-    public SensorResource sensor() {
+    public SensorResource sensor() throws MeasurementNotFoundException {
         return getResourceFactory()
                 .createSensorResource(measurement.getSensor());
     }

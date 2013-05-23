@@ -6,7 +6,7 @@ URL=http://localhost:8080/webapp
 USERS=10
 GROUPS=2
 TRACKS=2
-MEASUREMENTS=10
+MEASUREMENTS=3600
 SENSORS=2
 
 # users
@@ -118,5 +118,5 @@ for user in {1..$USERS}; do
 					}
 				}"
 		done
-	done
+	done &
 done

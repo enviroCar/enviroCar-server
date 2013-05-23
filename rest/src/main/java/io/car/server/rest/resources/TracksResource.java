@@ -17,6 +17,7 @@
  */
 package io.car.server.rest.resources;
 
+import javax.annotation.Nullable;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -26,12 +27,11 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
-import com.google.inject.assistedinject.AssistedInject;
 
 import io.car.server.core.entities.Track;
 import io.car.server.core.entities.Tracks;
@@ -40,6 +40,7 @@ import io.car.server.core.exception.ResourceAlreadyExistException;
 import io.car.server.core.exception.TrackNotFoundException;
 import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.core.exception.ValidationException;
+import io.car.server.rest.MediaTypes;
 import io.car.server.rest.RESTConstants;
 import io.car.server.rest.Schemas;
 import io.car.server.rest.auth.Authenticated;
@@ -52,28 +53,25 @@ public class TracksResource extends AbstractResource {
     public static final String TRACK = "{track}";
     private User user;
 
-    @AssistedInject
-    public TracksResource(@Assisted User user) {
+    @Inject
+    public TracksResource(@Assisted @Nullable User user) {
         this.user = user;
-    }
-
-    @AssistedInject
-    public TracksResource() {
-        this(null);
     }
 
     @GET
     @Schema(response = Schemas.TRACKS)
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces(MediaTypes.TRACKS)
     public Tracks get(
-            @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit) {
-        return user != null ? getService().getTracks(user) : getService()
-                .getTracks();
+            @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit)
+            throws UserNotFoundException {
+        return user != null
+               ? getService().getTracks(user)
+               : getService().getTracks();
     }
 
     @POST
     @Schema(request = Schemas.TRACK_CREATE)
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Consumes(MediaTypes.TRACK_CREATE)
     @Authenticated
     public Response create(Track track) throws ValidationException,
                                                ResourceAlreadyExistException,
@@ -81,17 +79,17 @@ public class TracksResource extends AbstractResource {
         if (user != null && !canModifyUser(user)) {
             throw new WebApplicationException(Status.FORBIDDEN);
         }
+        track = getService().createTrack(track.setUser(
+                getService().getUser(getCurrentUser())));
         return Response.created(
                 getUriInfo()
                 .getRequestUriBuilder()
-                .path(getService().createTrack(track.setUser(getCurrentUser()))
-                .getIdentifier()).build()).build();
+                .path(track.getIdentifier()).build()).build();
     }
 
     @Path(TRACK)
     public TrackResource user(@PathParam("track") String track)
             throws TrackNotFoundException {
-        return getResourceFactory().createTrackResource(
-                getService().getTrack(track));
+        return getResourceFactory().createTrackResource(track);
     }
 }

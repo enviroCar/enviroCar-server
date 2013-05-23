@@ -140,8 +140,7 @@ public class MeasurementCoder extends AbstractEntityCoder<Measurement> {
         }
         ObjectNode values = properties.putObject(JSONConstants.PHENOMENONS_KEY);
         for (MeasurementValue mv : t.getValues()) {
-            ObjectNode phenomenon = phenomenonProvider
-                    .encode(mv.getPhenomenon(), mediaType);
+            ObjectNode phenomenon = values.objectNode();
             Object value = mv.getValue();
             if (value instanceof Number) {
                 phenomenon.put(JSONConstants.VALUE_KEY, ((Number) value)

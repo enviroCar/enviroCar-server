@@ -17,10 +17,15 @@
  */
 package io.car.server.mongo.dao;
 
+import java.util.concurrent.ExecutionException;
+
 import org.bson.types.ObjectId;
 
 import com.github.jmkgreen.morphia.Datastore;
 import com.github.jmkgreen.morphia.dao.BasicDAO;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import com.google.inject.Inject;
 
 import io.car.server.core.dao.SensorDao;
@@ -33,14 +38,36 @@ import io.car.server.mongo.entity.MongoSensor;
  */
 public class MongoSensorDao extends BasicDAO<MongoSensor, ObjectId> implements
         SensorDao {
+    private LoadingCache<String, MongoSensor> cache = CacheBuilder.newBuilder()
+            .maximumSize(1000).build(new CacheLoader<String, MongoSensor>() {
+        @Override
+        public MongoSensor load(String key) throws Exception {
+            MongoSensor sensor = createQuery()
+                    .field(MongoSensor.NAME)
+                    .equal(key)
+                    .get();
+            if (sensor == null) {
+                throw new SensorNotFoundException();
+            }
+            return sensor;
+        }
+    });
     @Inject
     public MongoSensorDao(Datastore ds) {
         super(MongoSensor.class, ds);
     }
 
     @Override
-    public Sensor getByName(String name) {
-        return createQuery().field(MongoSensor.NAME).equal(name).get();
+    public Sensor getByName(final String name) {
+        try {
+            return cache.get(name);
+        } catch (ExecutionException ex) {
+            if (ex.getCause() instanceof SensorNotFoundException) {
+                return null;
+            }
+            throw new RuntimeException();
+        }
+
     }
 
     @Override
@@ -53,5 +80,9 @@ public class MongoSensorDao extends BasicDAO<MongoSensor, ObjectId> implements
         MongoSensor ms = (MongoSensor) sensor;
         save(ms);
         return ms;
+    }
+
+    private class SensorNotFoundException extends Exception {
+        private static final long serialVersionUID = -2361992444282158843L;
     }
 }

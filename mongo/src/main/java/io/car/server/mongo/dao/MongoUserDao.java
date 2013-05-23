@@ -17,9 +17,14 @@
  */
 package io.car.server.mongo.dao;
 
+import java.util.concurrent.ExecutionException;
+
 import com.github.jmkgreen.morphia.Datastore;
 import com.github.jmkgreen.morphia.dao.BasicDAO;
 import com.github.jmkgreen.morphia.query.Query;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import com.google.inject.Inject;
 
 import io.car.server.core.dao.UserDao;
@@ -34,14 +39,36 @@ import io.car.server.mongo.entity.MongoUser;
  * @author Arne de Wall
  */
 public class MongoUserDao extends BasicDAO<MongoUser, String> implements UserDao {
+    private LoadingCache<String, MongoUser> cache = CacheBuilder.newBuilder()
+            .maximumSize(1000).build(new CacheLoader<String, MongoUser>() {
+        @Override
+        public MongoUser load(String key) throws UserNotFoundException {
+            MongoUser user =
+                    find(createQuery()
+                    .field(MongoUser.NAME).equal(key))
+                    .get();
+            if (user == null) {
+                throw new UserNotFoundException();
+            } else {
+                return user;
+            }
+        }
+    });
     @Inject
     public MongoUserDao(Datastore datastore) {
         super(MongoUser.class, datastore);
     }
 
     @Override
-    public MongoUser getByName(String name) {
-        return find(createQuery().field(MongoUser.NAME).equal(name)).get();
+    public MongoUser getByName(final String name) {
+        try {
+            return cache.get(name);
+        } catch (ExecutionException ex) {
+            if (ex.getCause() instanceof UserNotFoundException) {
+                return null;
+            }
+            throw new RuntimeException(ex);
+        }
     }
 
     @Override
@@ -88,5 +115,9 @@ public class MongoUserDao extends BasicDAO<MongoUser, String> implements UserDao
     @Override
     public Users getByTrack(Track track) {
         return fetch(createQuery().field(MongoUser.TRACKS).hasThisElement(track));
+    }
+
+    private class UserNotFoundException extends Exception {
+        private static final long serialVersionUID = 2040283652624708863L;
     }
 }

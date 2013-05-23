@@ -17,11 +17,13 @@
  */
 package io.car.server.rest.resources;
 
-import io.car.server.core.entities.Group;
+import javax.annotation.Nullable;
+
+import com.google.inject.assistedinject.Assisted;
+
 import io.car.server.core.entities.Measurement;
 import io.car.server.core.entities.Phenomenon;
 import io.car.server.core.entities.Sensor;
-import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
 
 /**
@@ -35,29 +37,31 @@ public interface ResourceFactory {
 
     FriendsResource createFriendsResource(User user);
 
-    GroupResource createGroupResource(Group group);
-
-    GroupsResource createGroupsResource();
+    GroupResource createGroupResource(
+            @Assisted("group") String group);
 
     GroupsResource createGroupsResource(User user);
 
-    GroupMemberResource createGroupMemberResource(Group group, User member);
+    GroupMemberResource createGroupMemberResource(
+            @Assisted("group") String group, User member);
 
-    GroupMembersResource createGroupMembersResource(Group group);
+    GroupMembersResource createGroupMembersResource(
+            @Assisted("group") String group);
 
-    TrackResource createTrackResource(Track track);
+    TrackResource createTrackResource(
+            @Assisted("track") String track);
 
-    TracksResource createTracksResource();
+    TracksResource createTracksResource(
+            @Nullable User user);
 
-    TracksResource createTracksResource(User user);
+    MeasurementResource createMeasurementResource(
+            Measurement measurement,
+            @Nullable User user,
+            @Nullable @Assisted("track") String track);
 
-    MeasurementResource createMeasurementResource(Measurement measuurement);
-
-    MeasurementsResource createMeasurementsResource();
-
-    MeasurementsResource createMeasurementsResource(User user);
-
-    MeasurementsResource createMeasurementsResource(Track track);
+    MeasurementsResource createMeasurementsResource(
+            @Nullable User user,
+            @Nullable @Assisted("track") String track);
 
     PhenomenonResource createPhenomenonResource(Phenomenon phenomenon);
 
@@ -67,9 +71,6 @@ public interface ResourceFactory {
 
     SensorsResource createSensorsResource();
 
-    StatisticsResource createStatisticsResource();
-
-    StatisticsResource createStatisticsResource(Track track);
-
-    StatisticsResource createStatisticsResource(User user);
+    StatisticsResource createStatisticsResource(@Assisted("track") String track,
+                                                User user);
 }
