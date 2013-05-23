@@ -18,6 +18,7 @@
 package io.car.server.mongo.dao;
 
 import org.bson.types.ObjectId;
+import org.joda.time.DateTime;
 
 import com.github.jmkgreen.morphia.Datastore;
 import com.github.jmkgreen.morphia.Key;
@@ -74,6 +75,7 @@ public class MongoTrackDao extends BasicDAO<MongoTrack, ObjectId> implements
         ObjectId tid = new ObjectId(track);
         Key<MongoTrack> key = new Key<MongoTrack>(MongoTrack.class, tid);
         UpdateOperations<MongoTrack> add = createUpdateOperations()
+                .set(MongoTrack.LAST_MODIFIED, new DateTime())
                 .add(MongoTrack.MEASUREMENTS, (MongoMeasurement) m);
         getDatastore().update(key, add);
     }
