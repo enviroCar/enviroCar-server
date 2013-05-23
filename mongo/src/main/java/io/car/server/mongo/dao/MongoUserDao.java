@@ -32,6 +32,7 @@ import io.car.server.core.entities.Group;
 import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
 import io.car.server.core.entities.Users;
+import io.car.server.mongo.cache.EntityCache;
 import io.car.server.mongo.entity.MongoUser;
 
 /**
@@ -39,7 +40,8 @@ import io.car.server.mongo.entity.MongoUser;
  * @author Arne de Wall
  */
 public class MongoUserDao extends BasicDAO<MongoUser, String> implements UserDao {
-    private LoadingCache<String, MongoUser> cache = CacheBuilder.newBuilder()
+    private final LoadingCache<String, MongoUser> cache = CacheBuilder
+            .newBuilder()
             .maximumSize(1000).build(new CacheLoader<String, MongoUser>() {
         @Override
         public MongoUser load(String key) throws UserNotFoundException {
@@ -54,9 +56,11 @@ public class MongoUserDao extends BasicDAO<MongoUser, String> implements UserDao
             }
         }
     });
+    private final EntityCache<MongoUser> userCache;
     @Inject
-    public MongoUserDao(Datastore datastore) {
+    public MongoUserDao(Datastore datastore, EntityCache<MongoUser> userCache) {
         super(MongoUser.class, datastore);
+        this.userCache = userCache;
     }
 
     @Override
@@ -94,6 +98,8 @@ public class MongoUserDao extends BasicDAO<MongoUser, String> implements UserDao
     @Override
     public MongoUser save(User user) {
         MongoUser mu = (MongoUser) user;
+        cache.invalidate(mu);
+        userCache.invalidate(mu);
         save(mu);
         return mu;
     }
