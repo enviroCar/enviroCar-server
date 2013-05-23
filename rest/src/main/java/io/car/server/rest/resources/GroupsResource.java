@@ -17,6 +17,7 @@
  */
 package io.car.server.rest.resources;
 
+import javax.annotation.Nullable;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -25,11 +26,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
-import com.google.inject.assistedinject.AssistedInject;
 
 import io.car.server.core.entities.Group;
 import io.car.server.core.entities.Groups;
@@ -38,6 +38,7 @@ import io.car.server.core.exception.GroupNotFoundException;
 import io.car.server.core.exception.ResourceAlreadyExistException;
 import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.core.exception.ValidationException;
+import io.car.server.rest.MediaTypes;
 import io.car.server.rest.RESTConstants;
 import io.car.server.rest.Schemas;
 import io.car.server.rest.auth.Authenticated;
@@ -50,22 +51,18 @@ public class GroupsResource extends AbstractResource {
     public static final String GROUP = "{group}";
     private User user;
 
-    @AssistedInject
-    public GroupsResource(@Assisted User user) {
+    @Inject
+    public GroupsResource(@Assisted @Nullable User user) {
         this.user = user;
-    }
-
-    @AssistedInject
-    public GroupsResource() {
-        this(null);
     }
 
     @GET
     @Schema(response = Schemas.GROUPS)
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces(MediaTypes.GROUPS)
     public Groups get(
             @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit,
-            @QueryParam(RESTConstants.SEARCH) String search) {
+            @QueryParam(RESTConstants.SEARCH) String search) throws
+            UserNotFoundException {
         if (user == null) {
             if (search != null && !search.trim().isEmpty()) {
                 return getService().searchGroups(search, limit);
@@ -80,12 +77,13 @@ public class GroupsResource extends AbstractResource {
     @POST
     @Authenticated
     @Schema(request = Schemas.GROUP_CREATE)
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Consumes(MediaTypes.GROUP_CREATE)
     public Response createGroup(Group group) throws UserNotFoundException,
                                                     ResourceAlreadyExistException,
                                                     ValidationException {
-        Group g = getService().createGroup(group.setOwner(getCurrentUser())
-                .addMember(getCurrentUser()));
+        User currentUser = getService().getUser(getCurrentUser());
+        Group g = getService().createGroup(
+                group.setOwner(currentUser).addMember(currentUser));
         return Response.created(getUriInfo().getRequestUriBuilder().path(g
                 .getName()).build()).build();
     }
@@ -93,7 +91,6 @@ public class GroupsResource extends AbstractResource {
     @Path(GROUP)
     public GroupResource group(@PathParam("group") String groupname) throws
             GroupNotFoundException {
-        return getResourceFactory().createGroupResource(getService()
-                .getGroup(groupname));
+        return getResourceFactory().createGroupResource(groupname);
     }
 }

@@ -24,8 +24,8 @@ import javax.ws.rs.core.Response.Status;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
-import io.car.server.core.entities.Group;
 import io.car.server.core.entities.User;
+import io.car.server.core.exception.GroupNotFoundException;
 import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.rest.auth.Authenticated;
 
@@ -33,10 +33,11 @@ import io.car.server.rest.auth.Authenticated;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class GroupMemberResource extends UserResource {
-    private Group group;
+    private String group;
 
     @Inject
-    public GroupMemberResource(@Assisted Group group, @Assisted User member) {
+    public GroupMemberResource(@Assisted("group") String group,
+                               @Assisted User member) {
         super(member);
         this.group = group;
     }
@@ -44,7 +45,7 @@ public class GroupMemberResource extends UserResource {
     @DELETE
     @Override
     @Authenticated
-    public void delete() throws UserNotFoundException {
+    public void delete() throws UserNotFoundException, GroupNotFoundException {
         if (!canModifyUser(getUser())) {
             throw new WebApplicationException(Status.FORBIDDEN);
         }

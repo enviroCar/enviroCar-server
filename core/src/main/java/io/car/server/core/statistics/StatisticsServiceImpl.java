@@ -22,7 +22,6 @@ import com.google.inject.Inject;
 import io.car.server.core.dao.StatisticsDao;
 import io.car.server.core.entities.Phenomenon;
 import io.car.server.core.entities.Phenomenons;
-import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
 
 public class StatisticsServiceImpl implements StatisticsService {
@@ -34,13 +33,13 @@ public class StatisticsServiceImpl implements StatisticsService {
     }
 
     @Override
-    public Statistics getStatistics(Track track) {
-        return dao.getStatistics(track);
+    public Statistics getStatisticsForTrack(String track) {
+        return dao.getStatisticsForTrack(track);
     }
 
     @Override
-    public Statistics getStatistics(User user) {
-        return dao.getStatistics(user);
+    public Statistics getStatisticsForUser(User user) {
+        return dao.getStatisticsForUser(user);
     }
 
     @Override
@@ -49,13 +48,13 @@ public class StatisticsServiceImpl implements StatisticsService {
     }
 
     @Override
-    public Statistic getStatistics(Track track, Phenomenon phenomenon) {
-        return dao.getStatistics(track, phenomenon);
+    public Statistic getStatisticsForTrack(String track, Phenomenon phenomenon) {
+        return dao.getStatisticsForTrack(track, phenomenon);
     }
 
     @Override
-    public Statistic getStatistics(User user, Phenomenon phenomenon) {
-        return dao.getStatistics(user, phenomenon);
+    public Statistic getStatisticsForUser(User user, Phenomenon phenomenon) {
+        return dao.getStatisticsForUser(user, phenomenon);
     }
 
     @Override
@@ -64,17 +63,18 @@ public class StatisticsServiceImpl implements StatisticsService {
     }
 
     @Override
-    public Statistics getStatistics(Track track, Phenomenons phenomenon) {
-        return dao.getStatistics(track, phenomenon);
+    public Statistics getStatisticsForTrack(String track,
+                                            Phenomenons phenomenon) {
+        return dao.getStatisticsForTrack(track, phenomenon);
     }
 
     @Override
-    public Statistics getStatistics(User user, Phenomenons phenomenon) {
-        return dao.getStatistics(user, phenomenon);
+    public Statistics getStatisticsForUser(User user, Phenomenons phenomenon) {
+        return dao.getStatisticsForUser(user, phenomenon);
     }
 
     @Override
-    public Statistics getStatistics(Phenomenons phenomenon) {
-        return dao.getStatistics(phenomenon);
+    public Statistics getStatistics(Phenomenons phenomenons) {
+        return dao.getStatistics(phenomenons);
     }
 }

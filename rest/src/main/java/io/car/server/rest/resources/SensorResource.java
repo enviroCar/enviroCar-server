@@ -19,12 +19,12 @@ package io.car.server.rest.resources;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
 import io.car.server.core.entities.Sensor;
+import io.car.server.rest.MediaTypes;
 import io.car.server.rest.Schemas;
 import io.car.server.rest.validation.Schema;
 
@@ -41,7 +41,7 @@ public class SensorResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.SENSOR)
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces(MediaTypes.SENSOR)
     public Sensor get() {
         return this.sensor;
     }

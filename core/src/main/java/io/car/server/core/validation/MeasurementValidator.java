@@ -18,6 +18,7 @@
 package io.car.server.core.validation;
 
 import io.car.server.core.entities.Measurement;
+import io.car.server.core.entities.MeasurementValue;
 import io.car.server.core.exception.ValidationException;
 
 /**
@@ -33,6 +34,10 @@ public class MeasurementValidator extends AbstractValidator<Measurement> {
         isNotNull("sensor", t.getSensor());
         isNull("created", t.getCreationDate());
         isNull("modified", t.getLastModificationDate());
+        for (MeasurementValue mv : t.getValues()) {
+            isNotNull("phenomenon", mv.getPhenomenon());
+            isNotNull("value", mv.getValue());
+        }
         return t;
     }
 
@@ -43,6 +48,10 @@ public class MeasurementValidator extends AbstractValidator<Measurement> {
         isNull("location", t.getGeometry());
         isNull("user", t.getUser());
         isNull("sensor", t.getSensor());
+        for (MeasurementValue mv : t.getValues()) {
+            isNotNull("phenomenon", mv.getPhenomenon());
+            isNotNull("value", mv.getValue());
+        }
         return t;
     }
 }

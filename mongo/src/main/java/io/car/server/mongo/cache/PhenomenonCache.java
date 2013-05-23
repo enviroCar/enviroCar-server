@@ -15,35 +15,15 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-package io.car.server.core.statistics;
+package io.car.server.mongo.cache;
 
-import io.car.server.core.entities.Phenomenon;
-import io.car.server.core.entities.Phenomenons;
-import io.car.server.core.entities.User;
+import io.car.server.mongo.entity.MongoPhenomenon;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public interface StatisticsService {
-    Statistics getStatisticsForTrack(String track);
-
-    Statistics getStatisticsForUser(User user);
-
-    Statistics getStatistics();
-
-    Statistics getStatisticsForTrack(String track, Phenomenons phenomenon);
-
-    Statistics getStatisticsForUser(User user, Phenomenons phenomenon);
-
-    Statistics getStatistics(Phenomenons phenomenon);
-
-    Statistic getStatisticsForTrack(String track, Phenomenon phenomenon);
-
-    Statistic getStatisticsForUser(User user, Phenomenon phenomenon);
-
-    Statistic getStatistics(Phenomenon phenomenon);
+public class PhenomenonCache extends AbstractEntityCache<MongoPhenomenon> {
+    public PhenomenonCache() {
+        super(MongoPhenomenon.class);
+    }
 }

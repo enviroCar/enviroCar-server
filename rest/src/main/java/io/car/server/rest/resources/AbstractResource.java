@@ -24,6 +24,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import io.car.server.core.Service;
+import io.car.server.core.entities.EntityFactory;
 import io.car.server.core.entities.User;
 import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.rest.auth.AuthConstants;
@@ -36,13 +37,18 @@ public abstract class AbstractResource {
     private Provider<Service> service;
     private Provider<UriInfo> uriInfo;
     private Provider<ResourceFactory> resourceFactory;
+    private Provider<EntityFactory> entityFactory;
 
     protected boolean canModifyUser(User user) {
+        return canModifyUser(user.getName());
+    }
+
+    protected boolean canModifyUser(String user) {
         return getSecurityContext().isUserInRole(AuthConstants.ADMIN_ROLE) ||
                (getSecurityContext().getUserPrincipal() != null &&
-                getSecurityContext().getUserPrincipal().getName().equals(user
-                .getName()));
+                getSecurityContext().getUserPrincipal().getName().equals(user));
     }
+
 
     public SecurityContext getSecurityContext() {
         return securityContext.get();
@@ -60,9 +66,8 @@ public abstract class AbstractResource {
         return resourceFactory.get();
     }
 
-    protected User getCurrentUser() throws UserNotFoundException {
-        return getService().getUser(getSecurityContext().getUserPrincipal()
-                .getName());
+    protected String getCurrentUser() throws UserNotFoundException {
+        return getSecurityContext().getUserPrincipal().getName();
     }
 
     @Inject
@@ -83,5 +88,14 @@ public abstract class AbstractResource {
     @Inject
     public void setResourceFactory(Provider<ResourceFactory> resourceFactory) {
         this.resourceFactory = resourceFactory;
+    }
+
+    public EntityFactory getEntityFactory() {
+        return entityFactory.get();
+    }
+
+    @Inject
+    public void setEntityFactory(Provider<EntityFactory> entityFactory) {
+        this.entityFactory = entityFactory;
     }
 }

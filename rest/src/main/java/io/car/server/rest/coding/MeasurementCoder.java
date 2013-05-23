@@ -17,7 +17,6 @@
  */
 package io.car.server.rest.coding;
 
-import java.net.URI;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
@@ -37,8 +36,6 @@ import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.User;
 import io.car.server.core.util.GeoJSONConstants;
 import io.car.server.rest.MediaTypes;
-import io.car.server.rest.resources.MeasurementsResource;
-import io.car.server.rest.resources.TrackResource;
 
 /**
  * @author Arne de Wall <a.dewall@52north.org>
@@ -140,17 +137,10 @@ public class MeasurementCoder extends AbstractEntityCoder<Measurement> {
                     .print(t.getLastModificationDate()));
             properties.put(JSONConstants.CREATED_KEY,
                            getDateTimeFormat().print(t.getCreationDate()));
-        } else {
-            URI href = getUriInfo().getRequestUriBuilder()
-                    .path(TrackResource.MEASUREMENTS)
-                    .path(MeasurementsResource.MEASUREMENT)
-                    .build(t.getIdentifier());
-            properties.put(JSONConstants.HREF_KEY, href.toString());
         }
         ObjectNode values = properties.putObject(JSONConstants.PHENOMENONS_KEY);
         for (MeasurementValue mv : t.getValues()) {
-            ObjectNode phenomenon = phenomenonProvider
-                    .encode(mv.getPhenomenon(), mediaType);
+            ObjectNode phenomenon = values.objectNode();
             Object value = mv.getValue();
             if (value instanceof Number) {
                 phenomenon.put(JSONConstants.VALUE_KEY, ((Number) value)

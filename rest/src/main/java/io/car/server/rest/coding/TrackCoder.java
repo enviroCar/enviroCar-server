@@ -71,10 +71,6 @@ public class TrackCoder extends AbstractEntityCoder<Track> {
         ObjectNode track = getJsonFactory().objectNode();
         track.put(GeoJSONConstants.TYPE_KEY,
                   GeoJSONConstants.FEATURE_COLLECTION_TYPE);
-        JsonNode features = measurementsEncoder
-                .encode(t.getMeasurements(), mediaType)
-                .path(GeoJSONConstants.FEATURES_KEY);
-        track.put(GeoJSONConstants.FEATURES_KEY, features);
         ObjectNode properties = track.putObject(GeoJSONConstants.PROPERTIES_KEY);
         properties.put(JSONConstants.IDENTIFIER_KEY, t.getIdentifier());
         if (t.getName() != null) {
@@ -99,6 +95,10 @@ public class TrackCoder extends AbstractEntityCoder<Track> {
                 .path(TrackResource.STATISTICS).build();
         properties.put(JSONConstants.STATISTICS_KEY,
                        statistics.toString());
+        JsonNode features = measurementsEncoder
+                .encode(t.getMeasurements(), mediaType)
+                .path(GeoJSONConstants.FEATURES_KEY);
+        track.put(GeoJSONConstants.FEATURES_KEY, features);
         return track;
     }
 }

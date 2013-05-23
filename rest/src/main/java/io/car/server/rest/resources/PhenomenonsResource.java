@@ -23,12 +23,12 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import io.car.server.core.entities.Phenomenon;
 import io.car.server.core.entities.Phenomenons;
 import io.car.server.core.exception.PhenomenonNotFoundException;
+import io.car.server.rest.MediaTypes;
 import io.car.server.rest.Schemas;
 import io.car.server.rest.auth.Authenticated;
 import io.car.server.rest.validation.Schema;
@@ -42,7 +42,7 @@ public class PhenomenonsResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.PHENOMENONS)
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces(MediaTypes.PHENOMENONS)
     public Phenomenons get() {
         return getService().getPhenomenons();
     }
@@ -50,7 +50,7 @@ public class PhenomenonsResource extends AbstractResource {
     @POST
     @Authenticated
     @Schema(request = Schemas.PHENOMENON_CREATE)
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Consumes(MediaTypes.PHENOMENON_CREATE)
     public Response create(Phenomenon phenomenon) {
         return Response.created(getUriInfo().getRequestUriBuilder()
                 .path(getService().createPhenomenon(phenomenon)

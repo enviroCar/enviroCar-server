@@ -21,12 +21,15 @@ import org.bson.types.ObjectId;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
+import com.github.jmkgreen.morphia.Key;
 import com.github.jmkgreen.morphia.annotations.Id;
 import com.github.jmkgreen.morphia.annotations.Indexed;
 import com.github.jmkgreen.morphia.annotations.PrePersist;
 import com.github.jmkgreen.morphia.annotations.Property;
+import com.github.jmkgreen.morphia.annotations.Transient;
 import com.github.jmkgreen.morphia.mapping.Mapper;
 import com.google.common.base.Objects;
+import com.google.inject.Inject;
 
 import io.car.server.core.entities.BaseEntity;
 
@@ -43,6 +46,9 @@ public class MongoBaseEntity<T> implements BaseEntity {
     @Indexed
     @Property(LAST_MODIFIED)
     private DateTime lastModificationDate;
+    @Inject
+    @Transient
+    private Mapper mapr;
 
     @Override
     public DateTime getCreationDate() {
@@ -104,7 +110,18 @@ public class MongoBaseEntity<T> implements BaseEntity {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this).omitNullValues().add(ID, getId())
+        return Objects.toStringHelper(this)
+                .omitNullValues()
+                .add(ID, getId())
                 .toString();
+    }
+
+    @SuppressWarnings("unchecked")
+    public Key<T> asKey() {
+        if (this.id == null) {
+            return null;
+        } else {
+            return (Key<T>) mapr.getKey(this);
+        }
     }
 }

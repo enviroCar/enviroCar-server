@@ -17,22 +17,22 @@
  */
 package io.car.server.rest.resources;
 
+import javax.annotation.Nullable;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 
+import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
-import com.google.inject.assistedinject.AssistedInject;
 
 import io.car.server.core.entities.Phenomenon;
-import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
 import io.car.server.core.exception.PhenomenonNotFoundException;
 import io.car.server.core.statistics.Statistic;
 import io.car.server.core.statistics.Statistics;
 import io.car.server.core.statistics.StatisticsService;
+import io.car.server.rest.MediaTypes;
 import io.car.server.rest.Schemas;
 import io.car.server.rest.validation.Schema;
 
@@ -41,28 +41,13 @@ import io.car.server.rest.validation.Schema;
  */
 public class StatisticsResource extends AbstractResource {
     private static final String PHENOMENON = "{phenomenon}";
-    private final Track track;
+    private final String track;
     private final User user;
     private final StatisticsService statisticService;
 
-    @AssistedInject
-    public StatisticsResource(@Assisted Track track,
-                              StatisticsService statisticService) {
-        this(track, null, statisticService);
-    }
-    @AssistedInject
-    public StatisticsResource(@Assisted User user,
-                              StatisticsService statisticService) {
-        this(null, user, statisticService);
-    }
-
-    @AssistedInject
-    public StatisticsResource(StatisticsService statisticService) {
-        this(null, null, statisticService);
-    }
-
-    @AssistedInject
-    public StatisticsResource(@Assisted Track track, @Assisted User user,
+    @Inject
+    public StatisticsResource(@Assisted("track") @Nullable String track,
+                              @Assisted @Nullable User user,
                               StatisticsService statisticService) {
         this.track = track;
         this.user = user;
@@ -71,12 +56,12 @@ public class StatisticsResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.STATISTICS)
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces(MediaTypes.STATISTICS)
     public Statistics statistics() {
         if (track != null) {
-            return this.statisticService.getStatistics(track);
+            return this.statisticService.getStatisticsForTrack(track);
         } else if (user != null) {
-            return this.statisticService.getStatistics(user);
+            return this.statisticService.getStatisticsForUser(user);
         } else {
             return this.statisticService.getStatistics();
         }
@@ -85,16 +70,16 @@ public class StatisticsResource extends AbstractResource {
     @GET
     @Path(PHENOMENON)
     @Schema(response = Schemas.STATISTIC)
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces(MediaTypes.STATISTIC)
     public Statistic statistics(@PathParam("phenomenon") String phenomenon)
             throws PhenomenonNotFoundException {
-        Phenomenon phen = getService().getPhenomenonByName(phenomenon);
+        Phenomenon p = getService().getPhenomenonByName(phenomenon);
         if (track != null) {
-            return this.statisticService.getStatistics(track, phen);
+            return this.statisticService.getStatisticsForTrack(track, p);
         } else if (user != null) {
-            return this.statisticService.getStatistics(user, phen);
+            return this.statisticService.getStatisticsForUser(user, p);
         } else {
-            return this.statisticService.getStatistics(phen);
+            return this.statisticService.getStatistics(p);
         }
     }
 }

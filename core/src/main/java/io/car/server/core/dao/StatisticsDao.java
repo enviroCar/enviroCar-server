@@ -23,7 +23,6 @@ package io.car.server.core.dao;
 
 import io.car.server.core.entities.Phenomenon;
 import io.car.server.core.entities.Phenomenons;
-import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
 import io.car.server.core.statistics.Statistic;
 import io.car.server.core.statistics.Statistics;
@@ -33,21 +32,21 @@ import io.car.server.core.statistics.Statistics;
  * @author jan
  */
 public interface StatisticsDao {
-    Statistics getStatistics(Track track);
+    Statistics getStatisticsForTrack(String track);
 
-    Statistics getStatistics(User user);
+    Statistics getStatisticsForUser(User user);
 
     Statistics getStatistics();
 
-    Statistic getStatistics(Track track, Phenomenon phenomenon);
+    Statistic getStatisticsForTrack(String track, Phenomenon phenomenon);
 
-    Statistic getStatistics(User user, Phenomenon phenomenon);
+    Statistic getStatisticsForUser(User user, Phenomenon phenomenon);
 
     Statistic getStatistics(Phenomenon phenomenon);
 
-    Statistics getStatistics(Track track, Phenomenons phenomenon);
+    Statistics getStatisticsForTrack(String track, Phenomenons phenomenons);
 
-    Statistics getStatistics(User user, Phenomenons phenomenon);
+    Statistics getStatisticsForUser(User user, Phenomenons phenomenons);
 
-    Statistics getStatistics(Phenomenons phenomenon);
+    Statistics getStatistics(Phenomenons phenomenons);
 }

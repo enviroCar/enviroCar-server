@@ -27,7 +27,6 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -41,6 +40,7 @@ import io.car.server.core.exception.GroupNotFoundException;
 import io.car.server.core.exception.IllegalModificationException;
 import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.core.exception.ValidationException;
+import io.car.server.rest.MediaTypes;
 import io.car.server.rest.Schemas;
 import io.car.server.rest.auth.Authenticated;
 import io.car.server.rest.validation.Schema;
@@ -50,32 +50,34 @@ import io.car.server.rest.validation.Schema;
  */
 public class GroupResource extends AbstractResource {
     public static final String MEMBERS = "members";
-    private Group group;
+    private String group;
 
     @Inject
-    public GroupResource(@Assisted Group group) {
+    public GroupResource(@Assisted("group") String group) {
         this.group = group;
     }
 
     @GET
     @Schema(response = Schemas.GROUP)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Group get() {
-        return group;
+    @Produces(MediaTypes.GROUP)
+    public Group get() throws GroupNotFoundException {
+        return getService().getGroup(group);
     }
 
     @PUT
     @Authenticated
     @Schema(request = Schemas.GROUP_MODIFY)
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Consumes(MediaTypes.GROUP_MODIFY)
     public Response modify(Group changes) throws UserNotFoundException,
                                                  ValidationException,
-                                                 IllegalModificationException {
-        if (!group.getOwner().equals(getCurrentUser())) {
+                                                 IllegalModificationException,
+                                                 GroupNotFoundException {
+        Group g = get();
+        if (!g.getOwner().getName().equals(getCurrentUser())) {
             throw new WebApplicationException(Status.FORBIDDEN);
         }
-        Group modified = getService().modifyGroup(group, changes);
-        if (modified.getName().equals(group.getName())) {
+        Group modified = getService().modifyGroup(g, changes);
+        if (modified.getName().equals(g.getName())) {
             return Response.noContent().build();
         } else {
             UriBuilder b = getUriInfo().getBaseUriBuilder();
@@ -91,7 +93,7 @@ public class GroupResource extends AbstractResource {
     @DELETE
     @Authenticated
     public void delete() throws UserNotFoundException, GroupNotFoundException {
-        if (!group.getOwner().equals(getCurrentUser())) {
+        if (!get().getOwner().getName().equals(getCurrentUser())) {
             throw new WebApplicationException(Status.FORBIDDEN);
         }
         getService().deleteGroup(group);

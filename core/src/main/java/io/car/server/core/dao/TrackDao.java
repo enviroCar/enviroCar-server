@@ -19,6 +19,7 @@ package io.car.server.core.dao;
 
 import com.vividsolutions.jts.geom.Geometry;
 
+import io.car.server.core.entities.Measurement;
 import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.Track;
 import io.car.server.core.entities.Tracks;
@@ -46,7 +47,13 @@ public interface TrackDao {
 
     Tracks getByBbox(Geometry bbox);
 
+    void addMeasurement(String track, Measurement m);
+
     Tracks get();
 
     Tracks get(int limit);
+
+    User getUser(String track);
+
+    Sensor getSensor(String track);
 }
