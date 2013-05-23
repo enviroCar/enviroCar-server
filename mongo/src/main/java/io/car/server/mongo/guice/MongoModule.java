@@ -22,6 +22,8 @@ import com.github.jmkgreen.morphia.Morphia;
 import com.github.jmkgreen.morphia.mapping.Mapper;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
+import com.google.inject.Scopes;
+import com.google.inject.TypeLiteral;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.mongodb.DB;
 import com.mongodb.Mongo;
@@ -36,6 +38,10 @@ import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
 import io.car.server.mongo.MongoDB;
+import io.car.server.mongo.cache.EntityCache;
+import io.car.server.mongo.cache.PhenomenonCache;
+import io.car.server.mongo.cache.SensorCache;
+import io.car.server.mongo.cache.UserCache;
 import io.car.server.mongo.entity.MongoGroup;
 import io.car.server.mongo.entity.MongoMeasurement;
 import io.car.server.mongo.entity.MongoMeasurementValue;
@@ -59,6 +65,12 @@ public class MongoModule extends AbstractModule {
                 .implement(Phenomenon.class, MongoPhenomenon.class)
                 .implement(Sensor.class, MongoSensor.class)
                 .build(EntityFactory.class));
+        bind(new TypeLiteral<EntityCache<MongoUser>>() {
+        }).to(UserCache.class).in(Scopes.SINGLETON);
+        bind(new TypeLiteral<EntityCache<MongoPhenomenon>>() {
+        }).to(PhenomenonCache.class).in(Scopes.SINGLETON);
+        bind(new TypeLiteral<EntityCache<MongoSensor>>() {
+        }).to(SensorCache.class).in(Scopes.SINGLETON);
         bind(MongoDB.class);
     }
 
