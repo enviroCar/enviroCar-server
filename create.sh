@@ -3,11 +3,11 @@
 #URL=http://giv-car.uni-muenster.de:8080/dev
 URL=http://localhost:8080/webapp
 
-USERS=1
-GROUPS=1
-TRACKS=1
-MEASUREMENTS=3000
-SENSORS=1
+USERS=10
+GROUPS=5
+TRACKS=2
+MEASUREMENTS=3600
+SENSORS=10
 
 # users
 for i in {1..$USERS}; do 
@@ -109,7 +109,16 @@ for user in {1..$USERS}; do
 						\"time\": \"$t\",
 						\"sensor\": { \"name\": \"testsensor$(((($user - 1) % $SENSORS) + 1))\" },
 						\"phenomenons\": {
-							\"testphenomenon1\": { \"value\": $(($RANDOM / 1000.0)) }
+							\"testphenomenon1\": { \"value\": $(($RANDOM / 1000.0)) },
+							\"testphenomenon2\": { \"value\": $(($RANDOM / 1000.0)) },
+							\"testphenomenon3\": { \"value\": $(($RANDOM / 1000.0)) },
+							\"testphenomenon4\": { \"value\": $(($RANDOM / 1000.0)) },
+							\"testphenomenon5\": { \"value\": $(($RANDOM / 1000.0)) },
+							\"testphenomenon6\": { \"value\": $(($RANDOM / 1000.0)) },
+							\"testphenomenon7\": { \"value\": $(($RANDOM / 1000.0)) },
+							\"testphenomenon8\": { \"value\": $(($RANDOM / 1000.0)) },
+							\"testphenomenon9\": { \"value\": $(($RANDOM / 1000.0)) },
+							\"testphenomenon10\": { \"value\": $(($RANDOM / 1000.0)) }
 						}
 					}
 				}"
