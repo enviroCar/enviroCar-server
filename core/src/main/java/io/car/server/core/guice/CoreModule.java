@@ -17,6 +17,7 @@
  */
 package io.car.server.core.guice;
 
+import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 
@@ -42,6 +43,7 @@ public class CoreModule extends AbstractModule {
         bind(Service.class);
         bind(StatisticsService.class).to(StatisticsServiceImpl.class);
         bind(PasswordEncoder.class).to(BCryptPasswordEncoder.class);
+        DateTimeZone.setDefault(DateTimeZone.UTC);
     }
 
     @Provides
