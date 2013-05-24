@@ -31,6 +31,13 @@
                     "type": "string"
                 }
             }
+        },
+        "measurements": {
+            "type": "array",
+            "minItems": 0,
+            "items": {
+                "$ref": "http://schema.envirocar.org/measurement.create.json#"
+            }
         }
     }
 }
