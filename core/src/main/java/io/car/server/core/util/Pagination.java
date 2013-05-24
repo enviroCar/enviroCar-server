@@ -16,8 +16,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package io.car.server.core.util;
-
-import com.google.common.base.Objects;
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
@@ -26,8 +24,8 @@ public class Pagination {
     private int page;
 
     public Pagination(int size, int page) {
-        this.size = size <= 0 ? 100 : size;
-        this.page = page <= 0 ? 0 : page;
+        this.size = (size <= 0 || size > 100) ? 100 : size;
+        this.page = page <= 0 ? 1 : page;
     }
 
     public int getSize() {
@@ -39,46 +37,49 @@ public class Pagination {
     }
 
     public int getOffset() {
-        return page * size;
+        return (page - 1) * size;
     }
 
     public int getLimit() {
         return size;
     }
 
-    public int getFirst() {
-        return getOffset() + 1;
+    public Pagination first(long elements) {
+        if (page == 1 || page > lastPage(elements)) {
+            return null;
+        } else {
+            return new Pagination(size, 0);
+        }
     }
 
-    public int getLast() {
-        return getFirst() + getSize();
+    public Pagination previous(long elements) {
+        if (page <= 2 || page > lastPage(elements)) {
+            return null;
+        } else {
+            return new Pagination(size, page - 1);
+        }
     }
 
-    public Pagination next(int elements) {
-        return (getLast() < elements)
-               ? new Pagination(getSize(), getPage() + 1)
-               : null;
+    public Pagination next(long elements) {
+        int lastPage = lastPage(elements);
+        if (page >= (lastPage - 1)) {
+            return null;
+        } else {
+            return new Pagination(size, page + 1);
+        }
     }
 
-    public Pagination previous() {
-        return (getFirst() >= 0)
-               ? new Pagination(getSize(), getPage() - 1)
-               : null;
+    public Pagination last(long elements) {
+        int lastPage = lastPage(elements);
+        if (page == lastPage) {
+            return null;
+        } else {
+            return new Pagination(size, lastPage);
+        }
     }
 
-    public Pagination last(int elements) {
-        return new Pagination(getSize(), elements / getSize());
-    }
-
-    public Pagination first() {
-        return new Pagination(getSize(), 0);
-    }
-
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                .add("first", getFirst())
-                .add("last", getLast())
-                .toString();
+    protected int lastPage(long elements) {
+        int p = (int) elements / size;
+        return (elements % size) == 0 ? p : p + 1;
     }
 }
