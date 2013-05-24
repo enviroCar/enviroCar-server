@@ -18,13 +18,17 @@
 package io.car.server.rest.resources;
 
 import javax.ws.rs.GET;
+import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
 import io.car.server.core.entities.Phenomenon;
+import io.car.server.core.exception.PhenomenonNotFoundException;
+import io.car.server.core.statistics.Statistic;
+import io.car.server.core.statistics.StatisticsService;
+import io.car.server.rest.MediaTypes;
 import io.car.server.rest.Schemas;
 import io.car.server.rest.validation.Schema;
 
@@ -32,17 +36,29 @@ import io.car.server.rest.validation.Schema;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class PhenomenonResource extends AbstractResource {
-    private Phenomenon phenomenon;
+    public static final String STATISTIC = "statistic";
+    private final Phenomenon phenomenon;
+    private final StatisticsService statisticsService;
 
     @Inject
-    public PhenomenonResource(@Assisted Phenomenon phenomenon) {
+    public PhenomenonResource(@Assisted Phenomenon phenomenon,
+                              StatisticsService statisticsService) {
         this.phenomenon = phenomenon;
+        this.statisticsService = statisticsService;
     }
 
     @GET
     @Schema(response = Schemas.PHENOMENON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Phenomenon getPhenomenon() {
+    @Produces(MediaTypes.PHENOMENON)
+    public Phenomenon getPhenomenon() throws PhenomenonNotFoundException {
         return phenomenon;
+    }
+
+    @GET
+    @Path(STATISTIC)
+    @Schema(response = Schemas.STATISTIC)
+    @Produces(MediaTypes.STATISTIC)
+    public Statistic getStatistics() {
+        return this.statisticsService.getStatistics(this.phenomenon);
     }
 }

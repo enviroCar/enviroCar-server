@@ -26,6 +26,7 @@ import io.car.server.core.dao.PhenomenonDao;
 import io.car.server.core.dao.SensorDao;
 import io.car.server.core.dao.TrackDao;
 import io.car.server.core.dao.UserDao;
+import io.car.server.core.entities.EntityFactory;
 import io.car.server.core.entities.Group;
 import io.car.server.core.entities.Groups;
 import io.car.server.core.entities.Measurement;
@@ -48,6 +49,7 @@ import io.car.server.core.exception.TrackNotFoundException;
 import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.core.exception.ValidationException;
 import io.car.server.core.update.EntityUpdater;
+import io.car.server.core.util.Pagination;
 import io.car.server.core.util.PasswordEncoder;
 import io.car.server.core.validation.EntityValidator;
 
@@ -88,6 +90,8 @@ public class Service {
     private EntityValidator<Measurement> measurementValidator;
     @Inject
     private PasswordEncoder passwordEncoder;
+    @Inject
+    private EntityFactory entityFactory;
 
     public User createUser(User user) throws ValidationException,
                                              ResourceAlreadyExistException {
@@ -107,12 +111,8 @@ public class Service {
         return user;
     }
 
-    public Users getUsers(int limit) {
-        return this.userDao.get(limit);
-    }
-
-    public Users getUsers() {
-        return getUsers(0);
+    public Users getUsers(Pagination p) {
+        return this.userDao.get(p);
     }
 
     public User modifyUser(User user, User changes)
@@ -120,6 +120,12 @@ public class Service {
                    ValidationException {
         return this.userDao.save(this.userUpdater.update(
                 userValidator.validateUpdate(user), user));
+    }
+
+    public User modifyUser(String user, User changes)
+            throws UserNotFoundException, IllegalModificationException,
+                   ValidationException {
+        return this.modifyUser(getUser(user), changes);
     }
 
     public void deleteUser(String username) throws UserNotFoundException {
@@ -147,8 +153,8 @@ public class Service {
         return group;
     }
 
-    public Groups getGroups(int limit) {
-        return this.groupDao.get(limit);
+    public Groups getGroups(Pagination p) {
+        return this.groupDao.get(p);
     }
 
     public Group createGroup(Group group) throws ValidationException,
@@ -172,6 +178,13 @@ public class Service {
         return this.trackDao.save(this.trackUpdater.update(changes, track));
     }
 
+    public Track modifyTrack(String track, Track changes)
+            throws ValidationException, IllegalModificationException,
+                   TrackNotFoundException {
+        return modifyTrack(getTrack(track), changes);
+    }
+
+
     public void deleteGroup(String username) throws GroupNotFoundException {
         deleteGroup(getGroup(username));
     }
@@ -180,12 +193,17 @@ public class Service {
         this.groupDao.delete(group);
     }
 
-    public Groups getGroupsOfUser(User user, int limit) {
-        return this.groupDao.getByMember(user);
+    public Groups getGroupsOfUser(User user, Pagination p) {
+        return this.groupDao.getByMember(user, p);
     }
 
-    public Groups searchGroups(String search, int limit) {
-        return this.groupDao.search(search, limit);
+    public Groups getGroupsOfUser(String user, Pagination p) throws
+            UserNotFoundException {
+        return getGroupsOfUser(getUser(user), p);
+    }
+
+    public Groups searchGroups(String search, Pagination p) {
+        return this.groupDao.search(search, p);
     }
 
     public void addGroupMember(Group group, User user)
@@ -193,21 +211,33 @@ public class Service {
         this.groupDao.save(group.addMember(getUser(user.getName())));
     }
 
-    public void removeGroupMember(Group group, User user)
-            throws UserNotFoundException {
-        this.groupDao.save(group.removeMember(getUser(user.getName())));
+    public void addGroupMember(String group, User user)
+            throws UserNotFoundException, GroupNotFoundException {
+        this.groupDao.save(getGroup(group).addMember(getUser(user.getName())));
     }
 
-    public Tracks getTracks() {
-        return getTracks(0);
+    public void removeGroupMember(String group, User user)
+            throws UserNotFoundException, GroupNotFoundException {
+        removeGroupMember(group, user.getName());
     }
 
-    public Tracks getTracks(int limit) {
-        return trackDao.get(limit);
+    public void removeGroupMember(String group, String user)
+            throws UserNotFoundException, GroupNotFoundException {
+        this.groupDao
+                .save(getGroup(group).removeMember(getUser(user)));
     }
 
-    public Tracks getTracks(User user) {
-        return this.trackDao.getByUser(user);
+    public Tracks getTracks(Pagination p) {
+        return trackDao.get(p);
+    }
+
+    public Tracks getTracks(User user, Pagination p) {
+        return this.trackDao.getByUser(user, p);
+    }
+
+    public Tracks getTracks(String user, Pagination p) throws
+            UserNotFoundException {
+        return getTracks(getUser(user), p);
     }
 
     public Track getTrack(String id) throws TrackNotFoundException {
@@ -231,22 +261,34 @@ public class Service {
     }
 
     public Measurement createMeasurement(Measurement measurement) {
+        this.measurementValidator.validateCreate(measurement);
         return this.measurementDao.create(measurement);
     }
 
-    public Measurement createMeasurement(Track track, Measurement measurement) {
-        measurement.setTrack(track);
-        measurement = createMeasurement(measurement);
-        this.trackDao.save(track.addMeasurement(measurement));
+    public Measurement createMeasurement(String track, Measurement measurement) {
+        this.measurementValidator.validateCreate(measurement);
+        measurement.setTrack(entityFactory.createTrack().setIdentifier(track));
+        this.measurementDao.create(measurement);
+        this.trackDao.addMeasurement(track, measurement);
         return measurement;
     }
 
-    public Measurements getMeasurements(int limit) {
-        return this.measurementDao.get(limit);
+    public Measurements getMeasurements(Pagination p) {
+        return this.measurementDao.get(p);
     }
 
-    public Measurements getMeasurements(User user) {
-        return this.measurementDao.getByUser(user);
+    public Measurements getMeasurements(User user, Pagination p) {
+        return this.measurementDao.getByUser(user, p);
+    }
+
+    public Measurements getMeasurementsByUser(String user, Pagination p) throws
+            UserNotFoundException {
+        return this.measurementDao.getByUser(getUser(user), p);
+    }
+
+    public Measurements getMeasurementsByTrack(String track) throws
+            TrackNotFoundException {
+        return getTrack(track).getMeasurements();
     }
 
     public Measurement getMeasurement(String id) throws
@@ -267,12 +309,6 @@ public class Service {
                                                                        measurement));
     }
 
-    public Track addMeasurement(Track track, Measurement measurement)
-            throws ValidationException {
-        return trackDao.save(track.addMeasurement(measurementDao
-                .save(measurementValidator.validateCreate(measurement))));
-    }
-
     public void deleteMeasurement(Measurement measurement) {
         this.measurementDao.delete(measurement);
     }
@@ -290,8 +326,8 @@ public class Service {
         return this.phenomenonDao.create(phenomenon);
     }
 
-    public Phenomenons getPhenomenons() {
-        return this.phenomenonDao.get();
+    public Phenomenons getPhenomenons(Pagination p) {
+        return this.phenomenonDao.get(p);
     }
 
     public Sensor getSensorByName(String name) throws SensorNotFoundException {
@@ -302,11 +338,19 @@ public class Service {
         return s;
     }
 
-    public Sensors getSensors() {
-        return this.sensorDao.get();
+    public Sensors getSensors(Pagination p) {
+        return this.sensorDao.get(p);
     }
 
     public Sensor createSensor(Sensor sensor) {
         return this.sensorDao.create(sensor);
+    }
+
+    public User getUserForTrack(String track) {
+        return this.trackDao.getUser(track);
+    }
+
+    public Sensor getSensorForTrack(String track) {
+        return this.trackDao.getSensor(track);
     }
 }

@@ -25,7 +25,10 @@ import com.github.jmkgreen.morphia.Datastore;
 import com.github.jmkgreen.morphia.Morphia;
 import com.github.jmkgreen.morphia.converters.DefaultConverters;
 import com.github.jmkgreen.morphia.converters.TypeConverter;
-import com.github.jmkgreen.morphia.ext.guice.GuiceExtension;
+import com.github.jmkgreen.morphia.ext.guice.GuiceObjectFactory;
+import com.github.jmkgreen.morphia.logging.MorphiaLoggerFactory;
+import com.github.jmkgreen.morphia.logging.slf4j.SLF4JLogrImplFactory;
+import com.github.jmkgreen.morphia.mapping.DefaultCreator;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
@@ -62,9 +65,11 @@ public class MongoDB {
                    @Nullable @Named(USER_PROPERTY) String username,
                    @Nullable @Named(PASS_PROPERTY) char[] password) {
         try {
+            MorphiaLoggerFactory.registerLogger(SLF4JLogrImplFactory.class);
             mongo = new MongoClient(new ServerAddress(host, port));
             morphia = new Morphia();
-            new GuiceExtension(morphia, injector);
+            morphia.getMapper().getOptions().objectFactory =
+                    new GuiceObjectFactory(new DefaultCreator(), injector);
             addConverters(converters);
             addMappedClasses(mappedClasses);
             datastore = morphia
@@ -105,7 +110,7 @@ public class MongoDB {
     /*
      * FIXME remove this once 2dsphere indexes are supported by morphia
      */
-    protected void ensureIndexes() {
+    private void ensureIndexes() {
         DBCollection collection = datastore
                 .getCollection(MongoMeasurement.class);
         collection.ensureIndex(new BasicDBObject(MongoMeasurement.GEOMETRY,

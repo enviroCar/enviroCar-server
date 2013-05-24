@@ -23,29 +23,27 @@ package io.car.server.core.statistics;
 
 import io.car.server.core.entities.Phenomenon;
 import io.car.server.core.entities.Phenomenons;
-import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface StatisticsService {
+    Statistics getStatisticsForTrack(String track);
 
-    Statistics getStatistics(Track track);
-
-    Statistics getStatistics(User user);
+    Statistics getStatisticsForUser(User user);
 
     Statistics getStatistics();
 
-    Statistic getStatistics(Track track, Phenomenon phenomenon);
+    Statistics getStatisticsForTrack(String track, Phenomenons phenomenon);
 
-    Statistic getStatistics(User user, Phenomenon phenomenon);
-
-    Statistic getStatistics(Phenomenon phenomenon);
-
-    Statistics getStatistics(Track track, Phenomenons phenomenon);
-
-    Statistics getStatistics(User user, Phenomenons phenomenon);
+    Statistics getStatisticsForUser(User user, Phenomenons phenomenon);
 
     Statistics getStatistics(Phenomenons phenomenon);
+
+    Statistic getStatisticsForTrack(String track, Phenomenon phenomenon);
+
+    Statistic getStatisticsForUser(User user, Phenomenon phenomenon);
+
+    Statistic getStatistics(Phenomenon phenomenon);
 }

@@ -17,10 +17,41 @@
  */
 package io.car.server.core.entities;
 
+import io.car.server.core.util.Pagination;
 import io.car.server.core.util.UpCastingIterable;
 
 public class Tracks extends UpCastingIterable<Track> {
-    public Tracks(Iterable<? extends Track> delegate) {
-        super(delegate);
+    public static TracksBuilder from(
+            Iterable<? extends Track> delegate) {
+        return new TracksBuilder(delegate);
+    }
+
+    protected Tracks(Iterable<? extends Track> delegate,
+                     Pagination pagination, long elements) {
+        super(delegate, pagination, elements);
+    }
+
+    public static class TracksBuilder {
+        private Iterable<? extends Track> delegate;
+        private Pagination pagination;
+        private long elements;
+
+        public TracksBuilder(Iterable<? extends Track> delegate) {
+            this.delegate = delegate;
+        }
+
+        public TracksBuilder withPagination(Pagination pagination) {
+            this.pagination = pagination;
+            return this;
+        }
+
+        public TracksBuilder withElements(long elements) {
+            this.elements = elements;
+            return this;
+        }
+
+        public Tracks build() {
+            return new Tracks(delegate, pagination, elements);
+        }
     }
 }

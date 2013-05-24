@@ -27,7 +27,6 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -39,8 +38,10 @@ import com.google.inject.assistedinject.Assisted;
 
 import io.car.server.core.entities.User;
 import io.car.server.core.exception.IllegalModificationException;
+import io.car.server.core.exception.ResourceNotFoundException;
 import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.core.exception.ValidationException;
+import io.car.server.rest.MediaTypes;
 import io.car.server.rest.Schemas;
 import io.car.server.rest.auth.Authenticated;
 import io.car.server.rest.validation.Schema;
@@ -63,22 +64,21 @@ public class UserResource extends AbstractResource {
     }
 
     protected User getUser() {
-        return user;
+        return this.user;
     }
 
     @PUT
     @Schema(request = Schemas.USER_MODIFY)
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Consumes(MediaTypes.USER_MODIFY)
     @Authenticated
     public Response modify(User changes) throws
             UserNotFoundException, IllegalModificationException,
             ValidationException {
-        Preconditions.checkNotNull(user);
-        if (!canModifyUser(getUser())) {
+        if (!canModifyUser(user)) {
             throw new WebApplicationException(Status.FORBIDDEN);
         }
-        User modified = getService().modifyUser(getUser(), changes);
-        if (modified.getName().equals(getUser().getName())) {
+        User modified = getService().modifyUser(user, changes);
+        if (modified.getName().equals(user.getName())) {
             return Response.noContent().build();
         } else {
             UriBuilder b = getUriInfo().getBaseUriBuilder();
@@ -93,42 +93,42 @@ public class UserResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.USER)
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces(MediaTypes.USER)
     public User get() throws UserNotFoundException {
-        return getUser();
+        return user;
     }
 
     @DELETE
     @Authenticated
-    public void delete() throws UserNotFoundException {
-        if (!canModifyUser(getUser())) {
+    public void delete() throws ResourceNotFoundException {
+        if (!canModifyUser(this.user)) {
             throw new WebApplicationException(Status.FORBIDDEN);
         }
-        getService().deleteUser(getUser());
+        getService().deleteUser(this.user);
     }
 
     @Path(FRIENDS)
     public FriendsResource friends() {
-        return getResourceFactory().createFriendsResource(getUser());
+        return getResourceFactory().createFriendsResource(this.user);
     }
 
     @Path(GROUPS)
     public GroupsResource groups() {
-        return getResourceFactory().createGroupsResource(getUser());
+        return getResourceFactory().createGroupsResource(this.user);
     }
 
     @Path(TRACKS)
     public TracksResource tracks() {
-        return getResourceFactory().createTracksResource(getUser());
+        return getResourceFactory().createTracksResource(this.user);
     }
 
     @Path(MEASUREMENTS)
     public MeasurementsResource measurements() {
-        return getResourceFactory().createMeasurementsResource(getUser());
+        return getResourceFactory().createMeasurementsResource(this.user, null);
     }
 
     @Path(STATISTICS)
     public StatisticsResource statistics() {
-        return getResourceFactory().createStatisticsResource(getUser());
+        return getResourceFactory().createStatisticsResource(null, this.user);
     }
 }

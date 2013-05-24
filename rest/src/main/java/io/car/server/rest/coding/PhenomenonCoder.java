@@ -26,6 +26,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import io.car.server.core.entities.Phenomenon;
 import io.car.server.rest.MediaTypes;
+import io.car.server.rest.resources.PhenomenonResource;
 import io.car.server.rest.resources.PhenomenonsResource;
 import io.car.server.rest.resources.RootResource;
 
@@ -52,6 +53,9 @@ public class PhenomenonCoder extends AbstractEntityCoder<Phenomenon> {
                     .print(t.getCreationDate()));
             phenomenon.put(JSONConstants.MODIFIED_KEY, getDateTimeFormat()
                     .print(t.getLastModificationDate()));
+            URI stats = getUriInfo().getAbsolutePathBuilder()
+                    .path(PhenomenonResource.STATISTIC).build();
+            phenomenon.put(JSONConstants.STATISTIC_KEY, stats.toString());
         } else {
             URI href = getUriInfo().getBaseUriBuilder()
                     .path(RootResource.class)

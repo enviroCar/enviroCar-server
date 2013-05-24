@@ -25,6 +25,7 @@ import com.sun.jersey.api.core.ResourceConfig;
 import com.sun.jersey.guice.JerseyServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 
+import io.car.server.rest.PaginationFilter;
 import io.car.server.rest.SchemaServlet;
 import io.car.server.rest.auth.AuthenticationFilter;
 import io.car.server.rest.auth.AuthenticationResourceFilterFactory;
@@ -53,7 +54,8 @@ public class JerseyModule extends JerseyServletModule {
                 classList(GZIPContentEncodingFilter.class,
                           AuthenticationFilter.class),
                 ResourceConfig.PROPERTY_CONTAINER_RESPONSE_FILTERS,
-                classList(GZIPContentEncodingFilter.class),
+                classList(PaginationFilter.class,
+                          GZIPContentEncodingFilter.class),
                 ResourceConfig.PROPERTY_RESOURCE_FILTER_FACTORIES,
                 classList(AuthenticationResourceFilterFactory.class,
                           JSONSchemaResourceFilterFactory.class));

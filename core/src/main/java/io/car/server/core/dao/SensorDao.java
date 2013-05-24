@@ -19,6 +19,7 @@ package io.car.server.core.dao;
 
 import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.Sensors;
+import io.car.server.core.util.Pagination;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
@@ -27,7 +28,7 @@ import io.car.server.core.entities.Sensors;
 public interface SensorDao {
     Sensor getByName(String name);
 
-    Sensors get();
+    Sensors get(Pagination p);
 
     Sensor create(Sensor sensor);
 }

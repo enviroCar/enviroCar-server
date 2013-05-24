@@ -31,6 +31,7 @@ import io.car.server.core.entities.Measurement;
 import io.car.server.core.entities.Measurements;
 import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
+import io.car.server.core.util.Pagination;
 import io.car.server.mongo.entity.MongoMeasurement;
 
 /**
@@ -63,19 +64,19 @@ public class MongoMeasurementDao extends BasicDAO<MongoMeasurement, String>
     }
 
     @Override
-    public Measurements getByPhenomenon(String phenomenon) {
+    public Measurements getByPhenomenon(String phenomenon, Pagination p) {
         Query<MongoMeasurement> q = createQuery();
         q.field(MongoMeasurement.PHENOMENONS).equal(phenomenon);
-        return fetch(q);
+        return fetch(q, p);
     }
 
     @Override
-    public Measurements getByTrack(Track track) {
+    public Measurements getByTrack(Track track, Pagination p) {
         return track.getMeasurements();
     }
 
     @Override
-    public Measurements getByBbox(Geometry bbox) {
+    public Measurements getByBbox(Geometry bbox, Pagination p) {
         // XXX TODO
         Coordinate[] coords = bbox.getBoundary().getCoordinates();
         return null;
@@ -83,25 +84,15 @@ public class MongoMeasurementDao extends BasicDAO<MongoMeasurement, String>
 
     @Override
     public Measurements getByBbox(double minx, double miny, double maxx,
-                                  double maxy) {
+                                  double maxy, Pagination p) {
         Query<MongoMeasurement> q = createQuery();
         q.field(MongoMeasurement.GEOMETRY).within(minx, miny, maxx, maxy);
-        return fetch(q);
+        return fetch(q, p);
     }
 
     @Override
-    public Measurements get() {
-        return get(0);
-    }
-
-    @Override
-    public Measurements get(int limit) {
-        return fetch(createQuery().limit(limit)
-                .order(MongoMeasurement.CREATION_DATE));
-    }
-
-    protected Measurements fetch(Query<MongoMeasurement> q) {
-        return new Measurements(find(q).fetch());
+    public Measurements get(Pagination p) {
+        return fetch(createQuery().order(MongoMeasurement.CREATION_DATE), p);
     }
 
     @Override
@@ -116,8 +107,16 @@ public class MongoMeasurementDao extends BasicDAO<MongoMeasurement, String>
     }
 
     @Override
-    public Measurements getByUser(User user) {
+    public Measurements getByUser(User user, Pagination p) {
         return fetch(createQuery().field(MongoMeasurement.USER).equal(user)
-                .order(MongoMeasurement.TIME));
+                .order(MongoMeasurement.TIME), p);
+    }
+
+    protected Measurements fetch(Query<MongoMeasurement> q, Pagination p) {
+        long count = count(q);
+        q.limit(p.getLimit()).offset(p.getOffset());
+        Iterable<MongoMeasurement> entities = find(q).fetch();
+        return Measurements.from(entities).withPagination(p).withElements(count)
+                .build();
     }
 }

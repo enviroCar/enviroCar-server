@@ -24,16 +24,16 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response.Status;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
-import io.car.server.core.entities.Group;
 import io.car.server.core.entities.User;
 import io.car.server.core.entities.Users;
+import io.car.server.core.exception.GroupNotFoundException;
 import io.car.server.core.exception.UserNotFoundException;
+import io.car.server.rest.MediaTypes;
 import io.car.server.rest.Schemas;
 import io.car.server.rest.auth.Authenticated;
 import io.car.server.rest.validation.Schema;
@@ -43,25 +43,26 @@ import io.car.server.rest.validation.Schema;
  */
 public class GroupMembersResource extends AbstractResource {
     public static final String MEMBER = "{member}";
-    private Group group;
+    private String group;
 
     @Inject
-    public GroupMembersResource(@Assisted Group group) {
+    public GroupMembersResource(@Assisted("group") String group) {
         this.group = group;
     }
 
     @GET
     @Schema(response = Schemas.USERS)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Users get() {
-        return group.getMembers();
+    @Produces(MediaTypes.USERS)
+    public Users get() throws GroupNotFoundException {
+        return getService().getGroup(group).getMembers();
     }
 
     @POST
     @Authenticated
     @Schema(request = Schemas.USER)
-    @Consumes(MediaType.APPLICATION_JSON)
-    public void add(User user) throws UserNotFoundException {
+    @Consumes(MediaTypes.USER)
+    public void add(User user) throws UserNotFoundException,
+                                      GroupNotFoundException {
         if (!canModifyUser(user)) {
             throw new WebApplicationException(Status.FORBIDDEN);
         }
@@ -71,6 +72,7 @@ public class GroupMembersResource extends AbstractResource {
     @Path(MEMBER)
     public GroupMemberResource friend(@PathParam("member") String username)
             throws UserNotFoundException {
+        // TODO throw 404 for non-members
         return getResourceFactory()
                 .createGroupMemberResource(group, getService().getUser(username));
     }

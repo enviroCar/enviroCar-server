@@ -18,18 +18,24 @@
 package io.car.server.mongo.dao;
 
 import org.bson.types.ObjectId;
+import org.joda.time.DateTime;
 
 import com.github.jmkgreen.morphia.Datastore;
+import com.github.jmkgreen.morphia.Key;
 import com.github.jmkgreen.morphia.dao.BasicDAO;
 import com.github.jmkgreen.morphia.query.Query;
+import com.github.jmkgreen.morphia.query.UpdateOperations;
 import com.google.inject.Inject;
 import com.vividsolutions.jts.geom.Geometry;
 
 import io.car.server.core.dao.TrackDao;
+import io.car.server.core.entities.Measurement;
 import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.Track;
 import io.car.server.core.entities.Tracks;
 import io.car.server.core.entities.User;
+import io.car.server.core.util.Pagination;
+import io.car.server.mongo.entity.MongoMeasurement;
 import io.car.server.mongo.entity.MongoTrack;
 
 /**
@@ -56,13 +62,23 @@ public class MongoTrackDao extends BasicDAO<MongoTrack, ObjectId> implements
     }
 
     @Override
-    public Tracks getByUser(User user) {
-        return fetch(createQuery().field(MongoTrack.USER).equal(user));
+    public Tracks getByUser(User user, Pagination p) {
+        return fetch(createQuery().field(MongoTrack.USER).equal(user), p);
     }
 
     @Override
     public Track create(Track track) {
         return save(track);
+    }
+
+    @Override
+    public void addMeasurement(String track, Measurement m) {
+        ObjectId tid = new ObjectId(track);
+        Key<MongoTrack> key = new Key<MongoTrack>(MongoTrack.class, tid);
+        UpdateOperations<MongoTrack> add = createUpdateOperations()
+                .set(MongoTrack.LAST_MODIFIED, new DateTime())
+                .add(MongoTrack.MEASUREMENTS, (MongoMeasurement) m);
+        getDatastore().update(key, add);
     }
 
     @Override
@@ -78,34 +94,58 @@ public class MongoTrackDao extends BasicDAO<MongoTrack, ObjectId> implements
     }
 
     @Override
-    public Tracks getByBbox(double minx, double miny, double maxx, double maxy) {
+    public Tracks getByBbox(double minx, double miny, double maxx, double maxy,
+                            Pagination p) {
         Query<MongoTrack> q = createQuery();
         q.field("measurements.location").within(minx, miny, maxx, maxy);
-        return fetch(q);
+        return fetch(q, p);
     }
 
     @Override
-    public Tracks getByBbox(Geometry bbox) {
+    public Tracks getByBbox(Geometry bbox, Pagination p) {
         //FIXME implement
         throw new UnsupportedOperationException("not yet implemented");
     }
 
     @Override
-    public Tracks get() {
-        return get(0);
+    public Tracks get(Pagination p) {
+        return fetch(createQuery().order(MongoTrack.CREATION_DATE), p);
     }
 
     @Override
-    public Tracks get(int limit) {
-        return fetch(createQuery().limit(limit).order(MongoTrack.CREATION_DATE));
-    }
-
-    protected Tracks fetch(Query<MongoTrack> q) {
-        return new Tracks(find(q).fetch());
+    public Tracks getBySensor(Sensor car, Pagination p) {
+        return fetch(createQuery().field(MongoTrack.SENSOR).equal(car), p);
     }
 
     @Override
-    public Tracks getBySensor(Sensor car) {
-        return fetch(createQuery().field(MongoTrack.SENSOR).equal(car));
+    public User getUser(String track) {
+        ObjectId oid;
+        try {
+            oid = new ObjectId(track);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+        return createQuery().field(MongoTrack.ID).equal(oid)
+                .retrievedFields(true, MongoTrack.USER).get().getUser();
+    }
+
+    protected Tracks fetch(Query<MongoTrack> q, Pagination p) {
+        long count = count(q);
+        q.limit(p.getLimit()).offset(p.getOffset());
+        Iterable<MongoTrack> entities = find(q).fetch();
+        return Tracks.from(entities).withElements(count).withPagination(p)
+                .build();
+    }
+
+    @Override
+    public Sensor getSensor(String track) {
+        ObjectId oid;
+        try {
+            oid = new ObjectId(track);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+        return createQuery().field(MongoTrack.ID).equal(oid)
+                .retrievedFields(true, MongoTrack.SENSOR).get().getSensor();
     }
 }

@@ -33,7 +33,7 @@ public class TracksCoder extends AbstractEntityEncoder<Tracks> {
         ObjectNode root = getJsonFactory().objectNode();
         ArrayNode tracks = root.putArray(JSONConstants.TRACKS_KEY);
         for (Track u : t) {
-            URI uri = getUriInfo().getRequestUriBuilder()
+            URI uri = getUriInfo().getAbsolutePathBuilder()
                     .path(u.getIdentifier()).build();
             ObjectNode track = tracks.addObject();
             track.put(JSONConstants.IDENTIFIER_KEY, u.getIdentifier());

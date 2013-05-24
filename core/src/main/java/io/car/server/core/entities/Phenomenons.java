@@ -17,13 +17,44 @@
  */
 package io.car.server.core.entities;
 
+import io.car.server.core.util.Pagination;
 import io.car.server.core.util.UpCastingIterable;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class Phenomenons extends UpCastingIterable<Phenomenon> {
-    public Phenomenons(Iterable<? extends Phenomenon> delegate) {
-        super(delegate);
+    public static PhenomenonsBuilder from(
+            Iterable<? extends Phenomenon> delegate) {
+        return new PhenomenonsBuilder(delegate);
+    }
+
+    protected Phenomenons(Iterable<? extends Phenomenon> delegate,
+                          Pagination pagination, long elements) {
+        super(delegate, pagination, elements);
+    }
+
+    public static class PhenomenonsBuilder {
+        private Iterable<? extends Phenomenon> delegate;
+        private Pagination pagination;
+        private long elements;
+
+        public PhenomenonsBuilder(Iterable<? extends Phenomenon> delegate) {
+            this.delegate = delegate;
+        }
+
+        public PhenomenonsBuilder withPagination(Pagination pagination) {
+            this.pagination = pagination;
+            return this;
+        }
+
+        public PhenomenonsBuilder withElements(long elements) {
+            this.elements = elements;
+            return this;
+        }
+
+        public Phenomenons build() {
+            return new Phenomenons(delegate, pagination, elements);
+        }
     }
 }

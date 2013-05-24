@@ -23,74 +23,83 @@ package io.car.server.rest;
 
 import javax.ws.rs.core.MediaType;
 
-import com.google.common.collect.ImmutableMap;
-
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  * @author Arne de Wall
  */
-public class MediaTypes {
+public interface MediaTypes {
     public static final String SCHEMA_ATTRIBUTE = "schema";
-    public static final MediaType ROOT_TYPE =
-            withSchema(Schemas.ROOT);
-    public static final MediaType USERS_TYPE =
-            withSchema(Schemas.USERS);
-    public static final MediaType USER_TYPE =
-            withSchema(Schemas.USER);
-    public static final MediaType USER_MODIFY_TYPE =
-            withSchema(Schemas.USER_MODIFY);
-    public static final MediaType USER_CREATE_TYPE =
-            withSchema(Schemas.USER_CREATE);
-    public static final MediaType USER_REF_TYPE =
-            withSchema(Schemas.USER_REF);
-    public static final MediaType GROUPS_TYPE =
-            withSchema(Schemas.GROUPS);
-    public static final MediaType GROUP_TYPE =
-            withSchema(Schemas.GROUP);
-    public static final MediaType GROUP_MODIFY_TYPE =
-            withSchema(Schemas.GROUP_MODIFY);
-    public static final MediaType GROUP_CREATE_TYPE =
-            withSchema(Schemas.GROUP_CREATE);
-    public static final MediaType GROUP_REF_TYPE =
-            withSchema(Schemas.GROUP_REF);
-    public static final MediaType TRACK_TYPE =
-            withSchema(Schemas.TRACK);
-    public static final MediaType TRACKS_TYPE =
-            withSchema(Schemas.TRACKS);
-    public static final MediaType TRACK_CREATE_TYPE =
-            withSchema(Schemas.TRACK_CREATE);
-    public static final MediaType TRACK_MODIFY_TYPE =
-            withSchema(Schemas.TRACK_MODIFY);
-    public static final MediaType MEASUREMENT_TYPE =
-            withSchema(Schemas.MEASUREMENT);
-    public static final MediaType MEASUREMENTS_TYPE =
-            withSchema(Schemas.MEASUREMENTS);
-    public static final MediaType MEASUREMENT_CREATE_TYPE =
-            withSchema(Schemas.MEASUREMENT_CREATE);
-    public static final MediaType MEASUREMENT_MODIFY_TYPE =
-            withSchema(Schemas.MEASUREMENT_MODIFY);
-    public static final MediaType SENSOR_TYPE =
-            withSchema(Schemas.SENSOR);
-    public static final MediaType SENSORS_TYPE =
-            withSchema(Schemas.SENSORS);
-    public static final MediaType SENSOR_CREATE_TYPE =
-            withSchema(Schemas.SENSOR_CREATE);
-    public static final MediaType SENSOR_MODIFY_TYPE =
-            withSchema(Schemas.SENSOR_MODIFY);
-    public static final MediaType PHENOMENON_TYPE =
-            withSchema(Schemas.PHENOMENON);
-    public static final MediaType PHENOMENONS_TYPE =
-            withSchema(Schemas.PHENOMENONS);
-    public static final MediaType PHENOMENON_CREATE_TYPE =
-            withSchema(Schemas.PHENOMENON_CREATE);
-    public static final MediaType PHENOMENON_MODIFY_TYPE =
-            withSchema(Schemas.PHENOMENON_MODIFY);
-
-    public static MediaType withSchema(String schema) {
-        return new MediaType("application", "json",
-                             ImmutableMap.of(SCHEMA_ATTRIBUTE, schema));
-    }
-
-    private MediaTypes() {
-    }
+    String ROOT = "application/json; schema=\"" + Schemas.ROOT + "\"";
+    MediaType ROOT_TYPE = MediaType.valueOf(ROOT);
+    String USERS = "application/json; schema=\"" + Schemas.USERS + "\"";
+    MediaType USERS_TYPE = MediaType.valueOf(USERS);
+    String USER = "application/json; schema=\"" + Schemas.USER + "\"";
+    MediaType USER_TYPE = MediaType.valueOf(USER);
+    String USER_MODIFY = "application/json; schema=\"" + Schemas.USER_MODIFY +
+                         "\"";
+    MediaType USER_MODIFY_TYPE = MediaType.valueOf(USER_MODIFY);
+    String USER_CREATE = "application/json; schema=\"" + Schemas.USER_CREATE +
+                         "\"";
+    MediaType USER_CREATE_TYPE = MediaType.valueOf(USER_CREATE);
+    String USER_REF = "application/json; schema=\"" + Schemas.USER_REF + "\"";
+    MediaType USER_REF_TYPE = MediaType.valueOf(USER_REF);
+    String GROUPS = "application/json; schema=\"" + Schemas.GROUPS + "\"";
+    MediaType GROUPS_TYPE = MediaType.valueOf(GROUPS);
+    String GROUP = "application/json; schema=\"" + Schemas.GROUP + "\"";
+    MediaType GROUP_TYPE = MediaType.valueOf(GROUP);
+    String GROUP_MODIFY = "application/json; schema=\"" + Schemas.GROUP_MODIFY +
+                          "\"";
+    MediaType GROUP_MODIFY_TYPE = MediaType.valueOf(GROUP_MODIFY);
+    String GROUP_CREATE = "application/json; schema=\"" + Schemas.GROUP_CREATE +
+                          "\"";
+    MediaType GROUP_CREATE_TYPE = MediaType.valueOf(GROUP_CREATE);
+    String GROUP_REF = "application/json; schema=\"" + Schemas.GROUP_REF + "\"";
+    MediaType GROUP_REF_TYPE = MediaType.valueOf(GROUP_REF);
+    String TRACK = "application/json; schema=\"" + Schemas.TRACK + "\"";
+    MediaType TRACK_TYPE = MediaType.valueOf(TRACK);
+    String TRACKS = "application/json; schema=\"" + Schemas.TRACKS + "\"";
+    MediaType TRACKS_TYPE = MediaType.valueOf(TRACKS);
+    String TRACK_CREATE = "application/json; schema=\"" + Schemas.TRACK_CREATE +
+                          "\"";
+    MediaType TRACK_CREATE_TYPE = MediaType.valueOf(TRACK_CREATE);
+    String TRACK_MODIFY = "application/json; schema=\"" + Schemas.TRACK_MODIFY +
+                          "\"";
+    MediaType TRACK_MODIFY_TYPE = MediaType.valueOf(TRACK_MODIFY);
+    String MEASUREMENT = "application/json; schema=\"" + Schemas.MEASUREMENT +
+                         "\"";
+    MediaType MEASUREMENT_TYPE = MediaType.valueOf(MEASUREMENT);
+    String MEASUREMENTS = "application/json; schema=\"" + Schemas.MEASUREMENTS +
+                          "\"";
+    MediaType MEASUREMENTS_TYPE = MediaType.valueOf(MEASUREMENTS);
+    String MEASUREMENT_CREATE = "application/json; schema=\"" +
+                                Schemas.MEASUREMENT_CREATE + "\"";
+    MediaType MEASUREMENT_CREATE_TYPE = MediaType.valueOf(MEASUREMENT_CREATE);
+    String MEASUREMENT_MODIFY = "application/json; schema=\"" +
+                                Schemas.MEASUREMENT_MODIFY + "\"";
+    MediaType MEASUREMENT_MODIFY_TYPE = MediaType.valueOf(MEASUREMENT_MODIFY);
+    String SENSOR = "application/json; schema=\"" + Schemas.SENSOR + "\"";
+    MediaType SENSOR_TYPE = MediaType.valueOf(SENSOR);
+    String SENSORS = "application/json; schema=\"" + Schemas.SENSORS + "\"";
+    MediaType SENSORS_TYPE = MediaType.valueOf(SENSORS);
+    String SENSOR_CREATE =
+            "application/json; schema=\"" + Schemas.SENSOR_CREATE + "\"";
+    MediaType SENSOR_CREATE_TYPE = MediaType.valueOf(SENSOR_CREATE);
+    String SENSOR_MODIFY =
+            "application/json; schema=\"" + Schemas.SENSOR_MODIFY + "\"";
+    MediaType SENSOR_MODIFY_TYPE = MediaType.valueOf(SENSOR_MODIFY);
+    String PHENOMENON = "application/json; schema=\"" + Schemas.PHENOMENON +
+                        "\"";
+    MediaType PHENOMENON_TYPE = MediaType.valueOf(PHENOMENON);
+    String PHENOMENONS = "application/json; schema=\"" + Schemas.PHENOMENONS +
+                         "\"";
+    MediaType PHENOMENONS_TYPE = MediaType.valueOf(PHENOMENONS);
+    String PHENOMENON_CREATE = "application/json; schema=\"" +
+                               Schemas.PHENOMENON_CREATE + "\"";
+    MediaType PHENOMENON_CREATE_TYPE = MediaType.valueOf(PHENOMENON_CREATE);
+    String STATISTIC = "application/json; schema=\"" +
+                       Schemas.STATISTIC + "\"";
+    MediaType STATISTIC_TYPE = MediaType.valueOf(STATISTIC);
+    String STATISTICS = "application/json; schema=\"" +
+                        Schemas.STATISTICS + "\"";
+    MediaType STATISTICS_TYPE = MediaType.valueOf(STATISTICS);
 }

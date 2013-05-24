@@ -142,13 +142,13 @@ public class JerseyCodingModule extends AbstractModule {
     @Provides
     @Singleton
     public ObjectWriter objectWriter(ObjectMapper mapper) {
-        return mapper.writerWithDefaultPrettyPrinter();
+        return mapper.writer();
     }
 
     @Provides
     @Singleton
     public ObjectMapper objectMapper(JsonNodeFactory factory) {
         return new ObjectMapper().setNodeFactory(factory)
-                .enable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS);
+                .disable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS);
     }
 }

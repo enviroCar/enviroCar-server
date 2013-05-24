@@ -15,28 +15,15 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.core.dao;
+package io.car.server.mongo.cache;
 
-import io.car.server.core.entities.Group;
-import io.car.server.core.entities.User;
-import io.car.server.core.entities.Users;
-import io.car.server.core.util.Pagination;
+import io.car.server.mongo.entity.MongoSensor;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public interface UserDao {
-    User getByName(String name);
-
-    User getByMail(String mail);
-
-    Users get(Pagination p);
-
-    User create(User user);
-
-    User save(User user);
-
-    void delete(User user);
-
-    Users getByGroup(Group group);
+public class SensorCache extends AbstractEntityCache<MongoSensor> {
+    public SensorCache() {
+        super(MongoSensor.class);
+    }
 }

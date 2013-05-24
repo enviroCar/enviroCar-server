@@ -17,16 +17,22 @@
  */
 package io.car.server.mongo.dao;
 
+import java.util.concurrent.ExecutionException;
+
 import com.github.jmkgreen.morphia.Datastore;
 import com.github.jmkgreen.morphia.dao.BasicDAO;
 import com.github.jmkgreen.morphia.query.Query;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import com.google.inject.Inject;
 
 import io.car.server.core.dao.UserDao;
 import io.car.server.core.entities.Group;
-import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
 import io.car.server.core.entities.Users;
+import io.car.server.core.util.Pagination;
+import io.car.server.mongo.cache.EntityCache;
 import io.car.server.mongo.entity.MongoUser;
 
 /**
@@ -34,14 +40,39 @@ import io.car.server.mongo.entity.MongoUser;
  * @author Arne de Wall
  */
 public class MongoUserDao extends BasicDAO<MongoUser, String> implements UserDao {
+    private final LoadingCache<String, MongoUser> cache = CacheBuilder
+            .newBuilder()
+            .maximumSize(1000).build(new CacheLoader<String, MongoUser>() {
+        @Override
+        public MongoUser load(String key) throws UserNotFoundException {
+            MongoUser user =
+                    find(createQuery()
+                    .field(MongoUser.NAME).equal(key))
+                    .get();
+            if (user == null) {
+                throw new UserNotFoundException();
+            } else {
+                return user;
+            }
+        }
+    });
+    private final EntityCache<MongoUser> userCache;
     @Inject
-    public MongoUserDao(Datastore datastore) {
+    public MongoUserDao(Datastore datastore, EntityCache<MongoUser> userCache) {
         super(MongoUser.class, datastore);
+        this.userCache = userCache;
     }
 
     @Override
-    public MongoUser getByName(String name) {
-        return find(createQuery().field(MongoUser.NAME).equal(name)).get();
+    public MongoUser getByName(final String name) {
+        try {
+            return cache.get(name);
+        } catch (ExecutionException ex) {
+            if (ex.getCause() instanceof UserNotFoundException) {
+                return null;
+            }
+            throw new RuntimeException(ex);
+        }
     }
 
     @Override
@@ -50,13 +81,9 @@ public class MongoUserDao extends BasicDAO<MongoUser, String> implements UserDao
     }
 
     @Override
-    public Users get() {
-        return get(0);
-    }
-
-    @Override
-    public Users get(int limit) {
-        return fetch(createQuery().limit(limit).order(MongoUser.CREATION_DATE));
+    public Users get(Pagination p) {
+        Query<MongoUser> q = createQuery().order(MongoUser.CREATION_DATE);
+        return fetch(q, p);
     }
 
     @Override
@@ -67,6 +94,8 @@ public class MongoUserDao extends BasicDAO<MongoUser, String> implements UserDao
     @Override
     public MongoUser save(User user) {
         MongoUser mu = (MongoUser) user;
+        cache.invalidate(mu);
+        userCache.invalidate(mu);
         save(mu);
         return mu;
     }
@@ -81,12 +110,15 @@ public class MongoUserDao extends BasicDAO<MongoUser, String> implements UserDao
         return group.getMembers();
     }
 
-    protected Users fetch(Query<MongoUser> q) {
-        return new Users(find(q).fetch());
+    protected Users fetch(Query<MongoUser> q, Pagination p) {
+        long count = count(q);
+        q.limit(p.getLimit()).offset(p.getOffset());
+        Iterable<MongoUser> entities = find(q).fetch();
+        return Users.from(entities).withElements(count).withPagination(p)
+                .build();
     }
 
-    @Override
-    public Users getByTrack(Track track) {
-        return fetch(createQuery().field(MongoUser.TRACKS).hasThisElement(track));
+    private class UserNotFoundException extends Exception {
+        private static final long serialVersionUID = 2040283652624708863L;
     }
 }

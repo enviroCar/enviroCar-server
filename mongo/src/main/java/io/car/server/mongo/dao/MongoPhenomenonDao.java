@@ -17,15 +17,22 @@
  */
 package io.car.server.mongo.dao;
 
+import java.util.concurrent.ExecutionException;
+
 import org.bson.types.ObjectId;
 
 import com.github.jmkgreen.morphia.Datastore;
 import com.github.jmkgreen.morphia.dao.BasicDAO;
+import com.github.jmkgreen.morphia.query.Query;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import com.google.inject.Inject;
 
 import io.car.server.core.dao.PhenomenonDao;
 import io.car.server.core.entities.Phenomenon;
 import io.car.server.core.entities.Phenomenons;
+import io.car.server.core.util.Pagination;
 import io.car.server.mongo.entity.MongoPhenomenon;
 import io.car.server.mongo.entity.MongoSensor;
 
@@ -35,25 +42,59 @@ import io.car.server.mongo.entity.MongoSensor;
  */
 public class MongoPhenomenonDao extends BasicDAO<MongoPhenomenon, ObjectId>
         implements PhenomenonDao {
+    private LoadingCache<String, MongoPhenomenon> cache = CacheBuilder
+            .newBuilder()
+            .maximumSize(1000)
+                .build(new CacheLoader<String, MongoPhenomenon>() {
+        @Override
+        public MongoPhenomenon load(String key) throws Exception {
+            MongoPhenomenon phen =
+                    createQuery().field(MongoSensor.NAME).equal(key).get();
+            if (phen == null) {
+                throw new PhenomenonNotFoundException();
+            } else {
+                return phen;
+            }
+        }
+    });
+
     @Inject
     public MongoPhenomenonDao(Datastore datastore) {
         super(MongoPhenomenon.class, datastore);
     }
 
     @Override
-    public Phenomenon getByName(String name) {
-        return createQuery().field(MongoSensor.NAME).equal(name).get();
+    public MongoPhenomenon getByName(final String name) {
+        try {
+            return cache.get(name);
+        } catch (ExecutionException ex) {
+            if (ex.getCause() instanceof PhenomenonNotFoundException) {
+                return null;
+            }
+            throw new RuntimeException(ex);
+        }
     }
 
     @Override
-    public Phenomenons get() {
-        return new Phenomenons(find().fetch());
+    public Phenomenons get(Pagination p) {
+        return fetch(createQuery(), p);
     }
 
     @Override
-    public Phenomenon create(Phenomenon phen) {
+    public MongoPhenomenon create(Phenomenon phen) {
         MongoPhenomenon ph = (MongoPhenomenon) phen;
         save(ph);
         return ph;
+    }
+    protected Phenomenons fetch(Query<MongoPhenomenon> q, Pagination p) {
+        long count = count(q);
+        q.limit(p.getLimit()).offset(p.getOffset());
+        Iterable<MongoPhenomenon> entities = find(q).fetch();
+        return Phenomenons.from(entities).withElements(count).withPagination(p)
+                .build();
+    }
+
+    private class PhenomenonNotFoundException extends Exception {
+        private static final long serialVersionUID = 4584249990091719190L;
     }
 }

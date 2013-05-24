@@ -95,7 +95,7 @@ public class MongoUser extends MongoBaseEntity<MongoUser> implements User {
 
     @Override
     public Users getFriends() {
-        return new Users(this.friends);
+        return Users.from(this.friends).build();
     }
 
     @Override

@@ -59,7 +59,7 @@ public class GroupCoder extends AbstractEntityCoder<Group> {
                   getDateTimeFormat().print(t.getLastModificationDate()));
         group.put(JSONConstants.OWNER_KEY,
                   userEncoder.encode(t.getOwner(), mediaType));
-        URI uri = getUriInfo().getRequestUriBuilder()
+        URI uri = getUriInfo().getAbsolutePathBuilder()
                 .path(GroupResource.MEMBERS).build();
         group.put(JSONConstants.MEMBERS_KEY, uri.toString());
         return group;

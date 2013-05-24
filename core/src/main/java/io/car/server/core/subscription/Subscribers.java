@@ -17,13 +17,45 @@
  */
 package io.car.server.core.subscription;
 
+import io.car.server.core.util.Pagination;
 import io.car.server.core.util.UpCastingIterable;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class Subscribers extends UpCastingIterable<Subscriber> {
-    public Subscribers(Iterable<? extends Subscriber> delegate) {
-        super(delegate);
+    public static SubscribersBuilder from(
+            Iterable<? extends Subscriber> delegate) {
+        return new SubscribersBuilder(delegate);
+    }
+
+    protected Subscribers(Iterable<? extends Subscriber> delegate,
+                          Pagination pagination, long elements) {
+        super(delegate, pagination, elements);
+    }
+
+    public static class SubscribersBuilder {
+        private Iterable<? extends Subscriber> delegate;
+        private Pagination pagination;
+        private long elements;
+
+        public SubscribersBuilder(
+                Iterable<? extends Subscriber> delegate) {
+            this.delegate = delegate;
+        }
+
+        public SubscribersBuilder withPagination(Pagination pagination) {
+            this.pagination = pagination;
+            return this;
+        }
+
+        public SubscribersBuilder withElements(long elements) {
+            this.elements = elements;
+            return this;
+        }
+
+        public Subscribers build() {
+            return new Subscribers(delegate, pagination, elements);
+        }
     }
 }

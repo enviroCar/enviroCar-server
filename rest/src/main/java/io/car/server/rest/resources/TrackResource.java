@@ -24,7 +24,6 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
@@ -36,6 +35,7 @@ import io.car.server.core.exception.IllegalModificationException;
 import io.car.server.core.exception.TrackNotFoundException;
 import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.core.exception.ValidationException;
+import io.car.server.rest.MediaTypes;
 import io.car.server.rest.Schemas;
 import io.car.server.rest.auth.Authenticated;
 import io.car.server.rest.validation.Schema;
@@ -49,17 +49,17 @@ public class TrackResource extends AbstractResource {
     public static final String MEASUREMENTS = "measurements";
     public static final String SENSOR = "sensor";
     public static final String STATISTICS = "statistics";
-    private final Track track;
+    private final String track;
 
     @Inject
-    public TrackResource(@Assisted Track track) {
+    public TrackResource(@Assisted("track") String track) {
         this.track = track;
     }
 
     @PUT
-    @Schema(request = Schemas.TRACK_MODIFY)
-    @Consumes(MediaType.APPLICATION_JSON)
     @Authenticated
+    @Schema(request = Schemas.TRACK_MODIFY)
+    @Consumes(MediaTypes.TRACK_MODIFY)
     public Response modify(Track changes) throws TrackNotFoundException,
                                                  UserNotFoundException,
                                                  IllegalModificationException,
@@ -73,9 +73,9 @@ public class TrackResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.TRACK)
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces(MediaTypes.TRACK)
     public Track get() throws TrackNotFoundException {
-        return track;
+        return getService().getTrack(track);
     }
 
     @DELETE
@@ -89,16 +89,17 @@ public class TrackResource extends AbstractResource {
 
     @Path(MEASUREMENTS)
     public MeasurementsResource measurements() {
-        return getResourceFactory().createMeasurementsResource(track);
+        return getResourceFactory().createMeasurementsResource(null, track);
     }
 
     @Path(SENSOR)
-    public SensorResource sensor() {
-        return getResourceFactory().createSensorResource(track.getSensor());
+    public SensorResource sensor() throws TrackNotFoundException {
+        return getResourceFactory().createSensorResource(getService()
+                .getSensorForTrack(track));
     }
 
     @Path(STATISTICS)
     public StatisticsResource statistics() {
-        return getResourceFactory().createStatisticsResource(track);
+        return getResourceFactory().createStatisticsResource(track, null);
     }
 }

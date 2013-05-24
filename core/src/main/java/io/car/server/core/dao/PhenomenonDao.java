@@ -19,6 +19,7 @@ package io.car.server.core.dao;
 
 import io.car.server.core.entities.Phenomenon;
 import io.car.server.core.entities.Phenomenons;
+import io.car.server.core.util.Pagination;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
@@ -26,7 +27,7 @@ import io.car.server.core.entities.Phenomenons;
 public interface PhenomenonDao {
     Phenomenon getByName(String name);
 
-    Phenomenons get();
+    Phenomenons get(Pagination p);
 
     Phenomenon create(Phenomenon phenomenon);
 }

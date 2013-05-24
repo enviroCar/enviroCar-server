@@ -17,6 +17,7 @@
  */
 package io.car.server.rest.resources;
 
+import javax.annotation.Nullable;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -26,21 +27,22 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
-import com.google.inject.assistedinject.AssistedInject;
 
 import io.car.server.core.entities.Measurement;
 import io.car.server.core.entities.Measurements;
-import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
 import io.car.server.core.exception.MeasurementNotFoundException;
 import io.car.server.core.exception.ResourceAlreadyExistException;
+import io.car.server.core.exception.TrackNotFoundException;
 import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.core.exception.ValidationException;
+import io.car.server.core.util.Pagination;
+import io.car.server.rest.MediaTypes;
 import io.car.server.rest.RESTConstants;
 import io.car.server.rest.Schemas;
 import io.car.server.rest.auth.Authenticated;
@@ -51,80 +53,62 @@ import io.car.server.rest.validation.Schema;
  */
 public class MeasurementsResource extends AbstractResource {
     public static final String MEASUREMENT = "{measurement}";
-    private final Track track;
+    private final String track;
     private final User user;
 
-    @AssistedInject
-    public MeasurementsResource() {
-        this(null, null);
-    }
-
-    @AssistedInject
-    public MeasurementsResource(@Assisted Track track) {
-        this(track, null);
-    }
-
-    @AssistedInject
-    public MeasurementsResource(@Assisted User user) {
-        this(null, user);
-    }
-
-    @AssistedInject
-    public MeasurementsResource(@Assisted Track track, @Assisted User user) {
+    @Inject
+    public MeasurementsResource(@Assisted("track") @Nullable String track,
+                                @Assisted @Nullable User user) {
         this.track = track;
         this.user = user;
     }
 
     @GET
     @Schema(response = Schemas.MEASUREMENTS)
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces(MediaTypes.MEASUREMENTS)
     public Measurements get(
-            @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit) {
+            @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit,
+            @QueryParam(RESTConstants.PAGE) @DefaultValue("0") int page)
+            throws UserNotFoundException, TrackNotFoundException {
+        Pagination p = new Pagination(limit, page);
         if (track == null) {
             if (user == null) {
-                return getService().getMeasurements(limit);
+                return getService().getMeasurements(p);
             } else {
-                return getService().getMeasurements(user);
+                return getService().getMeasurements(user, p);
             }
         } else {
-            return track.getMeasurements();
+            return getService().getMeasurementsByTrack(track);
         }
-
     }
 
     @POST
     @Authenticated
     @Schema(request = Schemas.MEASUREMENT_CREATE)
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Consumes(MediaTypes.MEASUREMENT_CREATE)
     public Response create(Measurement measurement) throws
             ResourceAlreadyExistException, ValidationException,
             UserNotFoundException {
         Measurement m;
+        User cur = getService().getUser(getCurrentUser());
         if (track != null) {
-            if (!canModifyUser(track.getUser())) {
+            if (!canModifyUser(getService().getUserForTrack(track).getName())) {
                 throw new WebApplicationException(Status.FORBIDDEN);
             }
-            m = getService().createMeasurement(track, measurement.setUser(track
-                    .getUser()));
+            m = getService().createMeasurement(track, measurement.setUser(cur));
         } else {
-            m = getService().createMeasurement(measurement
-                    .setUser(getCurrentUser()));
+            m = getService().createMeasurement(measurement.setUser(cur));
         }
         return Response.created(
                 getUriInfo()
-                .getRequestUriBuilder()
+                .getAbsolutePathBuilder()
                 .path(m.getIdentifier()).build()).build();
     }
 
     @Path(MEASUREMENT)
     public MeasurementResource measurement(@PathParam("measurement") String id)
             throws MeasurementNotFoundException {
-        Measurement m = getService().getMeasurement(id);
-        if (track != null) {
-            if (!m.getTrack().equals(track)) {
-                throw new MeasurementNotFoundException(id);
-            }
-        }
-        return getResourceFactory().createMeasurementResource(m);
+        return getResourceFactory().createMeasurementResource(getService()
+                .getMeasurement(id), user, track);
     }
 }
