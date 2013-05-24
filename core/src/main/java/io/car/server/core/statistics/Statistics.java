@@ -35,14 +35,14 @@ public class Statistics extends UpCastingIterable<Statistic> {
 
     protected Statistics(
             Iterable<? extends Statistic> delegate,
-            Pagination pagination, int elements) {
+            Pagination pagination, long elements) {
         super(delegate, pagination, elements);
     }
 
     public static class StatisticsBuilder {
         private Iterable<? extends Statistic> delegate;
         private Pagination pagination;
-        private int elements;
+        private long elements;
 
         public StatisticsBuilder(
                 Iterable<? extends Statistic> delegate) {
@@ -56,7 +56,7 @@ public class Statistics extends UpCastingIterable<Statistic> {
         }
 
         public StatisticsBuilder withElements(
-                int elements) {
+                long elements) {
             this.elements = elements;
             return this;
         }

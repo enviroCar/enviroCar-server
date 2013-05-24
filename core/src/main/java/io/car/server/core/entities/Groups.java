@@ -29,14 +29,14 @@ public class Groups extends UpCastingIterable<Group> {
     }
 
     protected Groups(Iterable<? extends Group> delegate, Pagination pagination,
-                     int elements) {
+                     long elements) {
         super(delegate, pagination, elements);
     }
 
     public static class GroupsBuilder {
         private Iterable<? extends Group> delegate;
         private Pagination pagination;
-        private int elements;
+        private long elements;
 
         public GroupsBuilder(Iterable<? extends Group> delegate) {
             this.delegate = delegate;
@@ -47,7 +47,7 @@ public class Groups extends UpCastingIterable<Group> {
             return this;
         }
 
-        public GroupsBuilder withElements(int elements) {
+        public GroupsBuilder withElements(long elements) {
             this.elements = elements;
             return this;
         }

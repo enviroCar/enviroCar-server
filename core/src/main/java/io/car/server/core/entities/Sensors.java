@@ -30,14 +30,14 @@ public class Sensors extends UpCastingIterable<Sensor> {
     }
 
     protected Sensors(Iterable<? extends Sensor> delegate,
-                      Pagination pagination, int elements) {
+                      Pagination pagination, long elements) {
         super(delegate, pagination, elements);
     }
 
     public static class SensorsBuilder {
         private Iterable<? extends Sensor> delegate;
         private Pagination pagination;
-        private int elements;
+        private long elements;
 
         public SensorsBuilder(Iterable<? extends Sensor> delegate) {
             this.delegate = delegate;
@@ -48,7 +48,7 @@ public class Sensors extends UpCastingIterable<Sensor> {
             return this;
         }
 
-        public SensorsBuilder withElements(int elements) {
+        public SensorsBuilder withElements(long elements) {
             this.elements = elements;
             return this;
         }

@@ -29,9 +29,9 @@ public abstract class PaginatedIterable<T> implements Iterable<T> {
     private final Pagination previous;
     private final Pagination first;
 
-    public PaginatedIterable(Pagination current, int elements) {
-        this.first = current == null ? null : current.first();
-        this.previous = current == null ? null : current.previous();
+    public PaginatedIterable(Pagination current, long elements) {
+        this.first = current == null ? null : current.first(elements);
+        this.previous = current == null ? null : current.previous(elements);
         this.current = current;
         this.next = current == null ? null : current.next(elements);
         this.last = current == null ? null : current.last(elements);

@@ -27,14 +27,14 @@ public class Tracks extends UpCastingIterable<Track> {
     }
 
     protected Tracks(Iterable<? extends Track> delegate,
-                     Pagination pagination, int elements) {
+                     Pagination pagination, long elements) {
         super(delegate, pagination, elements);
     }
 
     public static class TracksBuilder {
         private Iterable<? extends Track> delegate;
         private Pagination pagination;
-        private int elements;
+        private long elements;
 
         public TracksBuilder(Iterable<? extends Track> delegate) {
             this.delegate = delegate;
@@ -45,7 +45,7 @@ public class Tracks extends UpCastingIterable<Track> {
             return this;
         }
 
-        public TracksBuilder withElements(int elements) {
+        public TracksBuilder withElements(long elements) {
             this.elements = elements;
             return this;
         }

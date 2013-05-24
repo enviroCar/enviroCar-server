@@ -30,14 +30,14 @@ public class Subscriptions extends UpCastingIterable<Subscription> {
     }
 
     protected Subscriptions(Iterable<? extends Subscription> delegate,
-                            Pagination pagination, int elements) {
+                            Pagination pagination, long elements) {
         super(delegate, pagination, elements);
     }
 
     public static class SubscriptionsBuilder {
         private Iterable<? extends Subscription> delegate;
         private Pagination pagination;
-        private int elements;
+        private long elements;
 
         public SubscriptionsBuilder(
                 Iterable<? extends Subscription> delegate) {
@@ -49,7 +49,7 @@ public class Subscriptions extends UpCastingIterable<Subscription> {
             return this;
         }
 
-        public SubscriptionsBuilder withElements(int elements) {
+        public SubscriptionsBuilder withElements(long elements) {
             this.elements = elements;
             return this;
         }

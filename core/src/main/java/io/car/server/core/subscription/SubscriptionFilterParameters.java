@@ -31,14 +31,14 @@ public class SubscriptionFilterParameters extends UpCastingIterable<Subscription
 
     protected SubscriptionFilterParameters(
             Iterable<? extends SubscriptionFilterParameter> delegate,
-            Pagination pagination, int elements) {
+            Pagination pagination, long elements) {
         super(delegate, pagination, elements);
     }
 
     public static class SubscriptionFilterParametersBuilder {
         private Iterable<? extends SubscriptionFilterParameter> delegate;
         private Pagination pagination;
-        private int elements;
+        private long elements;
 
         public SubscriptionFilterParametersBuilder(
                 Iterable<? extends SubscriptionFilterParameter> delegate) {
@@ -52,7 +52,7 @@ public class SubscriptionFilterParameters extends UpCastingIterable<Subscription
         }
 
         public SubscriptionFilterParametersBuilder withElements(
-                int elements) {
+                long elements) {
             this.elements = elements;
             return this;
         }

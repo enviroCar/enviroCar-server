@@ -30,14 +30,14 @@ public class MeasurementValues extends UpCastingIterable<MeasurementValue> {
     }
 
     protected MeasurementValues(Iterable<? extends MeasurementValue> delegate,
-                                Pagination pagination, int elements) {
+                                Pagination pagination, long elements) {
         super(delegate, pagination, elements);
     }
 
     public static class MeasurementValuesBuilder {
         private Iterable<? extends MeasurementValue> delegate;
         private Pagination pagination;
-        private int elements;
+        private long elements;
 
         public MeasurementValuesBuilder(
                 Iterable<? extends MeasurementValue> delegate) {
@@ -49,7 +49,7 @@ public class MeasurementValues extends UpCastingIterable<MeasurementValue> {
             return this;
         }
 
-        public MeasurementValuesBuilder withElements(int elements) {
+        public MeasurementValuesBuilder withElements(long elements) {
             this.elements = elements;
             return this;
         }

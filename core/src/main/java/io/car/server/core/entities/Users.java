@@ -30,14 +30,14 @@ public class Users extends UpCastingIterable<User> {
     }
 
     protected Users(Iterable<? extends User> delegate,
-                    Pagination pagination, int elements) {
+                    Pagination pagination, long elements) {
         super(delegate, pagination, elements);
     }
 
     public static class UsersBuilder {
         private Iterable<? extends User> delegate;
         private Pagination pagination;
-        private int elements;
+        private long elements;
 
         public UsersBuilder(Iterable<? extends User> delegate) {
             this.delegate = delegate;
@@ -48,7 +48,7 @@ public class Users extends UpCastingIterable<User> {
             return this;
         }
 
-        public UsersBuilder withElements(int elements) {
+        public UsersBuilder withElements(long elements) {
             this.elements = elements;
             return this;
         }

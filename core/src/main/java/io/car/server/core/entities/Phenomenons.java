@@ -30,14 +30,14 @@ public class Phenomenons extends UpCastingIterable<Phenomenon> {
     }
 
     protected Phenomenons(Iterable<? extends Phenomenon> delegate,
-                          Pagination pagination, int elements) {
+                          Pagination pagination, long elements) {
         super(delegate, pagination, elements);
     }
 
     public static class PhenomenonsBuilder {
         private Iterable<? extends Phenomenon> delegate;
         private Pagination pagination;
-        private int elements;
+        private long elements;
 
         public PhenomenonsBuilder(Iterable<? extends Phenomenon> delegate) {
             this.delegate = delegate;
@@ -48,7 +48,7 @@ public class Phenomenons extends UpCastingIterable<Phenomenon> {
             return this;
         }
 
-        public PhenomenonsBuilder withElements(int elements) {
+        public PhenomenonsBuilder withElements(long elements) {
             this.elements = elements;
             return this;
         }

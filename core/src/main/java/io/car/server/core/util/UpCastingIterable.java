@@ -30,7 +30,7 @@ public class UpCastingIterable<T> extends PaginatedIterable<T> {
     private final Iterable<? extends T> delegate;
 
     public UpCastingIterable(Iterable<? extends T> delegate,
-                             Pagination pagination, int elements) {
+                             Pagination pagination, long elements) {
         super(pagination, elements);
         Preconditions.checkNotNull(delegate);
         this.delegate = delegate;
