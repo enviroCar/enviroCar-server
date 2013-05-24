@@ -23,7 +23,6 @@ import com.github.jmkgreen.morphia.Datastore;
 import com.github.jmkgreen.morphia.dao.BasicDAO;
 import com.github.jmkgreen.morphia.query.Query;
 import com.google.inject.Inject;
-import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 
 import io.car.server.core.dao.MeasurementDao;
@@ -80,9 +79,8 @@ public class MongoMeasurementDao extends BasicDAO<MongoMeasurement, String>
 
     @Override
     public Measurements getByBbox(Geometry bbox, Pagination p) {
-        // XXX TODO
-        Coordinate[] coords = bbox.getBoundary().getCoordinates();
-        return null;
+        // FIXME implement
+        throw new UnsupportedOperationException("not yet implemented");
     }
 
     @Override

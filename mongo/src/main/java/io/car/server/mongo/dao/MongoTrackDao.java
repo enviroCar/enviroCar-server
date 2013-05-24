@@ -76,6 +76,7 @@ public class MongoTrackDao extends BasicDAO<MongoTrack, ObjectId> implements
 
     @Override
     public void delete(Track track) {
+        // FIXME remove track reference from measurements
         delete((MongoTrack) track);
     }
 

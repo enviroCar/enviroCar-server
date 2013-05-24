@@ -102,6 +102,7 @@ public class MongoUserDao extends BasicDAO<MongoUser, String> implements UserDao
 
     @Override
     public void delete(User user) {
+        // FIXME remove user from groups, friend lists, measurments and tracks
         delete((MongoUser) user);
     }
 

@@ -27,7 +27,6 @@ import io.car.server.core.statistics.Statistic;
 import io.car.server.rest.JSONConstants;
 
 /**
- * TODO JavaDoc
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class StatisticEncoder extends AbstractEntityEncoder<Statistic> {
