@@ -17,12 +17,12 @@
  */
 package io.car.server.mongo.dao;
 
+import io.car.server.core.dao.GroupDao;
 import io.car.server.core.dao.MeasurementDao;
 import io.car.server.core.dao.TrackDao;
 import io.car.server.core.dao.UserDao;
 import io.car.server.core.entities.Group;
 import io.car.server.core.entities.Measurement;
-import io.car.server.core.entities.Measurements;
 import io.car.server.core.entities.Track;
 import io.car.server.core.entities.Tracks;
 import io.car.server.core.entities.User;
@@ -65,14 +65,16 @@ public class MongoUserDao extends BasicDAO<MongoUser, String> implements
     private final EntityCache<MongoUser> userCache;
     private final TrackDao trackDao;
     private final MeasurementDao measurementDao;
+    private final GroupDao groupDao;
 
     @Inject
     public MongoUserDao(Datastore datastore, EntityCache<MongoUser> userCache,
-            TrackDao trackDao, MeasurementDao measurementDao) {
+            TrackDao trackDao, MeasurementDao measurementDao, GroupDao groupDao) {
         super(MongoUser.class, datastore);
         this.userCache = userCache;
         this.trackDao = trackDao;
         this.measurementDao = measurementDao;
+        this.groupDao = groupDao;
     }
 
     @Override
@@ -131,8 +133,21 @@ public class MongoUserDao extends BasicDAO<MongoUser, String> implements
                 measurementDao.save(m);
             }
         } while ((page = page.next(page.getSize())) != null);
+               
+        page = new Pagination();
+        do{
+            for(Group g : groupDao.getByMember(user, page)){
+                g.removeMember(user);
+                groupDao.save(g);
+            }
+        } while((page = page.next(page.getSize())) != null);
         
-        user.getFriends();
+        for(User u : user.getFriends()){
+            u.removeFriend(user);
+            save(u);
+            user.removeFriend(u);
+        }
+        
         delete((MongoUser) user);
     }
 
