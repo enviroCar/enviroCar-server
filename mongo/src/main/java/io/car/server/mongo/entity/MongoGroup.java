@@ -69,7 +69,7 @@ public class MongoGroup extends MongoBaseEntity<MongoGroup> implements Group {
 
     @Override
     public Users getMembers() {
-        return new Users(this.members);
+        return Users.from(this.members).build();
     }
 
     @Override

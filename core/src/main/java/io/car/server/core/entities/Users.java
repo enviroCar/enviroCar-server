@@ -17,13 +17,44 @@
  */
 package io.car.server.core.entities;
 
+import io.car.server.core.util.Pagination;
 import io.car.server.core.util.UpCastingIterable;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class Users extends UpCastingIterable<User> {
-    public Users(Iterable<? extends User> delegate) {
-        super(delegate);
+    public static UsersBuilder from(
+            Iterable<? extends User> delegate) {
+        return new UsersBuilder(delegate);
+    }
+
+    protected Users(Iterable<? extends User> delegate,
+                    Pagination pagination, int elements) {
+        super(delegate, pagination, elements);
+    }
+
+    public static class UsersBuilder {
+        private Iterable<? extends User> delegate;
+        private Pagination pagination;
+        private int elements;
+
+        public UsersBuilder(Iterable<? extends User> delegate) {
+            this.delegate = delegate;
+        }
+
+        public UsersBuilder withPagination(Pagination pagination) {
+            this.pagination = pagination;
+            return this;
+        }
+
+        public UsersBuilder withElements(int elements) {
+            this.elements = elements;
+            return this;
+        }
+
+        public Users build() {
+            return new Users(delegate, pagination, elements);
+        }
     }
 }

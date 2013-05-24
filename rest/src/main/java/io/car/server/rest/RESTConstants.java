@@ -22,5 +22,6 @@ package io.car.server.rest;
  */
 public interface RESTConstants {
     String LIMIT = "limit";
+    String PAGE = "page";
     String SEARCH = "q";
 }

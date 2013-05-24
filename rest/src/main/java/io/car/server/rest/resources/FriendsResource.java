@@ -54,7 +54,7 @@ public class FriendsResource extends AbstractResource {
     @Schema(response = Schemas.USERS)
     @Produces(MediaTypes.USERS)
     public Users get() {
-        return new Users(user.getFriends());
+        return user.getFriends();
     }
 
     @POST

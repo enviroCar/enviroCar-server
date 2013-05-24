@@ -17,10 +17,41 @@
  */
 package io.car.server.core.entities;
 
+import io.car.server.core.util.Pagination;
 import io.car.server.core.util.UpCastingIterable;
 
 public class Measurements extends UpCastingIterable<Measurement> {
-    public Measurements(Iterable<? extends Measurement> delegate) {
-        super(delegate);
+    public static MeasurementsBuilder from(
+            Iterable<? extends Measurement> delegate) {
+        return new MeasurementsBuilder(delegate);
+    }
+
+    protected Measurements(Iterable<? extends Measurement> delegate,
+                           Pagination pagination, int elements) {
+        super(delegate, pagination, elements);
+    }
+
+    public static class MeasurementsBuilder {
+        private Iterable<? extends Measurement> delegate;
+        private Pagination pagination;
+        private int elements;
+
+        public MeasurementsBuilder(Iterable<? extends Measurement> delegate) {
+            this.delegate = delegate;
+        }
+
+        public MeasurementsBuilder withPagination(Pagination pagination) {
+            this.pagination = pagination;
+            return this;
+        }
+
+        public MeasurementsBuilder withElements(int elements) {
+            this.elements = elements;
+            return this;
+        }
+
+        public Measurements build() {
+            return new Measurements(delegate, pagination, elements);
+        }
     }
 }

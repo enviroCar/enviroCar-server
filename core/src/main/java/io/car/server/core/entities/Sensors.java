@@ -17,13 +17,44 @@
  */
 package io.car.server.core.entities;
 
+import io.car.server.core.util.Pagination;
 import io.car.server.core.util.UpCastingIterable;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class Sensors extends UpCastingIterable<Sensor> {
-    public Sensors(Iterable<? extends Sensor> delegate) {
-        super(delegate);
+    public static SensorsBuilder from(
+            Iterable<? extends Sensor> delegate) {
+        return new SensorsBuilder(delegate);
+    }
+
+    protected Sensors(Iterable<? extends Sensor> delegate,
+                      Pagination pagination, int elements) {
+        super(delegate, pagination, elements);
+    }
+
+    public static class SensorsBuilder {
+        private Iterable<? extends Sensor> delegate;
+        private Pagination pagination;
+        private int elements;
+
+        public SensorsBuilder(Iterable<? extends Sensor> delegate) {
+            this.delegate = delegate;
+        }
+
+        public SensorsBuilder withPagination(Pagination pagination) {
+            this.pagination = pagination;
+            return this;
+        }
+
+        public SensorsBuilder withElements(int elements) {
+            this.elements = elements;
+            return this;
+        }
+
+        public Sensors build() {
+            return new Sensors(delegate, pagination, elements);
+        }
     }
 }

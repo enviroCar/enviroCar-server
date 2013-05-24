@@ -116,7 +116,7 @@ public class MongoTrackDao extends BasicDAO<MongoTrack, ObjectId> implements
     }
 
     protected Tracks fetch(Query<MongoTrack> q) {
-        return new Tracks(find(q).fetch());
+        return Tracks.from(find(q).fetch()).build();
     }
 
     @Override

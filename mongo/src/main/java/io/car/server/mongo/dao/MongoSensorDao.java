@@ -72,7 +72,7 @@ public class MongoSensorDao extends BasicDAO<MongoSensor, ObjectId> implements
 
     @Override
     public Sensors get() {
-        return new Sensors(find().fetch());
+        return Sensors.from(find().fetch()).build();
     }
 
     @Override

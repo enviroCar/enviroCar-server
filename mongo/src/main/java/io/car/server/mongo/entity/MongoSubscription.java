@@ -55,7 +55,8 @@ public class MongoSubscription extends MongoBaseEntity<MongoSubscription>
 
     @Override
     public SubscriptionFilterParameters getFilters() {
-        return new SubscriptionFilterParameters(this.subscriptionFilters);
+        return SubscriptionFilterParameters.from(this.subscriptionFilters)
+                .build();
     }
 
     @Override

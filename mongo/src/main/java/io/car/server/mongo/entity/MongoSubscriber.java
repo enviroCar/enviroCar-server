@@ -68,7 +68,7 @@ public class MongoSubscriber extends MongoBaseEntity<MongoSubscriber> implements
 
     @Override
     public Subscriptions getSubscriptions() {
-        return new Subscriptions(subscriptions);
+        return Subscriptions.from(subscriptions).build();
     }
 
     @Override

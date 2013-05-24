@@ -32,7 +32,6 @@ import javax.ws.rs.core.Response.Status;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
-
 import io.car.server.core.entities.Track;
 import io.car.server.core.entities.Tracks;
 import io.car.server.core.entities.User;

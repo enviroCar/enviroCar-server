@@ -22,13 +22,16 @@ import java.util.Iterator;
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 
+
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class UpCastingIterable<T> implements Iterable<T> {
+public class UpCastingIterable<T> extends PaginatedIterable<T> {
     private final Iterable<? extends T> delegate;
 
-    public UpCastingIterable(Iterable<? extends T> delegate) {
+    public UpCastingIterable(Iterable<? extends T> delegate,
+                             Pagination pagination, int elements) {
+        super(pagination, elements);
         Preconditions.checkNotNull(delegate);
         this.delegate = delegate;
     }

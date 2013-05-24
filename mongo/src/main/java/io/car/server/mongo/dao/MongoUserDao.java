@@ -115,7 +115,7 @@ public class MongoUserDao extends BasicDAO<MongoUser, String> implements UserDao
     }
 
     protected Users fetch(Query<MongoUser> q) {
-        return new Users(find(q).fetch());
+        return Users.from(find(q).fetch()).build();
     }
 
     @Override

@@ -54,7 +54,7 @@ public class MongoGroupDao extends BasicDAO<MongoGroup, String> implements
     }
 
     protected Groups fetch(Query<MongoGroup> q) {
-        return new Groups(find(q).fetch());
+        return Groups.from(find(q).fetch()).build();
     }
 
     @Override

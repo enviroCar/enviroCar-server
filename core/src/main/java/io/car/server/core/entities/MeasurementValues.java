@@ -17,13 +17,45 @@
  */
 package io.car.server.core.entities;
 
+import io.car.server.core.util.Pagination;
 import io.car.server.core.util.UpCastingIterable;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class MeasurementValues extends UpCastingIterable<MeasurementValue> {
-    public MeasurementValues(Iterable<? extends MeasurementValue> delegate) {
-        super(delegate);
+    public static MeasurementValuesBuilder from(
+            Iterable<? extends MeasurementValue> delegate) {
+        return new MeasurementValuesBuilder(delegate);
+    }
+
+    protected MeasurementValues(Iterable<? extends MeasurementValue> delegate,
+                                Pagination pagination, int elements) {
+        super(delegate, pagination, elements);
+    }
+
+    public static class MeasurementValuesBuilder {
+        private Iterable<? extends MeasurementValue> delegate;
+        private Pagination pagination;
+        private int elements;
+
+        public MeasurementValuesBuilder(
+                Iterable<? extends MeasurementValue> delegate) {
+            this.delegate = delegate;
+        }
+
+        public MeasurementValuesBuilder withPagination(Pagination pagination) {
+            this.pagination = pagination;
+            return this;
+        }
+
+        public MeasurementValuesBuilder withElements(int elements) {
+            this.elements = elements;
+            return this;
+        }
+
+        public MeasurementValues build() {
+            return new MeasurementValues(delegate, pagination, elements);
+        }
     }
 }

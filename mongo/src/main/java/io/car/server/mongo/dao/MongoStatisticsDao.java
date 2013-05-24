@@ -190,7 +190,7 @@ public class MongoStatisticsDao implements StatisticsDao {
         for (DBObject o : results) {
             l.add(parseStatistic(o));
         }
-        return new Statistics(l);
+        return Statistics.from(l).build();
     }
 
     protected Statistic parseStatistic(DBObject result) {

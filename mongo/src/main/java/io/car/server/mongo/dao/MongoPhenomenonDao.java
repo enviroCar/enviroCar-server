@@ -75,7 +75,7 @@ public class MongoPhenomenonDao extends BasicDAO<MongoPhenomenon, ObjectId>
 
     @Override
     public Phenomenons get() {
-        return new Phenomenons(find().fetch());
+        return Phenomenons.from(find().fetch()).build();
     }
 
     @Override

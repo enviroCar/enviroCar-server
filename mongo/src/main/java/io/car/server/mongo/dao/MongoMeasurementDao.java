@@ -101,7 +101,7 @@ public class MongoMeasurementDao extends BasicDAO<MongoMeasurement, String>
     }
 
     protected Measurements fetch(Query<MongoMeasurement> q) {
-        return new Measurements(find(q).fetch());
+        return Measurements.from(find(q).fetch()).build();
     }
 
     @Override

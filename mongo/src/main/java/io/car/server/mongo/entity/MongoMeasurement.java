@@ -73,7 +73,7 @@ public class MongoMeasurement extends MongoBaseEntity<MongoMeasurement>
 
     @Override
     public MeasurementValues getValues() {
-        return new MeasurementValues(this.values);
+        return MeasurementValues.from(this.values).build();
     }
 
     @Override

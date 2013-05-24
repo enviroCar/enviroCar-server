@@ -82,7 +82,7 @@ public class MongoTrack extends MongoBaseEntity<MongoTrack> implements Track {
 
     @Override
     public Measurements getMeasurements() {
-        return new Measurements(this.measurements);
+        return Measurements.from(this.measurements).build();
     }
 
     public MongoTrack setMeasurements(Measurements measurements) {
