@@ -26,13 +26,14 @@ import io.car.server.core.dao.GroupDao;
 import io.car.server.core.entities.Group;
 import io.car.server.core.entities.Groups;
 import io.car.server.core.entities.User;
+import io.car.server.core.util.Pagination;
 import io.car.server.mongo.entity.MongoGroup;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class MongoGroupDao extends BasicDAO<MongoGroup, String> implements
-        GroupDao {
+public class MongoGroupDao extends BasicDAO<MongoGroup, String>
+        implements GroupDao {
     @Inject
     public MongoGroupDao(Datastore ds) {
         super(MongoGroup.class, ds);
@@ -44,27 +45,23 @@ public class MongoGroupDao extends BasicDAO<MongoGroup, String> implements
     }
 
     @Override
-    public Groups search(String search) {
-        return search(search, 0);
+    public Groups getByOwner(User owner, Pagination p) {
+        Query<MongoGroup> q = createQuery().field(MongoGroup.OWNER).equal(owner);
+        return fetch(q, p);
+    }
+
+    protected Groups fetch(Query<MongoGroup> q, Pagination p) {
+        long count = count(q);
+        q.limit(p.getLimit()).offset(p.getOffset());
+        Iterable<MongoGroup> entities = find(q).fetch();
+        return Groups.from(entities).withElements(count).withPagination(p)
+                .build();
     }
 
     @Override
-    public Groups getByOwner(User owner) {
-        return fetch(createQuery().field(MongoGroup.OWNER).equal(owner));
-    }
-
-    protected Groups fetch(Query<MongoGroup> q) {
-        return Groups.from(find(q).fetch()).build();
-    }
-
-    @Override
-    public Groups get() {
-        return get(0);
-    }
-
-    @Override
-    public Groups get(int limit) {
-        return fetch(createQuery().limit(limit).order(MongoGroup.LAST_MODIFIED));
+    public Groups get(Pagination p) {
+        Query<MongoGroup> q = createQuery().order(MongoGroup.LAST_MODIFIED);
+        return fetch(q, p);
     }
 
     @Override
@@ -85,16 +82,18 @@ public class MongoGroupDao extends BasicDAO<MongoGroup, String> implements
     }
 
     @Override
-    public Groups getByMember(User member) {
-        return fetch(createQuery().field(MongoGroup.MEMBERS)
-                .hasThisElement(member));
+    public Groups getByMember(User member, Pagination p) {
+        Query<MongoGroup> q =
+                createQuery().field(MongoGroup.MEMBERS)
+                .hasThisElement(member);
+        return fetch(q, p);
     }
 
     @Override
-    public Groups search(String search, int limit) {
+    public Groups search(String search, Pagination p) {
         Query<MongoGroup> q = createQuery();
         q.or(q.criteria(MongoGroup.NAME).containsIgnoreCase(search),
              q.criteria(MongoGroup.DESCRIPTION).containsIgnoreCase(search));
-        return fetch(q.limit(limit));
+        return fetch(q, p);
     }
 }

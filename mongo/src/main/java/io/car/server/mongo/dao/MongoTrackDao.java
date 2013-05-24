@@ -34,6 +34,7 @@ import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.Track;
 import io.car.server.core.entities.Tracks;
 import io.car.server.core.entities.User;
+import io.car.server.core.util.Pagination;
 import io.car.server.mongo.entity.MongoMeasurement;
 import io.car.server.mongo.entity.MongoTrack;
 
@@ -61,8 +62,8 @@ public class MongoTrackDao extends BasicDAO<MongoTrack, ObjectId> implements
     }
 
     @Override
-    public Tracks getByUser(User user) {
-        return fetch(createQuery().field(MongoTrack.USER).equal(user));
+    public Tracks getByUser(User user, Pagination p) {
+        return fetch(createQuery().field(MongoTrack.USER).equal(user), p);
     }
 
     @Override
@@ -93,35 +94,27 @@ public class MongoTrackDao extends BasicDAO<MongoTrack, ObjectId> implements
     }
 
     @Override
-    public Tracks getByBbox(double minx, double miny, double maxx, double maxy) {
+    public Tracks getByBbox(double minx, double miny, double maxx, double maxy,
+                            Pagination p) {
         Query<MongoTrack> q = createQuery();
         q.field("measurements.location").within(minx, miny, maxx, maxy);
-        return fetch(q);
+        return fetch(q, p);
     }
 
     @Override
-    public Tracks getByBbox(Geometry bbox) {
+    public Tracks getByBbox(Geometry bbox, Pagination p) {
         //FIXME implement
         throw new UnsupportedOperationException("not yet implemented");
     }
 
     @Override
-    public Tracks get() {
-        return get(0);
+    public Tracks get(Pagination p) {
+        return fetch(createQuery().order(MongoTrack.CREATION_DATE), p);
     }
 
     @Override
-    public Tracks get(int limit) {
-        return fetch(createQuery().limit(limit).order(MongoTrack.CREATION_DATE));
-    }
-
-    protected Tracks fetch(Query<MongoTrack> q) {
-        return Tracks.from(find(q).fetch()).build();
-    }
-
-    @Override
-    public Tracks getBySensor(Sensor car) {
-        return fetch(createQuery().field(MongoTrack.SENSOR).equal(car));
+    public Tracks getBySensor(Sensor car, Pagination p) {
+        return fetch(createQuery().field(MongoTrack.SENSOR).equal(car), p);
     }
 
     @Override
@@ -134,6 +127,14 @@ public class MongoTrackDao extends BasicDAO<MongoTrack, ObjectId> implements
         }
         return createQuery().field(MongoTrack.ID).equal(oid)
                 .retrievedFields(true, MongoTrack.USER).get().getUser();
+    }
+
+    protected Tracks fetch(Query<MongoTrack> q, Pagination p) {
+        long count = count(q);
+        q.limit(p.getLimit()).offset(p.getOffset());
+        Iterable<MongoTrack> entities = find(q).fetch();
+        return Tracks.from(entities).withElements(count).withPagination(p)
+                .build();
     }
 
     @Override

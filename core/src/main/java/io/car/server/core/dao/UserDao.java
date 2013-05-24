@@ -18,9 +18,9 @@
 package io.car.server.core.dao;
 
 import io.car.server.core.entities.Group;
-import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
 import io.car.server.core.entities.Users;
+import io.car.server.core.util.Pagination;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
@@ -30,9 +30,7 @@ public interface UserDao {
 
     User getByMail(String mail);
 
-    Users get();
-
-    Users get(int limit);
+    Users get(Pagination p);
 
     User create(User user);
 
@@ -41,6 +39,4 @@ public interface UserDao {
     void delete(User user);
 
     Users getByGroup(Group group);
-
-    Users getByTrack(Track track);
 }

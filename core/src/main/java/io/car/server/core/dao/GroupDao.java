@@ -24,6 +24,7 @@ package io.car.server.core.dao;
 import io.car.server.core.entities.Group;
 import io.car.server.core.entities.Groups;
 import io.car.server.core.entities.User;
+import io.car.server.core.util.Pagination;
 
 /**
  *
@@ -32,17 +33,13 @@ import io.car.server.core.entities.User;
 public interface GroupDao {
     Group getByName(String name);
 
-    Groups search(String search);
+    Groups search(String search, Pagination p);
 
-    Groups search(String search, int limit);
+    Groups getByOwner(User owner, Pagination p);
 
-    Groups getByOwner(User owner);
+    Groups getByMember(User member, Pagination p);
 
-    Groups getByMember(User member);
-
-    Groups get();
-
-    Groups get(int limit);
+    Groups get(Pagination p);
 
     Group create(Group group);
 

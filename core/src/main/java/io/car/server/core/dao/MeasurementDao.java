@@ -23,6 +23,7 @@ import io.car.server.core.entities.Measurement;
 import io.car.server.core.entities.Measurements;
 import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
+import io.car.server.core.util.Pagination;
 
 /**
  *
@@ -38,17 +39,16 @@ public interface MeasurementDao {
 
     Measurement getById(String id);
 
-    Measurements getByPhenomenon(String string);
+    Measurements getByPhenomenon(String string, Pagination p);
 
-    Measurements getByTrack(Track track);
+    Measurements getByTrack(Track track, Pagination p);
 
-    Measurements getByBbox(Geometry bbox);
+    Measurements getByBbox(Geometry bbox, Pagination p);
 
-    Measurements getByBbox(double minx, double miny, double maxx, double maxy);
+    Measurements getByBbox(double minx, double miny, double maxx, double maxy,
+                           Pagination p);
 
-    Measurements get();
+    Measurements get(Pagination p);
 
-    Measurements get(int limit);
-
-    Measurements getByUser(User user);
+    Measurements getByUser(User user, Pagination p);
 }

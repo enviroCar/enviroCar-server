@@ -38,6 +38,7 @@ import io.car.server.core.exception.GroupNotFoundException;
 import io.car.server.core.exception.ResourceAlreadyExistException;
 import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.core.exception.ValidationException;
+import io.car.server.core.util.Pagination;
 import io.car.server.rest.MediaTypes;
 import io.car.server.rest.RESTConstants;
 import io.car.server.rest.Schemas;
@@ -61,16 +62,18 @@ public class GroupsResource extends AbstractResource {
     @Produces(MediaTypes.GROUPS)
     public Groups get(
             @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit,
+            @QueryParam(RESTConstants.PAGE) @DefaultValue("0") int page,
             @QueryParam(RESTConstants.SEARCH) String search) throws
             UserNotFoundException {
+        Pagination p = new Pagination(limit, page);
         if (user == null) {
             if (search != null && !search.trim().isEmpty()) {
-                return getService().searchGroups(search, limit);
+                return getService().searchGroups(search, p);
             } else {
-                return getService().getGroups(limit);
+                return getService().getGroups(p);
             }
         } else {
-            return getService().getGroupsOfUser(user, limit);
+            return getService().getGroupsOfUser(user, p);
         }
     }
 

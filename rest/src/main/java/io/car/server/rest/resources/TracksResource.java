@@ -32,6 +32,7 @@ import javax.ws.rs.core.Response.Status;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
+
 import io.car.server.core.entities.Track;
 import io.car.server.core.entities.Tracks;
 import io.car.server.core.entities.User;
@@ -39,6 +40,7 @@ import io.car.server.core.exception.ResourceAlreadyExistException;
 import io.car.server.core.exception.TrackNotFoundException;
 import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.core.exception.ValidationException;
+import io.car.server.core.util.Pagination;
 import io.car.server.rest.MediaTypes;
 import io.car.server.rest.RESTConstants;
 import io.car.server.rest.Schemas;
@@ -61,11 +63,13 @@ public class TracksResource extends AbstractResource {
     @Schema(response = Schemas.TRACKS)
     @Produces(MediaTypes.TRACKS)
     public Tracks get(
-            @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit)
+            @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit,
+            @QueryParam(RESTConstants.PAGE) @DefaultValue("0") int page)
             throws UserNotFoundException {
+        Pagination p = new Pagination(limit, page);
         return user != null
-               ? getService().getTracks(user)
-               : getService().getTracks();
+               ? getService().getTracks(user, p)
+               : getService().getTracks(p);
     }
 
     @POST

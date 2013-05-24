@@ -18,17 +18,21 @@
 package io.car.server.rest.resources;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
 import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.Sensors;
 import io.car.server.core.exception.SensorNotFoundException;
+import io.car.server.core.util.Pagination;
 import io.car.server.rest.MediaTypes;
+import io.car.server.rest.RESTConstants;
 import io.car.server.rest.Schemas;
 import io.car.server.rest.auth.Authenticated;
 import io.car.server.rest.validation.Schema;
@@ -43,8 +47,10 @@ public class SensorsResource extends AbstractResource {
     @GET
     @Schema(response = Schemas.SENSORS)
     @Produces(MediaTypes.SENSORS)
-    public Sensors get() {
-        return getService().getSensors();
+    public Sensors get(
+            @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit,
+            @QueryParam(RESTConstants.PAGE) @DefaultValue("0") int page) {
+        return getService().getSensors(new Pagination(limit, page));
     }
 
     @POST

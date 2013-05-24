@@ -32,6 +32,7 @@ import io.car.server.core.entities.Users;
 import io.car.server.core.exception.ResourceAlreadyExistException;
 import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.core.exception.ValidationException;
+import io.car.server.core.util.Pagination;
 import io.car.server.rest.MediaTypes;
 import io.car.server.rest.RESTConstants;
 import io.car.server.rest.Schemas;
@@ -48,8 +49,9 @@ public class UsersResource extends AbstractResource {
     @Schema(response = Schemas.USERS)
     @Produces(MediaTypes.USERS)
     public Users get(
-            @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit) {
-        return getService().getUsers(limit);
+            @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit,
+            @QueryParam(RESTConstants.PAGE) @DefaultValue("0") int page) {
+        return getService().getUsers(new Pagination(limit, page));
     }
 
     @POST

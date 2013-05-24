@@ -41,6 +41,7 @@ import io.car.server.core.exception.ResourceAlreadyExistException;
 import io.car.server.core.exception.TrackNotFoundException;
 import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.core.exception.ValidationException;
+import io.car.server.core.util.Pagination;
 import io.car.server.rest.MediaTypes;
 import io.car.server.rest.RESTConstants;
 import io.car.server.rest.Schemas;
@@ -66,13 +67,15 @@ public class MeasurementsResource extends AbstractResource {
     @Schema(response = Schemas.MEASUREMENTS)
     @Produces(MediaTypes.MEASUREMENTS)
     public Measurements get(
-            @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit)
+            @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit,
+            @QueryParam(RESTConstants.PAGE) @DefaultValue("0") int page)
             throws UserNotFoundException, TrackNotFoundException {
+        Pagination p = new Pagination(limit, page);
         if (track == null) {
             if (user == null) {
-                return getService().getMeasurements(limit);
+                return getService().getMeasurements(p);
             } else {
-                return getService().getMeasurements(user);
+                return getService().getMeasurements(user, p);
             }
         } else {
             return getService().getMeasurementsByTrack(track);

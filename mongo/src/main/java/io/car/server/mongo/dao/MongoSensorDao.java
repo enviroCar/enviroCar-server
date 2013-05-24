@@ -23,6 +23,7 @@ import org.bson.types.ObjectId;
 
 import com.github.jmkgreen.morphia.Datastore;
 import com.github.jmkgreen.morphia.dao.BasicDAO;
+import com.github.jmkgreen.morphia.query.Query;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -31,6 +32,7 @@ import com.google.inject.Inject;
 import io.car.server.core.dao.SensorDao;
 import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.Sensors;
+import io.car.server.core.util.Pagination;
 import io.car.server.mongo.entity.MongoSensor;
 
 /**
@@ -52,6 +54,7 @@ public class MongoSensorDao extends BasicDAO<MongoSensor, ObjectId> implements
             return sensor;
         }
     });
+
     @Inject
     public MongoSensorDao(Datastore ds) {
         super(MongoSensor.class, ds);
@@ -71,8 +74,16 @@ public class MongoSensorDao extends BasicDAO<MongoSensor, ObjectId> implements
     }
 
     @Override
-    public Sensors get() {
-        return Sensors.from(find().fetch()).build();
+    public Sensors get(Pagination p) {
+        return fetch(createQuery(), p);
+    }
+
+    protected Sensors fetch(Query<MongoSensor> q, Pagination p) {
+        long count = count(q);
+        q.limit(p.getLimit()).offset(p.getOffset());
+        Iterable<MongoSensor> entities = find(q).fetch();
+        return Sensors.from(entities).withElements(count).withPagination(p)
+                .build();
     }
 
     @Override

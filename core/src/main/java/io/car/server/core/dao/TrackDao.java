@@ -24,6 +24,7 @@ import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.Track;
 import io.car.server.core.entities.Tracks;
 import io.car.server.core.entities.User;
+import io.car.server.core.util.Pagination;
 
 /**
  *
@@ -39,19 +40,18 @@ public interface TrackDao {
 
     Track getById(String id);
 
-    Tracks getByUser(User user);
+    Tracks getByUser(User user, Pagination p);
 
-    Tracks getBySensor(Sensor sensor);
+    Tracks getBySensor(Sensor sensor, Pagination p);
 
-    Tracks getByBbox(double minx, double miny, double maxx, double maxy);
+    Tracks getByBbox(double minx, double miny, double maxx, double maxy,
+                     Pagination p);
 
-    Tracks getByBbox(Geometry bbox);
+    Tracks getByBbox(Geometry bbox, Pagination p);
 
     void addMeasurement(String track, Measurement m);
 
-    Tracks get();
-
-    Tracks get(int limit);
+    Tracks get(Pagination p);
 
     User getUser(String track);
 
