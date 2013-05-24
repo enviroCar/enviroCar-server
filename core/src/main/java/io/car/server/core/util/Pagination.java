@@ -57,13 +57,13 @@ public class Pagination {
     public Pagination next(int elements) {
         return (getLast() < elements)
                ? new Pagination(getSize(), getPage() + 1)
-               : last(elements);
+               : null;
     }
 
     public Pagination previous() {
         return (getFirst() >= 0)
                ? new Pagination(getSize(), getPage() - 1)
-               : first();
+               : null;
     }
 
     public Pagination last(int elements) {

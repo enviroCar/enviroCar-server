@@ -17,7 +17,6 @@
  */
 package io.car.server.core.util;
 
-
 import com.google.common.base.Objects;
 
 /**
@@ -42,8 +41,16 @@ public abstract class PaginatedIterable<T> implements Iterable<T> {
         return last;
     }
 
+    public boolean hasLast() {
+        return getLast() != null;
+    }
+
     public Pagination getNext() {
         return next;
+    }
+
+    public boolean hasNext() {
+        return getNext() != null;
     }
 
     public Pagination getCurrent() {
@@ -51,11 +58,19 @@ public abstract class PaginatedIterable<T> implements Iterable<T> {
     }
 
     public Pagination getPrevious() {
-
         return previous;
     }
+
+    public boolean hasPrevious() {
+        return getPrevious() != null;
+    }
+
     public Pagination getFirst() {
         return first;
+    }
+
+    public boolean hasFirst() {
+        return getFirst() != null;
     }
 
     public boolean isPaginated() {
