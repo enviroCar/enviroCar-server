@@ -87,7 +87,7 @@ public class GroupsResource extends AbstractResource {
         User currentUser = getService().getUser(getCurrentUser());
         Group g = getService().createGroup(
                 group.setOwner(currentUser).addMember(currentUser));
-        return Response.created(getUriInfo().getRequestUriBuilder().path(g
+        return Response.created(getUriInfo().getAbsolutePathBuilder().path(g
                 .getName()).build()).build();
     }
 

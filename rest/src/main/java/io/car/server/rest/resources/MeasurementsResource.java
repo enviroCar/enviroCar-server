@@ -101,7 +101,7 @@ public class MeasurementsResource extends AbstractResource {
         }
         return Response.created(
                 getUriInfo()
-                .getRequestUriBuilder()
+                .getAbsolutePathBuilder()
                 .path(m.getIdentifier()).build()).build();
     }
 

@@ -58,7 +58,7 @@ public class PhenomenonsResource extends AbstractResource {
     @Schema(request = Schemas.PHENOMENON_CREATE)
     @Consumes(MediaTypes.PHENOMENON_CREATE)
     public Response create(Phenomenon phenomenon) {
-        return Response.created(getUriInfo().getRequestUriBuilder()
+        return Response.created(getUriInfo().getAbsolutePathBuilder()
                 .path(getService().createPhenomenon(phenomenon)
                 .getName()).build()).build();
     }

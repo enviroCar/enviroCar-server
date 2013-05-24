@@ -86,7 +86,7 @@ public class TracksResource extends AbstractResource {
                 getService().getUser(getCurrentUser())));
         return Response.created(
                 getUriInfo()
-                .getRequestUriBuilder()
+                .getAbsolutePathBuilder()
                 .path(track.getIdentifier()).build()).build();
     }
 

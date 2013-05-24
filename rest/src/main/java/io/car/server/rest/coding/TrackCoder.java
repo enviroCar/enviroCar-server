@@ -87,11 +87,11 @@ public class TrackCoder extends AbstractEntityCoder<Track> {
                        sensorEncoder.encode(t.getSensor(), mediaType));
         properties.put(JSONConstants.USER_KEY,
                        userEncoder.encode(t.getUser(), mediaType));
-        URI measurements = getUriInfo().getRequestUriBuilder()
+        URI measurements = getUriInfo().getAbsolutePathBuilder()
                 .path(TrackResource.MEASUREMENTS).build();
         properties.put(JSONConstants.MEASUREMENTS_KEY,
                        measurements.toString());
-        URI statistics = getUriInfo().getRequestUriBuilder()
+        URI statistics = getUriInfo().getAbsolutePathBuilder()
                 .path(TrackResource.STATISTICS).build();
         properties.put(JSONConstants.STATISTICS_KEY,
                        statistics.toString());

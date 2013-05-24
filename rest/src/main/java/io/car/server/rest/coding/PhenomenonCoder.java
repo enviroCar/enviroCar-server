@@ -53,7 +53,7 @@ public class PhenomenonCoder extends AbstractEntityCoder<Phenomenon> {
                     .print(t.getCreationDate()));
             phenomenon.put(JSONConstants.MODIFIED_KEY, getDateTimeFormat()
                     .print(t.getLastModificationDate()));
-            URI stats = getUriInfo().getRequestUriBuilder()
+            URI stats = getUriInfo().getAbsolutePathBuilder()
                     .path(PhenomenonResource.STATISTIC).build();
             phenomenon.put(JSONConstants.STATISTIC_KEY, stats.toString());
         } else {

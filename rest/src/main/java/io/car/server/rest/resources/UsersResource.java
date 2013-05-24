@@ -61,7 +61,7 @@ public class UsersResource extends AbstractResource {
     public Response create(User user) throws ValidationException,
                                                        ResourceAlreadyExistException {
         return Response.created(
-                getUriInfo().getRequestUriBuilder()
+                getUriInfo().getAbsolutePathBuilder()
                 .path(getService().createUser(user).getName())
                 .build()).build();
     }

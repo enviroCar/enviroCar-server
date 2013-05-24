@@ -59,7 +59,7 @@ public class SensorsResource extends AbstractResource {
     @Consumes(MediaTypes.SENSOR_CREATE)
     public Response create(Sensor sensor) {
         return Response.created(
-                getUriInfo().getRequestUriBuilder()
+                getUriInfo().getAbsolutePathBuilder()
                 .path(getService().createSensor(sensor).getName())
                 .build()).build();
     }

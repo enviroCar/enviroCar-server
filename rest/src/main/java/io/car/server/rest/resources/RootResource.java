@@ -55,15 +55,16 @@ public class RootResource extends AbstractResource {
     @Produces(MediaTypes.ROOT)
     public JsonNode get() {
         ObjectNode root = factory.objectNode();
-        URI users = getUriInfo().getRequestUriBuilder().path(USERS).build();
-        URI groups = getUriInfo().getRequestUriBuilder().path(GROUPS).build();
-        URI tracks = getUriInfo().getRequestUriBuilder().path(TRACKS).build();
-        URI sensors = getUriInfo().getRequestUriBuilder().path(SENSORS).build();
-        URI phenomenons = getUriInfo().getRequestUriBuilder()
+        URI users = getUriInfo().getAbsolutePathBuilder().path(USERS).build();
+        URI groups = getUriInfo().getAbsolutePathBuilder().path(GROUPS).build();
+        URI tracks = getUriInfo().getAbsolutePathBuilder().path(TRACKS).build();
+        URI sensors = getUriInfo().getAbsolutePathBuilder().path(SENSORS)
+                .build();
+        URI phenomenons = getUriInfo().getAbsolutePathBuilder()
                 .path(PHENOMENONS).build();
-        URI measurements = getUriInfo().getRequestUriBuilder()
+        URI measurements = getUriInfo().getAbsolutePathBuilder()
                 .path(MEASUREMENTS).build();
-        URI statistics = getUriInfo().getRequestUriBuilder()
+        URI statistics = getUriInfo().getAbsolutePathBuilder()
                 .path(STATISTICS).build();
         root.put(JSONConstants.USERS_KEY, users.toString());
         root.put(JSONConstants.GROUPS_KEY, groups.toString());

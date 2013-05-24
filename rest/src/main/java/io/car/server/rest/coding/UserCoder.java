@@ -47,15 +47,15 @@ public class UserCoder extends AbstractEntityCoder<User> {
         ObjectNode j = getJsonFactory().objectNode()
                 .put(JSONConstants.NAME_KEY, t.getName());
         if (mediaType.equals(MediaTypes.USER_TYPE)) {
-            URI measurements = getUriInfo().getRequestUriBuilder()
+            URI measurements = getUriInfo().getAbsolutePathBuilder()
                     .path(UserResource.MEASUREMENTS).build();
-            URI groups = getUriInfo().getRequestUriBuilder()
+            URI groups = getUriInfo().getAbsolutePathBuilder()
                     .path(UserResource.GROUPS).build();
-            URI friends = getUriInfo().getRequestUriBuilder()
+            URI friends = getUriInfo().getAbsolutePathBuilder()
                     .path(UserResource.FRIENDS).build();
-            URI tracks = getUriInfo().getRequestUriBuilder()
+            URI tracks = getUriInfo().getAbsolutePathBuilder()
                     .path(UserResource.TRACKS).build();
-            URI statistics = getUriInfo().getRequestUriBuilder()
+            URI statistics = getUriInfo().getAbsolutePathBuilder()
                     .path(UserResource.STATISTICS).build();
             j.put(JSONConstants.MAIL_KEY, t.getMail());
             j.put(JSONConstants.CREATED_KEY,
