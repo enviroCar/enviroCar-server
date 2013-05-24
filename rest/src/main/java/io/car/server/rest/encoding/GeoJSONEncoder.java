@@ -15,35 +15,37 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.coding;
+package io.car.server.rest.encoding;
 
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response.Status;
 
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
+import com.vividsolutions.jts.geom.Geometry;
 
-import io.car.server.core.statistics.Statistic;
-import io.car.server.core.statistics.Statistics;
+import io.car.server.core.exception.GeometryConverterException;
+import io.car.server.rest.util.GeoJSON;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class StatisticsEncoder extends AbstractEntityEncoder<Statistics> {
-    private final EntityEncoder<Statistic> statisticEncoder;
+public class GeoJSONEncoder extends AbstractEntityEncoder<Geometry> {
+    private final GeoJSON geoJSON;
 
     @Inject
-    public StatisticsEncoder(EntityEncoder<Statistic> statisticEncoder) {
-        this.statisticEncoder = statisticEncoder;
+    public GeoJSONEncoder(GeoJSON geoJSON) {
+        this.geoJSON = geoJSON;
     }
 
     @Override
-    public ObjectNode encode(Statistics t, MediaType mt) {
-        ObjectNode root = getJsonFactory().objectNode();
-        ArrayNode statistics = root.putArray(JSONConstants.STATISTICS_KEY);
-        for (Statistic s : t) {
-            statistics.add(statisticEncoder.encode(s, mt));
+    public ObjectNode encode(Geometry t, MediaType mt) {
+        try {
+            return geoJSON.encode(t);
+        } catch (GeometryConverterException ex) {
+            throw new WebApplicationException(ex, Status.INTERNAL_SERVER_ERROR);
         }
-        return root;
     }
+
 }

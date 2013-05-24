@@ -18,12 +18,14 @@
 package io.car.server.rest.guice;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
+import com.google.inject.Scopes;
 import com.google.inject.Singleton;
 import com.google.inject.TypeLiteral;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
@@ -43,24 +45,33 @@ import io.car.server.core.entities.User;
 import io.car.server.core.entities.Users;
 import io.car.server.core.statistics.Statistic;
 import io.car.server.core.statistics.Statistics;
-import io.car.server.rest.coding.CodingFactory;
-import io.car.server.rest.coding.EntityDecoder;
-import io.car.server.rest.coding.EntityEncoder;
-import io.car.server.rest.coding.GeoJSON;
-import io.car.server.rest.coding.GroupCoder;
-import io.car.server.rest.coding.GroupsCoder;
-import io.car.server.rest.coding.MeasurementCoder;
-import io.car.server.rest.coding.MeasurementsCoder;
-import io.car.server.rest.coding.PhenomenonCoder;
-import io.car.server.rest.coding.PhenomenonsCoder;
-import io.car.server.rest.coding.SensorCoder;
-import io.car.server.rest.coding.SensorsCoder;
-import io.car.server.rest.coding.StatisticEncoder;
-import io.car.server.rest.coding.StatisticsEncoder;
-import io.car.server.rest.coding.TrackCoder;
-import io.car.server.rest.coding.TracksCoder;
-import io.car.server.rest.coding.UserCoder;
-import io.car.server.rest.coding.UsersCoder;
+import io.car.server.core.util.GeometryConverter;
+import io.car.server.rest.CodingFactory;
+import io.car.server.rest.decoding.EntityDecoder;
+import io.car.server.rest.decoding.GeoJSONDecoder;
+import io.car.server.rest.decoding.GroupDecoder;
+import io.car.server.rest.decoding.MeasurementDecoder;
+import io.car.server.rest.decoding.PhenomenonDecoder;
+import io.car.server.rest.decoding.SensorDecoder;
+import io.car.server.rest.decoding.TrackDecoder;
+import io.car.server.rest.decoding.UserDecoder;
+import io.car.server.rest.encoding.EntityEncoder;
+import io.car.server.rest.encoding.GeoJSONEncoder;
+import io.car.server.rest.encoding.GroupEncoder;
+import io.car.server.rest.encoding.GroupsEncoder;
+import io.car.server.rest.encoding.MeasurementEncoder;
+import io.car.server.rest.encoding.MeasurementsEncoder;
+import io.car.server.rest.encoding.PhenomenonEncoder;
+import io.car.server.rest.encoding.PhenomenonsEncoder;
+import io.car.server.rest.encoding.SensorEncoder;
+import io.car.server.rest.encoding.SensorsEncoder;
+import io.car.server.rest.encoding.StatisticEncoder;
+import io.car.server.rest.encoding.StatisticsEncoder;
+import io.car.server.rest.encoding.TrackEncoder;
+import io.car.server.rest.encoding.TracksEncoder;
+import io.car.server.rest.encoding.UserEncoder;
+import io.car.server.rest.encoding.UsersEncoder;
+import io.car.server.rest.util.GeoJSON;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
@@ -68,55 +79,57 @@ import io.car.server.rest.coding.UsersCoder;
 public class JerseyCodingModule extends AbstractModule {
     @Override
     protected void configure() {
+        bind(new TypeLiteral<GeometryConverter<JsonNode>>() {
+        }).to(GeoJSON.class).in(Scopes.SINGLETON);
         configureCodingFactory();
     }
 
     protected void configureCodingFactory() {
         FactoryModuleBuilder fmb = new FactoryModuleBuilder();
         bind(fmb, new TypeLiteral<EntityEncoder<User>>() {
-        }, UserCoder.class);
+        }, UserEncoder.class);
         bind(fmb, new TypeLiteral<EntityDecoder<User>>() {
-        }, UserCoder.class);
+        }, UserDecoder.class);
         bind(fmb, new TypeLiteral<EntityEncoder<Users>>() {
-        }, UsersCoder.class);
+        }, UsersEncoder.class);
         bind(fmb, new TypeLiteral<EntityEncoder<Sensor>>() {
-        }, SensorCoder.class);
+        }, SensorEncoder.class);
         bind(fmb, new TypeLiteral<EntityDecoder<Sensor>>() {
-        }, SensorCoder.class);
+        }, SensorDecoder.class);
         bind(fmb, new TypeLiteral<EntityEncoder<Sensors>>() {
-        }, SensorsCoder.class);
+        }, SensorsEncoder.class);
         bind(fmb, new TypeLiteral<EntityEncoder<Track>>() {
-        }, TrackCoder.class);
+        }, TrackEncoder.class);
         bind(fmb, new TypeLiteral<EntityDecoder<Track>>() {
-        }, TrackCoder.class);
+        }, TrackDecoder.class);
         bind(fmb, new TypeLiteral<EntityEncoder<Tracks>>() {
-        }, TracksCoder.class);
+        }, TracksEncoder.class);
         bind(fmb, new TypeLiteral<EntityEncoder<Measurement>>() {
-        }, MeasurementCoder.class);
+        }, MeasurementEncoder.class);
         bind(fmb, new TypeLiteral<EntityDecoder<Measurement>>() {
-        }, MeasurementCoder.class);
+        }, MeasurementDecoder.class);
         bind(fmb, new TypeLiteral<EntityEncoder<Measurements>>() {
-        }, MeasurementsCoder.class);
+        }, MeasurementsEncoder.class);
         bind(fmb, new TypeLiteral<EntityEncoder<Phenomenon>>() {
-        }, PhenomenonCoder.class);
+        }, PhenomenonEncoder.class);
         bind(fmb, new TypeLiteral<EntityDecoder<Phenomenon>>() {
-        }, PhenomenonCoder.class);
+        }, PhenomenonDecoder.class);
         bind(fmb, new TypeLiteral<EntityEncoder<Phenomenons>>() {
-        }, PhenomenonsCoder.class);
+        }, PhenomenonsEncoder.class);
         bind(fmb, new TypeLiteral<EntityEncoder<Group>>() {
-        }, GroupCoder.class);
+        }, GroupEncoder.class);
         bind(fmb, new TypeLiteral<EntityDecoder<Group>>() {
-        }, GroupCoder.class);
+        }, GroupDecoder.class);
         bind(fmb, new TypeLiteral<EntityEncoder<Groups>>() {
-        }, GroupsCoder.class);
+        }, GroupsEncoder.class);
         bind(fmb, new TypeLiteral<EntityEncoder<Statistic>>() {
         }, StatisticEncoder.class);
         bind(fmb, new TypeLiteral<EntityEncoder<Statistics>>() {
         }, StatisticsEncoder.class);
         bind(new TypeLiteral<EntityDecoder<Geometry>>() {
-        }).to(GeoJSON.class);
+        }).to(GeoJSONDecoder.class);
         bind(new TypeLiteral<EntityEncoder<Geometry>>() {
-        }).to(GeoJSON.class);
+        }).to(GeoJSONEncoder.class);
         install(fmb.build(CodingFactory.class));
     }
 

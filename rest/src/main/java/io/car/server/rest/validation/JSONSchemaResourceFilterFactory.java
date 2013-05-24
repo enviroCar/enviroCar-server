@@ -62,7 +62,7 @@ import com.sun.jersey.spi.container.ResourceFilterFactory;
 
 import io.car.server.core.exception.ValidationException;
 import io.car.server.rest.MediaTypes;
-import io.car.server.rest.coding.JSONConstants;
+import io.car.server.rest.JSONConstants;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>

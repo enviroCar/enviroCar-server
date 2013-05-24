@@ -15,25 +15,24 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.coding;
+package io.car.server.rest.decoding;
 
-import com.google.inject.Inject;
+import io.car.server.rest.JSONConstants;
+import javax.ws.rs.core.MediaType;
 
-import io.car.server.core.entities.EntityFactory;
+import com.fasterxml.jackson.databind.JsonNode;
+
+import io.car.server.core.entities.User;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public abstract class AbstractEntityCoder<T> extends AbstractEntityEncoder<T>
-        implements EntityDecoder<T> {
-    private EntityFactory entityFactory;
-
-    public EntityFactory getEntityFactory() {
-        return entityFactory;
-    }
-
-    @Inject
-    public void setEntityFactory(EntityFactory entityFactory) {
-        this.entityFactory = entityFactory;
+public class UserDecoder extends AbstractEntityDecoder<User> {
+    @Override
+    public User decode(JsonNode j, MediaType mediaType) {
+        return getEntityFactory().createUser()
+                .setName(j.path(JSONConstants.NAME_KEY).textValue())
+                .setMail(j.path(JSONConstants.MAIL_KEY).textValue())
+                .setToken(j.path(JSONConstants.TOKEN_KEY).textValue());
     }
 }

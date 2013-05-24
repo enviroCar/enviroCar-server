@@ -15,45 +15,36 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.core.entities;
+package io.car.server.rest.decoding;
 
+import io.car.server.rest.util.GeoJSON;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response.Status;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.google.inject.Inject;
 import com.vividsolutions.jts.geom.Geometry;
 
+import io.car.server.core.exception.GeometryConverterException;
+
 /**
- *
- * @author Arne de Wall <a.dewall@52north.org>
- *
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public interface Track extends BaseEntity {
-    String BBOX = "bbox";
-    String SENSOR = "sensor";
-    String USER = "user";
-    String NAME = "name";
-    String DESCIPTION = "description";
+public class GeoJSONDecoder extends AbstractEntityDecoder<Geometry> {
+    private final GeoJSON geoJSON;
 
-    String getName();
+    @Inject
+    public GeoJSONDecoder(GeoJSON geoJSON) {
+        this.geoJSON = geoJSON;
+    }
 
-    Track setName(String name);
-
-    String getDescription();
-
-    Track setDescription(String description);
-
-    String getIdentifier();
-
-    Track setIdentifier(String id);
-
-    User getUser();
-
-    Track setUser(User user);
-
-    Sensor getSensor();
-
-    Track setSensor(Sensor track);
-
-    Geometry getBbox();
-
-    Track setBbox(Geometry bbox);
-
-    Track setBbox(double minx, double miny, double maxx, double maxy);
+    @Override
+    public Geometry decode(JsonNode j, MediaType mt) {
+        try {
+            return geoJSON.decode(j);
+        } catch (GeometryConverterException ex) {
+            throw new WebApplicationException(ex, Status.BAD_REQUEST);
+        }
+    }
 }

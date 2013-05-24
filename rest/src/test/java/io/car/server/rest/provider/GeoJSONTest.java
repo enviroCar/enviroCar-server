@@ -43,7 +43,7 @@ import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
 
 import io.car.server.core.exception.GeometryConverterException;
-import io.car.server.rest.coding.GeoJSON;
+import io.car.server.rest.util.GeoJSON;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
@@ -123,8 +123,7 @@ public class GeoJSONTest {
         ObjectMapper mapr = new ObjectMapper().setNodeFactory(jsonNodeFactory)
                 .enable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS);
         ObjectWriter writer = mapr.writer().withDefaultPrettyPrinter();
-        GeoJSON conv = new GeoJSON(fac);
-        conv.setJsonFactory(jsonNodeFactory);
+        GeoJSON conv = new GeoJSON(fac, jsonNodeFactory);
         JsonNode json = conv.encode(col);
         writer.writeValue(System.out, json);
         Geometry geom = conv.decode(json);

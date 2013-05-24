@@ -15,8 +15,9 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.coding;
+package io.car.server.rest;
 
+import io.car.server.rest.encoding.EntityEncoder;
 import io.car.server.core.entities.Group;
 import io.car.server.core.entities.Groups;
 import io.car.server.core.entities.Measurement;
@@ -31,6 +32,7 @@ import io.car.server.core.entities.User;
 import io.car.server.core.entities.Users;
 import io.car.server.core.statistics.Statistic;
 import io.car.server.core.statistics.Statistics;
+import io.car.server.rest.decoding.EntityDecoder;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>

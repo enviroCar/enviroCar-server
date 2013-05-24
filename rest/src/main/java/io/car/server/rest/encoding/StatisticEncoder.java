@@ -15,35 +15,40 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.coding;
+package io.car.server.rest.encoding;
 
 import javax.ws.rs.core.MediaType;
 
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 
 import io.car.server.core.entities.Phenomenon;
-import io.car.server.core.entities.Phenomenons;
+import io.car.server.core.statistics.Statistic;
+import io.car.server.rest.JSONConstants;
 
 /**
+ * TODO JavaDoc
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class PhenomenonsCoder extends AbstractEntityEncoder<Phenomenons> {
+public class StatisticEncoder extends AbstractEntityEncoder<Statistic> {
     private final EntityEncoder<Phenomenon> phenomenonEncoder;
 
     @Inject
-    public PhenomenonsCoder(EntityEncoder<Phenomenon> phenomenonEncoder) {
+    public StatisticEncoder(EntityEncoder<Phenomenon> phenomenonEncoder) {
         this.phenomenonEncoder = phenomenonEncoder;
     }
 
     @Override
-    public ObjectNode encode(Phenomenons t, MediaType mediaType) {
-        ObjectNode root = getJsonFactory().objectNode();
-        ArrayNode phenomenons = root.putArray(JSONConstants.PHENOMENONS_KEY);
-        for (Phenomenon u : t) {
-            phenomenons.add(phenomenonEncoder.encode(u, mediaType));
-        }
-        return root;
+    public ObjectNode encode(Statistic t, MediaType mt) {
+        ObjectNode statistic = getJsonFactory().objectNode();
+        statistic.put(JSONConstants.MAX_KEY, t.getMax());
+        statistic.put(JSONConstants.AVG_KEY, t.getMean());
+        statistic.put(JSONConstants.MIN_KEY, t.getMin());
+        statistic.put(JSONConstants.MEASUREMENTS_KEY, t.getMeasurements());
+        statistic.put(JSONConstants.TRACKS_KEY, t.getTracks());
+        statistic.put(JSONConstants.USERS_KEY, t.getUsers());
+        statistic.put(JSONConstants.PHENOMENON_KEY,
+                      phenomenonEncoder.encode(t.getPhenomenon(), mt));
+        return statistic;
     }
 }

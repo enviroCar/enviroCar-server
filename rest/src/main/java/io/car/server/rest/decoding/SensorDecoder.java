@@ -15,33 +15,22 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.coding;
+package io.car.server.rest.decoding;
 
-import java.net.URI;
-
+import io.car.server.rest.JSONConstants;
 import javax.ws.rs.core.MediaType;
 
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.JsonNode;
 
-import io.car.server.core.entities.Group;
-import io.car.server.core.entities.Groups;
+import io.car.server.core.entities.Sensor;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class GroupsCoder extends AbstractEntityEncoder<Groups> {
+public class SensorDecoder extends AbstractEntityDecoder<Sensor> {
     @Override
-    public ObjectNode encode(Groups t, MediaType mediaType) {
-        ObjectNode root = getJsonFactory().objectNode();
-        ArrayNode groups = root.putArray(JSONConstants.GROUPS_KEY);
-        for (Group u : t) {
-            URI uri = getUriInfo().getAbsolutePathBuilder()
-                    .path(u.getName()).build();
-            groups.addObject()
-                    .put(JSONConstants.NAME_KEY, u.getName())
-                    .put(JSONConstants.HREF_KEY, uri.toString());
-        }
-        return root;
+    public Sensor decode(JsonNode j, MediaType mediaType) {
+        return getEntityFactory().createSensor().setName(j
+                .path(JSONConstants.NAME_KEY).textValue());
     }
 }

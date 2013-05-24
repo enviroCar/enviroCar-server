@@ -19,7 +19,7 @@ package io.car.server.rest.provider;
 
 import com.google.inject.Inject;
 
-import io.car.server.rest.coding.CodingFactory;
+import io.car.server.rest.CodingFactory;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>

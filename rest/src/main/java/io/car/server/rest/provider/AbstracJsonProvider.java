@@ -38,7 +38,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 import com.sun.jersey.core.provider.AbstractMessageReaderWriterProvider;
 
-import io.car.server.rest.coding.JSONConstants;
+import io.car.server.rest.JSONConstants;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>

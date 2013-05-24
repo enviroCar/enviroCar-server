@@ -15,15 +15,15 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.coding;
+package io.car.server.rest.decoding;
 
 import javax.ws.rs.core.MediaType;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public interface EntityEncoder<T> {
-    ObjectNode encode(T t, MediaType mt);
+public interface EntityDecoder<T> {
+    T decode(JsonNode j, MediaType mt);
 }

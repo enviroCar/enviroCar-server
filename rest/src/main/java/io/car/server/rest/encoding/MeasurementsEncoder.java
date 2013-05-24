@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.coding;
+package io.car.server.rest.encoding;
 
 import javax.ws.rs.core.MediaType;
 
@@ -33,12 +33,12 @@ import io.car.server.core.util.GeoJSONConstants;
  * @author Christian Autermann <autermann@uni-muenster.de>
  * @author Arne de Wall <a.dewall@52north.org>
  */
-public class MeasurementsCoder implements EntityEncoder<Measurements> {
+public class MeasurementsEncoder implements EntityEncoder<Measurements> {
     private final EntityEncoder<Measurement> measurementEncoder;
     private final JsonNodeFactory factory;
 
     @Inject
-    public MeasurementsCoder(JsonNodeFactory factory,
+    public MeasurementsEncoder(JsonNodeFactory factory,
                              EntityEncoder<Measurement> measurementEncoder) {
         this.measurementEncoder = measurementEncoder;
         this.factory = factory;
