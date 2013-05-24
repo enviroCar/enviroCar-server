@@ -26,7 +26,10 @@ import com.github.jmkgreen.morphia.query.Query;
 import com.google.inject.Inject;
 import com.vividsolutions.jts.geom.Geometry;
 
+import io.car.server.core.dao.MeasurementDao;
 import io.car.server.core.dao.TrackDao;
+import io.car.server.core.entities.Measurement;
+import io.car.server.core.entities.Measurements;
 import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.Track;
 import io.car.server.core.entities.Tracks;
@@ -35,15 +38,18 @@ import io.car.server.core.util.Pagination;
 import io.car.server.mongo.entity.MongoTrack;
 
 /**
- *
+ * 
  * @author Arne de Wall <a.dewall@52north.org>
- *
+ * 
  */
 public class MongoTrackDao extends BasicDAO<MongoTrack, ObjectId> implements
         TrackDao {
+    private final MeasurementDao measurementDao;
+
     @Inject
-    public MongoTrackDao(Datastore ds) {
+    public MongoTrackDao(Datastore ds, MeasurementDao measurementDao) {
         super(MongoTrack.class, ds);
+        this.measurementDao = measurementDao;
     }
 
     @Override
@@ -76,13 +82,20 @@ public class MongoTrackDao extends BasicDAO<MongoTrack, ObjectId> implements
 
     @Override
     public void delete(Track track) {
-        // FIXME remove track reference from measurements
+        Pagination page = new Pagination();
+        do {
+            Measurements measurements = measurementDao.getByTrack(track, page);
+            for (Measurement m : measurements) {
+                m.setTrack(null);
+                measurementDao.save(m);
+            }
+        } while ((page = page.next(page.getSize())) != null);
         delete((MongoTrack) track);
     }
 
     @Override
     public Tracks getByBbox(double minx, double miny, double maxx, double maxy,
-                            Pagination p) {
+            Pagination p) {
         Query<MongoTrack> q = createQuery();
         q.field("measurements.location").within(minx, miny, maxx, maxy);
         return fetch(q, p);
@@ -90,7 +103,7 @@ public class MongoTrackDao extends BasicDAO<MongoTrack, ObjectId> implements
 
     @Override
     public Tracks getByBbox(Geometry bbox, Pagination p) {
-        //FIXME implement
+        // FIXME implement
         throw new UnsupportedOperationException("not yet implemented");
     }
 
@@ -138,8 +151,9 @@ public class MongoTrackDao extends BasicDAO<MongoTrack, ObjectId> implements
 
     @Override
     public void update(Track track) {
-        getDatastore()
-                .update((MongoTrack) track, createUpdateOperations()
-                .set(MongoTrack.LAST_MODIFIED, new DateTime()));
+        getDatastore().update(
+                (MongoTrack) track,
+                createUpdateOperations().set(MongoTrack.LAST_MODIFIED,
+                        new DateTime()));
     }
 }

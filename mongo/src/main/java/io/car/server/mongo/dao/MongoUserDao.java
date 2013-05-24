@@ -17,6 +17,20 @@
  */
 package io.car.server.mongo.dao;
 
+import io.car.server.core.dao.MeasurementDao;
+import io.car.server.core.dao.TrackDao;
+import io.car.server.core.dao.UserDao;
+import io.car.server.core.entities.Group;
+import io.car.server.core.entities.Measurement;
+import io.car.server.core.entities.Measurements;
+import io.car.server.core.entities.Track;
+import io.car.server.core.entities.Tracks;
+import io.car.server.core.entities.User;
+import io.car.server.core.entities.Users;
+import io.car.server.core.util.Pagination;
+import io.car.server.mongo.cache.EntityCache;
+import io.car.server.mongo.entity.MongoUser;
+
 import java.util.concurrent.ExecutionException;
 
 import com.github.jmkgreen.morphia.Datastore;
@@ -27,40 +41,38 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.inject.Inject;
 
-import io.car.server.core.dao.UserDao;
-import io.car.server.core.entities.Group;
-import io.car.server.core.entities.User;
-import io.car.server.core.entities.Users;
-import io.car.server.core.util.Pagination;
-import io.car.server.mongo.cache.EntityCache;
-import io.car.server.mongo.entity.MongoUser;
-
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  * @author Arne de Wall
  */
-public class MongoUserDao extends BasicDAO<MongoUser, String> implements UserDao {
+public class MongoUserDao extends BasicDAO<MongoUser, String> implements
+        UserDao {
     private final LoadingCache<String, MongoUser> cache = CacheBuilder
-            .newBuilder()
-            .maximumSize(1000).build(new CacheLoader<String, MongoUser>() {
-        @Override
-        public MongoUser load(String key) throws UserNotFoundException {
-            MongoUser user =
-                    find(createQuery()
-                    .field(MongoUser.NAME).equal(key))
-                    .get();
-            if (user == null) {
-                throw new UserNotFoundException();
-            } else {
-                return user;
-            }
-        }
-    });
+            .newBuilder().maximumSize(1000)
+            .build(new CacheLoader<String, MongoUser>() {
+                @Override
+                public MongoUser load(String key) throws UserNotFoundException {
+                    MongoUser user = find(
+                            createQuery().field(MongoUser.NAME).equal(key))
+                            .get();
+                    if (user == null) {
+                        throw new UserNotFoundException();
+                    } else {
+                        return user;
+                    }
+                }
+            });
     private final EntityCache<MongoUser> userCache;
+    private final TrackDao trackDao;
+    private final MeasurementDao measurementDao;
+
     @Inject
-    public MongoUserDao(Datastore datastore, EntityCache<MongoUser> userCache) {
+    public MongoUserDao(Datastore datastore, EntityCache<MongoUser> userCache,
+            TrackDao trackDao, MeasurementDao measurementDao) {
         super(MongoUser.class, datastore);
         this.userCache = userCache;
+        this.trackDao = trackDao;
+        this.measurementDao = measurementDao;
     }
 
     @Override
@@ -103,6 +115,24 @@ public class MongoUserDao extends BasicDAO<MongoUser, String> implements UserDao
     @Override
     public void delete(User user) {
         // FIXME remove user from groups, friend lists, measurments and tracks
+        Pagination page = new Pagination();
+        do {
+            Tracks tracks = trackDao.getByUser(user, page);
+            for (Track t : tracks) {
+                t.setUser(null);
+                trackDao.save(t);
+            }
+        } while ((page = page.next(page.getSize())) != null);
+        
+        page = new Pagination();
+        do {
+            for (Measurement m : measurementDao.getByUser(user, page)) {
+                m.setUser(null);
+                measurementDao.save(m);
+            }
+        } while ((page = page.next(page.getSize())) != null);
+        
+        user.getFriends();
         delete((MongoUser) user);
     }
 
@@ -119,7 +149,7 @@ public class MongoUserDao extends BasicDAO<MongoUser, String> implements UserDao
                 .build();
     }
 
-    private class UserNotFoundException extends Exception {
+    private static class UserNotFoundException extends Exception {
         private static final long serialVersionUID = 2040283652624708863L;
     }
 }
