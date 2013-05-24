@@ -44,6 +44,7 @@ import io.car.server.core.dao.StatisticsDao;
 import io.car.server.core.dao.UserDao;
 import io.car.server.core.entities.Phenomenon;
 import io.car.server.core.entities.Phenomenons;
+import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
 import io.car.server.core.statistics.Statistic;
 import io.car.server.core.statistics.Statistics;
@@ -95,7 +96,7 @@ public class MongoStatisticsDao implements StatisticsDao {
     }
 
     @Override
-    public Statistics getStatisticsForTrack(String track) {
+    public Statistics getStatisticsForTrack(Track track) {
         return parseStatistics(aggregate(matchesTrack(track),
                                          project(),
                                          unwind(),
@@ -118,7 +119,7 @@ public class MongoStatisticsDao implements StatisticsDao {
     }
 
     @Override
-    public Statistic getStatisticsForTrack(String track, Phenomenon phenomenon) {
+    public Statistic getStatisticsForTrack(Track track, Phenomenon phenomenon) {
         return parseStatistic(aggregate(matchesTrack(track),
                                         project(),
                                         unwind(),
@@ -144,7 +145,7 @@ public class MongoStatisticsDao implements StatisticsDao {
     }
 
     @Override
-    public Statistics getStatisticsForTrack(String track,
+    public Statistics getStatisticsForTrack(Track track,
                                             Phenomenons phenomenons) {
         return parseStatistics(aggregate(matchesTrack(track),
                                          project(),
@@ -249,8 +250,15 @@ public class MongoStatisticsDao implements StatisticsDao {
     }
 
     protected DBObject matchesTrack(String track) {
-        DBRef ref = mapr
-                .keyToRef(new Key<MongoTrack>(MongoTrack.class, new ObjectId(track)));
+        return matchesTrack(new Key<MongoTrack>(MongoTrack.class, new ObjectId(track)));
+    }
+
+    protected DBObject matchesTrack(Track track) {
+        return matchesTrack(mapr.getKey((MongoTrack) track));
+    }
+
+    protected DBObject matchesTrack(Key<MongoTrack> track) {
+        DBRef ref = mapr.keyToRef(track);
         return new BasicDBObject(Ops.MATCH, new BasicDBObject(MongoMeasurement.TRACK, ref));
     }
 

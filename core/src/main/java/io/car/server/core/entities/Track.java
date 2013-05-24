@@ -48,14 +48,6 @@ public interface Track extends BaseEntity {
 
     Track setUser(User user);
 
-    Measurements getMeasurements();
-
-    Track addMeasurement(Measurement measurement);
-
-    Track addMeasurements(Measurements measurements);
-
-    Track removeMeasurement(Measurement measurement);
-
     Sensor getSensor();
 
     Track setSensor(Sensor track);

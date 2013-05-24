@@ -24,6 +24,8 @@ import org.joda.time.format.DateTimeFormatter;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.google.inject.Inject;
 
+import io.car.server.core.Service;
+
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
@@ -31,6 +33,7 @@ public abstract class AbstractEntityEncoder<T> implements EntityEncoder<T> {
     private UriInfo uriInfo;
     private JsonNodeFactory jsonFactory;
     private DateTimeFormatter dateTimeFormat;
+    private Service service;
 
     public UriInfo getUriInfo() {
         return uriInfo;
@@ -57,5 +60,14 @@ public abstract class AbstractEntityEncoder<T> implements EntityEncoder<T> {
     @Inject
     public void setDateTimeFormat(DateTimeFormatter dateTimeFormat) {
         this.dateTimeFormat = dateTimeFormat;
+    }
+
+    public Service getService() {
+        return service;
+    }
+
+    @Inject
+    public void setService(Service service) {
+        this.service = service;
     }
 }

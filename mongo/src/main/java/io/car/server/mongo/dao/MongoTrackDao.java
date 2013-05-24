@@ -21,21 +21,17 @@ import org.bson.types.ObjectId;
 import org.joda.time.DateTime;
 
 import com.github.jmkgreen.morphia.Datastore;
-import com.github.jmkgreen.morphia.Key;
 import com.github.jmkgreen.morphia.dao.BasicDAO;
 import com.github.jmkgreen.morphia.query.Query;
-import com.github.jmkgreen.morphia.query.UpdateOperations;
 import com.google.inject.Inject;
 import com.vividsolutions.jts.geom.Geometry;
 
 import io.car.server.core.dao.TrackDao;
-import io.car.server.core.entities.Measurement;
 import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.Track;
 import io.car.server.core.entities.Tracks;
 import io.car.server.core.entities.User;
 import io.car.server.core.util.Pagination;
-import io.car.server.mongo.entity.MongoMeasurement;
 import io.car.server.mongo.entity.MongoTrack;
 
 /**
@@ -69,16 +65,6 @@ public class MongoTrackDao extends BasicDAO<MongoTrack, ObjectId> implements
     @Override
     public Track create(Track track) {
         return save(track);
-    }
-
-    @Override
-    public void addMeasurement(String track, Measurement m) {
-        ObjectId tid = new ObjectId(track);
-        Key<MongoTrack> key = new Key<MongoTrack>(MongoTrack.class, tid);
-        UpdateOperations<MongoTrack> add = createUpdateOperations()
-                .set(MongoTrack.LAST_MODIFIED, new DateTime())
-                .add(MongoTrack.MEASUREMENTS, (MongoMeasurement) m);
-        getDatastore().update(key, add);
     }
 
     @Override
@@ -147,5 +133,12 @@ public class MongoTrackDao extends BasicDAO<MongoTrack, ObjectId> implements
         }
         return createQuery().field(MongoTrack.ID).equal(oid)
                 .retrievedFields(true, MongoTrack.SENSOR).get().getSensor();
+    }
+
+    @Override
+    public void update(Track track) {
+        getDatastore()
+                .update((MongoTrack) track, createUpdateOperations()
+                .set(MongoTrack.LAST_MODIFIED, new DateTime()));
     }
 }

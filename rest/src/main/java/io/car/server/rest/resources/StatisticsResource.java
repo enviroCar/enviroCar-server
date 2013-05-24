@@ -27,6 +27,7 @@ import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
 import io.car.server.core.entities.Phenomenon;
+import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
 import io.car.server.core.exception.PhenomenonNotFoundException;
 import io.car.server.core.statistics.Statistic;
@@ -41,12 +42,12 @@ import io.car.server.rest.validation.Schema;
  */
 public class StatisticsResource extends AbstractResource {
     private static final String PHENOMENON = "{phenomenon}";
-    private final String track;
+    private final Track track;
     private final User user;
     private final StatisticsService statisticService;
 
     @Inject
-    public StatisticsResource(@Assisted("track") @Nullable String track,
+    public StatisticsResource(@Assisted @Nullable Track track,
                               @Assisted @Nullable User user,
                               StatisticsService statisticService) {
         this.track = track;

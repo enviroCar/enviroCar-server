@@ -19,7 +19,6 @@ package io.car.server.core.dao;
 
 import com.vividsolutions.jts.geom.Geometry;
 
-import io.car.server.core.entities.Measurement;
 import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.Track;
 import io.car.server.core.entities.Tracks;
@@ -36,6 +35,8 @@ public interface TrackDao {
 
     Track save(Track track);
 
+    void update(Track track);
+
     void delete(Track track);
 
     Track getById(String id);
@@ -48,8 +49,6 @@ public interface TrackDao {
                      Pagination p);
 
     Tracks getByBbox(Geometry bbox, Pagination p);
-
-    void addMeasurement(String track, Measurement m);
 
     Tracks get(Pagination p);
 

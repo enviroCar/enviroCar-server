@@ -93,6 +93,7 @@ public class TracksResource extends AbstractResource {
     @Path(TRACK)
     public TrackResource user(@PathParam("track") String track)
             throws TrackNotFoundException {
-        return getResourceFactory().createTrackResource(track);
+        return getResourceFactory().createTrackResource(getService()
+                .getTrack(track));
     }
 }

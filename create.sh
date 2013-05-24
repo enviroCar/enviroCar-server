@@ -3,11 +3,11 @@
 #URL=http://giv-car.uni-muenster.de:8080/dev
 URL=http://localhost:8080/webapp
 
-USERS=10
+USERS=5
 GROUPS=5
 TRACKS=2
-MEASUREMENTS=3600
-SENSORS=10
+MEASUREMENTS=20
+SENSORS=5
 
 # users
 for i in {1..$USERS}; do 
@@ -113,12 +113,7 @@ for user in {1..$USERS}; do
 							\"testphenomenon2\": { \"value\": $(($RANDOM / 1000.0)) },
 							\"testphenomenon3\": { \"value\": $(($RANDOM / 1000.0)) },
 							\"testphenomenon4\": { \"value\": $(($RANDOM / 1000.0)) },
-							\"testphenomenon5\": { \"value\": $(($RANDOM / 1000.0)) },
-							\"testphenomenon6\": { \"value\": $(($RANDOM / 1000.0)) },
-							\"testphenomenon7\": { \"value\": $(($RANDOM / 1000.0)) },
-							\"testphenomenon8\": { \"value\": $(($RANDOM / 1000.0)) },
-							\"testphenomenon9\": { \"value\": $(($RANDOM / 1000.0)) },
-							\"testphenomenon10\": { \"value\": $(($RANDOM / 1000.0)) }
+							\"testphenomenon5\": { \"value\": $(($RANDOM / 1000.0)) }
 						}
 					}
 				}"

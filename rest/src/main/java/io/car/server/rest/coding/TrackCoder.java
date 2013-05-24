@@ -95,8 +95,9 @@ public class TrackCoder extends AbstractEntityCoder<Track> {
                 .path(TrackResource.STATISTICS).build();
         properties.put(JSONConstants.STATISTICS_KEY,
                        statistics.toString());
+        Measurements values = getService().getMeasurementsByTrack(t, null);
         JsonNode features = measurementsEncoder
-                .encode(t.getMeasurements(), mediaType)
+                .encode(values, mediaType)
                 .path(GeoJSONConstants.FEATURES_KEY);
         track.put(GeoJSONConstants.FEATURES_KEY, features);
         return track;

@@ -72,7 +72,10 @@ public class MongoMeasurementDao extends BasicDAO<MongoMeasurement, String>
 
     @Override
     public Measurements getByTrack(Track track, Pagination p) {
-        return track.getMeasurements();
+        Query<MongoMeasurement> q =
+                createQuery().field(MongoMeasurement.TRACK).equal(track)
+                .order(MongoMeasurement.TIME);
+        return fetch(q, p);
     }
 
     @Override
@@ -92,7 +95,7 @@ public class MongoMeasurementDao extends BasicDAO<MongoMeasurement, String>
 
     @Override
     public Measurements get(Pagination p) {
-        return fetch(createQuery().order(MongoMeasurement.CREATION_DATE), p);
+        return fetch(createQuery().order(MongoMeasurement.TIME), p);
     }
 
     @Override
@@ -113,10 +116,15 @@ public class MongoMeasurementDao extends BasicDAO<MongoMeasurement, String>
     }
 
     protected Measurements fetch(Query<MongoMeasurement> q, Pagination p) {
-        long count = count(q);
-        q.limit(p.getLimit()).offset(p.getOffset());
+        long count = 0;
+        if (p != null) {
+            count = count(q);
+            q.limit(p.getLimit()).offset(p.getOffset());
+        }
         Iterable<MongoMeasurement> entities = find(q).fetch();
-        return Measurements.from(entities).withPagination(p).withElements(count)
+        return Measurements.from(entities)
+                .withPagination(p)
+                .withElements(count)
                 .build();
     }
 }

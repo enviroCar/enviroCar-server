@@ -17,8 +17,6 @@
  */
 package io.car.server.mongo.entity;
 
-import java.util.List;
-
 import org.bson.types.ObjectId;
 
 import com.github.jmkgreen.morphia.Key;
@@ -26,17 +24,13 @@ import com.github.jmkgreen.morphia.annotations.Embedded;
 import com.github.jmkgreen.morphia.annotations.Entity;
 import com.github.jmkgreen.morphia.annotations.Indexed;
 import com.github.jmkgreen.morphia.annotations.Property;
-import com.github.jmkgreen.morphia.annotations.Reference;
 import com.github.jmkgreen.morphia.annotations.Transient;
 import com.github.jmkgreen.morphia.utils.IndexDirection;
-import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 
-import io.car.server.core.entities.Measurement;
-import io.car.server.core.entities.Measurements;
 import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
@@ -51,8 +45,6 @@ public class MongoTrack extends MongoBaseEntity<MongoTrack> implements Track {
     private Key<MongoUser> user;
     @Property(SENSOR)
     private Key<MongoSensor> sensor;
-    @Reference(value = MEASUREMENTS, lazy = true)
-    private List<MongoMeasurement> measurements = Lists.newLinkedList();
     @Property(DESCIPTION)
     private String description;
     @Property(NAME)
@@ -67,39 +59,6 @@ public class MongoTrack extends MongoBaseEntity<MongoTrack> implements Track {
     @Transient
     private GeometryFactory factory;
 
-
-    @Override
-    public MongoTrack addMeasurement(Measurement measurement) {
-        this.measurements.add((MongoMeasurement) measurement);
-        return this;
-    }
-
-    @Override
-    public MongoTrack removeMeasurement(Measurement measurement) {
-        this.measurements.remove((MongoMeasurement) measurement);
-        return this;
-    }
-
-    @Override
-    public Measurements getMeasurements() {
-        return Measurements.from(this.measurements).build();
-    }
-
-    public MongoTrack setMeasurements(Measurements measurements) {
-        this.measurements.clear();
-        for (Measurement m : measurements) {
-            this.measurements.add((MongoMeasurement) m);
-        }
-        return this;
-    }
-
-    @Override
-    public MongoTrack addMeasurements(Measurements measurements) {
-        for (Measurement m : measurements) {
-            this.measurements.add((MongoMeasurement) m);
-        }
-        return this;
-    }
 
     @Override
     public MongoTrack setBbox(Geometry bbox) {
