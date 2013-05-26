@@ -24,8 +24,8 @@ import javax.ws.rs.core.MediaType;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import io.car.server.core.entities.Sensor;
-import io.car.server.rest.MediaTypes;
 import io.car.server.rest.JSONConstants;
+import io.car.server.rest.MediaTypes;
 import io.car.server.rest.resources.RootResource;
 import io.car.server.rest.resources.SensorsResource;
 
@@ -38,7 +38,7 @@ public class SensorEncoder extends AbstractEntityEncoder<Sensor> {
     public ObjectNode encode(Sensor t, MediaType mediaType) {
         ObjectNode user = getJsonFactory().objectNode()
                 .put(JSONConstants.NAME_KEY, t.getName());
-        if (mediaType.equals(MediaTypes.PHENOMENON_TYPE)) {
+        if (mediaType.equals(MediaTypes.SENSOR_TYPE)) {
             user.put(JSONConstants.CREATED_KEY, getDateTimeFormat().print(t
                     .getCreationDate()));
             user.put(JSONConstants.MODIFIED_KEY, getDateTimeFormat().print(t
