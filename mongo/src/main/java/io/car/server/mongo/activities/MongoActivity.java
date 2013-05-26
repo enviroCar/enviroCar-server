@@ -50,9 +50,9 @@ public class MongoActivity extends MongoEntity<MongoActivity>
     private ActivityType type;
 
     @Inject
-    public MongoActivity(@Assisted MongoUser user,
+    public MongoActivity(@Assisted User user,
                          @Assisted ActivityType type) {
-        this.user = user;
+        this.user = (MongoUser) user;
         this.type = type;
     }
 

@@ -35,10 +35,10 @@ public class MongoUserActivity extends MongoActivity implements UserActivity {
 
     @Inject
     public MongoUserActivity(@Assisted ActivityType type,
-                             @Assisted("user") MongoUser user,
-                             @Assisted("other") MongoUser other) {
+                             @Assisted("user") User user,
+                             @Assisted("other") User other) {
         super(user, type);
-        this.other = other;
+        this.other = (MongoUser) other;
     }
 
     public MongoUserActivity() {

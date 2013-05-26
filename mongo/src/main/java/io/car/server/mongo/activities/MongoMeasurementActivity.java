@@ -24,8 +24,8 @@ import com.google.inject.assistedinject.Assisted;
 import io.car.server.core.activities.ActivityType;
 import io.car.server.core.activities.MeasurementActivity;
 import io.car.server.core.entities.Measurement;
+import io.car.server.core.entities.User;
 import io.car.server.mongo.entity.MongoMeasurement;
-import io.car.server.mongo.entity.MongoUser;
 
 public class MongoMeasurementActivity extends MongoActivity implements
         MeasurementActivity {
@@ -34,10 +34,10 @@ public class MongoMeasurementActivity extends MongoActivity implements
 
     @Inject
     public MongoMeasurementActivity(@Assisted ActivityType type,
-                                    @Assisted MongoUser user,
-                                    @Assisted MongoMeasurement measurement) {
+                                    @Assisted User user,
+                                    @Assisted Measurement measurement) {
         super(user, type);
-        this.measurement = measurement;
+        this.measurement = (MongoMeasurement) measurement;
     }
 
     public MongoMeasurementActivity() {

@@ -24,8 +24,8 @@ import com.google.inject.assistedinject.Assisted;
 import io.car.server.core.activities.ActivityType;
 import io.car.server.core.activities.TrackActivity;
 import io.car.server.core.entities.Track;
+import io.car.server.core.entities.User;
 import io.car.server.mongo.entity.MongoTrack;
-import io.car.server.mongo.entity.MongoUser;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
@@ -36,10 +36,10 @@ public class MongoTrackActivity extends MongoActivity implements TrackActivity {
 
     @Inject
     public MongoTrackActivity(@Assisted ActivityType type,
-                              @Assisted MongoUser user,
-                              @Assisted MongoTrack track) {
+                              @Assisted User user,
+                              @Assisted Track track) {
         super(user, type);
-        this.track = track;
+        this.track = (MongoTrack) track;
     }
 
     public MongoTrackActivity() {

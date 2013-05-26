@@ -24,8 +24,8 @@ import com.google.inject.assistedinject.Assisted;
 import io.car.server.core.activities.ActivityType;
 import io.car.server.core.activities.GroupActivity;
 import io.car.server.core.entities.Group;
+import io.car.server.core.entities.User;
 import io.car.server.mongo.entity.MongoGroup;
-import io.car.server.mongo.entity.MongoUser;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
@@ -36,10 +36,10 @@ public class MongoGroupActivity extends MongoActivity implements GroupActivity {
 
     @Inject
     public MongoGroupActivity(@Assisted ActivityType type,
-                              @Assisted MongoUser user,
-                              @Assisted MongoGroup group) {
+                              @Assisted User user,
+                              @Assisted Group group) {
         super(user, type);
-        this.group = group;
+        this.group = (MongoGroup) group;
     }
 
     public MongoGroupActivity() {
