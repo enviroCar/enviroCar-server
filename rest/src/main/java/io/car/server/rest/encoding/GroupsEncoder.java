@@ -27,6 +27,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.car.server.core.entities.Group;
 import io.car.server.core.entities.Groups;
 import io.car.server.rest.JSONConstants;
+import io.car.server.rest.resources.GroupsResource;
+import io.car.server.rest.resources.RootResource;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
@@ -37,8 +39,11 @@ public class GroupsEncoder extends AbstractEntityEncoder<Groups> {
         ObjectNode root = getJsonFactory().objectNode();
         ArrayNode groups = root.putArray(JSONConstants.GROUPS_KEY);
         for (Group u : t) {
-            URI uri = getUriInfo().getAbsolutePathBuilder()
-                    .path(u.getName()).build();
+            URI uri = getUriInfo().getBaseUriBuilder()
+                    .path(RootResource.class)
+                    .path(RootResource.GROUPS)
+                    .path(GroupsResource.GROUP)
+                    .build(u.getName());
             groups.addObject()
                     .put(JSONConstants.NAME_KEY, u.getName())
                     .put(JSONConstants.HREF_KEY, uri.toString());
