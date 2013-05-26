@@ -17,11 +17,13 @@
  */
 package io.car.server.mongo.util;
 
+import com.mongodb.QueryOperators;
+
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface Ops {
-    String IN = "$in";
+    String IN = QueryOperators.IN;
     String MATCH = "$match";
     String UNWIND = "$unwind";
     String AVG = "$avg";

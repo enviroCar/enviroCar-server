@@ -15,15 +15,22 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.coding;
+package io.car.server.rest.decoding;
 
+import io.car.server.rest.JSONConstants;
 import javax.ws.rs.core.MediaType;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
+import io.car.server.core.entities.Sensor;
+
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public interface EntityDecoder<T> {
-    T decode(JsonNode j, MediaType mt);
+public class SensorDecoder extends AbstractEntityDecoder<Sensor> {
+    @Override
+    public Sensor decode(JsonNode j, MediaType mediaType) {
+        return getEntityFactory().createSensor().setName(j
+                .path(JSONConstants.NAME_KEY).textValue());
+    }
 }

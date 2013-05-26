@@ -15,47 +15,48 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.coding;
+package io.car.server.rest.encoding;
 
 import java.net.URI;
 
 import javax.ws.rs.core.MediaType;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import io.car.server.core.entities.Sensor;
+import io.car.server.core.entities.Phenomenon;
 import io.car.server.rest.MediaTypes;
+import io.car.server.rest.JSONConstants;
+import io.car.server.rest.resources.PhenomenonResource;
+import io.car.server.rest.resources.PhenomenonsResource;
 import io.car.server.rest.resources.RootResource;
-import io.car.server.rest.resources.SensorsResource;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class SensorCoder extends AbstractEntityCoder<Sensor> {
+public class PhenomenonEncoder extends AbstractEntityEncoder<Phenomenon> {
     @Override
-    public Sensor decode(JsonNode j, MediaType mediaType) {
-        return getEntityFactory().createSensor().setName(j
-                .path(JSONConstants.NAME_KEY).textValue());
-    }
-
-    @Override
-    public ObjectNode encode(Sensor t, MediaType mediaType) {
-        ObjectNode user = getJsonFactory().objectNode()
+    public ObjectNode encode(Phenomenon t, MediaType mediaType) {
+        ObjectNode phenomenon = getJsonFactory().objectNode()
                 .put(JSONConstants.NAME_KEY, t.getName());
         if (mediaType.equals(MediaTypes.PHENOMENON_TYPE)) {
-            user.put(JSONConstants.CREATED_KEY, getDateTimeFormat().print(t
-                    .getCreationDate()));
-            user.put(JSONConstants.MODIFIED_KEY, getDateTimeFormat().print(t
-                    .getLastModificationDate()));
+            if (t.getUnit() != null) {
+                phenomenon.put(JSONConstants.UNIT_KEY, t.getUnit());
+            }
+            phenomenon.put(JSONConstants.CREATED_KEY, getDateTimeFormat()
+                    .print(t.getCreationDate()));
+            phenomenon.put(JSONConstants.MODIFIED_KEY, getDateTimeFormat()
+                    .print(t.getLastModificationDate()));
+            URI stats = getUriInfo().getAbsolutePathBuilder()
+                    .path(PhenomenonResource.STATISTIC).build();
+            phenomenon.put(JSONConstants.STATISTIC_KEY, stats.toString());
         } else {
             URI href = getUriInfo().getBaseUriBuilder()
                     .path(RootResource.class)
-                    .path(RootResource.SENSORS)
-                    .path(SensorsResource.SENSOR)
+                    .path(RootResource.PHENOMENONS)
+                    .path(PhenomenonsResource.PHENOMENON)
                     .build(t.getName());
-            user.put(JSONConstants.HREF_KEY, href.toString());
+            phenomenon.put(JSONConstants.HREF_KEY, href.toString());
         }
-        return user;
+        return phenomenon;
     }
 }

@@ -15,35 +15,15 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.coding;
+package io.car.server.rest.encoding;
 
 import javax.ws.rs.core.MediaType;
 
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.inject.Inject;
-
-import io.car.server.core.statistics.Statistic;
-import io.car.server.core.statistics.Statistics;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class StatisticsEncoder extends AbstractEntityEncoder<Statistics> {
-    private final EntityEncoder<Statistic> statisticEncoder;
-
-    @Inject
-    public StatisticsEncoder(EntityEncoder<Statistic> statisticEncoder) {
-        this.statisticEncoder = statisticEncoder;
-    }
-
-    @Override
-    public ObjectNode encode(Statistics t, MediaType mt) {
-        ObjectNode root = getJsonFactory().objectNode();
-        ArrayNode statistics = root.putArray(JSONConstants.STATISTICS_KEY);
-        for (Statistic s : t) {
-            statistics.add(statisticEncoder.encode(s, mt));
-        }
-        return root;
-    }
+public interface EntityEncoder<T> {
+    ObjectNode encode(T t, MediaType mt);
 }

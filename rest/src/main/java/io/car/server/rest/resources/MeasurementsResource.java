@@ -35,6 +35,7 @@ import com.google.inject.assistedinject.Assisted;
 
 import io.car.server.core.entities.Measurement;
 import io.car.server.core.entities.Measurements;
+import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
 import io.car.server.core.exception.MeasurementNotFoundException;
 import io.car.server.core.exception.ResourceAlreadyExistException;
@@ -53,11 +54,11 @@ import io.car.server.rest.validation.Schema;
  */
 public class MeasurementsResource extends AbstractResource {
     public static final String MEASUREMENT = "{measurement}";
-    private final String track;
+    private final Track track;
     private final User user;
 
     @Inject
-    public MeasurementsResource(@Assisted("track") @Nullable String track,
+    public MeasurementsResource(@Assisted @Nullable Track track,
                                 @Assisted @Nullable User user) {
         this.track = track;
         this.user = user;
@@ -78,7 +79,7 @@ public class MeasurementsResource extends AbstractResource {
                 return getService().getMeasurements(user, p);
             }
         } else {
-            return getService().getMeasurementsByTrack(track);
+            return getService().getMeasurementsByTrack(track, p);
         }
     }
 
@@ -92,7 +93,7 @@ public class MeasurementsResource extends AbstractResource {
         Measurement m;
         User cur = getService().getUser(getCurrentUser());
         if (track != null) {
-            if (!canModifyUser(getService().getUserForTrack(track).getName())) {
+            if (!canModifyUser(track.getUser())) {
                 throw new WebApplicationException(Status.FORBIDDEN);
             }
             m = getService().createMeasurement(track, measurement.setUser(cur));

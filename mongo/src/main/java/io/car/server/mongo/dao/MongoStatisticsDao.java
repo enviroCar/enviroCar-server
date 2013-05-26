@@ -38,12 +38,10 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 
-import io.car.server.core.dao.MeasurementDao;
-import io.car.server.core.dao.PhenomenonDao;
 import io.car.server.core.dao.StatisticsDao;
-import io.car.server.core.dao.UserDao;
 import io.car.server.core.entities.Phenomenon;
 import io.car.server.core.entities.Phenomenons;
+import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
 import io.car.server.core.statistics.Statistic;
 import io.car.server.core.statistics.Statistics;
@@ -75,27 +73,17 @@ public class MongoStatisticsDao implements StatisticsDao {
     protected static String path(String first, String second, String... paths) {
         return Joiner.on(".").join(first, second, (Object[]) paths);
     }
-    private final MongoMeasurementDao measurements;
-    private final MongoUserDao users;
-    private final MongoPhenomenonDao phens;
     private final Datastore db;
     private final Mapper mapr;
 
     @Inject
-    public MongoStatisticsDao(Mapper mapr,
-                              Datastore db,
-                              PhenomenonDao phenomenonDao,
-                              UserDao userDao,
-                              MeasurementDao measurementDao) {
-        this.measurements = (MongoMeasurementDao) measurementDao;
-        this.phens = (MongoPhenomenonDao) phenomenonDao;
-        this.users = (MongoUserDao) userDao;
+    public MongoStatisticsDao(Mapper mapr, Datastore db) {
         this.db = db;
         this.mapr = mapr;
     }
 
     @Override
-    public Statistics getStatisticsForTrack(String track) {
+    public Statistics getStatisticsForTrack(Track track) {
         return parseStatistics(aggregate(matchesTrack(track),
                                          project(),
                                          unwind(),
@@ -118,7 +106,7 @@ public class MongoStatisticsDao implements StatisticsDao {
     }
 
     @Override
-    public Statistic getStatisticsForTrack(String track, Phenomenon phenomenon) {
+    public Statistic getStatisticsForTrack(Track track, Phenomenon phenomenon) {
         return parseStatistic(aggregate(matchesTrack(track),
                                         project(),
                                         unwind(),
@@ -144,7 +132,7 @@ public class MongoStatisticsDao implements StatisticsDao {
     }
 
     @Override
-    public Statistics getStatisticsForTrack(String track,
+    public Statistics getStatisticsForTrack(Track track,
                                             Phenomenons phenomenons) {
         return parseStatistics(aggregate(matchesTrack(track),
                                          project(),
@@ -173,7 +161,7 @@ public class MongoStatisticsDao implements StatisticsDao {
 
     protected AggregationOutput aggregate(DBObject firstOp,
                                           DBObject... additionalOps) {
-        AggregationOutput result = measurements.getCollection()
+        AggregationOutput result = db.getCollection(MongoMeasurement.class)
                 .aggregate(firstOp, additionalOps);
         result.getCommandResult().throwOnError();
         return result;
@@ -249,8 +237,15 @@ public class MongoStatisticsDao implements StatisticsDao {
     }
 
     protected DBObject matchesTrack(String track) {
-        DBRef ref = mapr
-                .keyToRef(new Key<MongoTrack>(MongoTrack.class, new ObjectId(track)));
+        return matchesTrack(new Key<MongoTrack>(MongoTrack.class, new ObjectId(track)));
+    }
+
+    protected DBObject matchesTrack(Track track) {
+        return matchesTrack(mapr.getKey((MongoTrack) track));
+    }
+
+    protected DBObject matchesTrack(Key<MongoTrack> track) {
+        DBRef ref = mapr.keyToRef(track);
         return new BasicDBObject(Ops.MATCH, new BasicDBObject(MongoMeasurement.TRACK, ref));
     }
 

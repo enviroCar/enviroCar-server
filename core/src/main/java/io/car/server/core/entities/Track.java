@@ -26,7 +26,6 @@ import com.vividsolutions.jts.geom.Geometry;
  */
 public interface Track extends BaseEntity {
     String BBOX = "bbox";
-    String MEASUREMENTS = "measurements";
     String SENSOR = "sensor";
     String USER = "user";
     String NAME = "name";
@@ -47,14 +46,6 @@ public interface Track extends BaseEntity {
     User getUser();
 
     Track setUser(User user);
-
-    Measurements getMeasurements();
-
-    Track addMeasurement(Measurement measurement);
-
-    Track addMeasurements(Measurements measurements);
-
-    Track removeMeasurement(Measurement measurement);
 
     Sensor getSensor();
 

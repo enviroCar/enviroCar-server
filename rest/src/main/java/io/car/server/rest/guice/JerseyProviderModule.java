@@ -17,13 +17,9 @@
  */
 package io.car.server.rest.guice;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
-import com.google.inject.TypeLiteral;
 
-import io.car.server.core.util.GeometryConverter;
-import io.car.server.rest.coding.GeoJSON;
 import io.car.server.rest.mapper.IllegalModificationExceptionMapper;
 import io.car.server.rest.mapper.JsonValidationExceptionMapper;
 import io.car.server.rest.mapper.ResourceAlreadyExistExceptionMapper;
@@ -51,8 +47,6 @@ import io.car.server.rest.provider.UsersProvider;
 public class JerseyProviderModule extends AbstractModule {
     @Override
     protected void configure() {
-        bind(new TypeLiteral<GeometryConverter<JsonNode>>() {
-        }).to(GeoJSON.class).in(Scopes.SINGLETON);
         bind(GroupProvider.class).in(Scopes.SINGLETON);
         bind(GroupsProvider.class).in(Scopes.SINGLETON);
         bind(UserProvider.class).in(Scopes.SINGLETON);

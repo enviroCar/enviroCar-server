@@ -15,39 +15,30 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.coding;
-
-import javax.ws.rs.core.UriInfo;
+package io.car.server.rest.decoding;
 
 import org.joda.time.format.DateTimeFormatter;
 
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.google.inject.Inject;
+
+import io.car.server.core.Service;
+import io.car.server.core.entities.EntityFactory;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public abstract class AbstractEntityEncoder<T> implements EntityEncoder<T> {
-    private UriInfo uriInfo;
-    private JsonNodeFactory jsonFactory;
+public abstract class AbstractEntityDecoder<T> implements EntityDecoder<T> {
     private DateTimeFormatter dateTimeFormat;
+    private Service service;
+    private EntityFactory entityFactory;
 
-    public UriInfo getUriInfo() {
-        return uriInfo;
+    public EntityFactory getEntityFactory() {
+        return entityFactory;
     }
 
     @Inject
-    public void setUriInfo(UriInfo uriInfo) {
-        this.uriInfo = uriInfo;
-    }
-
-    public JsonNodeFactory getJsonFactory() {
-        return jsonFactory;
-    }
-
-    @Inject
-    public void setJsonFactory(JsonNodeFactory jsonFactory) {
-        this.jsonFactory = jsonFactory;
+    public void setEntityFactory(EntityFactory entityFactory) {
+        this.entityFactory = entityFactory;
     }
 
     public DateTimeFormatter getDateTimeFormat() {
@@ -57,5 +48,14 @@ public abstract class AbstractEntityEncoder<T> implements EntityEncoder<T> {
     @Inject
     public void setDateTimeFormat(DateTimeFormatter dateTimeFormat) {
         this.dateTimeFormat = dateTimeFormat;
+    }
+
+    public Service getService() {
+        return service;
+    }
+
+    @Inject
+    public void setService(Service service) {
+        this.service = service;
     }
 }

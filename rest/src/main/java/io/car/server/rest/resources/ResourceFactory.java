@@ -24,6 +24,7 @@ import com.google.inject.assistedinject.Assisted;
 import io.car.server.core.entities.Measurement;
 import io.car.server.core.entities.Phenomenon;
 import io.car.server.core.entities.Sensor;
+import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
 
 /**
@@ -37,6 +38,9 @@ public interface ResourceFactory {
 
     FriendsResource createFriendsResource(User user);
 
+    FriendResource createFriendResource(@Assisted("user") User user,
+                                        @Assisted("friend") User friend);
+
     GroupResource createGroupResource(
             @Assisted("group") String group);
 
@@ -48,8 +52,7 @@ public interface ResourceFactory {
     GroupMembersResource createGroupMembersResource(
             @Assisted("group") String group);
 
-    TrackResource createTrackResource(
-            @Assisted("track") String track);
+    TrackResource createTrackResource(Track track);
 
     TracksResource createTracksResource(
             @Nullable User user);
@@ -57,11 +60,11 @@ public interface ResourceFactory {
     MeasurementResource createMeasurementResource(
             Measurement measurement,
             @Nullable User user,
-            @Nullable @Assisted("track") String track);
+            @Nullable Track track);
 
     MeasurementsResource createMeasurementsResource(
             @Nullable User user,
-            @Nullable @Assisted("track") String track);
+            @Nullable Track track);
 
     PhenomenonResource createPhenomenonResource(Phenomenon phenomenon);
 
@@ -71,6 +74,6 @@ public interface ResourceFactory {
 
     SensorsResource createSensorsResource();
 
-    StatisticsResource createStatisticsResource(@Assisted("track") String track,
-                                                User user);
+    StatisticsResource createStatisticsResource(@Nullable Track track,
+                                                @Nullable User user);
 }

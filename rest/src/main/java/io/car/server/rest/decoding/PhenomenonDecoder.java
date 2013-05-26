@@ -15,35 +15,23 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.coding;
+package io.car.server.rest.decoding;
 
+import io.car.server.rest.JSONConstants;
 import javax.ws.rs.core.MediaType;
 
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.inject.Inject;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import io.car.server.core.entities.Phenomenon;
-import io.car.server.core.entities.Phenomenons;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class PhenomenonsCoder extends AbstractEntityEncoder<Phenomenons> {
-    private final EntityEncoder<Phenomenon> phenomenonEncoder;
-
-    @Inject
-    public PhenomenonsCoder(EntityEncoder<Phenomenon> phenomenonEncoder) {
-        this.phenomenonEncoder = phenomenonEncoder;
-    }
-
+public class PhenomenonDecoder extends AbstractEntityDecoder<Phenomenon> {
     @Override
-    public ObjectNode encode(Phenomenons t, MediaType mediaType) {
-        ObjectNode root = getJsonFactory().objectNode();
-        ArrayNode phenomenons = root.putArray(JSONConstants.PHENOMENONS_KEY);
-        for (Phenomenon u : t) {
-            phenomenons.add(phenomenonEncoder.encode(u, mediaType));
-        }
-        return root;
+    public Phenomenon decode(JsonNode j, MediaType mediaType) {
+        return getEntityFactory().createPhenomenon()
+                .setName(j.path(JSONConstants.NAME_KEY).textValue())
+                .setUnit(j.path(JSONConstants.UNIT_KEY).textValue());
     }
 }

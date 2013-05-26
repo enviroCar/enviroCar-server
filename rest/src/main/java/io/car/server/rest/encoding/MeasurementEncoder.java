@@ -15,103 +15,38 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.coding;
-
-import java.util.Iterator;
-import java.util.Map.Entry;
+package io.car.server.rest.encoding;
 
 import javax.ws.rs.core.MediaType;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 import com.vividsolutions.jts.geom.Geometry;
 
-import io.car.server.core.dao.PhenomenonDao;
-import io.car.server.core.dao.SensorDao;
 import io.car.server.core.entities.Measurement;
 import io.car.server.core.entities.MeasurementValue;
-import io.car.server.core.entities.Phenomenon;
 import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.User;
 import io.car.server.core.util.GeoJSONConstants;
 import io.car.server.rest.MediaTypes;
+import io.car.server.rest.JSONConstants;
 
 /**
  * @author Arne de Wall <a.dewall@52north.org>
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class MeasurementCoder extends AbstractEntityCoder<Measurement> {
+public class MeasurementEncoder extends AbstractEntityEncoder<Measurement> {
     private final EntityEncoder<Geometry> geometryEncoder;
-    private final EntityDecoder<Geometry> geometryDecoder;
     private final EntityEncoder<User> userProvider;
     private final EntityEncoder<Sensor> sensorProvider;
-    private final EntityEncoder<Phenomenon> phenomenonProvider;
-    private final PhenomenonDao phenomenonDao;
-    private final SensorDao sensorDao;
 
     @Inject
-    public MeasurementCoder(EntityEncoder<Geometry> geometryEncoder,
-                            EntityDecoder<Geometry> geometryDecoder,
-                            EntityEncoder<User> userProvider,
-                            EntityEncoder<Sensor> sensorProvider,
-                            EntityEncoder<Phenomenon> phenomenonProvider,
-                            PhenomenonDao phenomenonDao,
-                            SensorDao sensorDao) {
-        this.geometryDecoder = geometryDecoder;
+    public MeasurementEncoder(EntityEncoder<Geometry> geometryEncoder,
+                              EntityEncoder<User> userProvider,
+                              EntityEncoder<Sensor> sensorProvider) {
         this.geometryEncoder = geometryEncoder;
         this.userProvider = userProvider;
         this.sensorProvider = sensorProvider;
-        this.phenomenonProvider = phenomenonProvider;
-        this.phenomenonDao = phenomenonDao;
-        this.sensorDao = sensorDao;
-    }
-
-    @Override
-    public Measurement decode(JsonNode j, MediaType mediaType) {
-        Measurement measurement = getEntityFactory().createMeasurement();
-        if (j.has(JSONConstants.GEOMETRY_KEY)) {
-            measurement.setGeometry(geometryDecoder.decode(j
-                    .path(JSONConstants.GEOMETRY_KEY), mediaType));
-        }
-        if (j.has(GeoJSONConstants.PROPERTIES_KEY)) {
-            JsonNode p = j.path(GeoJSONConstants.PROPERTIES_KEY);
-            if (p.has(JSONConstants.SENSOR_KEY)) {
-                measurement.setSensor(sensorDao.getByName(p
-                        .path(JSONConstants.SENSOR_KEY)
-                        .path(JSONConstants.NAME_KEY).textValue()));
-            }
-            if (p.has(JSONConstants.TIME_KEY)) {
-                measurement.setTime(getDateTimeFormat().parseDateTime(p
-                        .path(JSONConstants.TIME_KEY).textValue()));
-            }
-
-            if (p.has(JSONConstants.PHENOMENONS_KEY)) {
-                JsonNode phens = p.path(JSONConstants.PHENOMENONS_KEY);
-                Iterator<Entry<String, JsonNode>> fields = phens.fields();
-                while (fields.hasNext()) {
-                    Entry<String, JsonNode> field = fields.next();
-                    Phenomenon phenomenon = phenomenonDao.getByName(field
-                            .getKey());
-                    JsonNode valueNode = field.getValue()
-                            .get(JSONConstants.VALUE_KEY);
-                    if (valueNode.isValueNode()) {
-                        Object value = null;
-                        if (valueNode.isNumber()) {
-                            value = valueNode.asDouble();
-                        } else if (valueNode.isBoolean()) {
-                            value = valueNode.booleanValue();
-                        } else if (valueNode.isTextual()) {
-                            value = valueNode.textValue();
-                        }
-                        measurement.addValue(getEntityFactory()
-                                .createMeasurementValue()
-                                .setValue(value).setPhenomenon(phenomenon));
-                    }
-                }
-            }
-        }
-        return measurement;
     }
 
     @Override

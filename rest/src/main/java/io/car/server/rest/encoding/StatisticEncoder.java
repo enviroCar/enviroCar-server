@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.coding;
+package io.car.server.rest.encoding;
 
 import javax.ws.rs.core.MediaType;
 
@@ -24,9 +24,9 @@ import com.google.inject.Inject;
 
 import io.car.server.core.entities.Phenomenon;
 import io.car.server.core.statistics.Statistic;
+import io.car.server.rest.JSONConstants;
 
 /**
- * TODO JavaDoc
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class StatisticEncoder extends AbstractEntityEncoder<Statistic> {

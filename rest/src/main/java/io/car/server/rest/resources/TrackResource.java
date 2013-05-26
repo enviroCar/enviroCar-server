@@ -49,10 +49,10 @@ public class TrackResource extends AbstractResource {
     public static final String MEASUREMENTS = "measurements";
     public static final String SENSOR = "sensor";
     public static final String STATISTICS = "statistics";
-    private final String track;
+    private final Track track;
 
     @Inject
-    public TrackResource(@Assisted("track") String track) {
+    public TrackResource(@Assisted Track track) {
         this.track = track;
     }
 
@@ -75,7 +75,7 @@ public class TrackResource extends AbstractResource {
     @Schema(response = Schemas.TRACK)
     @Produces(MediaTypes.TRACK)
     public Track get() throws TrackNotFoundException {
-        return getService().getTrack(track);
+        return track;
     }
 
     @DELETE
@@ -94,8 +94,7 @@ public class TrackResource extends AbstractResource {
 
     @Path(SENSOR)
     public SensorResource sensor() throws TrackNotFoundException {
-        return getResourceFactory().createSensorResource(getService()
-                .getSensorForTrack(track));
+        return getResourceFactory().createSensorResource(track.getSensor());
     }
 
     @Path(STATISTICS)

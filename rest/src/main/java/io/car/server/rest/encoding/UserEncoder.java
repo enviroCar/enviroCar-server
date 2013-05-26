@@ -15,16 +15,16 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.coding;
+package io.car.server.rest.encoding;
 
 import java.net.URI;
 
 import javax.ws.rs.core.MediaType;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import io.car.server.core.entities.User;
+import io.car.server.rest.JSONConstants;
 import io.car.server.rest.MediaTypes;
 import io.car.server.rest.resources.RootResource;
 import io.car.server.rest.resources.UserResource;
@@ -33,17 +33,13 @@ import io.car.server.rest.resources.UsersResource;
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class UserCoder extends AbstractEntityCoder<User> {
-    @Override
-    public User decode(JsonNode j, MediaType mediaType) {
-        return getEntityFactory().createUser()
-                .setName(j.path(JSONConstants.NAME_KEY).textValue())
-                .setMail(j.path(JSONConstants.MAIL_KEY).textValue())
-                .setToken(j.path(JSONConstants.TOKEN_KEY).textValue());
-    }
+public class UserEncoder extends AbstractEntityEncoder<User> {
 
     @Override
     public ObjectNode encode(User t, MediaType mediaType) {
+        if (t == null) {
+            return null;
+        }
         ObjectNode j = getJsonFactory().objectNode()
                 .put(JSONConstants.NAME_KEY, t.getName());
         if (mediaType.equals(MediaTypes.USER_TYPE)) {

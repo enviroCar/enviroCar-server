@@ -15,44 +15,36 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.coding;
+package io.car.server.rest.encoding;
 
 import javax.ws.rs.core.MediaType;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 
-import io.car.server.core.entities.Measurement;
-import io.car.server.core.entities.Measurements;
-import io.car.server.core.util.GeoJSONConstants;
+import io.car.server.core.statistics.Statistic;
+import io.car.server.core.statistics.Statistics;
+import io.car.server.rest.JSONConstants;
 
 /**
- *
  * @author Christian Autermann <autermann@uni-muenster.de>
- * @author Arne de Wall <a.dewall@52north.org>
  */
-public class MeasurementsCoder implements EntityEncoder<Measurements> {
-    private final EntityEncoder<Measurement> measurementEncoder;
-    private final JsonNodeFactory factory;
+public class StatisticsEncoder extends AbstractEntityEncoder<Statistics> {
+    private final EntityEncoder<Statistic> statisticEncoder;
 
     @Inject
-    public MeasurementsCoder(JsonNodeFactory factory,
-                             EntityEncoder<Measurement> measurementEncoder) {
-        this.measurementEncoder = measurementEncoder;
-        this.factory = factory;
+    public StatisticsEncoder(EntityEncoder<Statistic> statisticEncoder) {
+        this.statisticEncoder = statisticEncoder;
     }
 
     @Override
-    public ObjectNode encode(Measurements t, MediaType mediaType) {
-        ObjectNode on = factory.objectNode();
-        ArrayNode an = on.putArray(GeoJSONConstants.FEATURES_KEY);
-        for (Measurement measurement : t) {
-            an.add(measurementEncoder.encode(measurement, mediaType));
+    public ObjectNode encode(Statistics t, MediaType mt) {
+        ObjectNode root = getJsonFactory().objectNode();
+        ArrayNode statistics = root.putArray(JSONConstants.STATISTICS_KEY);
+        for (Statistic s : t) {
+            statistics.add(statisticEncoder.encode(s, mt));
         }
-        on.put(GeoJSONConstants.TYPE_KEY,
-               GeoJSONConstants.FEATURE_COLLECTION_TYPE);
-        return on;
+        return root;
     }
 }

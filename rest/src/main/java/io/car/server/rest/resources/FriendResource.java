@@ -15,36 +15,41 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-package io.car.server.core.statistics;
+package io.car.server.rest.resources;
 
-import io.car.server.core.entities.Phenomenon;
-import io.car.server.core.entities.Phenomenons;
-import io.car.server.core.entities.Track;
+
+import javax.ws.rs.DELETE;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response.Status;
+
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
+
 import io.car.server.core.entities.User;
+import io.car.server.core.exception.ResourceNotFoundException;
+import io.car.server.rest.auth.Authenticated;
 
 /**
+ * TODO JavaDoc
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public interface StatisticsService {
-    Statistics getStatisticsForTrack(Track track);
+public class FriendResource extends UserResource {
+    private User user;
+    @Inject
+    public FriendResource(@Assisted("user") User user,
+                          @Assisted("friend") User friend) {
+        super(friend);
+        this.user = user;
+    }
 
-    Statistics getStatisticsForUser(User user);
+    @DELETE
+    @Override
+    @Authenticated
+    public void delete() throws ResourceNotFoundException {
+        if (!canModifyUser(user)) {
+            throw new WebApplicationException(Status.FORBIDDEN);
+        }
+        getService().removeFriend(user, getUser());
 
-    Statistics getStatistics();
-
-    Statistics getStatisticsForTrack(Track track, Phenomenons phenomenon);
-
-    Statistics getStatisticsForUser(User user, Phenomenons phenomenon);
-
-    Statistics getStatistics(Phenomenons phenomenon);
-
-    Statistic getStatisticsForTrack(Track track, Phenomenon phenomenon);
-
-    Statistic getStatisticsForUser(User user, Phenomenon phenomenon);
-
-    Statistic getStatistics(Phenomenon phenomenon);
+    }
 }

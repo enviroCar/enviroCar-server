@@ -26,7 +26,6 @@ import io.car.server.core.dao.PhenomenonDao;
 import io.car.server.core.dao.SensorDao;
 import io.car.server.core.dao.TrackDao;
 import io.car.server.core.dao.UserDao;
-import io.car.server.core.entities.EntityFactory;
 import io.car.server.core.entities.Group;
 import io.car.server.core.entities.Groups;
 import io.car.server.core.entities.Measurement;
@@ -90,8 +89,6 @@ public class Service {
     private EntityValidator<Measurement> measurementValidator;
     @Inject
     private PasswordEncoder passwordEncoder;
-    @Inject
-    private EntityFactory entityFactory;
 
     public User createUser(User user) throws ValidationException,
                                              ResourceAlreadyExistException {
@@ -265,11 +262,16 @@ public class Service {
         return this.measurementDao.create(measurement);
     }
 
-    public Measurement createMeasurement(String track, Measurement measurement) {
+    public Measurement createMeasurement(String track, Measurement measurement)
+            throws TrackNotFoundException {
+        return createMeasurement(getTrack(track), measurement);
+    }
+
+    public Measurement createMeasurement(Track track, Measurement measurement) {
         this.measurementValidator.validateCreate(measurement);
-        measurement.setTrack(entityFactory.createTrack().setIdentifier(track));
+        measurement.setTrack(track);
         this.measurementDao.create(measurement);
-        this.trackDao.addMeasurement(track, measurement);
+        this.trackDao.update(track);
         return measurement;
     }
 
@@ -286,9 +288,13 @@ public class Service {
         return this.measurementDao.getByUser(getUser(user), p);
     }
 
-    public Measurements getMeasurementsByTrack(String track) throws
-            TrackNotFoundException {
-        return getTrack(track).getMeasurements();
+    public Measurements getMeasurementsByTrack(String track, Pagination p)
+            throws TrackNotFoundException {
+        return getMeasurementsByTrack(getTrack(track), p);
+    }
+
+    public Measurements getMeasurementsByTrack(Track track, Pagination p) {
+        return this.measurementDao.getByTrack(track, p);
     }
 
     public Measurement getMeasurement(String id) throws

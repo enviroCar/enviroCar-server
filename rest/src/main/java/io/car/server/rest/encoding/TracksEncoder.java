@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.coding;
+package io.car.server.rest.encoding;
 
 import java.net.URI;
 
@@ -24,23 +24,26 @@ import javax.ws.rs.core.MediaType;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import io.car.server.core.entities.Group;
-import io.car.server.core.entities.Groups;
+import io.car.server.core.entities.Track;
+import io.car.server.core.entities.Tracks;
+import io.car.server.rest.JSONConstants;
 
-/**
- * @author Christian Autermann <autermann@uni-muenster.de>
- */
-public class GroupsCoder extends AbstractEntityEncoder<Groups> {
+public class TracksEncoder extends AbstractEntityEncoder<Tracks> {
     @Override
-    public ObjectNode encode(Groups t, MediaType mediaType) {
+    public ObjectNode encode(Tracks t, MediaType mediaType) {
         ObjectNode root = getJsonFactory().objectNode();
-        ArrayNode groups = root.putArray(JSONConstants.GROUPS_KEY);
-        for (Group u : t) {
+        ArrayNode tracks = root.putArray(JSONConstants.TRACKS_KEY);
+        for (Track u : t) {
             URI uri = getUriInfo().getAbsolutePathBuilder()
-                    .path(u.getName()).build();
-            groups.addObject()
-                    .put(JSONConstants.NAME_KEY, u.getName())
-                    .put(JSONConstants.HREF_KEY, uri.toString());
+                    .path(u.getIdentifier()).build();
+            ObjectNode track = tracks.addObject();
+            track.put(JSONConstants.IDENTIFIER_KEY, u.getIdentifier());
+            track.put(JSONConstants.MODIFIED_KEY, getDateTimeFormat().print(u
+                    .getLastModificationDate()));
+            if (u.getName() != null) {
+                track.put(JSONConstants.NAME_KEY, u.getName());
+            }
+            track.put(JSONConstants.HREF_KEY, uri.toString());
         }
         return root;
     }

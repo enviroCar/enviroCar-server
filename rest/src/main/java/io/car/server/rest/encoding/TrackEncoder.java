@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.coding;
+package io.car.server.rest.encoding;
 
 import java.net.URI;
 
@@ -25,45 +25,26 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 
-import io.car.server.core.dao.SensorDao;
 import io.car.server.core.entities.Measurements;
 import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
 import io.car.server.core.util.GeoJSONConstants;
+import io.car.server.rest.JSONConstants;
 import io.car.server.rest.resources.TrackResource;
 
-public class TrackCoder extends AbstractEntityCoder<Track> {
-    private EntityEncoder<Sensor> sensorEncoder;
-    private EntityEncoder<Measurements> measurementsEncoder;
-    private EntityEncoder<User> userEncoder;
-    private SensorDao sensorDao;
+public class TrackEncoder extends AbstractEntityEncoder<Track> {
+    private final EntityEncoder<Sensor> sensorEncoder;
+    private final EntityEncoder<Measurements> measurementsEncoder;
+    private final EntityEncoder<User> userEncoder;
 
     @Inject
-    public TrackCoder(EntityEncoder<Sensor> sensorProvider,
-                      EntityEncoder<Measurements> measurementsProvider,
-                      EntityEncoder<User> userProvider,
-                      SensorDao sensorDao) {
-        this.sensorEncoder = sensorProvider;
-        this.userEncoder = userProvider;
-        this.measurementsEncoder = measurementsProvider;
-        this.sensorDao = sensorDao;
-    }
-
-    @Override
-    public Track decode(JsonNode j, MediaType mediaType) {
-        Track track = getEntityFactory().createTrack();
-        if (j.has(GeoJSONConstants.PROPERTIES_KEY)) {
-            JsonNode p = j.path(GeoJSONConstants.PROPERTIES_KEY);
-            if (p.has(JSONConstants.SENSOR_KEY)) {
-                track.setSensor(sensorDao.getByName(p
-                        .get(JSONConstants.SENSOR_KEY).asText()));
-            }
-            track.setName(p.path(JSONConstants.NAME_KEY).textValue());
-            track.setDescription(p.path(JSONConstants.DESCRIPTION_KEY)
-                    .textValue());
-        }
-        return track;
+    public TrackEncoder(EntityEncoder<Sensor> sensorEncoder,
+                        EntityEncoder<Measurements> measurementsEncoder,
+                        EntityEncoder<User> userEncoder) {
+        this.sensorEncoder = sensorEncoder;
+        this.userEncoder = userEncoder;
+        this.measurementsEncoder = measurementsEncoder;
     }
 
     @Override
@@ -95,8 +76,9 @@ public class TrackCoder extends AbstractEntityCoder<Track> {
                 .path(TrackResource.STATISTICS).build();
         properties.put(JSONConstants.STATISTICS_KEY,
                        statistics.toString());
+        Measurements values = getService().getMeasurementsByTrack(t, null);
         JsonNode features = measurementsEncoder
-                .encode(t.getMeasurements(), mediaType)
+                .encode(values, mediaType)
                 .path(GeoJSONConstants.FEATURES_KEY);
         track.put(GeoJSONConstants.FEATURES_KEY, features);
         return track;

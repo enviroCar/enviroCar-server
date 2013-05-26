@@ -18,7 +18,6 @@
 package io.car.server.rest.resources;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -68,22 +67,13 @@ public class FriendsResource extends AbstractResource {
         getService().addFriend(user, friend);
     }
 
-    @DELETE
-    @Authenticated
-    @Schema(request = Schemas.USER_REF)
-    @Consumes(MediaTypes.USER_REF)
-    public void remove(User friend) throws UserNotFoundException {
-        if (friend.getName() == null) {
-            throw new WebApplicationException(Status.BAD_REQUEST);
-        }
-        getService().removeFriend(user, friend);
-    }
-
     @Path(FRIEND)
-    public UserResource friend(@PathParam("friend") String username) throws
+    public UserResource friend(@PathParam("friend") String friendName) throws
             UserNotFoundException {
-        //TODO throw 404 for users that are not friends
-        return getResourceFactory().createUserResource(getService()
-                .getUser(username));
+        User friend = getService().getUser(friendName);
+        if (!user.hasFriend(friend)) {
+            throw new WebApplicationException(Status.NOT_FOUND);
+        }
+        return getResourceFactory().createFriendResource(user, friend);
     }
 }

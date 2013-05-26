@@ -15,34 +15,35 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.coding;
-
-import java.net.URI;
+package io.car.server.rest.encoding;
 
 import javax.ws.rs.core.MediaType;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.inject.Inject;
 
-import io.car.server.core.entities.Track;
-import io.car.server.core.entities.Tracks;
+import io.car.server.core.entities.Sensor;
+import io.car.server.core.entities.Sensors;
+import io.car.server.rest.JSONConstants;
 
-public class TracksCoder extends AbstractEntityEncoder<Tracks> {
+/**
+ * @author Christian Autermann <autermann@uni-muenster.de>
+ */
+public class SensorsEncoder extends AbstractEntityEncoder<Sensors> {
+    private final EntityEncoder<Sensor> sensorEncoder;
+
+    @Inject
+    public SensorsEncoder(EntityEncoder<Sensor> sensorEncoder) {
+        this.sensorEncoder = sensorEncoder;
+    }
+
     @Override
-    public ObjectNode encode(Tracks t, MediaType mediaType) {
+    public ObjectNode encode(Sensors t, MediaType mediaType) {
         ObjectNode root = getJsonFactory().objectNode();
-        ArrayNode tracks = root.putArray(JSONConstants.TRACKS_KEY);
-        for (Track u : t) {
-            URI uri = getUriInfo().getAbsolutePathBuilder()
-                    .path(u.getIdentifier()).build();
-            ObjectNode track = tracks.addObject();
-            track.put(JSONConstants.IDENTIFIER_KEY, u.getIdentifier());
-            track.put(JSONConstants.MODIFIED_KEY, getDateTimeFormat().print(u
-                    .getLastModificationDate()));
-            if (u.getName() != null) {
-                track.put(JSONConstants.NAME_KEY, u.getName());
-            }
-            track.put(JSONConstants.HREF_KEY, uri.toString());
+        ArrayNode sensors = root.putArray(JSONConstants.SENSORS_KEY);
+        for (Sensor u : t) {
+            sensors.add(sensorEncoder.encode(u, mediaType));
         }
         return root;
     }

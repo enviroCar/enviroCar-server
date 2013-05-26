@@ -49,6 +49,7 @@ import com.github.fge.jsonschema.report.ProcessingReport;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.io.Closeables;
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import com.sun.jersey.api.container.ContainerException;
 import com.sun.jersey.api.model.AbstractMethod;
 import com.sun.jersey.core.util.ReaderWriter;
@@ -61,8 +62,8 @@ import com.sun.jersey.spi.container.ResourceFilter;
 import com.sun.jersey.spi.container.ResourceFilterFactory;
 
 import io.car.server.core.exception.ValidationException;
+import io.car.server.rest.JSONConstants;
 import io.car.server.rest.MediaTypes;
-import io.car.server.rest.coding.JSONConstants;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
@@ -70,8 +71,10 @@ import io.car.server.rest.coding.JSONConstants;
 public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
     private static final Logger log = LoggerFactory
             .getLogger(JSONSchemaResourceFilterFactory.class);
-    private static final boolean VALIDATE_REQUESTS = true;
-    private static final boolean VALIDATE_RESPONSES = false;
+    public static final String VALIDATE_REQUESTS = "validate_requests";
+    public static final String VALIDATE_RESPONSES = "validate_responses";
+    private final boolean validateRequests;
+    private final boolean validateResponses;
     private final JsonSchemaFactory schemaFactory;
     private final ObjectReader reader;
     private final ObjectWriter writer;
@@ -81,11 +84,15 @@ public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
     public JSONSchemaResourceFilterFactory(JsonSchemaFactory schemaFactory,
                                            ObjectReader reader,
                                            ObjectWriter writer,
-                                           JsonNodeFactory factory) {
+                                           JsonNodeFactory factory,
+                                           @Named(VALIDATE_REQUESTS) boolean validateRequests,
+                                           @Named(VALIDATE_RESPONSES) boolean validateResponses) {
         this.schemaFactory = schemaFactory;
         this.reader = reader;
         this.writer = writer;
         this.factory = factory;
+        this.validateRequests = validateRequests;
+        this.validateResponses = validateResponses;
     }
 
     @Override
@@ -153,13 +160,13 @@ public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
 
         @Override
         public ContainerRequestFilter getRequestFilter() {
-            return request == null || !VALIDATE_REQUESTS ? null
+            return request == null || !validateRequests ? null
                    : new JSONSchemaRequestFilter(request);
         }
 
         @Override
         public ContainerResponseFilter getResponseFilter() {
-            return response == null || !VALIDATE_RESPONSES ? null
+            return response == null || !validateResponses ? null
                    : new JSONSchemaResponeFilter(response);
         }
     }

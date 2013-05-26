@@ -15,32 +15,35 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.coding;
-
-import java.net.URI;
+package io.car.server.rest.encoding;
 
 import javax.ws.rs.core.MediaType;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.inject.Inject;
 
-import io.car.server.core.entities.User;
-import io.car.server.core.entities.Users;
+import io.car.server.core.entities.Phenomenon;
+import io.car.server.core.entities.Phenomenons;
+import io.car.server.rest.JSONConstants;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class UsersCoder extends AbstractEntityEncoder<Users> {
+public class PhenomenonsEncoder extends AbstractEntityEncoder<Phenomenons> {
+    private final EntityEncoder<Phenomenon> phenomenonEncoder;
+
+    @Inject
+    public PhenomenonsEncoder(EntityEncoder<Phenomenon> phenomenonEncoder) {
+        this.phenomenonEncoder = phenomenonEncoder;
+    }
+
     @Override
-    public ObjectNode encode(Users t, MediaType mediaType) {
+    public ObjectNode encode(Phenomenons t, MediaType mediaType) {
         ObjectNode root = getJsonFactory().objectNode();
-        ArrayNode users = root.putArray(JSONConstants.USERS_KEY);
-        for (User u : t) {
-            URI uri = getUriInfo().getAbsolutePathBuilder().path(u.getName())
-                    .build();
-            users.addObject()
-                    .put(JSONConstants.NAME_KEY, u.getName())
-                    .put(JSONConstants.HREF_KEY, uri.toString());
+        ArrayNode phenomenons = root.putArray(JSONConstants.PHENOMENONS_KEY);
+        for (Phenomenon u : t) {
+            phenomenons.add(phenomenonEncoder.encode(u, mediaType));
         }
         return root;
     }

@@ -15,44 +15,36 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.core.dao;
+package io.car.server.rest.decoding;
 
+import io.car.server.rest.util.GeoJSON;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response.Status;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.google.inject.Inject;
 import com.vividsolutions.jts.geom.Geometry;
 
-import io.car.server.core.entities.Sensor;
-import io.car.server.core.entities.Track;
-import io.car.server.core.entities.Tracks;
-import io.car.server.core.entities.User;
-import io.car.server.core.util.Pagination;
+import io.car.server.core.exception.GeometryConverterException;
 
 /**
- *
- * @author Arne de Wall <a.dewall@52north.org>
- *
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public interface TrackDao {
-    Track create(Track track);
+public class GeoJSONDecoder extends AbstractEntityDecoder<Geometry> {
+    private final GeoJSON geoJSON;
 
-    Track save(Track track);
+    @Inject
+    public GeoJSONDecoder(GeoJSON geoJSON) {
+        this.geoJSON = geoJSON;
+    }
 
-    void update(Track track);
-
-    void delete(Track track);
-
-    Track getById(String id);
-
-    Tracks getByUser(User user, Pagination p);
-
-    Tracks getBySensor(Sensor sensor, Pagination p);
-
-    Tracks getByBbox(double minx, double miny, double maxx, double maxy,
-                     Pagination p);
-
-    Tracks getByBbox(Geometry bbox, Pagination p);
-
-    Tracks get(Pagination p);
-
-    User getUser(String track);
-
-    Sensor getSensor(String track);
+    @Override
+    public Geometry decode(JsonNode j, MediaType mt) {
+        try {
+            return geoJSON.decode(j);
+        } catch (GeometryConverterException ex) {
+            throw new WebApplicationException(ex, Status.BAD_REQUEST);
+        }
+    }
 }

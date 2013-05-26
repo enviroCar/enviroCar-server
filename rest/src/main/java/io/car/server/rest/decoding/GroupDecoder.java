@@ -15,53 +15,25 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.coding;
+package io.car.server.rest.decoding;
 
-import java.net.URI;
-
+import io.car.server.rest.JSONConstants;
 import javax.ws.rs.core.MediaType;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.inject.Inject;
 
 import io.car.server.core.entities.Group;
-import io.car.server.core.entities.User;
-import io.car.server.rest.resources.GroupResource;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class GroupCoder extends AbstractEntityCoder<Group> {
-    private EntityEncoder<User> userEncoder;
-
-    @Inject
-    public GroupCoder(EntityEncoder<User> userProvider) {
-        this.userEncoder = userProvider;
-    }
+public class GroupDecoder extends AbstractEntityDecoder<Group> {
 
     @Override
     public Group decode(JsonNode j, MediaType mediaType) {
         Group group = getEntityFactory().createGroup();
         group.setName(j.path(JSONConstants.NAME_KEY).textValue());
         group.setDescription(j.path(JSONConstants.DESCRIPTION_KEY).textValue());
-        return group;
-    }
-
-    @Override
-    public ObjectNode encode(Group t, MediaType mediaType) {
-        ObjectNode group = getJsonFactory().objectNode();
-        group.put(JSONConstants.NAME_KEY, t.getName());
-        group.put(JSONConstants.DESCRIPTION_KEY, t.getDescription());
-        group.put(JSONConstants.CREATED_KEY,
-                  getDateTimeFormat().print(t.getCreationDate()));
-        group.put(JSONConstants.MODIFIED_KEY,
-                  getDateTimeFormat().print(t.getLastModificationDate()));
-        group.put(JSONConstants.OWNER_KEY,
-                  userEncoder.encode(t.getOwner(), mediaType));
-        URI uri = getUriInfo().getAbsolutePathBuilder()
-                .path(GroupResource.MEMBERS).build();
-        group.put(JSONConstants.MEMBERS_KEY, uri.toString());
         return group;
     }
 }

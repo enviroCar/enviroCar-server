@@ -22,6 +22,7 @@ import com.google.inject.Inject;
 import io.car.server.core.dao.StatisticsDao;
 import io.car.server.core.entities.Phenomenon;
 import io.car.server.core.entities.Phenomenons;
+import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
 
 public class StatisticsServiceImpl implements StatisticsService {
@@ -33,7 +34,7 @@ public class StatisticsServiceImpl implements StatisticsService {
     }
 
     @Override
-    public Statistics getStatisticsForTrack(String track) {
+    public Statistics getStatisticsForTrack(Track track) {
         return dao.getStatisticsForTrack(track);
     }
 
@@ -48,7 +49,7 @@ public class StatisticsServiceImpl implements StatisticsService {
     }
 
     @Override
-    public Statistic getStatisticsForTrack(String track, Phenomenon phenomenon) {
+    public Statistic getStatisticsForTrack(Track track, Phenomenon phenomenon) {
         return dao.getStatisticsForTrack(track, phenomenon);
     }
 
@@ -63,7 +64,7 @@ public class StatisticsServiceImpl implements StatisticsService {
     }
 
     @Override
-    public Statistics getStatisticsForTrack(String track,
+    public Statistics getStatisticsForTrack(Track track,
                                             Phenomenons phenomenon) {
         return dao.getStatisticsForTrack(track, phenomenon);
     }
