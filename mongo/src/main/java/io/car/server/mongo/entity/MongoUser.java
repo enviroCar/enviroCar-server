@@ -119,6 +119,11 @@ public class MongoUser extends MongoBaseEntity<MongoUser> implements User {
     }
 
     @Override
+    public boolean hasFriend(User user) {
+        return this.friends.contains((MongoUser) user);
+    }
+
+    @Override
     public String toString() {
         return Objects.toStringHelper(this)
                 .omitNullValues()

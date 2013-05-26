@@ -68,10 +68,12 @@ public class FriendsResource extends AbstractResource {
     }
 
     @Path(FRIEND)
-    public UserResource friend(@PathParam("friend") String friend) throws
+    public UserResource friend(@PathParam("friend") String friendName) throws
             UserNotFoundException {
-        //TODO throw 404 for users that are not friends
-        return getResourceFactory().createFriendResource(
-                user, getService().getUser(friend));
+        User friend = getService().getUser(friendName);
+        if (!user.hasFriend(friend)) {
+            throw new WebApplicationException(Status.NOT_FOUND);
+        }
+        return getResourceFactory().createFriendResource(user, friend);
     }
 }

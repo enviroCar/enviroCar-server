@@ -49,4 +49,6 @@ public interface User extends BaseEntity {
     User addFriend(User user);
 
     User removeFriend(User user);
+
+    boolean hasFriend(User user);
 }
