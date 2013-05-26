@@ -17,7 +17,8 @@
  */
 package io.car.server.rest;
 
-import io.car.server.rest.encoding.EntityEncoder;
+import io.car.server.core.activities.Activities;
+import io.car.server.core.activities.Activity;
 import io.car.server.core.entities.Group;
 import io.car.server.core.entities.Groups;
 import io.car.server.core.entities.Measurement;
@@ -33,6 +34,7 @@ import io.car.server.core.entities.Users;
 import io.car.server.core.statistics.Statistic;
 import io.car.server.core.statistics.Statistics;
 import io.car.server.rest.decoding.EntityDecoder;
+import io.car.server.rest.encoding.EntityEncoder;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
@@ -77,4 +79,8 @@ public interface CodingFactory {
     EntityEncoder<Statistics> createStatisticsEncoder();
 
     EntityEncoder<Statistic> createStatisticEncoder();
+
+    EntityEncoder<Activity> createActivityEncoder();
+
+    EntityEncoder<Activities> createActivitiesEncoder();
 }
