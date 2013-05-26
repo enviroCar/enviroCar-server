@@ -38,10 +38,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 
-import io.car.server.core.dao.MeasurementDao;
-import io.car.server.core.dao.PhenomenonDao;
 import io.car.server.core.dao.StatisticsDao;
-import io.car.server.core.dao.UserDao;
 import io.car.server.core.entities.Phenomenon;
 import io.car.server.core.entities.Phenomenons;
 import io.car.server.core.entities.Track;
@@ -76,21 +73,11 @@ public class MongoStatisticsDao implements StatisticsDao {
     protected static String path(String first, String second, String... paths) {
         return Joiner.on(".").join(first, second, (Object[]) paths);
     }
-    private final MongoMeasurementDao measurements;
-    private final MongoUserDao users;
-    private final MongoPhenomenonDao phens;
     private final Datastore db;
     private final Mapper mapr;
 
     @Inject
-    public MongoStatisticsDao(Mapper mapr,
-                              Datastore db,
-                              PhenomenonDao phenomenonDao,
-                              UserDao userDao,
-                              MeasurementDao measurementDao) {
-        this.measurements = (MongoMeasurementDao) measurementDao;
-        this.phens = (MongoPhenomenonDao) phenomenonDao;
-        this.users = (MongoUserDao) userDao;
+    public MongoStatisticsDao(Mapper mapr, Datastore db) {
         this.db = db;
         this.mapr = mapr;
     }
@@ -174,7 +161,7 @@ public class MongoStatisticsDao implements StatisticsDao {
 
     protected AggregationOutput aggregate(DBObject firstOp,
                                           DBObject... additionalOps) {
-        AggregationOutput result = measurements.getCollection()
+        AggregationOutput result = db.getCollection(MongoMeasurement.class)
                 .aggregate(firstOp, additionalOps);
         result.getCommandResult().throwOnError();
         return result;
