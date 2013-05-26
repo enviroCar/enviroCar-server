@@ -61,10 +61,11 @@ public class FriendsResource extends AbstractResource {
     @Schema(request = Schemas.USER_REF)
     @Consumes(MediaTypes.USER_REF)
     public void add(User friend) throws UserNotFoundException {
-        if (friend.getName() == null) {
+        if (friend.getName() == null ||
+            friend.getName().equals(getCurrentUser())) {
             throw new WebApplicationException(Status.BAD_REQUEST);
         }
-        getService().addFriend(user, friend);
+        getService().addFriend(user, getService().getUser(friend.getName()));
     }
 
     @Path(FRIEND)
