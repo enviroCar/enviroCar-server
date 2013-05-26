@@ -119,17 +119,7 @@ public class Service {
                 userValidator.validateUpdate(user), user));
     }
 
-    public User modifyUser(String user, User changes)
-            throws UserNotFoundException, IllegalModificationException,
-                   ValidationException {
-        return this.modifyUser(getUser(user), changes);
-    }
-
-    public void deleteUser(String username) throws UserNotFoundException {
-        deleteUser(getUser(username));
-    }
-
-    public void deleteUser(User user) throws UserNotFoundException {
+    public void deleteUser(User user) {
         this.userDao.delete(user);
     }
 
@@ -163,6 +153,10 @@ public class Service {
         return this.groupDao.create(group);
     }
 
+    public Users getGroupMembers(Group group, Pagination pagination) {
+        return this.userDao.getByGroup(group, pagination);
+    }
+
     public Group modifyGroup(Group group, Group changes)
             throws ValidationException, IllegalModificationException {
         groupValidator.validateUpdate(group);
@@ -175,53 +169,30 @@ public class Service {
         return this.trackDao.save(this.trackUpdater.update(changes, track));
     }
 
-    public Track modifyTrack(String track, Track changes)
-            throws ValidationException, IllegalModificationException,
-                   TrackNotFoundException {
-        return modifyTrack(getTrack(track), changes);
-    }
-
-
-    public void deleteGroup(String username) throws GroupNotFoundException {
-        deleteGroup(getGroup(username));
-    }
-
     public void deleteGroup(Group group) throws GroupNotFoundException {
         this.groupDao.delete(group);
-    }
-
-    public Groups getGroupsOfUser(User user, Pagination p) {
-        return this.groupDao.getByMember(user, p);
-    }
-
-    public Groups getGroupsOfUser(String user, Pagination p) throws
-            UserNotFoundException {
-        return getGroupsOfUser(getUser(user), p);
     }
 
     public Groups searchGroups(String search, Pagination p) {
         return this.groupDao.search(search, p);
     }
 
+    public Group createGroup(User user, Group group) {
+        this.groupDao.save(group.setOwner(user));
+        this.userDao.save(user.addGroup(group));
+        return group;
+    }
+
     public void addGroupMember(Group group, User user)
             throws UserNotFoundException {
-        this.groupDao.save(group.addMember(getUser(user.getName())));
+        this.userDao.save(user.addGroup(group));
+        this.groupDao.update(group);
     }
 
-    public void addGroupMember(String group, User user)
+    public void removeGroupMember(Group group, User user)
             throws UserNotFoundException, GroupNotFoundException {
-        this.groupDao.save(getGroup(group).addMember(getUser(user.getName())));
-    }
-
-    public void removeGroupMember(String group, User user)
-            throws UserNotFoundException, GroupNotFoundException {
-        removeGroupMember(group, user.getName());
-    }
-
-    public void removeGroupMember(String group, String user)
-            throws UserNotFoundException, GroupNotFoundException {
-        this.groupDao
-                .save(getGroup(group).removeMember(getUser(user)));
+        this.userDao.save(user.removeGroup(group));
+        this.groupDao.update(group);
     }
 
     public Tracks getTracks(Pagination p) {
@@ -230,11 +201,6 @@ public class Service {
 
     public Tracks getTracks(User user, Pagination p) {
         return this.trackDao.getByUser(user, p);
-    }
-
-    public Tracks getTracks(String user, Pagination p) throws
-            UserNotFoundException {
-        return getTracks(getUser(user), p);
     }
 
     public Track getTrack(String id) throws TrackNotFoundException {
@@ -247,10 +213,6 @@ public class Service {
 
     public Track createTrack(Track track) throws ValidationException {
         return this.trackDao.create(this.trackValidator.validateCreate(track));
-    }
-
-    public void deleteTrack(String id) throws TrackNotFoundException {
-        this.trackDao.delete(getTrack(id));
     }
 
     public void deleteTrack(Track track) {
@@ -283,14 +245,8 @@ public class Service {
         return this.measurementDao.getByUser(user, p);
     }
 
-    public Measurements getMeasurementsByUser(String user, Pagination p) throws
-            UserNotFoundException {
-        return this.measurementDao.getByUser(getUser(user), p);
-    }
-
-    public Measurements getMeasurementsByTrack(String track, Pagination p)
-            throws TrackNotFoundException {
-        return getMeasurementsByTrack(getTrack(track), p);
+    public Measurements getMeasurementsByUser(User user, Pagination p) {
+        return this.measurementDao.getByUser(user, p);
     }
 
     public Measurements getMeasurementsByTrack(Track track, Pagination p) {
@@ -307,9 +263,8 @@ public class Service {
     }
 
     public Measurement modifyMeasurement(Measurement measurement,
-                                         Measurement changes) throws
-            ValidationException,
-            IllegalModificationException {
+                                         Measurement changes)
+            throws ValidationException, IllegalModificationException {
         measurementValidator.validateCreate(measurement);
         return this.measurementDao.save(this.measurementUpdater.update(changes,
                                                                        measurement));
@@ -350,13 +305,5 @@ public class Service {
 
     public Sensor createSensor(Sensor sensor) {
         return this.sensorDao.create(sensor);
-    }
-
-    public User getUserForTrack(String track) {
-        return this.trackDao.getUser(track);
-    }
-
-    public Sensor getSensorForTrack(String track) {
-        return this.trackDao.getSensor(track);
     }
 }
