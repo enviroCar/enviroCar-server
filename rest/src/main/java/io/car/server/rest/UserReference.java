@@ -15,32 +15,34 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.core.validation;
+package io.car.server.rest;
 
-import io.car.server.core.entities.Group;
-import io.car.server.core.exception.ValidationException;
+import com.google.common.base.Objects;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class GroupValidator extends AbstractValidator<Group> {
-    @Override
-    public Group validateCreate(Group t) throws ValidationException {
-        isNotNullOrEmpty("name", t.getName());
-        isNotNullOrEmpty("description", t.getDescription());
-        isNotNull("owner", t.getOwner());
-        isNull("created", t.getCreationDate());
-        isNull("modified", t.getLastModificationDate());
-        return t;
+public class UserReference {
+    private final String name;
+
+    public UserReference(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
     }
 
     @Override
-    public Group validateUpdate(Group t) throws ValidationException {
-        isNotEmpty("name", t.getName());
-        isNotEmpty("description", t.getDescription());
-        isNull("owner", t.getOwner());
-        isNull("created", t.getCreationDate());
-        isNull("modified", t.getLastModificationDate());
-        return t;
+    public int hashCode() {
+        return Objects.hashCode(getName());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        return Objects.equal(getName(), ((UserReference) obj).getName());
     }
 }

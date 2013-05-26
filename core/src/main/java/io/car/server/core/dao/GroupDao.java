@@ -37,9 +37,9 @@ public interface GroupDao {
 
     Groups getByOwner(User owner, Pagination p);
 
-    Groups getByMember(User member, Pagination p);
-
     Groups get(Pagination p);
+
+    void update(Group p);
 
     Group create(Group group);
 

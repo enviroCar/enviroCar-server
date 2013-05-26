@@ -50,10 +50,10 @@ import io.car.server.rest.validation.Schema;
  */
 public class GroupResource extends AbstractResource {
     public static final String MEMBERS = "members";
-    private String group;
+    private Group group;
 
     @Inject
-    public GroupResource(@Assisted("group") String group) {
+    public GroupResource(@Assisted Group group) {
         this.group = group;
     }
 
@@ -61,7 +61,7 @@ public class GroupResource extends AbstractResource {
     @Schema(response = Schemas.GROUP)
     @Produces(MediaTypes.GROUP)
     public Group get() throws GroupNotFoundException {
-        return getService().getGroup(group);
+        return group;
     }
 
     @PUT
@@ -93,7 +93,7 @@ public class GroupResource extends AbstractResource {
     @DELETE
     @Authenticated
     public void delete() throws UserNotFoundException, GroupNotFoundException {
-        if (!get().getOwner().getName().equals(getCurrentUser())) {
+        if (!group.getOwner().getName().equals(getCurrentUser())) {
             throw new WebApplicationException(Status.FORBIDDEN);
         }
         getService().deleteGroup(group);

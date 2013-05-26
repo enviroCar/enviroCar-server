@@ -26,7 +26,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
@@ -63,17 +65,16 @@ public class GroupsResource extends AbstractResource {
     public Groups get(
             @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit,
             @QueryParam(RESTConstants.PAGE) @DefaultValue("0") int page,
-            @QueryParam(RESTConstants.SEARCH) String search) throws
-            UserNotFoundException {
-        Pagination p = new Pagination(limit, page);
-        if (user == null) {
+            @QueryParam(RESTConstants.SEARCH) String search) {
+        if (user != null) {
+            return user.getGroups();
+        } else {
+            Pagination p = new Pagination(limit, page);
             if (search != null && !search.trim().isEmpty()) {
                 return getService().searchGroups(search, p);
             } else {
                 return getService().getGroups(p);
             }
-        } else {
-            return getService().getGroupsOfUser(user, p);
         }
     }
 
@@ -85,15 +86,18 @@ public class GroupsResource extends AbstractResource {
                                                     ResourceAlreadyExistException,
                                                     ValidationException {
         User currentUser = getService().getUser(getCurrentUser());
-        Group g = getService().createGroup(
-                group.setOwner(currentUser).addMember(currentUser));
+        Group g = getService().createGroup(currentUser, group);
         return Response.created(getUriInfo().getAbsolutePathBuilder().path(g
                 .getName()).build()).build();
     }
 
     @Path(GROUP)
-    public GroupResource group(@PathParam("group") String groupname) throws
+    public GroupResource group(@PathParam("group") String groupName) throws
             GroupNotFoundException {
-        return getResourceFactory().createGroupResource(groupname);
+        Group group = getService().getGroup(groupName);
+        if (user != null && !user.hasGroup(group)) {
+            throw new WebApplicationException(Status.NOT_FOUND);
+        }
+        return getResourceFactory().createGroupResource(group);
     }
 }

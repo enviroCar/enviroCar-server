@@ -18,7 +18,6 @@
 package io.car.server.mongo.dao;
 
 import org.bson.types.ObjectId;
-import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,7 +27,6 @@ import com.github.jmkgreen.morphia.query.UpdateResults;
 import com.google.inject.Inject;
 import com.vividsolutions.jts.geom.Geometry;
 
-import io.car.server.core.dao.MeasurementDao;
 import io.car.server.core.dao.TrackDao;
 import io.car.server.core.entities.Measurement;
 import io.car.server.core.entities.Measurements;
@@ -45,15 +43,14 @@ import io.car.server.mongo.entity.MongoUser;
  * @author Arne de Wall <a.dewall@52north.org>
  * 
  */
-public class MongoTrackDao
-        extends AbstractMongoDao<ObjectId, MongoTrack, Tracks>
+public class MongoTrackDao extends AbstractMongoDao<MongoTrack, Tracks>
         implements TrackDao {
     private static final Logger log = LoggerFactory
             .getLogger(MongoTrackDao.class);
-    private final MeasurementDao measurementDao;
+    private final MongoMeasurementDao measurementDao;
 
     @Inject
-    public MongoTrackDao(Datastore ds, MeasurementDao measurementDao) {
+    public MongoTrackDao(Datastore ds, MongoMeasurementDao measurementDao) {
         super(MongoTrack.class, ds);
         this.measurementDao = measurementDao;
     }
@@ -124,34 +121,8 @@ public class MongoTrackDao
     }
 
     @Override
-    public User getUser(String track) {
-        ObjectId oid;
-        try {
-            oid = new ObjectId(track);
-        } catch (IllegalArgumentException e) {
-            return null;
-        }
-        return q().field(MongoTrack.ID).equal(oid)
-                .retrievedFields(true, MongoTrack.USER).get().getUser();
-    }
-
-    @Override
-    public Sensor getSensor(String track) {
-        ObjectId oid;
-        try {
-            oid = new ObjectId(track);
-        } catch (IllegalArgumentException e) {
-            return null;
-        }
-        return q().field(MongoTrack.ID).equal(oid)
-                .retrievedFields(true, MongoTrack.SENSOR).get().getSensor();
-    }
-
-    @Override
     public void update(Track track) {
-        update(
-                ((MongoTrack) track).getId(),
-                up().set(MongoTrack.LAST_MODIFIED, new DateTime()));
+        updateTimestamp((MongoTrack) track);
     }
 
     void removeUser(MongoUser user) {

@@ -15,32 +15,36 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.core.validation;
+package io.car.server.rest.provider;
 
-import io.car.server.core.entities.Group;
-import io.car.server.core.exception.ValidationException;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.Provider;
+
+import com.fasterxml.jackson.databind.JsonNode;
+
+import io.car.server.core.entities.User;
+import io.car.server.rest.UserReference;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class GroupValidator extends AbstractValidator<Group> {
-    @Override
-    public Group validateCreate(Group t) throws ValidationException {
-        isNotNullOrEmpty("name", t.getName());
-        isNotNullOrEmpty("description", t.getDescription());
-        isNotNull("owner", t.getOwner());
-        isNull("created", t.getCreationDate());
-        isNull("modified", t.getLastModificationDate());
-        return t;
+@Provider
+@Consumes(MediaType.APPLICATION_JSON)
+public class UserReferenceProvider extends AbstractJsonEntityProvider<UserReference> {
+
+    public UserReferenceProvider() {
+        super(UserReference.class);
     }
 
     @Override
-    public Group validateUpdate(Group t) throws ValidationException {
-        isNotEmpty("name", t.getName());
-        isNotEmpty("description", t.getDescription());
-        isNull("owner", t.getOwner());
-        isNull("created", t.getCreationDate());
-        isNull("modified", t.getLastModificationDate());
-        return t;
+    public UserReference read(JsonNode j, MediaType mediaType) {
+        User user = getCodingFactory().createUserDecoder().decode(j, mediaType);
+        return new UserReference(user.getName());
+    }
+
+    @Override
+    public JsonNode write(UserReference t, MediaType mediaType) {
+        throw new UnsupportedOperationException();
     }
 }

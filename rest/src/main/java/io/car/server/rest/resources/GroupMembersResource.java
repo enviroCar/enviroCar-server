@@ -18,23 +18,29 @@
 package io.car.server.rest.resources;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response.Status;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
+import io.car.server.core.entities.Group;
 import io.car.server.core.entities.User;
 import io.car.server.core.entities.Users;
 import io.car.server.core.exception.GroupNotFoundException;
 import io.car.server.core.exception.UserNotFoundException;
+import io.car.server.core.util.Pagination;
 import io.car.server.rest.MediaTypes;
+import io.car.server.rest.RESTConstants;
 import io.car.server.rest.Schemas;
+import io.car.server.rest.UserReference;
 import io.car.server.rest.auth.Authenticated;
 import io.car.server.rest.validation.Schema;
 
@@ -43,37 +49,42 @@ import io.car.server.rest.validation.Schema;
  */
 public class GroupMembersResource extends AbstractResource {
     public static final String MEMBER = "{member}";
-    private String group;
+    private Group group;
 
     @Inject
-    public GroupMembersResource(@Assisted("group") String group) {
+    public GroupMembersResource(@Assisted Group group) {
         this.group = group;
     }
 
     @GET
     @Schema(response = Schemas.USERS)
     @Produces(MediaTypes.USERS)
-    public Users get() throws GroupNotFoundException {
-        return getService().getGroup(group).getMembers();
+    public Users get(
+            @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit,
+            @QueryParam(RESTConstants.PAGE) @DefaultValue("0") int page) {
+        return getService().getGroupMembers(group, new Pagination(limit, page));
     }
 
     @POST
     @Authenticated
-    @Schema(request = Schemas.USER)
-    @Consumes(MediaTypes.USER)
-    public void add(User user) throws UserNotFoundException,
-                                      GroupNotFoundException {
-        if (!canModifyUser(user)) {
+    @Schema(request = Schemas.USER_REF)
+    @Consumes(MediaTypes.USER_REF)
+    public void add(UserReference user) throws UserNotFoundException,
+                                               GroupNotFoundException {
+        User u = getService().getUser(user.getName());
+        if (!canModifyUser(u)) {
             throw new WebApplicationException(Status.FORBIDDEN);
         }
-        getService().addGroupMember(group, user);
+        getService().addGroupMember(group, u);
     }
 
     @Path(MEMBER)
-    public GroupMemberResource friend(@PathParam("member") String username)
+    public GroupMemberResource member(@PathParam("member") String username)
             throws UserNotFoundException {
-        // TODO throw 404 for non-members
-        return getResourceFactory()
-                .createGroupMemberResource(group, getService().getUser(username));
+        User user = getService().getUser(username);
+        if (!user.hasGroup(group)) {
+            throw new WebApplicationException(Status.NOT_FOUND);
+        }
+        return getResourceFactory().createGroupMemberResource(group, user);
     }
 }

@@ -38,5 +38,5 @@ public interface UserDao {
 
     void delete(User user);
 
-    Users getByGroup(Group group);
+    Users getByGroup(Group group, Pagination p);
 }

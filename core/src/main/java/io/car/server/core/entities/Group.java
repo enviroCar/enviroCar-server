@@ -23,7 +23,6 @@ package io.car.server.core.entities;
 public interface Group extends BaseEntity {
     String NAME = "name";
     String DESCRIPTION = "desc";
-    String MEMBERS = "members";
     String OWNER = "owner";
 
     Group setName(String name);
@@ -33,12 +32,6 @@ public interface Group extends BaseEntity {
     Group setDescription(String description);
 
     String getDescription();
-
-    Users getMembers();
-
-    Group addMember(User user);
-
-    Group removeMember(User user);
 
     Group setOwner(User user);
 
