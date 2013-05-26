@@ -17,18 +17,15 @@
  */
 package io.car.server.mongo.entity;
 
-import java.util.Set;
 
 import com.github.jmkgreen.morphia.annotations.Entity;
 import com.github.jmkgreen.morphia.annotations.Indexed;
 import com.github.jmkgreen.morphia.annotations.Property;
 import com.github.jmkgreen.morphia.annotations.Reference;
 import com.google.common.base.Objects;
-import com.google.common.collect.Sets;
 
 import io.car.server.core.entities.Group;
 import io.car.server.core.entities.User;
-import io.car.server.core.entities.Users;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
@@ -40,8 +37,6 @@ public class MongoGroup extends MongoBaseEntity<MongoGroup> implements Group {
     private String name;
     @Property(DESCRIPTION)
     private String description;
-    @Reference(value = MEMBERS, lazy = true)
-    private Set<MongoUser> members = Sets.newHashSet();
     @Reference(value = OWNER, lazy = true)
     private MongoUser owner;
 
@@ -68,23 +63,6 @@ public class MongoGroup extends MongoBaseEntity<MongoGroup> implements Group {
     }
 
     @Override
-    public Users getMembers() {
-        return Users.from(this.members).build();
-    }
-
-    @Override
-    public MongoGroup addMember(User user) {
-        this.members.add((MongoUser) user);
-        return this;
-    }
-
-    @Override
-    public MongoGroup removeMember(User user) {
-        this.members.remove((MongoUser) user);
-        return this;
-    }
-
-    @Override
     public MongoGroup setOwner(User user) {
         this.owner = (MongoUser) user;
         return this;
@@ -103,7 +81,6 @@ public class MongoGroup extends MongoBaseEntity<MongoGroup> implements Group {
                 .add(NAME, getName())
                 .add(DESCRIPTION, getDescription())
                 .add(OWNER, getOwner())
-                .add(MEMBERS, getMembers())
                 .toString();
     }
 }

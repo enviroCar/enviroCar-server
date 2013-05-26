@@ -36,13 +36,24 @@ import io.car.server.mongo.entity.MongoUser;
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class MongoGroupDao extends AbstractMongoDao<String, MongoGroup, Groups>
+public class MongoGroupDao extends AbstractMongoDao<MongoGroup, Groups>
         implements GroupDao {
     private static final Logger log = LoggerFactory
             .getLogger(MongoGroupDao.class);
+    private MongoUserDao userDao;
+
     @Inject
     public MongoGroupDao(Datastore ds) {
         super(MongoGroup.class, ds);
+    }
+
+    public MongoUserDao getUserDao() {
+        return userDao;
+    }
+
+    @Inject
+    public void setUserDao(MongoUserDao userDao) {
+        this.userDao = userDao;
     }
 
     @Override
@@ -74,13 +85,9 @@ public class MongoGroupDao extends AbstractMongoDao<String, MongoGroup, Groups>
 
     @Override
     public void delete(Group group) {
-        delete((MongoGroup) group);
-    }
-
-    @Override
-    public Groups getByMember(User member, Pagination p) {
-        return fetch(q().field(MongoGroup.MEMBERS)
-                .hasThisElement(member), p);
+        MongoGroup mg = (MongoGroup) group;
+        getUserDao().removeGroup(mg);
+        delete(mg);
     }
 
     @Override
@@ -92,21 +99,9 @@ public class MongoGroupDao extends AbstractMongoDao<String, MongoGroup, Groups>
     }
 
     void removeUser(MongoUser user) {
-
         UpdateResults<MongoGroup> result = update(
-                q().field(MongoGroup.MEMBERS).hasThisElement(user),
-                up().removeAll(MongoGroup.MEMBERS, user));
-
-        if (result.getHadError()) {
-            log.error("Error removing user {} as group member: {}",
-                      user, result.getError());
-        } else {
-            log.debug("Removed user {} from {} groups",
-                      user, result.getUpdatedCount());
-        }
-
-        result = update(q().field(MongoGroup.OWNER).equal(user),
-                        up().unset(MongoGroup.OWNER));
+                q().field(MongoGroup.OWNER).equal(user),
+                up().unset(MongoGroup.OWNER));
 
         if (result.getHadError()) {
             log.error("Error removing user {} as group owner: {}",
@@ -121,5 +116,10 @@ public class MongoGroupDao extends AbstractMongoDao<String, MongoGroup, Groups>
     protected Groups createPaginatedIterable(Iterable<MongoGroup> i,
                                              Pagination p, long count) {
         return Groups.from(i).withElements(count).withPagination(p).build();
+    }
+
+    @Override
+    public void update(Group group) {
+        updateTimestamp((MongoGroup) group);
     }
 }

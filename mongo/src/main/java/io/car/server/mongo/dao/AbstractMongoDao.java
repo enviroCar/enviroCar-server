@@ -18,6 +18,9 @@
 package io.car.server.mongo.dao;
 
 
+import org.bson.types.ObjectId;
+import org.joda.time.DateTime;
+
 import com.github.jmkgreen.morphia.Datastore;
 import com.github.jmkgreen.morphia.Key;
 import com.github.jmkgreen.morphia.dao.BasicDAO;
@@ -38,11 +41,11 @@ import io.car.server.mongo.entity.MongoBaseEntity;
  *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public abstract class AbstractMongoDao<K, E extends MongoBaseEntity<E>, C extends PaginatedIterable<? super E>> {
-    private final BasicDAO<E, K> dao;
+public abstract class AbstractMongoDao<E extends MongoBaseEntity<E>, C extends PaginatedIterable<? super E>> {
+    private final BasicDAO<E, ObjectId> dao;
 
     public AbstractMongoDao(Class<E> type, Datastore ds) {
-        this.dao = new BasicDAO<E, K>(type, ds);
+        this.dao = new BasicDAO<E, ObjectId>(type, ds);
     }
 
     protected Query<E> q() {
@@ -53,7 +56,7 @@ public abstract class AbstractMongoDao<K, E extends MongoBaseEntity<E>, C extend
         return dao.createUpdateOperations();
     }
 
-    protected E get(K key) {
+    protected E get(ObjectId key) {
         return dao.get(key);
     }
 
@@ -69,7 +72,7 @@ public abstract class AbstractMongoDao<K, E extends MongoBaseEntity<E>, C extend
         return dao.save(entity);
     }
 
-    protected UpdateResults<E> update(K key, UpdateOperations<E> ops) {
+    protected UpdateResults<E> update(ObjectId key, UpdateOperations<E> ops) {
         return dao.update(q().field(Mapper.ID_KEY).equal(key), ops);
     }
 
@@ -93,7 +96,11 @@ public abstract class AbstractMongoDao<K, E extends MongoBaseEntity<E>, C extend
     protected abstract C createPaginatedIterable(
             Iterable<E> i, Pagination p, long count);
 
-    protected WriteResult delete(K id) {
+    protected WriteResult delete(ObjectId id) {
         return dao.deleteById(id);
+    }
+
+    protected void updateTimestamp(E e) {
+        update(e.getId(), up().set(MongoBaseEntity.LAST_MODIFIED, new DateTime()));
     }
 }

@@ -38,7 +38,6 @@ public class GroupValidator extends AbstractValidator<Group> {
     public Group validateUpdate(Group t) throws ValidationException {
         isNotEmpty("name", t.getName());
         isNotEmpty("description", t.getDescription());
-        isEmpty("members", t.getMembers());
         isNull("owner", t.getOwner());
         isNull("created", t.getCreationDate());
         isNull("modified", t.getLastModificationDate());

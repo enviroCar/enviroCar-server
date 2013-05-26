@@ -26,7 +26,7 @@ public interface User extends BaseEntity {
     String TOKEN = "token";
     String IS_ADMIN = "isAdmin";
     String FRIENDS = "friends";
-    String TRACKS = "tracks";
+    String GROUPS = "groups";
 
     String getName();
 
@@ -51,4 +51,12 @@ public interface User extends BaseEntity {
     User removeFriend(User user);
 
     boolean hasFriend(User user);
+
+    Groups getGroups();
+
+    User addGroup(Group group);
+
+    User removeGroup(Group group);
+
+    boolean hasGroup(Group group);
 }

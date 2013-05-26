@@ -21,6 +21,7 @@ import javax.annotation.Nullable;
 
 import com.google.inject.assistedinject.Assisted;
 
+import io.car.server.core.entities.Group;
 import io.car.server.core.entities.Measurement;
 import io.car.server.core.entities.Phenomenon;
 import io.car.server.core.entities.Sensor;
@@ -41,30 +42,24 @@ public interface ResourceFactory {
     FriendResource createFriendResource(@Assisted("user") User user,
                                         @Assisted("friend") User friend);
 
-    GroupResource createGroupResource(
-            @Assisted("group") String group);
+    GroupResource createGroupResource(Group group);
 
     GroupsResource createGroupsResource(User user);
 
-    GroupMemberResource createGroupMemberResource(
-            @Assisted("group") String group, User member);
+    GroupMemberResource createGroupMemberResource(Group group, User member);
 
-    GroupMembersResource createGroupMembersResource(
-            @Assisted("group") String group);
+    GroupMembersResource createGroupMembersResource(Group group);
 
     TrackResource createTrackResource(Track track);
 
-    TracksResource createTracksResource(
-            @Nullable User user);
+    TracksResource createTracksResource(@Nullable User user);
 
-    MeasurementResource createMeasurementResource(
-            Measurement measurement,
-            @Nullable User user,
-            @Nullable Track track);
+    MeasurementResource createMeasurementResource(Measurement measurement,
+                                                  @Nullable User user,
+                                                  @Nullable Track track);
 
-    MeasurementsResource createMeasurementsResource(
-            @Nullable User user,
-            @Nullable Track track);
+    MeasurementsResource createMeasurementsResource(@Nullable User user,
+                                                    @Nullable Track track);
 
     PhenomenonResource createPhenomenonResource(Phenomenon phenomenon);
 

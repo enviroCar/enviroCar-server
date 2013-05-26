@@ -24,6 +24,7 @@ import javax.ws.rs.core.Response.Status;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
+import io.car.server.core.entities.Group;
 import io.car.server.core.entities.User;
 import io.car.server.core.exception.GroupNotFoundException;
 import io.car.server.core.exception.UserNotFoundException;
@@ -33,10 +34,10 @@ import io.car.server.rest.auth.Authenticated;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class GroupMemberResource extends UserResource {
-    private String group;
+    private Group group;
 
     @Inject
-    public GroupMemberResource(@Assisted("group") String group,
+    public GroupMemberResource(@Assisted Group group,
                                @Assisted User member) {
         super(member);
         this.group = group;

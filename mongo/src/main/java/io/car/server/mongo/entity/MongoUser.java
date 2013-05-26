@@ -17,6 +17,7 @@
  */
 package io.car.server.mongo.entity;
 
+import static io.car.server.core.entities.User.FRIENDS;
 import static io.car.server.mongo.entity.MongoBaseEntity.ID;
 
 import java.util.Set;
@@ -28,6 +29,8 @@ import com.github.jmkgreen.morphia.annotations.Reference;
 import com.google.common.base.Objects;
 import com.google.common.collect.Sets;
 
+import io.car.server.core.entities.Group;
+import io.car.server.core.entities.Groups;
 import io.car.server.core.entities.User;
 import io.car.server.core.entities.Users;
 
@@ -48,6 +51,8 @@ public class MongoUser extends MongoBaseEntity<MongoUser> implements User {
     private boolean isAdmin = false;
     @Reference(value = FRIENDS, lazy = true)
     private Set<MongoUser> friends = Sets.newHashSet();
+    @Reference(value = GROUPS, lazy = true)
+    private Set<MongoGroup> groups = Sets.newHashSet();
 
     @Override
     public String getName() {
@@ -124,13 +129,34 @@ public class MongoUser extends MongoBaseEntity<MongoUser> implements User {
     }
 
     @Override
+    public Groups getGroups() {
+        return Groups.from(groups).build();
+    }
+
+    @Override
+    public MongoUser addGroup(Group group) {
+        this.groups.add((MongoGroup) group);
+        return this;
+    }
+
+    @Override
+    public MongoUser removeGroup(Group group) {
+        this.groups.remove((MongoGroup) group);
+        return this;
+    }
+
+    @Override
+    public boolean hasGroup(Group group) {
+        return this.groups.contains((MongoGroup) group);
+    }
+
+    @Override
     public String toString() {
         return Objects.toStringHelper(this)
                 .omitNullValues()
                 .add(ID, getId())
                 .add(NAME, getName())
                 .add(MAIL, getMail())
-                .add(TOKEN, getToken())
                 .add(IS_ADMIN, isAdmin())
                 .add(FRIENDS, getFriends())
                 .toString();
