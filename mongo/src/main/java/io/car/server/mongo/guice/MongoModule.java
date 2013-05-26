@@ -29,6 +29,12 @@ import com.mongodb.DB;
 import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
 
+import io.car.server.core.activities.Activity;
+import io.car.server.core.activities.ActivityFactory;
+import io.car.server.core.activities.GroupActivity;
+import io.car.server.core.activities.MeasurementActivity;
+import io.car.server.core.activities.TrackActivity;
+import io.car.server.core.activities.UserActivity;
 import io.car.server.core.entities.EntityFactory;
 import io.car.server.core.entities.Group;
 import io.car.server.core.entities.Measurement;
@@ -38,6 +44,11 @@ import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
 import io.car.server.mongo.MongoDB;
+import io.car.server.mongo.activities.MongoActivity;
+import io.car.server.mongo.activities.MongoGroupActivity;
+import io.car.server.mongo.activities.MongoMeasurementActivity;
+import io.car.server.mongo.activities.MongoTrackActivity;
+import io.car.server.mongo.activities.MongoUserActivity;
 import io.car.server.mongo.cache.EntityCache;
 import io.car.server.mongo.cache.PhenomenonCache;
 import io.car.server.mongo.cache.SensorCache;
@@ -65,6 +76,13 @@ public class MongoModule extends AbstractModule {
                 .implement(Phenomenon.class, MongoPhenomenon.class)
                 .implement(Sensor.class, MongoSensor.class)
                 .build(EntityFactory.class));
+        install(new FactoryModuleBuilder()
+                .implement(Activity.class, MongoActivity.class)
+                .implement(GroupActivity.class, MongoGroupActivity.class)
+                .implement(MeasurementActivity.class, MongoMeasurementActivity.class)
+                .implement(TrackActivity.class, MongoTrackActivity.class)
+                .implement(UserActivity.class, MongoUserActivity.class)
+                .build(ActivityFactory.class));
         bind(new TypeLiteral<EntityCache<MongoUser>>() {
         }).to(UserCache.class).in(Scopes.SINGLETON);
         bind(new TypeLiteral<EntityCache<MongoPhenomenon>>() {
