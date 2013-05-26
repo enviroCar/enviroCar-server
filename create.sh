@@ -21,6 +21,18 @@ for i in {1..$USERS}; do
 	}"
 done
 
+# friends
+for i in {1..$USERS}; do
+	for j in {1..$USERS}; do
+		curl -X POST \
+			-H "Content-Type: application/json" \
+			-H "X-Token: testuser$i" \
+			-H "X-User: testuser$i" \
+			$URL/rest/users/testuser$i/friends -d \
+			"{ \"name\": \"testuser$j\" }"
+	done
+done
+
 # groups
 for i in {1..$GROUPS}; do
 	curl -X POST \
