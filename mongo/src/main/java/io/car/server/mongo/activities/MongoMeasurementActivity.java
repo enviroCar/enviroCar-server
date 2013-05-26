@@ -17,7 +17,7 @@
  */
 package io.car.server.mongo.activities;
 
-import com.github.jmkgreen.morphia.annotations.Property;
+import com.github.jmkgreen.morphia.annotations.Embedded;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
@@ -29,7 +29,7 @@ import io.car.server.mongo.entity.MongoMeasurement;
 
 public class MongoMeasurementActivity extends MongoActivity implements
         MeasurementActivity {
-    @Property(MEASUREMENT)
+    @Embedded(MEASUREMENT)
     private MongoMeasurement measurement;
 
     @Inject

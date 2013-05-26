@@ -17,7 +17,7 @@
  */
 package io.car.server.mongo.activities;
 
-import com.github.jmkgreen.morphia.annotations.Property;
+import com.github.jmkgreen.morphia.annotations.Embedded;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
@@ -31,7 +31,7 @@ import io.car.server.mongo.entity.MongoGroup;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class MongoGroupActivity extends MongoActivity implements GroupActivity {
-    @Property(GROUP)
+    @Embedded(GROUP)
     private MongoGroup group;
 
     @Inject

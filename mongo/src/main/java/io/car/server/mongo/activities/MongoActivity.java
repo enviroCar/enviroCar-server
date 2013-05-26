@@ -19,6 +19,7 @@ package io.car.server.mongo.activities;
 
 import org.joda.time.DateTime;
 
+import com.github.jmkgreen.morphia.annotations.Embedded;
 import com.github.jmkgreen.morphia.annotations.Entity;
 import com.github.jmkgreen.morphia.annotations.Indexed;
 import com.github.jmkgreen.morphia.annotations.Polymorphic;
@@ -43,7 +44,7 @@ public class MongoActivity extends MongoEntity<MongoActivity>
     @Property(TIME)
     private DateTime time = new DateTime();
     @Indexed
-    @Property(USER)
+    @Embedded(USER)
     private MongoUser user;
     @Indexed
     @Property(TYPE)

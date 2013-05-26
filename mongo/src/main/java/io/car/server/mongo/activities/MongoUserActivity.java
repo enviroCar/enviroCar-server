@@ -17,7 +17,7 @@
  */
 package io.car.server.mongo.activities;
 
-import com.github.jmkgreen.morphia.annotations.Property;
+import com.github.jmkgreen.morphia.annotations.Embedded;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
@@ -30,7 +30,7 @@ import io.car.server.mongo.entity.MongoUser;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class MongoUserActivity extends MongoActivity implements UserActivity {
-    @Property(OTHER)
+    @Embedded(OTHER)
     private MongoUser other;
 
     @Inject

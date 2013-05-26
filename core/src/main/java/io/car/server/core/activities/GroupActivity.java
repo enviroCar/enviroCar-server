@@ -27,7 +27,7 @@ import io.car.server.core.entities.Group;
  *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public interface GroupActivity {
+public interface GroupActivity extends Activity {
     String GROUP = "group";
     Group getGroup();
 
