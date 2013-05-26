@@ -18,10 +18,11 @@
 package io.car.server.mongo.dao;
 
 import org.bson.types.ObjectId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.github.jmkgreen.morphia.Datastore;
-import com.github.jmkgreen.morphia.dao.BasicDAO;
-import com.github.jmkgreen.morphia.query.Query;
+import com.github.jmkgreen.morphia.query.UpdateResults;
 import com.google.inject.Inject;
 import com.vividsolutions.jts.geom.Geometry;
 
@@ -32,14 +33,17 @@ import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
 import io.car.server.core.util.Pagination;
 import io.car.server.mongo.entity.MongoMeasurement;
+import io.car.server.mongo.entity.MongoUser;
 
 /**
  *
  * @author Arne de Wall
  *
  */
-public class MongoMeasurementDao extends BasicDAO<MongoMeasurement, String>
+public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasurement, Measurements>
         implements MeasurementDao {
+    private static final Logger log = LoggerFactory
+            .getLogger(MongoMeasurementDao.class);
     @Inject
     protected MongoMeasurementDao(Datastore ds) {
         super(MongoMeasurement.class, ds);
@@ -64,17 +68,13 @@ public class MongoMeasurementDao extends BasicDAO<MongoMeasurement, String>
 
     @Override
     public Measurements getByPhenomenon(String phenomenon, Pagination p) {
-        Query<MongoMeasurement> q = createQuery();
-        q.field(MongoMeasurement.PHENOMENONS).equal(phenomenon);
-        return fetch(q, p);
+        return fetch(q().field(MongoMeasurement.PHENOMENONS).equal(phenomenon), p);
     }
 
     @Override
     public Measurements getByTrack(Track track, Pagination p) {
-        Query<MongoMeasurement> q =
-                createQuery().field(MongoMeasurement.TRACK).equal(track)
-                .order(MongoMeasurement.TIME);
-        return fetch(q, p);
+        return fetch(q().field(MongoMeasurement.TRACK).equal(track)
+                .order(MongoMeasurement.TIME), p);
     }
 
     @Override
@@ -86,14 +86,13 @@ public class MongoMeasurementDao extends BasicDAO<MongoMeasurement, String>
     @Override
     public Measurements getByBbox(double minx, double miny, double maxx,
                                   double maxy, Pagination p) {
-        Query<MongoMeasurement> q = createQuery();
-        q.field(MongoMeasurement.GEOMETRY).within(minx, miny, maxx, maxy);
-        return fetch(q, p);
+        return fetch(q().field(MongoMeasurement.GEOMETRY)
+                .within(minx, miny, maxx, maxy), p);
     }
 
     @Override
     public Measurements get(Pagination p) {
-        return fetch(createQuery().order(MongoMeasurement.TIME), p);
+        return fetch(q().order(MongoMeasurement.TIME), p);
     }
 
     @Override
@@ -104,25 +103,33 @@ public class MongoMeasurementDao extends BasicDAO<MongoMeasurement, String>
         } catch (IllegalArgumentException e) {
             return null;
         }
-        return find(createQuery().field(MongoMeasurement.ID).equal(oid)).get();
+        return get(oid);
     }
 
     @Override
     public Measurements getByUser(User user, Pagination p) {
-        return fetch(createQuery().field(MongoMeasurement.USER).equal(user)
+        return fetch(q().field(MongoMeasurement.USER).equal(user)
                 .order(MongoMeasurement.TIME), p);
     }
 
-    protected Measurements fetch(Query<MongoMeasurement> q, Pagination p) {
-        long count = 0;
-        if (p != null) {
-            count = count(q);
-            q.limit(p.getLimit()).offset(p.getOffset());
+    void removeUser(MongoUser user) {
+        UpdateResults<MongoMeasurement> result = update(
+                q().field(MongoMeasurement.USER).equal(user),
+                up().unset(MongoMeasurement.USER));
+        if (result.getHadError()) {
+            log.error("Error removing user {} from measurement: {}",
+                      user, result.getError());
+        } else {
+            log.debug("Removed user {} from {} measurements",
+                      user, result.getUpdatedCount());
         }
-        Iterable<MongoMeasurement> entities = find(q).fetch();
-        return Measurements.from(entities)
-                .withPagination(p)
-                .withElements(count)
+    }
+
+    @Override
+    protected Measurements createPaginatedIterable(
+            Iterable<MongoMeasurement> i,
+            Pagination p, long count) {
+        return Measurements.from(i).withPagination(p).withElements(count)
                 .build();
     }
 }

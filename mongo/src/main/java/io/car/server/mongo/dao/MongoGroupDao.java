@@ -17,9 +17,12 @@
  */
 package io.car.server.mongo.dao;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.github.jmkgreen.morphia.Datastore;
-import com.github.jmkgreen.morphia.dao.BasicDAO;
 import com.github.jmkgreen.morphia.query.Query;
+import com.github.jmkgreen.morphia.query.UpdateResults;
 import com.google.inject.Inject;
 
 import io.car.server.core.dao.GroupDao;
@@ -28,12 +31,15 @@ import io.car.server.core.entities.Groups;
 import io.car.server.core.entities.User;
 import io.car.server.core.util.Pagination;
 import io.car.server.mongo.entity.MongoGroup;
+import io.car.server.mongo.entity.MongoUser;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class MongoGroupDao extends BasicDAO<MongoGroup, String>
+public class MongoGroupDao extends AbstractMongoDao<String, MongoGroup, Groups>
         implements GroupDao {
+    private static final Logger log = LoggerFactory
+            .getLogger(MongoGroupDao.class);
     @Inject
     public MongoGroupDao(Datastore ds) {
         super(MongoGroup.class, ds);
@@ -41,27 +47,17 @@ public class MongoGroupDao extends BasicDAO<MongoGroup, String>
 
     @Override
     public MongoGroup getByName(String name) {
-        return createQuery().field(MongoGroup.NAME).equal(name).get();
+        return q().field(MongoGroup.NAME).equal(name).get();
     }
 
     @Override
     public Groups getByOwner(User owner, Pagination p) {
-        Query<MongoGroup> q = createQuery().field(MongoGroup.OWNER).equal(owner);
-        return fetch(q, p);
-    }
-
-    protected Groups fetch(Query<MongoGroup> q, Pagination p) {
-        long count = count(q);
-        q.limit(p.getLimit()).offset(p.getOffset());
-        Iterable<MongoGroup> entities = find(q).fetch();
-        return Groups.from(entities).withElements(count).withPagination(p)
-                .build();
+        return fetch(q().field(MongoGroup.OWNER).equal(owner), p);
     }
 
     @Override
     public Groups get(Pagination p) {
-        Query<MongoGroup> q = createQuery().order(MongoGroup.LAST_MODIFIED);
-        return fetch(q, p);
+        return fetch(q().order(MongoGroup.LAST_MODIFIED), p);
     }
 
     @Override
@@ -83,17 +79,47 @@ public class MongoGroupDao extends BasicDAO<MongoGroup, String>
 
     @Override
     public Groups getByMember(User member, Pagination p) {
-        Query<MongoGroup> q =
-                createQuery().field(MongoGroup.MEMBERS)
-                .hasThisElement(member);
-        return fetch(q, p);
+        return fetch(q().field(MongoGroup.MEMBERS)
+                .hasThisElement(member), p);
     }
 
     @Override
     public Groups search(String search, Pagination p) {
-        Query<MongoGroup> q = createQuery();
+        Query<MongoGroup> q = q();
         q.or(q.criteria(MongoGroup.NAME).containsIgnoreCase(search),
              q.criteria(MongoGroup.DESCRIPTION).containsIgnoreCase(search));
         return fetch(q, p);
+    }
+
+    void removeUser(MongoUser user) {
+
+        UpdateResults<MongoGroup> result = update(
+                q().field(MongoGroup.MEMBERS).hasThisElement(user),
+                up().removeAll(MongoGroup.MEMBERS, user));
+
+        if (result.getHadError()) {
+            log.error("Error removing user {} as group member: {}",
+                      user, result.getError());
+        } else {
+            log.debug("Removed user {} from {} groups",
+                      user, result.getUpdatedCount());
+        }
+
+        result = update(q().field(MongoGroup.OWNER).equal(user),
+                        up().unset(MongoGroup.OWNER));
+
+        if (result.getHadError()) {
+            log.error("Error removing user {} as group owner: {}",
+                      user, result.getError());
+        } else {
+            log.debug("Removed user {} as owner from {} groups",
+                      user, result.getUpdatedCount());
+        }
+    }
+
+    @Override
+    protected Groups createPaginatedIterable(Iterable<MongoGroup> i,
+                                             Pagination p, long count) {
+        return Groups.from(i).withElements(count).withPagination(p).build();
     }
 }

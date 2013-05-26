@@ -19,10 +19,12 @@ package io.car.server.mongo.dao;
 
 import org.bson.types.ObjectId;
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.github.jmkgreen.morphia.Datastore;
-import com.github.jmkgreen.morphia.dao.BasicDAO;
 import com.github.jmkgreen.morphia.query.Query;
+import com.github.jmkgreen.morphia.query.UpdateResults;
 import com.google.inject.Inject;
 import com.vividsolutions.jts.geom.Geometry;
 
@@ -36,14 +38,18 @@ import io.car.server.core.entities.Tracks;
 import io.car.server.core.entities.User;
 import io.car.server.core.util.Pagination;
 import io.car.server.mongo.entity.MongoTrack;
+import io.car.server.mongo.entity.MongoUser;
 
 /**
  * 
  * @author Arne de Wall <a.dewall@52north.org>
  * 
  */
-public class MongoTrackDao extends BasicDAO<MongoTrack, ObjectId> implements
-        TrackDao {
+public class MongoTrackDao
+        extends AbstractMongoDao<ObjectId, MongoTrack, Tracks>
+        implements TrackDao {
+    private static final Logger log = LoggerFactory
+            .getLogger(MongoTrackDao.class);
     private final MeasurementDao measurementDao;
 
     @Inject
@@ -65,7 +71,7 @@ public class MongoTrackDao extends BasicDAO<MongoTrack, ObjectId> implements
 
     @Override
     public Tracks getByUser(User user, Pagination p) {
-        return fetch(createQuery().field(MongoTrack.USER).equal(user), p);
+        return fetch(q().field(MongoTrack.USER).equal(user), p);
     }
 
     @Override
@@ -96,8 +102,8 @@ public class MongoTrackDao extends BasicDAO<MongoTrack, ObjectId> implements
     @Override
     public Tracks getByBbox(double minx, double miny, double maxx, double maxy,
             Pagination p) {
-        Query<MongoTrack> q = createQuery();
-        q.field("measurements.location").within(minx, miny, maxx, maxy);
+        Query<MongoTrack> q = q().field("measurements.location")
+                .within(minx, miny, maxx, maxy);
         return fetch(q, p);
     }
 
@@ -109,12 +115,12 @@ public class MongoTrackDao extends BasicDAO<MongoTrack, ObjectId> implements
 
     @Override
     public Tracks get(Pagination p) {
-        return fetch(createQuery().order(MongoTrack.CREATION_DATE), p);
+        return fetch(q().order(MongoTrack.CREATION_DATE), p);
     }
 
     @Override
     public Tracks getBySensor(Sensor car, Pagination p) {
-        return fetch(createQuery().field(MongoTrack.SENSOR).equal(car), p);
+        return fetch(q().field(MongoTrack.SENSOR).equal(car), p);
     }
 
     @Override
@@ -125,16 +131,8 @@ public class MongoTrackDao extends BasicDAO<MongoTrack, ObjectId> implements
         } catch (IllegalArgumentException e) {
             return null;
         }
-        return createQuery().field(MongoTrack.ID).equal(oid)
+        return q().field(MongoTrack.ID).equal(oid)
                 .retrievedFields(true, MongoTrack.USER).get().getUser();
-    }
-
-    protected Tracks fetch(Query<MongoTrack> q, Pagination p) {
-        long count = count(q);
-        q.limit(p.getLimit()).offset(p.getOffset());
-        Iterable<MongoTrack> entities = find(q).fetch();
-        return Tracks.from(entities).withElements(count).withPagination(p)
-                .build();
     }
 
     @Override
@@ -145,15 +143,34 @@ public class MongoTrackDao extends BasicDAO<MongoTrack, ObjectId> implements
         } catch (IllegalArgumentException e) {
             return null;
         }
-        return createQuery().field(MongoTrack.ID).equal(oid)
+        return q().field(MongoTrack.ID).equal(oid)
                 .retrievedFields(true, MongoTrack.SENSOR).get().getSensor();
     }
 
     @Override
     public void update(Track track) {
-        getDatastore().update(
-                (MongoTrack) track,
-                createUpdateOperations().set(MongoTrack.LAST_MODIFIED,
-                        new DateTime()));
+        update(
+                ((MongoTrack) track).getId(),
+                up().set(MongoTrack.LAST_MODIFIED, new DateTime()));
+    }
+
+    void removeUser(MongoUser user) {
+        UpdateResults<MongoTrack> result = update(
+                q().field(MongoTrack.USER).equal(user),
+                up().unset(MongoTrack.USER));
+        if (result.getHadError()) {
+            log.error("Error removing user {} from tracks: {}",
+                      user, result.getError());
+        } else {
+            log.debug("Removed user {} from {} tracks",
+                      user, result.getUpdatedCount());
+        }
+    }
+
+    @Override
+    protected Tracks createPaginatedIterable(
+            Iterable<MongoTrack> i,
+            Pagination p, long count) {
+        return Tracks.from(i).withPagination(p).withElements(count).build();
     }
 }

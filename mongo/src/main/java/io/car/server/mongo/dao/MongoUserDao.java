@@ -17,29 +17,31 @@
  */
 package io.car.server.mongo.dao;
 
+import java.util.concurrent.ExecutionException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.github.jmkgreen.morphia.Datastore;
+import com.github.jmkgreen.morphia.dao.BasicDAO;
+import com.github.jmkgreen.morphia.query.Query;
+import com.github.jmkgreen.morphia.query.UpdateOperations;
+import com.github.jmkgreen.morphia.query.UpdateResults;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
+import com.google.inject.Inject;
+
 import io.car.server.core.dao.GroupDao;
 import io.car.server.core.dao.MeasurementDao;
 import io.car.server.core.dao.TrackDao;
 import io.car.server.core.dao.UserDao;
 import io.car.server.core.entities.Group;
-import io.car.server.core.entities.Measurement;
-import io.car.server.core.entities.Track;
-import io.car.server.core.entities.Tracks;
 import io.car.server.core.entities.User;
 import io.car.server.core.entities.Users;
 import io.car.server.core.util.Pagination;
 import io.car.server.mongo.cache.EntityCache;
 import io.car.server.mongo.entity.MongoUser;
-
-import java.util.concurrent.ExecutionException;
-
-import com.github.jmkgreen.morphia.Datastore;
-import com.github.jmkgreen.morphia.dao.BasicDAO;
-import com.github.jmkgreen.morphia.query.Query;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
-import com.google.inject.Inject;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
@@ -47,13 +49,14 @@ import com.google.inject.Inject;
  */
 public class MongoUserDao extends BasicDAO<MongoUser, String> implements
         UserDao {
+    private final Logger log = LoggerFactory.getLogger(MongoUserDao.class);
     private final LoadingCache<String, MongoUser> cache = CacheBuilder
             .newBuilder().maximumSize(1000)
             .build(new CacheLoader<String, MongoUser>() {
                 @Override
                 public MongoUser load(String key) throws UserNotFoundException {
                     MongoUser user = find(
-                            createQuery().field(MongoUser.NAME).equal(key))
+                            q().field(MongoUser.NAME).equal(key))
                             .get();
                     if (user == null) {
                         throw new UserNotFoundException();
@@ -63,18 +66,18 @@ public class MongoUserDao extends BasicDAO<MongoUser, String> implements
                 }
             });
     private final EntityCache<MongoUser> userCache;
-    private final TrackDao trackDao;
-    private final MeasurementDao measurementDao;
-    private final GroupDao groupDao;
+    private final MongoTrackDao trackDao;
+    private final MongoMeasurementDao measurementDao;
+    private final MongoGroupDao groupDao;
 
     @Inject
     public MongoUserDao(Datastore datastore, EntityCache<MongoUser> userCache,
             TrackDao trackDao, MeasurementDao measurementDao, GroupDao groupDao) {
         super(MongoUser.class, datastore);
         this.userCache = userCache;
-        this.trackDao = trackDao;
-        this.measurementDao = measurementDao;
-        this.groupDao = groupDao;
+        this.trackDao = (MongoTrackDao) trackDao;
+        this.measurementDao = (MongoMeasurementDao) measurementDao;
+        this.groupDao = (MongoGroupDao) groupDao;
     }
 
     @Override
@@ -91,12 +94,12 @@ public class MongoUserDao extends BasicDAO<MongoUser, String> implements
 
     @Override
     public MongoUser getByMail(String mail) {
-        return find(createQuery().field(MongoUser.MAIL).equal(mail)).get();
+        return find(q().field(MongoUser.MAIL).equal(mail)).get();
     }
 
     @Override
     public Users get(Pagination p) {
-        Query<MongoUser> q = createQuery().order(MongoUser.CREATION_DATE);
+        Query<MongoUser> q = q().order(MongoUser.CREATION_DATE);
         return fetch(q, p);
     }
 
@@ -115,40 +118,24 @@ public class MongoUserDao extends BasicDAO<MongoUser, String> implements
     }
 
     @Override
-    public void delete(User user) {
-        // FIXME remove user from groups, friend lists, measurments and tracks
-        Pagination page = new Pagination();
-        do {
-            Tracks tracks = trackDao.getByUser(user, page);
-            for (Track t : tracks) {
-                t.setUser(null);
-                trackDao.save(t);
-            }
-        } while ((page = page.next(page.getSize())) != null);
-        
-        page = new Pagination();
-        do {
-            for (Measurement m : measurementDao.getByUser(user, page)) {
-                m.setUser(null);
-                measurementDao.save(m);
-            }
-        } while ((page = page.next(page.getSize())) != null);
-               
-        page = new Pagination();
-        do{
-            for(Group g : groupDao.getByMember(user, page)){
-                g.removeMember(user);
-                groupDao.save(g);
-            }
-        } while((page = page.next(page.getSize())) != null);
-        
-        for(User u : user.getFriends()){
-            u.removeFriend(user);
-            save(u);
-            user.removeFriend(u);
+    public void delete(User u) {
+        MongoUser user = (MongoUser) u;
+
+        trackDao.removeUser(user);
+        measurementDao.removeUser(user);
+        groupDao.removeUser(user);
+        UpdateResults<MongoUser> result = update(
+                q().field(MongoUser.FRIENDS).hasThisElement(user),
+                up().removeAll(MongoUser.FRIENDS, user));
+        if (result.getHadError()) {
+            log.error("Error removing user {} as friend: {}",
+                      u, result.getError());
+        } else {
+            log.debug("Removed user {} from {} friend lists",
+                      u, result.getUpdatedCount());
         }
-        
-        delete((MongoUser) user);
+        delete(user);
+        cache.invalidate(user.getName());
     }
 
     @Override
@@ -162,6 +149,14 @@ public class MongoUserDao extends BasicDAO<MongoUser, String> implements
         Iterable<MongoUser> entities = find(q).fetch();
         return Users.from(entities).withElements(count).withPagination(p)
                 .build();
+    }
+
+    protected Query<MongoUser> q() {
+        return createQuery();
+    }
+
+    protected UpdateOperations<MongoUser> up() {
+        return createUpdateOperations();
     }
 
     private static class UserNotFoundException extends Exception {

@@ -24,8 +24,8 @@ import javax.ws.rs.core.MediaType;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import io.car.server.core.entities.User;
-import io.car.server.rest.MediaTypes;
 import io.car.server.rest.JSONConstants;
+import io.car.server.rest.MediaTypes;
 import io.car.server.rest.resources.RootResource;
 import io.car.server.rest.resources.UserResource;
 import io.car.server.rest.resources.UsersResource;
@@ -37,6 +37,9 @@ public class UserEncoder extends AbstractEntityEncoder<User> {
 
     @Override
     public ObjectNode encode(User t, MediaType mediaType) {
+        if (t == null) {
+            return null;
+        }
         ObjectNode j = getJsonFactory().objectNode()
                 .put(JSONConstants.NAME_KEY, t.getName());
         if (mediaType.equals(MediaTypes.USER_TYPE)) {
