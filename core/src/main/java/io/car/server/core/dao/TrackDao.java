@@ -51,8 +51,4 @@ public interface TrackDao {
     Tracks getByBbox(Geometry bbox, Pagination p);
 
     Tracks get(Pagination p);
-
-    User getUser(String track);
-
-    Sensor getSensor(String track);
 }
