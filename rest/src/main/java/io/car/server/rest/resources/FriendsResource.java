@@ -34,6 +34,7 @@ import io.car.server.core.entities.Users;
 import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.rest.MediaTypes;
 import io.car.server.rest.Schemas;
+import io.car.server.rest.UserReference;
 import io.car.server.rest.auth.Authenticated;
 import io.car.server.rest.validation.Schema;
 
@@ -60,7 +61,7 @@ public class FriendsResource extends AbstractResource {
     @Authenticated
     @Schema(request = Schemas.USER_REF)
     @Consumes(MediaTypes.USER_REF)
-    public void add(User friend) throws UserNotFoundException {
+    public void add(UserReference friend) throws UserNotFoundException {
         if (friend.getName() == null ||
             friend.getName().equals(getCurrentUser())) {
             throw new WebApplicationException(Status.BAD_REQUEST);

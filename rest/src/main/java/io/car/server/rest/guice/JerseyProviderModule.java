@@ -39,6 +39,7 @@ import io.car.server.rest.provider.StatisticsProvider;
 import io.car.server.rest.provider.TrackProvider;
 import io.car.server.rest.provider.TracksProvider;
 import io.car.server.rest.provider.UserProvider;
+import io.car.server.rest.provider.UserReferenceProvider;
 import io.car.server.rest.provider.UsersProvider;
 
 /**
@@ -50,6 +51,7 @@ public class JerseyProviderModule extends AbstractModule {
         bind(GroupProvider.class).in(Scopes.SINGLETON);
         bind(GroupsProvider.class).in(Scopes.SINGLETON);
         bind(UserProvider.class).in(Scopes.SINGLETON);
+        bind(UserReferenceProvider.class).in(Scopes.SINGLETON);
         bind(UsersProvider.class).in(Scopes.SINGLETON);
         bind(TrackProvider.class).in(Scopes.SINGLETON);
         bind(TracksProvider.class).in(Scopes.SINGLETON);

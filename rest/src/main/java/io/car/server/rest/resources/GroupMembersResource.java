@@ -40,6 +40,7 @@ import io.car.server.core.util.Pagination;
 import io.car.server.rest.MediaTypes;
 import io.car.server.rest.RESTConstants;
 import io.car.server.rest.Schemas;
+import io.car.server.rest.UserReference;
 import io.car.server.rest.auth.Authenticated;
 import io.car.server.rest.validation.Schema;
 
@@ -68,8 +69,8 @@ public class GroupMembersResource extends AbstractResource {
     @Authenticated
     @Schema(request = Schemas.USER_REF)
     @Consumes(MediaTypes.USER_REF)
-    public void add(User user) throws UserNotFoundException,
-                                      GroupNotFoundException {
+    public void add(UserReference user) throws UserNotFoundException,
+                                               GroupNotFoundException {
         User u = getService().getUser(user.getName());
         if (!canModifyUser(u)) {
             throw new WebApplicationException(Status.FORBIDDEN);
