@@ -20,15 +20,8 @@ package io.car.server.rest.guice;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 
-import io.car.server.rest.resources.FriendsResource;
-import io.car.server.rest.resources.GroupMemberResource;
-import io.car.server.rest.resources.GroupMembersResource;
-import io.car.server.rest.resources.GroupResource;
-import io.car.server.rest.resources.GroupsResource;
 import io.car.server.rest.resources.ResourceFactory;
 import io.car.server.rest.resources.RootResource;
-import io.car.server.rest.resources.UserResource;
-import io.car.server.rest.resources.UsersResource;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
@@ -36,16 +29,7 @@ import io.car.server.rest.resources.UsersResource;
 public class JerseyResourceModule extends AbstractModule {
     @Override
     protected void configure() {
-        install(new FactoryModuleBuilder()
-                .implement(UserResource.class, UserResource.class)
-                .implement(UsersResource.class, UsersResource.class)
-                .implement(FriendsResource.class, FriendsResource.class)
-                .implement(GroupResource.class, GroupResource.class)
-                .implement(GroupsResource.class, GroupsResource.class)
-                .implement(GroupMembersResource.class, GroupMembersResource.class)
-                .implement(GroupMemberResource.class, GroupMemberResource.class)
-                .build(ResourceFactory.class));
-
+        install(new FactoryModuleBuilder().build(ResourceFactory.class));
         bind(RootResource.class);
     }
 }
