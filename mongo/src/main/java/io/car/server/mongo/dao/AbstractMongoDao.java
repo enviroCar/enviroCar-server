@@ -36,7 +36,7 @@ import io.car.server.mongo.entity.MongoBaseEntity;
  * @param <E> the entitiy type
  * @param <C> the collection type
  *
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public abstract class AbstractMongoDao<K, E extends MongoBaseEntity<E>, C extends PaginatedIterable<? super E>> {
     private final BasicDAO<E, K> dao;

@@ -38,6 +38,9 @@ public interface ResourceFactory {
 
     FriendsResource createFriendsResource(User user);
 
+    FriendResource createFriendResource(@Assisted("user") User user,
+                                        @Assisted("friend") User friend);
+
     GroupResource createGroupResource(
             @Assisted("group") String group);
 

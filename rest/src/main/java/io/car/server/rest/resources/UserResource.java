@@ -56,7 +56,7 @@ public class UserResource extends AbstractResource {
     public static final String TRACKS = "tracks";
     public static final String MEASUREMENTS = "measurements";
     public static final String STATISTICS = "statistics";
-    protected final User user;
+    private final User user;
 
     @Inject
     public UserResource(@Assisted User user) {
