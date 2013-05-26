@@ -37,7 +37,7 @@ import io.car.server.core.entities.User;
 import io.car.server.mongo.cache.EntityCache;
 
 @Entity("tracks")
-public class MongoTrack extends MongoBaseEntity<MongoTrack> implements Track {
+public class MongoTrack extends MongoEntityBase<MongoTrack> implements Track {
     @Indexed(IndexDirection.GEO2D)
     @Embedded(BBOX)
     private Geometry bbox;

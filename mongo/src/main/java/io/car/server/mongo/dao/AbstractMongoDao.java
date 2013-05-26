@@ -17,7 +17,6 @@
  */
 package io.car.server.mongo.dao;
 
-
 import org.bson.types.ObjectId;
 import org.joda.time.DateTime;
 
@@ -32,7 +31,8 @@ import com.mongodb.WriteResult;
 
 import io.car.server.core.util.PaginatedIterable;
 import io.car.server.core.util.Pagination;
-import io.car.server.mongo.entity.MongoBaseEntity;
+import io.car.server.mongo.entity.MongoEntityBase;
+import io.car.server.mongo.entity.MongoEntity;
 
 /**
  * @param <K> the key type
@@ -41,7 +41,7 @@ import io.car.server.mongo.entity.MongoBaseEntity;
  *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public abstract class AbstractMongoDao<E extends MongoBaseEntity<E>, C extends PaginatedIterable<? super E>> {
+public abstract class AbstractMongoDao<E extends MongoEntity<E>, C extends PaginatedIterable<? super E>> {
     private final BasicDAO<E, ObjectId> dao;
 
     public AbstractMongoDao(Class<E> type, Datastore ds) {
@@ -101,6 +101,7 @@ public abstract class AbstractMongoDao<E extends MongoBaseEntity<E>, C extends P
     }
 
     protected void updateTimestamp(E e) {
-        update(e.getId(), up().set(MongoBaseEntity.LAST_MODIFIED, new DateTime()));
+        update(e.getId(), up()
+                .set(MongoEntityBase.LAST_MODIFIED, new DateTime()));
     }
 }

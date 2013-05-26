@@ -31,7 +31,7 @@ import io.car.server.core.entities.User;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Entity("groups")
-public class MongoGroup extends MongoBaseEntity<MongoGroup> implements Group {
+public class MongoGroup extends MongoEntityBase<MongoGroup> implements Group {
     @Indexed(unique = true)
     @Property(NAME)
     private String name;

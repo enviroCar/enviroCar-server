@@ -17,38 +17,25 @@
  */
 package io.car.server.mongo.entity;
 
-import org.bson.types.ObjectId;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
-import com.github.jmkgreen.morphia.Key;
-import com.github.jmkgreen.morphia.annotations.Id;
 import com.github.jmkgreen.morphia.annotations.Indexed;
 import com.github.jmkgreen.morphia.annotations.PrePersist;
 import com.github.jmkgreen.morphia.annotations.Property;
-import com.github.jmkgreen.morphia.annotations.Transient;
-import com.github.jmkgreen.morphia.mapping.Mapper;
-import com.google.common.base.Objects;
-import com.google.inject.Inject;
 
 import io.car.server.core.entities.BaseEntity;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class MongoBaseEntity<T> implements BaseEntity {
-    public static final String ID = Mapper.ID_KEY;
-    @Id
-    private ObjectId id = new ObjectId();
+public class MongoEntityBase<T> extends MongoEntity<T> implements BaseEntity {
     @Indexed
     @Property(CREATION_DATE)
     private DateTime creationDate;
     @Indexed
     @Property(LAST_MODIFIED)
     private DateTime lastModificationDate;
-    @Inject
-    @Transient
-    private Mapper mapr;
 
     @Override
     public DateTime getCreationDate() {
@@ -79,49 +66,5 @@ public class MongoBaseEntity<T> implements BaseEntity {
             setCreationDate(now);
         }
         setLastModificationDate(now);
-    }
-
-    public ObjectId getId() {
-        return id;
-    }
-
-    @SuppressWarnings("unchecked")
-    public T setId(ObjectId id) {
-        this.id = id;
-        return (T) this;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(getId());
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final MongoBaseEntity<?> other = (MongoBaseEntity) obj;
-        return Objects.equal(this.getId(), other.getId());
-    }
-
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                .omitNullValues()
-                .add(ID, getId())
-                .toString();
-    }
-
-    @SuppressWarnings("unchecked")
-    public Key<T> asKey() {
-        if (this.id == null) {
-            return null;
-        } else {
-            return (Key<T>) mapr.getKey(this);
-        }
     }
 }

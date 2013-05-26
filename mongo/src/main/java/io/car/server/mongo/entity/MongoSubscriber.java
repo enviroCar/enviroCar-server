@@ -32,7 +32,7 @@ import io.car.server.core.subscription.Subscriptions;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Entity("subscribers")
-public class MongoSubscriber extends MongoBaseEntity<MongoSubscriber> implements
+public class MongoSubscriber extends MongoEntityBase<MongoSubscriber> implements
         Subscriber {
     public static final String NAME = "name";
     public static final String SECRET = "secret";

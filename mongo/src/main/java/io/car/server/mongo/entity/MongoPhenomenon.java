@@ -27,7 +27,7 @@ import io.car.server.core.entities.Phenomenon;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Entity("phenomenons")
-public class MongoPhenomenon extends MongoBaseEntity<MongoPhenomenon> implements
+public class MongoPhenomenon extends MongoEntityBase<MongoPhenomenon> implements
         Phenomenon {
     @Indexed(unique = true)
     @Property(NAME)

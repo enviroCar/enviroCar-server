@@ -18,7 +18,7 @@
 package io.car.server.mongo.entity;
 
 import static io.car.server.core.entities.User.FRIENDS;
-import static io.car.server.mongo.entity.MongoBaseEntity.ID;
+import static io.car.server.mongo.entity.MongoEntityBase.ID;
 
 import java.util.Set;
 
@@ -38,7 +38,7 @@ import io.car.server.core.entities.Users;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Entity("users")
-public class MongoUser extends MongoBaseEntity<MongoUser> implements User {
+public class MongoUser extends MongoEntityBase<MongoUser> implements User {
     @Indexed(unique = true)
     @Property(NAME)
     private String name;

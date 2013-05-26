@@ -33,7 +33,7 @@ import io.car.server.core.subscription.SubscriptionFilterParameters;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Entity("subscriptions")
-public class MongoSubscription extends MongoBaseEntity<MongoSubscription>
+public class MongoSubscription extends MongoEntityBase<MongoSubscription>
         implements Subscription {
     public static final String SUBSCRIBER = "subscriber";
     public static final String SUBSCRIPTION_FILTERS = "filters";

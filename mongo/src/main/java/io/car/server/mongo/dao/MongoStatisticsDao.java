@@ -45,7 +45,7 @@ import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
 import io.car.server.core.statistics.Statistic;
 import io.car.server.core.statistics.Statistics;
-import io.car.server.mongo.entity.MongoBaseEntity;
+import io.car.server.mongo.entity.MongoEntityBase;
 import io.car.server.mongo.entity.MongoMeasurement;
 import io.car.server.mongo.entity.MongoMeasurementValue;
 import io.car.server.mongo.entity.MongoPhenomenon;
@@ -266,7 +266,7 @@ public class MongoStatisticsDao implements StatisticsDao {
         return new BasicDBObject(Ops.MATCH, new BasicDBObject(path(MongoMeasurement.PHENOMENONS, MongoMeasurementValue.PHENOMENON), in));
     }
 
-    protected <T extends MongoBaseEntity<T>> DBRef toRef(T o) {
+    protected <T extends MongoEntityBase<T>> DBRef toRef(T o) {
         DBRef ref = mapr.keyToRef(db.getKey(o));
         return ref;
     }

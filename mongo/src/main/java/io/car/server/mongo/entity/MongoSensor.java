@@ -26,7 +26,7 @@ import io.car.server.core.entities.Sensor;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Entity("sensors")
-public class MongoSensor extends MongoBaseEntity<MongoSensor> implements Sensor {
+public class MongoSensor extends MongoEntityBase<MongoSensor> implements Sensor {
     @Property(NAME)
     private String name;
 

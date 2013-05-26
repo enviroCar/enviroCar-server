@@ -46,7 +46,7 @@ import io.car.server.mongo.cache.EntityCache;
  * @author Arne de Wall
  */
 @Entity("measurements")
-public class MongoMeasurement extends MongoBaseEntity<MongoMeasurement>
+public class MongoMeasurement extends MongoEntityBase<MongoMeasurement>
         implements Measurement {
     @Indexed
     @Property(USER)
