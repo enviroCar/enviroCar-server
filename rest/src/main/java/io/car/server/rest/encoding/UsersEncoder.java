@@ -27,6 +27,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.car.server.core.entities.User;
 import io.car.server.core.entities.Users;
 import io.car.server.rest.JSONConstants;
+import io.car.server.rest.resources.RootResource;
+import io.car.server.rest.resources.UsersResource;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
@@ -37,8 +39,11 @@ public class UsersEncoder extends AbstractEntityEncoder<Users> {
         ObjectNode root = getJsonFactory().objectNode();
         ArrayNode users = root.putArray(JSONConstants.USERS_KEY);
         for (User u : t) {
-            URI uri = getUriInfo().getAbsolutePathBuilder().path(u.getName())
-                    .build();
+            URI uri = getUriInfo().getBaseUriBuilder()
+                    .path(RootResource.class)
+                    .path(RootResource.USERS)
+                    .path(UsersResource.USER)
+                    .build(u.getName());
             users.addObject()
                     .put(JSONConstants.NAME_KEY, u.getName())
                     .put(JSONConstants.HREF_KEY, uri.toString());
