@@ -23,6 +23,7 @@ import javax.ws.rs.core.MediaType;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.hp.hpl.jena.rdf.model.Model;
 
 import io.car.server.core.entities.User;
 import io.car.server.core.entities.Users;
@@ -35,7 +36,7 @@ import io.car.server.rest.resources.UsersResource;
  */
 public class UsersEncoder extends AbstractEntityEncoder<Users> {
     @Override
-    public ObjectNode encode(Users t, MediaType mediaType) {
+    public ObjectNode encodeJSON(Users t, MediaType mediaType) {
         ObjectNode root = getJsonFactory().objectNode();
         ArrayNode users = root.putArray(JSONConstants.USERS_KEY);
         for (User u : t) {
@@ -49,5 +50,11 @@ public class UsersEncoder extends AbstractEntityEncoder<Users> {
                     .put(JSONConstants.HREF_KEY, uri.toString());
         }
         return root;
+    }
+
+    @Override
+    public Model encodeRDF(Users t, MediaType mt) {
+        /* TODO implement io.car.server.rest.encoding.UsersEncoder.encodeRDF() */
+        throw new UnsupportedOperationException("io.car.server.rest.encoding.UsersEncoder.encodeRDF() not yet implemented");
     }
 }

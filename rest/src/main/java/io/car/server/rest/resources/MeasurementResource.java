@@ -70,7 +70,8 @@ public class MeasurementResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.MEASUREMENT)
-    @Produces(MediaTypes.MEASUREMENT)
+    @Produces({ MediaTypes.MEASUREMENT, MediaTypes.XML_RDF, MediaTypes.TURTLE,
+                MediaTypes.TURTLE_ALT })
     public Measurement get() throws MeasurementNotFoundException {
         return measurement;
     }

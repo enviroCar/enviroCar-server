@@ -23,6 +23,7 @@ import javax.ws.rs.core.MediaType;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.hp.hpl.jena.rdf.model.Model;
 
 import io.car.server.core.entities.Group;
 import io.car.server.core.entities.Groups;
@@ -35,7 +36,7 @@ import io.car.server.rest.resources.RootResource;
  */
 public class GroupsEncoder extends AbstractEntityEncoder<Groups> {
     @Override
-    public ObjectNode encode(Groups t, MediaType mediaType) {
+    public ObjectNode encodeJSON(Groups t, MediaType mediaType) {
         ObjectNode root = getJsonFactory().objectNode();
         ArrayNode groups = root.putArray(JSONConstants.GROUPS_KEY);
         for (Group u : t) {
@@ -49,5 +50,11 @@ public class GroupsEncoder extends AbstractEntityEncoder<Groups> {
                     .put(JSONConstants.HREF_KEY, uri.toString());
         }
         return root;
+    }
+
+    @Override
+    public Model encodeRDF(Groups t, MediaType mt) {
+        /* TODO implement io.car.server.rest.encoding.GroupsEncoder.encodeRDF() */
+        throw new UnsupportedOperationException("io.car.server.rest.encoding.GroupsEncoder.encodeRDF() not yet implemented");
     }
 }

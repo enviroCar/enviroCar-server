@@ -24,6 +24,7 @@ import javax.ws.rs.core.MediaType;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
+import com.hp.hpl.jena.rdf.model.Model;
 
 import io.car.server.core.entities.Measurements;
 import io.car.server.core.entities.Sensor;
@@ -48,7 +49,7 @@ public class TrackEncoder extends AbstractEntityEncoder<Track> {
     }
 
     @Override
-    public ObjectNode encode(Track t, MediaType mediaType) {
+    public ObjectNode encodeJSON(Track t, MediaType mediaType) {
         ObjectNode track = getJsonFactory().objectNode();
         track.put(GeoJSONConstants.TYPE_KEY,
                   GeoJSONConstants.FEATURE_COLLECTION_TYPE);
@@ -65,9 +66,9 @@ public class TrackEncoder extends AbstractEntityEncoder<Track> {
         properties.put(JSONConstants.MODIFIED_KEY,
                        getDateTimeFormat().print(t.getLastModificationDate()));
         properties.put(JSONConstants.SENSOR_KEY,
-                       sensorEncoder.encode(t.getSensor(), mediaType));
+                       sensorEncoder.encodeJSON(t.getSensor(), mediaType));
         properties.put(JSONConstants.USER_KEY,
-                       userEncoder.encode(t.getUser(), mediaType));
+                       userEncoder.encodeJSON(t.getUser(), mediaType));
         URI measurements = getUriInfo().getAbsolutePathBuilder()
                 .path(TrackResource.MEASUREMENTS).build();
         properties.put(JSONConstants.MEASUREMENTS_KEY,
@@ -78,9 +79,15 @@ public class TrackEncoder extends AbstractEntityEncoder<Track> {
                        statistics.toString());
         Measurements values = getService().getMeasurementsByTrack(t, null);
         JsonNode features = measurementsEncoder
-                .encode(values, mediaType)
+                .encodeJSON(values, mediaType)
                 .path(GeoJSONConstants.FEATURES_KEY);
         track.put(GeoJSONConstants.FEATURES_KEY, features);
         return track;
+    }
+
+    @Override
+    public Model encodeRDF(Track t, MediaType mt) {
+        /* TODO implement io.car.server.rest.encoding.TrackEncoder.encodeRDF() */
+        throw new UnsupportedOperationException("io.car.server.rest.encoding.TrackEncoder.encodeRDF() not yet implemented");
     }
 }

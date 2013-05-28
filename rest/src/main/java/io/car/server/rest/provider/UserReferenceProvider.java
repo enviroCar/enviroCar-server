@@ -22,6 +22,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.hp.hpl.jena.rdf.model.Model;
 
 import io.car.server.core.entities.User;
 import io.car.server.rest.UserReference;
@@ -31,7 +32,7 @@ import io.car.server.rest.UserReference;
  */
 @Provider
 @Consumes(MediaType.APPLICATION_JSON)
-public class UserReferenceProvider extends AbstractJsonEntityProvider<UserReference> {
+public class UserReferenceProvider extends AbstractEntityProvider<UserReference> {
 
     public UserReferenceProvider() {
         super(UserReference.class);
@@ -44,7 +45,12 @@ public class UserReferenceProvider extends AbstractJsonEntityProvider<UserRefere
     }
 
     @Override
-    public JsonNode write(UserReference t, MediaType mediaType) {
+    public JsonNode writeJSON(UserReference t, MediaType mediaType) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Model writeRDF(UserReference t, MediaType mediaType) {
         throw new UnsupportedOperationException();
     }
 }

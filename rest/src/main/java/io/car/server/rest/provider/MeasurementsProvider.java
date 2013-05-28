@@ -23,8 +23,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.hp.hpl.jena.rdf.model.Model;
 
 import io.car.server.core.entities.Measurements;
+import io.car.server.rest.MediaTypes;
 
 /**
  *
@@ -32,9 +34,10 @@ import io.car.server.core.entities.Measurements;
  * @author Arne de Wall <a.dewall@52north.org>
  */
 @Provider
-@Produces(MediaType.APPLICATION_JSON)
+@Produces({ MediaType.APPLICATION_JSON, MediaTypes.XML_RDF, MediaTypes.TURTLE,
+            MediaTypes.TURTLE_ALT })
 @Consumes(MediaType.APPLICATION_JSON)
-public class MeasurementsProvider extends AbstractJsonEntityProvider<Measurements> {
+public class MeasurementsProvider extends AbstractEntityProvider<Measurements> {
     public MeasurementsProvider() {
         super(Measurements.class);
     }
@@ -45,8 +48,14 @@ public class MeasurementsProvider extends AbstractJsonEntityProvider<Measurement
     }
 
     @Override
-    public JsonNode write(Measurements t, MediaType mediaType) {
+    public JsonNode writeJSON(Measurements t, MediaType mediaType) {
         return getCodingFactory().createMeasurementsEncoder()
-                .encode(t, mediaType);
+                .encodeJSON(t, mediaType);
+    }
+
+    @Override
+    public Model writeRDF(Measurements t, MediaType mediaType) {
+        return getCodingFactory().createMeasurementsEncoder()
+                .encodeRDF(t, mediaType);
     }
 }

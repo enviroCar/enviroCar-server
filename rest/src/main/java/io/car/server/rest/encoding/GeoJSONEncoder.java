@@ -23,6 +23,7 @@ import javax.ws.rs.core.Response.Status;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
+import com.hp.hpl.jena.rdf.model.Model;
 import com.vividsolutions.jts.geom.Geometry;
 
 import io.car.server.core.exception.GeometryConverterException;
@@ -40,12 +41,18 @@ public class GeoJSONEncoder extends AbstractEntityEncoder<Geometry> {
     }
 
     @Override
-    public ObjectNode encode(Geometry t, MediaType mt) {
+    public ObjectNode encodeJSON(Geometry t, MediaType mt) {
         try {
             return geoJSON.encode(t);
         } catch (GeometryConverterException ex) {
             throw new WebApplicationException(ex, Status.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @Override
+    public Model encodeRDF(Geometry t, MediaType mt) {
+        /* TODO implement io.car.server.rest.encoding.GeoJSONEncoder.encodeRDF() */
+        throw new UnsupportedOperationException("io.car.server.rest.encoding.GeoJSONEncoder.encodeRDF() not yet implemented");
     }
 
 }

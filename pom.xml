@@ -237,6 +237,12 @@
                 <groupId>com.github.fge</groupId>
                 <version>1.0.2</version>
             </dependency>
+            <dependency>
+                <groupId>org.apache.jena</groupId>
+                <artifactId>apache-jena-libs</artifactId>
+                <version>2.10.1</version>
+                <type>pom</type>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <build>

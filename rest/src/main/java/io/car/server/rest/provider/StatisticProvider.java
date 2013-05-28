@@ -22,15 +22,18 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.hp.hpl.jena.rdf.model.Model;
 
 import io.car.server.core.statistics.Statistic;
+import io.car.server.rest.MediaTypes;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
-@Produces(MediaType.APPLICATION_JSON)
-public class StatisticProvider extends AbstractJsonEntityProvider<Statistic> {
+@Produces({ MediaType.APPLICATION_JSON, MediaTypes.XML_RDF, MediaTypes.TURTLE,
+            MediaTypes.TURTLE_ALT })
+public class StatisticProvider extends AbstractEntityProvider<Statistic> {
 
     public StatisticProvider() {
         super(Statistic.class);
@@ -42,7 +45,14 @@ public class StatisticProvider extends AbstractJsonEntityProvider<Statistic> {
     }
 
     @Override
-    public JsonNode write(Statistic t, MediaType mediaType) {
-        return getCodingFactory().createStatisticEncoder().encode(t, mediaType);
+    public JsonNode writeJSON(Statistic t, MediaType mediaType) {
+        return getCodingFactory().createStatisticEncoder()
+                .encodeJSON(t, mediaType);
+    }
+
+    @Override
+    public Model writeRDF(Statistic t, MediaType mediaType) {
+        return getCodingFactory().createStatisticEncoder()
+                .encodeRDF(t, mediaType);
     }
 }

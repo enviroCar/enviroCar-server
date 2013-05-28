@@ -21,6 +21,7 @@ import javax.ws.rs.core.MediaType;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
+import com.hp.hpl.jena.rdf.model.Model;
 
 import io.car.server.core.entities.Phenomenon;
 import io.car.server.core.statistics.Statistic;
@@ -38,7 +39,7 @@ public class StatisticEncoder extends AbstractEntityEncoder<Statistic> {
     }
 
     @Override
-    public ObjectNode encode(Statistic t, MediaType mt) {
+    public ObjectNode encodeJSON(Statistic t, MediaType mt) {
         ObjectNode statistic = getJsonFactory().objectNode();
         statistic.put(JSONConstants.MAX_KEY, t.getMax());
         statistic.put(JSONConstants.AVG_KEY, t.getMean());
@@ -47,7 +48,13 @@ public class StatisticEncoder extends AbstractEntityEncoder<Statistic> {
         statistic.put(JSONConstants.TRACKS_KEY, t.getTracks());
         statistic.put(JSONConstants.USERS_KEY, t.getUsers());
         statistic.put(JSONConstants.PHENOMENON_KEY,
-                      phenomenonEncoder.encode(t.getPhenomenon(), mt));
+                      phenomenonEncoder.encodeJSON(t.getPhenomenon(), mt));
         return statistic;
+    }
+
+    @Override
+    public Model encodeRDF(Statistic t, MediaType mt) {
+        /* TODO implement io.car.server.rest.encoding.StatisticEncoder.encodeRDF() */
+        throw new UnsupportedOperationException("io.car.server.rest.encoding.StatisticEncoder.encodeRDF() not yet implemented");
     }
 }

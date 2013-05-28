@@ -22,6 +22,7 @@ import javax.ws.rs.core.MediaType;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
+import com.hp.hpl.jena.rdf.model.Model;
 
 import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.Sensors;
@@ -39,12 +40,18 @@ public class SensorsEncoder extends AbstractEntityEncoder<Sensors> {
     }
 
     @Override
-    public ObjectNode encode(Sensors t, MediaType mediaType) {
+    public ObjectNode encodeJSON(Sensors t, MediaType mediaType) {
         ObjectNode root = getJsonFactory().objectNode();
         ArrayNode sensors = root.putArray(JSONConstants.SENSORS_KEY);
         for (Sensor u : t) {
-            sensors.add(sensorEncoder.encode(u, mediaType));
+            sensors.add(sensorEncoder.encodeJSON(u, mediaType));
         }
         return root;
+    }
+
+    @Override
+    public Model encodeRDF(Sensors t, MediaType mt) {
+        /* TODO implement io.car.server.rest.encoding.SensorsEncoder.encodeRDF() */
+        throw new UnsupportedOperationException("io.car.server.rest.encoding.SensorsEncoder.encodeRDF() not yet implemented");
     }
 }

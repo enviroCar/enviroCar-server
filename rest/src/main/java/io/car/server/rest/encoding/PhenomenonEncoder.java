@@ -22,10 +22,11 @@ import java.net.URI;
 import javax.ws.rs.core.MediaType;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.hp.hpl.jena.rdf.model.Model;
 
 import io.car.server.core.entities.Phenomenon;
-import io.car.server.rest.MediaTypes;
 import io.car.server.rest.JSONConstants;
+import io.car.server.rest.MediaTypes;
 import io.car.server.rest.resources.PhenomenonResource;
 import io.car.server.rest.resources.PhenomenonsResource;
 import io.car.server.rest.resources.RootResource;
@@ -35,7 +36,7 @@ import io.car.server.rest.resources.RootResource;
  */
 public class PhenomenonEncoder extends AbstractEntityEncoder<Phenomenon> {
     @Override
-    public ObjectNode encode(Phenomenon t, MediaType mediaType) {
+    public ObjectNode encodeJSON(Phenomenon t, MediaType mediaType) {
         ObjectNode phenomenon = getJsonFactory().objectNode()
                 .put(JSONConstants.NAME_KEY, t.getName());
         if (mediaType.equals(MediaTypes.PHENOMENON_TYPE)) {
@@ -58,5 +59,11 @@ public class PhenomenonEncoder extends AbstractEntityEncoder<Phenomenon> {
             phenomenon.put(JSONConstants.HREF_KEY, href.toString());
         }
         return phenomenon;
+    }
+
+    @Override
+    public Model encodeRDF(Phenomenon t, MediaType mt) {
+        /* TODO implement io.car.server.rest.encoding.PhenomenonEncoder.encodeRDF() */
+        throw new UnsupportedOperationException("io.car.server.rest.encoding.PhenomenonEncoder.encodeRDF() not yet implemented");
     }
 }

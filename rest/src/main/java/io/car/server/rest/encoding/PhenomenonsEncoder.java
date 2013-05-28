@@ -22,6 +22,7 @@ import javax.ws.rs.core.MediaType;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
+import com.hp.hpl.jena.rdf.model.Model;
 
 import io.car.server.core.entities.Phenomenon;
 import io.car.server.core.entities.Phenomenons;
@@ -39,12 +40,18 @@ public class PhenomenonsEncoder extends AbstractEntityEncoder<Phenomenons> {
     }
 
     @Override
-    public ObjectNode encode(Phenomenons t, MediaType mediaType) {
+    public ObjectNode encodeJSON(Phenomenons t, MediaType mediaType) {
         ObjectNode root = getJsonFactory().objectNode();
         ArrayNode phenomenons = root.putArray(JSONConstants.PHENOMENONS_KEY);
         for (Phenomenon u : t) {
-            phenomenons.add(phenomenonEncoder.encode(u, mediaType));
+            phenomenons.add(phenomenonEncoder.encodeJSON(u, mediaType));
         }
         return root;
+    }
+
+    @Override
+    public Model encodeRDF(Phenomenons t, MediaType mt) {
+        /* TODO implement io.car.server.rest.encoding.PhenomenonsEncoder.encodeRDF() */
+        throw new UnsupportedOperationException("io.car.server.rest.encoding.PhenomenonsEncoder.encodeRDF() not yet implemented");
     }
 }

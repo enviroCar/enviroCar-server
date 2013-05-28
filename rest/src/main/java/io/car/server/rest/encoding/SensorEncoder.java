@@ -22,6 +22,7 @@ import java.net.URI;
 import javax.ws.rs.core.MediaType;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.hp.hpl.jena.rdf.model.Model;
 
 import io.car.server.core.entities.Sensor;
 import io.car.server.rest.JSONConstants;
@@ -35,7 +36,7 @@ import io.car.server.rest.resources.SensorsResource;
 public class SensorEncoder extends AbstractEntityEncoder<Sensor> {
 
     @Override
-    public ObjectNode encode(Sensor t, MediaType mediaType) {
+    public ObjectNode encodeJSON(Sensor t, MediaType mediaType) {
         ObjectNode sensor = getJsonFactory().objectNode()
                 .put(JSONConstants.NAME_KEY, t.getName());
         if (mediaType.equals(MediaTypes.SENSOR_TYPE)) {
@@ -52,5 +53,11 @@ public class SensorEncoder extends AbstractEntityEncoder<Sensor> {
             sensor.put(JSONConstants.HREF_KEY, href.toString());
         }
         return sensor;
+    }
+
+    @Override
+    public Model encodeRDF(Sensor t, MediaType mt) {
+        /* TODO implement io.car.server.rest.encoding.SensorEncoder.encodeRDF() */
+        throw new UnsupportedOperationException("io.car.server.rest.encoding.SensorEncoder.encodeRDF() not yet implemented");
     }
 }

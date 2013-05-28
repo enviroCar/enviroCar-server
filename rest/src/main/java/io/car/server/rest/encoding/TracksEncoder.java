@@ -23,6 +23,7 @@ import javax.ws.rs.core.MediaType;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.hp.hpl.jena.rdf.model.Model;
 
 import io.car.server.core.entities.Track;
 import io.car.server.core.entities.Tracks;
@@ -30,7 +31,7 @@ import io.car.server.rest.JSONConstants;
 
 public class TracksEncoder extends AbstractEntityEncoder<Tracks> {
     @Override
-    public ObjectNode encode(Tracks t, MediaType mediaType) {
+    public ObjectNode encodeJSON(Tracks t, MediaType mediaType) {
         ObjectNode root = getJsonFactory().objectNode();
         ArrayNode tracks = root.putArray(JSONConstants.TRACKS_KEY);
         for (Track u : t) {
@@ -46,5 +47,11 @@ public class TracksEncoder extends AbstractEntityEncoder<Tracks> {
             track.put(JSONConstants.HREF_KEY, uri.toString());
         }
         return root;
+    }
+
+    @Override
+    public Model encodeRDF(Tracks t, MediaType mt) {
+        /* TODO implement io.car.server.rest.encoding.TracksEncoder.encodeRDF() */
+        throw new UnsupportedOperationException("io.car.server.rest.encoding.TracksEncoder.encodeRDF() not yet implemented");
     }
 }

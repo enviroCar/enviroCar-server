@@ -23,6 +23,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
+import com.hp.hpl.jena.rdf.model.Model;
 
 import io.car.server.core.entities.Measurement;
 import io.car.server.core.entities.Measurements;
@@ -45,14 +46,20 @@ public class MeasurementsEncoder implements EntityEncoder<Measurements> {
     }
 
     @Override
-    public ObjectNode encode(Measurements t, MediaType mediaType) {
+    public ObjectNode encodeJSON(Measurements t, MediaType mediaType) {
         ObjectNode on = factory.objectNode();
         ArrayNode an = on.putArray(GeoJSONConstants.FEATURES_KEY);
         for (Measurement measurement : t) {
-            an.add(measurementEncoder.encode(measurement, mediaType));
+            an.add(measurementEncoder.encodeJSON(measurement, mediaType));
         }
         on.put(GeoJSONConstants.TYPE_KEY,
                GeoJSONConstants.FEATURE_COLLECTION_TYPE);
         return on;
+    }
+
+    @Override
+    public Model encodeRDF(Measurements t, MediaType mt) {
+        /* TODO implement io.car.server.rest.encoding.MeasurementsEncoder.encodeRDF() */
+        throw new UnsupportedOperationException("io.car.server.rest.encoding.MeasurementsEncoder.encodeRDF() not yet implemented");
     }
 }

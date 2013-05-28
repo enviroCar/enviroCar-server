@@ -23,6 +23,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.hp.hpl.jena.rdf.model.Model;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
@@ -30,7 +31,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 @Provider
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class JsonNodeProvider extends AbstractJsonEntityProvider<JsonNode> {
+public class JsonNodeProvider extends AbstractEntityProvider<JsonNode> {
     public JsonNodeProvider() {
         super(JsonNode.class);
     }
@@ -41,7 +42,12 @@ public class JsonNodeProvider extends AbstractJsonEntityProvider<JsonNode> {
     }
 
     @Override
-    public JsonNode write(JsonNode t, MediaType mediaType) {
+    public JsonNode writeJSON(JsonNode t, MediaType mediaType) {
         return t;
+    }
+
+    @Override
+    public Model writeRDF(JsonNode t, MediaType mediaType) {
+        throw new UnsupportedOperationException();
     }
 }

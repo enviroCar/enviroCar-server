@@ -23,16 +23,19 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.hp.hpl.jena.rdf.model.Model;
 
 import io.car.server.core.entities.Phenomenon;
+import io.car.server.rest.MediaTypes;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
-@Produces(MediaType.APPLICATION_JSON)
+@Produces({ MediaType.APPLICATION_JSON, MediaTypes.XML_RDF, MediaTypes.TURTLE,
+            MediaTypes.TURTLE_ALT })
 @Consumes(MediaType.APPLICATION_JSON)
-public class PhenomenonProvider extends AbstractJsonEntityProvider<Phenomenon> {
+public class PhenomenonProvider extends AbstractEntityProvider<Phenomenon> {
     public PhenomenonProvider() {
         super(Phenomenon.class);
     }
@@ -43,7 +46,14 @@ public class PhenomenonProvider extends AbstractJsonEntityProvider<Phenomenon> {
     }
 
     @Override
-    public JsonNode write(Phenomenon t, MediaType mediaType) {
-        return getCodingFactory().createPhenomenonEncoder().encode(t, mediaType);
+    public JsonNode writeJSON(Phenomenon t, MediaType mediaType) {
+        return getCodingFactory().createPhenomenonEncoder()
+                .encodeJSON(t, mediaType);
+    }
+
+    @Override
+    public Model writeRDF(Phenomenon t, MediaType mediaType) {
+        return getCodingFactory().createPhenomenonEncoder()
+                .encodeRDF(t, mediaType);
     }
 }

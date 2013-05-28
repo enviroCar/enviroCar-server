@@ -21,6 +21,7 @@ import javax.ws.rs.core.MediaType;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
+import com.hp.hpl.jena.rdf.model.Model;
 import com.vividsolutions.jts.geom.Geometry;
 
 import io.car.server.core.entities.Measurement;
@@ -28,8 +29,8 @@ import io.car.server.core.entities.MeasurementValue;
 import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.User;
 import io.car.server.core.util.GeoJSONConstants;
-import io.car.server.rest.MediaTypes;
 import io.car.server.rest.JSONConstants;
+import io.car.server.rest.MediaTypes;
 
 /**
  * @author Arne de Wall <a.dewall@52north.org>
@@ -50,12 +51,12 @@ public class MeasurementEncoder extends AbstractEntityEncoder<Measurement> {
     }
 
     @Override
-    public ObjectNode encode(Measurement t, MediaType mediaType) {
+    public ObjectNode encodeJSON(Measurement t, MediaType mediaType) {
         ObjectNode measurement = getJsonFactory().objectNode();
         measurement.put(GeoJSONConstants.TYPE_KEY,
                         GeoJSONConstants.FEATURE_TYPE);
         measurement.put(JSONConstants.GEOMETRY_KEY,
-                        geometryEncoder.encode(t.getGeometry(), mediaType));
+                        geometryEncoder.encodeJSON(t.getGeometry(), mediaType));
 
         ObjectNode properties = measurement
                 .putObject(GeoJSONConstants.PROPERTIES_KEY);
@@ -65,9 +66,9 @@ public class MeasurementEncoder extends AbstractEntityEncoder<Measurement> {
 
         if (!mediaType.equals(MediaTypes.TRACK_TYPE)) {
             properties.put(JSONConstants.SENSOR_KEY,
-                           sensorProvider.encode(t.getSensor(), mediaType));
+                           sensorProvider.encodeJSON(t.getSensor(), mediaType));
             properties.put(JSONConstants.USER_KEY,
-                           userProvider.encode(t.getUser(), mediaType));
+                           userProvider.encodeJSON(t.getUser(), mediaType));
             properties.put(JSONConstants.MODIFIED_KEY, getDateTimeFormat()
                     .print(t.getLastModificationDate()));
             properties.put(JSONConstants.CREATED_KEY,
@@ -88,5 +89,11 @@ public class MeasurementEncoder extends AbstractEntityEncoder<Measurement> {
             values.put(mv.getPhenomenon().getName(), phenomenon);
         }
         return measurement;
+    }
+
+    @Override
+    public Model encodeRDF(Measurement t, MediaType mt) {
+        /* TODO implement io.car.server.rest.encoding.MeasurementEncoder.encodeRDF() */
+        throw new UnsupportedOperationException("io.car.server.rest.encoding.MeasurementEncoder.encodeRDF() not yet implemented");
     }
 }

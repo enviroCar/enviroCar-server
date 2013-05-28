@@ -93,7 +93,8 @@ public class UserResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.USER)
-    @Produces(MediaTypes.USER)
+    @Produces({ MediaTypes.USER, MediaTypes.XML_RDF, MediaTypes.TURTLE,
+                MediaTypes.TURTLE_ALT })
     public User get() throws UserNotFoundException {
         return user;
     }

@@ -23,16 +23,19 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.hp.hpl.jena.rdf.model.Model;
 
 import io.car.server.core.entities.Group;
+import io.car.server.rest.MediaTypes;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
-@Produces(MediaType.APPLICATION_JSON)
+@Produces({ MediaType.APPLICATION_JSON, MediaTypes.XML_RDF, MediaTypes.TURTLE,
+            MediaTypes.TURTLE_ALT })
 @Consumes(MediaType.APPLICATION_JSON)
-public class GroupProvider extends AbstractJsonEntityProvider<Group> {
+public class GroupProvider extends AbstractEntityProvider<Group> {
     public GroupProvider() {
         super(Group.class);
     }
@@ -43,7 +46,12 @@ public class GroupProvider extends AbstractJsonEntityProvider<Group> {
     }
 
     @Override
-    public JsonNode write(Group t, MediaType mediaType) {
-        return getCodingFactory().createGroupEncoder().encode(t, mediaType);
+    public JsonNode writeJSON(Group t, MediaType mediaType) {
+        return getCodingFactory().createGroupEncoder().encodeJSON(t, mediaType);
+    }
+
+    @Override
+    public Model writeRDF(Group t, MediaType mediaType) {
+        return getCodingFactory().createGroupEncoder().encodeRDF(t, mediaType);
     }
 }

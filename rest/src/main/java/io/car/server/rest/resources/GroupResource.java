@@ -59,7 +59,8 @@ public class GroupResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.GROUP)
-    @Produces(MediaTypes.GROUP)
+    @Produces({ MediaTypes.GROUP, MediaTypes.XML_RDF, MediaTypes.TURTLE,
+                MediaTypes.TURTLE_ALT })
     public Group get() throws GroupNotFoundException {
         return group;
     }

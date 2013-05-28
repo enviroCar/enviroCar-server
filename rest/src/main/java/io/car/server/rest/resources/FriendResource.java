@@ -30,7 +30,6 @@ import io.car.server.core.exception.ResourceNotFoundException;
 import io.car.server.rest.auth.Authenticated;
 
 /**
- * TODO JavaDoc
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class FriendResource extends UserResource {

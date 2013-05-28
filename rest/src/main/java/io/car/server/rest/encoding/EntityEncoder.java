@@ -20,10 +20,12 @@ package io.car.server.rest.encoding;
 import javax.ws.rs.core.MediaType;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.hp.hpl.jena.rdf.model.Model;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface EntityEncoder<T> {
-    ObjectNode encode(T t, MediaType mt);
+    ObjectNode encodeJSON(T t, MediaType mt);
+    Model encodeRDF(T t, MediaType mt);
 }

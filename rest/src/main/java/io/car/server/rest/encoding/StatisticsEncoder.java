@@ -22,6 +22,7 @@ import javax.ws.rs.core.MediaType;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
+import com.hp.hpl.jena.rdf.model.Model;
 
 import io.car.server.core.statistics.Statistic;
 import io.car.server.core.statistics.Statistics;
@@ -39,12 +40,18 @@ public class StatisticsEncoder extends AbstractEntityEncoder<Statistics> {
     }
 
     @Override
-    public ObjectNode encode(Statistics t, MediaType mt) {
+    public ObjectNode encodeJSON(Statistics t, MediaType mt) {
         ObjectNode root = getJsonFactory().objectNode();
         ArrayNode statistics = root.putArray(JSONConstants.STATISTICS_KEY);
         for (Statistic s : t) {
-            statistics.add(statisticEncoder.encode(s, mt));
+            statistics.add(statisticEncoder.encodeJSON(s, mt));
         }
         return root;
+    }
+
+    @Override
+    public Model encodeRDF(Statistics t, MediaType mt) {
+        /* TODO implement io.car.server.rest.encoding.StatisticsEncoder.encodeRDF() */
+        throw new UnsupportedOperationException("io.car.server.rest.encoding.StatisticsEncoder.encodeRDF() not yet implemented");
     }
 }
