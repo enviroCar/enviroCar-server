@@ -59,9 +59,8 @@ public class TrackDecoder extends AbstractEntityDecoder<Track> {
                     .textValue());
         }
 
-        if (!j.path(GeoJSONConstants.PROPERTIES_KEY)
-                .path(GeoJSONConstants.FEATURES_KEY).isMissingNode()) {
-            JsonNode ms = j.path(JSONConstants.MEASUREMENTS_KEY);
+        if (!j.path(GeoJSONConstants.FEATURES_KEY).isMissingNode()) {
+            JsonNode ms = j.path(GeoJSONConstants.FEATURES_KEY);
             TrackWithMeasurments twm = new TrackWithMeasurments(track);
             for (int i = 0; i < ms.size(); i++) {
                 Measurement m = measurementDecoder.decode(ms.get(i), mediaType);
