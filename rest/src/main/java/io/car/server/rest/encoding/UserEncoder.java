@@ -23,6 +23,8 @@ import javax.ws.rs.core.MediaType;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.vocabulary.VCARD;
 
 import io.car.server.core.entities.User;
 import io.car.server.rest.JSONConstants;
@@ -77,7 +79,14 @@ public class UserEncoder extends AbstractEntityEncoder<User> {
 
     @Override
     public Model encodeRDF(User t, MediaType mt) {
-        /* TODO implement io.car.server.rest.encoding.UserEncoder.encodeRDF() */
-        throw new UnsupportedOperationException("io.car.server.rest.encoding.UserEncoder.encodeRDF() not yet implemented");
+        Model model = ModelFactory.createDefaultModel();
+        URI uri = getUriInfo().getBaseUriBuilder()
+                .path(RootResource.class)
+                .path(RootResource.USERS)
+                .path(UsersResource.USER).build(t.getName());
+        model.createResource(uri.toASCIIString())
+                .addProperty(VCARD.EMAIL, t.getMail())
+                .addProperty(VCARD.NICKNAME, t.getName());
+        return model;
     }
 }
