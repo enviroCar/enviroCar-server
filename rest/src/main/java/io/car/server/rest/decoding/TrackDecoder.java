@@ -60,7 +60,7 @@ public class TrackDecoder extends AbstractEntityDecoder<Track> {
         }
 
         if (!j.path(GeoJSONConstants.PROPERTIES_KEY)
-                .path(JSONConstants.MEASUREMENTS_KEY).isMissingNode()) {
+                .path(GeoJSONConstants.FEATURES_KEY).isMissingNode()) {
             JsonNode ms = j.path(JSONConstants.MEASUREMENTS_KEY);
             TrackWithMeasurments twm = new TrackWithMeasurments(track);
             for (int i = 0; i < ms.size(); i++) {
