@@ -28,8 +28,6 @@ import com.google.inject.Inject;
 import com.vividsolutions.jts.geom.Geometry;
 
 import io.car.server.core.dao.TrackDao;
-import io.car.server.core.entities.Measurement;
-import io.car.server.core.entities.Measurements;
 import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.Track;
 import io.car.server.core.entities.Tracks;
@@ -85,15 +83,9 @@ public class MongoTrackDao extends AbstractMongoDao<MongoTrack, Tracks>
 
     @Override
     public void delete(Track track) {
-        Pagination page = new Pagination();
-        do {
-            Measurements measurements = measurementDao.getByTrack(track, page);
-            for (Measurement m : measurements) {
-                m.setTrack(null);
-                measurementDao.save(m);
-            }
-        } while ((page = page.next(page.getSize())) != null);
-        delete((MongoTrack) track);
+        MongoTrack t = (MongoTrack) track;
+        measurementDao.removeTrack(t);
+        delete(t);
     }
 
     @Override

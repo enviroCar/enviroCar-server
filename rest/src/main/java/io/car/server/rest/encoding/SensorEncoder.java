@@ -36,21 +36,21 @@ public class SensorEncoder extends AbstractEntityEncoder<Sensor> {
 
     @Override
     public ObjectNode encode(Sensor t, MediaType mediaType) {
-        ObjectNode user = getJsonFactory().objectNode()
+        ObjectNode sensor = getJsonFactory().objectNode()
                 .put(JSONConstants.NAME_KEY, t.getName());
         if (mediaType.equals(MediaTypes.SENSOR_TYPE)) {
-            user.put(JSONConstants.CREATED_KEY, getDateTimeFormat().print(t
-                    .getCreationDate()));
-            user.put(JSONConstants.MODIFIED_KEY, getDateTimeFormat().print(t
-                    .getLastModificationDate()));
+            sensor.put(JSONConstants.CREATED_KEY,
+                       getDateTimeFormat().print(t.getCreationDate()));
+            sensor.put(JSONConstants.MODIFIED_KEY,
+                       getDateTimeFormat().print(t.getLastModificationDate()));
         } else {
             URI href = getUriInfo().getBaseUriBuilder()
                     .path(RootResource.class)
                     .path(RootResource.SENSORS)
                     .path(SensorsResource.SENSOR)
                     .build(t.getName());
-            user.put(JSONConstants.HREF_KEY, href.toString());
+            sensor.put(JSONConstants.HREF_KEY, href.toString());
         }
-        return user;
+        return sensor;
     }
 }

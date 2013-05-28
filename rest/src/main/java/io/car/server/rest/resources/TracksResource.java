@@ -33,6 +33,7 @@ import javax.ws.rs.core.Response.Status;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
+import io.car.server.core.entities.Measurement;
 import io.car.server.core.entities.Track;
 import io.car.server.core.entities.Tracks;
 import io.car.server.core.entities.User;
@@ -44,6 +45,7 @@ import io.car.server.core.util.Pagination;
 import io.car.server.rest.MediaTypes;
 import io.car.server.rest.RESTConstants;
 import io.car.server.rest.Schemas;
+import io.car.server.rest.TrackWithMeasurments;
 import io.car.server.rest.auth.Authenticated;
 import io.car.server.rest.validation.Schema;
 
@@ -82,11 +84,21 @@ public class TracksResource extends AbstractResource {
         if (user != null && !canModifyUser(user)) {
             throw new WebApplicationException(Status.FORBIDDEN);
         }
-        track = getService().createTrack(track.setUser(
-                getService().getUser(getCurrentUser())));
-        return Response.created(
-                getUriInfo()
-                .getAbsolutePathBuilder()
+        User u = getService().getUser(getCurrentUser());
+        track.setUser(u);
+
+        if (track instanceof TrackWithMeasurments) {
+            TrackWithMeasurments twm = (TrackWithMeasurments) track;
+            track = getService().createTrack(twm.getTrack());
+
+            for (Measurement m : twm.getMeasurements()) {
+                getService().createMeasurement(twm.getTrack(), m.setUser(u));
+            }
+
+        } else {
+            track = getService().createTrack(track);
+        }
+        return Response.created(getUriInfo().getAbsolutePathBuilder()
                 .path(track.getIdentifier()).build()).build();
     }
 

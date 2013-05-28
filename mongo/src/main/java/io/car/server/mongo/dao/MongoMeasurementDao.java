@@ -33,6 +33,7 @@ import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
 import io.car.server.core.util.Pagination;
 import io.car.server.mongo.entity.MongoMeasurement;
+import io.car.server.mongo.entity.MongoTrack;
 import io.car.server.mongo.entity.MongoUser;
 
 /**
@@ -131,5 +132,18 @@ public class MongoMeasurementDao extends AbstractMongoDao<MongoMeasurement, Meas
             Pagination p, long count) {
         return Measurements.from(i).withPagination(p).withElements(count)
                 .build();
+    }
+
+    void removeTrack(MongoTrack track) {
+        UpdateResults<MongoMeasurement> result = update(
+                q().field(MongoMeasurement.TRACK).equal(track),
+                up().unset(MongoMeasurement.TRACK));
+        if (result.getHadError()) {
+            log.error("Error removing track {} from measurements: {}",
+                      track, result.getError());
+        } else {
+            log.debug("Removed track {} from {} measurements",
+                      track, result.getUpdatedCount());
+        }
     }
 }
