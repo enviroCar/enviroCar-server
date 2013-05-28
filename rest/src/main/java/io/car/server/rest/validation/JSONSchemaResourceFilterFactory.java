@@ -180,6 +180,7 @@ public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
 
         @Override
         public ContainerRequest filter(ContainerRequest request) {
+            //FIXME NPE with missing content type
             if (request.getMediaType()
                     .isCompatible(MediaType.APPLICATION_JSON_TYPE)) {
                 adjustContentType(request);
