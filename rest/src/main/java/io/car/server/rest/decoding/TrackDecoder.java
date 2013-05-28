@@ -17,7 +17,6 @@
  */
 package io.car.server.rest.decoding;
 
-import io.car.server.rest.JSONConstants;
 import javax.ws.rs.core.MediaType;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -26,13 +25,15 @@ import com.google.inject.Inject;
 import io.car.server.core.dao.MeasurementDao;
 import io.car.server.core.dao.SensorDao;
 import io.car.server.core.entities.Measurement;
+import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.Track;
 import io.car.server.core.util.GeoJSONConstants;
+import io.car.server.rest.JSONConstants;
+import io.car.server.rest.TrackWithMeasurments;
 
 public class TrackDecoder extends AbstractEntityDecoder<Track> {
     private EntityDecoder<Measurement> measurementDecoder;
     private SensorDao sensorDao;
-    private MeasurementDao measurementDao;
 
     @Inject
     public TrackDecoder(EntityDecoder<Measurement> measurementDecoder,
@@ -40,29 +41,37 @@ public class TrackDecoder extends AbstractEntityDecoder<Track> {
                         MeasurementDao measurementDao) {
         this.measurementDecoder = measurementDecoder;
         this.sensorDao = sensorDao;
-        this.measurementDao = measurementDao;
     }
 
     @Override
     public Track decode(JsonNode j, MediaType mediaType) {
+        Sensor trackSensor = null;
         Track track = getEntityFactory().createTrack();
         if (j.has(GeoJSONConstants.PROPERTIES_KEY)) {
             JsonNode p = j.path(GeoJSONConstants.PROPERTIES_KEY);
             if (p.has(JSONConstants.SENSOR_KEY)) {
-                track.setSensor(sensorDao.getByName(p.get(
-                        JSONConstants.SENSOR_KEY).asText()));
+                trackSensor = sensorDao.getByName(p
+                        .get(JSONConstants.SENSOR_KEY).asText());
+                track.setSensor(trackSensor);
             }
             track.setName(p.path(JSONConstants.NAME_KEY).textValue());
             track.setDescription(p.path(JSONConstants.DESCRIPTION_KEY)
                     .textValue());
-            if (j.has(JSONConstants.MEASUREMENTS_KEY)) {
-//                trackDao.create(track);
-                JsonNode m = j.path(JSONConstants.MEASUREMENTS_KEY);
-                for (int i = 0; i < m.size(); i++) {
-                    measurementDao.create(measurementDecoder.decode(
-                            m.get(i), mediaType).setTrack(track));
+        }
+
+        if (!j.path(GeoJSONConstants.PROPERTIES_KEY)
+                .path(JSONConstants.MEASUREMENTS_KEY).isMissingNode()) {
+            JsonNode ms = j.path(JSONConstants.MEASUREMENTS_KEY);
+            TrackWithMeasurments twm = new TrackWithMeasurments(track);
+            for (int i = 0; i < ms.size(); i++) {
+                Measurement m = measurementDecoder.decode(ms.get(i), mediaType);
+                m.setTrack(track);
+                if (m.getSensor() != null) {
+                    m.setSensor(trackSensor);
                 }
+                twm.addMeasurement(m);
             }
+            track = twm;
         }
         return track;
     }
