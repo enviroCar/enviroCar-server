@@ -51,7 +51,8 @@ public class TrackWithMeasurments implements Track, Iterable<Measurement> {
 
     @Override
     public Track setName(String name) {
-        return track.setName(name);
+        track.setName(name);
+        return this;
     }
 
     @Override
@@ -61,7 +62,8 @@ public class TrackWithMeasurments implements Track, Iterable<Measurement> {
 
     @Override
     public Track setDescription(String description) {
-        return track.setDescription(description);
+        track.setDescription(description);
+        return this;
     }
 
     @Override
@@ -71,7 +73,8 @@ public class TrackWithMeasurments implements Track, Iterable<Measurement> {
 
     @Override
     public Track setIdentifier(String id) {
-        return track.setIdentifier(id);
+        track.setIdentifier(id);
+        return this;
     }
 
     @Override
@@ -81,7 +84,8 @@ public class TrackWithMeasurments implements Track, Iterable<Measurement> {
 
     @Override
     public Track setUser(User user) {
-        return track.setUser(user);
+        track.setUser(user);
+        return this;
     }
 
     @Override
@@ -91,7 +95,8 @@ public class TrackWithMeasurments implements Track, Iterable<Measurement> {
 
     @Override
     public Track setSensor(Sensor track) {
-        return this.track.setSensor(track);
+        this.track.setSensor(track);
+        return this;
     }
 
     @Override
@@ -101,12 +106,14 @@ public class TrackWithMeasurments implements Track, Iterable<Measurement> {
 
     @Override
     public Track setBbox(Geometry bbox) {
-        return track.setBbox(bbox);
+        track.setBbox(bbox);
+        return this;
     }
 
     @Override
     public Track setBbox(double minx, double miny, double maxx, double maxy) {
-        return track.setBbox(minx, miny, maxx, maxy);
+        track.setBbox(minx, miny, maxx, maxy);
+        return this;
     }
 
     @Override
