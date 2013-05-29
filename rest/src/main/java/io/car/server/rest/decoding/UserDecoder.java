@@ -17,12 +17,12 @@
  */
 package io.car.server.rest.decoding;
 
-import io.car.server.rest.JSONConstants;
 import javax.ws.rs.core.MediaType;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
 import io.car.server.core.entities.User;
+import io.car.server.rest.JSONConstants;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
@@ -30,9 +30,10 @@ import io.car.server.core.entities.User;
 public class UserDecoder extends AbstractEntityDecoder<User> {
     @Override
     public User decode(JsonNode j, MediaType mediaType) {
-        return getEntityFactory().createUser()
-                .setName(j.path(JSONConstants.NAME_KEY).textValue())
-                .setMail(j.path(JSONConstants.MAIL_KEY).textValue())
-                .setToken(j.path(JSONConstants.TOKEN_KEY).textValue());
+        User user = getEntityFactory().createUser();
+        user.setName(j.path(JSONConstants.NAME_KEY).textValue());
+        user.setMail(j.path(JSONConstants.MAIL_KEY).textValue());
+        user.setToken(j.path(JSONConstants.TOKEN_KEY).textValue());
+        return user;
     }
 }

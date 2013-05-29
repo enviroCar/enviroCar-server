@@ -17,21 +17,15 @@
  */
 package io.car.server.core.entities;
 
-import org.joda.time.DateTime;
-
-import com.vividsolutions.jts.geom.Geometry;
-
 /**
  *
  * @author Arne de Wall <a.dewall@52north.org>
  *
  */
-public interface Measurement extends BaseEntity, Comparable<Measurement> {
+public interface Measurement extends MeasurementBase, Comparable<Measurement> {
     String PHENOMENONS = "phenomenons";
-    String GEOMETRY = "geometry";
     String USER = "user";
     String SENSOR = "sensor";
-    String TIME = "time";
     String TRACK = "track";
 
     MeasurementValues getValues();
@@ -40,10 +34,6 @@ public interface Measurement extends BaseEntity, Comparable<Measurement> {
 
     Measurement removeValue(MeasurementValue value);
 
-    Geometry getGeometry();
-
-    Measurement setGeometry(Geometry geometry);
-
     Measurement setUser(User user);
 
     Sensor getSensor();
@@ -51,14 +41,6 @@ public interface Measurement extends BaseEntity, Comparable<Measurement> {
     Measurement setSensor(Sensor sensor);
 
     User getUser();
-
-    String getIdentifier();
-
-    DateTime getTime();
-
-    Measurement setTime(DateTime time);
-
-    Measurement setIdentifier(String identifier);
 
     Measurement setTrack(Track track);
 

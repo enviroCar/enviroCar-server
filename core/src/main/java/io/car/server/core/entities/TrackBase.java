@@ -17,36 +17,33 @@
  */
 package io.car.server.core.entities;
 
+import com.vividsolutions.jts.geom.Geometry;
+
 /**
- * @author Christian Autermann <autermann@uni-muenster.de>
+ *
+ * @author Arne de Wall <a.dewall@52north.org>
+ *
  */
-public interface User extends UserBase {
-    String TOKEN = "token";
-    String IS_ADMIN = "isAdmin";
-    String FRIENDS = "friends";
-    String GROUPS = "groups";
+public interface TrackBase extends BaseEntity {
+    String BBOX = "bbox";
+    String NAME = "name";
+    String DESCIPTION = "description";
 
-    String getToken();
+    String getName();
 
-    User setToken(String token);
+    TrackBase setName(String name);
 
-    boolean isAdmin();
+    String getDescription();
 
-    User setAdmin(boolean isAdmin);
+    TrackBase setDescription(String description);
 
-    Users getFriends();
+    String getIdentifier();
 
-    User addFriend(User user);
+    TrackBase setIdentifier(String id);
 
-    User removeFriend(User user);
+    Geometry getBbox();
 
-    boolean hasFriend(User user);
+    TrackBase setBbox(Geometry bbox);
 
-    Groups getGroups();
-
-    User addGroup(Group group);
-
-    User removeGroup(Group group);
-
-    boolean hasGroup(Group group);
+    TrackBase setBbox(double minx, double miny, double maxx, double maxy);
 }

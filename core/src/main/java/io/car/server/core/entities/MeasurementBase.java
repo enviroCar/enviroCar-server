@@ -17,36 +17,28 @@
  */
 package io.car.server.core.entities;
 
+import org.joda.time.DateTime;
+
+import com.vividsolutions.jts.geom.Geometry;
+
 /**
- * @author Christian Autermann <autermann@uni-muenster.de>
+ *
+ * @author Arne de Wall <a.dewall@52north.org>
+ *
  */
-public interface User extends UserBase {
-    String TOKEN = "token";
-    String IS_ADMIN = "isAdmin";
-    String FRIENDS = "friends";
-    String GROUPS = "groups";
+public interface MeasurementBase extends BaseEntity {
+    String GEOMETRY = "geometry";
+    String TIME = "time";
 
-    String getToken();
+    Geometry getGeometry();
 
-    User setToken(String token);
+    MeasurementBase setGeometry(Geometry geometry);
 
-    boolean isAdmin();
+    String getIdentifier();
 
-    User setAdmin(boolean isAdmin);
+    DateTime getTime();
 
-    Users getFriends();
+    MeasurementBase setTime(DateTime time);
 
-    User addFriend(User user);
-
-    User removeFriend(User user);
-
-    boolean hasFriend(User user);
-
-    Groups getGroups();
-
-    User addGroup(Group group);
-
-    User removeGroup(Group group);
-
-    boolean hasGroup(Group group);
+    MeasurementBase setIdentifier(String identifier);
 }

@@ -17,31 +17,14 @@
  */
 package io.car.server.core.entities;
 
-import com.vividsolutions.jts.geom.Geometry;
-
 /**
  *
  * @author Arne de Wall <a.dewall@52north.org>
  *
  */
-public interface Track extends BaseEntity {
-    String BBOX = "bbox";
+public interface Track extends TrackBase {
     String SENSOR = "sensor";
     String USER = "user";
-    String NAME = "name";
-    String DESCIPTION = "description";
-
-    String getName();
-
-    Track setName(String name);
-
-    String getDescription();
-
-    Track setDescription(String description);
-
-    String getIdentifier();
-
-    Track setIdentifier(String id);
 
     User getUser();
 
@@ -50,10 +33,4 @@ public interface Track extends BaseEntity {
     Sensor getSensor();
 
     Track setSensor(Sensor track);
-
-    Geometry getBbox();
-
-    Track setBbox(Geometry bbox);
-
-    Track setBbox(double minx, double miny, double maxx, double maxy);
 }
