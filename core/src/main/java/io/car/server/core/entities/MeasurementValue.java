@@ -23,9 +23,9 @@ public interface MeasurementValue {
 
     Object getValue();
 
-    MeasurementValue setValue(Object value);
+    void setValue(Object value);
 
     Phenomenon getPhenomenon();
 
-    MeasurementValue setPhenomenon(Phenomenon phenomenon);
+    void setPhenomenon(Phenomenon phenomenon);
 }

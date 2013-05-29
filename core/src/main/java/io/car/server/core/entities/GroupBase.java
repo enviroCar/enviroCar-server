@@ -24,11 +24,11 @@ public interface GroupBase extends BaseEntity {
     String NAME = "name";
     String DESCRIPTION = "desc";
 
-    GroupBase setName(String name);
+    void setName(String name);
 
     String getName();
 
-    GroupBase setDescription(String description);
+    void setDescription(String description);
 
     String getDescription();
 }

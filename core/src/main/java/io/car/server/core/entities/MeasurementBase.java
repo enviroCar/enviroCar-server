@@ -32,13 +32,13 @@ public interface MeasurementBase extends BaseEntity {
 
     Geometry getGeometry();
 
-    MeasurementBase setGeometry(Geometry geometry);
+    void setGeometry(Geometry geometry);
 
     String getIdentifier();
 
     DateTime getTime();
 
-    MeasurementBase setTime(DateTime time);
+    void setTime(DateTime time);
 
-    MeasurementBase setIdentifier(String identifier);
+    void setIdentifier(String identifier);
 }

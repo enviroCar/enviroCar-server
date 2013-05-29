@@ -26,7 +26,7 @@ import io.car.server.core.entities.Sensor;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Entity("sensors")
-public class MongoSensor extends MongoEntityBase<MongoSensor> implements Sensor {
+public class MongoSensor extends MongoEntityBase implements Sensor {
     @Property(NAME)
     private String name;
 
@@ -36,8 +36,7 @@ public class MongoSensor extends MongoEntityBase<MongoSensor> implements Sensor 
     }
 
     @Override
-    public Sensor setName(String name) {
+    public void setName(String name) {
         this.name = name;
-        return this;
     }
 }

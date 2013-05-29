@@ -25,15 +25,15 @@ import io.car.server.core.entities.BaseEntity;
 public interface Subscriber extends BaseEntity {
     String getName();
 
-    Subscriber setName(String name);
+    void setName(String name);
 
     String getSecret();
 
-    Subscriber setSecret(String secret);
+    void setSecret(String secret);
 
     Subscriptions getSubscriptions();
 
-    Subscriber addSubscription(Subscription subscription);
+    void addSubscription(Subscription subscription);
 
-    Subscriber removeSubscription(Subscription subscription);
+    void removeSubscription(Subscription subscription);
 }

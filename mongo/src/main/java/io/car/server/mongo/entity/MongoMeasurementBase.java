@@ -17,52 +17,55 @@
  */
 package io.car.server.mongo.entity;
 
+import org.bson.types.ObjectId;
 import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
 
 import com.github.jmkgreen.morphia.annotations.Indexed;
-import com.github.jmkgreen.morphia.annotations.PrePersist;
 import com.github.jmkgreen.morphia.annotations.Property;
+import com.vividsolutions.jts.geom.Geometry;
 
-import io.car.server.core.entities.BaseEntity;
+import io.car.server.core.entities.MeasurementBase;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
+ * @author Arne de Wall
  */
-public class MongoEntityBase extends MongoEntity implements BaseEntity {
+public class MongoMeasurementBase extends MongoEntityBase implements
+        MeasurementBase {
+//    @Indexed(IndexDirection.GEO2DSPHERE)
+    @Property(GEOMETRY)
+    private Geometry geometry;
     @Indexed
-    @Property(CREATION_DATE)
-    private DateTime creationDate;
-    @Indexed
-    @Property(LAST_MODIFIED)
-    private DateTime lastModificationDate;
+    @Property(TIME)
+    private DateTime time;
 
     @Override
-    public DateTime getCreationDate() {
-        return creationDate;
-    }
-
-    @SuppressWarnings("unchecked")
-    public void setCreationDate(DateTime creationDate) {
-        this.creationDate = creationDate;
+    public Geometry getGeometry() {
+        return this.geometry;
     }
 
     @Override
-    public DateTime getLastModificationDate() {
-        return lastModificationDate;
+    public void setGeometry(Geometry location) {
+        this.geometry = location;
     }
 
-    @SuppressWarnings("unchecked")
-    public void setLastModificationDate(DateTime lastModificationDate) {
-        this.lastModificationDate = lastModificationDate;
+    @Override
+    public String getIdentifier() {
+        return getId().toString();
     }
 
-    @PrePersist
-    public void prePersist() {
-        DateTime now = new DateTime(DateTimeZone.UTC);
-        if (getCreationDate() == null) {
-            setCreationDate(now);
-        }
-        setLastModificationDate(now);
+    @Override
+    public void setIdentifier(String identifier) {
+        setId(new ObjectId(identifier));
+    }
+
+    @Override
+    public DateTime getTime() {
+        return this.time;
+    }
+
+    @Override
+    public void setTime(DateTime time) {
+        this.time = time;
     }
 }

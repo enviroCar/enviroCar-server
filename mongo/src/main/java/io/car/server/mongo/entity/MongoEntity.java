@@ -27,10 +27,9 @@ import com.google.common.base.Objects;
 import com.google.inject.Inject;
 
 /**
- * TODO JavaDoc
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class MongoEntity<T> {
+public class MongoEntity {
     public static final String ID = Mapper.ID_KEY;
     @Id
     private ObjectId id = new ObjectId();
@@ -42,10 +41,8 @@ public class MongoEntity<T> {
         return id;
     }
 
-    @SuppressWarnings("unchecked")
-    public T setId(ObjectId id) {
+    public void setId(ObjectId id) {
         this.id = id;
-        return (T) this;
     }
 
     @Override
@@ -61,7 +58,7 @@ public class MongoEntity<T> {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final MongoEntityBase<?> other = (MongoEntityBase) obj;
+        final MongoEntityBase other = (MongoEntityBase) obj;
         return Objects.equal(this.getId(), other.getId());
     }
 
@@ -73,12 +70,11 @@ public class MongoEntity<T> {
                 .toString();
     }
 
-    @SuppressWarnings("unchecked")
-    public Key<T> asKey() {
+    public Key<?> asKey() {
         if (this.id == null) {
             return null;
         } else {
-            return (Key<T>) mapr.getKey(this);
+            return mapr.getKey(this);
         }
     }
 }

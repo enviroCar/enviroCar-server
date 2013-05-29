@@ -19,8 +19,6 @@ package io.car.server.mongo.entity;
 
 
 import com.github.jmkgreen.morphia.annotations.Entity;
-import com.github.jmkgreen.morphia.annotations.Indexed;
-import com.github.jmkgreen.morphia.annotations.Property;
 import com.github.jmkgreen.morphia.annotations.Reference;
 import com.google.common.base.Objects;
 
@@ -31,41 +29,13 @@ import io.car.server.core.entities.User;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Entity("groups")
-public class MongoGroup extends MongoEntityBase<MongoGroup> implements Group {
-    @Indexed(unique = true)
-    @Property(NAME)
-    private String name;
-    @Property(DESCRIPTION)
-    private String description;
+public class MongoGroup extends MongoGroupBase implements Group {
     @Reference(value = OWNER, lazy = true)
     private MongoUser owner;
 
     @Override
-    public MongoGroup setName(String name) {
-        this.name = name;
-        return this;
-    }
-
-    @Override
-    public String getName() {
-        return this.name;
-    }
-
-    @Override
-    public MongoGroup setDescription(String description) {
-        this.description = description;
-        return this;
-    }
-
-    @Override
-    public String getDescription() {
-        return this.description;
-    }
-
-    @Override
-    public MongoGroup setOwner(User user) {
+    public void setOwner(User user) {
         this.owner = (MongoUser) user;
-        return this;
     }
 
     @Override

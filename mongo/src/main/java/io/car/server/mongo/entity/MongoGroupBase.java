@@ -17,52 +17,50 @@
  */
 package io.car.server.mongo.entity;
 
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
 
 import com.github.jmkgreen.morphia.annotations.Indexed;
-import com.github.jmkgreen.morphia.annotations.PrePersist;
 import com.github.jmkgreen.morphia.annotations.Property;
+import com.google.common.base.Objects;
 
-import io.car.server.core.entities.BaseEntity;
+import io.car.server.core.entities.GroupBase;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class MongoEntityBase extends MongoEntity implements BaseEntity {
-    @Indexed
-    @Property(CREATION_DATE)
-    private DateTime creationDate;
-    @Indexed
-    @Property(LAST_MODIFIED)
-    private DateTime lastModificationDate;
+public class MongoGroupBase extends MongoEntityBase implements GroupBase {
+    @Indexed(unique = true)
+    @Property(NAME)
+    private String name;
+    @Property(DESCRIPTION)
+    private String description;
 
     @Override
-    public DateTime getCreationDate() {
-        return creationDate;
-    }
-
-    @SuppressWarnings("unchecked")
-    public void setCreationDate(DateTime creationDate) {
-        this.creationDate = creationDate;
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override
-    public DateTime getLastModificationDate() {
-        return lastModificationDate;
+    public String getName() {
+        return this.name;
     }
 
-    @SuppressWarnings("unchecked")
-    public void setLastModificationDate(DateTime lastModificationDate) {
-        this.lastModificationDate = lastModificationDate;
+    @Override
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    @PrePersist
-    public void prePersist() {
-        DateTime now = new DateTime(DateTimeZone.UTC);
-        if (getCreationDate() == null) {
-            setCreationDate(now);
-        }
-        setLastModificationDate(now);
+    @Override
+    public String getDescription() {
+        return this.description;
+    }
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+                .omitNullValues()
+                .add(ID, getId())
+                .add(NAME, getName())
+                .add(DESCRIPTION, getDescription())
+                .toString();
     }
 }

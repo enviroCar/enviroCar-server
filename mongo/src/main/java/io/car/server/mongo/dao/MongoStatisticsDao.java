@@ -266,7 +266,7 @@ public class MongoStatisticsDao implements StatisticsDao {
         return new BasicDBObject(Ops.MATCH, new BasicDBObject(path(MongoMeasurement.PHENOMENONS, MongoMeasurementValue.PHENOMENON), in));
     }
 
-    protected <T extends MongoEntityBase<T>> DBRef toRef(T o) {
+    protected <T extends MongoEntityBase> DBRef toRef(T o) {
         DBRef ref = mapr.keyToRef(db.getKey(o));
         return ref;
     }

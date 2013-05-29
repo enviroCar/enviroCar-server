@@ -32,7 +32,6 @@ import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
 
 /**
- * TODO JavaDoc
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class TrackWithMeasurments implements Track, Iterable<Measurement> {
@@ -50,9 +49,8 @@ public class TrackWithMeasurments implements Track, Iterable<Measurement> {
     }
 
     @Override
-    public Track setName(String name) {
+    public void setName(String name) {
         track.setName(name);
-        return this;
     }
 
     @Override
@@ -61,9 +59,8 @@ public class TrackWithMeasurments implements Track, Iterable<Measurement> {
     }
 
     @Override
-    public Track setDescription(String description) {
+    public void setDescription(String description) {
         track.setDescription(description);
-        return this;
     }
 
     @Override
@@ -72,9 +69,8 @@ public class TrackWithMeasurments implements Track, Iterable<Measurement> {
     }
 
     @Override
-    public Track setIdentifier(String id) {
+    public void setIdentifier(String id) {
         track.setIdentifier(id);
-        return this;
     }
 
     @Override
@@ -83,9 +79,8 @@ public class TrackWithMeasurments implements Track, Iterable<Measurement> {
     }
 
     @Override
-    public Track setUser(User user) {
+    public void setUser(User user) {
         track.setUser(user);
-        return this;
     }
 
     @Override
@@ -94,9 +89,8 @@ public class TrackWithMeasurments implements Track, Iterable<Measurement> {
     }
 
     @Override
-    public Track setSensor(Sensor track) {
+    public void setSensor(Sensor track) {
         this.track.setSensor(track);
-        return this;
     }
 
     @Override
@@ -105,15 +99,13 @@ public class TrackWithMeasurments implements Track, Iterable<Measurement> {
     }
 
     @Override
-    public Track setBbox(Geometry bbox) {
+    public void setBbox(Geometry bbox) {
         track.setBbox(bbox);
-        return this;
     }
 
     @Override
-    public Track setBbox(double minx, double miny, double maxx, double maxy) {
+    public void setBbox(double minx, double miny, double maxx, double maxy) {
         track.setBbox(minx, miny, maxx, maxy);
-        return this;
     }
 
     @Override

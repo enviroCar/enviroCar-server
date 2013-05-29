@@ -24,13 +24,15 @@ import com.google.inject.assistedinject.Assisted;
 import io.car.server.core.activities.ActivityType;
 import io.car.server.core.activities.MeasurementActivity;
 import io.car.server.core.entities.Measurement;
+import io.car.server.core.entities.MeasurementBase;
 import io.car.server.core.entities.User;
 import io.car.server.mongo.entity.MongoMeasurement;
+import io.car.server.mongo.entity.MongoMeasurementBase;
 
 public class MongoMeasurementActivity extends MongoActivity implements
         MeasurementActivity {
     @Embedded(MEASUREMENT)
-    private MongoMeasurement measurement;
+    private MongoMeasurementBase measurement;
 
     @Inject
     public MongoMeasurementActivity(@Assisted ActivityType type,
@@ -46,13 +48,12 @@ public class MongoMeasurementActivity extends MongoActivity implements
 
 
     @Override
-    public Measurement getMeasurement() {
+    public MongoMeasurementBase getMeasurement() {
         return this.measurement;
     }
 
     @Override
-    public MeasurementActivity setMeasurement(Measurement measurement) {
-        this.measurement = (MongoMeasurement) measurement;
-        return this;
+    public void setMeasurement(MeasurementBase measurement) {
+        this.measurement = (MongoMeasurementBase) measurement;
     }
 }

@@ -135,13 +135,15 @@ public class Service {
 
     public void removeFriend(User user, User friend)
             throws UserNotFoundException {
-        this.userDao.save(user.removeFriend(friend));
+        user.removeFriend(friend);
+        this.userDao.save(user);
         this.activityDao.save(activityFactory
                 .createUserActivity(ActivityType.UNFRIENDED_USER, user, friend));
     }
 
     public void addFriend(User user, User friend) throws UserNotFoundException {
-        this.userDao.save(user.addFriend(friend));
+        user.addFriend(friend);
+        this.userDao.save(user);
         this.activityDao.save(activityFactory
                 .createUserActivity(ActivityType.FRIENDED_USER, user, friend));
     }
@@ -201,8 +203,10 @@ public class Service {
     }
 
     public Group createGroup(User user, Group group) {
-        this.groupDao.save(group.setOwner(user));
-        this.userDao.save(user.addGroup(group));
+        group.setOwner(user);
+        this.groupDao.save(group);
+        user.addGroup(group);
+        this.userDao.save(user);
         this.activityDao.save(activityFactory
                 .createGroupActivity(ActivityType.CREATED_GROUP, user, group));
         return group;
@@ -210,7 +214,8 @@ public class Service {
 
     public void addGroupMember(Group group, User user)
             throws UserNotFoundException {
-        this.userDao.save(user.addGroup(group));
+        user.addGroup(group);
+        this.userDao.save(user);
         this.groupDao.update(group);
         this.activityDao.save(activityFactory
                 .createGroupActivity(ActivityType.JOINED_GROUP, user, group));
@@ -218,7 +223,8 @@ public class Service {
 
     public void removeGroupMember(Group group, User user)
             throws UserNotFoundException, GroupNotFoundException {
-        this.userDao.save(user.removeGroup(group));
+        user.removeGroup(group);
+        this.userDao.save(user);
         this.groupDao.update(group);
         this.activityDao.save(activityFactory
                 .createGroupActivity(ActivityType.LEAVED_GROUP, user, group));

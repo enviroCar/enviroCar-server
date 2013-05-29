@@ -21,7 +21,7 @@
  */
 package io.car.server.core.activities;
 
-import io.car.server.core.entities.Group;
+import io.car.server.core.entities.GroupBase;
 
 /**
  *
@@ -29,7 +29,7 @@ import io.car.server.core.entities.Group;
  */
 public interface GroupActivity extends Activity {
     String GROUP = "group";
-    Group getGroup();
+    GroupBase getGroup();
 
-    GroupActivity setGroup(Group group);
+    void setGroup(GroupBase group);
 }

@@ -30,19 +30,19 @@ public interface Measurement extends MeasurementBase, Comparable<Measurement> {
 
     MeasurementValues getValues();
 
-    Measurement addValue(MeasurementValue value);
+    void addValue(MeasurementValue value);
 
-    Measurement removeValue(MeasurementValue value);
+    void removeValue(MeasurementValue value);
 
-    Measurement setUser(User user);
+    void setUser(User user);
 
     Sensor getSensor();
 
-    Measurement setSensor(Sensor sensor);
+    void setSensor(Sensor sensor);
 
     User getUser();
 
-    Measurement setTrack(Track track);
+    void setTrack(Track track);
 
     Track getTrack();
 }

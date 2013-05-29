@@ -27,8 +27,7 @@ import io.car.server.core.entities.Phenomenon;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Entity("phenomenons")
-public class MongoPhenomenon extends MongoEntityBase<MongoPhenomenon> implements
-        Phenomenon {
+public class MongoPhenomenon extends MongoEntityBase implements Phenomenon {
     @Indexed(unique = true)
     @Property(NAME)
     private String name;
@@ -41,9 +40,8 @@ public class MongoPhenomenon extends MongoEntityBase<MongoPhenomenon> implements
     }
 
     @Override
-    public MongoPhenomenon setName(String name) {
+    public void setName(String name) {
         this.name = name;
-        return this;
     }
 
     @Override
@@ -52,8 +50,7 @@ public class MongoPhenomenon extends MongoEntityBase<MongoPhenomenon> implements
     }
 
     @Override
-    public Phenomenon setUnit(String unit) {
+    public void setUnit(String unit) {
         this.unit = unit;
-        return this;
     }
 }

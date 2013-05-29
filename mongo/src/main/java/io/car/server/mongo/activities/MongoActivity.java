@@ -30,22 +30,23 @@ import com.google.inject.assistedinject.Assisted;
 import io.car.server.core.activities.Activity;
 import io.car.server.core.activities.ActivityType;
 import io.car.server.core.entities.User;
+import io.car.server.core.entities.UserBase;
 import io.car.server.mongo.entity.MongoEntity;
 import io.car.server.mongo.entity.MongoUser;
+import io.car.server.mongo.entity.MongoUserBase;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Polymorphic
 @Entity("activities")
-public class MongoActivity extends MongoEntity<MongoActivity>
-        implements Activity {
+public class MongoActivity extends MongoEntity implements Activity {
     @Indexed
     @Property(TIME)
     private DateTime time = new DateTime();
     @Indexed
     @Embedded(USER)
-    private MongoUser user;
+    private MongoUserBase user;
     @Indexed
     @Property(TYPE)
     private ActivityType type;
@@ -62,14 +63,13 @@ public class MongoActivity extends MongoEntity<MongoActivity>
     }
 
     @Override
-    public MongoUser getUser() {
+    public MongoUserBase getUser() {
         return this.user;
     }
 
     @Override
-    public MongoActivity setUser(User user) {
-        this.user = (MongoUser) user;
-        return this;
+    public void setUser(UserBase user) {
+        this.user = (MongoUserBase) user;
     }
 
     @Override
@@ -78,9 +78,8 @@ public class MongoActivity extends MongoEntity<MongoActivity>
     }
 
     @Override
-    public MongoActivity setType(ActivityType type) {
+    public void setType(ActivityType type) {
         this.type = type;
-        return this;
     }
 
     @Override

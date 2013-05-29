@@ -24,15 +24,17 @@ import com.google.inject.assistedinject.Assisted;
 import io.car.server.core.activities.ActivityType;
 import io.car.server.core.activities.GroupActivity;
 import io.car.server.core.entities.Group;
+import io.car.server.core.entities.GroupBase;
 import io.car.server.core.entities.User;
 import io.car.server.mongo.entity.MongoGroup;
+import io.car.server.mongo.entity.MongoGroupBase;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class MongoGroupActivity extends MongoActivity implements GroupActivity {
     @Embedded(GROUP)
-    private MongoGroup group;
+    private MongoGroupBase group;
 
     @Inject
     public MongoGroupActivity(@Assisted ActivityType type,
@@ -48,13 +50,12 @@ public class MongoGroupActivity extends MongoActivity implements GroupActivity {
 
 
     @Override
-    public MongoGroup getGroup() {
+    public MongoGroupBase getGroup() {
         return this.group;
     }
 
     @Override
-    public MongoGroupActivity setGroup(Group group) {
-        this.group = (MongoGroup) group;
-        return this;
+    public void setGroup(GroupBase group) {
+        this.group = (MongoGroupBase) group;
     }
 }

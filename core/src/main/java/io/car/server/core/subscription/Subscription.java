@@ -25,11 +25,11 @@ import io.car.server.core.entities.BaseEntity;
 public interface Subscription extends BaseEntity {
     Subscriber getSubscriber();
 
-    Subscription setSubscriber(Subscriber subscriber);
+    void setSubscriber(Subscriber subscriber);
 
     SubscriptionFilterParameters getFilters();
 
-    Subscription addFilter(SubscriptionFilterParameter filter);
+    void addFilter(SubscriptionFilterParameter filter);
 
-    Subscription removeFilter(SubscriptionFilterParameter filter);
+    void removeFilter(SubscriptionFilterParameter filter);
 }

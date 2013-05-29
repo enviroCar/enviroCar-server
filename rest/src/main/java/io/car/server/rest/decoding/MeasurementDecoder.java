@@ -17,7 +17,6 @@
  */
 package io.car.server.rest.decoding;
 
-import io.car.server.rest.JSONConstants;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
@@ -30,8 +29,10 @@ import com.vividsolutions.jts.geom.Geometry;
 import io.car.server.core.dao.PhenomenonDao;
 import io.car.server.core.dao.SensorDao;
 import io.car.server.core.entities.Measurement;
+import io.car.server.core.entities.MeasurementValue;
 import io.car.server.core.entities.Phenomenon;
 import io.car.server.core.util.GeoJSONConstants;
+import io.car.server.rest.JSONConstants;
 
 /**
  * @author Arne de Wall <a.dewall@52north.org>
@@ -88,9 +89,11 @@ public class MeasurementDecoder extends AbstractEntityDecoder<Measurement> {
                         } else if (valueNode.isTextual()) {
                             value = valueNode.textValue();
                         }
-                        measurement.addValue(getEntityFactory()
-                                .createMeasurementValue()
-                                .setValue(value).setPhenomenon(phenomenon));
+                        MeasurementValue v = getEntityFactory()
+                                .createMeasurementValue();
+                        v.setValue(value);
+                        v.setPhenomenon(phenomenon);
+                        measurement.addValue(v);
                     }
                 }
             }

@@ -19,7 +19,7 @@ package io.car.server.core.activities;
 
 import org.joda.time.DateTime;
 
-import io.car.server.core.entities.User;
+import io.car.server.core.entities.UserBase;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
@@ -29,13 +29,13 @@ public interface Activity {
     String TYPE = "type";
     String TIME = "time";
 
-    User getUser();
+    UserBase getUser();
 
-    Activity setUser(User user);
+    void setUser(UserBase user);
 
     ActivityType getType();
 
-    Activity setType(ActivityType type);
+    void setType(ActivityType type);
 
     DateTime getTime();
 }

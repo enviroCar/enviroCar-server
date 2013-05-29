@@ -21,7 +21,7 @@
  */
 package io.car.server.core.activities;
 
-import io.car.server.core.entities.Track;
+import io.car.server.core.entities.TrackBase;
 
 /**
  *
@@ -29,7 +29,7 @@ import io.car.server.core.entities.Track;
  */
 public interface TrackActivity extends Activity {
     String TRACK = "track";
-    Track getTrack();
+    TrackBase getTrack();
 
-    TrackActivity setTrack(Track track);
+    void setTrack(TrackBase track);
 }

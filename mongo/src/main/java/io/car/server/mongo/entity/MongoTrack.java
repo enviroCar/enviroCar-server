@@ -17,19 +17,11 @@
  */
 package io.car.server.mongo.entity;
 
-import org.bson.types.ObjectId;
-
 import com.github.jmkgreen.morphia.Key;
-import com.github.jmkgreen.morphia.annotations.Embedded;
 import com.github.jmkgreen.morphia.annotations.Entity;
-import com.github.jmkgreen.morphia.annotations.Indexed;
 import com.github.jmkgreen.morphia.annotations.Property;
 import com.github.jmkgreen.morphia.annotations.Transient;
-import com.github.jmkgreen.morphia.utils.IndexDirection;
 import com.google.inject.Inject;
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
 
 import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.Track;
@@ -37,57 +29,17 @@ import io.car.server.core.entities.User;
 import io.car.server.mongo.cache.EntityCache;
 
 @Entity("tracks")
-public class MongoTrack extends MongoEntityBase<MongoTrack> implements Track {
-    @Indexed(IndexDirection.GEO2D)
-    @Embedded(BBOX)
-    private Geometry bbox;
+public class MongoTrack extends MongoTrackBase implements Track {
     @Property(USER)
     private Key<MongoUser> user;
     @Property(SENSOR)
     private Key<MongoSensor> sensor;
-    @Property(DESCIPTION)
-    private String description;
-    @Property(NAME)
-    private String name;
     @Inject
     @Transient
     private EntityCache<MongoSensor> sensorCache;
     @Inject
     @Transient
     private EntityCache<MongoUser> userCache;
-    @Inject
-    @Transient
-    private GeometryFactory factory;
-
-
-    @Override
-    public MongoTrack setBbox(Geometry bbox) {
-        this.bbox = bbox;
-        return this;
-    }
-
-    @Override
-    public Geometry getBbox() {
-        return this.bbox;
-    }
-
-    @Override
-    public MongoTrack setBbox(double minx, double miny, double maxx, double maxy) {
-        Coordinate[] coords = new Coordinate[] { new Coordinate(minx, miny),
-                                                 new Coordinate(maxx, maxy) };
-        this.bbox = factory.createPolygon(coords);
-        return this;
-    }
-
-    @Override
-    public String getIdentifier() {
-        return (getId() == null) ? null : getId().toString();
-    }
-
-    @Override
-    public MongoTrack setIdentifier(String id) {
-        return setId(new ObjectId(id));
-    }
 
     @Override
     public MongoUser getUser() {
@@ -98,13 +50,13 @@ public class MongoTrack extends MongoEntityBase<MongoTrack> implements Track {
     }
 
     @Override
-    public MongoTrack setUser(User user) {
+    @SuppressWarnings("unchecked")
+    public void setUser(User user) {
         if (user != null) {
-            this.user = ((MongoUser) user).asKey();
+            this.user = (Key<MongoUser>) ((MongoUser) user).asKey();
         } else {
             this.user = null;
         }
-        return this;
     }
 
     @Override
@@ -113,34 +65,12 @@ public class MongoTrack extends MongoEntityBase<MongoTrack> implements Track {
     }
 
     @Override
-    public MongoTrack setSensor(Sensor sensor) {
+    @SuppressWarnings("unchecked")
+    public void setSensor(Sensor sensor) {
         if (sensor != null) {
-            this.sensor = ((MongoSensor) sensor).asKey();
+            this.sensor = (Key<MongoSensor>) ((MongoSensor) sensor).asKey();
         } else {
             this.sensor = null;
         }
-        return this;
-    }
-
-    @Override
-    public String getName() {
-        return this.name;
-    }
-
-    @Override
-    public MongoTrack setName(String name) {
-        this.name = name;
-        return this;
-    }
-
-    @Override
-    public String getDescription() {
-        return this.description;
-    }
-
-    @Override
-    public MongoTrack setDescription(String description) {
-        this.description = description;
-        return this;
     }
 }

@@ -21,7 +21,7 @@
  */
 package io.car.server.core.activities;
 
-import io.car.server.core.entities.User;
+import io.car.server.core.entities.UserBase;
 
 /**
  *
@@ -29,7 +29,7 @@ import io.car.server.core.entities.User;
  */
 public interface UserActivity extends Activity {
     String OTHER = "other";
-    User getOther();
+    UserBase getOther();
 
-    UserActivity setOther(User user);
+    void setOther(UserBase user);
 }

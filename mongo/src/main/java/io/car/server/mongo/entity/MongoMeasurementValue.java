@@ -43,9 +43,8 @@ public class MongoMeasurementValue implements MeasurementValue {
     }
 
     @Override
-    public MeasurementValue setValue(Object value) {
+    public void setValue(Object value) {
         this.value = value;
-        return this;
     }
 
     @Override
@@ -54,12 +53,14 @@ public class MongoMeasurementValue implements MeasurementValue {
     }
 
     @Override
-    public MeasurementValue setPhenomenon(Phenomenon phenomenon) {
+    @SuppressWarnings("unchecked")
+    public void setPhenomenon(Phenomenon phenomenon) {
         if (phenomenon != null) {
-            this.phenomenon = ((MongoPhenomenon) phenomenon).asKey();
+            this.phenomenon =
+                    (Key<MongoPhenomenon>) ((MongoPhenomenon) phenomenon)
+                    .asKey();
         } else {
             this.phenomenon = null;
         }
-        return this;
     }
 }

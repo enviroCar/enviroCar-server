@@ -23,7 +23,7 @@ package io.car.server.core.entities;
 public interface Group extends GroupBase {
     String OWNER = "owner";
 
-    Group setOwner(User user);
+    void setOwner(User user);
 
     User getOwner();
 }

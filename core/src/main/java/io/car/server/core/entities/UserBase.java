@@ -26,9 +26,9 @@ public interface UserBase extends BaseEntity {
 
     String getName();
 
-    UserBase setName(String name);
+    void setName(String name);
 
     String getMail();
 
-    UserBase setMail(String mail);
+    void setMail(String mail);
 }

@@ -34,7 +34,6 @@ import io.car.server.core.entities.User;
 import io.car.server.rest.JSONConstants;
 
 /**
- * TODO JavaDoc
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class ActivityEncoder extends AbstractEntityEncoder<Activity> {

@@ -18,12 +18,11 @@
 package io.car.server.mongo.entity;
 
 import static io.car.server.core.entities.User.FRIENDS;
-import static io.car.server.mongo.entity.MongoEntityBase.ID;
+import static io.car.server.mongo.entity.MongoEntity.ID;
 
 import java.util.Set;
 
 import com.github.jmkgreen.morphia.annotations.Entity;
-import com.github.jmkgreen.morphia.annotations.Indexed;
 import com.github.jmkgreen.morphia.annotations.Property;
 import com.github.jmkgreen.morphia.annotations.Reference;
 import com.google.common.base.Objects;
@@ -38,13 +37,7 @@ import io.car.server.core.entities.Users;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Entity("users")
-public class MongoUser extends MongoEntityBase<MongoUser> implements User {
-    @Indexed(unique = true)
-    @Property(NAME)
-    private String name;
-    @Indexed(unique = true)
-    @Property(MAIL)
-    private String mail;
+public class MongoUser extends MongoUserBase implements User {
     @Property(TOKEN)
     private String token;
     @Property(IS_ADMIN)
@@ -55,36 +48,13 @@ public class MongoUser extends MongoEntityBase<MongoUser> implements User {
     private Set<MongoGroup> groups = Sets.newHashSet();
 
     @Override
-    public String getName() {
-        return this.name;
-    }
-
-    @Override
-    public MongoUser setName(String name) {
-        this.name = name;
-        return this;
-    }
-
-    @Override
-    public String getMail() {
-        return mail;
-    }
-
-    @Override
-    public MongoUser setMail(String mail) {
-        this.mail = mail;
-        return this;
-    }
-
-    @Override
     public String getToken() {
         return this.token;
     }
 
     @Override
-    public MongoUser setToken(String token) {
+    public void setToken(String token) {
         this.token = token;
-        return this;
     }
 
     @Override
@@ -93,9 +63,8 @@ public class MongoUser extends MongoEntityBase<MongoUser> implements User {
     }
 
     @Override
-    public MongoUser setAdmin(boolean isAdmin) {
+    public void setAdmin(boolean isAdmin) {
         this.isAdmin = isAdmin;
-        return this;
     }
 
     @Override
@@ -104,23 +73,13 @@ public class MongoUser extends MongoEntityBase<MongoUser> implements User {
     }
 
     @Override
-    public MongoUser addFriend(User user) {
+    public void addFriend(User user) {
         this.friends.add((MongoUser) user);
-        return this;
     }
 
     @Override
-    public MongoUser removeFriend(User user) {
+    public void removeFriend(User user) {
         this.friends.remove((MongoUser) user);
-        return this;
-    }
-
-    public MongoUser setFriends(Users friends) {
-        this.friends.clear();
-        for (User u : friends) {
-            this.friends.add((MongoUser) u);
-        }
-        return this;
     }
 
     @Override
@@ -134,15 +93,13 @@ public class MongoUser extends MongoEntityBase<MongoUser> implements User {
     }
 
     @Override
-    public MongoUser addGroup(Group group) {
+    public void addGroup(Group group) {
         this.groups.add((MongoGroup) group);
-        return this;
     }
 
     @Override
-    public MongoUser removeGroup(Group group) {
+    public void removeGroup(Group group) {
         this.groups.remove((MongoGroup) group);
-        return this;
     }
 
     @Override

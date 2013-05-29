@@ -28,25 +28,25 @@ public interface User extends UserBase {
 
     String getToken();
 
-    User setToken(String token);
+    void setToken(String token);
 
     boolean isAdmin();
 
-    User setAdmin(boolean isAdmin);
+    void setAdmin(boolean isAdmin);
 
     Users getFriends();
 
-    User addFriend(User user);
+    void addFriend(User user);
 
-    User removeFriend(User user);
+    void removeFriend(User user);
 
     boolean hasFriend(User user);
 
     Groups getGroups();
 
-    User addGroup(Group group);
+    void addGroup(Group group);
 
-    User removeGroup(Group group);
+    void removeGroup(Group group);
 
     boolean hasGroup(Group group);
 }

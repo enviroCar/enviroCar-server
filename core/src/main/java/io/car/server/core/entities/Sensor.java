@@ -25,5 +25,5 @@ public interface Sensor extends BaseEntity {
 
     String getName();
 
-    Sensor setName(String name);
+    void setName(String name);
 }

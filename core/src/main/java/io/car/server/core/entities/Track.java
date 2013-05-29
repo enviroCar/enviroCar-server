@@ -28,9 +28,9 @@ public interface Track extends TrackBase {
 
     User getUser();
 
-    Track setUser(User user);
+    void setUser(User user);
 
     Sensor getSensor();
 
-    Track setSensor(Sensor track);
+    void setSensor(Sensor track);
 }

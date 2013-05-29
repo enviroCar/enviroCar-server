@@ -17,14 +17,14 @@
  */
 package io.car.server.core.activities;
 
-import io.car.server.core.entities.Measurement;
+import io.car.server.core.entities.MeasurementBase;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface MeasurementActivity extends Activity {
     String MEASUREMENT = "measurement";
-    Measurement getMeasurement();
+    MeasurementBase getMeasurement();
 
-    MeasurementActivity setMeasurement(Measurement measurement);
+    void setMeasurement(MeasurementBase measurement);
 }

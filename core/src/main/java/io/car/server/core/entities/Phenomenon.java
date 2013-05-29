@@ -25,9 +25,9 @@ public interface Phenomenon extends BaseEntity {
     String UNIT = "unit";
     String getName();
 
-    Phenomenon setName(String name);
+    void setName(String name);
 
     String getUnit();
 
-    Phenomenon setUnit(String unit);
+    void setUnit(String unit);
 }

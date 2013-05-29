@@ -24,14 +24,16 @@ import com.google.inject.assistedinject.Assisted;
 import io.car.server.core.activities.ActivityType;
 import io.car.server.core.activities.UserActivity;
 import io.car.server.core.entities.User;
+import io.car.server.core.entities.UserBase;
 import io.car.server.mongo.entity.MongoUser;
+import io.car.server.mongo.entity.MongoUserBase;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class MongoUserActivity extends MongoActivity implements UserActivity {
     @Embedded(OTHER)
-    private MongoUser other;
+    private MongoUserBase other;
 
     @Inject
     public MongoUserActivity(@Assisted ActivityType type,
@@ -46,13 +48,12 @@ public class MongoUserActivity extends MongoActivity implements UserActivity {
     }
 
     @Override
-    public MongoUser getOther() {
+    public MongoUserBase getOther() {
         return this.other;
     }
 
     @Override
-    public MongoUserActivity setOther(User user) {
-        this.other = (MongoUser) user;
-        return this;
+    public void setOther(UserBase user) {
+        this.other = (MongoUserBase) user;
     }
 }

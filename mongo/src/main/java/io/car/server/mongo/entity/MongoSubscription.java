@@ -33,8 +33,7 @@ import io.car.server.core.subscription.SubscriptionFilterParameters;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Entity("subscriptions")
-public class MongoSubscription extends MongoEntityBase<MongoSubscription>
-        implements Subscription {
+public class MongoSubscription extends MongoEntityBase implements Subscription {
     public static final String SUBSCRIBER = "subscriber";
     public static final String SUBSCRIPTION_FILTERS = "filters";
     @Reference(value = SUBSCRIBER, lazy = true)
@@ -48,9 +47,8 @@ public class MongoSubscription extends MongoEntityBase<MongoSubscription>
     }
 
     @Override
-    public Subscription setSubscriber(Subscriber subscriber) {
+    public void setSubscriber(Subscriber subscriber) {
         this.subscriber = (MongoSubscriber) subscriber;
-        return this;
     }
 
     @Override
@@ -60,15 +58,13 @@ public class MongoSubscription extends MongoEntityBase<MongoSubscription>
     }
 
     @Override
-    public Subscription addFilter(SubscriptionFilterParameter filter) {
+    public void addFilter(SubscriptionFilterParameter filter) {
         this.subscriptionFilters.add((MongoSubscriptionFilter) filter);
-        return this;
     }
 
     @Override
-    public Subscription removeFilter(SubscriptionFilterParameter filter) {
+    public void removeFilter(SubscriptionFilterParameter filter) {
         this.subscriptionFilters.remove((MongoSubscriptionFilter) filter);
-        return this;
     }
 
     @Override

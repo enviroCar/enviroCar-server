@@ -24,15 +24,17 @@ import com.google.inject.assistedinject.Assisted;
 import io.car.server.core.activities.ActivityType;
 import io.car.server.core.activities.TrackActivity;
 import io.car.server.core.entities.Track;
+import io.car.server.core.entities.TrackBase;
 import io.car.server.core.entities.User;
 import io.car.server.mongo.entity.MongoTrack;
+import io.car.server.mongo.entity.MongoTrackBase;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class MongoTrackActivity extends MongoActivity implements TrackActivity {
     @Embedded(TRACK)
-    private MongoTrack track;
+    private MongoTrackBase track;
 
     @Inject
     public MongoTrackActivity(@Assisted ActivityType type,
@@ -47,13 +49,12 @@ public class MongoTrackActivity extends MongoActivity implements TrackActivity {
     }
 
     @Override
-    public MongoTrack getTrack() {
+    public MongoTrackBase getTrack() {
         return this.track;
     }
 
     @Override
-    public MongoTrackActivity setTrack(Track track) {
-        this.track = (MongoTrack) track;
-        return this;
+    public void setTrack(TrackBase track) {
+        this.track = (MongoTrackBase) track;
     }
 }

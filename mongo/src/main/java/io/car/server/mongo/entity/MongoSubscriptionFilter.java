@@ -25,7 +25,6 @@ import io.car.server.core.subscription.SubscriptionFilterParameter;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Entity("filters")
-public class MongoSubscriptionFilter extends MongoEntityBase<MongoSubscriptionFilter>
-        implements
-        SubscriptionFilterParameter {
+public class MongoSubscriptionFilter extends MongoEntityBase
+        implements SubscriptionFilterParameter {
 }

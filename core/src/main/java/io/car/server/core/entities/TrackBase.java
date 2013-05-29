@@ -31,19 +31,19 @@ public interface TrackBase extends BaseEntity {
 
     String getName();
 
-    TrackBase setName(String name);
+    void setName(String name);
 
     String getDescription();
 
-    TrackBase setDescription(String description);
+    void setDescription(String description);
 
     String getIdentifier();
 
-    TrackBase setIdentifier(String id);
+    void setIdentifier(String id);
 
     Geometry getBbox();
 
-    TrackBase setBbox(Geometry bbox);
+    void setBbox(Geometry bbox);
 
-    TrackBase setBbox(double minx, double miny, double maxx, double maxy);
+    void setBbox(double minx, double miny, double maxx, double maxy);
 }
