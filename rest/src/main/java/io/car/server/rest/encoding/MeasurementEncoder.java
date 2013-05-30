@@ -28,8 +28,8 @@ import io.car.server.core.entities.MeasurementValue;
 import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.User;
 import io.car.server.core.util.GeoJSONConstants;
-import io.car.server.rest.MediaTypes;
 import io.car.server.rest.JSONConstants;
+import io.car.server.rest.MediaTypes;
 
 /**
  * @author Arne de Wall <a.dewall@52north.org>
@@ -85,6 +85,7 @@ public class MeasurementEncoder extends AbstractEntityEncoder<Measurement> {
             } else if (value != null) {
                 phenomenon.put(JSONConstants.VALUE_KEY, value.toString());
             }
+            phenomenon.put(JSONConstants.UNIT_KEY, mv.getPhenomenon().getUnit());
             values.put(mv.getPhenomenon().getName(), phenomenon);
         }
         return measurement;
