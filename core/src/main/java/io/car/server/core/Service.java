@@ -144,15 +144,6 @@ public class Service {
         return this.groupDao.get(p);
     }
 
-    public Group createGroup(Group group) throws ValidationException,
-                                                 ResourceAlreadyExistException {
-        groupValidator.validateCreate(group);
-        if (groupDao.getByName(group.getName()) != null) {
-            throw new ResourceAlreadyExistException();
-        }
-        return this.groupDao.create(group);
-    }
-
     public Users getGroupMembers(Group group, Pagination pagination) {
         return this.userDao.getByGroup(group, pagination);
     }
@@ -177,9 +168,16 @@ public class Service {
         return this.groupDao.search(search, p);
     }
 
-    public Group createGroup(User user, Group group) {
-        this.groupDao.save(group.setOwner(user));
-        this.userDao.save(user.addGroup(group));
+    public Group createGroup(User user, Group group) throws
+            ResourceAlreadyExistException, ValidationException {
+        group.setOwner(user);
+        groupValidator.validateCreate(group);
+        if (groupDao.getByName(group.getName()) != null) {
+            throw new ResourceAlreadyExistException();
+        }
+        this.groupDao.save(group);
+        user.addGroup(group);
+        this.userDao.save(user);
         return group;
     }
 
