@@ -32,9 +32,6 @@ import io.car.server.mongo.entity.MongoGroup;
 import io.car.server.mongo.entity.MongoMeasurement;
 import io.car.server.mongo.entity.MongoPhenomenon;
 import io.car.server.mongo.entity.MongoSensor;
-import io.car.server.mongo.entity.MongoSubscriber;
-import io.car.server.mongo.entity.MongoSubscription;
-import io.car.server.mongo.entity.MongoSubscriptionFilter;
 import io.car.server.mongo.entity.MongoTrack;
 import io.car.server.mongo.entity.MongoUser;
 
@@ -50,9 +47,6 @@ public class MongoMappedClassesModule extends AbstractModule {
                 Names.named(MongoDB.MAPPED_CLASSES));
         mb.addBinding().toInstance(MongoUser.class);
         mb.addBinding().toInstance(MongoGroup.class);
-        mb.addBinding().toInstance(MongoSubscriber.class);
-        mb.addBinding().toInstance(MongoSubscription.class);
-        mb.addBinding().toInstance(MongoSubscriptionFilter.class);
         mb.addBinding().toInstance(MongoTrack.class);
         mb.addBinding().toInstance(MongoMeasurement.class);
         mb.addBinding().toInstance(MongoPhenomenon.class);
