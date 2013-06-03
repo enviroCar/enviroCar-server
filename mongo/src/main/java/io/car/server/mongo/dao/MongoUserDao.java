@@ -119,7 +119,7 @@ public class MongoUserDao extends AbstractMongoDao<MongoUser, Users>
             log.debug("Removed user {} from {} friend lists",
                       u, result.getUpdatedCount());
         }
-        delete(user);
+        delete(user.getId());
     }
 
     @Override
