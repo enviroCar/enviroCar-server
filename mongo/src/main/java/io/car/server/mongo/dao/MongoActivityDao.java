@@ -17,6 +17,8 @@
  */
 package io.car.server.mongo.dao;
 
+import org.bson.types.ObjectId;
+
 import com.github.jmkgreen.morphia.Datastore;
 import com.google.inject.Inject;
 
@@ -31,7 +33,7 @@ import io.car.server.mongo.activities.MongoActivity;
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class MongoActivityDao extends AbstractMongoDao<MongoActivity, Activities>
+public class MongoActivityDao extends AbstractMongoDao<ObjectId, MongoActivity, Activities>
         implements ActivityDao {
     @Inject
     public MongoActivityDao(Datastore ds) {

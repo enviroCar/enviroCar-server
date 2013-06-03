@@ -41,7 +41,7 @@ import io.car.server.mongo.entity.MongoUser;
  * @author Arne de Wall <a.dewall@52north.org>
  * 
  */
-public class MongoTrackDao extends AbstractMongoDao<MongoTrack, Tracks>
+public class MongoTrackDao extends AbstractMongoDao<ObjectId, MongoTrack, Tracks>
         implements TrackDao {
     private static final Logger log = LoggerFactory
             .getLogger(MongoTrackDao.class);

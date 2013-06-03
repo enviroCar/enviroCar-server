@@ -65,14 +65,6 @@ public class MongoStatisticsDao implements StatisticsDao {
     public static final String MEASUREMENTS_KEY = "measurements";
     public static final String TRACKS_KEY = "tracks";
     public static final String USERS_KEY = "users";
-
-    protected static String valueOf(String property) {
-        return "$" + property;
-    }
-
-    protected static String path(String first, String second, String... paths) {
-        return Joiner.on(".").join(first, second, (Object[]) paths);
-    }
     private final Datastore db;
     private final Mapper mapr;
 
@@ -80,6 +72,14 @@ public class MongoStatisticsDao implements StatisticsDao {
     public MongoStatisticsDao(Mapper mapr, Datastore db) {
         this.db = db;
         this.mapr = mapr;
+    }
+
+    protected static String valueOf(String property) {
+        return "$" + property;
+    }
+
+    protected static String path(String first, String second, String... paths) {
+        return Joiner.on(".").join(first, second, (Object[]) paths);
     }
 
     @Override
@@ -132,24 +132,22 @@ public class MongoStatisticsDao implements StatisticsDao {
     }
 
     @Override
-    public Statistics getStatisticsForTrack(Track track,
-                                            Phenomenons phenomenons) {
+    public Statistics getStatisticsForTrack(Track track, Phenomenons phenomenons) {
         return parseStatistics(aggregate(matchesTrack(track),
                                          project(),
                                          unwind(),
                                          matchesPhenomenon(phenomenons),
                                          group()).results());
-    }
+}
 
     @Override
-    public Statistics getStatisticsForUser(User user,
-                                           Phenomenons phenomenons) {
+    public Statistics getStatisticsForUser(User user, Phenomenons phenomenons) {
         return parseStatistics(aggregate(matchesUser(user),
                                          project(),
                                          unwind(),
                                          matchesPhenomenon(phenomenons),
                                          group()).results());
-    }
+}
 
     @Override
     public Statistics getStatistics(Phenomenons phenomenons) {
@@ -165,7 +163,7 @@ public class MongoStatisticsDao implements StatisticsDao {
                 .aggregate(firstOp, additionalOps);
         result.getCommandResult().throwOnError();
         return result;
-    }
+}
 
     protected Statistic parseStatistic(Iterable<DBObject> results) {
         Statistics statistics = parseStatistics(results);
@@ -224,7 +222,7 @@ public class MongoStatisticsDao implements StatisticsDao {
 
     protected DBObject project() {
         BasicDBObject fields = new BasicDBObject();
-        fields.put(MongoMeasurement.ID, 0);
+        fields.put(MongoMeasurement.IDENTIFIER, 0);
         fields.put(MongoMeasurement.PHENOMENONS, 1);
         fields.put(MongoMeasurement.TRACK, 1);
         fields.put(MongoMeasurement.USER, 1);

@@ -81,10 +81,7 @@ public class GroupMembersResource extends AbstractResource {
     @Path(MEMBER)
     public GroupMemberResource member(@PathParam("member") String username)
             throws UserNotFoundException {
-        User user = getService().getUser(username);
-        if (!user.hasGroup(group)) {
-            throw new WebApplicationException(Status.NOT_FOUND);
-        }
+        User user = getService().getGroupMember(group, username);
         return getResourceFactory().createGroupMemberResource(group, user);
     }
 }

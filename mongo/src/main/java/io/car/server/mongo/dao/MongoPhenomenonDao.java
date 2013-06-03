@@ -32,7 +32,7 @@ import io.car.server.mongo.entity.MongoSensor;
  * @author Christian Autermann <autermann@uni-muenster.de>
  * @author Jan Wirwahn <jan.wirwahn@wwu.de>
  */
-public class MongoPhenomenonDao extends AbstractMongoDao<MongoPhenomenon, Phenomenons>
+public class MongoPhenomenonDao extends AbstractMongoDao<String, MongoPhenomenon, Phenomenons>
         implements PhenomenonDao {
     @Inject
     public MongoPhenomenonDao(Datastore datastore) {

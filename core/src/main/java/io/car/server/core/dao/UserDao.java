@@ -38,5 +38,13 @@ public interface UserDao {
 
     void delete(User user);
 
-    Users getByGroup(Group group, Pagination p);
+    User get(Group group, String username);
+
+    Users getFriends(User user);
+
+    User getFriend(User user, String friendName);
+
+    void addFriend(User user, User friend);
+
+    void removeFriend(User user, User friend);
 }

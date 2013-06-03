@@ -57,27 +57,41 @@ public class ActivityEncoder extends AbstractEntityEncoder<Activity> {
     @Override
     public ObjectNode encode(Activity t, MediaType mt) {
         ObjectNode root = getJsonFactory().objectNode();
-        root.put(JSONConstants.TIME_KEY, getDateTimeFormat().print(t.getTime()));
-        root.put(JSONConstants.TYPE_KEY, t.getType().toString());
-        root.put(JSONConstants.USER_KEY, userEncoder.encode(t.getUser(), mt));
+        if (t.hasTime()) {
+            root.put(JSONConstants.TIME_KEY, getDateTimeFormat().print(t
+                    .getTime()));
+        }
+        if (t.hasType()) {
+            root.put(JSONConstants.TYPE_KEY, t.getType().toString());
+        }
+        if (t.hasUser()) {
+            root.put(JSONConstants.USER_KEY,
+                     userEncoder.encode(t.getUser(), mt));
+        }
         if (t instanceof GroupActivity) {
             GroupActivity groupActivity = (GroupActivity) t;
             root.put(JSONConstants.GROUP_KEY, groupEncoder
                     .encode(groupActivity.getGroup(), mt));
         } else if (t instanceof UserActivity) {
             UserActivity userActivity = (UserActivity) t;
-            root.put(JSONConstants.OTHER_KEY, userEncoder
-                    .encode(userActivity.getOther(), mt));
+            if (userActivity.hasOther()) {
+                root.put(JSONConstants.OTHER_KEY, userEncoder
+                        .encode(userActivity.getOther(), mt));
+            }
 
         } else if (t instanceof TrackActivity) {
             TrackActivity trackActivity = (TrackActivity) t;
-            root.put(JSONConstants.TRACK_KEY, trackEncoder
-                    .encode(trackActivity.getTrack(), mt));
+            if (trackActivity.hasTrack()) {
+                root.put(JSONConstants.TRACK_KEY, trackEncoder
+                        .encode(trackActivity.getTrack(), mt));
+            }
 
         } else if (t instanceof MeasurementActivity) {
             MeasurementActivity measurementActivity = (MeasurementActivity) t;
-            root.put(JSONConstants.MEASUREMENT_KEY, measurementEncoder
-                    .encode(measurementActivity.getMeasurement(), mt));
+            if (measurementActivity.hasMeasurement()) {
+                root.put(JSONConstants.MEASUREMENT_KEY, measurementEncoder
+                        .encode(measurementActivity.getMeasurement(), mt));
+            }
         }
         return root;
     }

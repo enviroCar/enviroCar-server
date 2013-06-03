@@ -21,15 +21,16 @@
  */
 package io.car.server.core.activities;
 
-import io.car.server.core.entities.TrackBase;
+import io.car.server.core.entities.Track;
 
 /**
  *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface TrackActivity extends Activity {
-    String TRACK = "track";
-    TrackBase getTrack();
+    Track getTrack();
 
-    void setTrack(TrackBase track);
+    void setTrack(Track track);
+
+    boolean hasTrack();
 }

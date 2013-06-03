@@ -17,43 +17,60 @@
  */
 package io.car.server.mongo.activities;
 
-import com.github.jmkgreen.morphia.annotations.Embedded;
+import com.github.jmkgreen.morphia.Key;
+import com.github.jmkgreen.morphia.annotations.Property;
+import com.github.jmkgreen.morphia.annotations.Transient;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
+import com.google.inject.assistedinject.AssistedInject;
 
 import io.car.server.core.activities.ActivityType;
 import io.car.server.core.activities.UserActivity;
 import io.car.server.core.entities.User;
-import io.car.server.core.entities.UserBase;
+import io.car.server.mongo.MongoDB;
 import io.car.server.mongo.entity.MongoUser;
-import io.car.server.mongo.entity.MongoUserBase;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class MongoUserActivity extends MongoActivity implements UserActivity {
-    @Embedded(OTHER)
-    private MongoUserBase other;
+    public static final String OTHER = "other";
+    @Property(OTHER)
+    private Key<MongoUser> other;
+    @Transient
+    private MongoUser _other;
 
-    @Inject
-    public MongoUserActivity(@Assisted ActivityType type,
+    @AssistedInject
+    public MongoUserActivity(MongoDB mongoDB,
+                             @Assisted ActivityType type,
                              @Assisted("user") User user,
                              @Assisted("other") User other) {
-        super(user, type);
-        this.other = (MongoUser) other;
+        super(mongoDB, user, type);
+        this._other = (MongoUser) other;
+        this.other = mongoDB.reference(this._other);
     }
 
-    public MongoUserActivity() {
-        this(null, null, null);
-    }
-
-    @Override
-    public MongoUserBase getOther() {
-        return this.other;
+    @Inject
+    public MongoUserActivity(MongoDB mongoDB) {
+        this(mongoDB, null, null, null);
     }
 
     @Override
-    public void setOther(UserBase user) {
-        this.other = (MongoUserBase) user;
+    public MongoUser getOther() {
+        if (this._other == null) {
+            this._other = getMongoDB().dereference(MongoUser.class, this.other);
+        }
+        return this._other;
+    }
+
+    @Override
+    public void setOther(User user) {
+        this._other = (MongoUser) user;
+        this.other = getMongoDB().reference(this._other);
+    }
+
+    @Override
+    public boolean hasOther() {
+        return getOther() != null;
     }
 }

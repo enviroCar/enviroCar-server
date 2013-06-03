@@ -17,35 +17,64 @@
  */
 package io.car.server.mongo.entity;
 
-import static io.car.server.core.entities.User.FRIENDS;
-import static io.car.server.mongo.entity.MongoEntity.ID;
-
-import java.util.Set;
-
 import com.github.jmkgreen.morphia.annotations.Entity;
+import com.github.jmkgreen.morphia.annotations.Id;
+import com.github.jmkgreen.morphia.annotations.Indexed;
 import com.github.jmkgreen.morphia.annotations.Property;
-import com.github.jmkgreen.morphia.annotations.Reference;
+import com.github.jmkgreen.morphia.mapping.Mapper;
 import com.google.common.base.Objects;
-import com.google.common.collect.Sets;
 
-import io.car.server.core.entities.Group;
-import io.car.server.core.entities.Groups;
 import io.car.server.core.entities.User;
-import io.car.server.core.entities.Users;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Entity("users")
-public class MongoUser extends MongoUserBase implements User {
+public class MongoUser extends MongoEntityBase implements User {
+    public static final String TOKEN = "token";
+    public static final String IS_ADMIN = "isAdmin";
+    public static final String NAME = Mapper.ID_KEY;
+    public static final String MAIL = "mail";
+    public static final String FRIENDS = "friends";
     @Property(TOKEN)
     private String token;
     @Property(IS_ADMIN)
     private boolean isAdmin = false;
-    @Reference(value = FRIENDS, lazy = true)
-    private Set<MongoUser> friends = Sets.newHashSet();
-    @Reference(value = GROUPS, lazy = true)
-    private Set<MongoGroup> groups = Sets.newHashSet();
+    @Id
+    private String name;
+    @Indexed(unique = true)
+    @Property(MAIL)
+    private String mail;
+
+    @Override
+    public String getName() {
+        return this.name;
+    }
+
+    @Override
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String getMail() {
+        return mail;
+    }
+
+    @Override
+    public void setMail(String mail) {
+        this.mail = mail;
+    }
+
+    @Override
+    public boolean hasName() {
+        return getName() != null && !getName().isEmpty();
+    }
+
+    @Override
+    public boolean hasMail() {
+        return getMail() != null && !getMail().isEmpty();
+    }
 
     @Override
     public String getToken() {
@@ -68,54 +97,17 @@ public class MongoUser extends MongoUserBase implements User {
     }
 
     @Override
-    public Users getFriends() {
-        return Users.from(this.friends).build();
-    }
-
-    @Override
-    public void addFriend(User user) {
-        this.friends.add((MongoUser) user);
-    }
-
-    @Override
-    public void removeFriend(User user) {
-        this.friends.remove((MongoUser) user);
-    }
-
-    @Override
-    public boolean hasFriend(User user) {
-        return this.friends.contains((MongoUser) user);
-    }
-
-    @Override
-    public Groups getGroups() {
-        return Groups.from(groups).build();
-    }
-
-    @Override
-    public void addGroup(Group group) {
-        this.groups.add((MongoGroup) group);
-    }
-
-    @Override
-    public void removeGroup(Group group) {
-        this.groups.remove((MongoGroup) group);
-    }
-
-    @Override
-    public boolean hasGroup(Group group) {
-        return this.groups.contains((MongoGroup) group);
-    }
-
-    @Override
     public String toString() {
         return Objects.toStringHelper(this)
                 .omitNullValues()
-                .add(ID, getId())
                 .add(NAME, getName())
                 .add(MAIL, getMail())
                 .add(IS_ADMIN, isAdmin())
-                .add(FRIENDS, getFriends())
                 .toString();
+    }
+
+    @Override
+    public boolean hasToken() {
+        return getToken() != null && !getToken().isEmpty();
     }
 }

@@ -19,15 +19,19 @@ package io.car.server.mongo.entity;
 
 import java.util.Set;
 
+import org.bson.types.ObjectId;
+import org.joda.time.DateTime;
+
 import com.github.jmkgreen.morphia.Key;
 import com.github.jmkgreen.morphia.annotations.Embedded;
 import com.github.jmkgreen.morphia.annotations.Entity;
+import com.github.jmkgreen.morphia.annotations.Id;
 import com.github.jmkgreen.morphia.annotations.Indexed;
 import com.github.jmkgreen.morphia.annotations.Property;
-import com.github.jmkgreen.morphia.annotations.Reference;
 import com.github.jmkgreen.morphia.annotations.Transient;
+import com.github.jmkgreen.morphia.mapping.Mapper;
 import com.google.common.collect.Sets;
-import com.google.inject.Inject;
+import com.vividsolutions.jts.geom.Geometry;
 
 import io.car.server.core.entities.Measurement;
 import io.car.server.core.entities.MeasurementValue;
@@ -35,31 +39,88 @@ import io.car.server.core.entities.MeasurementValues;
 import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
-import io.car.server.mongo.cache.EntityCache;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  * @author Arne de Wall
  */
 @Entity("measurements")
-public class MongoMeasurement extends MongoMeasurementBase
-        implements Measurement {
+public class MongoMeasurement extends MongoEntityBase implements Measurement {
+    public static final String IDENTIFIER = Mapper.ID_KEY;
+    public static final String PHENOMENONS = "phenomenons";
+    public static final String USER = "user";
+    public static final String SENSOR = "sensor";
+    public static final String TRACK = "track";
+    public static final String GEOMETRY = "geometry";
+    public static final String TIME = "time";
+    @Id
+    private ObjectId id = new ObjectId();
+    @Property(GEOMETRY)
+    private Geometry geometry;
+    @Indexed
+    @Property(TIME)
+    private DateTime time;
     @Indexed
     @Property(USER)
     private Key<MongoUser> user;
-    @Embedded(SENSOR)
+    @Property(SENSOR)
     private Key<MongoSensor> sensor;
+    @Indexed
+    @Property(TRACK)
+    private Key<MongoTrack> track;
     @Embedded(PHENOMENONS)
     private Set<MongoMeasurementValue> values = Sets.newHashSet();
-    @Indexed
-    @Reference(value = TRACK, lazy = true)
-    private MongoTrack track;
-    @Inject
     @Transient
-    private EntityCache<MongoUser> userCache;
-    @Inject
+    private MongoTrack _track;
     @Transient
-    private EntityCache<MongoSensor> sensorCache;
+    private MongoUser _user;
+    @Transient
+    private MongoSensor _sensor;
+
+    @Override
+    public Geometry getGeometry() {
+        return this.geometry;
+    }
+
+    @Override
+    public void setGeometry(Geometry location) {
+        this.geometry = location;
+    }
+
+    @Override
+    public String getIdentifier() {
+        return this.id == null ? null : this.id.toString();
+    }
+
+    @Override
+    public void setIdentifier(String identifier) {
+        this.id = id == null ? null : new ObjectId(identifier);
+    }
+
+    @Override
+    public DateTime getTime() {
+        return this.time;
+    }
+
+    @Override
+    public void setTime(DateTime time) {
+        this.time = time;
+    }
+
+    @Override
+    public boolean hasGeometry() {
+        return getGeometry() != null;
+    }
+
+    @Override
+    public boolean hasIdentifier() {
+        return getIdentifier() != null;
+    }
+
+    @Override
+    public boolean hasTime() {
+        return getTime() != null;
+    }
 
     @Override
     public MeasurementValues getValues() {
@@ -73,17 +134,16 @@ public class MongoMeasurement extends MongoMeasurementBase
 
     @Override
     public MongoUser getUser() {
-        return userCache.get(user);
+        if (this._user == null) {
+            this._user = getMongoDB().dereference(MongoUser.class, this.user);
+        }
+        return this._user;
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void setUser(User user) {
-        if (user != null) {
-            this.user = (Key<MongoUser>) ((MongoUser) user).asKey();
-        } else {
-            this.user = null;
-        }
+        this._user = (MongoUser) user;
+        this.user = getMongoDB().reference(this._user);
     }
 
     @Override
@@ -98,26 +158,45 @@ public class MongoMeasurement extends MongoMeasurementBase
 
     @Override
     public MongoSensor getSensor() {
-        return sensorCache.get(sensor);
+        if (this._sensor == null) {
+            this._sensor = getMongoDB()
+                    .dereference(MongoSensor.class, this.sensor);
+        }
+        return this._sensor;
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void setSensor(Sensor sensor) {
-        if (sensor != null) {
-            this.sensor = (Key<MongoSensor>) ((MongoSensor) sensor).asKey();
-        } else {
-            this.sensor = null;
-        }
+        this._sensor = (MongoSensor) sensor;
+        this.sensor = getMongoDB().reference(this._sensor);
     }
 
     @Override
     public void setTrack(Track track) {
-        this.track = (MongoTrack) track;
+        this._track = (MongoTrack) track;
+        this.track = getMongoDB().reference(this._track);
     }
 
     @Override
     public MongoTrack getTrack() {
-        return this.track;
+        if (this._track == null) {
+            this._track = getMongoDB().dereference(MongoTrack.class, this.track);
+        }
+        return this._track;
+    }
+
+    @Override
+    public boolean hasUser() {
+        return getUser() != null;
+    }
+
+    @Override
+    public boolean hasSensor() {
+        return getSensor() != null;
+    }
+
+    @Override
+    public boolean hasTrack() {
+        return getTrack() != null;
     }
 }

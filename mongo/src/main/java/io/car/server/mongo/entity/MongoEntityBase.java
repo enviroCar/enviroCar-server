@@ -23,46 +23,72 @@ import org.joda.time.DateTimeZone;
 import com.github.jmkgreen.morphia.annotations.Indexed;
 import com.github.jmkgreen.morphia.annotations.PrePersist;
 import com.github.jmkgreen.morphia.annotations.Property;
+import com.github.jmkgreen.morphia.annotations.Transient;
+import com.google.inject.Inject;
 
 import io.car.server.core.entities.BaseEntity;
+import io.car.server.mongo.MongoDB;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class MongoEntityBase extends MongoEntity implements BaseEntity {
+public abstract class MongoEntityBase implements BaseEntity {
+    public static final String CREATION_DATE = "created";
+    public static final String LAST_MODIFIED = "modified";
+    @Transient
+    private MongoDB mongoDB;
     @Indexed
     @Property(CREATION_DATE)
-    private DateTime creationDate;
+    private DateTime creationTime;
     @Indexed
     @Property(LAST_MODIFIED)
-    private DateTime lastModificationDate;
+    private DateTime modificationTime;
 
     @Override
-    public DateTime getCreationDate() {
-        return creationDate;
+    public DateTime getCreationTime() {
+        return creationTime;
     }
 
     @SuppressWarnings("unchecked")
-    public void setCreationDate(DateTime creationDate) {
-        this.creationDate = creationDate;
+    public void setCreationTime(DateTime creationDate) {
+        this.creationTime = creationDate;
     }
 
     @Override
-    public DateTime getLastModificationDate() {
-        return lastModificationDate;
+    public DateTime getModificationTime() {
+        return modificationTime;
     }
 
     @SuppressWarnings("unchecked")
-    public void setLastModificationDate(DateTime lastModificationDate) {
-        this.lastModificationDate = lastModificationDate;
+    public void setModificationTime(DateTime lastModificationDate) {
+        this.modificationTime = lastModificationDate;
     }
 
     @PrePersist
     public void prePersist() {
         DateTime now = new DateTime(DateTimeZone.UTC);
-        if (getCreationDate() == null) {
-            setCreationDate(now);
+        if (getCreationTime() == null) {
+            setCreationTime(now);
         }
-        setLastModificationDate(now);
+        setModificationTime(now);
+    }
+
+    @Override
+    public boolean hasCreationTime() {
+        return getCreationTime() != null;
+    }
+
+    @Override
+    public boolean hasModificationTime() {
+        return getModificationTime() != null;
+    }
+
+    public MongoDB getMongoDB() {
+        return mongoDB;
+    }
+
+    @Inject
+    public void setMongoDB(MongoDB mongoDB) {
+        this.mongoDB = mongoDB;
     }
 }

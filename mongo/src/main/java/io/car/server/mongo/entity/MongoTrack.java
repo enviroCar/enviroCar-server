@@ -17,60 +17,133 @@
  */
 package io.car.server.mongo.entity;
 
+import org.bson.types.ObjectId;
+
 import com.github.jmkgreen.morphia.Key;
+import com.github.jmkgreen.morphia.annotations.Embedded;
 import com.github.jmkgreen.morphia.annotations.Entity;
+import com.github.jmkgreen.morphia.annotations.Id;
 import com.github.jmkgreen.morphia.annotations.Property;
 import com.github.jmkgreen.morphia.annotations.Transient;
-import com.google.inject.Inject;
+import com.vividsolutions.jts.geom.Geometry;
 
 import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
-import io.car.server.mongo.cache.EntityCache;
 
 @Entity("tracks")
-public class MongoTrack extends MongoTrackBase implements Track {
+public class MongoTrack extends MongoEntityBase implements Track {
+    public static final String USER = "user";
+    public static final String SENSOR = "sensor";
+    public static final String NAME = "name";
+    public static final String DESCRIPTION = "description";
+    public static final String BBOX = "bbox";
+    @Id
+    private ObjectId id = new ObjectId();
     @Property(USER)
     private Key<MongoUser> user;
-    @Property(SENSOR)
-    private Key<MongoSensor> sensor;
-    @Inject
     @Transient
-    private EntityCache<MongoSensor> sensorCache;
-    @Inject
-    @Transient
-    private EntityCache<MongoUser> userCache;
+    private MongoUser _user;
+    @Embedded(SENSOR)
+    private MongoSensor sensor;
+    @Property(NAME)
+    private String name;
+    @Property(DESCRIPTION)
+    private String description;
+    @Property(BBOX)
+    private Geometry bbox;
 
     @Override
     public MongoUser getUser() {
-        if (user == null) {
-            return null;
+        if (this._user == null) {
+            this._user = getMongoDB().dereference(MongoUser.class, this.user);
         }
-        return this.userCache.get(user);
+        return this._user;
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void setUser(User user) {
-        if (user != null) {
-            this.user = (Key<MongoUser>) ((MongoUser) user).asKey();
-        } else {
-            this.user = null;
-        }
+        this._user = (MongoUser) user;
+        this.user = getMongoDB().reference(this._user);
     }
 
     @Override
     public MongoSensor getSensor() {
-        return this.sensorCache.get(sensor);
+        return this.sensor;
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void setSensor(Sensor sensor) {
-        if (sensor != null) {
-            this.sensor = (Key<MongoSensor>) ((MongoSensor) sensor).asKey();
-        } else {
-            this.sensor = null;
-        }
+        this.sensor = (MongoSensor) sensor;
+    }
+
+    @Override
+    public boolean hasUser() {
+        return getUser() != null;
+    }
+
+    @Override
+    public boolean hasSensor() {
+        return getSensor() != null;
+    }
+
+    @Override
+    public String getName() {
+        return this.name;
+    }
+
+    @Override
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public boolean hasName() {
+        return getName() != null && !getDescription().isEmpty();
+    }
+
+    @Override
+    public String getDescription() {
+        return this.description;
+    }
+
+    @Override
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    @Override
+    public boolean hasDescription() {
+        return getDescription() != null && !getDescription().isEmpty();
+    }
+
+    @Override
+    public String getIdentifier() {
+        return this.id == null ? null : this.id.toString();
+    }
+
+    @Override
+    public void setIdentifier(String id) {
+        this.id = id == null ? null : new ObjectId(id);
+    }
+
+    @Override
+    public boolean hasIdentifier() {
+        return this.id != null;
+    }
+
+    @Override
+    public Geometry getBoundingBox() {
+        return this.bbox;
+    }
+
+    @Override
+    public void setBoundingBox(Geometry bbox) {
+        this.bbox = bbox;
+    }
+
+    @Override
+    public boolean hasBoundingBox() {
+        return getBoundingBox() != null && !getBoundingBox().isEmpty();
     }
 }

@@ -17,43 +17,60 @@
  */
 package io.car.server.mongo.activities;
 
-import com.github.jmkgreen.morphia.annotations.Embedded;
+import com.github.jmkgreen.morphia.Key;
+import com.github.jmkgreen.morphia.annotations.Property;
+import com.github.jmkgreen.morphia.annotations.Transient;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
+import com.google.inject.assistedinject.AssistedInject;
 
 import io.car.server.core.activities.ActivityType;
 import io.car.server.core.activities.MeasurementActivity;
 import io.car.server.core.entities.Measurement;
-import io.car.server.core.entities.MeasurementBase;
 import io.car.server.core.entities.User;
+import io.car.server.mongo.MongoDB;
 import io.car.server.mongo.entity.MongoMeasurement;
-import io.car.server.mongo.entity.MongoMeasurementBase;
 
 public class MongoMeasurementActivity extends MongoActivity implements
         MeasurementActivity {
-    @Embedded(MEASUREMENT)
-    private MongoMeasurementBase measurement;
+    public static final String MEASUREMENT = "measurement";
+    @Property(MEASUREMENT)
+    private Key<MongoMeasurement> measurement;
+    @Transient
+    private MongoMeasurement _measurement;
 
-    @Inject
-    public MongoMeasurementActivity(@Assisted ActivityType type,
+    @AssistedInject
+    public MongoMeasurementActivity(MongoDB mongoDB, @Assisted ActivityType type,
                                     @Assisted User user,
                                     @Assisted Measurement measurement) {
-        super(user, type);
-        this.measurement = (MongoMeasurement) measurement;
+        super(mongoDB, user, type);
+        this._measurement = (MongoMeasurement) measurement;
+        this.measurement = mongoDB.reference(this._measurement);
     }
 
-    public MongoMeasurementActivity() {
-        this(null, null, null);
+    @Inject
+    public MongoMeasurementActivity(MongoDB mongoDB) {
+        this(mongoDB, null, null, null);
     }
 
 
     @Override
-    public MongoMeasurementBase getMeasurement() {
-        return this.measurement;
+    public MongoMeasurement getMeasurement() {
+        if (this._measurement == null) {
+            this._measurement = getMongoDB()
+                    .dereference(MongoMeasurement.class, this.measurement);
+        }
+        return this._measurement;
     }
 
     @Override
-    public void setMeasurement(MeasurementBase measurement) {
-        this.measurement = (MongoMeasurementBase) measurement;
+    public void setMeasurement(Measurement measurement) {
+        this._measurement = (MongoMeasurement) measurement;
+        this.measurement = getMongoDB().reference(this._measurement);
+    }
+
+    @Override
+    public boolean hasMeasurement() {
+        return getMeasurement() != null;
     }
 }

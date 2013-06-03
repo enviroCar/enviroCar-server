@@ -37,11 +37,10 @@ public class UserEncoder extends AbstractEntityEncoder<User> {
 
     @Override
     public ObjectNode encode(User t, MediaType mediaType) {
-        if (t == null) {
-            return null;
+        ObjectNode j = getJsonFactory().objectNode();
+        if (t.hasName()) {
+            j.put(JSONConstants.NAME_KEY, t.getName());
         }
-        ObjectNode j = getJsonFactory().objectNode()
-                .put(JSONConstants.NAME_KEY, t.getName());
         if (mediaType.equals(MediaTypes.USER_TYPE)) {
             URI measurements = getUriInfo().getAbsolutePathBuilder()
                     .path(UserResource.MEASUREMENTS).build();
@@ -53,11 +52,17 @@ public class UserEncoder extends AbstractEntityEncoder<User> {
                     .path(UserResource.TRACKS).build();
             URI statistics = getUriInfo().getAbsolutePathBuilder()
                     .path(UserResource.STATISTICS).build();
-            j.put(JSONConstants.MAIL_KEY, t.getMail());
-            j.put(JSONConstants.CREATED_KEY,
-                  getDateTimeFormat().print(t.getCreationDate()));
-            j.put(JSONConstants.MODIFIED_KEY,
-                  getDateTimeFormat().print(t.getLastModificationDate()));
+            if (t.hasMail()) {
+                j.put(JSONConstants.MAIL_KEY, t.getMail());
+            }
+            if (t.hasCreationTime()) {
+                j.put(JSONConstants.CREATED_KEY,
+                      getDateTimeFormat().print(t.getCreationTime()));
+            }
+            if (t.hasModificationTime()) {
+                j.put(JSONConstants.MODIFIED_KEY,
+                      getDateTimeFormat().print(t.getModificationTime()));
+            }
             j.put(JSONConstants.MEASUREMENTS_KEY, measurements.toString());
             j.put(JSONConstants.GROUPS_KEY, groups.toString());
             j.put(JSONConstants.FRIENDS_KEY, friends.toString());

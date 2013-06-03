@@ -17,45 +17,62 @@
  */
 package io.car.server.mongo.activities;
 
-import com.github.jmkgreen.morphia.annotations.Embedded;
+import com.github.jmkgreen.morphia.Key;
+import com.github.jmkgreen.morphia.annotations.Property;
+import com.github.jmkgreen.morphia.annotations.Transient;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
+import com.google.inject.assistedinject.AssistedInject;
 
 import io.car.server.core.activities.ActivityType;
 import io.car.server.core.activities.GroupActivity;
 import io.car.server.core.entities.Group;
-import io.car.server.core.entities.GroupBase;
 import io.car.server.core.entities.User;
+import io.car.server.mongo.MongoDB;
 import io.car.server.mongo.entity.MongoGroup;
-import io.car.server.mongo.entity.MongoGroupBase;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class MongoGroupActivity extends MongoActivity implements GroupActivity {
-    @Embedded(GROUP)
-    private MongoGroupBase group;
+    public static final String GROUP = "group";
+    @Property(GROUP)
+    private Key<MongoGroup> group;
+    @Transient
+    private MongoGroup _group;
 
-    @Inject
-    public MongoGroupActivity(@Assisted ActivityType type,
+    @AssistedInject
+    public MongoGroupActivity(MongoDB mongoDB,
+                              @Assisted ActivityType type,
                               @Assisted User user,
                               @Assisted Group group) {
-        super(user, type);
-        this.group = (MongoGroup) group;
+        super(mongoDB, user, type);
+        this._group = (MongoGroup) group;
+        this.group = mongoDB.reference(this._group);
     }
 
-    public MongoGroupActivity() {
-        this(null, null, null);
+    @Inject
+    public MongoGroupActivity(MongoDB mongoDB) {
+        this(mongoDB, null, null, null);
     }
 
 
     @Override
-    public MongoGroupBase getGroup() {
-        return this.group;
+    public MongoGroup getGroup() {
+        if (this._group == null) {
+            this._group = getMongoDB().dereference(MongoGroup.class, this.group);
+        }
+        return this._group;
     }
 
     @Override
-    public void setGroup(GroupBase group) {
-        this.group = (MongoGroupBase) group;
+    public void setGroup(Group group) {
+        this._group = (MongoGroup) group;
+        this.group = getMongoDB().reference(this._group);
+    }
+
+    @Override
+    public boolean hasGroup() {
+        return getGroup() != null;
     }
 }

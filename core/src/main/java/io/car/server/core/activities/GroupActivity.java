@@ -21,15 +21,16 @@
  */
 package io.car.server.core.activities;
 
-import io.car.server.core.entities.GroupBase;
+import io.car.server.core.entities.Group;
 
 /**
  *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface GroupActivity extends Activity {
-    String GROUP = "group";
-    GroupBase getGroup();
+    Group getGroup();
 
-    void setGroup(GroupBase group);
+    void setGroup(Group group);
+
+    boolean hasGroup();
 }

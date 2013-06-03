@@ -21,15 +21,16 @@
  */
 package io.car.server.core.activities;
 
-import io.car.server.core.entities.UserBase;
+import io.car.server.core.entities.User;
 
 /**
  *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface UserActivity extends Activity {
-    String OTHER = "other";
-    UserBase getOther();
+    User getOther();
 
-    void setOther(UserBase user);
+    void setOther(User user);
+
+    boolean hasOther();
 }

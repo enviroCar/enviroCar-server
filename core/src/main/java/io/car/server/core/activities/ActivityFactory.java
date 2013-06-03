@@ -15,10 +15,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package io.car.server.core.activities;
 
 import com.google.inject.assistedinject.Assisted;
@@ -29,7 +25,6 @@ import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
 
 /**
- *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface ActivityFactory {

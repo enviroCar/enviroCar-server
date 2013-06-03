@@ -29,8 +29,8 @@ public class TrackUpdater implements EntityUpdater<Track> {
     @Override
     public Track update(Track changes, Track original)
             throws IllegalModificationException {
-        if (changes.getBbox() != null) {
-            original.setBbox(changes.getBbox());
+        if (changes.getBoundingBox() != null) {
+            original.setBoundingBox(changes.getBoundingBox());
         }
         return original;
     }

@@ -17,44 +17,61 @@
  */
 package io.car.server.mongo.activities;
 
-import com.github.jmkgreen.morphia.annotations.Embedded;
+import com.github.jmkgreen.morphia.Key;
+import com.github.jmkgreen.morphia.annotations.Property;
+import com.github.jmkgreen.morphia.annotations.Transient;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
+import com.google.inject.assistedinject.AssistedInject;
 
 import io.car.server.core.activities.ActivityType;
 import io.car.server.core.activities.TrackActivity;
 import io.car.server.core.entities.Track;
-import io.car.server.core.entities.TrackBase;
 import io.car.server.core.entities.User;
+import io.car.server.mongo.MongoDB;
 import io.car.server.mongo.entity.MongoTrack;
-import io.car.server.mongo.entity.MongoTrackBase;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class MongoTrackActivity extends MongoActivity implements TrackActivity {
-    @Embedded(TRACK)
-    private MongoTrackBase track;
+    public static final String TRACK = "track";
+    @Property(TRACK)
+    private Key<MongoTrack> track;
+    @Transient
+    private MongoTrack _track;
 
-    @Inject
-    public MongoTrackActivity(@Assisted ActivityType type,
+    @AssistedInject
+    public MongoTrackActivity(MongoDB mongoDB,
+                              @Assisted ActivityType type,
                               @Assisted User user,
                               @Assisted Track track) {
-        super(user, type);
-        this.track = (MongoTrack) track;
+        super(mongoDB, user, type);
+        this._track = (MongoTrack) track;
+        this.track = mongoDB.reference(this._track);
     }
 
-    public MongoTrackActivity() {
-        this(null, null, null);
-    }
-
-    @Override
-    public MongoTrackBase getTrack() {
-        return this.track;
+    @Inject
+    public MongoTrackActivity(MongoDB mongoDB) {
+        this(mongoDB, null, null, null);
     }
 
     @Override
-    public void setTrack(TrackBase track) {
-        this.track = (MongoTrackBase) track;
+    public MongoTrack getTrack() {
+        if (this._track == null) {
+            this._track = getMongoDB().dereference(MongoTrack.class, this.track);
+        }
+        return this._track;
+    }
+
+    @Override
+    public void setTrack(Track track) {
+        this._track = (MongoTrack) track;
+        this.track = getMongoDB().reference(this._track);
+    }
+
+    @Override
+    public boolean hasTrack() {
+        return getTrack() != null;
     }
 }

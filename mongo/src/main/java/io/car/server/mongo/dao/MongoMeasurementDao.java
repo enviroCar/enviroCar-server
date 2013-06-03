@@ -41,7 +41,7 @@ import io.car.server.mongo.entity.MongoUser;
  * @author Arne de Wall
  *
  */
-public class MongoMeasurementDao extends AbstractMongoDao<MongoMeasurement, Measurements>
+public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasurement, Measurements>
         implements MeasurementDao {
     private static final Logger log = LoggerFactory
             .getLogger(MongoMeasurementDao.class);

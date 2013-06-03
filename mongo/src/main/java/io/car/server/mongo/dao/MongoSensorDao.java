@@ -31,7 +31,7 @@ import io.car.server.mongo.entity.MongoSensor;
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class MongoSensorDao extends AbstractMongoDao<MongoSensor, Sensors>
+public class MongoSensorDao extends AbstractMongoDao<String, MongoSensor, Sensors>
         implements SensorDao {
 
     @Inject

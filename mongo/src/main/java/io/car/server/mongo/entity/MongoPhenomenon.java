@@ -18,8 +18,9 @@
 package io.car.server.mongo.entity;
 
 import com.github.jmkgreen.morphia.annotations.Entity;
-import com.github.jmkgreen.morphia.annotations.Indexed;
+import com.github.jmkgreen.morphia.annotations.Id;
 import com.github.jmkgreen.morphia.annotations.Property;
+import com.github.jmkgreen.morphia.mapping.Mapper;
 
 import io.car.server.core.entities.Phenomenon;
 
@@ -28,8 +29,9 @@ import io.car.server.core.entities.Phenomenon;
  */
 @Entity("phenomenons")
 public class MongoPhenomenon extends MongoEntityBase implements Phenomenon {
-    @Indexed(unique = true)
-    @Property(NAME)
+    public static final String NAME = Mapper.ID_KEY;
+    public static final String UNIT = "unit";
+    @Id
     private String name;
     @Property(UNIT)
     private String unit;
@@ -52,5 +54,15 @@ public class MongoPhenomenon extends MongoEntityBase implements Phenomenon {
     @Override
     public void setUnit(String unit) {
         this.unit = unit;
+    }
+
+    @Override
+    public boolean hasName() {
+        return getName() != null && !getName().isEmpty();
+    }
+
+    @Override
+    public boolean hasUnit() {
+        return getUnit() != null && !getUnit().isEmpty();
     }
 }

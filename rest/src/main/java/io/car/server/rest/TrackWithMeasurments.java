@@ -35,7 +35,11 @@ import io.car.server.core.entities.User;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class TrackWithMeasurments implements Track, Iterable<Measurement> {
-
+    public static final String SENSOR = "sensor";
+    public static final String USER = "user";
+    public static final String BBOX = "bbox";
+    public static final String NAME = "name";
+    public static final String DESCIPTION = "description";
     private Track track;
     private List<Measurement> measurements = Lists.newLinkedList();
 
@@ -94,28 +98,23 @@ public class TrackWithMeasurments implements Track, Iterable<Measurement> {
     }
 
     @Override
-    public Geometry getBbox() {
-        return track.getBbox();
+    public Geometry getBoundingBox() {
+        return track.getBoundingBox();
     }
 
     @Override
-    public void setBbox(Geometry bbox) {
-        track.setBbox(bbox);
+    public void setBoundingBox(Geometry bbox) {
+        track.setBoundingBox(bbox);
     }
 
     @Override
-    public void setBbox(double minx, double miny, double maxx, double maxy) {
-        track.setBbox(minx, miny, maxx, maxy);
+    public DateTime getCreationTime() {
+        return track.getCreationTime();
     }
 
     @Override
-    public DateTime getCreationDate() {
-        return track.getCreationDate();
-    }
-
-    @Override
-    public DateTime getLastModificationDate() {
-        return track.getLastModificationDate();
+    public DateTime getModificationTime() {
+        return track.getModificationTime();
     }
 
     @Override
@@ -137,5 +136,45 @@ public class TrackWithMeasurments implements Track, Iterable<Measurement> {
 
     public Track getTrack() {
         return track;
+    }
+
+    @Override
+    public boolean hasUser() {
+        return track.hasUser();
+    }
+
+    @Override
+    public boolean hasSensor() {
+        return track.hasSensor();
+    }
+
+    @Override
+    public boolean hasName() {
+        return track.hasName();
+    }
+
+    @Override
+    public boolean hasDescription() {
+        return track.hasDescription();
+    }
+
+    @Override
+    public boolean hasIdentifier() {
+        return track.hasIdentifier();
+    }
+
+    @Override
+    public boolean hasBoundingBox() {
+        return track.hasBoundingBox();
+    }
+
+    @Override
+    public boolean hasCreationTime() {
+        return track.hasCreationTime();
+    }
+
+    @Override
+    public boolean hasModificationTime() {
+        return track.hasModificationTime();
     }
 }

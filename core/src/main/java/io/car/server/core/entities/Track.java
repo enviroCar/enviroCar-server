@@ -17,20 +17,47 @@
  */
 package io.car.server.core.entities;
 
+import com.vividsolutions.jts.geom.Geometry;
+
 /**
  *
  * @author Arne de Wall <a.dewall@52north.org>
  *
  */
-public interface Track extends TrackBase {
-    String SENSOR = "sensor";
-    String USER = "user";
+public interface Track extends BaseEntity {
+    String getName();
+
+    void setName(String name);
+
+    boolean hasName();
+
+    String getDescription();
+
+    void setDescription(String description);
+
+    boolean hasDescription();
+
+    String getIdentifier();
+
+    void setIdentifier(String id);
+
+    boolean hasIdentifier();
+
+    Geometry getBoundingBox();
+
+    void setBoundingBox(Geometry boundingBox);
+
+    boolean hasBoundingBox();
 
     User getUser();
 
     void setUser(User user);
 
+    boolean hasUser();
+
     Sensor getSensor();
 
     void setSensor(Sensor track);
+
+    boolean hasSensor();
 }

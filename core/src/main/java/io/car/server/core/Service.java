@@ -135,15 +135,13 @@ public class Service {
 
     public void removeFriend(User user, User friend)
             throws UserNotFoundException {
-        user.removeFriend(friend);
-        this.userDao.save(user);
+        this.userDao.removeFriend(user, friend);
         this.activityDao.save(activityFactory
                 .createUserActivity(ActivityType.UNFRIENDED_USER, user, friend));
     }
 
     public void addFriend(User user, User friend) throws UserNotFoundException {
-        user.addFriend(friend);
-        this.userDao.save(user);
+        this.userDao.addFriend(user, friend);
         this.activityDao.save(activityFactory
                 .createUserActivity(ActivityType.FRIENDED_USER, user, friend));
     }
@@ -173,7 +171,7 @@ public class Service {
     }
 
     public Users getGroupMembers(Group group, Pagination pagination) {
-        return this.userDao.getByGroup(group, pagination);
+        return this.groupDao.getMembers(group, pagination);
     }
 
     public Group modifyGroup(Group group, Group changes)
@@ -205,27 +203,21 @@ public class Service {
     public Group createGroup(User user, Group group) {
         group.setOwner(user);
         this.groupDao.save(group);
-        user.addGroup(group);
-        this.userDao.save(user);
+        addGroupMember(group, user);
         this.activityDao.save(activityFactory
                 .createGroupActivity(ActivityType.CREATED_GROUP, user, group));
         return group;
     }
 
-    public void addGroupMember(Group group, User user)
-            throws UserNotFoundException {
-        user.addGroup(group);
-        this.userDao.save(user);
-        this.groupDao.update(group);
+    public void addGroupMember(Group group, User user) {
+        this.groupDao.addMember(group, user);
         this.activityDao.save(activityFactory
                 .createGroupActivity(ActivityType.JOINED_GROUP, user, group));
     }
 
     public void removeGroupMember(Group group, User user)
             throws UserNotFoundException, GroupNotFoundException {
-        user.removeGroup(group);
-        this.userDao.save(user);
-        this.groupDao.update(group);
+        this.groupDao.removeMember(group, user);
         this.activityDao.save(activityFactory
                 .createGroupActivity(ActivityType.LEAVED_GROUP, user, group));
     }
@@ -345,5 +337,40 @@ public class Service {
 
     public Sensor createSensor(Sensor sensor) {
         return this.sensorDao.create(sensor);
+    }
+
+    public Group getGroup(User user, String groupName) throws
+            GroupNotFoundException {
+        Group g = this.groupDao.get(user, groupName);
+        if (g == null) {
+            throw new GroupNotFoundException(groupName);
+        }
+        return g;
+    }
+
+    public User getGroupMember(Group group, String username) throws
+            UserNotFoundException {
+        User u = this.userDao.get(group, username);
+        if (u == null) {
+            throw new UserNotFoundException(username);
+        }
+        return u;
+    }
+
+    public Users getFriends(User user) {
+        return this.userDao.getFriends(user);
+    }
+
+    public User getFriend(User user, String friendName) throws
+            UserNotFoundException {
+        User f = this.userDao.getFriend(user, friendName);
+        if (f == null) {
+            throw new UserNotFoundException(friendName);
+        }
+        return f;
+    }
+
+    public Groups getGroups(User user, Pagination p) {
+        return this.groupDao.getByMember(user, p);
     }
 }

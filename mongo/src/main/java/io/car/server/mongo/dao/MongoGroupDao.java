@@ -17,6 +17,7 @@
  */
 package io.car.server.mongo.dao;
 
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,6 +30,7 @@ import io.car.server.core.dao.GroupDao;
 import io.car.server.core.entities.Group;
 import io.car.server.core.entities.Groups;
 import io.car.server.core.entities.User;
+import io.car.server.core.entities.Users;
 import io.car.server.core.util.Pagination;
 import io.car.server.mongo.entity.MongoGroup;
 import io.car.server.mongo.entity.MongoUser;
@@ -36,7 +38,7 @@ import io.car.server.mongo.entity.MongoUser;
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class MongoGroupDao extends AbstractMongoDao<MongoGroup, Groups>
+public class MongoGroupDao extends AbstractMongoDao<String, MongoGroup, Groups>
         implements GroupDao {
     private static final Logger log = LoggerFactory
             .getLogger(MongoGroupDao.class);
@@ -85,9 +87,7 @@ public class MongoGroupDao extends AbstractMongoDao<MongoGroup, Groups>
 
     @Override
     public void delete(Group group) {
-        MongoGroup mg = (MongoGroup) group;
-        getUserDao().removeGroup(mg);
-        delete(mg);
+        delete((MongoGroup) group);
     }
 
     @Override
@@ -99,6 +99,44 @@ public class MongoGroupDao extends AbstractMongoDao<MongoGroup, Groups>
     }
 
     void removeUser(MongoUser user) {
+        removeOwner(user);
+        removeMember(user);
+    }
+
+    @Override
+    protected Groups createPaginatedIterable(Iterable<MongoGroup> i,
+                                             Pagination p, long count) {
+        return Groups.from(i).withElements(count).withPagination(p).build();
+    }
+
+    @Override
+    public Group get(User user, String groupName) {
+        return q().field(MongoGroup.NAME).equal(groupName)
+                .field(MongoGroup.MEMBERS).hasThisElement(user).get();
+    }
+
+    @Override
+    public Groups getByMember(User user, Pagination p) {
+        return fetch(q().field(MongoGroup.MEMBERS).hasThisElement(user), p);
+    }
+
+    @Override
+    public void removeMember(Group group, User user) {
+        MongoGroup g = (MongoGroup) group;
+        update(g.getName(), up()
+                .removeAll(MongoGroup.MEMBERS, user)
+                .set(MongoGroup.LAST_MODIFIED, new DateTime()));
+    }
+
+    @Override
+    public void addMember(Group group, User user) {
+        MongoGroup g = (MongoGroup) group;
+        update(g.getName(), up()
+                .add(MongoGroup.MEMBERS, user)
+                .set(MongoGroup.LAST_MODIFIED, new DateTime()));
+    }
+
+    protected void removeOwner(MongoUser user) {
         UpdateResults<MongoGroup> result = update(
                 q().field(MongoGroup.OWNER).equal(user),
                 up().unset(MongoGroup.OWNER));
@@ -112,14 +150,23 @@ public class MongoGroupDao extends AbstractMongoDao<MongoGroup, Groups>
         }
     }
 
-    @Override
-    protected Groups createPaginatedIterable(Iterable<MongoGroup> i,
-                                             Pagination p, long count) {
-        return Groups.from(i).withElements(count).withPagination(p).build();
+    protected void removeMember(MongoUser user) {
+        UpdateResults<MongoGroup> result = update(
+                q().field(MongoGroup.MEMBERS).hasThisElement(user),
+                up().removeAll(MongoGroup.MEMBERS, user));
+
+        if (result.getHadError()) {
+            log.error("Error removing user {} as group member: {}",
+                      user, result.getError());
+        } else {
+            log.debug("Removed user {} as member from {} groups",
+                      user, result.getUpdatedCount());
+        }
     }
 
     @Override
-    public void update(Group group) {
-        updateTimestamp((MongoGroup) group);
+    public Users getMembers(Group group, Pagination pagination) {
+        /* TODO implement io.car.server.mongo.dao.MongoGroupDao.getMembers() */
+        throw new UnsupportedOperationException("io.car.server.mongo.dao.MongoGroupDao.getMembers() not yet implemented");
     }
 }

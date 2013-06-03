@@ -18,14 +18,16 @@
 package io.car.server.core.entities;
 
 public interface MeasurementValue {
-    String VALUE = "value";
-    String PHENOMENON = "phen";
 
     Object getValue();
 
     void setValue(Object value);
 
+    boolean hasValue();
+
     Phenomenon getPhenomenon();
 
     void setPhenomenon(Phenomenon phenomenon);
+
+    boolean hasPhenomenon();
 }

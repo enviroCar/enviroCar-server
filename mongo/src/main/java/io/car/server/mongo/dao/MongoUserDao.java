@@ -18,6 +18,7 @@
 package io.car.server.mongo.dao;
 
 
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,19 +31,16 @@ import io.car.server.core.entities.Group;
 import io.car.server.core.entities.User;
 import io.car.server.core.entities.Users;
 import io.car.server.core.util.Pagination;
-import io.car.server.mongo.cache.EntityCache;
-import io.car.server.mongo.entity.MongoGroup;
 import io.car.server.mongo.entity.MongoUser;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  * @author Arne de Wall
  */
-public class MongoUserDao extends AbstractMongoDao<MongoUser, Users>
+public class MongoUserDao extends AbstractMongoDao<String, MongoUser, Users>
         implements UserDao {
     private static final Logger log = LoggerFactory
             .getLogger(MongoUserDao.class);
-    private EntityCache<MongoUser> userCache;
     private MongoTrackDao trackDao;
     private MongoMeasurementDao measurementDao;
     private MongoGroupDao groupDao;
@@ -50,12 +48,6 @@ public class MongoUserDao extends AbstractMongoDao<MongoUser, Users>
     @Inject
     public MongoUserDao(Datastore datastore) {
         super(MongoUser.class, datastore);
-    }
-
-    @Inject
-    public void setUserCache(
-            EntityCache<MongoUser> userCache) {
-        this.userCache = userCache;
     }
 
     @Inject
@@ -97,7 +89,6 @@ public class MongoUserDao extends AbstractMongoDao<MongoUser, Users>
     @Override
     public MongoUser save(User user) {
         MongoUser mu = (MongoUser) user;
-        userCache.invalidate(mu);
         save(mu);
         return mu;
     }
@@ -123,27 +114,42 @@ public class MongoUserDao extends AbstractMongoDao<MongoUser, Users>
     }
 
     @Override
-    public Users getByGroup(Group group, Pagination p) {
-        return fetch(q().field(MongoUser.GROUPS).hasThisElement(group), p);
-    }
-
-    void removeGroup(MongoGroup group) {
-        UpdateResults<MongoUser> result = update(
-                q().field(MongoUser.GROUPS).hasThisElement(group),
-                up().removeAll(MongoUser.GROUPS, group));
-
-        if (result.getHadError()) {
-            log.error("Error removing members of group {}: {}",
-                      group, result.getError());
-        } else {
-            log.debug("Removed group from {} users",
-                      group, result.getUpdatedCount());
-        }
-    }
-
-    @Override
     protected Users createPaginatedIterable(Iterable<MongoUser> i, Pagination p,
                                             long count) {
         return Users.from(i).withPagination(p).withElements(count).build();
+    }
+
+    @Override
+    public User get(Group group, String username) {
+        /* TODO implement io.car.server.mongo.dao.MongoUserDao.get() */
+        throw new UnsupportedOperationException("io.car.server.mongo.dao.MongoUserDao.get() not yet implemented");
+    }
+
+    @Override
+    public Users getFriends(User user) {
+        /* TODO implement io.car.server.mongo.dao.MongoUserDao.getFriends() */
+        throw new UnsupportedOperationException("io.car.server.mongo.dao.MongoUserDao.getFriends() not yet implemented");
+    }
+
+    @Override
+    public User getFriend(User user, String friendName) {
+        /* TODO implement io.car.server.mongo.dao.MongoUserDao.getFriend() */
+        throw new UnsupportedOperationException("io.car.server.mongo.dao.MongoUserDao.getFriend() not yet implemented");
+    }
+
+    @Override
+    public void addFriend(User user, User friend) {
+        MongoUser g = (MongoUser) user;
+        update(g.getName(), up()
+                .add(MongoUser.FRIENDS, friend)
+                .set(MongoUser.LAST_MODIFIED, new DateTime()));
+    }
+
+    @Override
+    public void removeFriend(User user, User friend) {
+        MongoUser g = (MongoUser) user;
+        update(g.getName(), up()
+                .removeAll(MongoUser.FRIENDS, friend)
+                .set(MongoUser.LAST_MODIFIED, new DateTime()));
     }
 }

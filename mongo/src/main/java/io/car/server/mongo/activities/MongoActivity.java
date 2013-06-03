@@ -17,59 +17,94 @@
  */
 package io.car.server.mongo.activities;
 
+import org.bson.types.ObjectId;
 import org.joda.time.DateTime;
 
-import com.github.jmkgreen.morphia.annotations.Embedded;
+import com.github.jmkgreen.morphia.Key;
 import com.github.jmkgreen.morphia.annotations.Entity;
+import com.github.jmkgreen.morphia.annotations.Id;
 import com.github.jmkgreen.morphia.annotations.Indexed;
 import com.github.jmkgreen.morphia.annotations.Polymorphic;
 import com.github.jmkgreen.morphia.annotations.Property;
+import com.github.jmkgreen.morphia.annotations.Transient;
+import com.github.jmkgreen.morphia.mapping.Mapper;
+import com.google.common.base.Objects;
+import com.google.common.base.Objects.ToStringHelper;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
+import com.google.inject.assistedinject.AssistedInject;
 
 import io.car.server.core.activities.Activity;
 import io.car.server.core.activities.ActivityType;
 import io.car.server.core.entities.User;
-import io.car.server.core.entities.UserBase;
-import io.car.server.mongo.entity.MongoEntity;
+import io.car.server.mongo.MongoDB;
 import io.car.server.mongo.entity.MongoUser;
-import io.car.server.mongo.entity.MongoUserBase;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Polymorphic
 @Entity("activities")
-public class MongoActivity extends MongoEntity implements Activity {
+public class MongoActivity implements Activity {
+    public static final String ID = Mapper.ID_KEY;
+    public static final String USER = "user";
+    public static final String TYPE = "type";
+    public static final String TIME = "time";
+    @Id
+    private ObjectId id = new ObjectId();
     @Indexed
     @Property(TIME)
     private DateTime time = new DateTime();
     @Indexed
-    @Embedded(USER)
-    private MongoUserBase user;
+    @Property(USER)
+    private Key<MongoUser> user;
+    @Transient
+    private MongoUser _user;
     @Indexed
     @Property(TYPE)
     private ActivityType type;
-
     @Inject
-    public MongoActivity(@Assisted User user,
+    @Transient
+    private MongoDB mongoDB;
+
+    @AssistedInject
+    public MongoActivity(MongoDB mongoDB,
+                         @Assisted User user,
                          @Assisted ActivityType type) {
-        this.user = (MongoUser) user;
+        this.mongoDB = mongoDB;
+        this._user = (MongoUser) user;
+        this.user = mongoDB.reference(this._user);
         this.type = type;
     }
 
-    public MongoActivity() {
-        this(null, null);
+    @Inject
+    public MongoActivity(MongoDB mongoDB) {
+        this(mongoDB, null, null);
+    }
+
+    public ObjectId getId() {
+        return id;
+    }
+
+    public void setId(ObjectId id) {
+        this.id = id;
+    }
+    public boolean hasId() {
+        return getId() != null;
     }
 
     @Override
-    public MongoUserBase getUser() {
-        return this.user;
+    public MongoUser getUser() {
+        if (this._user == null) {
+            this._user = getMongoDB().dereference(MongoUser.class, this.user);
+        }
+        return this._user;
     }
 
     @Override
-    public void setUser(UserBase user) {
-        this.user = (MongoUserBase) user;
+    public void setUser(User user) {
+        this._user = (MongoUser) user;
+        this.user = getMongoDB().reference(this._user);
     }
 
     @Override
@@ -85,5 +120,54 @@ public class MongoActivity extends MongoEntity implements Activity {
     @Override
     public DateTime getTime() {
         return this.time;
+    }
+
+    @Override
+    public boolean hasUser() {
+        return getUser() != null;
+    }
+
+    @Override
+    public boolean hasType() {
+        return getType() != null;
+    }
+
+    @Override
+    public boolean hasTime() {
+        return getTime() != null;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(this.id);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final MongoActivity other = (MongoActivity) obj;
+        return Objects.equal(this.id, other.getId());
+    }
+
+    @Override
+    public String toString() {
+        return toStringHelper().toString();
+    }
+
+    protected ToStringHelper toStringHelper() {
+        return Objects.toStringHelper(this)
+                .omitNullValues()
+                .add(ID, this.id)
+                .add(TYPE, this.type)
+                .add(USER, this.user);
+    }
+
+    public MongoDB getMongoDB() {
+        return mongoDB;
     }
 }

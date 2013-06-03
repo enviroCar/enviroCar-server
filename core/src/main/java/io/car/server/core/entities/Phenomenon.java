@@ -21,13 +21,15 @@ package io.car.server.core.entities;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface Phenomenon extends BaseEntity {
-    String NAME = "name";
-    String UNIT = "unit";
     String getName();
 
     void setName(String name);
 
+    boolean hasName();
+
     String getUnit();
 
     void setUnit(String unit);
+
+    boolean hasUnit();
 }
