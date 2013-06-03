@@ -101,6 +101,10 @@ public class MeasurementEncoder extends AbstractEntityEncoder<Measurement> {
                     phenomenon.put(JSONConstants.VALUE_KEY, value.toString());
                 }
                 values.put(mv.getPhenomenon().getName(), phenomenon);
+                if (mv.getPhenomenon().hasUnit()) {
+                    phenomenon.put(JSONConstants.UNIT_KEY, mv.getPhenomenon()
+                            .getUnit());
+                }
             }
         }
         return measurement;

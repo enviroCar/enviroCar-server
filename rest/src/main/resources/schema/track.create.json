@@ -32,7 +32,7 @@
                 }
             }
         },
-        "measurements": {
+        "features": {
             "type": "array",
             "minItems": 0,
             "items": {
