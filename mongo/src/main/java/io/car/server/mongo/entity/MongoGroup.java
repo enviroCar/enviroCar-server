@@ -26,7 +26,6 @@ import com.github.jmkgreen.morphia.annotations.Id;
 import com.github.jmkgreen.morphia.annotations.Property;
 import com.github.jmkgreen.morphia.annotations.Transient;
 import com.github.jmkgreen.morphia.mapping.Mapper;
-import com.google.common.collect.Sets;
 
 import io.car.server.core.entities.Group;
 import io.car.server.core.entities.User;
@@ -45,7 +44,7 @@ public class MongoGroup extends MongoEntityBase implements Group {
     @Transient
     private MongoUser _owner;
     @Property(MEMBERS)
-    private Set<Key<MongoUser>> members = Sets.newHashSet();
+    private Set<Key<MongoUser>> members;
     @Id
     private String name;
     @Property(DESCRIPTION)
@@ -102,10 +101,6 @@ public class MongoGroup extends MongoEntityBase implements Group {
     }
 
     public Set<Key<MongoUser>> getMembers() {
-        return Collections.unmodifiableSet(members);
-    }
-
-    public void setMembers(Set<Key<MongoUser>> members) {
-        this.members = members;
+        return members == null ? null : Collections.unmodifiableSet(members);
     }
 }

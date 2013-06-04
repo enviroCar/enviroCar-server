@@ -17,6 +17,10 @@
  */
 package io.car.server.mongo.entity;
 
+import java.util.Collections;
+import java.util.Set;
+
+import com.github.jmkgreen.morphia.Key;
 import com.github.jmkgreen.morphia.annotations.Entity;
 import com.github.jmkgreen.morphia.annotations.Id;
 import com.github.jmkgreen.morphia.annotations.Indexed;
@@ -45,6 +49,9 @@ public class MongoUser extends MongoEntityBase implements User {
     @Indexed(unique = true)
     @Property(MAIL)
     private String mail;
+    @Property(FRIENDS)
+    private Set<Key<MongoUser>> friends;
+
 
     @Override
     public String getName() {
@@ -109,5 +116,9 @@ public class MongoUser extends MongoEntityBase implements User {
     @Override
     public boolean hasToken() {
         return getToken() != null && !getToken().isEmpty();
+    }
+
+    public Set<Key<MongoUser>> getFriends() {
+        return friends == null ? null : Collections.unmodifiableSet(friends);
     }
 }
