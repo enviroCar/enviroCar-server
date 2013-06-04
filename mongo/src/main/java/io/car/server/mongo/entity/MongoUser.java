@@ -52,6 +52,12 @@ public class MongoUser extends MongoEntityBase implements User {
     @Property(FRIENDS)
     private Set<Key<MongoUser>> friends;
 
+    public MongoUser(String name) {
+        this.name = name;
+    }
+
+    public MongoUser() {
+    }
 
     @Override
     public String getName() {

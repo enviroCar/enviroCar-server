@@ -31,7 +31,6 @@ import com.github.jmkgreen.morphia.query.UpdateResults;
 import com.google.inject.Inject;
 
 import io.car.server.core.dao.UserDao;
-import io.car.server.core.entities.Group;
 import io.car.server.core.entities.User;
 import io.car.server.core.entities.Users;
 import io.car.server.core.util.Pagination;
@@ -125,12 +124,6 @@ public class MongoUserDao extends AbstractMongoDao<String, MongoUser, Users>
     }
 
     @Override
-    public User get(Group group, String username) {
-        /* TODO implement io.car.server.mongo.dao.MongoUserDao.get() */
-        throw new UnsupportedOperationException("io.car.server.mongo.dao.MongoUserDao.get() not yet implemented");
-    }
-
-    @Override
     public Users getFriends(User user) {
         Iterable<MongoUser> friends;
         Set<Key<MongoUser>> friendRefs = getFriendRefs(user);
@@ -146,9 +139,7 @@ public class MongoUserDao extends AbstractMongoDao<String, MongoUser, Users>
     public User getFriend(User user, String friendName) {
         Set<Key<MongoUser>> friendRefs = getFriendRefs(user);
         if (friendRefs != null) {
-            MongoUser f = new MongoUser();
-            f.setName(friendName);
-            Key<MongoUser> friendRef = reference(f);
+            Key<MongoUser> friendRef = reference(new MongoUser(friendName));
             getMapper().updateKind(friendRef);
             if (friendRefs.contains(friendRef)) {
                 return dereference(MongoUser.class, friendRef);

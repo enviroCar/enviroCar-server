@@ -48,6 +48,8 @@ public interface GroupDao {
 
     Group get(User user, String groupName);
 
+    User getMember(Group group, String username);
+
     Groups getByMember(User user, Pagination p);
 
     void removeMember(Group group, User user);

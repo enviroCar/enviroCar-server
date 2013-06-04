@@ -343,7 +343,7 @@ public class Service {
 
     public User getGroupMember(Group group, String username) throws
             UserNotFoundException {
-        User u = this.userDao.get(group, username);
+        User u = this.groupDao.getMember(group, username);
         if (u == null) {
             throw new UserNotFoundException(username);
         }

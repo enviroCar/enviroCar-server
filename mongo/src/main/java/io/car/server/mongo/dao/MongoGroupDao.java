@@ -176,16 +176,7 @@ public class MongoGroupDao extends AbstractMongoDao<String, MongoGroup, Groups>
 
     @Override
     public Users getMembers(Group group, Pagination pagination) {
-        MongoGroup g = (MongoGroup) group;
-        Set<Key<MongoUser>> memberRefs = g.getMembers();
-        if (memberRefs == null) {
-            MongoGroup groupWithMembers = q()
-                    .field(MongoGroup.NAME).equal(g.getName())
-                    .retrievedFields(true, MongoGroup.MEMBERS).get();
-            if (groupWithMembers != null) {
-                memberRefs = groupWithMembers.getMembers();
-            }
-        }
+        Set<Key<MongoUser>> memberRefs = getMemberRefs(group);
         Iterable<MongoUser> members;
         if (memberRefs != null) {
             members = dereference(MongoUser.class, memberRefs);
@@ -198,5 +189,32 @@ public class MongoGroupDao extends AbstractMongoDao<String, MongoGroup, Groups>
     @Override
     protected Groups fetch(Query<MongoGroup> q, Pagination p) {
         return super.fetch(q.retrievedFields(false, MongoGroup.MEMBERS), p);
+    }
+
+    @Override
+    public User getMember(Group group, String username) {
+        Set<Key<MongoUser>> memberRefs = getMemberRefs(group);
+        if (memberRefs != null) {
+            Key<MongoUser> memberRef = reference(new MongoUser(username));
+            getMapper().updateKind(memberRef);
+            if (memberRefs.contains(memberRef)) {
+                return dereference(MongoUser.class, memberRef);
+            }
+        }
+        return null;
+    }
+
+    protected Set<Key<MongoUser>> getMemberRefs(Group group) {
+        MongoGroup g = (MongoGroup) group;
+        Set<Key<MongoUser>> memberRefs = g.getMembers();
+        if (memberRefs == null) {
+            MongoGroup groupWithMembers = q()
+                    .field(MongoGroup.NAME).equal(g.getName())
+                    .retrievedFields(true, MongoGroup.MEMBERS).get();
+            if (groupWithMembers != null) {
+                memberRefs = groupWithMembers.getMembers();
+            }
+        }
+        return memberRefs;
     }
 }
