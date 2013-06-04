@@ -98,6 +98,7 @@ public class MongoGroupDao extends AbstractMongoDao<String, MongoGroup, Groups>
         return fetch(q, p);
     }
 
+
     void removeUser(MongoUser user) {
         removeOwner(user);
         removeMember(user);
@@ -168,5 +169,10 @@ public class MongoGroupDao extends AbstractMongoDao<String, MongoGroup, Groups>
     public Users getMembers(Group group, Pagination pagination) {
         /* TODO implement io.car.server.mongo.dao.MongoGroupDao.getMembers() */
         throw new UnsupportedOperationException("io.car.server.mongo.dao.MongoGroupDao.getMembers() not yet implemented");
+    }
+
+    @Override
+    protected Groups fetch(Query<MongoGroup> q, Pagination p) {
+        return super.fetch(q.retrievedFields(false, MongoGroup.MEMBERS), p);
     }
 }
