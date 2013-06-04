@@ -18,11 +18,15 @@
 package io.car.server.mongo.dao;
 
 
+import java.util.Collections;
+import java.util.Set;
+
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.jmkgreen.morphia.Key;
+import com.github.jmkgreen.morphia.query.Query;
 import com.github.jmkgreen.morphia.query.UpdateResults;
 import com.google.inject.Inject;
 
@@ -128,8 +132,23 @@ public class MongoUserDao extends AbstractMongoDao<String, MongoUser, Users>
 
     @Override
     public Users getFriends(User user) {
-        /* TODO implement io.car.server.mongo.dao.MongoUserDao.getFriends() */
-        throw new UnsupportedOperationException("io.car.server.mongo.dao.MongoUserDao.getFriends() not yet implemented");
+        MongoUser u = (MongoUser) user;
+        Iterable<MongoUser> friends;
+        Set<Key<MongoUser>> friendRefs = u.getFriends();
+        if (friendRefs == null) {
+            MongoUser userWithFriends = q()
+                    .field(MongoUser.NAME).equal(u.getName())
+                    .retrievedFields(true, MongoUser.FRIENDS).get();
+            if (userWithFriends != null) {
+                friendRefs = userWithFriends.getFriends();
+            }
+        }
+        if (friendRefs != null) {
+            friends = dereference(MongoUser.class, friendRefs);
+        } else {
+            friends = Collections.emptyList();
+        }
+        return Users.from(friends).build();
     }
 
     @Override
@@ -152,5 +171,10 @@ public class MongoUserDao extends AbstractMongoDao<String, MongoUser, Users>
         update(g.getName(), up()
                 .removeAll(MongoUser.FRIENDS, reference(friend))
                 .set(MongoUser.LAST_MODIFIED, new DateTime()));
+    }
+
+    @Override
+    protected Users fetch(Query<MongoUser> q, Pagination p) {
+        return super.fetch(q.retrievedFields(false, MongoUser.FRIENDS), p);
     }
 }

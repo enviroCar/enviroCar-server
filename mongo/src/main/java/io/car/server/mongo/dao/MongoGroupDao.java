@@ -17,6 +17,7 @@
  */
 package io.car.server.mongo.dao;
 
+import java.util.Collections;
 import java.util.Set;
 
 import org.joda.time.DateTime;
@@ -178,13 +179,20 @@ public class MongoGroupDao extends AbstractMongoDao<String, MongoGroup, Groups>
         MongoGroup g = (MongoGroup) group;
         Set<Key<MongoUser>> memberRefs = g.getMembers();
         if (memberRefs == null) {
-            MongoGroup g2 = q().field(MongoGroup.NAME).equal(g.getName())
+            MongoGroup groupWithMembers = q()
+                    .field(MongoGroup.NAME).equal(g.getName())
                     .retrievedFields(true, MongoGroup.MEMBERS).get();
-            if (g2 != null) {
-                memberRefs = g2.getMembers();
+            if (groupWithMembers != null) {
+                memberRefs = groupWithMembers.getMembers();
             }
         }
-        return Users.from(dereference(MongoUser.class, memberRefs)).build();
+        Iterable<MongoUser> members;
+        if (memberRefs != null) {
+            members = dereference(MongoUser.class, memberRefs);
+        } else {
+            members = Collections.emptyList();
+        }
+        return Users.from(members).build();
     }
 
     @Override
