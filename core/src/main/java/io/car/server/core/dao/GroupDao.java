@@ -24,6 +24,7 @@ package io.car.server.core.dao;
 import io.car.server.core.entities.Group;
 import io.car.server.core.entities.Groups;
 import io.car.server.core.entities.User;
+import io.car.server.core.entities.Users;
 import io.car.server.core.util.Pagination;
 
 /**
@@ -39,11 +40,21 @@ public interface GroupDao {
 
     Groups get(Pagination p);
 
-    void update(Group p);
-
     Group create(Group group);
 
     Group save(Group group);
 
     void delete(Group group);
+
+    Group get(User user, String groupName);
+
+    User getMember(Group group, String username);
+
+    Groups getByMember(User user, Pagination p);
+
+    void removeMember(Group group, User user);
+
+    void addMember(Group group, User user);
+
+    Users getMembers(Group group, Pagination pagination);
 }

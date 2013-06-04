@@ -92,7 +92,8 @@ public class TracksResource extends AbstractResource {
             track = getService().createTrack(twm.getTrack());
 
             for (Measurement m : twm.getMeasurements()) {
-                getService().createMeasurement(twm.getTrack(), m.setUser(u));
+                m.setUser(u);
+                getService().createMeasurement(twm.getTrack(), m);
             }
 
         } else {

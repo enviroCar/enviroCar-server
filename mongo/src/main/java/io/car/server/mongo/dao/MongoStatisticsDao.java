@@ -26,7 +26,6 @@ import java.util.List;
 
 import org.bson.types.ObjectId;
 
-import com.github.jmkgreen.morphia.Datastore;
 import com.github.jmkgreen.morphia.Key;
 import com.github.jmkgreen.morphia.mapping.Mapper;
 import com.google.common.base.Joiner;
@@ -45,7 +44,8 @@ import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
 import io.car.server.core.statistics.Statistic;
 import io.car.server.core.statistics.Statistics;
-import io.car.server.mongo.entity.MongoBaseEntity;
+import io.car.server.mongo.MongoDB;
+import io.car.server.mongo.entity.MongoEntityBase;
 import io.car.server.mongo.entity.MongoMeasurement;
 import io.car.server.mongo.entity.MongoMeasurementValue;
 import io.car.server.mongo.entity.MongoPhenomenon;
@@ -65,6 +65,11 @@ public class MongoStatisticsDao implements StatisticsDao {
     public static final String MEASUREMENTS_KEY = "measurements";
     public static final String TRACKS_KEY = "tracks";
     public static final String USERS_KEY = "users";
+    private final MongoDB mongoDB;
+    @Inject
+    public MongoStatisticsDao(MongoDB mongoDB) {
+        this.mongoDB = mongoDB;
+    }
 
     protected static String valueOf(String property) {
         return "$" + property;
@@ -72,14 +77,6 @@ public class MongoStatisticsDao implements StatisticsDao {
 
     protected static String path(String first, String second, String... paths) {
         return Joiner.on(".").join(first, second, (Object[]) paths);
-    }
-    private final Datastore db;
-    private final Mapper mapr;
-
-    @Inject
-    public MongoStatisticsDao(Mapper mapr, Datastore db) {
-        this.db = db;
-        this.mapr = mapr;
     }
 
     @Override
@@ -132,24 +129,22 @@ public class MongoStatisticsDao implements StatisticsDao {
     }
 
     @Override
-    public Statistics getStatisticsForTrack(Track track,
-                                            Phenomenons phenomenons) {
+    public Statistics getStatisticsForTrack(Track track, Phenomenons phenomenons) {
         return parseStatistics(aggregate(matchesTrack(track),
                                          project(),
                                          unwind(),
                                          matchesPhenomenon(phenomenons),
                                          group()).results());
-    }
+}
 
     @Override
-    public Statistics getStatisticsForUser(User user,
-                                           Phenomenons phenomenons) {
+    public Statistics getStatisticsForUser(User user, Phenomenons phenomenons) {
         return parseStatistics(aggregate(matchesUser(user),
                                          project(),
                                          unwind(),
                                          matchesPhenomenon(phenomenons),
                                          group()).results());
-    }
+}
 
     @Override
     public Statistics getStatistics(Phenomenons phenomenons) {
@@ -161,11 +156,12 @@ public class MongoStatisticsDao implements StatisticsDao {
 
     protected AggregationOutput aggregate(DBObject firstOp,
                                           DBObject... additionalOps) {
-        AggregationOutput result = db.getCollection(MongoMeasurement.class)
+        AggregationOutput result = mongoDB.getDatastore()
+                .getCollection(MongoMeasurement.class)
                 .aggregate(firstOp, additionalOps);
         result.getCommandResult().throwOnError();
         return result;
-    }
+}
 
     protected Statistic parseStatistic(Iterable<DBObject> results) {
         Statistics statistics = parseStatistics(results);
@@ -183,9 +179,9 @@ public class MongoStatisticsDao implements StatisticsDao {
 
     protected Statistic parseStatistic(DBObject result) {
         DBObject phenDbo = ((DBRef) result.get(ID_KEY)).fetch();
-        Phenomenon phenomenon = (Phenomenon) mapr
-                .fromDBObject(MongoPhenomenon.class, phenDbo, mapr
-                .createEntityCache());
+        Phenomenon phenomenon = (Phenomenon) mongoDB.getMapper()
+                .fromDBObject(MongoPhenomenon.class, phenDbo,
+                              mongoDB.getMapper().createEntityCache());
         long numberOfMeasurements = ((Number) result.get(MEASUREMENTS_KEY))
                 .longValue();
         List<?> tracks = (List<?>) result.get(TRACKS_KEY);
@@ -203,10 +199,10 @@ public class MongoStatisticsDao implements StatisticsDao {
 
     protected DBObject group() {
         BasicDBObject fields = new BasicDBObject();
-        String value =
-                valueOf(path(MongoMeasurement.PHENOMENONS, MongoMeasurementValue.VALUE));
-        fields
-                .put(ID_KEY, valueOf(path(MongoMeasurement.PHENOMENONS, MongoMeasurementValue.PHENOMENON)));
+        String value = valueOf(path(MongoMeasurement.PHENOMENONS,
+                                    MongoMeasurementValue.VALUE));
+        fields.put(ID_KEY, valueOf(path(MongoMeasurement.PHENOMENONS,
+                                        MongoMeasurementValue.PHENOMENON)));
         fields.put(AVG_KEY, new BasicDBObject(Ops.AVG, value));
         fields.put(MIN_KEY, new BasicDBObject(Ops.MIN, value));
         fields.put(MAX_KEY, new BasicDBObject(Ops.MAX, value));
@@ -224,7 +220,7 @@ public class MongoStatisticsDao implements StatisticsDao {
 
     protected DBObject project() {
         BasicDBObject fields = new BasicDBObject();
-        fields.put(MongoMeasurement.ID, 0);
+        fields.put(MongoMeasurement.IDENTIFIER, 0);
         fields.put(MongoMeasurement.PHENOMENONS, 1);
         fields.put(MongoMeasurement.TRACK, 1);
         fields.put(MongoMeasurement.USER, 1);
@@ -232,7 +228,8 @@ public class MongoStatisticsDao implements StatisticsDao {
     }
 
     protected DBObject matchesUser(User user) {
-        DBRef ref = mapr.keyToRef(mapr.getKey((MongoUser) user));
+        DBRef ref = mongoDB.getMapper().keyToRef(mongoDB.getMapper()
+                .getKey((MongoUser) user));
         return new BasicDBObject(Ops.MATCH, new BasicDBObject(MongoMeasurement.USER, ref));
     }
 
@@ -241,33 +238,38 @@ public class MongoStatisticsDao implements StatisticsDao {
     }
 
     protected DBObject matchesTrack(Track track) {
-        return matchesTrack(mapr.getKey((MongoTrack) track));
+        return matchesTrack(mongoDB.getMapper().getKey((MongoTrack) track));
     }
 
     protected DBObject matchesTrack(Key<MongoTrack> track) {
-        DBRef ref = mapr.keyToRef(track);
+        DBRef ref = mongoDB.getMapper().keyToRef(track);
         return new BasicDBObject(Ops.MATCH, new BasicDBObject(MongoMeasurement.TRACK, ref));
     }
 
     protected DBObject matchesPhenomenon(Phenomenon phenomenon) {
-        Key<MongoPhenomenon> key = mapr.getKey(((MongoPhenomenon) phenomenon));
-        DBRef ref = mapr.keyToRef(key);
-        return new BasicDBObject(Ops.MATCH, new BasicDBObject(path(MongoMeasurement.PHENOMENONS, MongoMeasurementValue.PHENOMENON), ref));
+        Key<MongoPhenomenon> key = mongoDB.getMapper()
+                .getKey(((MongoPhenomenon) phenomenon));
+        DBRef ref = mongoDB.getMapper().keyToRef(key);
+        return new BasicDBObject(Ops.MATCH,
+                                 new BasicDBObject(path(MongoMeasurement.PHENOMENONS,
+                                                        MongoMeasurementValue.PHENOMENON), ref));
     }
 
     protected DBObject matchesPhenomenon(Phenomenons phenomenons) {
         BasicDBList refs = new BasicDBList();
         for (Phenomenon phenomenon : phenomenons) {
-            Key<MongoPhenomenon> key = mapr
+            Key<MongoPhenomenon> key = mongoDB.getMapper()
                     .getKey(((MongoPhenomenon) phenomenon));
-            refs.add(mapr.keyToRef(key));
+            refs.add(mongoDB.getMapper().keyToRef(key));
         }
         BasicDBObject in = new BasicDBObject(Ops.IN, refs);
-        return new BasicDBObject(Ops.MATCH, new BasicDBObject(path(MongoMeasurement.PHENOMENONS, MongoMeasurementValue.PHENOMENON), in));
+        return new BasicDBObject(Ops.MATCH,
+                                 new BasicDBObject(path(MongoMeasurement.PHENOMENONS,
+                                                        MongoMeasurementValue.PHENOMENON), in));
     }
 
-    protected <T extends MongoBaseEntity<T>> DBRef toRef(T o) {
-        DBRef ref = mapr.keyToRef(db.getKey(o));
+    protected <T extends MongoEntityBase> DBRef toRef(T o) {
+        DBRef ref = mongoDB.getMapper().keyToRef(mongoDB.getMapper().getKey(o));
         return ref;
     }
 }

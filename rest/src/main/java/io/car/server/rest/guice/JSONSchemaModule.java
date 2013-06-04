@@ -62,6 +62,8 @@ public class JSONSchemaModule extends AbstractModule {
         mb.addBinding().toInstance("/schema/users.json");
         mb.addBinding().toInstance("/schema/statistics.json");
         mb.addBinding().toInstance("/schema/statistic.json");
+        mb.addBinding().toInstance("/schema/activity.json");
+        mb.addBinding().toInstance("/schema/activities.json");
 
         bindConstant().annotatedWith(Names
                 .named(JSONSchemaResourceFilterFactory.VALIDATE_REQUESTS))

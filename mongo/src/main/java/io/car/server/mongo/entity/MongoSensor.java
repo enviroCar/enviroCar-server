@@ -18,7 +18,8 @@
 package io.car.server.mongo.entity;
 
 import com.github.jmkgreen.morphia.annotations.Entity;
-import com.github.jmkgreen.morphia.annotations.Property;
+import com.github.jmkgreen.morphia.annotations.Id;
+import com.github.jmkgreen.morphia.mapping.Mapper;
 
 import io.car.server.core.entities.Sensor;
 
@@ -26,8 +27,9 @@ import io.car.server.core.entities.Sensor;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Entity("sensors")
-public class MongoSensor extends MongoBaseEntity<MongoSensor> implements Sensor {
-    @Property(NAME)
+public class MongoSensor extends MongoEntityBase implements Sensor {
+    public static final String NAME = Mapper.ID_KEY;
+    @Id
     private String name;
 
     @Override
@@ -36,8 +38,12 @@ public class MongoSensor extends MongoBaseEntity<MongoSensor> implements Sensor 
     }
 
     @Override
-    public Sensor setName(String name) {
+    public void setName(String name) {
         this.name = name;
-        return this;
+    }
+
+    @Override
+    public boolean hasName() {
+        return getName() != null && !getName().isEmpty();
     }
 }

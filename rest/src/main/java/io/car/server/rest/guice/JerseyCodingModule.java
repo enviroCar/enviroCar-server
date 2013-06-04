@@ -31,6 +31,8 @@ import com.google.inject.TypeLiteral;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.vividsolutions.jts.geom.Geometry;
 
+import io.car.server.core.activities.Activities;
+import io.car.server.core.activities.Activity;
 import io.car.server.core.entities.Group;
 import io.car.server.core.entities.Groups;
 import io.car.server.core.entities.Measurement;
@@ -55,6 +57,8 @@ import io.car.server.rest.decoding.PhenomenonDecoder;
 import io.car.server.rest.decoding.SensorDecoder;
 import io.car.server.rest.decoding.TrackDecoder;
 import io.car.server.rest.decoding.UserDecoder;
+import io.car.server.rest.encoding.ActivitiesEncoder;
+import io.car.server.rest.encoding.ActivityEncoder;
 import io.car.server.rest.encoding.EntityEncoder;
 import io.car.server.rest.encoding.GeoJSONEncoder;
 import io.car.server.rest.encoding.GroupEncoder;
@@ -126,6 +130,10 @@ public class JerseyCodingModule extends AbstractModule {
         }, StatisticEncoder.class);
         bind(fmb, new TypeLiteral<EntityEncoder<Statistics>>() {
         }, StatisticsEncoder.class);
+        bind(fmb, new TypeLiteral<EntityEncoder<Activity>>() {
+        }, ActivityEncoder.class);
+        bind(fmb, new TypeLiteral<EntityEncoder<Activities>>() {
+        }, ActivitiesEncoder.class);
         bind(new TypeLiteral<EntityDecoder<Geometry>>() {
         }).to(GeoJSONDecoder.class);
         bind(new TypeLiteral<EntityEncoder<Geometry>>() {

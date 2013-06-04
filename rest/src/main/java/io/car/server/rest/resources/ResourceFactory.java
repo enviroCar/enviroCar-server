@@ -71,4 +71,10 @@ public interface ResourceFactory {
 
     StatisticsResource createStatisticsResource(@Nullable Track track,
                                                 @Nullable User user);
+
+    ActivitiesResource createActivitiesResource();
+
+    ActivitiesResource createActivitiesResource(@Nullable User user);
+
+    ActivitiesResource createActivitiesResource(@Nullable Group group);
 }

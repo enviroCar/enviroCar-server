@@ -15,14 +15,22 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.mongo.cache;
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package io.car.server.core.activities;
 
-import com.github.jmkgreen.morphia.Key;
+import io.car.server.core.entities.Group;
 
 /**
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public interface EntityCache<T> {
-    T get(Key<T> ref);
-    void invalidate(T t);
+public interface GroupActivity extends Activity {
+    Group getGroup();
+
+    void setGroup(Group group);
+
+    boolean hasGroup();
 }

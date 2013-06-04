@@ -20,6 +20,10 @@ package io.car.server.core;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import io.car.server.core.activities.Activities;
+import io.car.server.core.activities.ActivityFactory;
+import io.car.server.core.activities.ActivityType;
+import io.car.server.core.dao.ActivityDao;
 import io.car.server.core.dao.GroupDao;
 import io.car.server.core.dao.MeasurementDao;
 import io.car.server.core.dao.PhenomenonDao;
@@ -72,6 +76,10 @@ public class Service {
     @Inject
     private PhenomenonDao phenomenonDao;
     @Inject
+    private ActivityDao activityDao;
+    @Inject
+    private ActivityFactory activityFactory;
+    @Inject
     private EntityValidator<User> userValidator;
     @Inject
     private EntityValidator<Group> groupValidator;
@@ -115,8 +123,11 @@ public class Service {
     public User modifyUser(User user, User changes)
             throws UserNotFoundException, IllegalModificationException,
                    ValidationException {
-        return this.userDao.save(this.userUpdater.update(
+        this.userDao.save(this.userUpdater.update(
                 userValidator.validateUpdate(user), user));
+        this.activityDao.save(activityFactory
+                .createActivity(ActivityType.CHANGED_PROFILE, user));
+        return user;
     }
 
     public void deleteUser(User user) {
@@ -125,11 +136,15 @@ public class Service {
 
     public void removeFriend(User user, User friend)
             throws UserNotFoundException {
-        this.userDao.save(user.removeFriend(getUser(friend.getName())));
+        this.userDao.removeFriend(user, friend);
+        this.activityDao.save(activityFactory
+                .createUserActivity(ActivityType.UNFRIENDED_USER, user, friend));
     }
 
     public void addFriend(User user, User friend) throws UserNotFoundException {
-        this.userDao.save(user.addFriend(getUser(friend.getName())));
+        this.userDao.addFriend(user, friend);
+        this.activityDao.save(activityFactory
+                .createUserActivity(ActivityType.FRIENDED_USER, user, friend));
     }
 
     public Group getGroup(String name) throws GroupNotFoundException {
@@ -145,12 +160,15 @@ public class Service {
     }
 
     public Users getGroupMembers(Group group, Pagination pagination) {
-        return this.userDao.getByGroup(group, pagination);
+        return this.groupDao.getMembers(group, pagination);
     }
 
     public Group modifyGroup(Group group, Group changes)
             throws ValidationException, IllegalModificationException {
         groupValidator.validateUpdate(group);
+        this.activityDao.save(activityFactory
+                .createGroupActivity(ActivityType.CHANGED_GROUP, group
+                .getOwner(), group));
         return this.groupDao.save(this.groupUpdater.update(changes, group));
     }
 
@@ -161,6 +179,9 @@ public class Service {
     }
 
     public void deleteGroup(Group group) throws GroupNotFoundException {
+        this.activityDao.save(activityFactory
+                .createGroupActivity(ActivityType.DELETED_GROUP, group
+                .getOwner(), group));
         this.groupDao.delete(group);
     }
 
@@ -169,28 +190,30 @@ public class Service {
     }
 
     public Group createGroup(User user, Group group) throws
-            ResourceAlreadyExistException, ValidationException {
+            ResourceAlreadyExistException {
         group.setOwner(user);
         groupValidator.validateCreate(group);
         if (groupDao.getByName(group.getName()) != null) {
             throw new ResourceAlreadyExistException();
         }
         this.groupDao.save(group);
-        user.addGroup(group);
-        this.userDao.save(user);
+        addGroupMember(group, user);
+        this.activityDao.save(activityFactory
+                .createGroupActivity(ActivityType.CREATED_GROUP, user, group));
         return group;
     }
 
-    public void addGroupMember(Group group, User user)
-            throws UserNotFoundException {
-        this.userDao.save(user.addGroup(group));
-        this.groupDao.update(group);
+    public void addGroupMember(Group group, User user) {
+        this.groupDao.addMember(group, user);
+        this.activityDao.save(activityFactory
+                .createGroupActivity(ActivityType.JOINED_GROUP, user, group));
     }
 
     public void removeGroupMember(Group group, User user)
             throws UserNotFoundException, GroupNotFoundException {
-        this.userDao.save(user.removeGroup(group));
-        this.groupDao.update(group);
+        this.groupDao.removeMember(group, user);
+        this.activityDao.save(activityFactory
+                .createGroupActivity(ActivityType.LEAVED_GROUP, user, group));
     }
 
     public Tracks getTracks(Pagination p) {
@@ -210,7 +233,10 @@ public class Service {
     }
 
     public Track createTrack(Track track) throws ValidationException {
-        return this.trackDao.create(this.trackValidator.validateCreate(track));
+        this.trackDao.create(this.trackValidator.validateCreate(track));
+        this.activityDao.save(activityFactory
+                .createTrackActivity(ActivityType.CREATED_TRACK, track.getUser(), track));
+        return track;
     }
 
     public void deleteTrack(Track track) {
@@ -219,12 +245,11 @@ public class Service {
 
     public Measurement createMeasurement(Measurement measurement) {
         this.measurementValidator.validateCreate(measurement);
-        return this.measurementDao.create(measurement);
-    }
-
-    public Measurement createMeasurement(String track, Measurement measurement)
-            throws TrackNotFoundException {
-        return createMeasurement(getTrack(track), measurement);
+        this.measurementDao.create(measurement);
+        this.activityDao.save(activityFactory
+                .createMeasurementActivity(ActivityType.CREATED_MEASUREMENT,
+                                           measurement.getUser(), measurement));
+        return measurement;
     }
 
     public Measurement createMeasurement(Track track, Measurement measurement) {
@@ -232,6 +257,9 @@ public class Service {
         measurement.setTrack(track);
         this.measurementDao.create(measurement);
         this.trackDao.update(track);
+        this.activityDao.save(activityFactory
+                .createMeasurementActivity(ActivityType.CREATED_MEASUREMENT,
+                                           measurement.getUser(), measurement));
         return measurement;
     }
 
@@ -303,5 +331,64 @@ public class Service {
 
     public Sensor createSensor(Sensor sensor) {
         return this.sensorDao.create(sensor);
+    }
+
+    public Group getGroup(User user, String groupName) throws
+            GroupNotFoundException {
+        Group g = this.groupDao.get(user, groupName);
+        if (g == null) {
+            throw new GroupNotFoundException(groupName);
+        }
+        return g;
+    }
+
+    public User getGroupMember(Group group, String username) throws
+            UserNotFoundException {
+        User u = this.groupDao.getMember(group, username);
+        if (u == null) {
+            throw new UserNotFoundException(username);
+        }
+        return u;
+    }
+
+    public Users getFriends(User user) {
+        return this.userDao.getFriends(user);
+    }
+
+    public User getFriend(User user, String friendName) throws
+            UserNotFoundException {
+        User f = this.userDao.getFriend(user, friendName);
+        if (f == null) {
+            throw new UserNotFoundException(friendName);
+        }
+        return f;
+    }
+
+    public Groups getGroups(User user, Pagination p) {
+        return this.groupDao.getByMember(user, p);
+    }
+
+    public Activities getActivities(Pagination p) {
+        return activityDao.get(p);
+    }
+
+    public Activities getActivities(User user, Pagination p) {
+        return activityDao.get(user, p);
+    }
+
+    public Activities getActivities(ActivityType type, Pagination p) {
+        return activityDao.get(type, p);
+    }
+
+    public Activities getActivities(ActivityType type, User user, Pagination p) {
+        return activityDao.get(type, user, p);
+    }
+
+    public Activities getActivities(Group user, Pagination p) {
+        return activityDao.get(user, p);
+    }
+
+    public Activities getActivities(ActivityType type, Group user, Pagination p) {
+        return activityDao.get(type, user, p);
     }
 }

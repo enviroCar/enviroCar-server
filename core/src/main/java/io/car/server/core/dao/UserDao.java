@@ -17,7 +17,6 @@
  */
 package io.car.server.core.dao;
 
-import io.car.server.core.entities.Group;
 import io.car.server.core.entities.User;
 import io.car.server.core.entities.Users;
 import io.car.server.core.util.Pagination;
@@ -38,5 +37,11 @@ public interface UserDao {
 
     void delete(User user);
 
-    Users getByGroup(Group group, Pagination p);
+    Users getFriends(User user);
+
+    User getFriend(User user, String friendName);
+
+    void addFriend(User user, User friend);
+
+    void removeFriend(User user, User friend);
 }

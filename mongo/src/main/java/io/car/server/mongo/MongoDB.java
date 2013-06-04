@@ -17,18 +17,26 @@
  */
 package io.car.server.mongo;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 import javax.annotation.Nullable;
 
 import com.github.jmkgreen.morphia.Datastore;
+import com.github.jmkgreen.morphia.Key;
 import com.github.jmkgreen.morphia.Morphia;
 import com.github.jmkgreen.morphia.converters.DefaultConverters;
 import com.github.jmkgreen.morphia.converters.TypeConverter;
-import com.github.jmkgreen.morphia.ext.guice.GuiceObjectFactory;
 import com.github.jmkgreen.morphia.logging.MorphiaLoggerFactory;
 import com.github.jmkgreen.morphia.logging.slf4j.SLF4JLogrImplFactory;
 import com.github.jmkgreen.morphia.mapping.DefaultCreator;
+import com.github.jmkgreen.morphia.mapping.Mapper;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.LinkedListMultimap;
+import com.google.common.collect.ListMultimap;
+import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
@@ -69,7 +77,7 @@ public class MongoDB {
             mongo = new MongoClient(new ServerAddress(host, port));
             morphia = new Morphia();
             morphia.getMapper().getOptions().objectFactory =
-                    new GuiceObjectFactory(new DefaultCreator(), injector);
+                    new CustomGuiceObjectFactory(new DefaultCreator(), injector);
             addConverters(converters);
             addMappedClasses(mappedClasses);
             datastore = morphia
@@ -94,8 +102,12 @@ public class MongoDB {
         return this.datastore;
     }
 
+    public Mapper getMapper() {
+        return getMorphia().getMapper();
+    }
+
     private void addConverters(Set<TypeConverter> converters) {
-        DefaultConverters dc = morphia.getMapper().getConverters();
+        DefaultConverters dc = getMapper().getConverters();
         for (TypeConverter tc : converters) {
             dc.addConverter(tc);
         }
@@ -103,17 +115,74 @@ public class MongoDB {
 
     private void addMappedClasses(Set<Class<?>> mappedClasses) {
         for (Class<?> c : mappedClasses) {
-            morphia.getMapper().addMappedClass(c);
+            getMapper().addMappedClass(c);
         }
     }
 
     /*
-     * FIXME remove this once 2dsphere indexes are supported by morphia
+     * FIXME remove this once 2dsphere indexes are supported by morphia in v1.3.0
      */
     private void ensureIndexes() {
-        DBCollection collection = datastore
+        DBCollection collection = getDatastore()
                 .getCollection(MongoMeasurement.class);
         collection.ensureIndex(new BasicDBObject(MongoMeasurement.GEOMETRY,
                                                  "2dsphere"));
+    }
+
+    public <T> T dereference(Class<T> c, Key<T> key) {
+        return key == null ? null : getDatastore().getByKey(c, key);
+    }
+
+    public <T> Iterable<T> dereference(Class<T> c, Iterable<Key<T>> keys) {
+        return dereference(c, Lists.newArrayList(keys));
+    }
+
+    @SuppressWarnings("unchecked")
+    protected <T> Iterable<T> dereference(Class<T> clazz, List<Key<T>> keys) {
+        if (keys == null || keys.isEmpty()) {
+            return Collections.emptyList();
+        }
+        ListMultimap<String, Key<T>> kindMap = getKindMap(clazz, keys);
+        List<Iterable<T>> fetched = Lists.newLinkedList();
+        for (String kind : kindMap.keySet()) {
+            List<Key<T>> kindKeys = kindMap.get(kind);
+            List<Object> objIds = new ArrayList<Object>(kindKeys.size());
+            Class<T> kindClass = clazz == null
+                                 ? (Class<T>) kindKeys.get(0).getKindClass()
+                                 : clazz;
+            for (Key<T> key : kindKeys) {
+                objIds.add(key.getId());
+            }
+            fetched.add(getDatastore()
+                    .find(kind, kindClass)
+                    .disableValidation()
+                    .field(Mapper.ID_KEY)
+                    .in(objIds)
+                    .fetch());
+        }
+        return Iterables.concat(fetched);
+    }
+
+    public <T> Key<T> reference(T entity) {
+        return entity == null ? null : getMapper().getKey(entity);
+    }
+
+    protected <T> ListMultimap<String, Key<T>> getKindMap(Class<T> clazz,
+                                                          List<Key<T>> keys) {
+        ListMultimap<String, Key<T>> kindMap = LinkedListMultimap.create();
+        String clazzKind = (clazz == null) ? null : getMapper()
+                .getCollectionName(clazz);
+        for (Key<T> key : keys) {
+            getMapper().updateKind(key);
+            String kind = key.getKind();
+
+            if (clazzKind != null && !kind.equals(clazzKind)) {
+                throw new IllegalArgumentException(String.format(
+                        "Types are not equal (%s!=%s) for key and method parameter clazz",
+                        clazz, key.getKindClass()));
+            }
+            kindMap.put(kind, key);
+        }
+        return kindMap;
     }
 }

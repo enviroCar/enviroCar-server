@@ -32,11 +32,14 @@ import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
 
 /**
- * TODO JavaDoc
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class TrackWithMeasurments implements Track, Iterable<Measurement> {
-
+    public static final String SENSOR = "sensor";
+    public static final String USER = "user";
+    public static final String BBOX = "bbox";
+    public static final String NAME = "name";
+    public static final String DESCIPTION = "description";
     private Track track;
     private List<Measurement> measurements = Lists.newLinkedList();
 
@@ -50,8 +53,8 @@ public class TrackWithMeasurments implements Track, Iterable<Measurement> {
     }
 
     @Override
-    public Track setName(String name) {
-        return track.setName(name);
+    public void setName(String name) {
+        track.setName(name);
     }
 
     @Override
@@ -60,8 +63,8 @@ public class TrackWithMeasurments implements Track, Iterable<Measurement> {
     }
 
     @Override
-    public Track setDescription(String description) {
-        return track.setDescription(description);
+    public void setDescription(String description) {
+        track.setDescription(description);
     }
 
     @Override
@@ -70,8 +73,8 @@ public class TrackWithMeasurments implements Track, Iterable<Measurement> {
     }
 
     @Override
-    public Track setIdentifier(String id) {
-        return track.setIdentifier(id);
+    public void setIdentifier(String id) {
+        track.setIdentifier(id);
     }
 
     @Override
@@ -80,8 +83,8 @@ public class TrackWithMeasurments implements Track, Iterable<Measurement> {
     }
 
     @Override
-    public Track setUser(User user) {
-        return track.setUser(user);
+    public void setUser(User user) {
+        track.setUser(user);
     }
 
     @Override
@@ -90,33 +93,28 @@ public class TrackWithMeasurments implements Track, Iterable<Measurement> {
     }
 
     @Override
-    public Track setSensor(Sensor track) {
-        return this.track.setSensor(track);
+    public void setSensor(Sensor track) {
+        this.track.setSensor(track);
     }
 
     @Override
-    public Geometry getBbox() {
-        return track.getBbox();
+    public Geometry getBoundingBox() {
+        return track.getBoundingBox();
     }
 
     @Override
-    public Track setBbox(Geometry bbox) {
-        return track.setBbox(bbox);
+    public void setBoundingBox(Geometry bbox) {
+        track.setBoundingBox(bbox);
     }
 
     @Override
-    public Track setBbox(double minx, double miny, double maxx, double maxy) {
-        return track.setBbox(minx, miny, maxx, maxy);
+    public DateTime getCreationTime() {
+        return track.getCreationTime();
     }
 
     @Override
-    public DateTime getCreationDate() {
-        return track.getCreationDate();
-    }
-
-    @Override
-    public DateTime getLastModificationDate() {
-        return track.getLastModificationDate();
+    public DateTime getModificationTime() {
+        return track.getModificationTime();
     }
 
     @Override
@@ -138,5 +136,45 @@ public class TrackWithMeasurments implements Track, Iterable<Measurement> {
 
     public Track getTrack() {
         return track;
+    }
+
+    @Override
+    public boolean hasUser() {
+        return track.hasUser();
+    }
+
+    @Override
+    public boolean hasSensor() {
+        return track.hasSensor();
+    }
+
+    @Override
+    public boolean hasName() {
+        return track.hasName();
+    }
+
+    @Override
+    public boolean hasDescription() {
+        return track.hasDescription();
+    }
+
+    @Override
+    public boolean hasIdentifier() {
+        return track.hasIdentifier();
+    }
+
+    @Override
+    public boolean hasBoundingBox() {
+        return track.hasBoundingBox();
+    }
+
+    @Override
+    public boolean hasCreationTime() {
+        return track.hasCreationTime();
+    }
+
+    @Override
+    public boolean hasModificationTime() {
+        return track.hasModificationTime();
     }
 }

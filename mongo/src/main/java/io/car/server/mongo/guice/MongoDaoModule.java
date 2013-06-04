@@ -19,6 +19,7 @@ package io.car.server.mongo.guice;
 
 import com.google.inject.AbstractModule;
 
+import io.car.server.core.dao.ActivityDao;
 import io.car.server.core.dao.GroupDao;
 import io.car.server.core.dao.MeasurementDao;
 import io.car.server.core.dao.PhenomenonDao;
@@ -26,6 +27,7 @@ import io.car.server.core.dao.SensorDao;
 import io.car.server.core.dao.StatisticsDao;
 import io.car.server.core.dao.TrackDao;
 import io.car.server.core.dao.UserDao;
+import io.car.server.mongo.dao.MongoActivityDao;
 import io.car.server.mongo.dao.MongoGroupDao;
 import io.car.server.mongo.dao.MongoMeasurementDao;
 import io.car.server.mongo.dao.MongoPhenomenonDao;
@@ -47,5 +49,6 @@ public class MongoDaoModule extends AbstractModule {
         bind(SensorDao.class).to(MongoSensorDao.class);
         bind(StatisticsDao.class).to(MongoStatisticsDao.class);
         bind(PhenomenonDao.class).to(MongoPhenomenonDao.class);
+        bind(ActivityDao.class).to(MongoActivityDao.class);
     }
 }

@@ -3,12 +3,6 @@
     "id": "http://schema.envirocar.org/sensor.modify.json#",
     "type": "object",
     "additionalProperties": false,
-    "required": [
-        "name"
-    ],
     "properties": {
-        "name": {
-            "type": "string"
-        }
     }
 }
