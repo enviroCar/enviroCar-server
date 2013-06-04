@@ -36,18 +36,18 @@ public class UserValidator extends AbstractValidator<User> {
         matches("name", user.getName(), NAME_PATTERN);
         matches("mail", user.getMail(), EMAIL_PATTERN);
         isNotNullOrEmpty("token", user.getToken());
-        isNull("created", user.getCreationDate());
-        isNull("modified", user.getLastModificationDate());
+        isNull("created", user.getCreationTime());
+        isNull("modified", user.getModificationTime());
         return user;
     }
 
     @Override
     public User validateUpdate(User user) throws ValidationException {
-        isNullOrMatches("name", user.getName(), NAME_PATTERN);
+        isNull("name", user.getName());
         isNullOrMatches("mail", user.getMail(), EMAIL_PATTERN);
         isNull("token", user.getToken());
-        isNull("created", user.getCreationDate());
-        isNull("modified", user.getLastModificationDate());
+        isNull("created", user.getCreationTime());
+        isNull("modified", user.getModificationTime());
         return user;
     }
 }

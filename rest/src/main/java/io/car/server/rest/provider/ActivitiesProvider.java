@@ -15,21 +15,34 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.core.subscription;
+package io.car.server.rest.provider;
 
-import io.car.server.core.entities.BaseEntity;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.Provider;
+
+import com.fasterxml.jackson.databind.JsonNode;
+
+import io.car.server.core.activities.Activities;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public interface Subscription extends BaseEntity {
-    Subscriber getSubscriber();
+@Provider
+@Produces(MediaType.APPLICATION_JSON)
+public class ActivitiesProvider extends AbstractJsonEntityProvider<Activities> {
 
-    Subscription setSubscriber(Subscriber subscriber);
+    public ActivitiesProvider() {
+        super(Activities.class);
+    }
 
-    SubscriptionFilterParameters getFilters();
+    @Override
+    public Activities read(JsonNode j, MediaType mediaType) {
+        throw new UnsupportedOperationException();
+    }
 
-    Subscription addFilter(SubscriptionFilterParameter filter);
-
-    Subscription removeFilter(SubscriptionFilterParameter filter);
+    @Override
+    public JsonNode write(Activities t, MediaType mediaType) {
+        return getCodingFactory().createActivitiesEncoder().encode(t, mediaType);
+    }
 }

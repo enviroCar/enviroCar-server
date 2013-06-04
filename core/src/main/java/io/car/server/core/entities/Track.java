@@ -25,35 +25,39 @@ import com.vividsolutions.jts.geom.Geometry;
  *
  */
 public interface Track extends BaseEntity {
-    String BBOX = "bbox";
-    String SENSOR = "sensor";
-    String USER = "user";
-    String NAME = "name";
-    String DESCIPTION = "description";
-
     String getName();
 
-    Track setName(String name);
+    void setName(String name);
+
+    boolean hasName();
 
     String getDescription();
 
-    Track setDescription(String description);
+    void setDescription(String description);
+
+    boolean hasDescription();
 
     String getIdentifier();
 
-    Track setIdentifier(String id);
+    void setIdentifier(String id);
+
+    boolean hasIdentifier();
+
+    Geometry getBoundingBox();
+
+    void setBoundingBox(Geometry boundingBox);
+
+    boolean hasBoundingBox();
 
     User getUser();
 
-    Track setUser(User user);
+    void setUser(User user);
+
+    boolean hasUser();
 
     Sensor getSensor();
 
-    Track setSensor(Sensor track);
+    void setSensor(Sensor track);
 
-    Geometry getBbox();
-
-    Track setBbox(Geometry bbox);
-
-    Track setBbox(double minx, double miny, double maxx, double maxy);
+    boolean hasSensor();
 }

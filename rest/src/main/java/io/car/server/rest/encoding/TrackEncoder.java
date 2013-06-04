@@ -53,29 +53,44 @@ public class TrackEncoder extends AbstractEntityEncoder<Track> {
         track.put(GeoJSONConstants.TYPE_KEY,
                   GeoJSONConstants.FEATURE_COLLECTION_TYPE);
         ObjectNode properties = track.putObject(GeoJSONConstants.PROPERTIES_KEY);
-        properties.put(JSONConstants.IDENTIFIER_KEY, t.getIdentifier());
-        if (t.getName() != null) {
+        if (t.hasIdentifier()) {
+            properties.put(JSONConstants.IDENTIFIER_KEY, t.getIdentifier());
+        }
+
+        if (t.hasName()) {
             properties.put(JSONConstants.NAME_KEY, t.getName());
         }
-        if (t.getDescription() != null) {
+        if (t.hasDescription()) {
             properties.put(JSONConstants.DESCRIPTION_KEY, t.getDescription());
         }
-        properties.put(JSONConstants.CREATED_KEY,
-                       getDateTimeFormat().print(t.getCreationDate()));
-        properties.put(JSONConstants.MODIFIED_KEY,
-                       getDateTimeFormat().print(t.getLastModificationDate()));
-        properties.put(JSONConstants.SENSOR_KEY,
-                       sensorEncoder.encode(t.getSensor(), mediaType));
-        properties.put(JSONConstants.USER_KEY,
-                       userEncoder.encode(t.getUser(), mediaType));
+        if (t.hasCreationTime()) {
+            properties.put(JSONConstants.CREATED_KEY,
+                           getDateTimeFormat().print(t.getCreationTime()));
+        }
+        if (t.hasModificationTime()) {
+            properties.put(JSONConstants.MODIFIED_KEY,
+                           getDateTimeFormat()
+                    .print(t.getModificationTime()));
+        }
+        if (t.hasSensor()) {
+            properties.put(JSONConstants.SENSOR_KEY,
+                           sensorEncoder.encode(t.getSensor(), mediaType));
+        }
+        if (t.hasUser()) {
+            properties.put(JSONConstants.USER_KEY,
+                           userEncoder.encode(t.getUser(), mediaType));
+        }
+
         URI measurements = getUriInfo().getAbsolutePathBuilder()
                 .path(TrackResource.MEASUREMENTS).build();
         properties.put(JSONConstants.MEASUREMENTS_KEY,
                        measurements.toString());
+
         URI statistics = getUriInfo().getAbsolutePathBuilder()
                 .path(TrackResource.STATISTICS).build();
         properties.put(JSONConstants.STATISTICS_KEY,
                        statistics.toString());
+
         Measurements values = getService().getMeasurementsByTrack(t, null);
         JsonNode features = measurementsEncoder
                 .encode(values, mediaType)

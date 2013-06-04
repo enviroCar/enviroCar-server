@@ -21,9 +21,9 @@ package io.car.server.core.entities;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface Sensor extends BaseEntity {
-    String NAME = "name";
-
     String getName();
 
-    Sensor setName(String name);
+    void setName(String name);
+
+    boolean hasName();
 }

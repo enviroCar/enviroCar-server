@@ -17,12 +17,12 @@
  */
 package io.car.server.rest.decoding;
 
-import io.car.server.rest.JSONConstants;
 import javax.ws.rs.core.MediaType;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
 import io.car.server.core.entities.Phenomenon;
+import io.car.server.rest.JSONConstants;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
@@ -30,8 +30,9 @@ import io.car.server.core.entities.Phenomenon;
 public class PhenomenonDecoder extends AbstractEntityDecoder<Phenomenon> {
     @Override
     public Phenomenon decode(JsonNode j, MediaType mediaType) {
-        return getEntityFactory().createPhenomenon()
-                .setName(j.path(JSONConstants.NAME_KEY).textValue())
-                .setUnit(j.path(JSONConstants.UNIT_KEY).textValue());
+        Phenomenon p = getEntityFactory().createPhenomenon();
+        p.setName(j.path(JSONConstants.NAME_KEY).textValue());
+        p.setUnit(j.path(JSONConstants.UNIT_KEY).textValue());
+        return p;
     }
 }

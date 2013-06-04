@@ -1,0 +1,34 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "id": "http://schema.envirocar.org/activity.json#",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "time",
+        "user",
+        "type"
+    ],
+    "properties": {
+        "time": {
+            "$ref": "http://schema.envirocar.org/definitions.json#/date-time"
+        },
+        "user": {
+            "$ref": "http://schema.envirocar.org/user.json#"
+        },
+        "type": {
+            "type": "string"
+        },
+        "group": {
+            "$ref": "http://schema.envirocar.org/group.json#"
+        },
+        "track": {
+            "$ref": "http://schema.envirocar.org/track.json#"
+        },
+        "measurement": {
+            "$ref": "http://schema.envirocar.org/measurement.json#"
+        },
+        "other": {
+            "$ref": "http://schema.envirocar.org/user.json#"
+        }
+    }
+}

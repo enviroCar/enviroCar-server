@@ -21,19 +21,21 @@ package io.car.server.core.entities;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface Group extends BaseEntity {
-    String NAME = "name";
-    String DESCRIPTION = "desc";
-    String OWNER = "owner";
-
-    Group setName(String name);
+    void setName(String name);
 
     String getName();
 
-    Group setDescription(String description);
+    boolean hasName();
+
+    void setDescription(String description);
 
     String getDescription();
 
-    Group setOwner(User user);
+    boolean hasDescription();
+
+    void setOwner(User user);
 
     User getOwner();
+
+    boolean hasOwner();
 }

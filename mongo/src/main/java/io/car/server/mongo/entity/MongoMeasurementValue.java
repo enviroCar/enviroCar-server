@@ -17,25 +17,20 @@
  */
 package io.car.server.mongo.entity;
 
-import com.github.jmkgreen.morphia.Key;
 import com.github.jmkgreen.morphia.annotations.Embedded;
 import com.github.jmkgreen.morphia.annotations.Property;
-import com.github.jmkgreen.morphia.annotations.Transient;
-import com.google.inject.Inject;
 
 import io.car.server.core.entities.MeasurementValue;
 import io.car.server.core.entities.Phenomenon;
-import io.car.server.mongo.cache.EntityCache;
 
 @Embedded
 public class MongoMeasurementValue implements MeasurementValue {
+    public static final String VALUE = "value";
+    public static final String PHENOMENON = "phen";
     @Property(VALUE)
     private Object value;
-    @Property(PHENOMENON)
-    private Key<MongoPhenomenon> phenomenon;
-    @Inject
-    @Transient
-    private EntityCache<MongoPhenomenon> phenomenonCache;
+    @Embedded(PHENOMENON)
+    private MongoPhenomenon phenomenon;
 
     @Override
     public Object getValue() {
@@ -43,23 +38,27 @@ public class MongoMeasurementValue implements MeasurementValue {
     }
 
     @Override
-    public MeasurementValue setValue(Object value) {
+    public void setValue(Object value) {
         this.value = value;
-        return this;
     }
 
     @Override
     public Phenomenon getPhenomenon() {
-        return this.phenomenonCache.get(phenomenon);
+        return this.phenomenon;
     }
 
     @Override
-    public MeasurementValue setPhenomenon(Phenomenon phenomenon) {
-        if (phenomenon != null) {
-            this.phenomenon = ((MongoPhenomenon) phenomenon).asKey();
-        } else {
-            this.phenomenon = null;
-        }
-        return this;
+    public void setPhenomenon(Phenomenon phenomenon) {
+        this.phenomenon = (MongoPhenomenon) phenomenon;
+    }
+
+    @Override
+    public boolean hasValue() {
+        return getValue() != null;
+    }
+
+    @Override
+    public boolean hasPhenomenon() {
+        return getPhenomenon() != null;
     }
 }

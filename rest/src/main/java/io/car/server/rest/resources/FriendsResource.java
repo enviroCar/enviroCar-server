@@ -54,7 +54,7 @@ public class FriendsResource extends AbstractResource {
     @Schema(response = Schemas.USERS)
     @Produces(MediaTypes.USERS)
     public Users get() {
-        return user.getFriends();
+        return getService().getFriends(user);
     }
 
     @POST
@@ -72,10 +72,7 @@ public class FriendsResource extends AbstractResource {
     @Path(FRIEND)
     public UserResource friend(@PathParam("friend") String friendName) throws
             UserNotFoundException {
-        User friend = getService().getUser(friendName);
-        if (!user.hasFriend(friend)) {
-            throw new WebApplicationException(Status.NOT_FOUND);
-        }
-        return getResourceFactory().createFriendResource(user, friend);
+        return getResourceFactory().createFriendResource(user, getService()
+                .getFriend(user, friendName));
     }
 }

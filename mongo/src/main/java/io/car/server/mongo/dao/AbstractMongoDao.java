@@ -17,8 +17,6 @@
  */
 package io.car.server.mongo.dao;
 
-
-import org.bson.types.ObjectId;
 import org.joda.time.DateTime;
 
 import com.github.jmkgreen.morphia.Datastore;
@@ -32,7 +30,8 @@ import com.mongodb.WriteResult;
 
 import io.car.server.core.util.PaginatedIterable;
 import io.car.server.core.util.Pagination;
-import io.car.server.mongo.entity.MongoBaseEntity;
+import io.car.server.mongo.MongoDB;
+import io.car.server.mongo.entity.MongoEntityBase;
 
 /**
  * @param <K> the key type
@@ -41,11 +40,13 @@ import io.car.server.mongo.entity.MongoBaseEntity;
  *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public abstract class AbstractMongoDao<E extends MongoBaseEntity<E>, C extends PaginatedIterable<? super E>> {
-    private final BasicDAO<E, ObjectId> dao;
+public abstract class AbstractMongoDao<K, E, C extends PaginatedIterable<? super E>> {
+    private final BasicDAO<E, K> dao;
+    private MongoDB mongoDB;
 
-    public AbstractMongoDao(Class<E> type, Datastore ds) {
-        this.dao = new BasicDAO<E, ObjectId>(type, ds);
+    public AbstractMongoDao(Class<E> type, MongoDB mongoDB) {
+        this.mongoDB = mongoDB;
+        this.dao = new BasicDAO<E, K>(type, this.mongoDB.getDatastore());
     }
 
     protected Query<E> q() {
@@ -56,7 +57,7 @@ public abstract class AbstractMongoDao<E extends MongoBaseEntity<E>, C extends P
         return dao.createUpdateOperations();
     }
 
-    protected E get(ObjectId key) {
+    protected E get(K key) {
         return dao.get(key);
     }
 
@@ -72,7 +73,7 @@ public abstract class AbstractMongoDao<E extends MongoBaseEntity<E>, C extends P
         return dao.save(entity);
     }
 
-    protected UpdateResults<E> update(ObjectId key, UpdateOperations<E> ops) {
+    protected UpdateResults<E> update(K key, UpdateOperations<E> ops) {
         return dao.update(q().field(Mapper.ID_KEY).equal(key), ops);
     }
 
@@ -96,11 +97,33 @@ public abstract class AbstractMongoDao<E extends MongoBaseEntity<E>, C extends P
     protected abstract C createPaginatedIterable(
             Iterable<E> i, Pagination p, long count);
 
-    protected WriteResult delete(ObjectId id) {
+    protected WriteResult delete(K id) {
         return dao.deleteById(id);
     }
 
+    @SuppressWarnings("unchecked")
     protected void updateTimestamp(E e) {
-        update(e.getId(), up().set(MongoBaseEntity.LAST_MODIFIED, new DateTime()));
+        update((K) this.mongoDB.getMapper().getId(e), up()
+                .set(MongoEntityBase.LAST_MODIFIED, new DateTime()));
+    }
+
+    public <T> T dereference(Class<T> c, Key<T> key) {
+        return mongoDB.dereference(c, key);
+    }
+
+    public <T> Iterable<T> dereference(Class<T> c, Iterable<Key<T>> keys) {
+        return mongoDB.dereference(c, keys);
+    }
+
+    public <T> Key<T> reference(T entity) {
+        return mongoDB.reference(entity);
+    }
+
+    public Datastore getDatastore() {
+        return mongoDB.getDatastore();
+    }
+
+    public Mapper getMapper() {
+        return mongoDB.getMapper();
     }
 }

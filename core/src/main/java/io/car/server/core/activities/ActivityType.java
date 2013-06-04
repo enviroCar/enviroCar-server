@@ -15,15 +15,20 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.mongo.cache;
-
-import io.car.server.mongo.entity.MongoUser;
+package io.car.server.core.activities;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class UserCache extends AbstractEntityCache<MongoUser> {
-    public UserCache() {
-        super(MongoUser.class);
-    }
+public enum ActivityType {
+    CHANGED_PROFILE,
+    CREATED_GROUP,
+    CHANGED_GROUP,
+    JOINED_GROUP,
+    LEAVED_GROUP,
+    DELETED_GROUP,
+    FRIENDED_USER,
+    UNFRIENDED_USER,
+    CREATED_MEASUREMENT,
+    CREATED_TRACK
 }

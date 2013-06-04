@@ -15,25 +15,29 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.core.subscription;
+package io.car.server.core.activities;
 
-import io.car.server.core.entities.BaseEntity;
+import org.joda.time.DateTime;
+
+import io.car.server.core.entities.User;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public interface Subscriber extends BaseEntity {
-    String getName();
+public interface Activity {
+    User getUser();
 
-    Subscriber setName(String name);
+    void setUser(User user);
 
-    String getSecret();
+    boolean hasUser();
 
-    Subscriber setSecret(String secret);
+    ActivityType getType();
 
-    Subscriptions getSubscriptions();
+    void setType(ActivityType type);
 
-    Subscriber addSubscription(Subscription subscription);
+    boolean hasType();
 
-    Subscriber removeSubscription(Subscription subscription);
+    DateTime getTime();
+
+    boolean hasTime();
 }

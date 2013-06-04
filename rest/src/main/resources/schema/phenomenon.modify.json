@@ -4,9 +4,6 @@
     "type": "object",
     "additionalProperties": false,
     "properties": {
-        "name": {
-            "type": "string"
-        },
         "unit": {
             "type": "string"
         }

@@ -21,7 +21,6 @@ import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.jmkgreen.morphia.Datastore;
 import com.github.jmkgreen.morphia.query.UpdateResults;
 import com.google.inject.Inject;
 import com.vividsolutions.jts.geom.Geometry;
@@ -32,6 +31,7 @@ import io.car.server.core.entities.Measurements;
 import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
 import io.car.server.core.util.Pagination;
+import io.car.server.mongo.MongoDB;
 import io.car.server.mongo.entity.MongoMeasurement;
 import io.car.server.mongo.entity.MongoTrack;
 import io.car.server.mongo.entity.MongoUser;
@@ -41,13 +41,13 @@ import io.car.server.mongo.entity.MongoUser;
  * @author Arne de Wall
  *
  */
-public class MongoMeasurementDao extends AbstractMongoDao<MongoMeasurement, Measurements>
+public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasurement, Measurements>
         implements MeasurementDao {
     private static final Logger log = LoggerFactory
             .getLogger(MongoMeasurementDao.class);
     @Inject
-    protected MongoMeasurementDao(Datastore ds) {
-        super(MongoMeasurement.class, ds);
+    protected MongoMeasurementDao(MongoDB mongoDB) {
+        super(MongoMeasurement.class, mongoDB);
     }
 
     @Override
@@ -69,12 +69,14 @@ public class MongoMeasurementDao extends AbstractMongoDao<MongoMeasurement, Meas
 
     @Override
     public Measurements getByPhenomenon(String phenomenon, Pagination p) {
+        //FIXME this one won't work
         return fetch(q().field(MongoMeasurement.PHENOMENONS).equal(phenomenon), p);
     }
 
     @Override
     public Measurements getByTrack(Track track, Pagination p) {
-        return fetch(q().field(MongoMeasurement.TRACK).equal(track)
+        return fetch(q().field(MongoMeasurement.TRACK)
+                .equal(reference(track))
                 .order(MongoMeasurement.TIME), p);
     }
 
@@ -109,13 +111,15 @@ public class MongoMeasurementDao extends AbstractMongoDao<MongoMeasurement, Meas
 
     @Override
     public Measurements getByUser(User user, Pagination p) {
-        return fetch(q().field(MongoMeasurement.USER).equal(user)
+        return fetch(q()
+                .field(MongoMeasurement.USER)
+                .equal(reference(user))
                 .order(MongoMeasurement.TIME), p);
     }
 
     void removeUser(MongoUser user) {
         UpdateResults<MongoMeasurement> result = update(
-                q().field(MongoMeasurement.USER).equal(user),
+                q().field(MongoMeasurement.USER).equal(reference(user)),
                 up().unset(MongoMeasurement.USER));
         if (result.getHadError()) {
             log.error("Error removing user {} from measurement: {}",
@@ -136,7 +140,7 @@ public class MongoMeasurementDao extends AbstractMongoDao<MongoMeasurement, Meas
 
     void removeTrack(MongoTrack track) {
         UpdateResults<MongoMeasurement> result = update(
-                q().field(MongoMeasurement.TRACK).equal(track),
+                q().field(MongoMeasurement.TRACK).equal(reference(track)),
                 up().unset(MongoMeasurement.TRACK));
         if (result.getHadError()) {
             log.error("Error removing track {} from measurements: {}",

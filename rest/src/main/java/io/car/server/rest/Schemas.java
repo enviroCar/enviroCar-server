@@ -55,6 +55,8 @@ public class Schemas {
                                                    "phenomenon.modify.json#";
     public static final String STATISTICS = PREFIX + "statistics.json#";
     public static final String STATISTIC = PREFIX + "statistic.json#";
+    public static final String ACTIVITY = PREFIX + "activitiy.json#";
+    public static final String ACTIVITIES = PREFIX + "activities.json#";
 
     private Schemas() {
     }

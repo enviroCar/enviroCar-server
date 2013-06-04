@@ -21,42 +21,25 @@ package io.car.server.core.entities;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface User extends BaseEntity {
-    String NAME = "name";
-    String MAIL = "mail";
-    String TOKEN = "token";
-    String IS_ADMIN = "isAdmin";
-    String FRIENDS = "friends";
-    String GROUPS = "groups";
-
     String getName();
 
-    User setName(String name);
+    void setName(String name);
+
+    boolean hasName();
 
     String getMail();
 
-    User setMail(String mail);
+    void setMail(String mail);
+
+    boolean hasMail();
 
     String getToken();
 
-    User setToken(String token);
+    void setToken(String token);
+
+    boolean hasToken();
 
     boolean isAdmin();
 
-    User setAdmin(boolean isAdmin);
-
-    Users getFriends();
-
-    User addFriend(User user);
-
-    User removeFriend(User user);
-
-    boolean hasFriend(User user);
-
-    Groups getGroups();
-
-    User addGroup(Group group);
-
-    User removeGroup(Group group);
-
-    boolean hasGroup(Group group);
+    void setAdmin(boolean isAdmin);
 }

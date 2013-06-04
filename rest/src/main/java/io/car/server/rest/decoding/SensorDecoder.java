@@ -17,12 +17,12 @@
  */
 package io.car.server.rest.decoding;
 
-import io.car.server.rest.JSONConstants;
 import javax.ws.rs.core.MediaType;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
 import io.car.server.core.entities.Sensor;
+import io.car.server.rest.JSONConstants;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
@@ -30,7 +30,8 @@ import io.car.server.core.entities.Sensor;
 public class SensorDecoder extends AbstractEntityDecoder<Sensor> {
     @Override
     public Sensor decode(JsonNode j, MediaType mediaType) {
-        return getEntityFactory().createSensor().setName(j
-                .path(JSONConstants.NAME_KEY).textValue());
+        Sensor s = getEntityFactory().createSensor();
+        s.setName(j.path(JSONConstants.NAME_KEY).textValue());
+        return s;
     }
 }
