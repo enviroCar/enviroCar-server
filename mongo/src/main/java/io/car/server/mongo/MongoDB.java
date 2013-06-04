@@ -29,7 +29,6 @@ import com.github.jmkgreen.morphia.Key;
 import com.github.jmkgreen.morphia.Morphia;
 import com.github.jmkgreen.morphia.converters.DefaultConverters;
 import com.github.jmkgreen.morphia.converters.TypeConverter;
-import com.github.jmkgreen.morphia.ext.guice.GuiceObjectFactory;
 import com.github.jmkgreen.morphia.logging.MorphiaLoggerFactory;
 import com.github.jmkgreen.morphia.logging.slf4j.SLF4JLogrImplFactory;
 import com.github.jmkgreen.morphia.mapping.DefaultCreator;
@@ -78,7 +77,7 @@ public class MongoDB {
             mongo = new MongoClient(new ServerAddress(host, port));
             morphia = new Morphia();
             morphia.getMapper().getOptions().objectFactory =
-                    new GuiceObjectFactory(new DefaultCreator(), injector);
+                    new CustomGuiceObjectFactory(new DefaultCreator(), injector);
             addConverters(converters);
             addMappedClasses(mappedClasses);
             datastore = morphia
