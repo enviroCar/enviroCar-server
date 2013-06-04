@@ -17,10 +17,13 @@
  */
 package io.car.server.mongo.dao;
 
+import java.util.Set;
+
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.github.jmkgreen.morphia.Key;
 import com.github.jmkgreen.morphia.query.Query;
 import com.github.jmkgreen.morphia.query.UpdateResults;
 import com.google.inject.Inject;
@@ -167,8 +170,16 @@ public class MongoGroupDao extends AbstractMongoDao<String, MongoGroup, Groups>
 
     @Override
     public Users getMembers(Group group, Pagination pagination) {
-        /* TODO implement io.car.server.mongo.dao.MongoGroupDao.getMembers() */
-        throw new UnsupportedOperationException("io.car.server.mongo.dao.MongoGroupDao.getMembers() not yet implemented");
+        MongoGroup g = (MongoGroup) group;
+        Set<Key<MongoUser>> memberRefs = g.getMembers();
+        if (memberRefs == null) {
+            MongoGroup g2 = q().field(MongoGroup.NAME).equal(g.getName())
+                    .retrievedFields(true, MongoGroup.MEMBERS).get();
+            if (g2 != null) {
+                memberRefs = g2.getMembers();
+            }
+        }
+        return Users.from(dereference(MongoUser.class, memberRefs)).build();
     }
 
     @Override
