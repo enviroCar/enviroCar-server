@@ -22,7 +22,6 @@ import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.jmkgreen.morphia.Datastore;
 import com.github.jmkgreen.morphia.query.UpdateResults;
 import com.google.inject.Inject;
 
@@ -31,6 +30,7 @@ import io.car.server.core.entities.Group;
 import io.car.server.core.entities.User;
 import io.car.server.core.entities.Users;
 import io.car.server.core.util.Pagination;
+import io.car.server.mongo.MongoDB;
 import io.car.server.mongo.entity.MongoUser;
 
 /**
@@ -46,8 +46,8 @@ public class MongoUserDao extends AbstractMongoDao<String, MongoUser, Users>
     private MongoGroupDao groupDao;
 
     @Inject
-    public MongoUserDao(Datastore datastore) {
-        super(MongoUser.class, datastore);
+    public MongoUserDao(MongoDB mongoDB) {
+        super(MongoUser.class, mongoDB);
     }
 
     @Inject
@@ -56,8 +56,7 @@ public class MongoUserDao extends AbstractMongoDao<String, MongoUser, Users>
     }
 
     @Inject
-    public void setMeasurementDao(
-            MongoMeasurementDao measurementDao) {
+    public void setMeasurementDao(MongoMeasurementDao measurementDao) {
         this.measurementDao = measurementDao;
     }
 

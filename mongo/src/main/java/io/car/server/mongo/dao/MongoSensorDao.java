@@ -17,15 +17,13 @@
  */
 package io.car.server.mongo.dao;
 
-
-
-import com.github.jmkgreen.morphia.Datastore;
 import com.google.inject.Inject;
 
 import io.car.server.core.dao.SensorDao;
 import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.Sensors;
 import io.car.server.core.util.Pagination;
+import io.car.server.mongo.MongoDB;
 import io.car.server.mongo.entity.MongoSensor;
 
 /**
@@ -33,10 +31,9 @@ import io.car.server.mongo.entity.MongoSensor;
  */
 public class MongoSensorDao extends AbstractMongoDao<String, MongoSensor, Sensors>
         implements SensorDao {
-
     @Inject
-    public MongoSensorDao(Datastore ds) {
-        super(MongoSensor.class, ds);
+    public MongoSensorDao(MongoDB mongoDB) {
+        super(MongoSensor.class, mongoDB);
     }
 
     @Override
@@ -48,7 +45,6 @@ public class MongoSensorDao extends AbstractMongoDao<String, MongoSensor, Sensor
     public Sensors get(Pagination p) {
         return fetch(q(), p);
     }
-
 
     @Override
     public Sensor create(Sensor sensor) {

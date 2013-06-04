@@ -19,7 +19,6 @@ package io.car.server.mongo.dao;
 
 import org.bson.types.ObjectId;
 
-import com.github.jmkgreen.morphia.Datastore;
 import com.google.inject.Inject;
 
 import io.car.server.core.activities.Activities;
@@ -28,6 +27,7 @@ import io.car.server.core.activities.ActivityType;
 import io.car.server.core.dao.ActivityDao;
 import io.car.server.core.entities.User;
 import io.car.server.core.util.Pagination;
+import io.car.server.mongo.MongoDB;
 import io.car.server.mongo.activities.MongoActivity;
 
 /**
@@ -36,8 +36,8 @@ import io.car.server.mongo.activities.MongoActivity;
 public class MongoActivityDao extends AbstractMongoDao<ObjectId, MongoActivity, Activities>
         implements ActivityDao {
     @Inject
-    public MongoActivityDao(Datastore ds) {
-        super(MongoActivity.class, ds);
+    public MongoActivityDao(MongoDB mongoDB) {
+        super(MongoActivity.class, mongoDB);
     }
 
     @Override

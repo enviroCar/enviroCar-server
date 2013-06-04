@@ -18,13 +18,13 @@
 package io.car.server.mongo.dao;
 
 
-import com.github.jmkgreen.morphia.Datastore;
 import com.google.inject.Inject;
 
 import io.car.server.core.dao.PhenomenonDao;
 import io.car.server.core.entities.Phenomenon;
 import io.car.server.core.entities.Phenomenons;
 import io.car.server.core.util.Pagination;
+import io.car.server.mongo.MongoDB;
 import io.car.server.mongo.entity.MongoPhenomenon;
 import io.car.server.mongo.entity.MongoSensor;
 
@@ -35,8 +35,8 @@ import io.car.server.mongo.entity.MongoSensor;
 public class MongoPhenomenonDao extends AbstractMongoDao<String, MongoPhenomenon, Phenomenons>
         implements PhenomenonDao {
     @Inject
-    public MongoPhenomenonDao(Datastore datastore) {
-        super(MongoPhenomenon.class, datastore);
+    public MongoPhenomenonDao(MongoDB mongoDB) {
+        super(MongoPhenomenon.class, mongoDB);
     }
 
     @Override

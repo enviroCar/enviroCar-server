@@ -19,7 +19,6 @@ package io.car.server.mongo.dao;
 
 import org.joda.time.DateTime;
 
-import com.github.jmkgreen.morphia.Datastore;
 import com.github.jmkgreen.morphia.Key;
 import com.github.jmkgreen.morphia.dao.BasicDAO;
 import com.github.jmkgreen.morphia.mapping.Mapper;
@@ -30,6 +29,7 @@ import com.mongodb.WriteResult;
 
 import io.car.server.core.util.PaginatedIterable;
 import io.car.server.core.util.Pagination;
+import io.car.server.mongo.MongoDB;
 import io.car.server.mongo.entity.MongoEntityBase;
 
 /**
@@ -41,11 +41,11 @@ import io.car.server.mongo.entity.MongoEntityBase;
  */
 public abstract class AbstractMongoDao<K, E, C extends PaginatedIterable<? super E>> {
     private final BasicDAO<E, K> dao;
-    private final Datastore datastore;
+    private MongoDB mongoDB;
 
-    public AbstractMongoDao(Class<E> type, Datastore ds) {
-        this.datastore = ds;
-        this.dao = new BasicDAO<E, K>(type, this.datastore);
+    public AbstractMongoDao(Class<E> type, MongoDB mongoDB) {
+        this.mongoDB = mongoDB;
+        this.dao = new BasicDAO<E, K>(type, this.mongoDB.getDatastore());
     }
 
     protected Query<E> q() {
@@ -102,7 +102,19 @@ public abstract class AbstractMongoDao<K, E, C extends PaginatedIterable<? super
 
     @SuppressWarnings("unchecked")
     protected void updateTimestamp(E e) {
-        update((K) datastore.getMapper().getId(e), up()
+        update((K) this.mongoDB.getMapper().getId(e), up()
                 .set(MongoEntityBase.LAST_MODIFIED, new DateTime()));
+    }
+
+    public <T> T dereference(Class<T> c, Key<T> key) {
+        return mongoDB.dereference(c, key);
+    }
+
+    public <T> Iterable<T> dereference(Class<T> c, Iterable<Key<T>> keys) {
+        return mongoDB.dereference(c, keys);
+    }
+
+    public <T> Key<T> reference(T entity) {
+        return mongoDB.reference(entity);
     }
 }

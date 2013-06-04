@@ -21,7 +21,6 @@ import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.jmkgreen.morphia.Datastore;
 import com.github.jmkgreen.morphia.query.UpdateResults;
 import com.google.inject.Inject;
 import com.vividsolutions.jts.geom.Geometry;
@@ -32,6 +31,7 @@ import io.car.server.core.entities.Measurements;
 import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
 import io.car.server.core.util.Pagination;
+import io.car.server.mongo.MongoDB;
 import io.car.server.mongo.entity.MongoMeasurement;
 import io.car.server.mongo.entity.MongoTrack;
 import io.car.server.mongo.entity.MongoUser;
@@ -46,8 +46,8 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
     private static final Logger log = LoggerFactory
             .getLogger(MongoMeasurementDao.class);
     @Inject
-    protected MongoMeasurementDao(Datastore ds) {
-        super(MongoMeasurement.class, ds);
+    protected MongoMeasurementDao(MongoDB mongoDB) {
+        super(MongoMeasurement.class, mongoDB);
     }
 
     @Override
