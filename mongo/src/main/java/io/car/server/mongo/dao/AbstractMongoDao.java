@@ -19,6 +19,7 @@ package io.car.server.mongo.dao;
 
 import org.joda.time.DateTime;
 
+import com.github.jmkgreen.morphia.Datastore;
 import com.github.jmkgreen.morphia.Key;
 import com.github.jmkgreen.morphia.dao.BasicDAO;
 import com.github.jmkgreen.morphia.mapping.Mapper;
@@ -116,5 +117,13 @@ public abstract class AbstractMongoDao<K, E, C extends PaginatedIterable<? super
 
     public <T> Key<T> reference(T entity) {
         return mongoDB.reference(entity);
+    }
+
+    public Datastore getDatastore() {
+        return mongoDB.getDatastore();
+    }
+
+    public Mapper getMapper() {
+        return mongoDB.getMapper();
     }
 }

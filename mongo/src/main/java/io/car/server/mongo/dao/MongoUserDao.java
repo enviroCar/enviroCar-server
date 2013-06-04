@@ -132,17 +132,8 @@ public class MongoUserDao extends AbstractMongoDao<String, MongoUser, Users>
 
     @Override
     public Users getFriends(User user) {
-        MongoUser u = (MongoUser) user;
         Iterable<MongoUser> friends;
-        Set<Key<MongoUser>> friendRefs = u.getFriends();
-        if (friendRefs == null) {
-            MongoUser userWithFriends = q()
-                    .field(MongoUser.NAME).equal(u.getName())
-                    .retrievedFields(true, MongoUser.FRIENDS).get();
-            if (userWithFriends != null) {
-                friendRefs = userWithFriends.getFriends();
-            }
-        }
+        Set<Key<MongoUser>> friendRefs = getFriendRefs(user);
         if (friendRefs != null) {
             friends = dereference(MongoUser.class, friendRefs);
         } else {
@@ -153,8 +144,17 @@ public class MongoUserDao extends AbstractMongoDao<String, MongoUser, Users>
 
     @Override
     public User getFriend(User user, String friendName) {
-        /* TODO implement io.car.server.mongo.dao.MongoUserDao.getFriend() */
-        throw new UnsupportedOperationException("io.car.server.mongo.dao.MongoUserDao.getFriend() not yet implemented");
+        Set<Key<MongoUser>> friendRefs = getFriendRefs(user);
+        if (friendRefs != null) {
+            MongoUser f = new MongoUser();
+            f.setName(friendName);
+            Key<MongoUser> friendRef = reference(f);
+            getMapper().updateKind(friendRef);
+            if (friendRefs.contains(friendRef)) {
+                return dereference(MongoUser.class, friendRef);
+            }
+        }
+        return null;
     }
 
     @Override
@@ -176,5 +176,19 @@ public class MongoUserDao extends AbstractMongoDao<String, MongoUser, Users>
     @Override
     protected Users fetch(Query<MongoUser> q, Pagination p) {
         return super.fetch(q.retrievedFields(false, MongoUser.FRIENDS), p);
+    }
+
+    protected Set<Key<MongoUser>> getFriendRefs(User user) {
+        MongoUser u = (MongoUser) user;
+        Set<Key<MongoUser>> friendRefs = u.getFriends();
+        if (friendRefs == null) {
+            MongoUser userWithFriends = q()
+                    .field(MongoUser.NAME).equal(u.getName())
+                    .retrievedFields(true, MongoUser.FRIENDS).get();
+            if (userWithFriends != null) {
+                friendRefs = userWithFriends.getFriends();
+            }
+        }
+        return friendRefs;
     }
 }
