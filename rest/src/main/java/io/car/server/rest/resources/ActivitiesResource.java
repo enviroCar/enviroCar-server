@@ -28,6 +28,7 @@ import com.google.inject.assistedinject.AssistedInject;
 
 import io.car.server.core.activities.Activities;
 import io.car.server.core.activities.ActivityType;
+import io.car.server.core.entities.Group;
 import io.car.server.core.entities.User;
 import io.car.server.core.util.Pagination;
 import io.car.server.rest.MediaTypes;
@@ -42,6 +43,7 @@ import io.car.server.rest.validation.Schema;
  */
 public class ActivitiesResource extends AbstractResource {
     private User user;
+    private Group group;
 
     @AssistedInject
     public ActivitiesResource(@Assisted @Nullable User user) {
@@ -49,8 +51,12 @@ public class ActivitiesResource extends AbstractResource {
     }
 
     @AssistedInject
+    public ActivitiesResource(@Assisted @Nullable Group group) {
+        this.group = group;
+    }
+
+    @AssistedInject
     public ActivitiesResource() {
-        this(null);
     }
 
     @GET
@@ -61,19 +67,24 @@ public class ActivitiesResource extends AbstractResource {
             @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit,
             @QueryParam(RESTConstants.PAGE) @DefaultValue("0") int page) {
         Pagination p = new Pagination(limit, page);
-        if (user == null) {
-            if (type == null) {
-                return getService().getActivities(p);
-            } else {
-                return getService().getActivities(type, p);
-            }
-        } else {
+        if (user != null) {
             if (type == null) {
                 return getService().getActivities(user, p);
             } else {
                 return getService().getActivities(type, user, p);
             }
-
+        } else if (group != null) {
+            if (type == null) {
+                return getService().getActivities(group, p);
+            } else {
+                return getService().getActivities(type, group, p);
+            }
+        } else {
+            if (type == null) {
+                return getService().getActivities(p);
+            } else {
+                return getService().getActivities(type, p);
+            }
         }
     }
 }

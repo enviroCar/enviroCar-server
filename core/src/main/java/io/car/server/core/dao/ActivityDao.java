@@ -24,6 +24,7 @@ package io.car.server.core.dao;
 import io.car.server.core.activities.Activities;
 import io.car.server.core.activities.Activity;
 import io.car.server.core.activities.ActivityType;
+import io.car.server.core.entities.Group;
 import io.car.server.core.entities.User;
 import io.car.server.core.util.Pagination;
 
@@ -40,4 +41,8 @@ public interface ActivityDao {
     Activities get(ActivityType type, Pagination p);
 
     Activities get(ActivityType type, User user, Pagination p);
+
+    Activities get(Group group, Pagination p);
+
+    Activities get(ActivityType type, Group group, Pagination p);
 }

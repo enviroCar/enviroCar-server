@@ -63,9 +63,12 @@ public class GroupEncoder extends AbstractEntityEncoder<Group> {
                 group.put(JSONConstants.MODIFIED_KEY,
                           getDateTimeFormat().print(t.getModificationTime()));
             }
-            URI uri = getUriInfo().getAbsolutePathBuilder()
+            URI members = getUriInfo().getAbsolutePathBuilder()
                     .path(GroupResource.MEMBERS).build();
-            group.put(JSONConstants.MEMBERS_KEY, uri.toString());
+            group.put(JSONConstants.MEMBERS_KEY, members.toString());
+            URI activities = getUriInfo().getAbsolutePathBuilder()
+                    .path(GroupResource.ACTIVITIES).build();
+            group.put(JSONConstants.ACTIVITIES_KEY, activities.toString());
         }
         return group;
     }

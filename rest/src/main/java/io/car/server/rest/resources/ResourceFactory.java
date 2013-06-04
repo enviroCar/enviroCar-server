@@ -75,4 +75,6 @@ public interface ResourceFactory {
     ActivitiesResource createActivitiesResource();
 
     ActivitiesResource createActivitiesResource(@Nullable User user);
+
+    ActivitiesResource createActivitiesResource(@Nullable Group group);
 }

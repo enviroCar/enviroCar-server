@@ -383,4 +383,12 @@ public class Service {
     public Activities getActivities(ActivityType type, User user, Pagination p) {
         return activityDao.get(type, user, p);
     }
+
+    public Activities getActivities(Group user, Pagination p) {
+        return activityDao.get(user, p);
+    }
+
+    public Activities getActivities(ActivityType type, Group user, Pagination p) {
+        return activityDao.get(type, user, p);
+    }
 }

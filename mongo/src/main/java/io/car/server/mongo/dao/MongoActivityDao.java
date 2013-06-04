@@ -17,24 +17,31 @@
  */
 package io.car.server.mongo.dao;
 
+import java.util.Set;
+
 import org.bson.types.ObjectId;
 
+import com.github.jmkgreen.morphia.Key;
 import com.google.inject.Inject;
 
 import io.car.server.core.activities.Activities;
 import io.car.server.core.activities.Activity;
 import io.car.server.core.activities.ActivityType;
 import io.car.server.core.dao.ActivityDao;
+import io.car.server.core.entities.Group;
 import io.car.server.core.entities.User;
 import io.car.server.core.util.Pagination;
 import io.car.server.mongo.MongoDB;
 import io.car.server.mongo.activities.MongoActivity;
+import io.car.server.mongo.entity.MongoUser;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class MongoActivityDao extends AbstractMongoDao<ObjectId, MongoActivity, Activities>
         implements ActivityDao {
+    private MongoGroupDao groupDao;
+
     @Inject
     public MongoActivityDao(MongoDB mongoDB) {
         super(MongoActivity.class, mongoDB);
@@ -71,5 +78,28 @@ public class MongoActivityDao extends AbstractMongoDao<ObjectId, MongoActivity, 
         return fetch(q()
                 .field(MongoActivity.USER).equal(reference(user))
                 .field(MongoActivity.TYPE).equal(type), p);
+    }
+
+    @Override
+    public Activities get(Group group, Pagination p) {
+        Set<Key<MongoUser>> members = this.groupDao.getMemberRefs(group);
+        return fetch(q().field(MongoActivity.USER).in(members), p);
+    }
+
+    @Override
+    public Activities get(ActivityType type, Group group, Pagination p) {
+        Set<Key<MongoUser>> members = this.groupDao.getMemberRefs(group);
+        return fetch(q()
+                .field(MongoActivity.USER).in(members)
+                .field(MongoActivity.TYPE).equal(type), p);
+    }
+
+    public MongoGroupDao getGroupDao() {
+        return groupDao;
+    }
+
+    @Inject
+    public void setGroupDao(MongoGroupDao groupDao) {
+        this.groupDao = groupDao;
     }
 }

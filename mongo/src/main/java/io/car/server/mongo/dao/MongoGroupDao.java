@@ -204,7 +204,7 @@ public class MongoGroupDao extends AbstractMongoDao<String, MongoGroup, Groups>
         return null;
     }
 
-    protected Set<Key<MongoUser>> getMemberRefs(Group group) {
+    public Set<Key<MongoUser>> getMemberRefs(Group group) {
         MongoGroup g = (MongoGroup) group;
         Set<Key<MongoUser>> memberRefs = g.getMembers();
         if (memberRefs == null) {
