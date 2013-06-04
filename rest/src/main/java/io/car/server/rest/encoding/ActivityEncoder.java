@@ -78,7 +78,6 @@ public class ActivityEncoder extends AbstractEntityEncoder<Activity> {
                 root.put(JSONConstants.OTHER_KEY, userEncoder
                         .encode(userActivity.getOther(), mt));
             }
-
         } else if (t instanceof TrackActivity) {
             TrackActivity trackActivity = (TrackActivity) t;
             if (trackActivity.hasTrack()) {

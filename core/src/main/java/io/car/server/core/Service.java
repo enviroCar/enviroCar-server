@@ -20,6 +20,7 @@ package io.car.server.core;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import io.car.server.core.activities.Activities;
 import io.car.server.core.activities.ActivityFactory;
 import io.car.server.core.activities.ActivityType;
 import io.car.server.core.dao.ActivityDao;
@@ -365,5 +366,21 @@ public class Service {
 
     public Groups getGroups(User user, Pagination p) {
         return this.groupDao.getByMember(user, p);
+    }
+
+    public Activities getActivities(Pagination p) {
+        return activityDao.get(p);
+    }
+
+    public Activities getActivities(User user, Pagination p) {
+        return activityDao.get(user, p);
+    }
+
+    public Activities getActivities(ActivityType type, Pagination p) {
+        return activityDao.get(type, p);
+    }
+
+    public Activities getActivities(ActivityType type, User user, Pagination p) {
+        return activityDao.get(type, user, p);
     }
 }
