@@ -178,7 +178,7 @@ public class MongoStatisticsDao implements StatisticsDao {
     }
 
     protected Statistic parseStatistic(DBObject result) {
-        DBObject phenDbo = ((DBRef) result.get(ID_KEY)).fetch();
+        DBObject phenDbo = (DBObject) result.get(ID_KEY);
         Phenomenon phenomenon = (Phenomenon) mongoDB.getMapper()
                 .fromDBObject(MongoPhenomenon.class, phenDbo,
                               mongoDB.getMapper().createEntityCache());
