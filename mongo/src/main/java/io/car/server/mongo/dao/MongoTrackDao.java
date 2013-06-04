@@ -74,7 +74,7 @@ public class MongoTrackDao extends AbstractMongoDao<ObjectId, MongoTrack, Tracks
 
     @Override
     public Tracks getByUser(User user, Pagination p) {
-        return fetch(q().field(MongoTrack.USER).equal(user), p);
+        return fetch(q().field(MongoTrack.USER).equal(reference(user)), p);
     }
 
     @Override
@@ -127,7 +127,7 @@ public class MongoTrackDao extends AbstractMongoDao<ObjectId, MongoTrack, Tracks
 
     void removeUser(MongoUser user) {
         UpdateResults<MongoTrack> result = update(
-                q().field(MongoTrack.USER).equal(user),
+                q().field(MongoTrack.USER).equal(reference(user)),
                 up().unset(MongoTrack.USER));
         if (result.getHadError()) {
             log.error("Error removing user {} from tracks: {}",

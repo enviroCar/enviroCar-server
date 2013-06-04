@@ -22,6 +22,7 @@ import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.github.jmkgreen.morphia.Key;
 import com.github.jmkgreen.morphia.query.UpdateResults;
 import com.google.inject.Inject;
 
@@ -99,9 +100,10 @@ public class MongoUserDao extends AbstractMongoDao<String, MongoUser, Users>
         trackDao.removeUser(user);
         measurementDao.removeUser(user);
         groupDao.removeUser(user);
+        Key<MongoUser> userRef = reference(user);
         UpdateResults<MongoUser> result = update(
-                q().field(MongoUser.FRIENDS).hasThisElement(user),
-                up().removeAll(MongoUser.FRIENDS, user));
+                q().field(MongoUser.FRIENDS).hasThisElement(userRef),
+                up().removeAll(MongoUser.FRIENDS, userRef));
         if (result.getHadError()) {
             log.error("Error removing user {} as friend: {}",
                       u, result.getError());
@@ -140,7 +142,7 @@ public class MongoUserDao extends AbstractMongoDao<String, MongoUser, Users>
     public void addFriend(User user, User friend) {
         MongoUser g = (MongoUser) user;
         update(g.getName(), up()
-                .add(MongoUser.FRIENDS, friend)
+                .add(MongoUser.FRIENDS, reference(friend))
                 .set(MongoUser.LAST_MODIFIED, new DateTime()));
     }
 
@@ -148,7 +150,7 @@ public class MongoUserDao extends AbstractMongoDao<String, MongoUser, Users>
     public void removeFriend(User user, User friend) {
         MongoUser g = (MongoUser) user;
         update(g.getName(), up()
-                .removeAll(MongoUser.FRIENDS, friend)
+                .removeAll(MongoUser.FRIENDS, reference(friend))
                 .set(MongoUser.LAST_MODIFIED, new DateTime()));
     }
 }

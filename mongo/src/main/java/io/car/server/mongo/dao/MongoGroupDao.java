@@ -68,7 +68,7 @@ public class MongoGroupDao extends AbstractMongoDao<String, MongoGroup, Groups>
 
     @Override
     public Groups getByOwner(User owner, Pagination p) {
-        return fetch(q().field(MongoGroup.OWNER).equal(owner), p);
+        return fetch(q().field(MongoGroup.OWNER).equal(reference(owner)), p);
     }
 
     @Override
@@ -115,20 +115,24 @@ public class MongoGroupDao extends AbstractMongoDao<String, MongoGroup, Groups>
 
     @Override
     public Group get(User user, String groupName) {
-        return q().field(MongoGroup.NAME).equal(groupName)
-                .field(MongoGroup.MEMBERS).hasThisElement(user).get();
+        return q()
+                .field(MongoGroup.NAME)
+                .equal(groupName)
+                .field(MongoGroup.MEMBERS)
+                .hasThisElement(reference(user)).get();
     }
 
     @Override
     public Groups getByMember(User user, Pagination p) {
-        return fetch(q().field(MongoGroup.MEMBERS).hasThisElement(user), p);
+        return fetch(q().field(MongoGroup.MEMBERS)
+                .hasThisElement(reference(user)), p);
     }
 
     @Override
     public void removeMember(Group group, User user) {
         MongoGroup g = (MongoGroup) group;
         update(g.getName(), up()
-                .removeAll(MongoGroup.MEMBERS, user)
+                .removeAll(MongoGroup.MEMBERS, reference(user))
                 .set(MongoGroup.LAST_MODIFIED, new DateTime()));
     }
 
@@ -136,13 +140,13 @@ public class MongoGroupDao extends AbstractMongoDao<String, MongoGroup, Groups>
     public void addMember(Group group, User user) {
         MongoGroup g = (MongoGroup) group;
         update(g.getName(), up()
-                .add(MongoGroup.MEMBERS, user)
+                .add(MongoGroup.MEMBERS, reference(user))
                 .set(MongoGroup.LAST_MODIFIED, new DateTime()));
     }
 
     protected void removeOwner(MongoUser user) {
         UpdateResults<MongoGroup> result = update(
-                q().field(MongoGroup.OWNER).equal(user),
+                q().field(MongoGroup.OWNER).equal(reference(user)),
                 up().unset(MongoGroup.OWNER));
 
         if (result.getHadError()) {
@@ -155,9 +159,10 @@ public class MongoGroupDao extends AbstractMongoDao<String, MongoGroup, Groups>
     }
 
     protected void removeMember(MongoUser user) {
+        Key<MongoUser> userRef = reference(user);
         UpdateResults<MongoGroup> result = update(
-                q().field(MongoGroup.MEMBERS).hasThisElement(user),
-                up().removeAll(MongoGroup.MEMBERS, user));
+                q().field(MongoGroup.MEMBERS).hasThisElement(userRef),
+                up().removeAll(MongoGroup.MEMBERS, userRef));
 
         if (result.getHadError()) {
             log.error("Error removing user {} as group member: {}",

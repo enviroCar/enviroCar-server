@@ -58,7 +58,7 @@ public class MongoActivityDao extends AbstractMongoDao<ObjectId, MongoActivity, 
 
     @Override
     public Activities get(User user, Pagination p) {
-        return fetch(q().field(MongoActivity.USER).equal(user), p);
+        return fetch(q().field(MongoActivity.USER).equal(reference(user)), p);
     }
 
     @Override
@@ -69,7 +69,7 @@ public class MongoActivityDao extends AbstractMongoDao<ObjectId, MongoActivity, 
     @Override
     public Activities get(ActivityType type, User user, Pagination p) {
         return fetch(q()
-                .field(MongoActivity.USER).equal(user)
+                .field(MongoActivity.USER).equal(reference(user))
                 .field(MongoActivity.TYPE).equal(type), p);
     }
 }

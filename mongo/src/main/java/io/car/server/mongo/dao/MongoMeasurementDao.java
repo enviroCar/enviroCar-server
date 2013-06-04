@@ -69,12 +69,14 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
 
     @Override
     public Measurements getByPhenomenon(String phenomenon, Pagination p) {
+        //FIXME this one won't work
         return fetch(q().field(MongoMeasurement.PHENOMENONS).equal(phenomenon), p);
     }
 
     @Override
     public Measurements getByTrack(Track track, Pagination p) {
-        return fetch(q().field(MongoMeasurement.TRACK).equal(track)
+        return fetch(q().field(MongoMeasurement.TRACK)
+                .equal(reference(track))
                 .order(MongoMeasurement.TIME), p);
     }
 
@@ -109,13 +111,15 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
 
     @Override
     public Measurements getByUser(User user, Pagination p) {
-        return fetch(q().field(MongoMeasurement.USER).equal(user)
+        return fetch(q()
+                .field(MongoMeasurement.USER)
+                .equal(reference(user))
                 .order(MongoMeasurement.TIME), p);
     }
 
     void removeUser(MongoUser user) {
         UpdateResults<MongoMeasurement> result = update(
-                q().field(MongoMeasurement.USER).equal(user),
+                q().field(MongoMeasurement.USER).equal(reference(user)),
                 up().unset(MongoMeasurement.USER));
         if (result.getHadError()) {
             log.error("Error removing user {} from measurement: {}",
@@ -136,7 +140,7 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
 
     void removeTrack(MongoTrack track) {
         UpdateResults<MongoMeasurement> result = update(
-                q().field(MongoMeasurement.TRACK).equal(track),
+                q().field(MongoMeasurement.TRACK).equal(reference(track)),
                 up().unset(MongoMeasurement.TRACK));
         if (result.getHadError()) {
             log.error("Error removing track {} from measurements: {}",
