@@ -54,6 +54,8 @@ public class UserEncoder extends AbstractEntityEncoder<User> {
                     .path(UserResource.STATISTICS).build();
             URI activities = getUriInfo().getAbsolutePathBuilder()
                     .path(UserResource.ACTIVITIES).build();
+            URI avatar = getUriInfo().getAbsolutePathBuilder()
+                    .path(UserResource.AVATAR).build();
             if (t.hasMail()) {
                 j.put(JSONConstants.MAIL_KEY, t.getMail());
             }
@@ -71,13 +73,13 @@ public class UserEncoder extends AbstractEntityEncoder<User> {
             j.put(JSONConstants.TRACKS_KEY, tracks.toString());
             j.put(JSONConstants.STATISTICS_KEY, statistics.toString());
             j.put(JSONConstants.ACTIVITIES_KEY, activities.toString());
+            j.put(JSONConstants.AVATAR_KEY, avatar.toString());
         } else {
             URI uri = getUriInfo().getBaseUriBuilder()
                     .path(RootResource.class)
                     .path(RootResource.USERS)
                     .path(UsersResource.USER).build(t.getName());
             return j.put(JSONConstants.HREF_KEY, uri.toString());
-
         }
         return j;
     }

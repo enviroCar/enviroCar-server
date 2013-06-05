@@ -24,8 +24,7 @@ import com.google.inject.Injector;
 import com.mongodb.DBObject;
 
 /**
- * TODO JavaDoc
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class CustomGuiceObjectFactory extends GuiceObjectFactory {
     public CustomGuiceObjectFactory(ObjectFactory delegate, Injector injector) {
@@ -33,6 +32,7 @@ public class CustomGuiceObjectFactory extends GuiceObjectFactory {
     }
 
     @Override
+    @SuppressWarnings("rawtypes")
     public Object createInstance(Class clazz, DBObject dbObj) {
         String className = (String) dbObj.get(Mapper.CLASS_NAME_FIELDNAME);
         if (className != null) {
