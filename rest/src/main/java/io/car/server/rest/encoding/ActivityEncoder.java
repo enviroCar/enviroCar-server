@@ -70,8 +70,10 @@ public class ActivityEncoder extends AbstractEntityEncoder<Activity> {
         }
         if (t instanceof GroupActivity) {
             GroupActivity groupActivity = (GroupActivity) t;
-            root.put(JSONConstants.GROUP_KEY, groupEncoder
-                    .encode(groupActivity.getGroup(), mt));
+            if (groupActivity.hasGroup()) {
+                root.put(JSONConstants.GROUP_KEY, groupEncoder
+                        .encode(groupActivity.getGroup(), mt));
+            }
         } else if (t instanceof UserActivity) {
             UserActivity userActivity = (UserActivity) t;
             if (userActivity.hasOther()) {
