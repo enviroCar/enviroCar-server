@@ -213,7 +213,7 @@ public class Service {
             throws UserNotFoundException, GroupNotFoundException {
         this.groupDao.removeMember(group, user);
         this.activityDao.save(activityFactory
-                .createGroupActivity(ActivityType.LEAVED_GROUP, user, group));
+                .createGroupActivity(ActivityType.LEFT_GROUP, user, group));
     }
 
     public Tracks getTracks(Pagination p) {
