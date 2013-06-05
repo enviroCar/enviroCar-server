@@ -63,8 +63,8 @@ public class MongoMeasurement extends MongoEntityBase implements Measurement {
     @Indexed
     @Property(USER)
     private Key<MongoUser> user;
-    @Property(SENSOR)
-    private Key<MongoSensor> sensor;
+    @Embedded(SENSOR)
+    private MongoSensor sensor;
     @Indexed
     @Property(TRACK)
     private Key<MongoTrack> track;
@@ -74,8 +74,6 @@ public class MongoMeasurement extends MongoEntityBase implements Measurement {
     private MongoTrack _track;
     @Transient
     private MongoUser _user;
-    @Transient
-    private MongoSensor _sensor;
 
     @Override
     public Geometry getGeometry() {
@@ -158,17 +156,12 @@ public class MongoMeasurement extends MongoEntityBase implements Measurement {
 
     @Override
     public MongoSensor getSensor() {
-        if (this._sensor == null) {
-            this._sensor = getMongoDB()
-                    .dereference(MongoSensor.class, this.sensor);
-        }
-        return this._sensor;
+        return this.sensor;
     }
 
     @Override
     public void setSensor(Sensor sensor) {
-        this._sensor = (MongoSensor) sensor;
-        this.sensor = getMongoDB().reference(this._sensor);
+        this.sensor = (MongoSensor) sensor;
     }
 
     @Override
