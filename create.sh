@@ -2,9 +2,8 @@
 
 #URL=http://giv-car.uni-muenster.de:8080/dev
 URL=http://localhost:8080/webapp
-
-USERS=5
-GROUPS=5
+USERS=20
+GROUPS=10
 TRACKS=2
 MEASUREMENTS=20
 SENSORS=5

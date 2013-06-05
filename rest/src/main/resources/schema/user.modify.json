@@ -6,6 +6,9 @@
     "properties": {
         "mail": {
             "$ref": "http://schema.envirocar.org/definitions.json#/mail"
+        },
+        "token": {
+            "type": "string"
         }
     }
 }

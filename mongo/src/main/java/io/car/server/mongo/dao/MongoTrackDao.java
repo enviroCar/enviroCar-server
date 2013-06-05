@@ -93,7 +93,7 @@ public class MongoTrackDao extends AbstractMongoDao<ObjectId, MongoTrack, Tracks
     public void delete(Track track) {
         MongoTrack t = (MongoTrack) track;
         measurementDao.removeTrack(t);
-        delete(t);
+        delete(t.getId());
     }
 
     @Override

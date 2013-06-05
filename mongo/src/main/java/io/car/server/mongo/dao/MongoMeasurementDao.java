@@ -64,7 +64,7 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
 
     @Override
     public void delete(Measurement measurement) {
-        delete((MongoMeasurement) measurement);
+        delete(((MongoMeasurement) measurement).getId());
     }
 
     @Override

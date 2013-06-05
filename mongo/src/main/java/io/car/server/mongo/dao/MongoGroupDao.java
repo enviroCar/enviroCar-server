@@ -91,7 +91,7 @@ public class MongoGroupDao extends AbstractMongoDao<String, MongoGroup, Groups>
 
     @Override
     public void delete(Group group) {
-        delete((MongoGroup) group);
+        delete(group.getName());
     }
 
     @Override

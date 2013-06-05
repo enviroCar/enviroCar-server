@@ -146,4 +146,12 @@ public class MongoTrack extends MongoEntityBase implements Track {
     public boolean hasBoundingBox() {
         return getBoundingBox() != null && !getBoundingBox().isEmpty();
     }
+
+    public ObjectId getId() {
+        return id;
+    }
+
+    public void setId(ObjectId id) {
+        this.id = id;
+    }
 }

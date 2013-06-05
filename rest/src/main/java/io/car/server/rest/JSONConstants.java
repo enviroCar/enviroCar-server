@@ -59,4 +59,5 @@ public interface JSONConstants {
     String USER_KEY = "user";
     String USERS_KEY = "users";
     String VALUE_KEY = "value";
+    String AVATAR_KEY = "avatar";
 }

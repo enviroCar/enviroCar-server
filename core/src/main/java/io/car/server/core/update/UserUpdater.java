@@ -17,12 +17,22 @@
  */
 package io.car.server.core.update;
 
+import com.google.inject.Inject;
+
 import io.car.server.core.entities.User;
+import io.car.server.core.util.PasswordEncoder;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class UserUpdater implements EntityUpdater<User> {
+    private final PasswordEncoder encoder;
+
+    @Inject
+    public UserUpdater(PasswordEncoder encoder) {
+        this.encoder = encoder;
+    }
+
     @Override
     public User update(User changes, User original) {
         if (changes.getName() != null) {
@@ -30,6 +40,9 @@ public class UserUpdater implements EntityUpdater<User> {
         }
         if (changes.getMail() != null) {
             original.setMail(changes.getMail());
+        }
+        if (changes.getToken() != null) {
+            original.setToken(encoder.encode(changes.getToken()));
         }
         return original;
     }

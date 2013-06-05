@@ -237,6 +237,11 @@
                 <groupId>com.github.fge</groupId>
                 <version>1.0.2</version>
             </dependency>
+            <dependency>
+                <groupId>commons-codec</groupId>
+                <artifactId>commons-codec</artifactId>
+                <version>1.8</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <build>

@@ -67,7 +67,6 @@ public class JerseyProviderModule extends AbstractModule {
         bind(StatisticProvider.class).in(Scopes.SINGLETON);
         bind(ActivitiesProvider.class).in(Scopes.SINGLETON);
         bind(ActivityProvider.class).in(Scopes.SINGLETON);
-
         bind(JsonNodeProvider.class).in(Scopes.SINGLETON);
 
         bind(IllegalModificationExceptionMapper.class).in(Scopes.SINGLETON);
