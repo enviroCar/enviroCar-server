@@ -192,4 +192,12 @@ public class MongoMeasurement extends MongoEntityBase implements Measurement {
     public boolean hasTrack() {
         return getTrack() != null;
     }
+
+    public ObjectId getId() {
+        return id;
+    }
+
+    public void setId(ObjectId id) {
+        this.id = id;
+    }
 }
