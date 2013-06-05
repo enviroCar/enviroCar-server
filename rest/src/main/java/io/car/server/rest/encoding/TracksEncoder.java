@@ -38,7 +38,6 @@ public class TracksEncoder extends AbstractEntityEncoder<Tracks> {
         UriBuilder b = getUriInfo().getAbsolutePathBuilder()
                 .path(TracksResource.TRACK);
         for (Track u : t) {
-            URI uri = b.build(u.getIdentifier());
             ObjectNode track = tracks.addObject();
             if (u.hasIdentifier()) {
                 track.put(JSONConstants.IDENTIFIER_KEY, u.getIdentifier());
@@ -50,6 +49,7 @@ public class TracksEncoder extends AbstractEntityEncoder<Tracks> {
             if (u.hasName()) {
                 track.put(JSONConstants.NAME_KEY, u.getName());
             }
+            URI uri = b.build(u.getIdentifier());
             track.put(JSONConstants.HREF_KEY, uri.toString());
         }
         return root;

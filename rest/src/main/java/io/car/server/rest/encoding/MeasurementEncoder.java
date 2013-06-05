@@ -87,23 +87,30 @@ public class MeasurementEncoder extends AbstractEntityEncoder<Measurement> {
                                getDateTimeFormat().print(t.getCreationTime()));
             }
         }
-        ObjectNode values = properties.putObject(JSONConstants.PHENOMENONS_KEY);
-        for (MeasurementValue mv : t.getValues()) {
-            if (mv.hasPhenomenon() && mv.hasValue()) {
-                ObjectNode phenomenon = values.objectNode();
-                Object value = mv.getValue();
-                if (value instanceof Number) {
-                    phenomenon.put(JSONConstants.VALUE_KEY, ((Number) value)
-                            .doubleValue());
-                } else if (value instanceof Boolean) {
-                    phenomenon.put(JSONConstants.VALUE_KEY, (Boolean) value);
-                } else if (value != null) {
-                    phenomenon.put(JSONConstants.VALUE_KEY, value.toString());
-                }
-                values.put(mv.getPhenomenon().getName(), phenomenon);
-                if (mv.getPhenomenon().hasUnit()) {
-                    phenomenon.put(JSONConstants.UNIT_KEY, mv.getPhenomenon()
-                            .getUnit());
+        if (mediaType.equals(MediaTypes.MEASUREMENT_TYPE) ||
+            mediaType.equals(MediaTypes.MEASUREMENTS_TYPE) ||
+            mediaType.equals(MediaTypes.TRACK_TYPE)) {
+            ObjectNode values = properties
+                    .putObject(JSONConstants.PHENOMENONS_KEY);
+            for (MeasurementValue mv : t.getValues()) {
+                if (mv.hasPhenomenon() && mv.hasValue()) {
+                    ObjectNode phenomenon = values.objectNode();
+                    Object value = mv.getValue();
+                    if (value instanceof Number) {
+                        phenomenon.put(JSONConstants.VALUE_KEY, ((Number) value)
+                                .doubleValue());
+                    } else if (value instanceof Boolean) {
+                        phenomenon.put(JSONConstants.VALUE_KEY, (Boolean) value);
+                    } else if (value != null) {
+                        phenomenon
+                                .put(JSONConstants.VALUE_KEY, value.toString());
+                    }
+                    values.put(mv.getPhenomenon().getName(), phenomenon);
+                    if (mv.getPhenomenon().hasUnit()) {
+                        phenomenon.put(JSONConstants.UNIT_KEY, mv
+                                .getPhenomenon()
+                                .getUnit());
+                    }
                 }
             }
         }
