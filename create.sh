@@ -1,7 +1,7 @@
 #!/bin/zsh -e
 
-#URL=http://giv-car.uni-muenster.de:8080/dev
-URL=http://localhost:8080/webapp
+URL=http://giv-car.uni-muenster.de:8080/dev
+#URL=http://localhost:8080/webapp
 USERS=20
 GROUPS=10
 TRACKS=2

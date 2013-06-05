@@ -49,6 +49,7 @@ import io.car.server.mongo.entity.MongoEntityBase;
 import io.car.server.mongo.entity.MongoMeasurement;
 import io.car.server.mongo.entity.MongoMeasurementValue;
 import io.car.server.mongo.entity.MongoPhenomenon;
+import io.car.server.mongo.entity.MongoStatistic;
 import io.car.server.mongo.entity.MongoTrack;
 import io.car.server.mongo.entity.MongoUser;
 import io.car.server.mongo.util.Ops;
@@ -172,29 +173,25 @@ public class MongoStatisticsDao implements StatisticsDao {
     }
 
     protected Statistics parseStatistics(Iterable<DBObject> results) {
-        List<Statistic> l = Lists.newLinkedList();
+        List<MongoStatistic> l = Lists.newLinkedList();
         for (DBObject o : results) {
             l.add(parseStatistic(o));
         }
         return Statistics.from(l).build();
     }
 
-    protected Statistic parseStatistic(DBObject result) {
+    protected MongoStatistic parseStatistic(DBObject result) {
         String phenomenonName = (String) result.get(ID_KEY);
         Phenomenon phenomenon = this.phenomenonDao.get(phenomenonName);;
-        long numberOfMeasurements = ((Number) result.get(MEASUREMENTS_KEY))
-                .longValue();
-        List<?> tracks = (List<?>) result.get(TRACKS_KEY);
-        List<?> users = (List<?>) result.get(USERS_KEY);
-        double max = ((Number) result.get(MAX_KEY)).doubleValue();
-        double min = ((Number) result.get(MIN_KEY)).doubleValue();
-        double mean = ((Number) result.get(AVG_KEY)).doubleValue();
-        return new Statistic()
-                .setPhenomenon(phenomenon)
-                .setMeasurements(numberOfMeasurements)
-                .setTracks(tracks.size())
-                .setUsers(users.size())
-                .setMax(max).setMin(min).setMean(mean);
+        MongoStatistic stat = new MongoStatistic();
+        stat.setPhenomenon(phenomenon);
+        stat.setMeasurements(((Number) result.get(MEASUREMENTS_KEY)).longValue());
+        stat.setTracks(((List<?>) result.get(TRACKS_KEY)).size());
+        stat.setUsers(((List<?>) result.get(USERS_KEY)).size());
+        stat.setMax(((Number) result.get(MAX_KEY)).doubleValue());
+        stat.setMin(((Number) result.get(MIN_KEY)).doubleValue());
+        stat.setMean(((Number) result.get(AVG_KEY)).doubleValue());
+        return stat;
     }
 
     protected DBObject group() {
