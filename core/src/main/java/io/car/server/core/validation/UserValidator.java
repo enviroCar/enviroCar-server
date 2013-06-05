@@ -45,7 +45,7 @@ public class UserValidator extends AbstractValidator<User> {
     public User validateUpdate(User user) throws ValidationException {
         isNull("name", user.getName());
         isNullOrMatches("mail", user.getMail(), EMAIL_PATTERN);
-        isNull("token", user.getToken());
+        isNotEmpty("token", user.getToken());
         isNull("created", user.getCreationTime());
         isNull("modified", user.getModificationTime());
         return user;
