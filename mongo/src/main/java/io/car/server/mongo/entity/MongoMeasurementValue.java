@@ -19,6 +19,7 @@ package io.car.server.mongo.entity;
 
 import com.github.jmkgreen.morphia.annotations.Embedded;
 import com.github.jmkgreen.morphia.annotations.Property;
+import com.google.common.base.Objects;
 
 import io.car.server.core.entities.MeasurementValue;
 import io.car.server.core.entities.Phenomenon;
@@ -60,5 +61,31 @@ public class MongoMeasurementValue implements MeasurementValue {
     @Override
     public boolean hasPhenomenon() {
         return getPhenomenon() != null;
+    }
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+                .add(VALUE, value)
+                .add(PHENOMENON, phenomenon)
+                .toString();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(this.value, this.phenomenon);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final MongoMeasurementValue other = (MongoMeasurementValue) obj;
+        return Objects.equal(this.value, other.value) &&
+               Objects.equal(this.phenomenon, other.phenomenon);
     }
 }

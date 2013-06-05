@@ -17,6 +17,8 @@
  */
 package io.car.server.mongo.entity;
 
+import static io.car.server.mongo.entity.MongoMeasurement.IDENTIFIER;
+
 import org.bson.types.ObjectId;
 
 import com.github.jmkgreen.morphia.Key;
@@ -25,6 +27,7 @@ import com.github.jmkgreen.morphia.annotations.Entity;
 import com.github.jmkgreen.morphia.annotations.Id;
 import com.github.jmkgreen.morphia.annotations.Property;
 import com.github.jmkgreen.morphia.annotations.Transient;
+import com.google.common.base.Objects;
 import com.vividsolutions.jts.geom.Geometry;
 
 import io.car.server.core.entities.Sensor;
@@ -153,5 +156,34 @@ public class MongoTrack extends MongoEntityBase implements Track {
 
     public void setId(ObjectId id) {
         this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return toStringHelper()
+                .add(IDENTIFIER, id)
+                .add(NAME, name)
+                .add(DESCRIPTION, description)
+                .add(USER, user)
+                .add(SENSOR, sensor)
+                .add(BBOX, bbox)
+                .toString();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(this.id);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final MongoTrack other = (MongoTrack) obj;
+        return Objects.equal(this.id, other.id);
     }
 }

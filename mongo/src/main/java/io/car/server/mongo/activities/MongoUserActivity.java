@@ -73,4 +73,9 @@ public class MongoUserActivity extends MongoActivity implements UserActivity {
     public boolean hasOther() {
         return getOther() != null;
     }
+
+    @Override
+    public String toString() {
+        return toStringHelper().add(OTHER, other).toString();
+    }
 }

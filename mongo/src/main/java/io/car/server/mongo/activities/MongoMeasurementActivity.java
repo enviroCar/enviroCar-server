@@ -73,4 +73,9 @@ public class MongoMeasurementActivity extends MongoActivity implements
     public boolean hasMeasurement() {
         return getMeasurement() != null;
     }
+
+    @Override
+    public String toString() {
+        return toStringHelper().add(MEASUREMENT, measurement).toString();
+    }
 }

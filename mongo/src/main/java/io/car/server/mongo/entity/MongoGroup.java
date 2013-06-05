@@ -26,6 +26,7 @@ import com.github.jmkgreen.morphia.annotations.Id;
 import com.github.jmkgreen.morphia.annotations.Property;
 import com.github.jmkgreen.morphia.annotations.Transient;
 import com.github.jmkgreen.morphia.mapping.Mapper;
+import com.google.common.base.Objects;
 
 import io.car.server.core.entities.Group;
 import io.car.server.core.entities.User;
@@ -102,5 +103,31 @@ public class MongoGroup extends MongoEntityBase implements Group {
 
     public Set<Key<MongoUser>> getMembers() {
         return members == null ? null : Collections.unmodifiableSet(members);
+    }
+
+    @Override
+    public String toString() {
+        return toStringHelper()
+                .add(NAME, name)
+                .add(OWNER, owner)
+                .add(DESCRIPTION, description)
+                .add(MEMBERS, members).toString();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(this.name);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final MongoGroup other = (MongoGroup) obj;
+        return Objects.equal(this.name, other.name);
     }
 }

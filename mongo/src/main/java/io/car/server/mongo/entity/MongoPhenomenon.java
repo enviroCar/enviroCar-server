@@ -21,6 +21,7 @@ import com.github.jmkgreen.morphia.annotations.Entity;
 import com.github.jmkgreen.morphia.annotations.Id;
 import com.github.jmkgreen.morphia.annotations.Property;
 import com.github.jmkgreen.morphia.mapping.Mapper;
+import com.google.common.base.Objects;
 
 import io.car.server.core.entities.Phenomenon;
 
@@ -64,5 +65,28 @@ public class MongoPhenomenon extends MongoEntityBase implements Phenomenon {
     @Override
     public boolean hasUnit() {
         return getUnit() != null && !getUnit().isEmpty();
+    }
+
+    @Override
+    public String toString() {
+        return toStringHelper()
+                .add(NAME, name).toString();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(this.name);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final MongoPhenomenon other = (MongoPhenomenon) obj;
+        return Objects.equal(this.name, other.name);
     }
 }

@@ -24,6 +24,8 @@ import com.github.jmkgreen.morphia.annotations.Indexed;
 import com.github.jmkgreen.morphia.annotations.PrePersist;
 import com.github.jmkgreen.morphia.annotations.Property;
 import com.github.jmkgreen.morphia.annotations.Transient;
+import com.google.common.base.Objects;
+import com.google.common.base.Objects.ToStringHelper;
 import com.google.inject.Inject;
 
 import io.car.server.core.entities.BaseEntity;
@@ -90,5 +92,12 @@ public abstract class MongoEntityBase implements BaseEntity {
     @Inject
     public void setMongoDB(MongoDB mongoDB) {
         this.mongoDB = mongoDB;
+    }
+
+    protected ToStringHelper toStringHelper() {
+        return Objects.toStringHelper(this)
+                .omitNullValues()
+                .add(CREATION_DATE, this.creationTime)
+                .add(LAST_MODIFIED, this.modificationTime);
     }
 }

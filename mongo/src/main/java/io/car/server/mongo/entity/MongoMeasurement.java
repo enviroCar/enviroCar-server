@@ -30,6 +30,7 @@ import com.github.jmkgreen.morphia.annotations.Indexed;
 import com.github.jmkgreen.morphia.annotations.Property;
 import com.github.jmkgreen.morphia.annotations.Transient;
 import com.github.jmkgreen.morphia.mapping.Mapper;
+import com.google.common.base.Objects;
 import com.google.common.collect.Sets;
 import com.vividsolutions.jts.geom.Geometry;
 
@@ -199,5 +200,35 @@ public class MongoMeasurement extends MongoEntityBase implements Measurement {
 
     public void setId(ObjectId id) {
         this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return toStringHelper()
+                .add(IDENTIFIER, id)
+                .add(TIME, time)
+                .add(GEOMETRY, geometry)
+                .add(USER, user)
+                .add(SENSOR, sensor)
+                .add(TRACK, track)
+                .add(PHENOMENONS, values)
+                .toString();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(this.id);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final MongoMeasurement other = (MongoMeasurement) obj;
+        return Objects.equal(this.id, other.id);
     }
 }

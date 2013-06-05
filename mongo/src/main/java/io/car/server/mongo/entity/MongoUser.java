@@ -110,21 +110,37 @@ public class MongoUser extends MongoEntityBase implements User {
     }
 
     @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                .omitNullValues()
-                .add(NAME, getName())
-                .add(MAIL, getMail())
-                .add(IS_ADMIN, isAdmin())
-                .toString();
-    }
-
-    @Override
     public boolean hasToken() {
         return getToken() != null && !getToken().isEmpty();
     }
 
     public Set<Key<MongoUser>> getFriends() {
         return friends == null ? null : Collections.unmodifiableSet(friends);
+    }
+
+    @Override
+    public String toString() {
+        return toStringHelper()
+                .add(NAME, name)
+                .add(MAIL, mail)
+                .add(IS_ADMIN, isAdmin)
+                .add(FRIENDS, friends).toString();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(this.name);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final MongoUser other = (MongoUser) obj;
+        return Objects.equal(this.name, other.name);
     }
 }

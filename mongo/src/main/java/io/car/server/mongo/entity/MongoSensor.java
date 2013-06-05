@@ -20,6 +20,7 @@ package io.car.server.mongo.entity;
 import com.github.jmkgreen.morphia.annotations.Entity;
 import com.github.jmkgreen.morphia.annotations.Id;
 import com.github.jmkgreen.morphia.mapping.Mapper;
+import com.google.common.base.Objects;
 
 import io.car.server.core.entities.Sensor;
 
@@ -45,5 +46,28 @@ public class MongoSensor extends MongoEntityBase implements Sensor {
     @Override
     public boolean hasName() {
         return getName() != null && !getName().isEmpty();
+    }
+
+    @Override
+    public String toString() {
+        return toStringHelper()
+                .add(NAME, name).toString();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(this.name);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final MongoSensor other = (MongoSensor) obj;
+        return Objects.equal(this.name, other.name);
     }
 }
