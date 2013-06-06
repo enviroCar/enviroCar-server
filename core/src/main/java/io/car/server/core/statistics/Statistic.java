@@ -24,78 +24,21 @@ package io.car.server.core.statistics;
 import io.car.server.core.entities.Phenomenon;
 
 /**
- *
- * @author jan
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class Statistic {
-    private Phenomenon phenomenon;
-    private long tracks;
-    private long users;
-    private long measurements;
-    private double mean;
-    private double min;
-    private double max;
+public interface Statistic {
 
-    public Phenomenon getPhenomenon() {
-        return phenomenon;
-    }
+    double getMax();
 
-    public Statistic setPhenomenon(Phenomenon phenomenon) {
-        this.phenomenon = phenomenon;
-        return this;
-    }
+    double getMean();
 
-    public long getMeasurements() {
-        return measurements;
-    }
+    double getMin();
 
-    public Statistic setMeasurements(long measurements) {
-        this.measurements = measurements;
-        return this;
-    }
+    long getTracks();
 
-    public long getUsers() {
-        return users;
-    }
+    long getUsers();
 
-    public Statistic setUsers(long users) {
-        this.users = users;
-        return this;
-    }
+    long getMeasurements();
 
-    public long getTracks() {
-        return tracks;
-    }
-
-    public Statistic setTracks(long tracks) {
-        this.tracks = tracks;
-        return this;
-    }
-
-    public double getMean() {
-        return mean;
-    }
-
-    public Statistic setMean(double mean) {
-        this.mean = mean;
-        return this;
-    }
-
-    public double getMin() {
-        return min;
-    }
-
-    public Statistic setMin(double min) {
-        this.min = min;
-        return this;
-    }
-
-    public double getMax() {
-        return max;
-    }
-
-    public Statistic setMax(double max) {
-        this.max = max;
-        return this;
-    }
+    Phenomenon getPhenomenon();
 }

@@ -74,4 +74,9 @@ public class MongoTrackActivity extends MongoActivity implements TrackActivity {
     public boolean hasTrack() {
         return getTrack() != null;
     }
+
+    @Override
+    public String toString() {
+        return toStringHelper().add(TRACK, track).toString();
+    }
 }

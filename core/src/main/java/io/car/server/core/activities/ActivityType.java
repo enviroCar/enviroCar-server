@@ -25,7 +25,7 @@ public enum ActivityType {
     CREATED_GROUP,
     CHANGED_GROUP,
     JOINED_GROUP,
-    LEAVED_GROUP,
+    LEFT_GROUP,
     DELETED_GROUP,
     FRIENDED_USER,
     UNFRIENDED_USER,

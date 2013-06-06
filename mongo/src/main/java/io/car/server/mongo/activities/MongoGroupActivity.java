@@ -75,4 +75,9 @@ public class MongoGroupActivity extends MongoActivity implements GroupActivity {
     public boolean hasGroup() {
         return getGroup() != null;
     }
+
+    @Override
+    public String toString() {
+        return toStringHelper().add(GROUP, group).toString();
+    }
 }
