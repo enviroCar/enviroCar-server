@@ -21,20 +21,37 @@
  */
 package io.car.server.mongo.entity;
 
+import com.github.jmkgreen.morphia.annotations.Embedded;
+import com.github.jmkgreen.morphia.annotations.Property;
+
 import io.car.server.core.entities.Phenomenon;
 import io.car.server.core.statistics.Statistic;
 
 /**
- *
  * @author jan
  */
+@Embedded
 public class MongoStatistic implements Statistic {
-    private Phenomenon phenomenon;
+    public static final String MIN = "min";
+    public static final String MAX = "max";
+    public static final String MEAN = "mean";
+    public static final String USERS = "users";
+    public static final String MEASUREMENTS = "measurements";
+    public static final String TRACKS = "tracks";
+    public static final String PHENOMENON = "phenomenon";
+    @Embedded
+    private MongoPhenomenon phenomenon;
+    @Property(TRACKS)
     private long tracks;
+    @Property(USERS)
     private long users;
+    @Property(MEASUREMENTS)
     private long measurements;
+    @Property(MEAN)
     private double mean;
+    @Property(MIN)
     private double min;
+    @Property(MAX)
     private double max;
 
     @Override
@@ -43,7 +60,7 @@ public class MongoStatistic implements Statistic {
     }
 
     public void setPhenomenon(Phenomenon phenomenon) {
-        this.phenomenon = phenomenon;
+        this.phenomenon = (MongoPhenomenon) phenomenon;
     }
 
     @Override

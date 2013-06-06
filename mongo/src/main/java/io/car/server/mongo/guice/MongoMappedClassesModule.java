@@ -32,6 +32,9 @@ import io.car.server.mongo.entity.MongoGroup;
 import io.car.server.mongo.entity.MongoMeasurement;
 import io.car.server.mongo.entity.MongoPhenomenon;
 import io.car.server.mongo.entity.MongoSensor;
+import io.car.server.mongo.entity.MongoStatistic;
+import io.car.server.mongo.entity.MongoStatisticKey;
+import io.car.server.mongo.entity.MongoStatistics;
 import io.car.server.mongo.entity.MongoTrack;
 import io.car.server.mongo.entity.MongoUser;
 
@@ -56,5 +59,8 @@ public class MongoMappedClassesModule extends AbstractModule {
         mb.addBinding().toInstance(MongoMeasurementActivity.class);
         mb.addBinding().toInstance(MongoTrackActivity.class);
         mb.addBinding().toInstance(MongoUserActivity.class);
+        mb.addBinding().toInstance(MongoStatistics.class);
+        mb.addBinding().toInstance(MongoStatistic.class);
+        mb.addBinding().toInstance(MongoStatisticKey.class);
     }
 }
