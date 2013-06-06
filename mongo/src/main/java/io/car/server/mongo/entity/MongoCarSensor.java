@@ -15,19 +15,30 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.core.entities;
+package io.car.server.mongo.entity;
 
-import java.util.Map;
+import com.github.jmkgreen.morphia.annotations.Property;
 
 /**
- * @author Christian Autermann <autermann@uni-muenster.de>
+ * 
+ * @author Arne de Wall
+ *
  */
-public interface Sensor extends BaseEntity {
-    String getName();
-    void setName(String name);
-    boolean hasName();
-    String getType();
-    void setType(String type);
-    Map<String, String> getAttributes();
-    void addAttribute(String key, String val);
+public class MongoCarSensor extends MongoSensor {
+    public static final String MANUFACTURER = "manufactuerer";
+    public static final String MODEL = "model";
+    public static final String FUELTYPE = "fuelType";
+    public static final String CONSTRUCTIONYEAR = "constructionYear";
+    public static final String VIN = "vin";
+    
+    @Property(MANUFACTURER)
+    String manufacturer;
+    @Property(MODEL)
+    String model;
+    @Property(FUELTYPE)
+    String fuelType;
+    @Property(CONSTRUCTIONYEAR)
+    int constructionYear;
+    @Property(VIN)
+    String vin;
 }

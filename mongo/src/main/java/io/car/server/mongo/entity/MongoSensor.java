@@ -17,12 +17,17 @@
  */
 package io.car.server.mongo.entity;
 
+import io.car.server.core.entities.Sensor;
+
+import java.util.Map;
+
+import com.github.jmkgreen.morphia.annotations.Embedded;
 import com.github.jmkgreen.morphia.annotations.Entity;
 import com.github.jmkgreen.morphia.annotations.Id;
+import com.github.jmkgreen.morphia.annotations.Property;
 import com.github.jmkgreen.morphia.mapping.Mapper;
 import com.google.common.base.Objects;
-
-import io.car.server.core.entities.Sensor;
+import com.google.common.collect.Maps;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
@@ -30,8 +35,15 @@ import io.car.server.core.entities.Sensor;
 @Entity("sensors")
 public class MongoSensor extends MongoEntityBase implements Sensor {
     public static final String NAME = Mapper.ID_KEY;
+    public static final String TYPE = "type";
+    public static final String PROPERTIES = "properties";
+    
     @Id
     private String name;
+    @Property(TYPE)
+    private String type;
+    @Embedded(PROPERTIES)
+    private Map<String, String> properties = Maps.newHashMap();
 
     @Override
     public String getName() {
@@ -69,5 +81,25 @@ public class MongoSensor extends MongoEntityBase implements Sensor {
         }
         final MongoSensor other = (MongoSensor) obj;
         return Objects.equal(this.name, other.name);
+    }
+
+    @Override
+    public String getType() {
+        return this.type;
+    }
+
+    @Override
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    @Override
+    public Map<String, String> getAttributes() {
+        return properties;
+    }
+
+    @Override
+    public void addAttribute(String key, String value) {
+        this.properties.put(key, value);
     }
 }

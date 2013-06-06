@@ -17,17 +17,20 @@
  */
 package io.car.server.core.entities;
 
-import java.util.Map;
-
 /**
- * @author Christian Autermann <autermann@uni-muenster.de>
+ * 
+ * @author Arne de Wall
+ *
  */
-public interface Sensor extends BaseEntity {
-    String getName();
-    void setName(String name);
-    boolean hasName();
-    String getType();
-    void setType(String type);
-    Map<String, String> getAttributes();
-    void addAttribute(String key, String val);
+public interface Car extends Sensor {
+    String getManufacturer();
+    void setManufacturere(String manufactuer);
+    String getModel();
+    void setModel(String model);
+    String getFuelType();
+    void setFuelType(String fuelType);
+    String getConstructionYear();
+    void setConstructionYear(String ConstructionYear);
+    String getVIN();
+    void setVIN(String vin);
 }

@@ -17,12 +17,15 @@
  */
 package io.car.server.rest.decoding;
 
+import io.car.server.core.entities.Sensor;
+import io.car.server.rest.JSONConstants;
+
+import java.util.Iterator;
+import java.util.Map.Entry;
+
 import javax.ws.rs.core.MediaType;
 
 import com.fasterxml.jackson.databind.JsonNode;
-
-import io.car.server.core.entities.Sensor;
-import io.car.server.rest.JSONConstants;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
@@ -32,6 +35,11 @@ public class SensorDecoder extends AbstractEntityDecoder<Sensor> {
     public Sensor decode(JsonNode j, MediaType mediaType) {
         Sensor s = getEntityFactory().createSensor();
         s.setName(j.path(JSONConstants.NAME_KEY).textValue());
+        Iterator<Entry<String, JsonNode>> iter = j.fields();
+        while (iter.hasNext()) {
+            Entry<String, JsonNode> attrib = iter.next();
+            s.addAttribute(attrib.getKey(), attrib.getValue().textValue());
+        }
         return s;
     }
 }
