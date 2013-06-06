@@ -30,5 +30,7 @@ public interface SensorDao {
 
     Sensors get(Pagination p);
 
+    Sensors getByType(String type, Pagination p);
+
     Sensor create(Sensor sensor);
 }

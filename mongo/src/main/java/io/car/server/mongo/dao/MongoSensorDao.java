@@ -67,5 +67,8 @@ public class MongoSensorDao extends AbstractMongoDao<ObjectId, MongoSensor, Sens
         return Sensors.from(i).withElements(count).withPagination(p).build();
     }
 
-
+    @Override
+    public Sensors getByType(String type, Pagination p) {
+        return fetch(q().field(MongoSensor.TYPE).equal(type), p);
+    }
 }

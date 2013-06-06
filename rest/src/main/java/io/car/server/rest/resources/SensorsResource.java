@@ -49,8 +49,14 @@ public class SensorsResource extends AbstractResource {
     @Produces(MediaTypes.SENSORS)
     public Sensors get(
             @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit,
-            @QueryParam(RESTConstants.PAGE) @DefaultValue("0") int page) {
-        return getService().getSensors(new Pagination(limit, page));
+            @QueryParam(RESTConstants.PAGE) @DefaultValue("0") int page,
+            @QueryParam(RESTConstants.TYPE) String type) {
+        Pagination p = new Pagination(limit, page);
+        if (type == null) {
+            return getService().getSensors(p);
+        } else {
+            return getService().getSensorsByType(type, p);
+        }
     }
 
     @POST
