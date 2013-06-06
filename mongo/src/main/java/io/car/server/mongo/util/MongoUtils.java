@@ -97,6 +97,22 @@ public class MongoUtils {
         return new BasicDBObject(Ops.PROJECT, fields);
     }
 
+    public static String order(String order, String second, String... orders) {
+        return Joiner.on(',').join(order, second, (Object[]) orders);
+    }
+
+    public static String order(String order, String second) {
+        return order + ',' + second;
+    }
+
+    public static String order(String order) {
+        return order;
+    }
+
+    public static String reverse(String order) {
+        return "-" + order;
+    }
+
     private MongoUtils() {
     }
 }
