@@ -62,9 +62,9 @@ public class MeasurementDecoder extends AbstractEntityDecoder<Measurement> {
         if (j.has(GeoJSONConstants.PROPERTIES_KEY)) {
             JsonNode p = j.path(GeoJSONConstants.PROPERTIES_KEY);
             if (p.has(JSONConstants.SENSOR_KEY)) {
-                measurement.setSensor(sensorDao.getByName(p
+                measurement.setSensor(sensorDao.getByIdentifier(p
                         .path(JSONConstants.SENSOR_KEY)
-                        .path(JSONConstants.NAME_KEY).textValue()));
+                        .path(JSONConstants.IDENTIFIER_KEY).textValue()));
             }
             if (p.has(JSONConstants.TIME_KEY)) {
                 measurement.setTime(getDateTimeFormat().parseDateTime(p

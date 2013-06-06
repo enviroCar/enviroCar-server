@@ -17,17 +17,18 @@
  */
 package io.car.server.rest.encoding;
 
-import java.net.URI;
-
-import javax.ws.rs.core.MediaType;
-
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
 import io.car.server.core.entities.Sensor;
 import io.car.server.rest.JSONConstants;
 import io.car.server.rest.MediaTypes;
 import io.car.server.rest.resources.RootResource;
 import io.car.server.rest.resources.SensorsResource;
+
+import java.net.URI;
+import java.util.Map.Entry;
+
+import javax.ws.rs.core.MediaType;
+
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
@@ -37,8 +38,14 @@ public class SensorEncoder extends AbstractEntityEncoder<Sensor> {
     @Override
     public ObjectNode encode(Sensor t, MediaType mediaType) {
         ObjectNode sensor = getJsonFactory().objectNode();
-        if (t.hasName()) {
-            sensor.put(JSONConstants.NAME_KEY, t.getName());
+        if(t.hasType()){
+            sensor.put(JSONConstants.TYPE_KEY, t.getType());
+        }
+        
+        if(t.hasProperties()){
+            for(Entry<String, Object> attrib : t.getAttributes().entrySet()){
+                sensor.put(attrib.getKey(), attrib.getValue().toString());
+            }
         }
         if (mediaType.equals(MediaTypes.SENSOR_TYPE)) {
             if (t.hasCreationTime()) {
@@ -55,7 +62,7 @@ public class SensorEncoder extends AbstractEntityEncoder<Sensor> {
                     .path(RootResource.class)
                     .path(RootResource.SENSORS)
                     .path(SensorsResource.SENSOR)
-                    .build(t.getName());
+                    .build(t.getIdentifier());
             sensor.put(JSONConstants.HREF_KEY, href.toString());
         }
         return sensor;

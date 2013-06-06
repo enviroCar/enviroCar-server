@@ -17,9 +17,6 @@
  */
 package io.car.server.core;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-
 import io.car.server.core.activities.Activities;
 import io.car.server.core.activities.ActivityFactory;
 import io.car.server.core.activities.ActivityType;
@@ -55,6 +52,9 @@ import io.car.server.core.update.EntityUpdater;
 import io.car.server.core.util.Pagination;
 import io.car.server.core.util.PasswordEncoder;
 import io.car.server.core.validation.EntityValidator;
+
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
@@ -317,10 +317,10 @@ public class Service {
         return this.phenomenonDao.get(p);
     }
 
-    public Sensor getSensorByName(String name) throws SensorNotFoundException {
-        Sensor s = this.sensorDao.getByName(name);
+    public Sensor getSensorByName(String id) throws SensorNotFoundException {
+        Sensor s = this.sensorDao.getByIdentifier(id);
         if (s == null) {
-            throw new SensorNotFoundException(name);
+            throw new SensorNotFoundException(id);
         }
         return s;
     }

@@ -34,11 +34,16 @@ public class SensorDecoder extends AbstractEntityDecoder<Sensor> {
     @Override
     public Sensor decode(JsonNode j, MediaType mediaType) {
         Sensor s = getEntityFactory().createSensor();
-        s.setName(j.path(JSONConstants.NAME_KEY).textValue());
-        Iterator<Entry<String, JsonNode>> iter = j.fields();
+        s.setType(j.path(JSONConstants.TYPE_KEY).textValue());
+        JsonNode properties = j.path(JSONConstants.PROPERTIES_KEY);
+        Iterator<Entry<String, JsonNode>> iter = properties.fields();
         while (iter.hasNext()) {
             Entry<String, JsonNode> attrib = iter.next();
-            s.addAttribute(attrib.getKey(), attrib.getValue().textValue());
+            if(attrib.getKey().equals("constructionYear")){
+                s.addAttribute(attrib.getKey(), attrib.getValue().intValue());
+            } else {
+                s.addAttribute(attrib.getKey(), attrib.getValue().textValue());
+            }
         }
         return s;
     }

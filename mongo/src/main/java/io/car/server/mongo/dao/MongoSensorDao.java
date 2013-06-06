@@ -17,6 +17,8 @@
  */
 package io.car.server.mongo.dao;
 
+import org.bson.types.ObjectId;
+
 import com.google.inject.Inject;
 
 import io.car.server.core.dao.SensorDao;
@@ -29,7 +31,7 @@ import io.car.server.mongo.entity.MongoSensor;
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class MongoSensorDao extends AbstractMongoDao<String, MongoSensor, Sensors>
+public class MongoSensorDao extends AbstractMongoDao<ObjectId, MongoSensor, Sensors>
         implements SensorDao {
     @Inject
     public MongoSensorDao(MongoDB mongoDB) {
@@ -37,8 +39,14 @@ public class MongoSensorDao extends AbstractMongoDao<String, MongoSensor, Sensor
     }
 
     @Override
-    public Sensor getByName(final String name) {
-        return q().field(MongoSensor.NAME).equal(name).get();
+    public Sensor getByIdentifier(String id) {
+        ObjectId oid;
+        try {
+            oid = new ObjectId(id);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+        return get(oid);
     }
 
     @Override
@@ -58,4 +66,6 @@ public class MongoSensorDao extends AbstractMongoDao<String, MongoSensor, Sensor
                                               Pagination p, long count) {
         return Sensors.from(i).withElements(count).withPagination(p).build();
     }
+
+
 }

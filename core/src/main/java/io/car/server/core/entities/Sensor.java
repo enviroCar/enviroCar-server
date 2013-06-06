@@ -23,11 +23,13 @@ import java.util.Map;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface Sensor extends BaseEntity {
-    String getName();
-    void setName(String name);
-    boolean hasName();
     String getType();
     void setType(String type);
-    Map<String, String> getAttributes();
-    void addAttribute(String key, String val);
+    boolean hasType();
+    Map<String, Object> getAttributes();
+    void addAttribute(String key, Object val);
+    boolean hasProperties();
+    String getIdentifier();
+    void setIdentifier(String id);
+    boolean hasIdentifier();
 }

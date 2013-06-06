@@ -60,7 +60,7 @@ public class SensorsResource extends AbstractResource {
     public Response create(Sensor sensor) {
         return Response.created(
                 getUriInfo().getAbsolutePathBuilder()
-                .path(getService().createSensor(sensor).getName())
+                .path(getService().createSensor(sensor).getIdentifier())
                 .build()).build();
     }
 

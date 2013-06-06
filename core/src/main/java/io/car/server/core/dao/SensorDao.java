@@ -26,7 +26,7 @@ import io.car.server.core.util.Pagination;
  * @author Jan Wirwahn <jan.wirwahn@wwu.de>
  */
 public interface SensorDao {
-    Sensor getByName(String name);
+    Sensor getByIdentifier(String identifier);
 
     Sensors get(Pagination p);
 
