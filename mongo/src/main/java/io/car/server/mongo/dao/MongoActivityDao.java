@@ -17,11 +17,14 @@
  */
 package io.car.server.mongo.dao;
 
+import static io.car.server.mongo.util.MongoUtils.reverse;
+
 import java.util.Set;
 
 import org.bson.types.ObjectId;
 
 import com.github.jmkgreen.morphia.Key;
+import com.github.jmkgreen.morphia.query.Query;
 import com.google.inject.Inject;
 
 import io.car.server.core.activities.Activities;
@@ -94,6 +97,7 @@ public class MongoActivityDao extends AbstractMongoDao<ObjectId, MongoActivity, 
                 .field(MongoActivity.TYPE).equal(type), p);
     }
 
+
     public MongoGroupDao getGroupDao() {
         return groupDao;
     }
@@ -101,5 +105,15 @@ public class MongoActivityDao extends AbstractMongoDao<ObjectId, MongoActivity, 
     @Inject
     public void setGroupDao(MongoGroupDao groupDao) {
         this.groupDao = groupDao;
+    }
+
+    @Override
+    protected Iterable<MongoActivity> fetch(Query<MongoActivity> q) {
+        return super.fetch(q.order(reverse(MongoActivity.TIME)));
+    }
+
+    @Override
+    protected Activities fetch(Query<MongoActivity> q, Pagination p) {
+        return super.fetch(q.order(reverse(MongoActivity.TIME)), p);
     }
 }

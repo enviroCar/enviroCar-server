@@ -28,6 +28,7 @@ import com.github.jmkgreen.morphia.annotations.Polymorphic;
 import com.github.jmkgreen.morphia.annotations.Property;
 import com.github.jmkgreen.morphia.annotations.Transient;
 import com.github.jmkgreen.morphia.mapping.Mapper;
+import com.github.jmkgreen.morphia.utils.IndexDirection;
 import com.google.common.base.Objects;
 import com.google.common.base.Objects.ToStringHelper;
 import com.google.inject.Inject;
@@ -52,7 +53,7 @@ public class MongoActivity implements Activity {
     public static final String TIME = "time";
     @Id
     private ObjectId id = new ObjectId();
-    @Indexed
+    @Indexed(IndexDirection.DESC)
     @Property(TIME)
     private DateTime time = new DateTime();
     @Indexed

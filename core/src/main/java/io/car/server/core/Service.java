@@ -104,6 +104,9 @@ public class Service {
         if (userDao.getByName(user.getName()) != null) {
             throw new ResourceAlreadyExistException();
         }
+        if (userDao.getByMail(user.getMail()) != null) {
+            throw new ResourceAlreadyExistException();
+        }
         user.setToken(passwordEncoder.encode(user.getToken()));
         return this.userDao.create(user);
     }
@@ -120,11 +123,18 @@ public class Service {
         return this.userDao.get(p);
     }
 
-    public User modifyUser(User user, User changes)
-            throws UserNotFoundException, IllegalModificationException,
-                   ValidationException {
-        this.userDao.save(this.userUpdater.update(
-                userValidator.validateUpdate(user), user));
+    public User modifyUser(User user, User changes) throws UserNotFoundException,
+                                                           IllegalModificationException,
+                                                           ValidationException,
+                                                           ResourceAlreadyExistException {
+        this.userValidator.validateUpdate(changes);
+        if (changes.hasMail() && !changes.getMail().equals(user.getMail())) {
+            if (this.userDao.getByMail(changes.getMail()) != null) {
+                throw new ResourceAlreadyExistException();
+            }
+        }
+        this.userUpdater.update(changes, user);
+        this.userDao.save(user);
         this.activityDao.save(activityFactory
                 .createActivity(ActivityType.CHANGED_PROFILE, user));
         return user;

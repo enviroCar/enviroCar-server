@@ -38,6 +38,7 @@ import com.google.inject.assistedinject.Assisted;
 
 import io.car.server.core.entities.User;
 import io.car.server.core.exception.IllegalModificationException;
+import io.car.server.core.exception.ResourceAlreadyExistException;
 import io.car.server.core.exception.ResourceNotFoundException;
 import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.core.exception.ValidationException;
@@ -75,7 +76,7 @@ public class UserResource extends AbstractResource {
     @Authenticated
     public Response modify(User changes) throws
             UserNotFoundException, IllegalModificationException,
-            ValidationException {
+            ValidationException, ResourceAlreadyExistException {
         if (!canModifyUser(user)) {
             throw new WebApplicationException(Status.FORBIDDEN);
         }
