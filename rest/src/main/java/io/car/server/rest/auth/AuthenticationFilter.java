@@ -20,10 +20,12 @@ package io.car.server.rest.auth;
 import java.security.Principal;
 
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.SecurityContext;
 
 import com.google.inject.Inject;
+import com.sun.jersey.core.util.Base64;
 import com.sun.jersey.spi.container.ContainerRequest;
 import com.sun.jersey.spi.container.ContainerRequestFilter;
 
@@ -47,11 +49,26 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 
     @Override
     public ContainerRequest filter(ContainerRequest request) {
-        String username = request.getRequestHeaders()
-                .getFirst(AuthConstants.USERNAME_HEADER);
-        String token = request.getRequestHeaders()
-                .getFirst(AuthConstants.TOKEN_HEADER);
+        String username = request.getHeaderValue(AuthConstants.USERNAME_HEADER);
+        String token = request.getHeaderValue(AuthConstants.TOKEN_HEADER);
+        String auth = request.getHeaderValue(HttpHeaders.AUTHORIZATION);
 
+        if (username == null) {
+            if (auth != null) {
+                if (!auth.startsWith("Basic ")) {
+                    throw new WebApplicationException(Status.BAD_REQUEST);
+                }
+                String decoded = new String(Base64.decode(auth
+                        .replaceFirst("Basic ", "")));
+                int sep = decoded.indexOf(':');
+                if (sep >= 0) {
+                    username = decoded.substring(0, sep);
+                    token = decoded.substring(sep + 1);
+                } else {
+                    throw new WebApplicationException(Status.BAD_REQUEST);
+                }
+            }
+        }
         if (username != null) {
             if (username.isEmpty() || token == null || token.isEmpty()) {
                 throw new WebApplicationException(Status.BAD_REQUEST);
