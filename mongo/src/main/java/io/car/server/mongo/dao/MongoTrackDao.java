@@ -144,4 +144,14 @@ public class MongoTrackDao extends AbstractMongoDao<ObjectId, MongoTrack, Tracks
             Pagination p, long count) {
         return Tracks.from(i).withPagination(p).withElements(count).build();
     }
+
+    @Override
+    protected Iterable<MongoTrack> fetch(Query<MongoTrack> q) {
+        return super.fetch(q.order(MongoTrack.RECENTLY_MODIFIED_ORDER));
+    }
+
+    @Override
+    protected Tracks fetch(Query<MongoTrack> q, Pagination p) {
+        return super.fetch(q.order(MongoTrack.RECENTLY_MODIFIED_ORDER), p);
+    }
 }
