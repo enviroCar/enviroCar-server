@@ -18,7 +18,6 @@
 package io.car.server.rest.guice;
 
 import com.google.inject.AbstractModule;
-import com.google.inject.TypeLiteral;
 import com.google.inject.multibindings.Multibinder;
 import com.google.inject.name.Names;
 
@@ -31,8 +30,8 @@ public class JSONSchemaModule extends AbstractModule {
     @Override
     protected void configure() {
         Multibinder<String> mb = Multibinder.newSetBinder(
-                binder(), new TypeLiteral<String>() {
-        }, Names.named(JSONSchemaFactoryProvider.SCHEMAS));
+                binder(), String.class, Names
+                .named(JSONSchemaFactoryProvider.SCHEMAS));
         mb.addBinding().toInstance("/schema/definitions.json");
         mb.addBinding().toInstance("/schema/geometry.json");
         mb.addBinding().toInstance("/schema/group.create.json");
