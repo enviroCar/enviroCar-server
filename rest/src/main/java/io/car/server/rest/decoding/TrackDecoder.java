@@ -50,7 +50,7 @@ public class TrackDecoder extends AbstractEntityDecoder<Track> {
         if (j.has(GeoJSONConstants.PROPERTIES_KEY)) {
             JsonNode p = j.path(GeoJSONConstants.PROPERTIES_KEY);
             if (p.has(JSONConstants.SENSOR_KEY)) {
-                trackSensor = sensorDao.getByName(p
+                trackSensor = sensorDao.getByIdentifier(p
                         .get(JSONConstants.SENSOR_KEY).asText());
                 track.setSensor(trackSensor);
             }

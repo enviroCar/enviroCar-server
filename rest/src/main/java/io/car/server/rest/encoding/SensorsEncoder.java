@@ -44,8 +44,8 @@ public class SensorsEncoder extends AbstractEntityEncoder<Sensors> {
 
         for (Sensor u : t) {
             sensors.addObject()
-                    .put(JSONConstants.HREF_KEY, b.build(u.getName()).toString())
-                    .put(JSONConstants.NAME_KEY, u.getName());
+                    .put(JSONConstants.HREF_KEY, b.build(u.getIdentifier()).toString())
+                    .put(JSONConstants.IDENTIFIER_KEY, u.getIdentifier());
         }
         return root;
     }
