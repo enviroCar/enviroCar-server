@@ -29,9 +29,9 @@ public interface Sensor extends BaseEntity {
 
     boolean hasType();
 
-    Map<String, Object> getAttributes();
+    Map<String, Object> getProperties();
 
-    void addAttribute(String key, Object val);
+    void addProperty(String key, Object val);
 
     boolean hasProperties();
 

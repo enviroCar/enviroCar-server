@@ -44,7 +44,7 @@ public class SensorEncoder extends AbstractEntityEncoder<Sensor> {
         Map<String, Object> properties = Maps.newHashMap();
 
         if (t.hasProperties()) {
-            properties.putAll(t.getAttributes());
+            properties.putAll(t.getProperties());
         }
         properties.put(JSONConstants.IDENTIFIER_KEY, t.getIdentifier());
 

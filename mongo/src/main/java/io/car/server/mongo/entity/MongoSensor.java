@@ -81,12 +81,12 @@ public class MongoSensor extends MongoEntityBase implements Sensor {
     }
 
     @Override
-    public Map<String, Object> getAttributes() {
+    public Map<String, Object> getProperties() {
         return properties;
     }
 
     @Override
-    public void addAttribute(String key, Object value) {
+    public void addProperty(String key, Object value) {
         this.properties.put(key, value);
     }
 
