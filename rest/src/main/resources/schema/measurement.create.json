@@ -27,7 +27,8 @@
             ],
             "properties": {
                 "sensor": {
-                    "$ref": "#/definitions/value-ref"
+                    "type": "string",
+                    "description": "the id of an existing sensor"
                 },
                 "time": {
                     "$ref": "http://schema.envirocar.org/definitions.json#/date-time"
@@ -50,20 +51,6 @@
                             }
                         }
                     }
-                }
-            }
-        }
-    },
-    "definitions": {
-        "value-ref": {
-            "type": "object",
-            "additionalProperties": false,
-            "required": [
-                "name"
-            ],
-            "properties": {
-                "name": {
-                    "type": "string"
                 }
             }
         }

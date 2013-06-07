@@ -118,7 +118,7 @@ for user in {1..$USERS}; do
 					},
 					\"properties\": {
 						\"time\": \"$t\",
-						\"sensor\": { \"name\": \"testsensor$(((($user - 1) % $SENSORS) + 1))\" },
+						\"sensor\": \"testsensor$(((($user - 1) % $SENSORS) + 1))\",
 						\"phenomenons\": {
 							\"testphenomenon1\": { \"value\": $(($RANDOM / 1000.0)) },
 							\"testphenomenon2\": { \"value\": $(($RANDOM / 1000.0)) },
