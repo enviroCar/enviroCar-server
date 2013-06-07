@@ -24,12 +24,20 @@ import java.util.Map;
  */
 public interface Sensor extends BaseEntity {
     String getType();
+
     void setType(String type);
+
     boolean hasType();
+
     Map<String, Object> getAttributes();
+
     void addAttribute(String key, Object val);
+
     boolean hasProperties();
+
     String getIdentifier();
+
     void setIdentifier(String id);
+
     boolean hasIdentifier();
 }
