@@ -95,16 +95,7 @@ public class MeasurementEncoder extends AbstractEntityEncoder<Measurement> {
             for (MeasurementValue mv : t.getValues()) {
                 if (mv.hasPhenomenon() && mv.hasValue()) {
                     ObjectNode phenomenon = values.objectNode();
-                    Object value = mv.getValue();
-                    if (value instanceof Number) {
-                        phenomenon.put(JSONConstants.VALUE_KEY, ((Number) value)
-                                .doubleValue());
-                    } else if (value instanceof Boolean) {
-                        phenomenon.put(JSONConstants.VALUE_KEY, (Boolean) value);
-                    } else if (value != null) {
-                        phenomenon
-                                .put(JSONConstants.VALUE_KEY, value.toString());
-                    }
+                    phenomenon.putPOJO(JSONConstants.VALUE_KEY, mv.getValue());
                     values.put(mv.getPhenomenon().getName(), phenomenon);
                     if (mv.getPhenomenon().hasUnit()) {
                         phenomenon.put(JSONConstants.UNIT_KEY, mv

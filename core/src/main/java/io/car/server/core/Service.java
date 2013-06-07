@@ -17,6 +17,8 @@
  */
 package io.car.server.core;
 
+import java.util.Set;
+
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -36,6 +38,7 @@ import io.car.server.core.entities.Measurement;
 import io.car.server.core.entities.Measurements;
 import io.car.server.core.entities.Phenomenon;
 import io.car.server.core.entities.Phenomenons;
+import io.car.server.core.entities.PropertyFilter;
 import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.Sensors;
 import io.car.server.core.entities.Track;
@@ -327,16 +330,16 @@ public class Service {
         return this.phenomenonDao.get(p);
     }
 
-    public Sensor getSensorByName(String name) throws SensorNotFoundException {
-        Sensor s = this.sensorDao.getByName(name);
+    public Sensor getSensorByName(String id) throws SensorNotFoundException {
+        Sensor s = this.sensorDao.getByIdentifier(id);
         if (s == null) {
-            throw new SensorNotFoundException(name);
+            throw new SensorNotFoundException(id);
         }
         return s;
     }
 
-    public Sensors getSensors(Pagination p) {
-        return this.sensorDao.get(p);
+    public Sensors getSensors(Set<PropertyFilter> filters, Pagination p) {
+        return this.sensorDao.get(filters, p);
     }
 
     public Sensor createSensor(Sensor sensor) {
@@ -400,5 +403,10 @@ public class Service {
 
     public Activities getActivities(ActivityType type, Group user, Pagination p) {
         return activityDao.get(type, user, p);
+    }
+
+    public Sensors getSensorsByType(String type, Set<PropertyFilter> filters,
+                                    Pagination p) {
+        return this.sensorDao.getByType(type, filters, p);
     }
 }

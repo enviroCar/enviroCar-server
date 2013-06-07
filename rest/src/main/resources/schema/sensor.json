@@ -1,22 +1,100 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
     "id": "http://schema.envirocar.org/sensor.json#",
-    "type": "object",
-    "additionalProperties": false,
-    "required": [
-        "name",
-        "created",
-        "modified"
+    "allOf": [
+        {
+            "$ref": "#/definitions/base"
+        },
+        {
+            "$ref": "#/definitions/with-id"
+        },
+        {
+            "oneOf": [
+                {
+                    "not": {
+                        "$ref": "#/definitions/car-type"
+                    }
+                },
+                {
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/car-type"
+                        },
+                        {
+                            "$ref": "#/definitions/car-properties"
+                        }
+                    ]
+                }
+            ]
+        }
     ],
-    "properties": {
-        "created": {
-            "$ref": "http://schema.envirocar.org/definitions.json#/date-time"
+    "definitions": {
+        "base": {
+            "type": "object",
+            "required": [
+                "type",
+                "properties"
+            ],
+            "properties": {
+                "type": {
+                    "type": "string"
+                },
+                "properties": {
+                    "type": "object"
+                }
+            }
         },
-        "modified": {
-            "$ref": "http://schema.envirocar.org/definitions.json#/date-time"
+        "with-id": {
+            "properties": {
+                "properties": {
+                    "required": [
+                        "id"
+                    ],
+                    "properties": {
+                        "id": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
         },
-        "name": {
-            "type": "string"
+        "car-type": {
+            "properties": {
+                "type": {
+                    "enum": [
+                        "car"
+                    ]
+                }
+            }
+        },
+        "car-properties": {
+            "properties": {
+                "properties": {
+                    "properties": {
+                        "manufacturer": {
+                            "type": "string"
+                        },
+                        "model": {
+                            "type": "string"
+                        },
+                        "fuelType": {
+                            "type": "string",
+                            "enum": [
+                                "diesel",
+                                "gasolene",
+                                "electric"
+                            ]
+                        },
+                        "constructionYear": {
+                            "type": "integer",
+                            "minimum": 0
+                        },
+                        "VIN": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
         }
     }
 }
