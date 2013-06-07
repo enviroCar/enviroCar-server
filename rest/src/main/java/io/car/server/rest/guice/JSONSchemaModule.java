@@ -49,7 +49,6 @@ public class JSONSchemaModule extends AbstractModule {
         mb.addBinding().toInstance("/schema/root.json");
         mb.addBinding().toInstance("/schema/sensor.create.json");
         mb.addBinding().toInstance("/schema/sensor.json");
-        mb.addBinding().toInstance("/schema/sensor.modify.json");
         mb.addBinding().toInstance("/schema/sensors.json");
         mb.addBinding().toInstance("/schema/track.create.json");
         mb.addBinding().toInstance("/schema/track.json");

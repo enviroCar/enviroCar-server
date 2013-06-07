@@ -17,6 +17,9 @@
  */
 package io.car.server.core.dao;
 
+import java.util.Set;
+
+import io.car.server.core.entities.PropertyFilter;
 import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.Sensors;
 import io.car.server.core.util.Pagination;
@@ -26,9 +29,11 @@ import io.car.server.core.util.Pagination;
  * @author Jan Wirwahn <jan.wirwahn@wwu.de>
  */
 public interface SensorDao {
-    Sensor getByName(String name);
+    Sensor getByIdentifier(String identifier);
 
-    Sensors get(Pagination p);
+    Sensors get(Set<PropertyFilter> filters, Pagination p);
+
+    Sensors getByType(String type, Set<PropertyFilter> filters, Pagination p);
 
     Sensor create(Sensor sensor);
 }
