@@ -17,6 +17,8 @@
  */
 package io.car.server.mongo.entity;
 
+import static io.car.server.mongo.util.MongoUtils.reverse;
+
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
@@ -24,6 +26,7 @@ import com.github.jmkgreen.morphia.annotations.Indexed;
 import com.github.jmkgreen.morphia.annotations.PrePersist;
 import com.github.jmkgreen.morphia.annotations.Property;
 import com.github.jmkgreen.morphia.annotations.Transient;
+import com.github.jmkgreen.morphia.utils.IndexDirection;
 import com.google.common.base.Objects;
 import com.google.common.base.Objects.ToStringHelper;
 import com.google.inject.Inject;
@@ -37,12 +40,14 @@ import io.car.server.mongo.MongoDB;
 public abstract class MongoEntityBase implements BaseEntity {
     public static final String CREATION_DATE = "created";
     public static final String LAST_MODIFIED = "modified";
+    public static final String RECENTLY_MODIFIED_ORDER = reverse(LAST_MODIFIED);
+    public static final String RECENTLY_CREATED_ORDER = reverse(CREATION_DATE);
     @Transient
     private MongoDB mongoDB;
-    @Indexed
+    @Indexed(IndexDirection.DESC)
     @Property(CREATION_DATE)
     private DateTime creationTime;
-    @Indexed
+    @Indexed(IndexDirection.DESC)
     @Property(LAST_MODIFIED)
     private DateTime modificationTime;
 

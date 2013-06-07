@@ -30,6 +30,7 @@ import com.github.jmkgreen.morphia.annotations.Indexed;
 import com.github.jmkgreen.morphia.annotations.Property;
 import com.github.jmkgreen.morphia.annotations.Transient;
 import com.github.jmkgreen.morphia.mapping.Mapper;
+import com.github.jmkgreen.morphia.utils.IndexDirection;
 import com.google.common.base.Objects;
 import com.google.common.collect.Sets;
 import com.vividsolutions.jts.geom.Geometry;
@@ -58,7 +59,7 @@ public class MongoMeasurement extends MongoEntityBase implements Measurement {
     private ObjectId id = new ObjectId();
     @Property(GEOMETRY)
     private Geometry geometry;
-    @Indexed
+    @Indexed(IndexDirection.ASC)
     @Property(TIME)
     private DateTime time;
     @Indexed
