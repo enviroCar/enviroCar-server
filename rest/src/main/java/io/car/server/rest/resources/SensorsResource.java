@@ -17,6 +17,9 @@
  */
 package io.car.server.rest.resources;
 
+import java.util.List;
+import java.util.Set;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -25,8 +28,12 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
+import com.google.common.collect.Sets;
+
+import io.car.server.core.entities.PropertyFilter;
 import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.Sensors;
 import io.car.server.core.exception.SensorNotFoundException;
@@ -51,11 +58,23 @@ public class SensorsResource extends AbstractResource {
             @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit,
             @QueryParam(RESTConstants.PAGE) @DefaultValue("0") int page,
             @QueryParam(RESTConstants.TYPE) String type) {
+        MultivaluedMap<String, String> queryParameters =
+                getUriInfo().getQueryParameters();
+        queryParameters.remove("limit");
+        queryParameters.remove("page");
+        queryParameters.remove("type");
+        Set<PropertyFilter> filters = Sets.newHashSet();
+        for (String key : queryParameters.keySet()) {
+            List<String> list = queryParameters.get(key);
+            for (String value : list) {
+                filters.add(new PropertyFilter(key, value));
+            }
+        }
         Pagination p = new Pagination(limit, page);
         if (type == null) {
-            return getService().getSensors(p);
+            return getService().getSensors(filters, p);
         } else {
-            return getService().getSensorsByType(type, p);
+            return getService().getSensorsByType(type, filters, p);
         }
     }
 
