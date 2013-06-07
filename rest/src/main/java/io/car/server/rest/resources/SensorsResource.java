@@ -60,11 +60,13 @@ public class SensorsResource extends AbstractResource {
             @QueryParam(RESTConstants.TYPE) String type) {
         MultivaluedMap<String, String> queryParameters =
                 getUriInfo().getQueryParameters();
-        queryParameters.remove("limit");
-        queryParameters.remove("page");
-        queryParameters.remove("type");
         Set<PropertyFilter> filters = Sets.newHashSet();
         for (String key : queryParameters.keySet()) {
+            if (key.equals(RESTConstants.LIMIT) ||
+                key.equals(RESTConstants.PAGE) ||
+                key.equals(RESTConstants.TYPE)) {
+                continue;
+            }
             List<String> list = queryParameters.get(key);
             for (String value : list) {
                 filters.add(new PropertyFilter(key, value));
