@@ -40,7 +40,7 @@
                                 "fuelType",
                                 "constructionYear"
                             ],
-                            "additonalProperties": false
+                            "additionalProperties": false
                         }
                     }
                 }

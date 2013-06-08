@@ -65,7 +65,7 @@ public class TrackDecoder extends AbstractEntityDecoder<Track> {
             for (int i = 0; i < ms.size(); i++) {
                 Measurement m = measurementDecoder.decode(ms.get(i), mediaType);
                 m.setTrack(track);
-                if (m.getSensor() != null) {
+                if (m.getSensor() == null) {
                     m.setSensor(trackSensor);
                 }
                 twm.addMeasurement(m);
