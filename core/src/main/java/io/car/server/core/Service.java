@@ -259,9 +259,6 @@ public class Service {
     public Measurement createMeasurement(Measurement measurement) {
         this.measurementValidator.validateCreate(measurement);
         this.measurementDao.create(measurement);
-        this.activityDao.save(activityFactory
-                .createMeasurementActivity(ActivityType.CREATED_MEASUREMENT,
-                                           measurement.getUser(), measurement));
         return measurement;
     }
 
@@ -270,9 +267,6 @@ public class Service {
         measurement.setTrack(track);
         this.measurementDao.create(measurement);
         this.trackDao.update(track);
-        this.activityDao.save(activityFactory
-                .createMeasurementActivity(ActivityType.CREATED_MEASUREMENT,
-                                           measurement.getUser(), measurement));
         return measurement;
     }
 

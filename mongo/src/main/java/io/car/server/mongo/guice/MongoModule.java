@@ -30,7 +30,6 @@ import com.mongodb.MongoClient;
 import io.car.server.core.activities.Activity;
 import io.car.server.core.activities.ActivityFactory;
 import io.car.server.core.activities.GroupActivity;
-import io.car.server.core.activities.MeasurementActivity;
 import io.car.server.core.activities.TrackActivity;
 import io.car.server.core.activities.UserActivity;
 import io.car.server.core.entities.EntityFactory;
@@ -44,7 +43,6 @@ import io.car.server.core.entities.User;
 import io.car.server.mongo.MongoDB;
 import io.car.server.mongo.activities.MongoActivity;
 import io.car.server.mongo.activities.MongoGroupActivity;
-import io.car.server.mongo.activities.MongoMeasurementActivity;
 import io.car.server.mongo.activities.MongoTrackActivity;
 import io.car.server.mongo.activities.MongoUserActivity;
 import io.car.server.mongo.entity.MongoGroup;
@@ -73,7 +71,6 @@ public class MongoModule extends AbstractModule {
         install(new FactoryModuleBuilder()
                 .implement(Activity.class, MongoActivity.class)
                 .implement(GroupActivity.class, MongoGroupActivity.class)
-                .implement(MeasurementActivity.class, MongoMeasurementActivity.class)
                 .implement(TrackActivity.class, MongoTrackActivity.class)
                 .implement(UserActivity.class, MongoUserActivity.class)
                 .build(ActivityFactory.class));

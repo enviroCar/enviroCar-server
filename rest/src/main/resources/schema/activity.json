@@ -29,9 +29,6 @@
             "$ref": "#/definitions/track-activity"
         },
         {
-            "$ref": "#/definitions/measurement-activity"
-        },
-        {
             "$ref": "#/definitions/user-activity"
         }
     ],
@@ -48,18 +45,6 @@
                         "JOINED_GROUP",
                         "LEFT_GROUP",
                         "DELETED_GROUP"
-                    ]
-                }
-            }
-        },
-        "measurement-activity": {
-            "properties": {
-                "measurement": {
-                    "$ref": "http://schema.envirocar.org/definitions.json#/measurement-ref"
-                },
-                "type": {
-                    "enum": [
-                        "CREATED_MEASUREMENT"
                     ]
                 }
             }
