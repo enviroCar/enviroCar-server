@@ -35,14 +35,61 @@ public class UserUpdater implements EntityUpdater<User> {
 
     @Override
     public User update(User changes, User original) {
-        if (changes.getName() != null) {
-            original.setName(changes.getName());
-        }
         if (changes.getMail() != null) {
             original.setMail(changes.getMail());
         }
         if (changes.getToken() != null) {
             original.setToken(encoder.encode(changes.getToken()));
+        }
+        if (changes.getAboutMe() != null) {
+            if (changes.getAboutMe().isEmpty()) {
+                original.setAboutMe(null);
+            } else {
+                original.setAboutMe(changes.getAboutMe());
+            }
+        }
+        if (changes.getCountry() != null) {
+            if (changes.getCountry().isEmpty()) {
+                original.setCountry(null);
+            } else {
+                original.setCountry(changes.getCountry());
+            }
+        }
+        if (changes.getDayOfBirth() != null) {
+            if (changes.getDayOfBirth().isEmpty()) {
+                original.setDayOfBirth(null);
+            } else {
+                original.setDayOfBirth(changes.getDayOfBirth());
+            }
+        }
+        if (changes.getFirstName() != null) {
+            if (changes.getFirstName().isEmpty()) {
+                original.setFirstName(null);
+            } else {
+                original.setFirstName(changes.getFirstName());
+            }
+        }
+        if (changes.getGender() != null) {
+        }
+        if (changes.getLanguage() != null) {
+            if (changes.getLanguage().isEmpty()) {
+                original.setLanguage(null);
+            } else {
+                original.setLanguage(changes.getLanguage());
+            }
+        }
+        if (changes.getLastName() != null) {
+            if (changes.getLastName().isEmpty()) {
+                original.setLastName(null);
+            } else {
+                original.setLastName(changes.getLastName());
+            }
+        }
+        if (changes.getLocation() != null) {
+            original.setLocation(changes.getLocation());
+        }
+        if (changes.getUrl() != null) {
+            original.setUrl(changes.getUrl());
         }
         return original;
     }

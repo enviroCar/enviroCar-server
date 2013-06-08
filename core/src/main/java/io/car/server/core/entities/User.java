@@ -17,6 +17,10 @@
  */
 package io.car.server.core.entities;
 
+import java.net.URL;
+
+import com.vividsolutions.jts.geom.Geometry;
+
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
@@ -42,4 +46,58 @@ public interface User extends BaseEntity {
     boolean isAdmin();
 
     void setAdmin(boolean isAdmin);
+
+    String getCountry();
+
+    void setCountry(String country);
+
+    boolean hasCountry();
+
+    String getDayOfBirth();
+
+    void setDayOfBirth(String dayOfBirth);
+
+    boolean hasDayOfBirth();
+
+    String getFirstName();
+
+    void setFirstName(String firstName);
+
+    boolean hasFirstName();
+
+    Gender getGender();
+
+    void setGender(Gender gender);
+
+    boolean hasGender();
+
+    String getLanguage();
+
+    void setLanguage(String language);
+
+    boolean hasLanguage();
+
+    String getLastName();
+
+    void setLastName(String lastName);
+
+    boolean hasLastName();
+
+    Geometry getLocation();
+
+    void setLocation(Geometry location);
+
+    boolean hasLocation();
+
+    URL getUrl();
+
+    void setUrl(URL url);
+
+    boolean hasUrl();
+
+    String getAboutMe();
+
+    void setAboutMe(String aboutMe);
+
+    boolean hasAboutMe();
 }
