@@ -29,6 +29,5 @@ public enum ActivityType {
     DELETED_GROUP,
     FRIENDED_USER,
     UNFRIENDED_USER,
-    CREATED_MEASUREMENT,
     CREATED_TRACK
 }

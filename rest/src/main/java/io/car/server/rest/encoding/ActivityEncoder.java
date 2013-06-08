@@ -24,11 +24,9 @@ import com.google.inject.Inject;
 
 import io.car.server.core.activities.Activity;
 import io.car.server.core.activities.GroupActivity;
-import io.car.server.core.activities.MeasurementActivity;
 import io.car.server.core.activities.TrackActivity;
 import io.car.server.core.activities.UserActivity;
 import io.car.server.core.entities.Group;
-import io.car.server.core.entities.Measurement;
 import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
 import io.car.server.rest.JSONConstants;
@@ -41,17 +39,14 @@ public class ActivityEncoder extends AbstractEntityEncoder<Activity> {
     private final EntityEncoder<User> userEncoder;
     private final EntityEncoder<Track> trackEncoder;
     private final EntityEncoder<Group> groupEncoder;
-    private final EntityEncoder<Measurement> measurementEncoder;
 
     @Inject
     public ActivityEncoder(EntityEncoder<User> userEncoder,
                            EntityEncoder<Track> trackEncoder,
-                           EntityEncoder<Group> groupEncoder,
-                           EntityEncoder<Measurement> measurementEncoder) {
+                           EntityEncoder<Group> groupEncoder) {
         this.userEncoder = userEncoder;
         this.trackEncoder = trackEncoder;
         this.groupEncoder = groupEncoder;
-        this.measurementEncoder = measurementEncoder;
     }
 
     @Override
@@ -85,13 +80,6 @@ public class ActivityEncoder extends AbstractEntityEncoder<Activity> {
             if (trackActivity.hasTrack()) {
                 root.put(JSONConstants.TRACK_KEY, trackEncoder
                         .encode(trackActivity.getTrack(), mt));
-            }
-
-        } else if (t instanceof MeasurementActivity) {
-            MeasurementActivity measurementActivity = (MeasurementActivity) t;
-            if (measurementActivity.hasMeasurement()) {
-                root.put(JSONConstants.MEASUREMENT_KEY, measurementEncoder
-                        .encode(measurementActivity.getMeasurement(), mt));
             }
         }
         return root;

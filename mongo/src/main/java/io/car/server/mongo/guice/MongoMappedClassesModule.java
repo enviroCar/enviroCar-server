@@ -25,7 +25,6 @@ import com.google.inject.name.Names;
 import io.car.server.mongo.MongoDB;
 import io.car.server.mongo.activities.MongoActivity;
 import io.car.server.mongo.activities.MongoGroupActivity;
-import io.car.server.mongo.activities.MongoMeasurementActivity;
 import io.car.server.mongo.activities.MongoTrackActivity;
 import io.car.server.mongo.activities.MongoUserActivity;
 import io.car.server.mongo.entity.MongoGroup;
@@ -56,7 +55,6 @@ public class MongoMappedClassesModule extends AbstractModule {
         mb.addBinding().toInstance(MongoSensor.class);
         mb.addBinding().toInstance(MongoActivity.class);
         mb.addBinding().toInstance(MongoGroupActivity.class);
-        mb.addBinding().toInstance(MongoMeasurementActivity.class);
         mb.addBinding().toInstance(MongoTrackActivity.class);
         mb.addBinding().toInstance(MongoUserActivity.class);
         mb.addBinding().toInstance(MongoStatistics.class);

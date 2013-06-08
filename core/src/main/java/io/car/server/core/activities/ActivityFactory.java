@@ -20,7 +20,6 @@ package io.car.server.core.activities;
 import com.google.inject.assistedinject.Assisted;
 
 import io.car.server.core.entities.Group;
-import io.car.server.core.entities.Measurement;
 import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
 
@@ -34,10 +33,6 @@ public interface ActivityFactory {
     GroupActivity createGroupActivity(ActivityType type,
                                       User user,
                                       Group group);
-
-    MeasurementActivity createMeasurementActivity(ActivityType type,
-                                                  User user,
-                                                  Measurement measurement);
 
     TrackActivity createTrackActivity(ActivityType type,
                                       User user,
