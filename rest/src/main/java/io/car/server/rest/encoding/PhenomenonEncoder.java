@@ -40,10 +40,10 @@ public class PhenomenonEncoder extends AbstractEntityEncoder<Phenomenon> {
         if (t.hasName()) {
             phenomenon.put(JSONConstants.NAME_KEY, t.getName());
         }
+        if (t.hasUnit()) {
+            phenomenon.put(JSONConstants.UNIT_KEY, t.getUnit());
+        }
         if (mediaType.equals(MediaTypes.PHENOMENON_TYPE)) {
-            if (t.hasUnit()) {
-                phenomenon.put(JSONConstants.UNIT_KEY, t.getUnit());
-            }
             if (t.hasCreationTime()) {
                 phenomenon.put(JSONConstants.CREATED_KEY, getDateTimeFormat()
                         .print(t.getCreationTime()));
