@@ -136,7 +136,7 @@
             },
             "language": {
                 "type": "string",
-                "regex": "^[a-z]{2}[-_][A-Z]{2}$"
+                "pattern": "^[a-z]{2}[-_][A-Z]{2}$"
             }
         }
     }
