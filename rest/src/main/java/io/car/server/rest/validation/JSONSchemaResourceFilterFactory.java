@@ -180,7 +180,8 @@ public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
 
         @Override
         public ContainerRequest filter(ContainerRequest request) {
-            if (request.getMediaType()
+            if (request.getMediaType() != null &&
+                request.getMediaType()
                     .isCompatible(MediaType.APPLICATION_JSON_TYPE)) {
                 adjustContentType(request);
                 validate(request);
@@ -204,17 +205,15 @@ public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             InputStream in = request.getEntityInputStream();
             try {
-                if (in.available() > 0) {
-                    ReaderWriter.writeTo(in, out);
-                    byte[] requestEntity = out.toByteArray();
-                    ByteArrayInputStream bais =
-                            new ByteArrayInputStream(requestEntity);
-                    request.setEntityInputStream(bais);
-                    String enitity = new String(requestEntity, ReaderWriter
-                            .getCharset(request.getMediaType()));
-                    JSONSchemaResourceFilterFactory.this
-                            .validate(enitity, schema);
-                }
+                ReaderWriter.writeTo(in, out);
+                byte[] requestEntity = out.toByteArray();
+                ByteArrayInputStream bais =
+                        new ByteArrayInputStream(requestEntity);
+                request.setEntityInputStream(bais);
+                String enitity = new String(requestEntity, ReaderWriter
+                        .getCharset(request.getMediaType()));
+                JSONSchemaResourceFilterFactory.this
+                        .validate(enitity, schema);
             } catch (IOException ex) {
                 throw new ContainerException(ex);
             }

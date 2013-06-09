@@ -55,38 +55,58 @@ public class MeasurementEncoder extends AbstractEntityEncoder<Measurement> {
         ObjectNode measurement = getJsonFactory().objectNode();
         measurement.put(GeoJSONConstants.TYPE_KEY,
                         GeoJSONConstants.FEATURE_TYPE);
-        measurement.put(JSONConstants.GEOMETRY_KEY,
-                        geometryEncoder.encodeJSON(t.getGeometry(), mediaType));
+        if (t.hasGeometry()) {
+            measurement.put(JSONConstants.GEOMETRY_KEY,
+                            geometryEncoder
+                    .encodeJSON(t.getGeometry(), mediaType));
+        }
 
         ObjectNode properties = measurement
                 .putObject(GeoJSONConstants.PROPERTIES_KEY);
-        properties.put(JSONConstants.IDENTIFIER_KEY, t.getIdentifier());
-        properties.put(JSONConstants.TIME_KEY,
-                       getDateTimeFormat().print(t.getTime()));
+        if (t.hasIdentifier()) {
+            properties.put(JSONConstants.IDENTIFIER_KEY, t.getIdentifier());
+        }
+        if (t.hasTime()) {
+            properties.put(JSONConstants.TIME_KEY,
+                           getDateTimeFormat().print(t.getTime()));
+        }
 
         if (!mediaType.equals(MediaTypes.TRACK_TYPE)) {
-            properties.put(JSONConstants.SENSOR_KEY,
-                           sensorProvider.encodeJSON(t.getSensor(), mediaType));
-            properties.put(JSONConstants.USER_KEY,
-                           userProvider.encodeJSON(t.getUser(), mediaType));
-            properties.put(JSONConstants.MODIFIED_KEY, getDateTimeFormat()
-                    .print(t.getLastModificationDate()));
-            properties.put(JSONConstants.CREATED_KEY,
-                           getDateTimeFormat().print(t.getCreationDate()));
-        }
-        ObjectNode values = properties.putObject(JSONConstants.PHENOMENONS_KEY);
-        for (MeasurementValue mv : t.getValues()) {
-            ObjectNode phenomenon = values.objectNode();
-            Object value = mv.getValue();
-            if (value instanceof Number) {
-                phenomenon.put(JSONConstants.VALUE_KEY, ((Number) value)
-                        .doubleValue());
-            } else if (value instanceof Boolean) {
-                phenomenon.put(JSONConstants.VALUE_KEY, (Boolean) value);
-            } else if (value != null) {
-                phenomenon.put(JSONConstants.VALUE_KEY, value.toString());
+            if (t.hasSensor()) {
+                properties.put(JSONConstants.SENSOR_KEY,
+                               sensorProvider
+                        .encodeJSON(t.getSensor(), mediaType));
             }
-            values.put(mv.getPhenomenon().getName(), phenomenon);
+            if (t.hasUser()) {
+                properties.put(JSONConstants.USER_KEY,
+                               userProvider.encodeJSON(t.getUser(), mediaType));
+            }
+            if (t.hasModificationTime()) {
+                properties.put(JSONConstants.MODIFIED_KEY, getDateTimeFormat()
+                        .print(t.getModificationTime()));
+            }
+            if (t.hasCreationTime()) {
+                properties.put(JSONConstants.CREATED_KEY,
+                               getDateTimeFormat().print(t.getCreationTime()));
+            }
+        }
+        if (mediaType.equals(MediaTypes.MEASUREMENT_TYPE) ||
+            mediaType.equals(MediaTypes.MEASUREMENTS_TYPE) ||
+            mediaType.equals(MediaTypes.TRACK_TYPE)) {
+            ObjectNode values = properties
+                    .putObject(JSONConstants.PHENOMENONS_KEY);
+            for (MeasurementValue mv : t.getValues()) {
+                if (mv.hasPhenomenon() && mv.hasValue()) {
+                    ObjectNode phenomenon = values.objectNode();
+                    phenomenon.putPOJO(JSONConstants.VALUE_KEY, mv.getValue());
+                    values.put(mv.getPhenomenon().getName(), phenomenon);
+                    if (mv.getPhenomenon().hasUnit()) {
+                        phenomenon.put(JSONConstants.UNIT_KEY, mv
+                                .getPhenomenon()
+                                .getUnit());
+                    }
+                }
+            }
         }
         return measurement;
     }

@@ -17,42 +17,77 @@
  */
 package io.car.server.mongo.entity;
 
-import static io.car.server.core.entities.User.FRIENDS;
-import static io.car.server.mongo.entity.MongoBaseEntity.ID;
-
+import java.net.URL;
+import java.util.Collections;
 import java.util.Set;
 
+import com.github.jmkgreen.morphia.Key;
 import com.github.jmkgreen.morphia.annotations.Entity;
+import com.github.jmkgreen.morphia.annotations.Id;
 import com.github.jmkgreen.morphia.annotations.Indexed;
 import com.github.jmkgreen.morphia.annotations.Property;
-import com.github.jmkgreen.morphia.annotations.Reference;
+import com.github.jmkgreen.morphia.mapping.Mapper;
 import com.google.common.base.Objects;
-import com.google.common.collect.Sets;
+import com.vividsolutions.jts.geom.Geometry;
 
-import io.car.server.core.entities.Group;
-import io.car.server.core.entities.Groups;
+import io.car.server.core.entities.Gender;
 import io.car.server.core.entities.User;
-import io.car.server.core.entities.Users;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Entity("users")
-public class MongoUser extends MongoBaseEntity<MongoUser> implements User {
-    @Indexed(unique = true)
-    @Property(NAME)
-    private String name;
-    @Indexed(unique = true)
-    @Property(MAIL)
-    private String mail;
+public class MongoUser extends MongoEntityBase implements User {
+    public static final String TOKEN = "token";
+    public static final String IS_ADMIN = "isAdmin";
+    public static final String NAME = Mapper.ID_KEY;
+    public static final String MAIL = "mail";
+    public static final String FRIENDS = "friends";
+    public static final String LAST_NAME = "lastName";
+    public static final String FIRST_NAME = "firstName";
+    public static final String COUNTRY = "country";
+    public static final String LOCATION = "location";
+    public static final String ABOUT_ME = "aboutMe";
+    public static final String URL = "url";
+    public static final String DAY_OF_BIRTH = "dayOfBirth";
+    public static final String GENDER = "gender";
+    public static final String LANGUAGE = "lang";
     @Property(TOKEN)
     private String token;
     @Property(IS_ADMIN)
     private boolean isAdmin = false;
-    @Reference(value = FRIENDS, lazy = true)
-    private Set<MongoUser> friends = Sets.newHashSet();
-    @Reference(value = GROUPS, lazy = true)
-    private Set<MongoGroup> groups = Sets.newHashSet();
+    @Id
+    private String name;
+    @Indexed(unique = true)
+    @Property(MAIL)
+    private String mail;
+    @Property(FRIENDS)
+    private Set<Key<MongoUser>> friends;
+    @Property(FIRST_NAME)
+    private String firstName;
+    @Property(LAST_NAME)
+    private String lastName;
+    @Property(COUNTRY)
+    private String country;
+    @Property(LOCATION)
+    private Geometry location;
+    @Property(ABOUT_ME)
+    private String aboutMe;
+    @Property(URL)
+    private URL url;
+    @Property(DAY_OF_BIRTH)
+    private String dayOfBirth;
+    @Property(GENDER)
+    private Gender gender;
+    @Property(LANGUAGE)
+    private String language;
+
+    public MongoUser(String name) {
+        this.name = name;
+    }
+
+    public MongoUser() {
+    }
 
     @Override
     public String getName() {
@@ -60,9 +95,8 @@ public class MongoUser extends MongoBaseEntity<MongoUser> implements User {
     }
 
     @Override
-    public MongoUser setName(String name) {
+    public void setName(String name) {
         this.name = name;
-        return this;
     }
 
     @Override
@@ -71,9 +105,18 @@ public class MongoUser extends MongoBaseEntity<MongoUser> implements User {
     }
 
     @Override
-    public MongoUser setMail(String mail) {
+    public void setMail(String mail) {
         this.mail = mail;
-        return this;
+    }
+
+    @Override
+    public boolean hasName() {
+        return getName() != null && !getName().isEmpty();
+    }
+
+    @Override
+    public boolean hasMail() {
+        return getMail() != null && !getMail().isEmpty();
     }
 
     @Override
@@ -82,9 +125,8 @@ public class MongoUser extends MongoBaseEntity<MongoUser> implements User {
     }
 
     @Override
-    public MongoUser setToken(String token) {
+    public void setToken(String token) {
         this.token = token;
-        return this;
     }
 
     @Override
@@ -93,72 +135,177 @@ public class MongoUser extends MongoBaseEntity<MongoUser> implements User {
     }
 
     @Override
-    public MongoUser setAdmin(boolean isAdmin) {
+    public void setAdmin(boolean isAdmin) {
         this.isAdmin = isAdmin;
-        return this;
     }
 
     @Override
-    public Users getFriends() {
-        return Users.from(this.friends).build();
+    public boolean hasToken() {
+        return getToken() != null && !getToken().isEmpty();
     }
 
-    @Override
-    public MongoUser addFriend(User user) {
-        this.friends.add((MongoUser) user);
-        return this;
-    }
-
-    @Override
-    public MongoUser removeFriend(User user) {
-        this.friends.remove((MongoUser) user);
-        return this;
-    }
-
-    public MongoUser setFriends(Users friends) {
-        this.friends.clear();
-        for (User u : friends) {
-            this.friends.add((MongoUser) u);
-        }
-        return this;
-    }
-
-    @Override
-    public boolean hasFriend(User user) {
-        return this.friends.contains((MongoUser) user);
-    }
-
-    @Override
-    public Groups getGroups() {
-        return Groups.from(groups).build();
-    }
-
-    @Override
-    public MongoUser addGroup(Group group) {
-        this.groups.add((MongoGroup) group);
-        return this;
-    }
-
-    @Override
-    public MongoUser removeGroup(Group group) {
-        this.groups.remove((MongoGroup) group);
-        return this;
-    }
-
-    @Override
-    public boolean hasGroup(Group group) {
-        return this.groups.contains((MongoGroup) group);
+    public Set<Key<MongoUser>> getFriends() {
+        return friends == null ? null : Collections.unmodifiableSet(friends);
     }
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this)
-                .omitNullValues()
-                .add(ID, getId())
-                .add(NAME, getName())
-                .add(MAIL, getMail())
-                .add(IS_ADMIN, isAdmin())
-                .add(FRIENDS, getFriends())
-                .toString();
+        return toStringHelper()
+                .add(NAME, name)
+                .add(MAIL, mail)
+                .add(IS_ADMIN, isAdmin)
+                .add(FRIENDS, friends).toString();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(this.name);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final MongoUser other = (MongoUser) obj;
+        return Objects.equal(this.name, other.name);
+    }
+
+    @Override
+    public String getFirstName() {
+        return firstName;
+    }
+
+    @Override
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    @Override
+    public String getLastName() {
+        return lastName;
+    }
+
+    @Override
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    @Override
+    public String getCountry() {
+        return country;
+    }
+
+    @Override
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    @Override
+    public Geometry getLocation() {
+        return location;
+    }
+
+    @Override
+    public void setLocation(Geometry location) {
+        this.location = location;
+    }
+
+    @Override
+    public String getAboutMe() {
+        return aboutMe;
+    }
+
+    @Override
+    public void setAboutMe(String aboutMe) {
+        this.aboutMe = aboutMe;
+    }
+
+    @Override
+    public URL getUrl() {
+        return url;
+    }
+
+    @Override
+    public void setUrl(URL url) {
+        this.url = url;
+    }
+
+    @Override
+    public String getDayOfBirth() {
+        return dayOfBirth;
+    }
+
+    @Override
+    public void setDayOfBirth(String dayOfBirth) {
+        this.dayOfBirth = dayOfBirth;
+    }
+
+    @Override
+    public Gender getGender() {
+        return gender;
+    }
+
+    @Override
+    public void setGender(Gender gender) {
+        this.gender = gender;
+    }
+
+    @Override
+    public String getLanguage() {
+        return language;
+    }
+
+    @Override
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    @Override
+    public boolean hasCountry() {
+        return getCountry() != null && !getCountry().isEmpty();
+    }
+
+    @Override
+    public boolean hasDayOfBirth() {
+        return getDayOfBirth() != null && !getDayOfBirth().isEmpty();
+    }
+
+    @Override
+    public boolean hasFirstName() {
+        return getFirstName() != null && !getFirstName().isEmpty();
+    }
+
+    @Override
+    public boolean hasGender() {
+        return getGender() != null;
+    }
+
+    @Override
+    public boolean hasLanguage() {
+        return getLanguage() != null && !getLanguage().isEmpty();
+    }
+
+    @Override
+    public boolean hasLastName() {
+        return getLastName() != null && !getLastName().isEmpty();
+    }
+
+    @Override
+    public boolean hasLocation() {
+        return getLocation() != null && !getLocation().isEmpty();
+    }
+
+    @Override
+    public boolean hasUrl() {
+        return getUrl() != null;
+    }
+
+    @Override
+    public boolean hasAboutMe() {
+        return getAboutMe() != null && !getAboutMe().isEmpty();
     }
 }

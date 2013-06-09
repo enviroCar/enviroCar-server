@@ -25,6 +25,8 @@ import io.car.server.rest.mapper.JsonValidationExceptionMapper;
 import io.car.server.rest.mapper.ResourceAlreadyExistExceptionMapper;
 import io.car.server.rest.mapper.ResourceNotFoundExceptionMapper;
 import io.car.server.rest.mapper.ValidationExceptionMapper;
+import io.car.server.rest.provider.ActivitiesProvider;
+import io.car.server.rest.provider.ActivityProvider;
 import io.car.server.rest.provider.GroupProvider;
 import io.car.server.rest.provider.GroupsProvider;
 import io.car.server.rest.provider.JsonNodeProvider;
@@ -63,7 +65,8 @@ public class JerseyProviderModule extends AbstractModule {
         bind(MeasurementsProvider.class).in(Scopes.SINGLETON);
         bind(StatisticsProvider.class).in(Scopes.SINGLETON);
         bind(StatisticProvider.class).in(Scopes.SINGLETON);
-
+        bind(ActivitiesProvider.class).in(Scopes.SINGLETON);
+        bind(ActivityProvider.class).in(Scopes.SINGLETON);
         bind(JsonNodeProvider.class).in(Scopes.SINGLETON);
 
         bind(IllegalModificationExceptionMapper.class).in(Scopes.SINGLETON);

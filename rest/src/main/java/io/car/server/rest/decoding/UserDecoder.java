@@ -17,22 +17,67 @@
  */
 package io.car.server.rest.decoding;
 
-import io.car.server.rest.JSONConstants;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response.Status;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.inject.Inject;
+import com.vividsolutions.jts.geom.Geometry;
 
+import io.car.server.core.entities.Gender;
 import io.car.server.core.entities.User;
+import io.car.server.rest.JSONConstants;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class UserDecoder extends AbstractEntityDecoder<User> {
+    private final EntityDecoder<Geometry> geometryDecoder;
+
+    @Inject
+    public UserDecoder(EntityDecoder<Geometry> geometryDecoder) {
+        this.geometryDecoder = geometryDecoder;
+    }
+
     @Override
     public User decode(JsonNode j, MediaType mediaType) {
-        return getEntityFactory().createUser()
-                .setName(j.path(JSONConstants.NAME_KEY).textValue())
-                .setMail(j.path(JSONConstants.MAIL_KEY).textValue())
-                .setToken(j.path(JSONConstants.TOKEN_KEY).textValue());
+        User user = getEntityFactory().createUser();
+        user.setName(j.path(JSONConstants.NAME_KEY).textValue());
+        user.setMail(j.path(JSONConstants.MAIL_KEY).textValue());
+        user.setToken(j.path(JSONConstants.TOKEN_KEY).textValue());
+
+        user.setAboutMe(j.path(JSONConstants.ABOUT_ME_KEY).textValue());
+        user.setCountry(j.path(JSONConstants.COUNTRY_KEY).textValue());
+        user.setDayOfBirth(j.path(JSONConstants.DAY_OF_BIRTH_KEY).textValue());
+        user.setFirstName(j.path(JSONConstants.FIRST_NAME_KEY).textValue());
+        user.setLastName(j.path(JSONConstants.LAST_NAME_KEY).textValue());
+        user.setLanguage(j.path(JSONConstants.LANGUAGE_KEY).textValue());
+        JsonNode l = j.path(JSONConstants.LOCATION_KEY);
+        if (!l.isMissingNode() && !l.isNull()) {
+            user.setLocation(geometryDecoder.decode(l, mediaType));
+        }
+        String g = j.path(JSONConstants.GENDER_KEY).textValue();
+        if (g != null) {
+            if (g.equalsIgnoreCase(JSONConstants.MALE)) {
+                user.setGender(Gender.MALE);
+            } else if (g.equalsIgnoreCase(JSONConstants.FEMALE)) {
+                user.setGender(Gender.FEMALE);
+            } else {
+                throw new WebApplicationException(Status.BAD_REQUEST);
+            }
+        }
+        String u = j.path(JSONConstants.URL_KEY).textValue();
+        if (u != null) {
+            try {
+                user.setUrl(new URL(u));
+            } catch (MalformedURLException ex) {
+                throw new WebApplicationException(ex, Status.BAD_REQUEST);
+            }
+        }
+        return user;
     }
 }

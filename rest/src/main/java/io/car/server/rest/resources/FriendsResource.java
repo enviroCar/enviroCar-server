@@ -55,7 +55,7 @@ public class FriendsResource extends AbstractResource {
     @Produces({ MediaTypes.USERS, MediaTypes.XML_RDF, MediaTypes.TURTLE,
                 MediaTypes.TURTLE_ALT })
     public Users get() {
-        return user.getFriends();
+        return getService().getFriends(user);
     }
 
     @POST
@@ -73,10 +73,7 @@ public class FriendsResource extends AbstractResource {
     @Path(FRIEND)
     public UserResource friend(@PathParam("friend") String friendName) throws
             UserNotFoundException {
-        User friend = getService().getUser(friendName);
-        if (!user.hasFriend(friend)) {
-            throw new WebApplicationException(Status.NOT_FOUND);
-        }
-        return getResourceFactory().createFriendResource(user, friend);
+        return getResourceFactory().createFriendResource(user, getService()
+                .getFriend(user, friendName));
     }
 }

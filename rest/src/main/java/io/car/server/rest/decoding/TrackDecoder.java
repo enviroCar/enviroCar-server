@@ -50,7 +50,7 @@ public class TrackDecoder extends AbstractEntityDecoder<Track> {
         if (j.has(GeoJSONConstants.PROPERTIES_KEY)) {
             JsonNode p = j.path(GeoJSONConstants.PROPERTIES_KEY);
             if (p.has(JSONConstants.SENSOR_KEY)) {
-                trackSensor = sensorDao.getByName(p
+                trackSensor = sensorDao.getByIdentifier(p
                         .get(JSONConstants.SENSOR_KEY).asText());
                 track.setSensor(trackSensor);
             }
@@ -59,14 +59,13 @@ public class TrackDecoder extends AbstractEntityDecoder<Track> {
                     .textValue());
         }
 
-        if (!j.path(GeoJSONConstants.PROPERTIES_KEY)
-                .path(JSONConstants.MEASUREMENTS_KEY).isMissingNode()) {
-            JsonNode ms = j.path(JSONConstants.MEASUREMENTS_KEY);
+        if (!j.path(GeoJSONConstants.FEATURES_KEY).isMissingNode()) {
+            JsonNode ms = j.path(GeoJSONConstants.FEATURES_KEY);
             TrackWithMeasurments twm = new TrackWithMeasurments(track);
             for (int i = 0; i < ms.size(); i++) {
                 Measurement m = measurementDecoder.decode(ms.get(i), mediaType);
                 m.setTrack(track);
-                if (m.getSensor() != null) {
+                if (m.getSensor() == null) {
                     m.setSensor(trackSensor);
                 }
                 twm.addMeasurement(m);

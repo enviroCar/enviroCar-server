@@ -20,6 +20,7 @@ package io.car.server.rest.encoding;
 import java.net.URI;
 
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriBuilder;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -39,15 +40,15 @@ public class UsersEncoder extends AbstractEntityEncoder<Users> {
     public ObjectNode encodeJSON(Users t, MediaType mediaType) {
         ObjectNode root = getJsonFactory().objectNode();
         ArrayNode users = root.putArray(JSONConstants.USERS_KEY);
+        UriBuilder b = getUriInfo().getBaseUriBuilder()
+                .path(RootResource.class)
+                .path(RootResource.USERS)
+                .path(UsersResource.USER);
         for (User u : t) {
-            URI uri = getUriInfo().getBaseUriBuilder()
-                    .path(RootResource.class)
-                    .path(RootResource.USERS)
-                    .path(UsersResource.USER)
-                    .build(u.getName());
-            users.addObject()
-                    .put(JSONConstants.NAME_KEY, u.getName())
-                    .put(JSONConstants.HREF_KEY, uri.toString());
+            URI uri = b.build(u.getName());
+            ObjectNode user = users.addObject();
+            user.put(JSONConstants.NAME_KEY, u.getName());
+            user.put(JSONConstants.HREF_KEY, uri.toString());
         }
         return root;
     }

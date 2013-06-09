@@ -15,15 +15,22 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.mongo.cache;
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package io.car.server.core.activities;
 
-import io.car.server.mongo.entity.MongoSensor;
+import io.car.server.core.entities.Track;
 
 /**
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class SensorCache extends AbstractEntityCache<MongoSensor> {
-    public SensorCache() {
-        super(MongoSensor.class);
-    }
+public interface TrackActivity extends Activity {
+    Track getTrack();
+
+    void setTrack(Track track);
+
+    boolean hasTrack();
 }

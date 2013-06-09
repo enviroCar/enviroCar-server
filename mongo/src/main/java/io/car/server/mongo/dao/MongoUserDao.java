@@ -18,44 +18,40 @@
 package io.car.server.mongo.dao;
 
 
+import java.util.Collections;
+import java.util.Set;
+
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.jmkgreen.morphia.Datastore;
+import com.github.jmkgreen.morphia.Key;
+import com.github.jmkgreen.morphia.query.Query;
 import com.github.jmkgreen.morphia.query.UpdateResults;
 import com.google.inject.Inject;
 
 import io.car.server.core.dao.UserDao;
-import io.car.server.core.entities.Group;
 import io.car.server.core.entities.User;
 import io.car.server.core.entities.Users;
 import io.car.server.core.util.Pagination;
-import io.car.server.mongo.cache.EntityCache;
-import io.car.server.mongo.entity.MongoGroup;
+import io.car.server.mongo.MongoDB;
 import io.car.server.mongo.entity.MongoUser;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  * @author Arne de Wall
  */
-public class MongoUserDao extends AbstractMongoDao<MongoUser, Users>
+public class MongoUserDao extends AbstractMongoDao<String, MongoUser, Users>
         implements UserDao {
     private static final Logger log = LoggerFactory
             .getLogger(MongoUserDao.class);
-    private EntityCache<MongoUser> userCache;
     private MongoTrackDao trackDao;
     private MongoMeasurementDao measurementDao;
     private MongoGroupDao groupDao;
 
     @Inject
-    public MongoUserDao(Datastore datastore) {
-        super(MongoUser.class, datastore);
-    }
-
-    @Inject
-    public void setUserCache(
-            EntityCache<MongoUser> userCache) {
-        this.userCache = userCache;
+    public MongoUserDao(MongoDB mongoDB) {
+        super(MongoUser.class, mongoDB);
     }
 
     @Inject
@@ -64,8 +60,7 @@ public class MongoUserDao extends AbstractMongoDao<MongoUser, Users>
     }
 
     @Inject
-    public void setMeasurementDao(
-            MongoMeasurementDao measurementDao) {
+    public void setMeasurementDao(MongoMeasurementDao measurementDao) {
         this.measurementDao = measurementDao;
     }
 
@@ -97,7 +92,6 @@ public class MongoUserDao extends AbstractMongoDao<MongoUser, Users>
     @Override
     public MongoUser save(User user) {
         MongoUser mu = (MongoUser) user;
-        userCache.invalidate(mu);
         save(mu);
         return mu;
     }
@@ -109,9 +103,10 @@ public class MongoUserDao extends AbstractMongoDao<MongoUser, Users>
         trackDao.removeUser(user);
         measurementDao.removeUser(user);
         groupDao.removeUser(user);
+        Key<MongoUser> userRef = reference(user);
         UpdateResults<MongoUser> result = update(
-                q().field(MongoUser.FRIENDS).hasThisElement(user),
-                up().removeAll(MongoUser.FRIENDS, user));
+                q().field(MongoUser.FRIENDS).hasThisElement(userRef),
+                up().removeAll(MongoUser.FRIENDS, userRef));
         if (result.getHadError()) {
             log.error("Error removing user {} as friend: {}",
                       u, result.getError());
@@ -119,31 +114,72 @@ public class MongoUserDao extends AbstractMongoDao<MongoUser, Users>
             log.debug("Removed user {} from {} friend lists",
                       u, result.getUpdatedCount());
         }
-        delete(user);
-    }
-
-    @Override
-    public Users getByGroup(Group group, Pagination p) {
-        return fetch(q().field(MongoUser.GROUPS).hasThisElement(group), p);
-    }
-
-    void removeGroup(MongoGroup group) {
-        UpdateResults<MongoUser> result = update(
-                q().field(MongoUser.GROUPS).hasThisElement(group),
-                up().removeAll(MongoUser.GROUPS, group));
-
-        if (result.getHadError()) {
-            log.error("Error removing members of group {}: {}",
-                      group, result.getError());
-        } else {
-            log.debug("Removed group from {} users",
-                      group, result.getUpdatedCount());
-        }
+        delete(user.getName());
     }
 
     @Override
     protected Users createPaginatedIterable(Iterable<MongoUser> i, Pagination p,
                                             long count) {
         return Users.from(i).withPagination(p).withElements(count).build();
+    }
+
+    @Override
+    public Users getFriends(User user) {
+        Iterable<MongoUser> friends;
+        Set<Key<MongoUser>> friendRefs = getFriendRefs(user);
+        if (friendRefs != null) {
+            friends = dereference(MongoUser.class, friendRefs);
+        } else {
+            friends = Collections.emptyList();
+        }
+        return Users.from(friends).build();
+    }
+
+    @Override
+    public User getFriend(User user, String friendName) {
+        Set<Key<MongoUser>> friendRefs = getFriendRefs(user);
+        if (friendRefs != null) {
+            Key<MongoUser> friendRef = reference(new MongoUser(friendName));
+            getMapper().updateKind(friendRef);
+            if (friendRefs.contains(friendRef)) {
+                return dereference(MongoUser.class, friendRef);
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void addFriend(User user, User friend) {
+        MongoUser g = (MongoUser) user;
+        update(g.getName(), up()
+                .add(MongoUser.FRIENDS, reference(friend))
+                .set(MongoUser.LAST_MODIFIED, new DateTime()));
+    }
+
+    @Override
+    public void removeFriend(User user, User friend) {
+        MongoUser g = (MongoUser) user;
+        update(g.getName(), up()
+                .removeAll(MongoUser.FRIENDS, reference(friend))
+                .set(MongoUser.LAST_MODIFIED, new DateTime()));
+    }
+
+    @Override
+    protected Users fetch(Query<MongoUser> q, Pagination p) {
+        return super.fetch(q.retrievedFields(false, MongoUser.FRIENDS), p);
+    }
+
+    protected Set<Key<MongoUser>> getFriendRefs(User user) {
+        MongoUser u = (MongoUser) user;
+        Set<Key<MongoUser>> friendRefs = u.getFriends();
+        if (friendRefs == null) {
+            MongoUser userWithFriends = q()
+                    .field(MongoUser.NAME).equal(u.getName())
+                    .retrievedFields(true, MongoUser.FRIENDS).get();
+            if (userWithFriends != null) {
+                friendRefs = userWithFriends.getFriends();
+            }
+        }
+        return friendRefs;
     }
 }

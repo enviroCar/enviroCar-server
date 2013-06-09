@@ -23,10 +23,11 @@ import org.joda.time.DateTime;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface BaseEntity {
-    String CREATION_DATE = "created";
-    String LAST_MODIFIED = "modified";
+    DateTime getCreationTime();
 
-    DateTime getCreationDate();
+    boolean hasCreationTime();
 
-    DateTime getLastModificationDate();
+    DateTime getModificationTime();
+
+    boolean hasModificationTime();
 }

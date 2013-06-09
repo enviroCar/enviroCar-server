@@ -17,27 +17,101 @@
  */
 package io.car.server.mongo.entity;
 
-import com.github.jmkgreen.morphia.annotations.Entity;
-import com.github.jmkgreen.morphia.annotations.Property;
-
 import io.car.server.core.entities.Sensor;
+
+import java.util.Map;
+
+import org.bson.types.ObjectId;
+
+import com.github.jmkgreen.morphia.annotations.Entity;
+import com.github.jmkgreen.morphia.annotations.Id;
+import com.github.jmkgreen.morphia.annotations.Property;
+import com.github.jmkgreen.morphia.mapping.Mapper;
+import com.google.common.base.Objects;
+import com.google.common.collect.Maps;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Entity("sensors")
-public class MongoSensor extends MongoBaseEntity<MongoSensor> implements Sensor {
-    @Property(NAME)
-    private String name;
+public class MongoSensor extends MongoEntityBase implements Sensor {
+    public static final String NAME = Mapper.ID_KEY;
+    public static final String TYPE = "type";
+    public static final String PROPERTIES = "properties";
+    
+    @Id
+    private ObjectId id = new ObjectId();
+    @Property(TYPE)
+    private String type;
+    @Property(PROPERTIES)
+    private Map<String, Object> properties = Maps.newHashMap();
+
 
     @Override
-    public String getName() {
-        return this.name;
+    public String toString() {
+        return toStringHelper()
+                .add(NAME, id).toString();
     }
 
     @Override
-    public Sensor setName(String name) {
-        this.name = name;
-        return this;
+    public int hashCode() {
+        return Objects.hashCode(this.id);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final MongoSensor other = (MongoSensor) obj;
+        return Objects.equal(this.id, other.id);
+    }
+
+    @Override
+    public String getType() {
+        return this.type;
+    }
+
+    @Override
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    @Override
+    public Map<String, Object> getProperties() {
+        return properties;
+    }
+
+    @Override
+    public void addProperty(String key, Object value) {
+        this.properties.put(key, value);
+    }
+
+    @Override
+    public boolean hasType() {
+        return getType() != null && !getType().isEmpty();
+    }
+
+    @Override
+    public boolean hasProperties() {    
+        return properties.size() > 0;
+    }
+
+    @Override
+    public String getIdentifier() {
+        return this.id == null ? null : this.id.toString();
+    }
+
+    @Override
+    public void setIdentifier(String id) {
+        this.id = id == null ? null : new ObjectId(id);
+    }
+
+    @Override
+    public boolean hasIdentifier() {
+        return this.id != null;
     }
 }

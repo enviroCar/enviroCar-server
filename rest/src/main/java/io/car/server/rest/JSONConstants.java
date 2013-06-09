@@ -21,6 +21,12 @@ package io.car.server.rest;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface JSONConstants {
+    String GROUP_KEY = "group";
+    String OTHER_KEY = "other";
+    String TRACK_KEY = "track";
+    String MEASUREMENT_KEY = "measurement";
+    String TYPE_KEY = "type";
+    String ACTIVITIES_KEY = "activities";
     String UNIT_KEY = "unit";
     String MIN_KEY = "min";
     String AVG_KEY = "avg";
@@ -53,4 +59,18 @@ public interface JSONConstants {
     String USER_KEY = "user";
     String USERS_KEY = "users";
     String VALUE_KEY = "value";
+    String AVATAR_KEY = "avatar";
+    String CAR_KEY = "car";
+    String PROPERTIES_KEY = "properties";
+    String LAST_NAME_KEY = "lastName";
+    String FIRST_NAME_KEY = "firstName";
+    String COUNTRY_KEY = "country";
+    String LOCATION_KEY = "location";
+    String ABOUT_ME_KEY = "aboutMe";
+    String URL_KEY = "url";
+    String DAY_OF_BIRTH_KEY = "dayOfBirth";
+    String GENDER_KEY = "gender";
+    String LANGUAGE_KEY = "language";
+    String MALE = "m";
+    String FEMALE = "f";
 }

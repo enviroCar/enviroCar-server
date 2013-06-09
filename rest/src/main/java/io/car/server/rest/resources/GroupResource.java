@@ -50,6 +50,7 @@ import io.car.server.rest.validation.Schema;
  */
 public class GroupResource extends AbstractResource {
     public static final String MEMBERS = "members";
+    public static final String ACTIVITIES = "activities";
     private Group group;
 
     @Inject
@@ -103,5 +104,10 @@ public class GroupResource extends AbstractResource {
     @Path(MEMBERS)
     public GroupMembersResource members() {
         return getResourceFactory().createGroupMembersResource(group);
+    }
+
+    @Path(ACTIVITIES)
+    public ActivitiesResource activities() {
+        return getResourceFactory().createActivitiesResource(group);
     }
 }

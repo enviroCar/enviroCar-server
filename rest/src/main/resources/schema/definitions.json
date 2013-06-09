@@ -101,5 +101,43 @@
                 "$ref": "#/href"
             }
         }
+    },
+    "optional-user-properties": {
+        "properties": {
+            "firstName": {
+                "type": "string"
+            },
+            "lastName": {
+                "type": "string"
+            },
+            "country": {
+                "type": "string"
+            },
+            "location": {
+                "$ref": "http://schema.envirocar.org/geometry.json#"
+            },
+            "aboutMe": {
+                "type": "string"
+            },
+            "url": {
+                "type": "string",
+                "format": "uri"
+            },
+            "dayOfBirth": {
+                "type": "string",
+                "format": "date"
+            },
+            "gender": {
+                "type": "string",
+                "enum": [
+                    "m",
+                    "f"
+                ]
+            },
+            "language": {
+                "type": "string",
+                "pattern": "^[a-z]{2}[-_][A-Z]{2}$"
+            }
+        }
     }
 }

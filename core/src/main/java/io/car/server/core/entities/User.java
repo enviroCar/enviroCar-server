@@ -17,46 +17,87 @@
  */
 package io.car.server.core.entities;
 
+import java.net.URL;
+
+import com.vividsolutions.jts.geom.Geometry;
+
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface User extends BaseEntity {
-    String NAME = "name";
-    String MAIL = "mail";
-    String TOKEN = "token";
-    String IS_ADMIN = "isAdmin";
-    String FRIENDS = "friends";
-    String GROUPS = "groups";
-
     String getName();
 
-    User setName(String name);
+    void setName(String name);
+
+    boolean hasName();
 
     String getMail();
 
-    User setMail(String mail);
+    void setMail(String mail);
+
+    boolean hasMail();
 
     String getToken();
 
-    User setToken(String token);
+    void setToken(String token);
+
+    boolean hasToken();
 
     boolean isAdmin();
 
-    User setAdmin(boolean isAdmin);
+    void setAdmin(boolean isAdmin);
 
-    Users getFriends();
+    String getCountry();
 
-    User addFriend(User user);
+    void setCountry(String country);
 
-    User removeFriend(User user);
+    boolean hasCountry();
 
-    boolean hasFriend(User user);
+    String getDayOfBirth();
 
-    Groups getGroups();
+    void setDayOfBirth(String dayOfBirth);
 
-    User addGroup(Group group);
+    boolean hasDayOfBirth();
 
-    User removeGroup(Group group);
+    String getFirstName();
 
-    boolean hasGroup(Group group);
+    void setFirstName(String firstName);
+
+    boolean hasFirstName();
+
+    Gender getGender();
+
+    void setGender(Gender gender);
+
+    boolean hasGender();
+
+    String getLanguage();
+
+    void setLanguage(String language);
+
+    boolean hasLanguage();
+
+    String getLastName();
+
+    void setLastName(String lastName);
+
+    boolean hasLastName();
+
+    Geometry getLocation();
+
+    void setLocation(Geometry location);
+
+    boolean hasLocation();
+
+    URL getUrl();
+
+    void setUrl(URL url);
+
+    boolean hasUrl();
+
+    String getAboutMe();
+
+    void setAboutMe(String aboutMe);
+
+    boolean hasAboutMe();
 }

@@ -21,7 +21,6 @@ import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.jmkgreen.morphia.Datastore;
 import com.github.jmkgreen.morphia.query.Query;
 import com.github.jmkgreen.morphia.query.UpdateResults;
 import com.google.inject.Inject;
@@ -33,6 +32,7 @@ import io.car.server.core.entities.Track;
 import io.car.server.core.entities.Tracks;
 import io.car.server.core.entities.User;
 import io.car.server.core.util.Pagination;
+import io.car.server.mongo.MongoDB;
 import io.car.server.mongo.entity.MongoTrack;
 import io.car.server.mongo.entity.MongoUser;
 
@@ -41,15 +41,23 @@ import io.car.server.mongo.entity.MongoUser;
  * @author Arne de Wall <a.dewall@52north.org>
  * 
  */
-public class MongoTrackDao extends AbstractMongoDao<MongoTrack, Tracks>
+public class MongoTrackDao extends AbstractMongoDao<ObjectId, MongoTrack, Tracks>
         implements TrackDao {
     private static final Logger log = LoggerFactory
             .getLogger(MongoTrackDao.class);
-    private final MongoMeasurementDao measurementDao;
+    private MongoMeasurementDao measurementDao;
 
     @Inject
-    public MongoTrackDao(Datastore ds, MongoMeasurementDao measurementDao) {
-        super(MongoTrack.class, ds);
+    public MongoTrackDao(MongoDB mongoDB) {
+        super(MongoTrack.class, mongoDB);
+    }
+
+    public MongoMeasurementDao getMeasurementDao() {
+        return measurementDao;
+    }
+
+    @Inject
+    public void setMeasurementDao(MongoMeasurementDao measurementDao) {
         this.measurementDao = measurementDao;
     }
 
@@ -66,7 +74,7 @@ public class MongoTrackDao extends AbstractMongoDao<MongoTrack, Tracks>
 
     @Override
     public Tracks getByUser(User user, Pagination p) {
-        return fetch(q().field(MongoTrack.USER).equal(user), p);
+        return fetch(q().field(MongoTrack.USER).equal(reference(user)), p);
     }
 
     @Override
@@ -85,7 +93,7 @@ public class MongoTrackDao extends AbstractMongoDao<MongoTrack, Tracks>
     public void delete(Track track) {
         MongoTrack t = (MongoTrack) track;
         measurementDao.removeTrack(t);
-        delete(t);
+        delete(t.getId());
     }
 
     @Override
@@ -119,7 +127,7 @@ public class MongoTrackDao extends AbstractMongoDao<MongoTrack, Tracks>
 
     void removeUser(MongoUser user) {
         UpdateResults<MongoTrack> result = update(
-                q().field(MongoTrack.USER).equal(user),
+                q().field(MongoTrack.USER).equal(reference(user)),
                 up().unset(MongoTrack.USER));
         if (result.getHadError()) {
             log.error("Error removing user {} from tracks: {}",
@@ -135,5 +143,15 @@ public class MongoTrackDao extends AbstractMongoDao<MongoTrack, Tracks>
             Iterable<MongoTrack> i,
             Pagination p, long count) {
         return Tracks.from(i).withPagination(p).withElements(count).build();
+    }
+
+    @Override
+    protected Iterable<MongoTrack> fetch(Query<MongoTrack> q) {
+        return super.fetch(q.order(MongoTrack.RECENTLY_MODIFIED_ORDER));
+    }
+
+    @Override
+    protected Tracks fetch(Query<MongoTrack> q, Pagination p) {
+        return super.fetch(q.order(MongoTrack.RECENTLY_MODIFIED_ORDER), p);
     }
 }

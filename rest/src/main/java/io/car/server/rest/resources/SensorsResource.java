@@ -17,6 +17,9 @@
  */
 package io.car.server.rest.resources;
 
+import java.util.List;
+import java.util.Set;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -25,8 +28,12 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
+import com.google.common.collect.Sets;
+
+import io.car.server.core.entities.PropertyFilter;
 import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.Sensors;
 import io.car.server.core.exception.SensorNotFoundException;
@@ -50,8 +57,28 @@ public class SensorsResource extends AbstractResource {
                 MediaTypes.TURTLE_ALT })
     public Sensors get(
             @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit,
-            @QueryParam(RESTConstants.PAGE) @DefaultValue("0") int page) {
-        return getService().getSensors(new Pagination(limit, page));
+            @QueryParam(RESTConstants.PAGE) @DefaultValue("0") int page,
+            @QueryParam(RESTConstants.TYPE) String type) {
+        MultivaluedMap<String, String> queryParameters =
+                getUriInfo().getQueryParameters();
+        Set<PropertyFilter> filters = Sets.newHashSet();
+        for (String key : queryParameters.keySet()) {
+            if (key.equals(RESTConstants.LIMIT) ||
+                key.equals(RESTConstants.PAGE) ||
+                key.equals(RESTConstants.TYPE)) {
+                continue;
+            }
+            List<String> list = queryParameters.get(key);
+            for (String value : list) {
+                filters.add(new PropertyFilter(key, value));
+            }
+        }
+        Pagination p = new Pagination(limit, page);
+        if (type == null) {
+            return getService().getSensors(filters, p);
+        } else {
+            return getService().getSensorsByType(type, filters, p);
+        }
     }
 
     @POST
@@ -61,7 +88,7 @@ public class SensorsResource extends AbstractResource {
     public Response create(Sensor sensor) {
         return Response.created(
                 getUriInfo().getAbsolutePathBuilder()
-                .path(getService().createSensor(sensor).getName())
+                .path(getService().createSensor(sensor).getIdentifier())
                 .build()).build();
     }
 

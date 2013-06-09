@@ -18,12 +18,21 @@
 package io.car.server.rest.guice;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.util.Map;
 import java.util.Set;
 
+import com.github.fge.jsonschema.SchemaVersion;
 import com.github.fge.jsonschema.cfg.LoadingConfiguration;
 import com.github.fge.jsonschema.cfg.LoadingConfigurationBuilder;
+import com.github.fge.jsonschema.cfg.ValidationConfiguration;
+import com.github.fge.jsonschema.cfg.ValidationConfigurationBuilder;
 import com.github.fge.jsonschema.exceptions.unchecked.ProcessingError;
+import com.github.fge.jsonschema.format.draftv3.DateAttribute;
+import com.github.fge.jsonschema.library.DraftV4Library;
+import com.github.fge.jsonschema.library.Library;
 import com.github.fge.jsonschema.main.JsonSchemaFactory;
+import com.github.fge.jsonschema.ref.JsonRef;
 import com.github.fge.jsonschema.util.JsonLoader;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -45,7 +54,9 @@ public class JSONSchemaFactoryProvider implements Provider<JsonSchemaFactory> {
     @Override
     public JsonSchemaFactory get() {
         return JsonSchemaFactory.newBuilder()
-                .setLoadingConfiguration(loadingConfiguration()).freeze();
+                .setValidationConfiguration(validationConfiguration())
+                .setLoadingConfiguration(loadingConfiguration())
+                .freeze();
     }
 
     private LoadingConfiguration loadingConfiguration() {
@@ -60,5 +71,62 @@ public class JSONSchemaFactoryProvider implements Provider<JsonSchemaFactory> {
             }
         }
         return cfgb.freeze();
+    }
+
+    protected ValidationConfiguration validationConfiguration() {
+        Library modifiedV4 = DraftV4Library.get().thaw()
+                .addFormatAttribute("date", DateAttribute.getInstance())
+                .freeze();
+        ValidationConfigurationBuilder vcb = ValidationConfiguration.newBuilder();
+        JsonRef ref = JsonRef.fromURI(SchemaVersion.DRAFTV4.getLocation());
+        /*
+         * ugliest hack ever. consider to duplicate the v4 schema
+         * under a different URI and to adjust the schema files
+         * with that URI
+         */
+        setLibrary(vcb, ref, modifiedV4);
+        setDefaultLibrary(vcb, modifiedV4);
+        return vcb.freeze();
+    }
+
+    @SuppressWarnings("unchecked")
+    protected void setLibrary(ValidationConfigurationBuilder vcb,
+                              JsonRef ref, Library lib) {
+        try {
+            Field librariesField = ValidationConfigurationBuilder.class
+                    .getDeclaredField("libraries");
+            librariesField.setAccessible(true);
+            final Map<JsonRef, Library> libraries =
+                    (Map<JsonRef, Library>) librariesField.get(vcb);
+            libraries.put(ref, lib);
+            librariesField.setAccessible(false);
+        } catch (NoSuchFieldException ex) {
+            throw new RuntimeException(ex);
+        } catch (SecurityException ex) {
+            throw new RuntimeException(ex);
+        } catch (IllegalArgumentException ex) {
+            throw new RuntimeException(ex);
+        } catch (IllegalAccessException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    protected void setDefaultLibrary(ValidationConfigurationBuilder vcb,
+                                     Library lib) {
+        try {
+            Field defaultLibraryField = ValidationConfigurationBuilder.class
+                    .getDeclaredField("defaultLibrary");
+            defaultLibraryField.setAccessible(true);
+            defaultLibraryField.set(vcb, lib);
+            defaultLibraryField.setAccessible(false);
+        } catch (NoSuchFieldException ex) {
+            throw new RuntimeException(ex);
+        } catch (SecurityException ex) {
+            throw new RuntimeException(ex);
+        } catch (IllegalArgumentException ex) {
+            throw new RuntimeException(ex);
+        } catch (IllegalAccessException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 }

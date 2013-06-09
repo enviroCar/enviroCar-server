@@ -15,10 +15,30 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.core.subscription;
+package io.car.server.core.activities;
+
+import com.google.inject.assistedinject.Assisted;
+
+import io.car.server.core.entities.Group;
+import io.car.server.core.entities.Track;
+import io.car.server.core.entities.User;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public interface SubscriptionFilterParameter {
+public interface ActivityFactory {
+    Activity createActivity(ActivityType type,
+                            User user);
+
+    GroupActivity createGroupActivity(ActivityType type,
+                                      User user,
+                                      Group group);
+
+    TrackActivity createTrackActivity(ActivityType type,
+                                      User user,
+                                      Track track);
+
+    UserActivity createUserActivity(ActivityType type,
+                                    @Assisted("user") User user,
+                                    @Assisted("other") User other);
 }

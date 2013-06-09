@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.core.subscription;
+package io.car.server.core.activities;
 
 import io.car.server.core.util.Pagination;
 import io.car.server.core.util.UpCastingIterable;
@@ -23,39 +23,38 @@ import io.car.server.core.util.UpCastingIterable;
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class Subscriptions extends UpCastingIterable<Subscription> {
-    public static SubscriptionsBuilder from(
-            Iterable<? extends Subscription> delegate) {
-        return new SubscriptionsBuilder(delegate);
+public class Activities extends UpCastingIterable<Activity> {
+    public static Activities.ActivitiesBuilder from(
+            Iterable<? extends Activity> delegate) {
+        return new ActivitiesBuilder(delegate);
     }
 
-    protected Subscriptions(Iterable<? extends Subscription> delegate,
-                            Pagination pagination, long elements) {
+    protected Activities(Iterable<? extends Activity> delegate,
+                         Pagination pagination, long elements) {
         super(delegate, pagination, elements);
     }
 
-    public static class SubscriptionsBuilder {
-        private Iterable<? extends Subscription> delegate;
+    public static class ActivitiesBuilder {
+        private Iterable<? extends Activity> delegate;
         private Pagination pagination;
         private long elements;
 
-        public SubscriptionsBuilder(
-                Iterable<? extends Subscription> delegate) {
+        public ActivitiesBuilder(Iterable<? extends Activity> delegate) {
             this.delegate = delegate;
         }
 
-        public SubscriptionsBuilder withPagination(Pagination pagination) {
+        public ActivitiesBuilder withPagination(Pagination pagination) {
             this.pagination = pagination;
             return this;
         }
 
-        public SubscriptionsBuilder withElements(long elements) {
+        public ActivitiesBuilder withElements(long elements) {
             this.elements = elements;
             return this;
         }
 
-        public Subscriptions build() {
-            return new Subscriptions(delegate, pagination, elements);
+        public Activities build() {
+            return new Activities(delegate, pagination, elements);
         }
     }
 }

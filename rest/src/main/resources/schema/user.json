@@ -2,40 +2,45 @@
     "$schema": "http://json-schema.org/draft-04/schema#",
     "id": "http://schema.envirocar.org/user.json#",
     "type": "object",
-    "additionalProperties": false,
     "required": [
         "name",
         "created",
-        "modified",
-        "mail"
+        "modified"
     ],
-    "properties": {
-        "created": {
-            "$ref": "http://schema.envirocar.org/definitions.json#/date-time"
+    "allOf": [
+        {
+            "$ref": "http://schema.envirocar.org/definitions.json#/optional-user-properties"
         },
-        "mail": {
-            "$ref": "http://schema.envirocar.org/definitions.json#/mail"
-        },
-        "modified": {
-            "$ref": "http://schema.envirocar.org/definitions.json#/date-time"
-        },
-        "name": {
-            "$ref": "http://schema.envirocar.org/definitions.json#/username"
-        },
-        "measurements": {
-            "$ref": "http://schema.envirocar.org/definitions.json#/href"
-        },
-        "friends": {
-            "$ref": "http://schema.envirocar.org/definitions.json#/href"
-        },
-        "groups": {
-            "$ref": "http://schema.envirocar.org/definitions.json#/href"
-        },
-        "tracks": {
-            "$ref": "http://schema.envirocar.org/definitions.json#/href"
-        },
-        "statistics": {
-            "$ref": "http://schema.envirocar.org/definitions.json#/href"
+        {
+            "properties": {
+                "created": {
+                    "$ref": "http://schema.envirocar.org/definitions.json#/date-time"
+                },
+                "mail": {
+                    "$ref": "http://schema.envirocar.org/definitions.json#/mail"
+                },
+                "modified": {
+                    "$ref": "http://schema.envirocar.org/definitions.json#/date-time"
+                },
+                "name": {
+                    "$ref": "http://schema.envirocar.org/definitions.json#/username"
+                },
+                "measurements": {
+                    "$ref": "http://schema.envirocar.org/definitions.json#/href"
+                },
+                "friends": {
+                    "$ref": "http://schema.envirocar.org/definitions.json#/href"
+                },
+                "groups": {
+                    "$ref": "http://schema.envirocar.org/definitions.json#/href"
+                },
+                "tracks": {
+                    "$ref": "http://schema.envirocar.org/definitions.json#/href"
+                },
+                "statistics": {
+                    "$ref": "http://schema.envirocar.org/definitions.json#/href"
+                }
+            }
         }
-    }
+    ]
 }

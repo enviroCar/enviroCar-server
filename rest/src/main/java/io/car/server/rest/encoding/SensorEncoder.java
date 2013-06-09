@@ -18,10 +18,12 @@
 package io.car.server.rest.encoding;
 
 import java.net.URI;
+import java.util.Map;
 
 import javax.ws.rs.core.MediaType;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.collect.Maps;
 import com.hp.hpl.jena.rdf.model.Model;
 
 import io.car.server.core.entities.Sensor;
@@ -34,24 +36,38 @@ import io.car.server.rest.resources.SensorsResource;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class SensorEncoder extends AbstractEntityEncoder<Sensor> {
-
     @Override
     public ObjectNode encodeJSON(Sensor t, MediaType mediaType) {
-        ObjectNode sensor = getJsonFactory().objectNode()
-                .put(JSONConstants.NAME_KEY, t.getName());
+        ObjectNode sensor = getJsonFactory().objectNode();
+        if (t.hasType()) {
+            sensor.put(JSONConstants.TYPE_KEY, t.getType());
+        }
+        Map<String, Object> properties = Maps.newHashMap();
+
+        if (t.hasProperties()) {
+            properties.putAll(t.getProperties());
+        }
+        properties.put(JSONConstants.IDENTIFIER_KEY, t.getIdentifier());
         if (mediaType.equals(MediaTypes.SENSOR_TYPE)) {
-            sensor.put(JSONConstants.CREATED_KEY,
-                       getDateTimeFormat().print(t.getCreationDate()));
-            sensor.put(JSONConstants.MODIFIED_KEY,
-                       getDateTimeFormat().print(t.getLastModificationDate()));
+            if (t.hasCreationTime()) {
+                properties.put(JSONConstants.CREATED_KEY,
+                               getDateTimeFormat().print(t.getCreationTime()));
+            }
+            if (t.hasModificationTime()) {
+                properties.put(JSONConstants.MODIFIED_KEY,
+                               getDateTimeFormat()
+                        .print(t.getModificationTime()));
+            }
         } else {
             URI href = getUriInfo().getBaseUriBuilder()
                     .path(RootResource.class)
                     .path(RootResource.SENSORS)
                     .path(SensorsResource.SENSOR)
-                    .build(t.getName());
+                    .build(t.getIdentifier());
             sensor.put(JSONConstants.HREF_KEY, href.toString());
         }
+
+        sensor.putPOJO(JSONConstants.PROPERTIES_KEY, properties);
         return sensor;
     }
 

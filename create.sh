@@ -1,10 +1,9 @@
 #!/bin/zsh -e
 
-#URL=http://giv-car.uni-muenster.de:8080/dev
-URL=http://localhost:8080/webapp
-
-USERS=5
-GROUPS=5
+URL=http://giv-car.uni-muenster.de:8080/dev
+#URL=http://localhost:8080/webapp
+USERS=20
+GROUPS=10
 TRACKS=2
 MEASUREMENTS=20
 SENSORS=5
@@ -119,7 +118,7 @@ for user in {1..$USERS}; do
 					},
 					\"properties\": {
 						\"time\": \"$t\",
-						\"sensor\": { \"name\": \"testsensor$(((($user - 1) % $SENSORS) + 1))\" },
+						\"sensor\": \"testsensor$(((($user - 1) % $SENSORS) + 1))\",
 						\"phenomenons\": {
 							\"testphenomenon1\": { \"value\": $(($RANDOM / 1000.0)) },
 							\"testphenomenon2\": { \"value\": $(($RANDOM / 1000.0)) },

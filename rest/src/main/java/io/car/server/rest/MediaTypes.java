@@ -102,6 +102,12 @@ public interface MediaTypes {
     String STATISTICS = "application/json; schema=\"" +
                         Schemas.STATISTICS + "\"";
     MediaType STATISTICS_TYPE = MediaType.valueOf(STATISTICS);
+    String ACTIVITY = "application/json; schema=\"" +
+                      Schemas.ACTIVITY + "\"";
+    MediaType ACTIVITY_TYPE = MediaType.valueOf(ACTIVITY);
+    String ACTIVITIES = "application/json; schema=\"" +
+                        Schemas.ACTIVITIES + "\"";
+    MediaType ACTIVITIES_TYPE = MediaType.valueOf(ACTIVITIES);
     String XML_RDF = "application/rdf+xml";
     MediaType XML_RDF_TYPE = MediaType.valueOf(XML_RDF);
     String TURTLE = "text/turtle";

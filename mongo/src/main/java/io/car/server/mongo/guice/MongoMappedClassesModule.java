@@ -23,13 +23,17 @@ import com.google.inject.multibindings.Multibinder;
 import com.google.inject.name.Names;
 
 import io.car.server.mongo.MongoDB;
+import io.car.server.mongo.activities.MongoActivity;
+import io.car.server.mongo.activities.MongoGroupActivity;
+import io.car.server.mongo.activities.MongoTrackActivity;
+import io.car.server.mongo.activities.MongoUserActivity;
 import io.car.server.mongo.entity.MongoGroup;
 import io.car.server.mongo.entity.MongoMeasurement;
 import io.car.server.mongo.entity.MongoPhenomenon;
 import io.car.server.mongo.entity.MongoSensor;
-import io.car.server.mongo.entity.MongoSubscriber;
-import io.car.server.mongo.entity.MongoSubscription;
-import io.car.server.mongo.entity.MongoSubscriptionFilter;
+import io.car.server.mongo.entity.MongoStatistic;
+import io.car.server.mongo.entity.MongoStatisticKey;
+import io.car.server.mongo.entity.MongoStatistics;
 import io.car.server.mongo.entity.MongoTrack;
 import io.car.server.mongo.entity.MongoUser;
 
@@ -45,12 +49,16 @@ public class MongoMappedClassesModule extends AbstractModule {
                 Names.named(MongoDB.MAPPED_CLASSES));
         mb.addBinding().toInstance(MongoUser.class);
         mb.addBinding().toInstance(MongoGroup.class);
-        mb.addBinding().toInstance(MongoSubscriber.class);
-        mb.addBinding().toInstance(MongoSubscription.class);
-        mb.addBinding().toInstance(MongoSubscriptionFilter.class);
         mb.addBinding().toInstance(MongoTrack.class);
         mb.addBinding().toInstance(MongoMeasurement.class);
         mb.addBinding().toInstance(MongoPhenomenon.class);
         mb.addBinding().toInstance(MongoSensor.class);
+        mb.addBinding().toInstance(MongoActivity.class);
+        mb.addBinding().toInstance(MongoGroupActivity.class);
+        mb.addBinding().toInstance(MongoTrackActivity.class);
+        mb.addBinding().toInstance(MongoUserActivity.class);
+        mb.addBinding().toInstance(MongoStatistics.class);
+        mb.addBinding().toInstance(MongoStatistic.class);
+        mb.addBinding().toInstance(MongoStatisticKey.class);
     }
 }

@@ -15,17 +15,22 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.mongo.entity;
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package io.car.server.core.activities;
 
-import com.github.jmkgreen.morphia.annotations.Entity;
-
-import io.car.server.core.subscription.SubscriptionFilterParameter;
+import io.car.server.core.entities.User;
 
 /**
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-@Entity("filters")
-public class MongoSubscriptionFilter extends MongoBaseEntity<MongoSubscriptionFilter>
-        implements
-        SubscriptionFilterParameter {
+public interface UserActivity extends Activity {
+    User getOther();
+
+    void setOther(User user);
+
+    boolean hasOther();
 }

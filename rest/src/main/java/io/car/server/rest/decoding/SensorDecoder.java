@@ -17,12 +17,20 @@
  */
 package io.car.server.rest.decoding;
 
-import io.car.server.rest.JSONConstants;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response.Status;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 import io.car.server.core.entities.Sensor;
+import io.car.server.rest.JSONConstants;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
@@ -30,7 +38,79 @@ import io.car.server.core.entities.Sensor;
 public class SensorDecoder extends AbstractEntityDecoder<Sensor> {
     @Override
     public Sensor decode(JsonNode j, MediaType mediaType) {
-        return getEntityFactory().createSensor().setName(j
-                .path(JSONConstants.NAME_KEY).textValue());
+        Sensor s = getEntityFactory().createSensor();
+        s.setType(j.path(JSONConstants.TYPE_KEY).textValue());
+        JsonNode properties = j.path(JSONConstants.PROPERTIES_KEY);
+        // do not allow a property called id...
+        if (!properties.path(JSONConstants.IDENTIFIER_KEY).isMissingNode()) {
+            throw new WebApplicationException(Status.BAD_REQUEST);
+        }
+        Iterator<String> iter = properties.fieldNames();
+        while (iter.hasNext()) {
+            String name = iter.next();
+            s.addProperty(name, parseNode(properties.get(name)));
+        }
+        return s;
+    }
+
+    private Object parseNode(JsonNode value) {
+        if (value.isContainerNode()) {
+            if (value.isArray()) {
+                return parseArrayNode(value);
+            } else if (value.isObject()) {
+                return parseObjectNode(value);
+            }
+        } else if (value.isValueNode()) {
+            return parseValueNode(value);
+        } else if (value.isMissingNode()) {
+            return null;
+        }
+        throw new IllegalArgumentException("can not decode " + value);
+    }
+
+    private Object parseObjectNode(JsonNode value) {
+        Iterator<String> names = value.fieldNames();
+        Map<String, Object> map = Maps.newHashMapWithExpectedSize(value.size());
+        while (names.hasNext()) {
+            String name = names.next();
+            map.put(name, parseNode(value.path(name)));
+        }
+        return map;
+    }
+
+    private Object parseArrayNode(JsonNode value) {
+        List<Object> list = Lists.newArrayListWithExpectedSize(value.size());
+        for (int i = 0; i < value.size(); ++i) {
+            list.add(parseNode(value.get(i)));
+        }
+        return list;
+    }
+
+    private Object parseValueNode(JsonNode value) {
+        if (value.isNull()) {
+            return null;
+        } else if (value.isNumber()) {
+            if (value.isFloatingPointNumber()) {
+                if (value.isBigDecimal()) {
+                    return value.decimalValue();
+                } else if (value.isDouble()) {
+                    return value.asDouble();
+                }
+            } else if (value.isIntegralNumber()) {
+                if (value.isBigInteger()) {
+                    return value.bigIntegerValue();
+                } else if (value.isLong()) {
+                    return value.longValue();
+                } else if (value.isInt()) {
+                    return value.intValue();
+                }
+            }
+            return value.numberValue();
+        } else if (value.isTextual()) {
+            return value.asText();
+        } else if (value.isBoolean()) {
+            return value.booleanValue();
+        }
+        throw new IllegalArgumentException("can not decode " + value);
     }
 }

@@ -97,9 +97,11 @@ public class MeasurementsResource extends AbstractResource {
             if (!canModifyUser(track.getUser())) {
                 throw new WebApplicationException(Status.FORBIDDEN);
             }
-            m = getService().createMeasurement(track, measurement.setUser(cur));
+            measurement.setUser(cur);
+            m = getService().createMeasurement(track, measurement);
         } else {
-            m = getService().createMeasurement(measurement.setUser(cur));
+            measurement.setUser(cur);
+            m = getService().createMeasurement(measurement);
         }
         return Response.created(
                 getUriInfo()

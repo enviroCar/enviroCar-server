@@ -1,0 +1,87 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "id": "http://schema.envirocar.org/activity.json#",
+    "type": "object",
+    "required": [
+        "time",
+        "user",
+        "type"
+    ],
+    "properties": {
+        "time": {
+            "$ref": "http://schema.envirocar.org/definitions.json#/date-time"
+        },
+        "user": {
+            "$ref": "http://schema.envirocar.org/user-ref.json#"
+        },
+        "type": {
+            "type": "string"
+        }
+    },
+    "oneOf": [
+        {
+            "$ref": "#/definitions/self-activity"
+        },
+        {
+            "$ref": "#/definitions/group-activity"
+        },
+        {
+            "$ref": "#/definitions/track-activity"
+        },
+        {
+            "$ref": "#/definitions/user-activity"
+        }
+    ],
+    "definititions": {
+        "group-activitiy": {
+            "properties": {
+                "group": {
+                    "$ref": "http://schema.envirocar.org/definitions.json#/group-ref"
+                },
+                "type": {
+                    "enum": [
+                        "CREATED_GROUP",
+                        "CHANGED_GROUP",
+                        "JOINED_GROUP",
+                        "LEFT_GROUP",
+                        "DELETED_GROUP"
+                    ]
+                }
+            }
+        },
+        "track-activity": {
+            "properties": {
+                "track": {
+                    "$ref": "http://schema.envirocar.org/definitions.json#/track-ref"
+                },
+                "type": {
+                    "enum": [
+                        "CREATED_TRACK"
+                    ]
+                }
+            }
+        },
+        "user-activity": {
+            "properties": {
+                "other": {
+                    "$ref": "http://schema.envirocar.org/definitions.json#/user-ref"
+                }
+            },
+            "type": {
+                "enum": [
+                    "FRIENDED_USER",
+                    "UNFRIENDED_USER"
+                ]
+            }
+        },
+        "self-activity": {
+            "properties": {
+                "type": {
+                    "enum": [
+                        "CHANGED_PROFILE"
+                    ]
+                }
+            }
+        }
+    }
+}

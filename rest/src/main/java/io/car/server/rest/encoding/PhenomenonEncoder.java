@@ -37,16 +37,22 @@ import io.car.server.rest.resources.RootResource;
 public class PhenomenonEncoder extends AbstractEntityEncoder<Phenomenon> {
     @Override
     public ObjectNode encodeJSON(Phenomenon t, MediaType mediaType) {
-        ObjectNode phenomenon = getJsonFactory().objectNode()
-                .put(JSONConstants.NAME_KEY, t.getName());
+        ObjectNode phenomenon = getJsonFactory().objectNode();
+        if (t.hasName()) {
+            phenomenon.put(JSONConstants.NAME_KEY, t.getName());
+        }
+        if (t.hasUnit()) {
+            phenomenon.put(JSONConstants.UNIT_KEY, t.getUnit());
+        }
         if (mediaType.equals(MediaTypes.PHENOMENON_TYPE)) {
-            if (t.getUnit() != null) {
-                phenomenon.put(JSONConstants.UNIT_KEY, t.getUnit());
+            if (t.hasCreationTime()) {
+                phenomenon.put(JSONConstants.CREATED_KEY, getDateTimeFormat()
+                        .print(t.getCreationTime()));
             }
-            phenomenon.put(JSONConstants.CREATED_KEY, getDateTimeFormat()
-                    .print(t.getCreationDate()));
-            phenomenon.put(JSONConstants.MODIFIED_KEY, getDateTimeFormat()
-                    .print(t.getLastModificationDate()));
+            if (t.hasModificationTime()) {
+                phenomenon.put(JSONConstants.MODIFIED_KEY, getDateTimeFormat()
+                        .print(t.getModificationTime()));
+            }
             URI stats = getUriInfo().getAbsolutePathBuilder()
                     .path(PhenomenonResource.STATISTIC).build();
             phenomenon.put(JSONConstants.STATISTIC_KEY, stats.toString());

@@ -29,18 +29,18 @@ public class GroupValidator extends AbstractValidator<Group> {
         isNotNullOrEmpty("name", t.getName());
         isNotNullOrEmpty("description", t.getDescription());
         isNotNull("owner", t.getOwner());
-        isNull("created", t.getCreationDate());
-        isNull("modified", t.getLastModificationDate());
+        isNull("created", t.getCreationTime());
+        isNull("modified", t.getModificationTime());
         return t;
     }
 
     @Override
     public Group validateUpdate(Group t) throws ValidationException {
-        isNotEmpty("name", t.getName());
+        isNull("name", t.getName());
         isNotEmpty("description", t.getDescription());
         isNull("owner", t.getOwner());
-        isNull("created", t.getCreationDate());
-        isNull("modified", t.getLastModificationDate());
+        isNull("created", t.getCreationTime());
+        isNull("modified", t.getModificationTime());
         return t;
     }
 }

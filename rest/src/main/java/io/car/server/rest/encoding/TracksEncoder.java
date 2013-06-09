@@ -20,6 +20,7 @@ package io.car.server.rest.encoding;
 import java.net.URI;
 
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriBuilder;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -28,22 +29,28 @@ import com.hp.hpl.jena.rdf.model.Model;
 import io.car.server.core.entities.Track;
 import io.car.server.core.entities.Tracks;
 import io.car.server.rest.JSONConstants;
+import io.car.server.rest.resources.TracksResource;
 
 public class TracksEncoder extends AbstractEntityEncoder<Tracks> {
     @Override
     public ObjectNode encodeJSON(Tracks t, MediaType mediaType) {
         ObjectNode root = getJsonFactory().objectNode();
         ArrayNode tracks = root.putArray(JSONConstants.TRACKS_KEY);
+        UriBuilder b = getUriInfo().getAbsolutePathBuilder()
+                .path(TracksResource.TRACK);
         for (Track u : t) {
-            URI uri = getUriInfo().getAbsolutePathBuilder()
-                    .path(u.getIdentifier()).build();
             ObjectNode track = tracks.addObject();
-            track.put(JSONConstants.IDENTIFIER_KEY, u.getIdentifier());
-            track.put(JSONConstants.MODIFIED_KEY, getDateTimeFormat().print(u
-                    .getLastModificationDate()));
-            if (u.getName() != null) {
+            if (u.hasIdentifier()) {
+                track.put(JSONConstants.IDENTIFIER_KEY, u.getIdentifier());
+            }
+            if (u.hasModificationTime()) {
+                track.put(JSONConstants.MODIFIED_KEY, getDateTimeFormat()
+                        .print(u.getModificationTime()));
+            }
+            if (u.hasName()) {
                 track.put(JSONConstants.NAME_KEY, u.getName());
             }
+            URI uri = b.build(u.getIdentifier());
             track.put(JSONConstants.HREF_KEY, uri.toString());
         }
         return root;

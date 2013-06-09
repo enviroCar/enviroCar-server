@@ -27,40 +27,45 @@ import com.vividsolutions.jts.geom.Geometry;
  *
  */
 public interface Measurement extends BaseEntity, Comparable<Measurement> {
-    String PHENOMENONS = "phenomenons";
-    String GEOMETRY = "geometry";
-    String USER = "user";
-    String SENSOR = "sensor";
-    String TIME = "time";
-    String TRACK = "track";
-
-    MeasurementValues getValues();
-
-    Measurement addValue(MeasurementValue value);
-
-    Measurement removeValue(MeasurementValue value);
-
     Geometry getGeometry();
 
-    Measurement setGeometry(Geometry geometry);
+    void setGeometry(Geometry geometry);
 
-    Measurement setUser(User user);
-
-    Sensor getSensor();
-
-    Measurement setSensor(Sensor sensor);
-
-    User getUser();
+    boolean hasGeometry();
 
     String getIdentifier();
 
+    void setIdentifier(String identifier);
+
+    boolean hasIdentifier();
+
     DateTime getTime();
 
-    Measurement setTime(DateTime time);
+    void setTime(DateTime time);
 
-    Measurement setIdentifier(String identifier);
+    boolean hasTime();
 
-    Measurement setTrack(Track track);
+    MeasurementValues getValues();
+
+    void addValue(MeasurementValue value);
+
+    void removeValue(MeasurementValue value);
+
+    User getUser();
+
+    void setUser(User user);
+
+    boolean hasUser();
+
+    Sensor getSensor();
+
+    void setSensor(Sensor sensor);
+
+    boolean hasSensor();
+
+    void setTrack(Track track);
 
     Track getTrack();
+
+    boolean hasTrack();
 }

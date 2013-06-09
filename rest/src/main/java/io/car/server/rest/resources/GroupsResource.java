@@ -26,9 +26,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
@@ -67,10 +65,10 @@ public class GroupsResource extends AbstractResource {
             @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit,
             @QueryParam(RESTConstants.PAGE) @DefaultValue("0") int page,
             @QueryParam(RESTConstants.SEARCH) String search) {
+        Pagination p = new Pagination(limit, page);
         if (user != null) {
-            return user.getGroups();
+            return getService().getGroups(user, p);
         } else {
-            Pagination p = new Pagination(limit, page);
             if (search != null && !search.trim().isEmpty()) {
                 return getService().searchGroups(search, p);
             } else {
@@ -95,9 +93,11 @@ public class GroupsResource extends AbstractResource {
     @Path(GROUP)
     public GroupResource group(@PathParam("group") String groupName) throws
             GroupNotFoundException {
-        Group group = getService().getGroup(groupName);
-        if (user != null && !user.hasGroup(group)) {
-            throw new WebApplicationException(Status.NOT_FOUND);
+        Group group;
+        if (user != null) {
+            group = getService().getGroup(user, groupName);
+        } else {
+            group = getService().getGroup(groupName);
         }
         return getResourceFactory().createGroupResource(group);
     }

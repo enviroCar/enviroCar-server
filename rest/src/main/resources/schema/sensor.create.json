@@ -1,14 +1,50 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
     "id": "http://schema.envirocar.org/sensor.create.json#",
-    "type": "object",
-    "additionalProperties": false,
-    "required": [
-        "name"
+    "allOf": [
+        {
+            "$ref": "http://schema.envirocar.org/sensor.json#/definitions/base"
+        },
+        {
+            "oneOf": [
+                {
+                    "not": {
+                        "$ref": "http://schema.envirocar.org/sensor.json#/definitions/car-type"
+                    }
+                },
+                {
+                    "allOf": [
+                        {
+                            "$ref": "http://schema.envirocar.org/sensor.json#/definitions/car-type"
+                        },
+                        {
+                            "$ref": "#/definitions/car-properties"
+                        }
+                    ]
+                }
+            ]
+        }
     ],
-    "properties": {
-        "name": {
-            "type": "string"
+    "definitions": {
+        "car-properties": {
+            "allOf": [
+                {
+                    "$ref": "http://schema.envirocar.org/sensor.json#/definitions/car-properties"
+                },
+                {
+                    "properties": {
+                        "properties": {
+                            "required": [
+                                "manufacturer",
+                                "model",
+                                "fuelType",
+                                "constructionYear"
+                            ],
+                            "additionalProperties": false
+                        }
+                    }
+                }
+            ]
         }
     }
 }

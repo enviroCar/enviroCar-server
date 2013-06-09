@@ -38,6 +38,7 @@ import com.google.inject.assistedinject.Assisted;
 
 import io.car.server.core.entities.User;
 import io.car.server.core.exception.IllegalModificationException;
+import io.car.server.core.exception.ResourceAlreadyExistException;
 import io.car.server.core.exception.ResourceNotFoundException;
 import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.core.exception.ValidationException;
@@ -56,6 +57,8 @@ public class UserResource extends AbstractResource {
     public static final String TRACKS = "tracks";
     public static final String MEASUREMENTS = "measurements";
     public static final String STATISTICS = "statistics";
+    public static final String ACTIVITIES = "activities";
+    public static final String AVATAR = "avatar";
     private final User user;
 
     @Inject
@@ -73,7 +76,7 @@ public class UserResource extends AbstractResource {
     @Authenticated
     public Response modify(User changes) throws
             UserNotFoundException, IllegalModificationException,
-            ValidationException {
+            ValidationException, ResourceAlreadyExistException {
         if (!canModifyUser(user)) {
             throw new WebApplicationException(Status.FORBIDDEN);
         }
@@ -131,5 +134,15 @@ public class UserResource extends AbstractResource {
     @Path(STATISTICS)
     public StatisticsResource statistics() {
         return getResourceFactory().createStatisticsResource(null, this.user);
+    }
+
+    @Path(ACTIVITIES)
+    public ActivitiesResource activities() {
+        return getResourceFactory().createActivitiesResource(this.user);
+    }
+
+    @Path(AVATAR)
+    public AvatarResource avatar() {
+        return getResourceFactory().createAvatarResource(this.user);
     }
 }
