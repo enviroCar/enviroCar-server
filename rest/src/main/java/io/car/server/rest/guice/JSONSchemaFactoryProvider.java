@@ -80,9 +80,8 @@ public class JSONSchemaFactoryProvider implements Provider<JsonSchemaFactory> {
         ValidationConfigurationBuilder vcb = ValidationConfiguration.newBuilder();
         JsonRef ref = JsonRef.fromURI(SchemaVersion.DRAFTV4.getLocation());
         /*
-         * ugliest hack ever. consider to duplicate the v4 schema
-         * under a different URI and to adjust the schema files
-         * with that URI
+         * FIXME ugliest hack ever. consider to duplicate the v4 schema under a
+         * different URI and to adjust the schema files with that URI
          */
         setLibrary(vcb, ref, modifiedV4);
         setDefaultLibrary(vcb, modifiedV4);

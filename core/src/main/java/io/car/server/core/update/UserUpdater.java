@@ -70,6 +70,7 @@ public class UserUpdater implements EntityUpdater<User> {
             }
         }
         if (changes.getGender() != null) {
+            original.setGender(changes.getGender());
         }
         if (changes.getLanguage() != null) {
             if (changes.getLanguage().isEmpty()) {
