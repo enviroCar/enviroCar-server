@@ -58,6 +58,7 @@ public class UserResource extends AbstractResource {
     public static final String MEASUREMENTS = "measurements";
     public static final String STATISTICS = "statistics";
     public static final String ACTIVITIES = "activities";
+    public static final String FRIEND_ACTIVITIES = "friendActivities";
     public static final String AVATAR = "avatar";
     private final User user;
 
@@ -138,6 +139,11 @@ public class UserResource extends AbstractResource {
     @Path(ACTIVITIES)
     public ActivitiesResource activities() {
         return getResourceFactory().createActivitiesResource(this.user);
+    }
+
+    @Path(FRIEND_ACTIVITIES)
+    public FriendsActivitiesResource friendActivities() {
+        return getResourceFactory().createFriendActivitiesResource(this.user);
     }
 
     @Path(AVATAR)
