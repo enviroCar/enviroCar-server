@@ -45,4 +45,6 @@ public interface ActivityDao {
     Activities get(Group group, Pagination p);
 
     Activities get(ActivityType type, Group group, Pagination p);
+
+    Activities getForFriends(User user, Pagination p);
 }

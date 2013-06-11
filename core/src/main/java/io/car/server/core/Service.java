@@ -383,6 +383,10 @@ public class Service {
         return activityDao.get(user, p);
     }
 
+    public Activities getFriendActivities(User user, Pagination p) {
+        return activityDao.getForFriends(user, p);
+    }
+
     public Activities getActivities(ActivityType type, Pagination p) {
         return activityDao.get(type, p);
     }
