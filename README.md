@@ -10,8 +10,8 @@ See the [wiki](https://github.com/car-io/car.io-server/wiki#api-reference).
 
 ## Deployments ##
 
-* http://giv-car.uni-muenster.de:8080/dev/rest/ (following the dev branch)
-* http://giv-car.uni-muenster.de:8080/stable/rest/ (following the master branch)
+* https://giv-car.uni-muenster.de/dev/rest/ (following the dev branch)
+* https://giv-car.uni-muenster.de/stable/rest/ (following the master branch)
 
 ## [License](https://github.com/car-io/car.io-server/blob/master/LICENSE) ##
 
