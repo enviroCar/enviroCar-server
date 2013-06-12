@@ -136,6 +136,10 @@ public class UserEncoder extends AbstractEntityEncoder<User> {
               getUriInfo().getAbsolutePathBuilder()
                 .path(UserResource.ACTIVITIES)
                 .build().toString());
+        j.put(JSONConstants.FRIEND_ACTIVITIES,
+              getUriInfo().getAbsolutePathBuilder()
+                .path(UserResource.FRIEND_ACTIVITIES)
+                .build().toString());
         j.put(JSONConstants.AVATAR_KEY,
               getUriInfo().getAbsolutePathBuilder()
                 .path(UserResource.AVATAR)

@@ -169,7 +169,7 @@ public class MongoUserDao extends AbstractMongoDao<String, MongoUser, Users>
         return super.fetch(q.retrievedFields(false, MongoUser.FRIENDS), p);
     }
 
-    protected Set<Key<MongoUser>> getFriendRefs(User user) {
+    public Set<Key<MongoUser>> getFriendRefs(User user) {
         MongoUser u = (MongoUser) user;
         Set<Key<MongoUser>> friendRefs = u.getFriends();
         if (friendRefs == null) {

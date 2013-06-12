@@ -79,4 +79,6 @@ public interface ResourceFactory {
     ActivitiesResource createActivitiesResource(@Nullable Group group);
 
     AvatarResource createAvatarResource(User user);
+
+    FriendsActivitiesResource createFriendActivitiesResource(User user);
 }

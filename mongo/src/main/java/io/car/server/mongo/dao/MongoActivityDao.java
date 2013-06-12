@@ -44,10 +44,29 @@ import io.car.server.mongo.entity.MongoUser;
 public class MongoActivityDao extends AbstractMongoDao<ObjectId, MongoActivity, Activities>
         implements ActivityDao {
     private MongoGroupDao groupDao;
+    private MongoUserDao userDao;
 
     @Inject
     public MongoActivityDao(MongoDB mongoDB) {
         super(MongoActivity.class, mongoDB);
+    }
+
+    public MongoGroupDao getGroupDao() {
+        return groupDao;
+    }
+
+    @Inject
+    public void setGroupDao(MongoGroupDao groupDao) {
+        this.groupDao = groupDao;
+    }
+
+    public MongoUserDao getUserDao() {
+        return userDao;
+    }
+
+    @Inject
+    public void setUserDao(MongoUserDao userDao) {
+        this.userDao = userDao;
     }
 
     @Override
@@ -97,16 +116,6 @@ public class MongoActivityDao extends AbstractMongoDao<ObjectId, MongoActivity, 
                 .field(MongoActivity.TYPE).equal(type), p);
     }
 
-
-    public MongoGroupDao getGroupDao() {
-        return groupDao;
-    }
-
-    @Inject
-    public void setGroupDao(MongoGroupDao groupDao) {
-        this.groupDao = groupDao;
-    }
-
     @Override
     protected Iterable<MongoActivity> fetch(Query<MongoActivity> q) {
         return super.fetch(q.order(reverse(MongoActivity.TIME)));
@@ -115,5 +124,12 @@ public class MongoActivityDao extends AbstractMongoDao<ObjectId, MongoActivity, 
     @Override
     protected Activities fetch(Query<MongoActivity> q, Pagination p) {
         return super.fetch(q.order(reverse(MongoActivity.TIME)), p);
+    }
+
+    @Override
+    public Activities getForFriends(User user, Pagination p) {
+        MongoUser u = (MongoUser) user;
+        Set<Key<MongoUser>> friends = userDao.getFriendRefs(u);
+        return fetch(q().field(MongoActivity.USER).in(friends), p);
     }
 }
