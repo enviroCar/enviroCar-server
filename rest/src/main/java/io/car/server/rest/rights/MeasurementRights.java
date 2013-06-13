@@ -17,26 +17,23 @@
  */
 package io.car.server.rest.rights;
 
-import io.car.server.core.entities.Group;
 import io.car.server.core.entities.Measurement;
-import io.car.server.core.entities.Phenomenon;
-import io.car.server.core.entities.Sensor;
-import io.car.server.core.entities.Track;
-import io.car.server.core.entities.User;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public interface DeletionRights {
-    boolean canDelete(User user);
+public interface MeasurementRights {
+    boolean canSeeUserOf(Measurement measurement);
 
-    boolean canDelete(Track track);
+    boolean canSeeSensorOf(Measurement measurement);
+
+    boolean canSeeTimeOf(Measurement measurement);
+
+    boolean canSeeCreationTimeOf(Measurement measurement);
+
+    boolean canSeeModificationTimeOf(Measurement measurement);
+
+    boolean canModify(Measurement measurement);
 
     boolean canDelete(Measurement measurement);
-
-    boolean canDelete(Group group);
-
-    boolean canDelete(Sensor sensor);
-
-    boolean canDelete(Phenomenon phenomenon);
 }

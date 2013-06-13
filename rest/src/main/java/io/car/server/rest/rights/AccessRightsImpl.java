@@ -220,4 +220,59 @@ public class AccessRightsImpl extends AbstractAccessRights {
     public boolean canSeeAvatarOf(User user) {
         return true;
     }
+
+    @Override
+    public boolean canSeeNameOf(Track track) {
+        return isSelfFriendOfOrShareGroup(track.getUser());
+    }
+
+    @Override
+    public boolean canSeeDescriptionOf(Track track) {
+        return isSelfFriendOfOrShareGroup(track.getUser());
+    }
+
+    @Override
+    public boolean canSeeSensorOf(Track track) {
+        return isSelfFriendOfOrShareGroup(track.getUser());
+    }
+
+    @Override
+    public boolean canSeeMeasurementsOf(Track track) {
+        return isSelfFriendOfOrShareGroup(track.getUser());
+    }
+
+    @Override
+    public boolean canSeeSensorOf(Measurement measurement) {
+        return isSelfFriendOfOrShareGroup(measurement.getUser());
+    }
+
+    @Override
+    public boolean canSeeTimeOf(Measurement measurement) {
+        return isSelfFriendOfOrShareGroup(measurement.getUser());
+    }
+
+    @Override
+    public boolean canSeeCreationTimeOf(Measurement measurement) {
+        return isSelfFriendOfOrShareGroup(measurement.getUser());
+    }
+
+    @Override
+    public boolean canSeeModificationTimeOf(Measurement measurement) {
+        return isSelfFriendOfOrShareGroup(measurement.getUser());
+    }
+
+    @Override
+    public boolean canSeeNameOf(Group group) {
+        return true;
+    }
+
+    @Override
+    public boolean canSeeDescriptionOf(Group group) {
+        return true;
+    }
+
+    @Override
+    public boolean canSeeMembersOf(Group group) {
+        return isMember(group);
+    }
 }

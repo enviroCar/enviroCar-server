@@ -18,25 +18,24 @@
 package io.car.server.rest.rights;
 
 import io.car.server.core.entities.Group;
-import io.car.server.core.entities.Measurement;
-import io.car.server.core.entities.Phenomenon;
-import io.car.server.core.entities.Sensor;
-import io.car.server.core.entities.Track;
-import io.car.server.core.entities.User;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public interface ModificationRights {
-    boolean canModify(User user);
+public interface GroupRights {
+    boolean canSeeActivitiesOf(Group group);
 
-    boolean canModify(Track track);
+    boolean canJoinGroup(Group group);
 
-    boolean canModify(Measurement measurement);
+    boolean canLeaveGroup(Group group);
+
+    boolean canSeeNameOf(Group group);
+
+    boolean canSeeDescriptionOf(Group group);
+
+    boolean canSeeMembersOf(Group group);
 
     boolean canModify(Group group);
 
-    boolean canModify(Sensor sensor);
-
-    boolean canModify(Phenomenon phenomenon);
+    boolean canDelete(Group group);
 }

@@ -17,40 +17,23 @@
  */
 package io.car.server.rest.rights;
 
-import io.car.server.core.entities.User;
+import io.car.server.core.entities.Track;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public interface UserProfileRights {
+public interface TrackRights {
+    boolean canSeeUserOf(Track track);
 
-    boolean canSeeNameOf(User user);
+    boolean canSeeNameOf(Track track);
 
-    boolean canSeeMailOf(User user);
+    boolean canSeeDescriptionOf(Track track);
 
-    boolean canSeeIsAdminOf(User user);
+    boolean canSeeSensorOf(Track track);
 
-    boolean canSeeCountryOf(User user);
+    boolean canSeeMeasurementsOf(Track track);
 
-    boolean canSeeDayOfBirthOf(User user);
+    boolean canModify(Track track);
 
-    boolean canSeeFirstNameOf(User user);
-
-    boolean canSeeGenderOf(User user);
-
-    boolean canSeeLanguageOf(User user);
-
-    boolean canSeeLastNameOf(User user);
-
-    boolean canSeeLocationOf(User user);
-
-    boolean canSeeUrlOf(User user);
-
-    boolean canSeeAboutMeOf(User user);
-
-    boolean canSeeCreationTimeOf(User user);
-
-    boolean canSeeModificationTimeOf(User user);
-
-    boolean canSeeAvatarOf(User user);
+    boolean canDelete(Track track);
 }
