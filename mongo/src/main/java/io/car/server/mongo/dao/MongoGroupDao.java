@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import com.github.jmkgreen.morphia.Key;
 import com.github.jmkgreen.morphia.query.Query;
 import com.github.jmkgreen.morphia.query.UpdateResults;
+import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
 import io.car.server.core.dao.GroupDao;
@@ -216,5 +217,12 @@ public class MongoGroupDao extends AbstractMongoDao<String, MongoGroup, Groups>
             }
         }
         return memberRefs;
+    }
+
+    @Override
+    public boolean shareGroup(User user1, User user2) {
+        Iterable<Key<User>> users = Lists.newArrayList(reference(user1),
+                                                       reference(user2));
+        return q().field(MongoGroup.MEMBERS).hasAllOf(users).getKey() != null;
     }
 }

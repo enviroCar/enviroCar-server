@@ -15,37 +15,29 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.resources;
+package io.car.server.rest.auth;
 
-import javax.ws.rs.DELETE;
+import java.security.Principal;
 
-import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
-
-import io.car.server.core.entities.Group;
 import io.car.server.core.entities.User;
-import io.car.server.core.exception.GroupNotFoundException;
-import io.car.server.core.exception.UserNotFoundException;
-import io.car.server.rest.auth.Authenticated;
 
 /**
+ * TODO JavaDoc
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class GroupMemberResource extends UserResource {
-    private Group group;
+public class PrincipalImpl implements Principal {
+    private final User user;
 
-    @Inject
-    public GroupMemberResource(@Assisted Group group,
-                               @Assisted User member) {
-        super(member);
-        this.group = group;
+    PrincipalImpl(User user) {
+        this.user = user;
     }
 
-    @DELETE
     @Override
-    @Authenticated
-    public void delete() throws UserNotFoundException, GroupNotFoundException {
-        checkRights(getAccessRights().canLeaveGroup(group));
-        getService().removeGroupMember(group, getUser());
+    public String getName() {
+        return user.getName();
+    }
+
+    public User getUser() {
+        return user;
     }
 }

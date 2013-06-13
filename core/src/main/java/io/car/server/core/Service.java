@@ -358,6 +358,10 @@ public class Service {
         return u;
     }
 
+    public boolean isGroupMember(Group group, User user) {
+        return this.groupDao.getMember(group, user.getName()) != null;
+    }
+
     public Users getFriends(User user) {
         return this.userDao.getFriends(user);
     }
@@ -406,5 +410,17 @@ public class Service {
     public Sensors getSensorsByType(String type, Set<PropertyFilter> filters,
                                     Pagination p) {
         return this.sensorDao.getByType(type, filters, p);
+    }
+
+    public boolean isFriend(User user1, User user2) {
+        try {
+            return getFriend(user1, user2.getName()) != null;
+        } catch (UserNotFoundException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    public boolean shareGroup(User user, User user0) {
+        return this.groupDao.shareGroup(user, user0);
     }
 }

@@ -15,37 +15,50 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.resources;
+package io.car.server.rest.auth;
 
-import javax.ws.rs.DELETE;
+import java.security.Principal;
 
-import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
+import javax.ws.rs.core.SecurityContext;
 
-import io.car.server.core.entities.Group;
 import io.car.server.core.entities.User;
-import io.car.server.core.exception.GroupNotFoundException;
-import io.car.server.core.exception.UserNotFoundException;
-import io.car.server.rest.auth.Authenticated;
 
 /**
+ * TODO JavaDoc
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class GroupMemberResource extends UserResource {
-    private Group group;
+public class SecurityContextImpl implements SecurityContext {
 
-    @Inject
-    public GroupMemberResource(@Assisted Group group,
-                               @Assisted User member) {
-        super(member);
-        this.group = group;
+    private final PrincipalImpl principal;
+    private final boolean secure;
+
+    SecurityContextImpl(User user, boolean secure) {
+        this.secure = secure;
+        this.principal = new PrincipalImpl(user);
     }
 
-    @DELETE
     @Override
-    @Authenticated
-    public void delete() throws UserNotFoundException, GroupNotFoundException {
-        checkRights(getAccessRights().canLeaveGroup(group));
-        getService().removeGroupMember(group, getUser());
+    public Principal getUserPrincipal() {
+        return this.principal;
     }
+
+    @Override
+    public boolean isUserInRole(String role) {
+        if (role.equals(AuthConstants.ADMIN_ROLE)) {
+            return principal.getUser().isAdmin();
+        } else {
+            return role.equals(AuthConstants.USER_ROLE);
+        }
+    }
+
+    @Override
+    public boolean isSecure() {
+        return secure;
+    }
+
+    @Override
+    public String getAuthenticationScheme() {
+        return AuthConstants.AUTH_SCHEME;
+    }
+
 }

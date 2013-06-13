@@ -23,9 +23,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
@@ -64,9 +62,7 @@ public class TrackResource extends AbstractResource {
                                                  UserNotFoundException,
                                                  IllegalModificationException,
                                                  ValidationException {
-        if (!canModifyUser(getCurrentUser())) {
-            throw new WebApplicationException(Status.FORBIDDEN);
-        }
+        checkRights(getAccessRights().canModify(track));
         getService().modifyTrack(track, changes);
         return Response.ok().build();
     }
@@ -81,9 +77,7 @@ public class TrackResource extends AbstractResource {
     @DELETE
     @Authenticated
     public void delete() throws TrackNotFoundException, UserNotFoundException {
-        if (!canModifyUser(getCurrentUser())) {
-            throw new WebApplicationException(Status.FORBIDDEN);
-        }
+        checkRights(getAccessRights().canDelete(track));
         getService().deleteTrack(track);
     }
 

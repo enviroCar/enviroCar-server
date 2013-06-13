@@ -26,9 +26,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
@@ -91,15 +89,12 @@ public class MeasurementsResource extends AbstractResource {
             ResourceAlreadyExistException, ValidationException,
             UserNotFoundException {
         Measurement m;
-        User cur = getService().getUser(getCurrentUser());
         if (track != null) {
-            if (!canModifyUser(track.getUser())) {
-                throw new WebApplicationException(Status.FORBIDDEN);
-            }
-            measurement.setUser(cur);
+            checkRights(getAccessRights().canModify(track));
+            measurement.setUser(getCurrentUser());
             m = getService().createMeasurement(track, measurement);
         } else {
-            measurement.setUser(cur);
+            measurement.setUser(getCurrentUser());
             m = getService().createMeasurement(measurement);
         }
         return Response.created(

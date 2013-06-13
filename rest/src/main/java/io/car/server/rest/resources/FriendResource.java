@@ -19,8 +19,6 @@ package io.car.server.rest.resources;
 
 
 import javax.ws.rs.DELETE;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response.Status;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
@@ -45,10 +43,7 @@ public class FriendResource extends UserResource {
     @Override
     @Authenticated
     public void delete() throws ResourceNotFoundException {
-        if (!canModifyUser(user)) {
-            throw new WebApplicationException(Status.FORBIDDEN);
-        }
+        checkRights(getAccessRights().canModify(user));
         getService().removeFriend(user, getUser());
-
     }
 }

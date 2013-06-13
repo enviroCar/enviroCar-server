@@ -26,10 +26,8 @@ import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriBuilder;
 
 import com.google.common.base.Preconditions;
@@ -78,9 +76,7 @@ public class UserResource extends AbstractResource {
     public Response modify(User changes) throws
             UserNotFoundException, IllegalModificationException,
             ValidationException, ResourceAlreadyExistException {
-        if (!canModifyUser(user)) {
-            throw new WebApplicationException(Status.FORBIDDEN);
-        }
+        checkRights(getAccessRights().canModify(user));
         User modified = getService().modifyUser(user, changes);
         if (modified.getName().equals(user.getName())) {
             return Response.noContent().build();
@@ -105,9 +101,7 @@ public class UserResource extends AbstractResource {
     @DELETE
     @Authenticated
     public void delete() throws ResourceNotFoundException {
-        if (!canModifyUser(this.user)) {
-            throw new WebApplicationException(Status.FORBIDDEN);
-        }
+        checkRights(getAccessRights().canDelete(user));
         getService().deleteUser(this.user);
     }
 

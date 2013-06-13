@@ -57,4 +57,6 @@ public interface GroupDao {
     void addMember(Group group, User user);
 
     Users getMembers(Group group, Pagination pagination);
+
+    boolean shareGroup(User user, User user0);
 }

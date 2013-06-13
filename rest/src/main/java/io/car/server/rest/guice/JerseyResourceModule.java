@@ -20,6 +20,8 @@ package io.car.server.rest.guice;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 
+import io.car.server.rest.auth.AccessRights;
+import io.car.server.rest.auth.AccessRightsImpl;
 import io.car.server.rest.resources.ResourceFactory;
 import io.car.server.rest.resources.RootResource;
 
@@ -29,6 +31,7 @@ import io.car.server.rest.resources.RootResource;
 public class JerseyResourceModule extends AbstractModule {
     @Override
     protected void configure() {
+        bind(AccessRights.class).to(AccessRightsImpl.class);
         install(new FactoryModuleBuilder().build(ResourceFactory.class));
         bind(RootResource.class);
     }

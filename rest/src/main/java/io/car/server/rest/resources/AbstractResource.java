@@ -17,6 +17,8 @@
  */
 package io.car.server.rest.resources;
 
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
@@ -26,55 +28,59 @@ import com.google.inject.Provider;
 import io.car.server.core.Service;
 import io.car.server.core.entities.EntityFactory;
 import io.car.server.core.entities.User;
-import io.car.server.core.exception.UserNotFoundException;
-import io.car.server.rest.auth.AuthConstants;
+import io.car.server.rest.auth.PrincipalImpl;
+import io.car.server.rest.auth.AccessRights;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public abstract class AbstractResource {
     private Provider<SecurityContext> securityContext;
+    private Provider<AccessRights> accessRights;
     private Provider<Service> service;
     private Provider<UriInfo> uriInfo;
     private Provider<ResourceFactory> resourceFactory;
     private Provider<EntityFactory> entityFactory;
 
-    protected boolean canModifyUser(User user) {
-        return canModifyUser(user.getName());
+    protected AccessRights getAccessRights() {
+        return accessRights.get();
     }
 
-    protected boolean canModifyUser(String user) {
-        return getSecurityContext().isUserInRole(AuthConstants.ADMIN_ROLE) ||
-               (getSecurityContext().getUserPrincipal() != null &&
-                getSecurityContext().getUserPrincipal().getName().equals(user));
-    }
-
-
-    public SecurityContext getSecurityContext() {
-        return securityContext.get();
-    }
-
-    public UriInfo getUriInfo() {
+    protected UriInfo getUriInfo() {
         return uriInfo.get();
     }
 
-    public Service getService() {
+    protected Service getService() {
         return service.get();
     }
 
-    public ResourceFactory getResourceFactory() {
+    protected ResourceFactory getResourceFactory() {
         return resourceFactory.get();
     }
 
-    protected String getCurrentUser() throws UserNotFoundException {
-        return getSecurityContext().getUserPrincipal().getName();
+    protected EntityFactory getEntityFactory() {
+        return entityFactory.get();
     }
+
+    protected void checkRights(boolean right) {
+        if (!right) {
+            throw new WebApplicationException(Status.FORBIDDEN);
+        }
+    }
+
+    protected User getCurrentUser() {
+        PrincipalImpl p = (PrincipalImpl) securityContext.get()
+                .getUserPrincipal();
+        return p.getUser();
+    }
+
 
     @Inject
-    public void setSecurityContext(Provider<SecurityContext> securityContext) {
-        this.securityContext = securityContext;
+    public void setAccessRights(Provider<AccessRights> accessRights) {
+        this.accessRights = accessRights;
     }
 
+    
     @Inject
     public void setUriInfo(Provider<UriInfo> uriInfo) {
         this.uriInfo = uriInfo;
@@ -88,10 +94,6 @@ public abstract class AbstractResource {
     @Inject
     public void setResourceFactory(Provider<ResourceFactory> resourceFactory) {
         this.resourceFactory = resourceFactory;
-    }
-
-    public EntityFactory getEntityFactory() {
-        return entityFactory.get();
     }
 
     @Inject
