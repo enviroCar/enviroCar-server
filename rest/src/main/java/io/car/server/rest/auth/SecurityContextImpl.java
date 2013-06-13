@@ -24,7 +24,6 @@ import javax.ws.rs.core.SecurityContext;
 import io.car.server.core.entities.User;
 
 /**
- * TODO JavaDoc
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class SecurityContextImpl implements SecurityContext {

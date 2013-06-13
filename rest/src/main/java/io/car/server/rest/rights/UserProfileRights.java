@@ -15,28 +15,42 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.auth;
-
-import java.security.Principal;
+package io.car.server.rest.rights;
 
 import io.car.server.core.entities.User;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class PrincipalImpl implements Principal {
-    private final User user;
+public interface UserProfileRights {
 
-    PrincipalImpl(User user) {
-        this.user = user;
-    }
+    boolean canSeeNameOf(User user);
 
-    @Override
-    public String getName() {
-        return user.getName();
-    }
+    boolean canSeeMailOf(User user);
 
-    public User getUser() {
-        return user;
-    }
+    boolean canSeeIsAdminOf(User user);
+
+    boolean canSeeCountryOf(User user);
+
+    boolean canSeeDayOfBirthOf(User user);
+
+    boolean canSeeFirstNameOf(User user);
+
+    boolean canSeeGenderOf(User user);
+
+    boolean canSeeLanguageOf(User user);
+
+    boolean canSeeLastNameOf(User user);
+
+    boolean canSeeLocationOf(User user);
+
+    boolean canSeeUrlOf(User user);
+
+    boolean canSeeAboutMeOf(User user);
+
+    boolean canSeeCreationTimeOf(User user);
+
+    boolean canSeeModificationTimeOf(User user);
+
+    boolean canSeeAvatarOf(User user);
 }

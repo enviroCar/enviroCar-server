@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.auth;
+package io.car.server.rest.rights;
 
 import java.util.Map;
 
@@ -27,14 +27,15 @@ import com.google.inject.Inject;
 import io.car.server.core.Service;
 import io.car.server.core.entities.Group;
 import io.car.server.core.entities.User;
+import io.car.server.rest.auth.PrincipalImpl;
 
 public abstract class AbstractAccessRights implements AccessRights {
     private User user;
     private Service service;
-    private Map<User, Boolean> isFriend = Maps.newHashMap();
-    private Map<User, Boolean> isFriendOf = Maps.newHashMap();
-    private Map<Group, Boolean> isMember = Maps.newHashMap();
-    private Map<User, Boolean> shareGroup = Maps.newHashMap();
+    private final Map<User, Boolean> isFriend = Maps.newHashMap();
+    private final Map<User, Boolean> isFriendOf = Maps.newHashMap();
+    private final Map<Group, Boolean> isMember = Maps.newHashMap();
+    private final Map<User, Boolean> shareGroup = Maps.newHashMap();
 
     @Inject
     public void setService(Service service) {
@@ -78,5 +79,9 @@ public abstract class AbstractAccessRights implements AccessRights {
             isMember.put(group, service.isGroupMember(group, this.user));
         }
         return isMember.get(group).booleanValue();
+    }
+
+    protected boolean isSelfFriendOfOrShareGroup(User user) {
+        return isSelf(user) || isFriendOf(user) || shareGroup(user);
     }
 }

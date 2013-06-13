@@ -15,28 +15,42 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.auth;
+package io.car.server.rest.rights;
 
-import java.security.Principal;
-
+import io.car.server.core.entities.Group;
+import io.car.server.core.entities.Measurement;
+import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class PrincipalImpl implements Principal {
-    private final User user;
+public interface AccessRights extends UserProfileRights,
+                                      ModificationRights,
+                                      DeletionRights {
+    boolean isSelf(User user);
 
-    PrincipalImpl(User user) {
-        this.user = user;
-    }
+    boolean canSeeTracksOf(User user);
 
-    @Override
-    public String getName() {
-        return user.getName();
-    }
+    boolean canSeeMeasurementsOf(User user);
 
-    public User getUser() {
-        return user;
-    }
+    boolean canSeeFriendsOf(User user);
+
+    boolean canSeeStatisticsOf(User user);
+
+    boolean canSeeGroupsOf(User user);
+
+    boolean canSeeUserOf(Track track);
+
+    boolean canSeeUserOf(Measurement measurement);
+
+    boolean canSeeActivitiesOf(User user);
+
+    boolean canSeeFriendActivitiesOf(User user);
+
+    boolean canSeeActivitiesOf(Group group);
+
+    boolean canJoinGroup(Group group);
+
+    boolean canLeaveGroup(Group group);
 }

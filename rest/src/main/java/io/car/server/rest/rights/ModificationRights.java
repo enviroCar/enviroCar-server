@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.auth;
+package io.car.server.rest.rights;
 
 import io.car.server.core.entities.Group;
 import io.car.server.core.entities.Measurement;
@@ -25,32 +25,9 @@ import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
 
 /**
- * TODO JavaDoc
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public interface AccessRights {
-    boolean isSelf(User user);
-
-    boolean canSeeTracksOf(User user);
-
-    boolean canSeeMeasurementsOf(User user);
-
-    boolean canSeeFriendsOf(User user);
-
-    boolean canSeeGroupsOf(User user);
-
-    boolean canSeeProfileOf(User user);
-
-    boolean canSeeMailAddressOf(User user);
-
-    boolean canSeeUserOf(Track track);
-
-    boolean canSeeUserOf(Measurement measurement);
-
-    boolean canSeeActivitiesOf(User user);
-
-    boolean canSeeActivitiesOf(Group group);
-
+public interface ModificationRights {
     boolean canModify(User user);
 
     boolean canModify(Track track);
@@ -62,20 +39,4 @@ public interface AccessRights {
     boolean canModify(Sensor sensor);
 
     boolean canModify(Phenomenon phenomenon);
-
-    boolean canJoinGroup(Group group);
-
-    boolean canLeaveGroup(Group group);
-
-    boolean canDelete(User user);
-
-    boolean canDelete(Track track);
-
-    boolean canDelete(Measurement measurement);
-
-    boolean canDelete(Group group);
-
-    boolean canDelete(Sensor sensor);
-
-    boolean canDelete(Phenomenon phenomenon);
 }

@@ -15,28 +15,28 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.auth;
+package io.car.server.rest.rights;
 
-import java.security.Principal;
-
+import io.car.server.core.entities.Group;
+import io.car.server.core.entities.Measurement;
+import io.car.server.core.entities.Phenomenon;
+import io.car.server.core.entities.Sensor;
+import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class PrincipalImpl implements Principal {
-    private final User user;
+public interface DeletionRights {
+    boolean canDelete(User user);
 
-    PrincipalImpl(User user) {
-        this.user = user;
-    }
+    boolean canDelete(Track track);
 
-    @Override
-    public String getName() {
-        return user.getName();
-    }
+    boolean canDelete(Measurement measurement);
 
-    public User getUser() {
-        return user;
-    }
+    boolean canDelete(Group group);
+
+    boolean canDelete(Sensor sensor);
+
+    boolean canDelete(Phenomenon phenomenon);
 }

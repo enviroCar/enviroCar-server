@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.auth;
+package io.car.server.rest.rights;
 
 import io.car.server.core.entities.Group;
 import io.car.server.core.entities.Measurement;
@@ -28,9 +28,7 @@ public class AccessRightsImpl extends AbstractAccessRights {
    
     @Override
     public boolean canSeeTracksOf(User user) {
-        return isSelf(user) ||
-               isFriend(user) ||
-               shareGroup(user);
+        return isSelfFriendOfOrShareGroup(user);
     }
 
     @Override
@@ -46,16 +44,6 @@ public class AccessRightsImpl extends AbstractAccessRights {
     @Override
     public boolean canSeeGroupsOf(User user) {
         return true;
-    }
-
-    @Override
-    public boolean canSeeProfileOf(User user) {
-        return true;
-    }
-
-    @Override
-    public boolean canSeeMailAddressOf(User user) {
-        return isSelf(user);
     }
 
     @Override
@@ -120,23 +108,17 @@ public class AccessRightsImpl extends AbstractAccessRights {
 
     @Override
     public boolean canSeeUserOf(Track track) {
-        return isSelf(track.getUser()) ||
-               isFriendOf(track.getUser()) ||
-               shareGroup(track.getUser());
+        return isSelfFriendOfOrShareGroup(track.getUser());
     }
 
     @Override
     public boolean canSeeUserOf(Measurement measurement) {
-        return isSelf(measurement.getUser()) ||
-               isFriendOf(measurement.getUser()) ||
-               shareGroup(measurement.getUser());
+        return isSelfFriendOfOrShareGroup(measurement.getUser());
     }
 
     @Override
     public boolean canSeeActivitiesOf(User user) {
-        return isSelf(user) ||
-               isFriendOf(user) ||
-               shareGroup(user);
+        return isSelfFriendOfOrShareGroup(user);
     }
 
     @Override
@@ -151,6 +133,91 @@ public class AccessRightsImpl extends AbstractAccessRights {
 
     @Override
     public boolean canLeaveGroup(Group group) {
+        return true;
+    }
+
+    @Override
+    public boolean canSeeNameOf(User user) {
+        return true;
+    }
+
+    @Override
+    public boolean canSeeMailOf(User user) {
+        return isSelf(user);
+    }
+
+    @Override
+    public boolean canSeeIsAdminOf(User user) {
+        return user.isAdmin();
+    }
+
+    @Override
+    public boolean canSeeCountryOf(User user) {
+        return isSelfFriendOfOrShareGroup(user);
+    }
+
+    @Override
+    public boolean canSeeDayOfBirthOf(User user) {
+        return isSelfFriendOfOrShareGroup(user);
+    }
+
+    @Override
+    public boolean canSeeFirstNameOf(User user) {
+        return isSelfFriendOfOrShareGroup(user);
+    }
+
+    @Override
+    public boolean canSeeGenderOf(User user) {
+        return isSelfFriendOfOrShareGroup(user);
+    }
+
+    @Override
+    public boolean canSeeLanguageOf(User user) {
+        return isSelfFriendOfOrShareGroup(user);
+    }
+
+    @Override
+    public boolean canSeeLastNameOf(User user) {
+        return isSelfFriendOfOrShareGroup(user);
+    }
+
+    @Override
+    public boolean canSeeLocationOf(User user) {
+        return isSelfFriendOfOrShareGroup(user);
+    }
+
+    @Override
+    public boolean canSeeUrlOf(User user) {
+        return isSelfFriendOfOrShareGroup(user);
+    }
+
+    @Override
+    public boolean canSeeAboutMeOf(User user) {
+        return isSelfFriendOfOrShareGroup(user);
+    }
+
+    @Override
+    public boolean canSeeCreationTimeOf(User user) {
+        return true;
+    }
+
+    @Override
+    public boolean canSeeModificationTimeOf(User user) {
+        return true;
+    }
+
+    @Override
+    public boolean canSeeStatisticsOf(User user) {
+        return isSelfFriendOfOrShareGroup(user);
+    }
+
+    @Override
+    public boolean canSeeFriendActivitiesOf(User user) {
+        return isSelf(user);
+    }
+
+    @Override
+    public boolean canSeeAvatarOf(User user) {
         return true;
     }
 }

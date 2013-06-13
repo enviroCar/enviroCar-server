@@ -29,7 +29,7 @@ import io.car.server.core.Service;
 import io.car.server.core.entities.EntityFactory;
 import io.car.server.core.entities.User;
 import io.car.server.rest.auth.PrincipalImpl;
-import io.car.server.rest.auth.AccessRights;
+import io.car.server.rest.rights.AccessRights;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
