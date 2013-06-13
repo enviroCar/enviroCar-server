@@ -275,4 +275,29 @@ public class AccessRightsImpl extends AbstractAccessRights {
     public boolean canSeeMembersOf(Group group) {
         return isMember(group);
     }
+
+    @Override
+    public boolean canSeeCreationTimeOf(Track track) {
+        return isSelfFriendOfOrShareGroup(track.getUser());
+    }
+
+    @Override
+    public boolean canSeeModificationTimeOf(Track track) {
+        return isSelfFriendOfOrShareGroup(track.getUser());
+    }
+
+    @Override
+    public boolean canSeeOwnerOf(Group group) {
+        return true;
+    }
+
+    @Override
+    public boolean canSeeCreationTimeOf(Group group) {
+        return isMember(group);
+    }
+
+    @Override
+    public boolean canSeeModificationTimeOf(Group group) {
+        return isMember(group);
+    }
 }
