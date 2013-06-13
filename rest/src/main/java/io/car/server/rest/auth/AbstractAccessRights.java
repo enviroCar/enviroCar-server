@@ -17,18 +17,24 @@
  */
 package io.car.server.rest.auth;
 
+import java.util.Map;
+
 import javax.ws.rs.core.SecurityContext;
 
+import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 
 import io.car.server.core.Service;
 import io.car.server.core.entities.Group;
 import io.car.server.core.entities.User;
-import io.car.server.rest.auth.PrincipalImpl;
 
 public abstract class AbstractAccessRights implements AccessRights {
     private User user;
     private Service service;
+    private Map<User, Boolean> isFriend = Maps.newHashMap();
+    private Map<User, Boolean> isFriendOf = Maps.newHashMap();
+    private Map<Group, Boolean> isMember = Maps.newHashMap();
+    private Map<User, Boolean> shareGroup = Maps.newHashMap();
 
     @Inject
     public void setService(Service service) {
@@ -47,18 +53,30 @@ public abstract class AbstractAccessRights implements AccessRights {
     }
 
     protected boolean isFriend(User user) {
-        return service.isFriend(this.user, user);
+        if (!isFriend.containsKey(user)) {
+            isFriend.put(user, service.isFriend(this.user, user));
+        }
+        return isFriend.get(user).booleanValue();
     }
 
     protected boolean isFriendOf(User user) {
-        return service.isFriend(user, this.user);
+        if (!isFriendOf.containsKey(user)) {
+            isFriendOf.put(user, service.isFriend(user, this.user));
+        }
+        return isFriendOf.get(user).booleanValue();
     }
 
     protected boolean shareGroup(User user) {
-        return service.shareGroup(this.user, user);
+        if (!shareGroup.containsKey(user)) {
+            shareGroup.put(user, service.shareGroup(this.user, user));
+        }
+        return shareGroup.get(user).booleanValue();
     }
 
     protected boolean isMember(Group group) {
-        return service.isGroupMember(group, this.user);
+        if (!isMember.containsKey(group)) {
+            isMember.put(group, service.isGroupMember(group, this.user));
+        }
+        return isMember.get(group).booleanValue();
     }
 }
