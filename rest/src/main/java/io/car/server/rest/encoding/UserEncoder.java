@@ -49,28 +49,29 @@ public class UserEncoder extends AbstractEntityEncoder<User> {
     @Override
     public ObjectNode encode(User t, MediaType mediaType) {
         ObjectNode j = getJsonFactory().objectNode();
-        if (t.hasName()) {
+        if (t.hasName() && getRights().canSeeNameOf(t)) {
             j.put(JSONConstants.NAME_KEY, t.getName());
         }
         if (mediaType.equals(MediaTypes.USER_TYPE)) {
-            if (t.hasMail()) {
+            if (t.hasMail() && getRights().canSeeMailOf(t)) {
                 j.put(JSONConstants.MAIL_KEY, t.getMail());
             }
-            if (t.hasCreationTime()) {
+            if (t.hasCreationTime() && getRights().canSeeCreationTimeOf(t)) {
                 j.put(JSONConstants.CREATED_KEY,
                       getDateTimeFormat().print(t.getCreationTime()));
             }
-            if (t.hasModificationTime()) {
+            if (t.hasModificationTime() && getRights()
+                    .canSeeModificationTimeOf(t)) {
                 j.put(JSONConstants.MODIFIED_KEY,
                       getDateTimeFormat().print(t.getModificationTime()));
             }
-            if (t.hasFirstName()) {
+            if (t.hasFirstName() && getRights().canSeeFirstNameOf(t)) {
                 j.put(JSONConstants.FIRST_NAME_KEY, t.getFirstName());
             }
-            if (t.hasLastName()) {
+            if (t.hasLastName() && getRights().canSeeLastNameOf(t)) {
                 j.put(JSONConstants.LAST_NAME_KEY, t.getLastName());
             }
-            if (t.hasGender()) {
+            if (t.hasGender() && getRights().canSeeGenderOf(t)) {
                 switch (t.getGender()) {
                     case MALE:
                         j.put(JSONConstants.GENDER_KEY, JSONConstants.MALE);
@@ -80,24 +81,23 @@ public class UserEncoder extends AbstractEntityEncoder<User> {
                         break;
                 }
             }
-            if (t.hasDayOfBirth()) {
+            if (t.hasDayOfBirth() && getRights().canSeeDayOfBirthOf(t)) {
                 j.put(JSONConstants.DAY_OF_BIRTH_KEY, t.getDayOfBirth());
             }
-            if (t.hasAboutMe()) {
+            if (t.hasAboutMe() && getRights().canSeeAboutMeOf(t)) {
                 j.put(JSONConstants.ABOUT_ME_KEY, t.getAboutMe());
             }
-            if (t.hasCountry()) {
+            if (t.hasCountry() && getRights().canSeeCountryOf(t)) {
                 j.put(JSONConstants.COUNTRY_KEY, t.getCountry());
             }
-            if (t.hasLocation()) {
+            if (t.hasLocation() && getRights().canSeeLocationOf(t)) {
                 j.put(JSONConstants.LOCATION_KEY,
                       geometryEncoder.encode(t.getLocation(), mediaType));
             }
-            if (t.hasLanguage()) {
+            if (t.hasLanguage() && getRights().canSeeLanguageOf(t)) {
                 j.put(JSONConstants.LANGUAGE_KEY, t.getLanguage());
             }
-
-            encodeLinks(j);
+            encodeLinks(j, t);
         } else {
             URI uri = getUriInfo().getBaseUriBuilder()
                     .path(RootResource.class)
@@ -108,38 +108,54 @@ public class UserEncoder extends AbstractEntityEncoder<User> {
         return j;
     }
 
-    protected void encodeLinks(ObjectNode j) {
-        j.put(JSONConstants.MEASUREMENTS_KEY,
-              getUriInfo().getAbsolutePathBuilder()
-                .path(UserResource.MEASUREMENTS)
-                .build().toString());
-        j.put(JSONConstants.GROUPS_KEY,
-              getUriInfo().getAbsolutePathBuilder()
-                .path(UserResource.GROUPS)
-                .build().toString());
-        j.put(JSONConstants.FRIENDS_KEY,
-              getUriInfo().getAbsolutePathBuilder()
-                .path(UserResource.FRIENDS)
-                .build().toString());
-        j.put(JSONConstants.TRACKS_KEY,
-              getUriInfo().getAbsolutePathBuilder()
-                .path(UserResource.TRACKS)
-                .build().toString());
-        j.put(JSONConstants.STATISTICS_KEY,
-              getUriInfo().getAbsolutePathBuilder()
-                .path(UserResource.STATISTICS)
-                .build().toString());
-        j.put(JSONConstants.ACTIVITIES_KEY,
-              getUriInfo().getAbsolutePathBuilder()
-                .path(UserResource.ACTIVITIES)
-                .build().toString());
-        j.put(JSONConstants.FRIEND_ACTIVITIES,
-              getUriInfo().getAbsolutePathBuilder()
-                .path(UserResource.FRIEND_ACTIVITIES)
-                .build().toString());
-        j.put(JSONConstants.AVATAR_KEY,
-              getUriInfo().getAbsolutePathBuilder()
-                .path(UserResource.AVATAR)
-                .build().toString());
+    protected void encodeLinks(ObjectNode j, User u) {
+        if (getRights().canSeeMeasurementsOf(u)) {
+            j.put(JSONConstants.MEASUREMENTS_KEY,
+                  getUriInfo().getAbsolutePathBuilder()
+                    .path(UserResource.MEASUREMENTS)
+                    .build().toString());
+        }
+        if (getRights().canSeeGroupsOf(u)) {
+            j.put(JSONConstants.GROUPS_KEY,
+                  getUriInfo().getAbsolutePathBuilder()
+                    .path(UserResource.GROUPS)
+                    .build().toString());
+        }
+        if (getRights().canSeeFriendsOf(u)) {
+            j.put(JSONConstants.FRIENDS_KEY,
+                  getUriInfo().getAbsolutePathBuilder()
+                    .path(UserResource.FRIENDS)
+                    .build().toString());
+        }
+        if (getRights().canSeeTracksOf(u)) {
+            j.put(JSONConstants.TRACKS_KEY,
+                  getUriInfo().getAbsolutePathBuilder()
+                    .path(UserResource.TRACKS)
+                    .build().toString());
+        }
+        if (getRights().canSeeStatisticsOf(u)) {
+            j.put(JSONConstants.STATISTICS_KEY,
+                  getUriInfo().getAbsolutePathBuilder()
+                    .path(UserResource.STATISTICS)
+                    .build().toString());
+        }
+        if (getRights().canSeeActivitiesOf(u)) {
+            j.put(JSONConstants.ACTIVITIES_KEY,
+                  getUriInfo().getAbsolutePathBuilder()
+                    .path(UserResource.ACTIVITIES)
+                    .build().toString());
+        }
+        if (getRights().canSeeFriendActivitiesOf(u)) {
+            j.put(JSONConstants.FRIEND_ACTIVITIES,
+                  getUriInfo().getAbsolutePathBuilder()
+                    .path(UserResource.FRIEND_ACTIVITIES)
+                    .build().toString());
+        }
+        if (getRights().canSeeAvatarOf(u)) {
+            j.put(JSONConstants.AVATAR_KEY,
+                  getUriInfo().getAbsolutePathBuilder()
+                    .path(UserResource.AVATAR)
+                    .build().toString());
+        }
     }
 }
