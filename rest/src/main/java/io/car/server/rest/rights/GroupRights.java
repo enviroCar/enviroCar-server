@@ -35,6 +35,12 @@ public interface GroupRights {
 
     boolean canSeeMembersOf(Group group);
 
+    boolean canSeeOwnerOf(Group group);
+
+    boolean canSeeCreationTimeOf(Group group);
+
+    boolean canSeeModificationTimeOf(Group group);
+
     boolean canModify(Group group);
 
     boolean canDelete(Group group);

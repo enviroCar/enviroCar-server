@@ -33,6 +33,10 @@ public interface TrackRights {
 
     boolean canSeeMeasurementsOf(Track track);
 
+    boolean canSeeCreationTimeOf(Track track);
+
+    boolean canSeeModificationTimeOf(Track track);
+
     boolean canModify(Track track);
 
     boolean canDelete(Track track);
