@@ -33,17 +33,17 @@ public class AccessRightsImpl extends AbstractAccessRights {
 
     @Override
     public boolean canSeeMeasurementsOf(User user) {
-        return true;
+        return isSelfFriendOfOrShareGroup(user);
     }
 
     @Override
     public boolean canSeeFriendsOf(User user) {
-        return true;
+        return isSelfFriendOfOrShareGroup(user);
     }
 
     @Override
     public boolean canSeeGroupsOf(User user) {
-        return true;
+        return isSelfFriendOfOrShareGroup(user);
     }
 
     @Override
@@ -198,12 +198,12 @@ public class AccessRightsImpl extends AbstractAccessRights {
 
     @Override
     public boolean canSeeCreationTimeOf(User user) {
-        return true;
+        return isSelfFriendOfOrShareGroup(user);
     }
 
     @Override
     public boolean canSeeModificationTimeOf(User user) {
-        return true;
+        return isSelfFriendOfOrShareGroup(user);
     }
 
     @Override
@@ -299,5 +299,25 @@ public class AccessRightsImpl extends AbstractAccessRights {
     @Override
     public boolean canSeeModificationTimeOf(Group group) {
         return isMember(group);
+    }
+
+    @Override
+    public boolean canUnfriend(User user) {
+        return !isSelf(user);
+    }
+
+    @Override
+    public boolean canFriend(User user) {
+        return !isSelf(user);
+    }
+
+    @Override
+    public boolean canSeeStatisticsOf(Track track) {
+        return isSelfFriendOfOrShareGroup(track.getUser());
+    }
+
+    @Override
+    public boolean canSeeStatisticsOf(Phenomenon phenomenon) {
+        return true;
     }
 }

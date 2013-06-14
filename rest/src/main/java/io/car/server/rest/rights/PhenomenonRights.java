@@ -31,4 +31,6 @@ public interface PhenomenonRights {
     boolean canModify(Phenomenon phenomenon);
 
     boolean canDelete(Phenomenon phenomenon);
+
+    boolean canSeeStatisticsOf(Phenomenon phenomenon);
 }

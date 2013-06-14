@@ -40,4 +40,6 @@ public interface TrackRights {
     boolean canModify(Track track);
 
     boolean canDelete(Track track);
+
+    boolean canSeeStatisticsOf(Track track);
 }
