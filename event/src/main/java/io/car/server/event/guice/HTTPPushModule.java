@@ -15,24 +15,20 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.core.event;
+package io.car.server.event.guice;
 
-import io.car.server.core.activities.Activity;
+import io.car.server.core.event.EventBusListener;
+import io.car.server.event.HTTPPushListener;
 
-/**
- * Interface which implementations are updated
- * with new {@link Activity}s by the {@link EventBus}. 
- * 
- * @author matthes rieke
- *
- */
-public interface EventBusListener {
+import com.google.inject.AbstractModule;
+import com.google.inject.multibindings.Multibinder;
 
-	/**
-	 * An implementation can do whatever it wants to.
-	 * 
-	 * @param ac the new activity
-	 */
-	void onNewActivity(Activity ac);
+public class HTTPPushModule extends AbstractModule {
+
+	@Override
+	protected void configure() {
+		Multibinder<EventBusListener> uriBinder = Multibinder.newSetBinder(binder(), EventBusListener.class);
+	    uriBinder.addBinding().to(HTTPPushListener.class);
+	}
 
 }

@@ -19,31 +19,52 @@ package io.car.server.core.event;
 
 import io.car.server.core.activities.Activity;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+/**
+ * EventBus concept where implementations of {@link EventBusListener} can listen
+ * to new {@link Activity}s.
+ * 
+ * @author matthes rieke
+ * @author daniel nüst
+ *
+ */
 @Singleton
 public class EventBus {
 
 	private static final Logger log = LoggerFactory.getLogger(EventBus.class);
 
-	private List<EventBusListener> listeners = new ArrayList<EventBusListener>();
+	private Set<EventBusListener> listeners;
 
-	public EventBus() {
-		//
+	@Inject
+	public EventBus(Set<EventBusListener> listeners) {
+		this.listeners = listeners;
 	}
 
+	/**
+	 * calls every available {@link EventBusListener#onNewActivity(Activity)}
+	 * (by default provides through Guice MultiBinding).
+	 * 
+	 * @param ac the new activity
+	 */
 	public void pushActivity(Activity ac) {
+
 		log.debug("New event pushed to bus: {}", ac);
 
 		for (EventBusListener ebl : this.listeners) {
-			ebl.onNewActivity(ac);
+			try {
+				ebl.onNewActivity(ac);
+			} catch (RuntimeException e) {
+				log.warn(e.getMessage(), e);
+			}
 		}
+
 	}
 
 }
