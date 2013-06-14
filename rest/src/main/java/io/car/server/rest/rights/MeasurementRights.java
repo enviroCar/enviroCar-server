@@ -36,4 +36,8 @@ public interface MeasurementRights {
     boolean canModify(Measurement measurement);
 
     boolean canDelete(Measurement measurement);
+
+    boolean canSeeValuesOf(Measurement measurement);
+
+    boolean canSeeGeometryOf(Measurement t);
 }

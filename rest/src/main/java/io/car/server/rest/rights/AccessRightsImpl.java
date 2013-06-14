@@ -320,4 +320,14 @@ public class AccessRightsImpl extends AbstractAccessRights {
     public boolean canSeeStatisticsOf(Phenomenon phenomenon) {
         return true;
     }
+
+    @Override
+    public boolean canSeeValuesOf(Measurement measurement) {
+        return true;
+    }
+
+    @Override
+    public boolean canSeeGeometryOf(Measurement t) {
+        return true;
+    }
 }
