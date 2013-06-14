@@ -62,55 +62,63 @@ public class TrackEncoder extends AbstractEntityEncoder<Track> {
             if (t.hasIdentifier()) {
                 properties.put(JSONConstants.IDENTIFIER_KEY, t.getIdentifier());
             }
-            if (t.hasName()) {
+            if (t.hasName() && getRights().canSeeNameOf(t)) {
                 properties.put(JSONConstants.NAME_KEY, t.getName());
             }
-            if (t.hasDescription()) {
+            if (t.hasDescription() && getRights().canSeeDescriptionOf(t)) {
                 properties
                         .put(JSONConstants.DESCRIPTION_KEY, t.getDescription());
             }
-            if (t.hasCreationTime()) {
+            if (t.hasCreationTime() && getRights().canSeeCreationTimeOf(t)) {
                 properties.put(JSONConstants.CREATED_KEY,
                                getDateTimeFormat().print(t.getCreationTime()));
             }
-            if (t.hasModificationTime()) {
+            if (t.hasModificationTime() && getRights()
+                    .canSeeModificationTimeOf(t)) {
                 properties.put(JSONConstants.MODIFIED_KEY,
                                getDateTimeFormat()
                         .print(t.getModificationTime()));
             }
-            if (t.hasSensor()) {
+            if (t.hasSensor() && getRights().canSeeSensorOf(t)) {
                 properties.put(JSONConstants.SENSOR_KEY,
                                sensorEncoder.encode(t.getSensor(), mediaType));
             }
-            if (t.hasUser()) {
+            if (t.hasUser() && getRights().canSeeUserOf(t)) {
                 properties.put(JSONConstants.USER_KEY,
                                userEncoder.encode(t.getUser(), mediaType));
             }
-
-            URI measurements = getUriInfo().getAbsolutePathBuilder()
-                    .path(TrackResource.MEASUREMENTS).build();
-            properties.put(JSONConstants.MEASUREMENTS_KEY,
-                           measurements.toString());
-
-            URI statistics = getUriInfo().getAbsolutePathBuilder()
-                    .path(TrackResource.STATISTICS).build();
-            properties.put(JSONConstants.STATISTICS_KEY,
-                           statistics.toString());
-
-            Measurements values = getService().getMeasurementsByTrack(t, null);
-            JsonNode features = measurementsEncoder
-                    .encode(values, mediaType)
-                    .path(GeoJSONConstants.FEATURES_KEY);
+            if (getRights().canSeeMeasurementsOf(t)) {
+                properties.put(JSONConstants.MEASUREMENTS_KEY,
+                               getUriInfo().getAbsolutePathBuilder()
+                        .path(TrackResource.MEASUREMENTS).build().toString());
+            }
+            if (getRights().canSeeStatisticsOf(t)) {
+                properties.put(JSONConstants.STATISTICS_KEY,
+                               getUriInfo().getAbsolutePathBuilder()
+                        .path(TrackResource.STATISTICS).build().toString());
+            }
+            JsonNode features;
+            if (getRights().canSeeMeasurementsOf(t)) {
+                Measurements values = getService()
+                        .getMeasurementsByTrack(t, null);
+                features =
+                        measurementsEncoder
+                        .encode(values, mediaType)
+                        .path(GeoJSONConstants.FEATURES_KEY);
+            } else {
+                features = track.arrayNode();
+            }
             track.put(GeoJSONConstants.FEATURES_KEY, features);
         } else {
             if (t.hasIdentifier()) {
                 track.put(JSONConstants.IDENTIFIER_KEY, t.getIdentifier());
             }
-            if (t.hasModificationTime()) {
+            if (t.hasModificationTime() && getRights()
+                    .canSeeModificationTimeOf(t)) {
                 track.put(JSONConstants.MODIFIED_KEY, getDateTimeFormat()
                         .print(t.getModificationTime()));
             }
-            if (t.hasName()) {
+            if (t.hasName() && getRights().canSeeNameOf(t)) {
                 track.put(JSONConstants.NAME_KEY, t.getName());
             }
             URI uri = getUriInfo().getBaseUriBuilder().path(RootResource.class)

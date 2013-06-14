@@ -48,11 +48,14 @@ public class RootResourceTest extends ResourceTestBase {
         JsonNode root = response.getEntity(JsonNode.class);
         assertThat(root, is(notNullValue()));
 
-        assertThat(root, hasProperty(JSONConstants.GROUPS_KEY));
-        assertThat(root.get(JSONConstants.GROUPS_KEY).asText(), instanceOf(String.class));
+        assertThat(root, hasProperty(JSONConstants.MEASUREMENTS_KEY));
+        assertThat(root.get(JSONConstants.MEASUREMENTS_KEY).asText(), instanceOf(String.class));
 
-        assertThat(root, hasProperty(JSONConstants.USERS_KEY));
-        assertThat(root.get(JSONConstants.USERS_KEY).asText(), instanceOf(String.class));
+        assertThat(root, hasProperty(JSONConstants.SENSORS_KEY));
+        assertThat(root.get(JSONConstants.SENSORS_KEY).asText(), instanceOf(String.class));
+
+        assertThat(root, hasProperty(JSONConstants.PHENOMENONS_KEY));
+        assertThat(root.get(JSONConstants.PHENOMENONS_KEY).asText(), instanceOf(String.class));
     }
 
     @Test

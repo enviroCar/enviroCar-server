@@ -54,7 +54,7 @@ public class MeasurementEncoder extends AbstractEntityEncoder<Measurement> {
         ObjectNode measurement = getJsonFactory().objectNode();
         measurement.put(GeoJSONConstants.TYPE_KEY,
                         GeoJSONConstants.FEATURE_TYPE);
-        if (t.hasGeometry()) {
+        if (t.hasGeometry() && getRights().canSeeGeometryOf(t)) {
             measurement.put(JSONConstants.GEOMETRY_KEY,
                             geometryEncoder.encode(t.getGeometry(), mediaType));
         }
@@ -64,25 +64,26 @@ public class MeasurementEncoder extends AbstractEntityEncoder<Measurement> {
         if (t.hasIdentifier()) {
             properties.put(JSONConstants.IDENTIFIER_KEY, t.getIdentifier());
         }
-        if (t.hasTime()) {
+        if (t.hasTime() && getRights().canSeeTimeOf(t)) {
             properties.put(JSONConstants.TIME_KEY,
                            getDateTimeFormat().print(t.getTime()));
         }
 
         if (!mediaType.equals(MediaTypes.TRACK_TYPE)) {
-            if (t.hasSensor()) {
+            if (t.hasSensor() && getRights().canSeeSensorOf(t)) {
                 properties.put(JSONConstants.SENSOR_KEY,
                                sensorProvider.encode(t.getSensor(), mediaType));
             }
-            if (t.hasUser()) {
+            if (t.hasUser() && getRights().canSeeUserOf(t)) {
                 properties.put(JSONConstants.USER_KEY,
                                userProvider.encode(t.getUser(), mediaType));
             }
-            if (t.hasModificationTime()) {
+            if (t.hasModificationTime() && getRights()
+                    .canSeeModificationTimeOf(t)) {
                 properties.put(JSONConstants.MODIFIED_KEY, getDateTimeFormat()
                         .print(t.getModificationTime()));
             }
-            if (t.hasCreationTime()) {
+            if (t.hasCreationTime() && getRights().canSeeCreationTimeOf(t)) {
                 properties.put(JSONConstants.CREATED_KEY,
                                getDateTimeFormat().print(t.getCreationTime()));
             }
@@ -90,17 +91,20 @@ public class MeasurementEncoder extends AbstractEntityEncoder<Measurement> {
         if (mediaType.equals(MediaTypes.MEASUREMENT_TYPE) ||
             mediaType.equals(MediaTypes.MEASUREMENTS_TYPE) ||
             mediaType.equals(MediaTypes.TRACK_TYPE)) {
-            ObjectNode values = properties
-                    .putObject(JSONConstants.PHENOMENONS_KEY);
-            for (MeasurementValue mv : t.getValues()) {
-                if (mv.hasPhenomenon() && mv.hasValue()) {
-                    ObjectNode phenomenon = values.objectNode();
-                    phenomenon.putPOJO(JSONConstants.VALUE_KEY, mv.getValue());
-                    values.put(mv.getPhenomenon().getName(), phenomenon);
-                    if (mv.getPhenomenon().hasUnit()) {
-                        phenomenon.put(JSONConstants.UNIT_KEY, mv
-                                .getPhenomenon()
-                                .getUnit());
+            if (getRights().canSeeValuesOf(t)) {
+                ObjectNode values = properties
+                        .putObject(JSONConstants.PHENOMENONS_KEY);
+
+                for (MeasurementValue mv : t.getValues()) {
+                    if (mv.hasPhenomenon() && mv.hasValue()) {
+                        ObjectNode phenomenon = values.objectNode();
+                        phenomenon.putPOJO(JSONConstants.VALUE_KEY,
+                                           mv.getValue());
+                        values.put(mv.getPhenomenon().getName(), phenomenon);
+                        if (mv.getPhenomenon().hasUnit()) {
+                            phenomenon.put(JSONConstants.UNIT_KEY,
+                                           mv.getPhenomenon().getUnit());
+                        }
                     }
                 }
             }

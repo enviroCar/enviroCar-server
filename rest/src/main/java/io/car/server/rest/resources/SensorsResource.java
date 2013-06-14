@@ -94,7 +94,8 @@ public class SensorsResource extends AbstractResource {
     @Path(SENSOR)
     public SensorResource sensor(@PathParam("sensor") String id)
             throws SensorNotFoundException {
-        return getResourceFactory().createSensorResource(getService()
-                .getSensorByName(id));
+        Sensor sensor = getService().getSensorByName(id);
+        checkRights(getRights().canSee(sensor));
+        return getResourceFactory().createSensorResource(sensor);
     }
 }

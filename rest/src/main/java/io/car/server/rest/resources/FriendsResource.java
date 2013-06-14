@@ -63,15 +63,19 @@ public class FriendsResource extends AbstractResource {
     @Consumes(MediaTypes.USER_REF)
     public void add(UserReference friend) throws UserNotFoundException {
         if (friend.getName() == null ||
-            friend.getName().equals(getCurrentUser())) {
+            friend.getName().equals(getCurrentUser().getName())) {
             throw new WebApplicationException(Status.BAD_REQUEST);
         }
-        getService().addFriend(user, getService().getUser(friend.getName()));
+        User f = getService().getUser(friend.getName());
+        checkRights(getRights().canModify(user) &&
+                    getRights().canFriend(f));
+        getService().addFriend(user, f);
     }
 
     @Path(FRIEND)
     public UserResource friend(@PathParam("friend") String friendName) throws
             UserNotFoundException {
+        checkRights(getRights().canSeeFriendsOf(user));
         return getResourceFactory().createFriendResource(user, getService()
                 .getFriend(user, friendName));
     }

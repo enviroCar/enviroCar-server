@@ -15,35 +15,49 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.resources;
+package io.car.server.rest.auth;
 
+import java.security.Principal;
 
-import javax.ws.rs.DELETE;
-
-import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
+import javax.ws.rs.core.SecurityContext;
 
 import io.car.server.core.entities.User;
-import io.car.server.core.exception.ResourceNotFoundException;
-import io.car.server.rest.auth.Authenticated;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class FriendResource extends UserResource {
-    private User user;
-    @Inject
-    public FriendResource(@Assisted("user") User user,
-                          @Assisted("friend") User friend) {
-        super(friend);
-        this.user = user;
+public class SecurityContextImpl implements SecurityContext {
+
+    private final PrincipalImpl principal;
+    private final boolean secure;
+
+    SecurityContextImpl(User user, boolean secure) {
+        this.secure = secure;
+        this.principal = new PrincipalImpl(user);
     }
 
-    @DELETE
     @Override
-    @Authenticated
-    public void delete() throws ResourceNotFoundException {
-        checkRights(getRights().canUnfriend(user));
-        getService().removeFriend(user, getUser());
+    public Principal getUserPrincipal() {
+        return this.principal;
     }
+
+    @Override
+    public boolean isUserInRole(String role) {
+        if (role.equals(AuthConstants.ADMIN_ROLE)) {
+            return principal.getUser().isAdmin();
+        } else {
+            return role.equals(AuthConstants.USER_ROLE);
+        }
+    }
+
+    @Override
+    public boolean isSecure() {
+        return secure;
+    }
+
+    @Override
+    public String getAuthenticationScheme() {
+        return AuthConstants.AUTH_SCHEME;
+    }
+
 }

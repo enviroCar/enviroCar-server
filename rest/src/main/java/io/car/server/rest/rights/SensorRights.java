@@ -15,35 +15,24 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.resources;
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package io.car.server.rest.rights;
 
-
-import javax.ws.rs.DELETE;
-
-import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
-
-import io.car.server.core.entities.User;
-import io.car.server.core.exception.ResourceNotFoundException;
-import io.car.server.rest.auth.Authenticated;
+import io.car.server.core.entities.Sensor;
 
 /**
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class FriendResource extends UserResource {
-    private User user;
-    @Inject
-    public FriendResource(@Assisted("user") User user,
-                          @Assisted("friend") User friend) {
-        super(friend);
-        this.user = user;
-    }
+public interface SensorRights {
+    boolean canSeeSensors();
 
-    @DELETE
-    @Override
-    @Authenticated
-    public void delete() throws ResourceNotFoundException {
-        checkRights(getRights().canUnfriend(user));
-        getService().removeFriend(user, getUser());
-    }
+    boolean canSee(Sensor sensor);
+
+    boolean canModify(Sensor sensor);
+
+    boolean canDelete(Sensor sensor);
 }
