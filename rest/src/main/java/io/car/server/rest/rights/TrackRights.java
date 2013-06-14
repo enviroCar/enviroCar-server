@@ -15,35 +15,35 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.resources;
+package io.car.server.rest.rights;
 
-
-import javax.ws.rs.DELETE;
-
-import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
-
-import io.car.server.core.entities.User;
-import io.car.server.core.exception.ResourceNotFoundException;
-import io.car.server.rest.auth.Authenticated;
+import io.car.server.core.entities.Track;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class FriendResource extends UserResource {
-    private User user;
-    @Inject
-    public FriendResource(@Assisted("user") User user,
-                          @Assisted("friend") User friend) {
-        super(friend);
-        this.user = user;
-    }
+public interface TrackRights {
+    boolean canSeeTracks();
 
-    @DELETE
-    @Override
-    @Authenticated
-    public void delete() throws ResourceNotFoundException {
-        checkRights(getRights().canUnfriend(user));
-        getService().removeFriend(user, getUser());
-    }
+    boolean canSee(Track track);
+
+    boolean canSeeUserOf(Track track);
+
+    boolean canSeeNameOf(Track track);
+
+    boolean canSeeDescriptionOf(Track track);
+
+    boolean canSeeSensorOf(Track track);
+
+    boolean canSeeMeasurementsOf(Track track);
+
+    boolean canSeeCreationTimeOf(Track track);
+
+    boolean canSeeModificationTimeOf(Track track);
+
+    boolean canModify(Track track);
+
+    boolean canDelete(Track track);
+
+    boolean canSeeStatisticsOf(Track track);
 }

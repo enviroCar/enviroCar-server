@@ -26,9 +26,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
@@ -81,18 +79,17 @@ public class TracksResource extends AbstractResource {
     public Response create(Track track) throws ValidationException,
                                                ResourceAlreadyExistException,
                                                UserNotFoundException {
-        if (user != null && !canModifyUser(user)) {
-            throw new WebApplicationException(Status.FORBIDDEN);
+        if (user != null) {
+            checkRights(getRights().isSelf(user));
         }
-        User u = getService().getUser(getCurrentUser());
-        track.setUser(u);
+        track.setUser(getCurrentUser());
 
         if (track instanceof TrackWithMeasurments) {
             TrackWithMeasurments twm = (TrackWithMeasurments) track;
             track = getService().createTrack(twm.getTrack());
 
             for (Measurement m : twm.getMeasurements()) {
-                m.setUser(u);
+                m.setUser(getCurrentUser());
                 getService().createMeasurement(twm.getTrack(), m);
             }
 
@@ -104,9 +101,10 @@ public class TracksResource extends AbstractResource {
     }
 
     @Path(TRACK)
-    public TrackResource user(@PathParam("track") String track)
+    public TrackResource track(@PathParam("track") String id)
             throws TrackNotFoundException {
-        return getResourceFactory().createTrackResource(getService()
-                .getTrack(track));
+        Track track = getService().getTrack(id);
+        checkRights(getRights().canSee(track));
+        return getResourceFactory().createTrackResource(track);
     }
 }

@@ -25,8 +25,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response.Status;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
@@ -72,16 +70,17 @@ public class GroupMembersResource extends AbstractResource {
     public void add(UserReference user) throws UserNotFoundException,
                                                GroupNotFoundException {
         User u = getService().getUser(user.getName());
-        if (!canModifyUser(u)) {
-            throw new WebApplicationException(Status.FORBIDDEN);
-        }
+        checkRights(getRights().isSelf(u) &&
+                    getRights().canJoinGroup(group));
         getService().addGroupMember(group, u);
     }
 
     @Path(MEMBER)
     public GroupMemberResource member(@PathParam("member") String username)
             throws UserNotFoundException {
+        checkRights(getRights().canSeeMembersOf(group));
         User user = getService().getGroupMember(group, username);
+        checkRights(getRights().canSee(user));
         return getResourceFactory().createGroupMemberResource(group, user);
     }
 }

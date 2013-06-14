@@ -15,35 +15,19 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.resources;
-
-
-import javax.ws.rs.DELETE;
-
-import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
+package io.car.server.rest.rights;
 
 import io.car.server.core.entities.User;
-import io.car.server.core.exception.ResourceNotFoundException;
-import io.car.server.rest.auth.Authenticated;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class FriendResource extends UserResource {
-    private User user;
-    @Inject
-    public FriendResource(@Assisted("user") User user,
-                          @Assisted("friend") User friend) {
-        super(friend);
-        this.user = user;
-    }
-
-    @DELETE
-    @Override
-    @Authenticated
-    public void delete() throws ResourceNotFoundException {
-        checkRights(getRights().canUnfriend(user));
-        getService().removeFriend(user, getUser());
-    }
+public interface AccessRights extends UserRights,
+                                      TrackRights,
+                                      MeasurementRights,
+                                      GroupRights,
+                                      SensorRights,
+                                      PhenomenonRights {
+    boolean isSelf(User user);
+    boolean canSeeStatistics();
 }

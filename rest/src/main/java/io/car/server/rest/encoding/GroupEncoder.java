@@ -17,8 +17,6 @@
  */
 package io.car.server.rest.encoding;
 
-import java.net.URI;
-
 import javax.ws.rs.core.MediaType;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -44,31 +42,36 @@ public class GroupEncoder extends AbstractEntityEncoder<Group> {
     @Override
     public ObjectNode encode(Group t, MediaType mediaType) {
         ObjectNode group = getJsonFactory().objectNode();
-        if (t.hasName()) {
+        if (t.hasName() && getRights().canSeeNameOf(t)) {
             group.put(JSONConstants.NAME_KEY, t.getName());
         }
-        if (t.hasDescription()) {
+        if (t.hasDescription() && getRights().canSeeDescriptionOf(t)) {
             group.put(JSONConstants.DESCRIPTION_KEY, t.getDescription());
         }
-        if (t.getOwner() != null) {
+        if (t.hasOwner() && getRights().canSeeOwnerOf(t)) {
             group.put(JSONConstants.OWNER_KEY,
                       userEncoder.encode(t.getOwner(), mediaType));
         }
         if (mediaType.equals(MediaTypes.GROUP_TYPE)) {
-            if (t.hasCreationTime()) {
+            if (t.hasCreationTime() && getRights().canSeeCreationTimeOf(t)) {
                 group.put(JSONConstants.CREATED_KEY,
                           getDateTimeFormat().print(t.getCreationTime()));
             }
-            if (t.hasModificationTime()) {
+            if (t.hasModificationTime() && getRights()
+                    .canSeeModificationTimeOf(t)) {
                 group.put(JSONConstants.MODIFIED_KEY,
                           getDateTimeFormat().print(t.getModificationTime()));
             }
-            URI members = getUriInfo().getAbsolutePathBuilder()
-                    .path(GroupResource.MEMBERS).build();
-            group.put(JSONConstants.MEMBERS_KEY, members.toString());
-            URI activities = getUriInfo().getAbsolutePathBuilder()
-                    .path(GroupResource.ACTIVITIES).build();
-            group.put(JSONConstants.ACTIVITIES_KEY, activities.toString());
+            if (getRights().canSeeMembersOf(t)) {
+                group.put(JSONConstants.MEMBERS_KEY, getUriInfo()
+                        .getAbsolutePathBuilder()
+                        .path(GroupResource.MEMBERS).build().toString());
+            }
+            if (getRights().canSeeActivitiesOf(t)) {
+                group.put(JSONConstants.ACTIVITIES_KEY, getUriInfo()
+                        .getAbsolutePathBuilder()
+                        .path(GroupResource.ACTIVITIES).build().toString());
+            }
         }
         return group;
     }

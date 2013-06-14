@@ -23,14 +23,13 @@ import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
 import io.car.server.core.entities.Measurement;
+import io.car.server.core.entities.Sensor;
 import io.car.server.core.exception.IllegalModificationException;
 import io.car.server.core.exception.MeasurementNotFoundException;
 import io.car.server.core.exception.UserNotFoundException;
@@ -61,9 +60,7 @@ public class MeasurementResource extends AbstractResource {
     public Response modify(Measurement changes)
             throws MeasurementNotFoundException, UserNotFoundException,
                    ValidationException, IllegalModificationException {
-        if (!canModifyUser(getCurrentUser())) {
-            throw new WebApplicationException(Status.FORBIDDEN);
-        }
+        checkRights(getRights().canModify(measurement));
         getService().modifyMeasurement(measurement, changes);
         return Response.ok().build();
     }
@@ -79,15 +76,15 @@ public class MeasurementResource extends AbstractResource {
     @Authenticated
     public void delete() throws MeasurementNotFoundException,
                                 UserNotFoundException {
-        if (!canModifyUser(getCurrentUser())) {
-            throw new WebApplicationException(Status.FORBIDDEN);
-        }
+        checkRights(getRights().canDelete(measurement));
         getService().deleteMeasurement(measurement);
     }
 
     @Path(SENSOR)
     public SensorResource sensor() throws MeasurementNotFoundException {
-        return getResourceFactory()
-                .createSensorResource(measurement.getSensor());
+        checkRights(getRights().canSeeSensorOf(measurement));
+        Sensor sensor = measurement.getSensor();
+        checkRights(getRights().canSee(sensor));
+        return getResourceFactory().createSensorResource(sensor);
     }
 }

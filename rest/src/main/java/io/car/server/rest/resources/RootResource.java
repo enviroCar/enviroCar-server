@@ -17,8 +17,6 @@
  */
 package io.car.server.rest.resources;
 
-import java.net.URI;
-
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -28,9 +26,9 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 
+import io.car.server.rest.JSONConstants;
 import io.car.server.rest.MediaTypes;
 import io.car.server.rest.Schemas;
-import io.car.server.rest.JSONConstants;
 import io.car.server.rest.validation.Schema;
 
 /**
@@ -55,59 +53,83 @@ public class RootResource extends AbstractResource {
     @Produces(MediaTypes.ROOT)
     public JsonNode get() {
         ObjectNode root = factory.objectNode();
-        URI users = getUriInfo().getAbsolutePathBuilder().path(USERS).build();
-        URI groups = getUriInfo().getAbsolutePathBuilder().path(GROUPS).build();
-        URI tracks = getUriInfo().getAbsolutePathBuilder().path(TRACKS).build();
-        URI sensors = getUriInfo().getAbsolutePathBuilder().path(SENSORS)
-                .build();
-        URI phenomenons = getUriInfo().getAbsolutePathBuilder()
-                .path(PHENOMENONS).build();
-        URI measurements = getUriInfo().getAbsolutePathBuilder()
-                .path(MEASUREMENTS).build();
-        URI statistics = getUriInfo().getAbsolutePathBuilder()
-                .path(STATISTICS).build();
-        root.put(JSONConstants.USERS_KEY, users.toString());
-        root.put(JSONConstants.GROUPS_KEY, groups.toString());
-        root.put(JSONConstants.TRACKS_KEY, tracks.toString());
-        root.put(JSONConstants.SENSORS_KEY, sensors.toString());
-        root.put(JSONConstants.PHENOMENONS_KEY, phenomenons.toString());
-        root.put(JSONConstants.MEASUREMENTS_KEY, measurements.toString());
-        root.put(JSONConstants.STATISTICS_KEY, statistics.toString());
+        if (getRights().canSeeUsers()) {
+            root.put(JSONConstants.USERS_KEY,
+                     getUriInfo().getAbsolutePathBuilder()
+                    .path(USERS).build().toString());
+        }
+        if (getRights().canSeeGroups()) {
+            root.put(JSONConstants.GROUPS_KEY, getUriInfo()
+                    .getAbsolutePathBuilder()
+                    .path(GROUPS).build().toString());
+        }
+        if (getRights().canSeeTracks()) {
+            root.put(JSONConstants.TRACKS_KEY, getUriInfo()
+                    .getAbsolutePathBuilder()
+                    .path(TRACKS).build().toString());
+        }
+        if (getRights().canSeeSensors()) {
+            root.put(JSONConstants.SENSORS_KEY, getUriInfo()
+                    .getAbsolutePathBuilder().path(SENSORS)
+                    .build().toString());
+        }
+        if (getRights().canSeePhenomenons()) {
+            root.put(JSONConstants.PHENOMENONS_KEY, getUriInfo()
+                    .getAbsolutePathBuilder()
+                    .path(PHENOMENONS).build().toString());
+        }
+        if (getRights().canSeeMeasurements()) {
+            root.put(JSONConstants.MEASUREMENTS_KEY, getUriInfo()
+                    .getAbsolutePathBuilder()
+                    .path(MEASUREMENTS).build().toString());
+        }
+        if (getRights().canSeeStatistics()) {
+            root.put(JSONConstants.STATISTICS_KEY, getUriInfo()
+                    .getAbsolutePathBuilder()
+                    .path(STATISTICS).build().toString());
+        }
         return root;
     }
 
     @Path(USERS)
     public UsersResource users() {
+        checkRights(getRights().canSeeUsers());
         return getResourceFactory().createUsersResource();
     }
 
     @Path(GROUPS)
     public GroupsResource groups() {
+        checkRights(getRights().canSeeGroups());
         return getResourceFactory().createGroupsResource(null);
     }
 
     @Path(TRACKS)
     public TracksResource tracks() {
+        checkRights(getRights().canSeeTracks());
         return getResourceFactory().createTracksResource(null);
     }
 
     @Path(PHENOMENONS)
     public PhenomenonsResource phenomenons() {
+        checkRights(getRights().canSeePhenomenons());
         return getResourceFactory().createPhenomenonsResource();
     }
 
     @Path(SENSORS)
     public SensorsResource sensors() {
+        checkRights(getRights().canSeeSensors());
         return getResourceFactory().createSensorsResource();
     }
 
     @Path(MEASUREMENTS)
     public MeasurementsResource measurements() {
+        checkRights(getRights().canSeeMeasurements());
         return getResourceFactory().createMeasurementsResource(null, null);
     }
 
     @Path(STATISTICS)
     public StatisticsResource statistics() {
+        checkRights(getRights().canSeeStatistics());
         return getResourceFactory().createStatisticsResource(null, null);
     }
 }

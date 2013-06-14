@@ -83,8 +83,7 @@ public class GroupsResource extends AbstractResource {
     public Response createGroup(Group group) throws UserNotFoundException,
                                                     ResourceAlreadyExistException,
                                                     ValidationException {
-        User currentUser = getService().getUser(getCurrentUser());
-        Group g = getService().createGroup(currentUser, group);
+        Group g = getService().createGroup(getCurrentUser(), group);
         return Response.created(getUriInfo().getAbsolutePathBuilder().path(g
                 .getName()).build()).build();
     }
@@ -98,6 +97,7 @@ public class GroupsResource extends AbstractResource {
         } else {
             group = getService().getGroup(groupName);
         }
+        checkRights(getRights().canSee(group));
         return getResourceFactory().createGroupResource(group);
     }
 }

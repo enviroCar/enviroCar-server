@@ -18,8 +18,6 @@
 package io.car.server.rest.resources;
 
 import javax.ws.rs.DELETE;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response.Status;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
@@ -47,9 +45,7 @@ public class GroupMemberResource extends UserResource {
     @Override
     @Authenticated
     public void delete() throws UserNotFoundException, GroupNotFoundException {
-        if (!canModifyUser(getUser())) {
-            throw new WebApplicationException(Status.FORBIDDEN);
-        }
+        checkRights(getRights().canLeaveGroup(group));
         getService().removeGroupMember(group, getUser());
     }
 }

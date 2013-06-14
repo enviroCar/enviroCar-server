@@ -26,10 +26,8 @@ import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriBuilder;
 
 import com.google.inject.Inject;
@@ -73,12 +71,9 @@ public class GroupResource extends AbstractResource {
                                                  ValidationException,
                                                  IllegalModificationException,
                                                  GroupNotFoundException {
-        Group g = get();
-        if (!g.getOwner().getName().equals(getCurrentUser())) {
-            throw new WebApplicationException(Status.FORBIDDEN);
-        }
-        Group modified = getService().modifyGroup(g, changes);
-        if (modified.getName().equals(g.getName())) {
+        checkRights(getRights().canModify(group));
+        Group modified = getService().modifyGroup(group, changes);
+        if (modified.getName().equals(group.getName())) {
             return Response.noContent().build();
         } else {
             UriBuilder b = getUriInfo().getBaseUriBuilder();
@@ -94,19 +89,19 @@ public class GroupResource extends AbstractResource {
     @DELETE
     @Authenticated
     public void delete() throws UserNotFoundException, GroupNotFoundException {
-        if (!group.getOwner().getName().equals(getCurrentUser())) {
-            throw new WebApplicationException(Status.FORBIDDEN);
-        }
+        checkRights(getRights().canDelete(group));
         getService().deleteGroup(group);
     }
 
     @Path(MEMBERS)
     public GroupMembersResource members() {
+        checkRights(getRights().canSeeMembersOf(group));
         return getResourceFactory().createGroupMembersResource(group);
     }
 
     @Path(ACTIVITIES)
     public ActivitiesResource activities() {
+        checkRights(getRights().canSeeActivitiesOf(group));
         return getResourceFactory().createActivitiesResource(group);
     }
 }

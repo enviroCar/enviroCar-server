@@ -26,9 +26,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
@@ -91,15 +89,12 @@ public class MeasurementsResource extends AbstractResource {
             ResourceAlreadyExistException, ValidationException,
             UserNotFoundException {
         Measurement m;
-        User cur = getService().getUser(getCurrentUser());
         if (track != null) {
-            if (!canModifyUser(track.getUser())) {
-                throw new WebApplicationException(Status.FORBIDDEN);
-            }
-            measurement.setUser(cur);
+            checkRights(getRights().canModify(track));
+            measurement.setUser(getCurrentUser());
             m = getService().createMeasurement(track, measurement);
         } else {
-            measurement.setUser(cur);
+            measurement.setUser(getCurrentUser());
             m = getService().createMeasurement(measurement);
         }
         return Response.created(
@@ -111,7 +106,15 @@ public class MeasurementsResource extends AbstractResource {
     @Path(MEASUREMENT)
     public MeasurementResource measurement(@PathParam("measurement") String id)
             throws MeasurementNotFoundException {
-        return getResourceFactory().createMeasurementResource(getService()
-                .getMeasurement(id), user, track);
+        if (user != null) {
+            checkRights(getRights().canSeeMeasurementsOf(user));
+        }
+        if (track != null) {
+            checkRights(getRights().canSeeMeasurementsOf(track));
+        }
+
+        Measurement m = getService().getMeasurement(id);
+        checkRights(getRights().canSee(m));
+        return getResourceFactory().createMeasurementResource(m, user, track);
     }
 }
