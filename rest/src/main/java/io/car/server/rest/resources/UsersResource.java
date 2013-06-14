@@ -51,6 +51,7 @@ public class UsersResource extends AbstractResource {
     public Users get(
             @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit,
             @QueryParam(RESTConstants.PAGE) @DefaultValue("0") int page) {
+        checkRights(getRights().canSeeUsers());
         return getService().getUsers(new Pagination(limit, page));
     }
 

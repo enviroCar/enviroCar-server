@@ -93,7 +93,6 @@ public class RootResource extends AbstractResource {
 
     @Path(USERS)
     public UsersResource users() {
-        checkRights(getRights().canSeeUsers());
         return getResourceFactory().createUsersResource();
     }
 
