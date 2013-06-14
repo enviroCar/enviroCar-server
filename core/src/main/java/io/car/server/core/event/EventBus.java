@@ -17,33 +17,30 @@
  */
 package io.car.server.core.event;
 
-import io.car.server.core.activities.Activity;
-
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
+
+import io.car.server.core.activities.Activity;
 
 @Singleton
 public class EventBus {
+    private static final Logger log = LoggerFactory.getLogger(EventBus.class);
+    private final Set<EventBusListener> listeners;
 
-	private static final Logger log = LoggerFactory.getLogger(EventBus.class);
+    @Inject
+    public EventBus(Set<EventBusListener> listeners) {
+        this.listeners = listeners;
+    }
 
-	private List<EventBusListener> listeners = new ArrayList<EventBusListener>();
-
-	public EventBus() {
-		//
-	}
-
-	public void pushActivity(Activity ac) {
-		log.debug("New event pushed to bus: {}", ac);
-
-		for (EventBusListener ebl : this.listeners) {
-			ebl.onNewActivity(ac);
-		}
-	}
-
+    public void pushActivity(Activity ac) {
+        log.debug("New event pushed to bus: {}", ac);
+        for (EventBusListener ebl : this.listeners) {
+            ebl.onNewActivity(ac);
+        }
+    }
 }
