@@ -25,6 +25,7 @@ import com.google.inject.Singleton;
 import io.car.server.core.activities.Activities;
 import io.car.server.core.activities.ActivityFactory;
 import io.car.server.core.activities.ActivityType;
+import io.car.server.core.activities.TrackActivity;
 import io.car.server.core.dao.ActivityDao;
 import io.car.server.core.dao.GroupDao;
 import io.car.server.core.dao.MeasurementDao;
@@ -45,6 +46,7 @@ import io.car.server.core.entities.Track;
 import io.car.server.core.entities.Tracks;
 import io.car.server.core.entities.User;
 import io.car.server.core.entities.Users;
+import io.car.server.core.event.EventBus;
 import io.car.server.core.exception.GroupNotFoundException;
 import io.car.server.core.exception.IllegalModificationException;
 import io.car.server.core.exception.MeasurementNotFoundException;
@@ -247,8 +249,10 @@ public class Service {
 
     public Track createTrack(Track track) throws ValidationException {
         this.trackDao.create(this.trackValidator.validateCreate(track));
-        this.activityDao.save(activityFactory
-                .createTrackActivity(ActivityType.CREATED_TRACK, track.getUser(), track));
+        TrackActivity ac = activityFactory
+                .createTrackActivity(ActivityType.CREATED_TRACK, track.getUser(), track);
+        this.activityDao.save(ac);
+        EventBus.getInstance().pushActivity(ac);
         return track;
     }
 
