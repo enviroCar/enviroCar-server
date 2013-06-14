@@ -263,12 +263,12 @@ public class AccessRightsImpl extends AbstractAccessRights {
 
     @Override
     public boolean canSeeNameOf(Group group) {
-        return true;
+        return isAuthenticated();
     }
 
     @Override
     public boolean canSeeDescriptionOf(Group group) {
-        return true;
+        return isAuthenticated();
     }
 
     @Override
@@ -288,7 +288,7 @@ public class AccessRightsImpl extends AbstractAccessRights {
 
     @Override
     public boolean canSeeOwnerOf(Group group) {
-        return true;
+        return isAuthenticated();
     }
 
     @Override
