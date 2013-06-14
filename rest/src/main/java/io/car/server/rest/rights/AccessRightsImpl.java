@@ -233,7 +233,7 @@ public class AccessRightsImpl extends AbstractAccessRights {
 
     @Override
     public boolean canSeeSensorOf(Track track) {
-        return isSelfFriendOfOrShareGroup(track.getUser());
+        return true;
     }
 
     @Override
@@ -243,7 +243,7 @@ public class AccessRightsImpl extends AbstractAccessRights {
 
     @Override
     public boolean canSeeSensorOf(Measurement measurement) {
-        return isSelfFriendOfOrShareGroup(measurement.getUser());
+        return true;
     }
 
     @Override
