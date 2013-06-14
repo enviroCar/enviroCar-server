@@ -54,12 +54,12 @@ public class UsersResourceTest extends ResourceTestBase {
     @Test
     public void testPutUsers() {
         assertThat(resource().path("/rest/users")
-                .put(ClientResponse.class).getStatus(), is(403));
+                .put(ClientResponse.class).getStatus(), is(405));
     }
 
     @Test
     public void testDeleteUsers() {
         assertThat(resource().path("/rest/users")
-                .delete(ClientResponse.class).getStatus(), is(403));
+                .delete(ClientResponse.class).getStatus(), is(405));
     }
 }
