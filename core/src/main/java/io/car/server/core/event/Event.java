@@ -15,22 +15,11 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.core.update;
-
-import io.car.server.core.entities.Track;
-import io.car.server.core.exception.IllegalModificationException;
+package io.car.server.core.event;
 
 /**
- *
- * @author Arne de Wall <a.dewall@52north.org>
- *
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class TrackUpdater implements EntityUpdater<Track> {
-    @Override
-    public void update(Track changes, Track original)
-            throws IllegalModificationException {
-        if (changes.getBoundingBox() != null) {
-            original.setBoundingBox(changes.getBoundingBox());
-        }
-    }
+public interface Event {
+
 }

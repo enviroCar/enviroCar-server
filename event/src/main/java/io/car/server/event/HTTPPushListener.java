@@ -38,30 +38,29 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
-import io.car.server.core.activities.Activity;
-import io.car.server.core.activities.ActivityType;
-import io.car.server.core.activities.TrackActivity;
-import io.car.server.core.event.EventBusListener;
+import io.car.server.core.entities.Track;
+import io.car.server.core.event.CreatedTrackEvent;
 import io.car.server.rest.CodingFactory;
 import io.car.server.rest.MediaTypes;
 
-public class HTTPPushListener implements EventBusListener {
-
-	private HttpClient client;
-
-	@Inject
-	private CodingFactory coding;
-
-	//TODO make configurable
-	private String host = "https://localhost:6143/geoevent/rest/receiver/car-io-tracks-in-rest?f=generic-json";
-
+@Singleton
+public class HTTPPushListener {
+    //TODO make configurable
+    private static final String host =
+            "https://localhost:6143/geoevent/rest/receiver/car-io-tracks-in-rest?f=generic-json";
 	private static final Logger logger = LoggerFactory.getLogger(HTTPPushListener.class);
+    private final HttpClient client;
+    private final CodingFactory codingFactory;
 
-	public HTTPPushListener() throws Exception {
+    @Inject
+    public HTTPPushListener(CodingFactory codingFactory) throws Exception {
 		SSLSocketFactory sslsf = new SSLSocketFactory(new TrustStrategy() {
 
+            @Override
 			public boolean isTrusted(final X509Certificate[] chain,
 					String authType) throws CertificateException {
 				return true;
@@ -75,25 +74,25 @@ public class HTTPPushListener implements EventBusListener {
 
 		BasicClientConnectionManager cm = new BasicClientConnectionManager(schemeRegistry);
 		
-		this.client = new DefaultHttpClient(cm);
+        this.client = new DefaultHttpClient(cm);
+        this.codingFactory = codingFactory;
 	}
 	
-	
-	@Override
-	public void onNewActivity(Activity ac) {
-		if (ac.getType() == ActivityType.CREATED_TRACK) {
-			pushNewTrack((TrackActivity) ac);
-		}
-	}
+    @Subscribe
+    public void onCreatedTrackEvent(CreatedTrackEvent e) {
+        pushNewTrack(e.getTrack());
+    }
 
 
-	private synchronized void pushNewTrack(TrackActivity ac) {
-		ObjectNode jsonTrack = this.coding.createTrackEncoder().encode(ac.getTrack(), MediaTypes.TRACK_TYPE);
+    private synchronized void pushNewTrack(Track track) {
+        ObjectNode jsonTrack = this.codingFactory.createTrackEncoder()
+                .encode(track, MediaTypes.TRACK_TYPE);
 		String content = jsonTrack.toString();
 		HttpResponse resp = null;
 		try {
 			HttpPost hp = new HttpPost(host);
-			hp.setEntity(new StringEntity(content, ContentType.create(MediaTypes.TRACK)));
+            hp.setEntity(new StringEntity(content,
+                                          ContentType.create(MediaTypes.TRACK)));
 			resp = this.client.execute(hp);
 		} catch (ClientProtocolException e) {
 			logger.warn(e.getMessage(), e);

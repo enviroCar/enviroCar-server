@@ -15,22 +15,30 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.core.update;
+package io.car.server.core.event;
 
-import io.car.server.core.entities.Track;
-import io.car.server.core.exception.IllegalModificationException;
+import io.car.server.core.entities.Group;
+import io.car.server.core.entities.User;
 
 /**
- *
- * @author Arne de Wall <a.dewall@52north.org>
- *
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class TrackUpdater implements EntityUpdater<Track> {
+public class JoinedGroupEvent implements GroupEvent {
+    private final Group group;
+    private final User user;
+
+    public JoinedGroupEvent(Group group, User user) {
+        this.group = group;
+        this.user = user;
+    }
+
     @Override
-    public void update(Track changes, Track original)
-            throws IllegalModificationException {
-        if (changes.getBoundingBox() != null) {
-            original.setBoundingBox(changes.getBoundingBox());
-        }
+    public Group getGroup() {
+        return group;
+    }
+
+    @Override
+    public User getUser() {
+        return user;
     }
 }

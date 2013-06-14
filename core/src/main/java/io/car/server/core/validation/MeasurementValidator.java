@@ -28,7 +28,7 @@ import io.car.server.core.exception.ValidationException;
  */
 public class MeasurementValidator extends AbstractValidator<Measurement> {
     @Override
-    public Measurement validateCreate(Measurement t) throws ValidationException {
+    public void validateCreate(Measurement t) throws ValidationException {
         isNotNull("location", t.getGeometry());
         isNotNull("user", t.getUser());
         isNotNull("sensor", t.getSensor());
@@ -38,11 +38,10 @@ public class MeasurementValidator extends AbstractValidator<Measurement> {
             isNotNull("phenomenon", mv.getPhenomenon());
             isNotNull("value", mv.getValue());
         }
-        return t;
     }
 
     @Override
-    public Measurement validateUpdate(Measurement t) throws ValidationException {
+    public void validateUpdate(Measurement t) throws ValidationException {
         isNull("created", t.getCreationTime());
         isNull("modified", t.getModificationTime());
         isNull("location", t.getGeometry());
@@ -52,6 +51,5 @@ public class MeasurementValidator extends AbstractValidator<Measurement> {
             isNotNull("phenomenon", mv.getPhenomenon());
             isNotNull("value", mv.getValue());
         }
-        return t;
     }
 }

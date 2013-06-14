@@ -17,22 +17,28 @@
  */
 package io.car.server.core.event;
 
-import io.car.server.core.activities.Activity;
+import io.car.server.core.entities.User;
 
 /**
- * Interface which implementations are updated
- * with new {@link Activity}s by the {@link EventBus}. 
- * 
- * @author matthes rieke
- *
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public interface EventBusListener {
+public class FriendedUserEvent implements UserEvent {
+    private User user;
+    private User other;
 
-	/**
-	 * An implementation can do whatever it wants to.
-	 * 
-	 * @param ac the new activity
-	 */
-	void onNewActivity(Activity ac);
+    public FriendedUserEvent(User user, User other) {
+        this.user = user;
+        this.other = other;
+    }
+
+    @Override
+    public User getUser() {
+        return this.user;
+    }
+
+    @Override
+    public User getOther() {
+        return other;
+    }
 
 }

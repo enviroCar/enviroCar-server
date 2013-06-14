@@ -27,6 +27,7 @@ import com.google.inject.Singleton;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.PrecisionModel;
 
+import io.car.server.core.activities.ActivityListener;
 import io.car.server.core.Service;
 import io.car.server.core.statistics.StatisticsService;
 import io.car.server.core.statistics.StatisticsServiceImpl;
@@ -41,6 +42,7 @@ public class CoreModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(Service.class);
+        bind(ActivityListener.class).asEagerSingleton();
         bind(StatisticsService.class).to(StatisticsServiceImpl.class);
         bind(PasswordEncoder.class).to(BCryptPasswordEncoder.class);
         DateTimeZone.setDefault(DateTimeZone.UTC);
@@ -60,7 +62,7 @@ public class CoreModule extends AbstractModule {
 
     @Provides
     @Singleton
-    protected DateTimeFormatter formatter() {
+    public DateTimeFormatter formatter() {
         return ISODateTimeFormat.dateTimeNoMillis();
     }
 }

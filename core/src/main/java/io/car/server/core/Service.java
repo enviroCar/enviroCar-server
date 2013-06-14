@@ -19,13 +19,12 @@ package io.car.server.core;
 
 import java.util.Set;
 
+import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import io.car.server.core.activities.Activities;
-import io.car.server.core.activities.ActivityFactory;
 import io.car.server.core.activities.ActivityType;
-import io.car.server.core.activities.TrackActivity;
 import io.car.server.core.dao.ActivityDao;
 import io.car.server.core.dao.GroupDao;
 import io.car.server.core.dao.MeasurementDao;
@@ -46,7 +45,23 @@ import io.car.server.core.entities.Track;
 import io.car.server.core.entities.Tracks;
 import io.car.server.core.entities.User;
 import io.car.server.core.entities.Users;
-import io.car.server.core.event.EventBus;
+import io.car.server.core.event.ChangedGroupEvent;
+import io.car.server.core.event.ChangedMeasurementEvent;
+import io.car.server.core.event.ChangedProfileEvent;
+import io.car.server.core.event.ChangedTrackEvent;
+import io.car.server.core.event.CreatedGroupEvent;
+import io.car.server.core.event.CreatedMeasurementEvent;
+import io.car.server.core.event.CreatedPhenomenonEvent;
+import io.car.server.core.event.CreatedSensorEvent;
+import io.car.server.core.event.CreatedTrackEvent;
+import io.car.server.core.event.DeletedGroupEvent;
+import io.car.server.core.event.DeletedMeasurementEvent;
+import io.car.server.core.event.DeletedTrackEvent;
+import io.car.server.core.event.DeletedUserEvent;
+import io.car.server.core.event.FriendedUserEvent;
+import io.car.server.core.event.JoinedGroupEvent;
+import io.car.server.core.event.LeftGroupEvent;
+import io.car.server.core.event.UnfriendedUserEvent;
 import io.car.server.core.exception.GroupNotFoundException;
 import io.car.server.core.exception.IllegalModificationException;
 import io.car.server.core.exception.MeasurementNotFoundException;
@@ -82,8 +97,6 @@ public class Service {
     private PhenomenonDao phenomenonDao;
     @Inject
     private ActivityDao activityDao;
-    @Inject
-    private ActivityFactory activityFactory;
     @Inject
     private EntityValidator<User> userValidator;
     @Inject
@@ -142,26 +155,24 @@ public class Service {
         }
         this.userUpdater.update(changes, user);
         this.userDao.save(user);
-        this.eventBus.pushActivity(activityFactory
-                .createActivity(ActivityType.CHANGED_PROFILE, user));
+        this.eventBus.post(new ChangedProfileEvent(user));
         return user;
     }
 
     public void deleteUser(User user) {
         this.userDao.delete(user);
+        this.eventBus.post(new DeletedUserEvent(user));
     }
 
     public void removeFriend(User user, User friend)
             throws UserNotFoundException {
         this.userDao.removeFriend(user, friend);
-        this.eventBus.pushActivity(activityFactory
-                .createUserActivity(ActivityType.UNFRIENDED_USER, user, friend));
+        this.eventBus.post(new UnfriendedUserEvent(user, friend));
     }
 
     public void addFriend(User user, User friend) throws UserNotFoundException {
         this.userDao.addFriend(user, friend);
-        this.eventBus.pushActivity(activityFactory
-                .createUserActivity(ActivityType.FRIENDED_USER, user, friend));
+        this.eventBus.post(new FriendedUserEvent(user, friend));
     }
 
     public Group getGroup(String name) throws GroupNotFoundException {
@@ -182,24 +193,25 @@ public class Service {
 
     public Group modifyGroup(Group group, Group changes)
             throws ValidationException, IllegalModificationException {
-        groupValidator.validateUpdate(group);
-        this.eventBus.pushActivity(activityFactory
-                .createGroupActivity(ActivityType.CHANGED_GROUP, group
-                .getOwner(), group));
-        return this.groupDao.save(this.groupUpdater.update(changes, group));
+        this.groupValidator.validateUpdate(group);
+        this.groupUpdater.update(changes, group);
+        this.groupDao.save(group);
+        this.eventBus.post(new ChangedGroupEvent(group, group.getOwner()));
+        return group;
     }
 
     public Track modifyTrack(Track track, Track changes)
             throws ValidationException, IllegalModificationException {
-        trackValidator.validateCreate(track);
-        return this.trackDao.save(this.trackUpdater.update(changes, track));
+        this.trackValidator.validateCreate(track);
+        this.trackUpdater.update(changes, track);
+        this.trackDao.save(track);
+        this.eventBus.post(new ChangedTrackEvent(track.getUser(), track));
+        return track;
     }
 
     public void deleteGroup(Group group) throws GroupNotFoundException {
-        this.eventBus.pushActivity(activityFactory
-                .createGroupActivity(ActivityType.DELETED_GROUP, group
-                .getOwner(), group));
         this.groupDao.delete(group);
+        this.eventBus.post(new DeletedGroupEvent(group, group.getOwner()));
     }
 
     public Groups searchGroups(String search, Pagination p) {
@@ -209,32 +221,29 @@ public class Service {
     public Group createGroup(User user, Group group) throws
             ResourceAlreadyExistException {
         group.setOwner(user);
-        groupValidator.validateCreate(group);
+        this.groupValidator.validateCreate(group);
         if (groupDao.getByName(group.getName()) != null) {
             throw new ResourceAlreadyExistException();
         }
         this.groupDao.save(group);
         addGroupMember(group, user);
-        this.eventBus.pushActivity(activityFactory
-                .createGroupActivity(ActivityType.CREATED_GROUP, user, group));
+        this.eventBus.post(new CreatedGroupEvent(group, group.getOwner()));
         return group;
     }
 
     public void addGroupMember(Group group, User user) {
         this.groupDao.addMember(group, user);
-        this.eventBus.pushActivity(activityFactory
-                .createGroupActivity(ActivityType.JOINED_GROUP, user, group));
+        this.eventBus.post(new JoinedGroupEvent(group, user));
     }
 
     public void removeGroupMember(Group group, User user)
             throws UserNotFoundException, GroupNotFoundException {
         this.groupDao.removeMember(group, user);
-        this.eventBus.pushActivity(activityFactory
-                .createGroupActivity(ActivityType.LEFT_GROUP, user, group));
+        this.eventBus.post(new LeftGroupEvent(group, user));
     }
 
     public Tracks getTracks(Pagination p) {
-        return trackDao.get(p);
+        return this.trackDao.get(p);
     }
 
     public Tracks getTracks(User user, Pagination p) {
@@ -250,30 +259,31 @@ public class Service {
     }
 
     public Track createTrack(Track track) throws ValidationException {
-    	Track validated = this.trackValidator.validateCreate(track);
-        this.trackDao.create(validated);
-        TrackActivity ac = activityFactory
-                .createTrackActivity(ActivityType.CREATED_TRACK, track.getUser(), track);
-        this.eventBus.pushActivity(ac);
+    	this.trackValidator.validateCreate(track);
+        this.trackDao.create(track);
+        this.eventBus.post(new CreatedTrackEvent(track.getUser(), track));
         return track;
     }
 
     public void deleteTrack(Track track) {
         this.trackDao.delete(track);
+        this.eventBus.post(new DeletedTrackEvent(track, track.getUser()));
     }
 
-    public Measurement createMeasurement(Measurement measurement) {
-        this.measurementValidator.validateCreate(measurement);
-        this.measurementDao.create(measurement);
-        return measurement;
+    public Measurement createMeasurement(Measurement m) {
+        this.measurementValidator.validateCreate(m);
+        this.measurementDao.create(m);
+        this.eventBus.post(new CreatedMeasurementEvent(m.getUser(), m));
+        return m;
     }
 
-    public Measurement createMeasurement(Track track, Measurement measurement) {
-        this.measurementValidator.validateCreate(measurement);
-        measurement.setTrack(track);
-        this.measurementDao.create(measurement);
+    public Measurement createMeasurement(Track track, Measurement m) {
+        this.measurementValidator.validateCreate(m);
+        m.setTrack(track);
+        this.measurementDao.create(m);
         this.trackDao.update(track);
-        return measurement;
+        this.eventBus.post(new CreatedMeasurementEvent(m.getUser(), m));
+        return m;
     }
 
     public Measurements getMeasurements(Pagination p) {
@@ -301,16 +311,19 @@ public class Service {
         return m;
     }
 
-    public Measurement modifyMeasurement(Measurement measurement,
+    public Measurement modifyMeasurement(Measurement m,
                                          Measurement changes)
             throws ValidationException, IllegalModificationException {
-        measurementValidator.validateCreate(measurement);
-        return this.measurementDao.save(this.measurementUpdater.update(changes,
-                                                                       measurement));
+        this.measurementValidator.validateCreate(m);
+        this.measurementUpdater.update(changes, m);
+        this.measurementDao.save(m);
+        this.eventBus.post(new ChangedMeasurementEvent(m, m.getUser()));
+        return m;
     }
 
-    public void deleteMeasurement(Measurement measurement) {
-        this.measurementDao.delete(measurement);
+    public void deleteMeasurement(Measurement m) {
+        this.measurementDao.delete(m);
+        this.eventBus.post(new DeletedMeasurementEvent(m, m.getUser()));
     }
 
     public Phenomenon getPhenomenonByName(String name)
@@ -323,7 +336,9 @@ public class Service {
     }
 
     public Phenomenon createPhenomenon(Phenomenon phenomenon) {
-        return this.phenomenonDao.create(phenomenon);
+        this.phenomenonDao.create(phenomenon);
+        this.eventBus.post(new CreatedPhenomenonEvent(phenomenon));
+        return phenomenon;
     }
 
     public Phenomenons getPhenomenons(Pagination p) {
@@ -343,7 +358,9 @@ public class Service {
     }
 
     public Sensor createSensor(Sensor sensor) {
-        return this.sensorDao.create(sensor);
+        this.sensorDao.create(sensor);
+        this.eventBus.post(new CreatedSensorEvent(sensor));
+        return sensor;
     }
 
     public Group getGroup(User user, String groupName) throws

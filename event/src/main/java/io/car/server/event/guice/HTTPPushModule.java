@@ -17,18 +17,15 @@
  */
 package io.car.server.event.guice;
 
-import io.car.server.core.event.EventBusListener;
-import io.car.server.event.HTTPPushListener;
-
 import com.google.inject.AbstractModule;
-import com.google.inject.multibindings.Multibinder;
+
+import io.car.server.event.HTTPPushListener;
 
 public class HTTPPushModule extends AbstractModule {
 
 	@Override
-	protected void configure() {
-		Multibinder<EventBusListener> uriBinder = Multibinder.newSetBinder(binder(), EventBusListener.class);
-	    uriBinder.addBinding().to(HTTPPushListener.class);
+    protected void configure() {
+        bind(HTTPPushListener.class).asEagerSingleton();
 	}
 
 }
