@@ -19,19 +19,8 @@ package io.car.server.core;
 
 import java.util.Set;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-
 import io.car.server.core.activities.Activities;
-import io.car.server.core.activities.ActivityFactory;
 import io.car.server.core.activities.ActivityType;
-import io.car.server.core.dao.ActivityDao;
-import io.car.server.core.dao.GroupDao;
-import io.car.server.core.dao.MeasurementDao;
-import io.car.server.core.dao.PhenomenonDao;
-import io.car.server.core.dao.SensorDao;
-import io.car.server.core.dao.TrackDao;
-import io.car.server.core.dao.UserDao;
 import io.car.server.core.entities.Group;
 import io.car.server.core.entities.Groups;
 import io.car.server.core.entities.Measurement;
@@ -54,373 +43,145 @@ import io.car.server.core.exception.SensorNotFoundException;
 import io.car.server.core.exception.TrackNotFoundException;
 import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.core.exception.ValidationException;
-import io.car.server.core.update.EntityUpdater;
 import io.car.server.core.util.Pagination;
-import io.car.server.core.util.PasswordEncoder;
-import io.car.server.core.validation.EntityValidator;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
- * @author Arne de Wall <a.dewall@52north.org>
- * @author Jan Wirwahn <jan.wirwahn@wwu.de>
  */
-@Singleton
-public class Service {
-    @Inject
-    private UserDao userDao;
-    @Inject
-    private GroupDao groupDao;
-    @Inject
-    private TrackDao trackDao;
-    @Inject
-    private MeasurementDao measurementDao;
-    @Inject
-    private SensorDao sensorDao;
-    @Inject
-    private PhenomenonDao phenomenonDao;
-    @Inject
-    private ActivityDao activityDao;
-    @Inject
-    private ActivityFactory activityFactory;
-    @Inject
-    private EntityValidator<User> userValidator;
-    @Inject
-    private EntityValidator<Group> groupValidator;
-    @Inject
-    private EntityValidator<Track> trackValidator;
-    @Inject
-    private EntityUpdater<Track> trackUpdater;
-    @Inject
-    private EntityUpdater<Group> groupUpdater;
-    @Inject
-    private EntityUpdater<User> userUpdater;
-    @Inject
-    private EntityUpdater<Measurement> measurementUpdater;
-    @Inject
-    private EntityValidator<Measurement> measurementValidator;
-    @Inject
-    private PasswordEncoder passwordEncoder;
+public interface Service {
+    void addFriend(User user, User friend) throws
+            UserNotFoundException;
 
-    public User createUser(User user) throws ValidationException,
-                                             ResourceAlreadyExistException {
-        userValidator.validateCreate(user);
-        if (userDao.getByName(user.getName()) != null) {
-            throw new ResourceAlreadyExistException();
-        }
-        if (userDao.getByMail(user.getMail()) != null) {
-            throw new ResourceAlreadyExistException();
-        }
-        user.setToken(passwordEncoder.encode(user.getToken()));
-        return this.userDao.create(user);
-    }
+    void addGroupMember(Group group, User user);
 
-    public User getUser(String name) throws UserNotFoundException {
-        User user = this.userDao.getByName(name);
-        if (user == null) {
-            throw new UserNotFoundException(name);
-        }
-        return user;
-    }
+    Group createGroup(User user, Group group) throws
+            ResourceAlreadyExistException;
 
-    public Users getUsers(Pagination p) {
-        return this.userDao.get(p);
-    }
+    Measurement createMeasurement(Measurement measurement);
 
-    public User modifyUser(User user, User changes) throws UserNotFoundException,
-                                                           IllegalModificationException,
-                                                           ValidationException,
-                                                           ResourceAlreadyExistException {
-        this.userValidator.validateUpdate(changes);
-        if (changes.hasMail() && !changes.getMail().equals(user.getMail())) {
-            if (this.userDao.getByMail(changes.getMail()) != null) {
-                throw new ResourceAlreadyExistException();
-            }
-        }
-        this.userUpdater.update(changes, user);
-        this.userDao.save(user);
-        this.activityDao.save(activityFactory
-                .createActivity(ActivityType.CHANGED_PROFILE, user));
-        return user;
-    }
+    Measurement createMeasurement(Track track, Measurement measurement);
 
-    public void deleteUser(User user) {
-        this.userDao.delete(user);
-    }
+    Phenomenon createPhenomenon(Phenomenon phenomenon);
 
-    public void removeFriend(User user, User friend)
-            throws UserNotFoundException {
-        this.userDao.removeFriend(user, friend);
-        this.activityDao.save(activityFactory
-                .createUserActivity(ActivityType.UNFRIENDED_USER, user, friend));
-    }
+    Sensor createSensor(Sensor sensor);
 
-    public void addFriend(User user, User friend) throws UserNotFoundException {
-        this.userDao.addFriend(user, friend);
-        this.activityDao.save(activityFactory
-                .createUserActivity(ActivityType.FRIENDED_USER, user, friend));
-    }
+    Track createTrack(Track track) throws
+            ValidationException;
 
-    public Group getGroup(String name) throws GroupNotFoundException {
-        Group group = this.groupDao.getByName(name);
-        if (group == null) {
-            throw new GroupNotFoundException(name);
-        }
-        return group;
-    }
+    User createUser(User user) throws
+            ValidationException,
+            ResourceAlreadyExistException;
 
-    public Groups getGroups(Pagination p) {
-        return this.groupDao.get(p);
-    }
+    void deleteGroup(Group group) throws
+            GroupNotFoundException;
 
-    public Users getGroupMembers(Group group, Pagination pagination) {
-        return this.groupDao.getMembers(group, pagination);
-    }
+    void deleteMeasurement(Measurement measurement);
 
-    public Group modifyGroup(Group group, Group changes)
-            throws ValidationException, IllegalModificationException {
-        groupValidator.validateUpdate(group);
-        this.activityDao.save(activityFactory
-                .createGroupActivity(ActivityType.CHANGED_GROUP, group
-                .getOwner(), group));
-        return this.groupDao.save(this.groupUpdater.update(changes, group));
-    }
+    void deleteTrack(Track track);
 
-    public Track modifyTrack(Track track, Track changes)
-            throws ValidationException, IllegalModificationException {
-        trackValidator.validateCreate(track);
-        return this.trackDao.save(this.trackUpdater.update(changes, track));
-    }
+    void deleteUser(User user);
 
-    public void deleteGroup(Group group) throws GroupNotFoundException {
-        this.activityDao.save(activityFactory
-                .createGroupActivity(ActivityType.DELETED_GROUP, group
-                .getOwner(), group));
-        this.groupDao.delete(group);
-    }
+    Activities getActivities(Pagination p);
 
-    public Groups searchGroups(String search, Pagination p) {
-        return this.groupDao.search(search, p);
-    }
+    Activities getActivities(User user, Pagination p);
 
-    public Group createGroup(User user, Group group) throws
-            ResourceAlreadyExistException {
-        group.setOwner(user);
-        groupValidator.validateCreate(group);
-        if (groupDao.getByName(group.getName()) != null) {
-            throw new ResourceAlreadyExistException();
-        }
-        this.groupDao.save(group);
-        addGroupMember(group, user);
-        this.activityDao.save(activityFactory
-                .createGroupActivity(ActivityType.CREATED_GROUP, user, group));
-        return group;
-    }
+    Activities getActivities(ActivityType type, Pagination p);
 
-    public void addGroupMember(Group group, User user) {
-        this.groupDao.addMember(group, user);
-        this.activityDao.save(activityFactory
-                .createGroupActivity(ActivityType.JOINED_GROUP, user, group));
-    }
+    Activities getActivities(ActivityType type, User user, Pagination p);
 
-    public void removeGroupMember(Group group, User user)
-            throws UserNotFoundException, GroupNotFoundException {
-        this.groupDao.removeMember(group, user);
-        this.activityDao.save(activityFactory
-                .createGroupActivity(ActivityType.LEFT_GROUP, user, group));
-    }
+    Activities getActivities(Group user, Pagination p);
 
-    public Tracks getTracks(Pagination p) {
-        return trackDao.get(p);
-    }
+    Activities getActivities(ActivityType type, Group user, Pagination p);
 
-    public Tracks getTracks(User user, Pagination p) {
-        return this.trackDao.getByUser(user, p);
-    }
+    User getFriend(User user, String friendName) throws
+            UserNotFoundException;
 
-    public Track getTrack(String id) throws TrackNotFoundException {
-        Track track = trackDao.getById(id);
-        if (track == null) {
-            throw new TrackNotFoundException(id);
-        }
-        return track;
-    }
+    Activities getFriendActivities(User user, Pagination p);
 
-    public Track createTrack(Track track) throws ValidationException {
-        this.trackDao.create(this.trackValidator.validateCreate(track));
-        this.activityDao.save(activityFactory
-                .createTrackActivity(ActivityType.CREATED_TRACK, track.getUser(), track));
-        return track;
-    }
+    Users getFriends(User user);
 
-    public void deleteTrack(Track track) {
-        this.trackDao.delete(track);
-    }
+    Group getGroup(String name) throws
+            GroupNotFoundException;
 
-    public Measurement createMeasurement(Measurement measurement) {
-        this.measurementValidator.validateCreate(measurement);
-        this.measurementDao.create(measurement);
-        return measurement;
-    }
+    Group getGroup(User user, String groupName) throws
+            GroupNotFoundException;
 
-    public Measurement createMeasurement(Track track, Measurement measurement) {
-        this.measurementValidator.validateCreate(measurement);
-        measurement.setTrack(track);
-        this.measurementDao.create(measurement);
-        this.trackDao.update(track);
-        return measurement;
-    }
+    User getGroupMember(Group group, String username) throws
+            UserNotFoundException;
 
-    public Measurements getMeasurements(Pagination p) {
-        return this.measurementDao.get(p);
-    }
+    Users getGroupMembers(Group group, Pagination pagination);
 
-    public Measurements getMeasurements(User user, Pagination p) {
-        return this.measurementDao.getByUser(user, p);
-    }
+    Groups getGroups(Pagination p);
 
-    public Measurements getMeasurementsByUser(User user, Pagination p) {
-        return this.measurementDao.getByUser(user, p);
-    }
+    Groups getGroups(User user, Pagination p);
 
-    public Measurements getMeasurementsByTrack(Track track, Pagination p) {
-        return this.measurementDao.getByTrack(track, p);
-    }
+    Measurement getMeasurement(String id) throws
+            MeasurementNotFoundException;
 
-    public Measurement getMeasurement(String id) throws
-            MeasurementNotFoundException {
-        Measurement m = this.measurementDao.getById(id);
-        if (m == null) {
-            throw new MeasurementNotFoundException(id);
-        }
-        return m;
-    }
+    Measurements getMeasurements(Pagination p);
 
-    public Measurement modifyMeasurement(Measurement measurement,
-                                         Measurement changes)
-            throws ValidationException, IllegalModificationException {
-        measurementValidator.validateCreate(measurement);
-        return this.measurementDao.save(this.measurementUpdater.update(changes,
-                                                                       measurement));
-    }
+    Measurements getMeasurements(User user, Pagination p);
 
-    public void deleteMeasurement(Measurement measurement) {
-        this.measurementDao.delete(measurement);
-    }
+    Measurements getMeasurementsByTrack(Track track, Pagination p);
 
-    public Phenomenon getPhenomenonByName(String name)
-            throws PhenomenonNotFoundException {
-        Phenomenon p = this.phenomenonDao.getByName(name);
-        if (p == null) {
-            throw new PhenomenonNotFoundException(name);
-        }
-        return p;
-    }
+    Measurements getMeasurementsByUser(User user, Pagination p);
 
-    public Phenomenon createPhenomenon(Phenomenon phenomenon) {
-        return this.phenomenonDao.create(phenomenon);
-    }
+    Phenomenon getPhenomenonByName(String name) throws
+            PhenomenonNotFoundException;
 
-    public Phenomenons getPhenomenons(Pagination p) {
-        return this.phenomenonDao.get(p);
-    }
+    Phenomenons getPhenomenons(Pagination p);
 
-    public Sensor getSensorByName(String id) throws SensorNotFoundException {
-        Sensor s = this.sensorDao.getByIdentifier(id);
-        if (s == null) {
-            throw new SensorNotFoundException(id);
-        }
-        return s;
-    }
+    Sensor getSensorByName(String id) throws
+            SensorNotFoundException;
 
-    public Sensors getSensors(Set<PropertyFilter> filters, Pagination p) {
-        return this.sensorDao.get(filters, p);
-    }
+    Sensors getSensors(
+            Set<PropertyFilter> filters, Pagination p);
 
-    public Sensor createSensor(Sensor sensor) {
-        return this.sensorDao.create(sensor);
-    }
+    Sensors getSensorsByType(String type,
+                             Set<PropertyFilter> filters, Pagination p);
 
-    public Group getGroup(User user, String groupName) throws
-            GroupNotFoundException {
-        Group g = this.groupDao.get(user, groupName);
-        if (g == null) {
-            throw new GroupNotFoundException(groupName);
-        }
-        return g;
-    }
+    Track getTrack(String id) throws
+            TrackNotFoundException;
 
-    public User getGroupMember(Group group, String username) throws
-            UserNotFoundException {
-        User u = this.groupDao.getMember(group, username);
-        if (u == null) {
-            throw new UserNotFoundException(username);
-        }
-        return u;
-    }
+    Tracks getTracks(Pagination p);
 
-    public boolean isGroupMember(Group group, User user) {
-        return this.groupDao.getMember(group, user.getName()) != null;
-    }
+    Tracks getTracks(User user, Pagination p);
 
-    public Users getFriends(User user) {
-        return this.userDao.getFriends(user);
-    }
+    User getUser(String name) throws
+            UserNotFoundException;
 
-    public User getFriend(User user, String friendName) throws
-            UserNotFoundException {
-        User f = this.userDao.getFriend(user, friendName);
-        if (f == null) {
-            throw new UserNotFoundException(friendName);
-        }
-        return f;
-    }
+    Users getUsers(Pagination p);
 
-    public Groups getGroups(User user, Pagination p) {
-        return this.groupDao.getByMember(user, p);
-    }
+    boolean isFriend(User user1, User user2);
 
-    public Activities getActivities(Pagination p) {
-        return activityDao.get(p);
-    }
+    boolean isGroupMember(Group group, User user);
 
-    public Activities getActivities(User user, Pagination p) {
-        return activityDao.get(user, p);
-    }
+    Group modifyGroup(Group group, Group changes) throws
+            ValidationException,
+            IllegalModificationException;
 
-    public Activities getFriendActivities(User user, Pagination p) {
-        return activityDao.getForFriends(user, p);
-    }
+    Measurement modifyMeasurement(Measurement measurement, Measurement changes)
+            throws ValidationException,
+                   IllegalModificationException;
 
-    public Activities getActivities(ActivityType type, Pagination p) {
-        return activityDao.get(type, p);
-    }
+    Track modifyTrack(Track track, Track changes) throws
+            ValidationException,
+            IllegalModificationException;
 
-    public Activities getActivities(ActivityType type, User user, Pagination p) {
-        return activityDao.get(type, user, p);
-    }
+    User modifyUser(User user, User changes) throws
+            UserNotFoundException,
+            IllegalModificationException,
+            ValidationException,
+            ResourceAlreadyExistException;
 
-    public Activities getActivities(Group user, Pagination p) {
-        return activityDao.get(user, p);
-    }
+    void removeFriend(User user, User friend) throws
+            UserNotFoundException;
 
-    public Activities getActivities(ActivityType type, Group user, Pagination p) {
-        return activityDao.get(type, user, p);
-    }
+    void removeGroupMember(Group group, User user) throws
+            UserNotFoundException,
+            GroupNotFoundException;
 
-    public Sensors getSensorsByType(String type, Set<PropertyFilter> filters,
-                                    Pagination p) {
-        return this.sensorDao.getByType(type, filters, p);
-    }
+    Groups searchGroups(String search, Pagination p);
 
-    public boolean isFriend(User user1, User user2) {
-        try {
-            return getFriend(user1, user2.getName()) != null;
-        } catch (UserNotFoundException ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-
-    public boolean shareGroup(User user, User user0) {
-        return this.groupDao.shareGroup(user, user0);
-    }
+    boolean shareGroup(User user, User user0);
 }
