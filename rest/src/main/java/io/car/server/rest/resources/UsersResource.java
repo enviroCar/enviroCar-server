@@ -70,7 +70,7 @@ public class UsersResource extends AbstractResource {
     public UserResource user(@PathParam("username") String username) throws
             UserNotFoundException {
         User user = getService().getUser(username);
-        checkRights(getAccessRights().canSee(user));
+        checkRights(getRights().canSee(user));
         return getResourceFactory().createUserResource(user);
     }
 }

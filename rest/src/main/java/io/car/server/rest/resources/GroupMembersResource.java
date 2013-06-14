@@ -70,17 +70,17 @@ public class GroupMembersResource extends AbstractResource {
     public void add(UserReference user) throws UserNotFoundException,
                                                GroupNotFoundException {
         User u = getService().getUser(user.getName());
-        checkRights(getAccessRights().isSelf(u) &&
-                    getAccessRights().canJoinGroup(group));
+        checkRights(getRights().isSelf(u) &&
+                    getRights().canJoinGroup(group));
         getService().addGroupMember(group, u);
     }
 
     @Path(MEMBER)
     public GroupMemberResource member(@PathParam("member") String username)
             throws UserNotFoundException {
-        checkRights(getAccessRights().canSeeMembersOf(group));
+        checkRights(getRights().canSeeMembersOf(group));
         User user = getService().getGroupMember(group, username);
-        checkRights(getAccessRights().canSee(user));
+        checkRights(getRights().canSee(user));
         return getResourceFactory().createGroupMemberResource(group, user);
     }
 }

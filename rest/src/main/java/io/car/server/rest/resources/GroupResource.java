@@ -71,7 +71,7 @@ public class GroupResource extends AbstractResource {
                                                  ValidationException,
                                                  IllegalModificationException,
                                                  GroupNotFoundException {
-        checkRights(getAccessRights().canModify(group));
+        checkRights(getRights().canModify(group));
         Group modified = getService().modifyGroup(group, changes);
         if (modified.getName().equals(group.getName())) {
             return Response.noContent().build();
@@ -89,19 +89,19 @@ public class GroupResource extends AbstractResource {
     @DELETE
     @Authenticated
     public void delete() throws UserNotFoundException, GroupNotFoundException {
-        checkRights(getAccessRights().canDelete(group));
+        checkRights(getRights().canDelete(group));
         getService().deleteGroup(group);
     }
 
     @Path(MEMBERS)
     public GroupMembersResource members() {
-        checkRights(getAccessRights().canSeeMembersOf(group));
+        checkRights(getRights().canSeeMembersOf(group));
         return getResourceFactory().createGroupMembersResource(group);
     }
 
     @Path(ACTIVITIES)
     public ActivitiesResource activities() {
-        checkRights(getAccessRights().canSeeActivitiesOf(group));
+        checkRights(getRights().canSeeActivitiesOf(group));
         return getResourceFactory().createActivitiesResource(group);
     }
 }

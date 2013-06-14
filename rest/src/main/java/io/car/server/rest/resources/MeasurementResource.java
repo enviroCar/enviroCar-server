@@ -60,7 +60,7 @@ public class MeasurementResource extends AbstractResource {
     public Response modify(Measurement changes)
             throws MeasurementNotFoundException, UserNotFoundException,
                    ValidationException, IllegalModificationException {
-        checkRights(getAccessRights().canModify(measurement));
+        checkRights(getRights().canModify(measurement));
         getService().modifyMeasurement(measurement, changes);
         return Response.ok().build();
     }
@@ -76,15 +76,15 @@ public class MeasurementResource extends AbstractResource {
     @Authenticated
     public void delete() throws MeasurementNotFoundException,
                                 UserNotFoundException {
-        checkRights(getAccessRights().canDelete(measurement));
+        checkRights(getRights().canDelete(measurement));
         getService().deleteMeasurement(measurement);
     }
 
     @Path(SENSOR)
     public SensorResource sensor() throws MeasurementNotFoundException {
-        checkRights(getAccessRights().canSeeSensorOf(measurement));
+        checkRights(getRights().canSeeSensorOf(measurement));
         Sensor sensor = measurement.getSensor();
-        checkRights(getAccessRights().canSee(sensor));
+        checkRights(getRights().canSee(sensor));
         return getResourceFactory().createSensorResource(sensor);
     }
 }

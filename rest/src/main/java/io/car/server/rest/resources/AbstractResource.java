@@ -42,7 +42,7 @@ public abstract class AbstractResource {
     private Provider<ResourceFactory> resourceFactory;
     private Provider<EntityFactory> entityFactory;
 
-    protected AccessRights getAccessRights() {
+    protected AccessRights getRights() {
         return accessRights.get();
     }
 
@@ -76,7 +76,7 @@ public abstract class AbstractResource {
 
 
     @Inject
-    public void setAccessRights(Provider<AccessRights> accessRights) {
+    public void setRights(Provider<AccessRights> accessRights) {
         this.accessRights = accessRights;
     }
 

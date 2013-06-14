@@ -62,7 +62,7 @@ public class TrackResource extends AbstractResource {
                                                  UserNotFoundException,
                                                  IllegalModificationException,
                                                  ValidationException {
-        checkRights(getAccessRights().canModify(track));
+        checkRights(getRights().canModify(track));
         getService().modifyTrack(track, changes);
         return Response.ok().build();
     }
@@ -77,25 +77,25 @@ public class TrackResource extends AbstractResource {
     @DELETE
     @Authenticated
     public void delete() throws TrackNotFoundException, UserNotFoundException {
-        checkRights(getAccessRights().canDelete(track));
+        checkRights(getRights().canDelete(track));
         getService().deleteTrack(track);
     }
 
     @Path(MEASUREMENTS)
     public MeasurementsResource measurements() {
-        checkRights(getAccessRights().canSeeMeasurementsOf(track));
+        checkRights(getRights().canSeeMeasurementsOf(track));
         return getResourceFactory().createMeasurementsResource(null, track);
     }
 
     @Path(SENSOR)
     public SensorResource sensor() throws TrackNotFoundException {
-        checkRights(getAccessRights().canSeeSensorOf(track));
+        checkRights(getRights().canSeeSensorOf(track));
         return getResourceFactory().createSensorResource(track.getSensor());
     }
 
     @Path(STATISTICS)
     public StatisticsResource statistics() {
-        checkRights(getAccessRights().canSeeStatisticsOf(track));
+        checkRights(getRights().canSeeStatisticsOf(track));
         return getResourceFactory().createStatisticsResource(track, null);
     }
 }

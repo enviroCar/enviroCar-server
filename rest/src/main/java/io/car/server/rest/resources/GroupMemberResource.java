@@ -45,7 +45,7 @@ public class GroupMemberResource extends UserResource {
     @Override
     @Authenticated
     public void delete() throws UserNotFoundException, GroupNotFoundException {
-        checkRights(getAccessRights().canLeaveGroup(group));
+        checkRights(getRights().canLeaveGroup(group));
         getService().removeGroupMember(group, getUser());
     }
 }

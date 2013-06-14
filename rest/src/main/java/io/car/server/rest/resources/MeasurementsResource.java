@@ -90,7 +90,7 @@ public class MeasurementsResource extends AbstractResource {
             UserNotFoundException {
         Measurement m;
         if (track != null) {
-            checkRights(getAccessRights().canModify(track));
+            checkRights(getRights().canModify(track));
             measurement.setUser(getCurrentUser());
             m = getService().createMeasurement(track, measurement);
         } else {
@@ -107,14 +107,14 @@ public class MeasurementsResource extends AbstractResource {
     public MeasurementResource measurement(@PathParam("measurement") String id)
             throws MeasurementNotFoundException {
         if (user != null) {
-            checkRights(getAccessRights().canSeeMeasurementsOf(user));
+            checkRights(getRights().canSeeMeasurementsOf(user));
         }
         if (track != null) {
-            checkRights(getAccessRights().canSeeMeasurementsOf(track));
+            checkRights(getRights().canSeeMeasurementsOf(track));
         }
 
         Measurement m = getService().getMeasurement(id);
-        checkRights(getAccessRights().canSee(m));
+        checkRights(getRights().canSee(m));
         return getResourceFactory().createMeasurementResource(m, user, track);
     }
 }

@@ -53,37 +53,37 @@ public class RootResource extends AbstractResource {
     @Produces(MediaTypes.ROOT)
     public JsonNode get() {
         ObjectNode root = factory.objectNode();
-        if (getAccessRights().canSeeUsers()) {
+        if (getRights().canSeeUsers()) {
             root.put(JSONConstants.USERS_KEY,
                      getUriInfo().getAbsolutePathBuilder()
                     .path(USERS).build().toString());
         }
-        if (getAccessRights().canSeeGroups()) {
+        if (getRights().canSeeGroups()) {
             root.put(JSONConstants.GROUPS_KEY, getUriInfo()
                     .getAbsolutePathBuilder()
                     .path(GROUPS).build().toString());
         }
-        if (getAccessRights().canSeeTracks()) {
+        if (getRights().canSeeTracks()) {
             root.put(JSONConstants.TRACKS_KEY, getUriInfo()
                     .getAbsolutePathBuilder()
                     .path(TRACKS).build().toString());
         }
-        if (getAccessRights().canSeeSensors()) {
+        if (getRights().canSeeSensors()) {
             root.put(JSONConstants.SENSORS_KEY, getUriInfo()
                     .getAbsolutePathBuilder().path(SENSORS)
                     .build().toString());
         }
-        if (getAccessRights().canSeePhenomenons()) {
+        if (getRights().canSeePhenomenons()) {
             root.put(JSONConstants.PHENOMENONS_KEY, getUriInfo()
                     .getAbsolutePathBuilder()
                     .path(PHENOMENONS).build().toString());
         }
-        if (getAccessRights().canSeeMeasurements()) {
+        if (getRights().canSeeMeasurements()) {
             root.put(JSONConstants.MEASUREMENTS_KEY, getUriInfo()
                     .getAbsolutePathBuilder()
                     .path(MEASUREMENTS).build().toString());
         }
-        if (getAccessRights().canSeeStatistics()) {
+        if (getRights().canSeeStatistics()) {
             root.put(JSONConstants.STATISTICS_KEY, getUriInfo()
                     .getAbsolutePathBuilder()
                     .path(STATISTICS).build().toString());
@@ -93,43 +93,43 @@ public class RootResource extends AbstractResource {
 
     @Path(USERS)
     public UsersResource users() {
-        checkRights(getAccessRights().canSeeUsers());
+        checkRights(getRights().canSeeUsers());
         return getResourceFactory().createUsersResource();
     }
 
     @Path(GROUPS)
     public GroupsResource groups() {
-        checkRights(getAccessRights().canSeeGroups());
+        checkRights(getRights().canSeeGroups());
         return getResourceFactory().createGroupsResource(null);
     }
 
     @Path(TRACKS)
     public TracksResource tracks() {
-        checkRights(getAccessRights().canSeeTracks());
+        checkRights(getRights().canSeeTracks());
         return getResourceFactory().createTracksResource(null);
     }
 
     @Path(PHENOMENONS)
     public PhenomenonsResource phenomenons() {
-        checkRights(getAccessRights().canSeePhenomenons());
+        checkRights(getRights().canSeePhenomenons());
         return getResourceFactory().createPhenomenonsResource();
     }
 
     @Path(SENSORS)
     public SensorsResource sensors() {
-        checkRights(getAccessRights().canSeeSensors());
+        checkRights(getRights().canSeeSensors());
         return getResourceFactory().createSensorsResource();
     }
 
     @Path(MEASUREMENTS)
     public MeasurementsResource measurements() {
-        checkRights(getAccessRights().canSeeMeasurements());
+        checkRights(getRights().canSeeMeasurements());
         return getResourceFactory().createMeasurementsResource(null, null);
     }
 
     @Path(STATISTICS)
     public StatisticsResource statistics() {
-        checkRights(getAccessRights().canSeeStatistics());
+        checkRights(getRights().canSeeStatistics());
         return getResourceFactory().createStatisticsResource(null, null);
     }
 }

@@ -80,7 +80,7 @@ public class TracksResource extends AbstractResource {
                                                ResourceAlreadyExistException,
                                                UserNotFoundException {
         if (user != null) {
-            checkRights(getAccessRights().isSelf(user));
+            checkRights(getRights().isSelf(user));
         }
         track.setUser(getCurrentUser());
 
@@ -104,7 +104,7 @@ public class TracksResource extends AbstractResource {
     public TrackResource track(@PathParam("track") String id)
             throws TrackNotFoundException {
         Track track = getService().getTrack(id);
-        checkRights(getAccessRights().canSee(track));
+        checkRights(getRights().canSee(track));
         return getResourceFactory().createTrackResource(track);
     }
 }

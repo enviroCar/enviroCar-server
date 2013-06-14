@@ -67,7 +67,7 @@ public class PhenomenonsResource extends AbstractResource {
     public PhenomenonResource phenomenon(@PathParam("phenomenon") String id)
             throws PhenomenonNotFoundException {
         Phenomenon p = getService().getPhenomenonByName(id);
-        checkRights(getAccessRights().canSee(p));
+        checkRights(getRights().canSee(p));
         return getResourceFactory().createPhenomenonResource(p);
     }
 }

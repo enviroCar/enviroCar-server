@@ -76,7 +76,7 @@ public class UserResource extends AbstractResource {
     public Response modify(User changes) throws
             UserNotFoundException, IllegalModificationException,
             ValidationException, ResourceAlreadyExistException {
-        checkRights(getAccessRights().canModify(user));
+        checkRights(getRights().canModify(user));
         User modified = getService().modifyUser(user, changes);
         if (modified.getName().equals(user.getName())) {
             return Response.noContent().build();
@@ -101,55 +101,55 @@ public class UserResource extends AbstractResource {
     @DELETE
     @Authenticated
     public void delete() throws ResourceNotFoundException {
-        checkRights(getAccessRights().canDelete(user));
+        checkRights(getRights().canDelete(user));
         getService().deleteUser(this.user);
     }
 
     @Path(FRIENDS)
     public FriendsResource friends() {
-        checkRights(getAccessRights().canSeeFriendsOf(user));
+        checkRights(getRights().canSeeFriendsOf(user));
         return getResourceFactory().createFriendsResource(this.user);
     }
 
     @Path(GROUPS)
     public GroupsResource groups() {
-        checkRights(getAccessRights().canSeeGroupsOf(user));
+        checkRights(getRights().canSeeGroupsOf(user));
         return getResourceFactory().createGroupsResource(this.user);
     }
 
     @Path(TRACKS)
     public TracksResource tracks() {
-        checkRights(getAccessRights().canSeeTracksOf(user));
+        checkRights(getRights().canSeeTracksOf(user));
         return getResourceFactory().createTracksResource(this.user);
     }
 
     @Path(MEASUREMENTS)
     public MeasurementsResource measurements() {
-        checkRights(getAccessRights().canSeeMeasurementsOf(user));
+        checkRights(getRights().canSeeMeasurementsOf(user));
         return getResourceFactory().createMeasurementsResource(this.user, null);
     }
 
     @Path(STATISTICS)
     public StatisticsResource statistics() {
-        checkRights(getAccessRights().canSeeStatisticsOf(user));
+        checkRights(getRights().canSeeStatisticsOf(user));
         return getResourceFactory().createStatisticsResource(null, this.user);
     }
 
     @Path(ACTIVITIES)
     public ActivitiesResource activities() {
-        checkRights(getAccessRights().canSeeActivitiesOf(user));
+        checkRights(getRights().canSeeActivitiesOf(user));
         return getResourceFactory().createActivitiesResource(this.user);
     }
 
     @Path(FRIEND_ACTIVITIES)
     public FriendsActivitiesResource friendActivities() {
-        checkRights(getAccessRights().canSeeFriendActivitiesOf(user));
+        checkRights(getRights().canSeeFriendActivitiesOf(user));
         return getResourceFactory().createFriendActivitiesResource(this.user);
     }
 
     @Path(AVATAR)
     public AvatarResource avatar() {
-        checkRights(getAccessRights().canSeeAvatarOf(user));
+        checkRights(getRights().canSeeAvatarOf(user));
         return getResourceFactory().createAvatarResource(this.user);
     }
 }
