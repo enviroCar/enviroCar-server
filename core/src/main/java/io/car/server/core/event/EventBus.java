@@ -1,5 +1,6 @@
 /*
- * Copyright (C) 2013  Matthes Rieke, Daniel Nüst
+ * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
+ *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -17,32 +18,32 @@
 package io.car.server.core.event;
 
 import io.car.server.core.activities.Activity;
-	
+
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.google.inject.Singleton;
+
+@Singleton
 public class EventBus {
 
-	private static EventBus instance;
+	private static final Logger log = LoggerFactory.getLogger(EventBus.class);
+
 	private List<EventBusListener> listeners = new ArrayList<EventBusListener>();
 
-	private EventBus() {
-		
-	}
-	
-	public static synchronized EventBus getInstance() {
-		if (instance == null)
-			instance = new EventBus();
-		
-		return null;
+	public EventBus() {
+		//
 	}
 
 	public void pushActivity(Activity ac) {
+		log.debug("New event pushed to bus: {}", ac);
+
 		for (EventBusListener ebl : this.listeners) {
 			ebl.onNewActivity(ac);
 		}
 	}
-	
-	
-	
+
 }

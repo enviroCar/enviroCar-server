@@ -102,6 +102,8 @@ public class Service {
     private EntityValidator<Measurement> measurementValidator;
     @Inject
     private PasswordEncoder passwordEncoder;
+    @Inject
+    private EventBus eventBus;
 
     public User createUser(User user) throws ValidationException,
                                              ResourceAlreadyExistException {
@@ -248,11 +250,12 @@ public class Service {
     }
 
     public Track createTrack(Track track) throws ValidationException {
-        this.trackDao.create(this.trackValidator.validateCreate(track));
+    	Track validated = this.trackValidator.validateCreate(track);
+        this.trackDao.create(validated);
         TrackActivity ac = activityFactory
                 .createTrackActivity(ActivityType.CREATED_TRACK, track.getUser(), track);
         this.activityDao.save(ac);
-        EventBus.getInstance().pushActivity(ac);
+        this.eventBus.pushActivity(ac);
         return track;
     }
 

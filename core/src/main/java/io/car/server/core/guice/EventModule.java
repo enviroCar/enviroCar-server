@@ -1,5 +1,6 @@
 /*
- * Copyright (C) 2013  Matthes Rieke, Daniel Nüst
+ * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
+ *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -16,6 +17,8 @@
  */
 package io.car.server.core.guice;
 
+import io.car.server.core.event.EventBus;
+
 import com.google.inject.AbstractModule;
 
 /**
@@ -27,8 +30,7 @@ public class EventModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		// TODO Auto-generated method stub
-
+		bind(EventBus.class);
 	}
 
 }
