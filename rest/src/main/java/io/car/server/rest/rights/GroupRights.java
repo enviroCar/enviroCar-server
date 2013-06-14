@@ -23,6 +23,8 @@ import io.car.server.core.entities.Group;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface GroupRights {
+    boolean canSeeGroups();
+
     boolean canSee(Group group);
 
     boolean canSeeActivitiesOf(Group group);

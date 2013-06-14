@@ -28,6 +28,8 @@ import io.car.server.core.entities.Sensor;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface SensorRights {
+    boolean canSeeSensors();
+
     boolean canSee(Sensor sensor);
 
     boolean canModify(Sensor sensor);

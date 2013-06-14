@@ -23,6 +23,8 @@ import io.car.server.core.entities.Measurement;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface MeasurementRights {
+    boolean canSeeMeasurements();
+
     boolean canSee(Measurement measurement);
 
     boolean canSeeUserOf(Measurement measurement);

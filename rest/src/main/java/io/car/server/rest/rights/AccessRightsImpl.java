@@ -348,7 +348,7 @@ public class AccessRightsImpl extends AbstractAccessRights {
 
     @Override
     public boolean canSee(Group group) {
-        return true;
+        return isAuthenticated();
     }
 
     @Override
@@ -358,6 +358,41 @@ public class AccessRightsImpl extends AbstractAccessRights {
 
     @Override
     public boolean canSee(Phenomenon phenomenon) {
+        return true;
+    }
+
+    @Override
+    public boolean canSeeUsers() {
+        return isAuthenticated();
+    }
+
+    @Override
+    public boolean canSeeTracks() {
+        return isAuthenticated();
+    }
+
+    @Override
+    public boolean canSeeMeasurements() {
+        return true;
+    }
+
+    @Override
+    public boolean canSeeGroups() {
+        return isAuthenticated();
+    }
+
+    @Override
+    public boolean canSeeSensors() {
+        return true;
+    }
+
+    @Override
+    public boolean canSeePhenomenons() {
+        return true;
+    }
+
+    @Override
+    public boolean canSeeStatistics() {
         return true;
     }
 }

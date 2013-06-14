@@ -99,4 +99,8 @@ public abstract class AbstractAccessRights implements AccessRights {
     protected boolean isSelfFriendOfOrShareGroup(User user) {
         return isSelf(user) || isFriendOf(user) || shareGroup(user);
     }
+
+    protected boolean isAuthenticated() {
+        return this.user != null;
+    }
 }

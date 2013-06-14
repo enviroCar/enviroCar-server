@@ -29,4 +29,5 @@ public interface AccessRights extends UserRights,
                                       SensorRights,
                                       PhenomenonRights {
     boolean isSelf(User user);
+    boolean canSeeStatistics();
 }

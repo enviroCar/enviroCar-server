@@ -24,6 +24,8 @@ import io.car.server.core.entities.Phenomenon;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface PhenomenonRights {
+    boolean canSeePhenomenons();
+
     boolean canSee(Phenomenon phenomenon);
 
     boolean canModify(Phenomenon phenomenon);
