@@ -142,7 +142,7 @@ public class Service {
         }
         this.userUpdater.update(changes, user);
         this.userDao.save(user);
-        this.activityDao.save(activityFactory
+        this.eventBus.pushActivity(activityFactory
                 .createActivity(ActivityType.CHANGED_PROFILE, user));
         return user;
     }
@@ -154,13 +154,13 @@ public class Service {
     public void removeFriend(User user, User friend)
             throws UserNotFoundException {
         this.userDao.removeFriend(user, friend);
-        this.activityDao.save(activityFactory
+        this.eventBus.pushActivity(activityFactory
                 .createUserActivity(ActivityType.UNFRIENDED_USER, user, friend));
     }
 
     public void addFriend(User user, User friend) throws UserNotFoundException {
         this.userDao.addFriend(user, friend);
-        this.activityDao.save(activityFactory
+        this.eventBus.pushActivity(activityFactory
                 .createUserActivity(ActivityType.FRIENDED_USER, user, friend));
     }
 
@@ -183,7 +183,7 @@ public class Service {
     public Group modifyGroup(Group group, Group changes)
             throws ValidationException, IllegalModificationException {
         groupValidator.validateUpdate(group);
-        this.activityDao.save(activityFactory
+        this.eventBus.pushActivity(activityFactory
                 .createGroupActivity(ActivityType.CHANGED_GROUP, group
                 .getOwner(), group));
         return this.groupDao.save(this.groupUpdater.update(changes, group));
@@ -196,7 +196,7 @@ public class Service {
     }
 
     public void deleteGroup(Group group) throws GroupNotFoundException {
-        this.activityDao.save(activityFactory
+        this.eventBus.pushActivity(activityFactory
                 .createGroupActivity(ActivityType.DELETED_GROUP, group
                 .getOwner(), group));
         this.groupDao.delete(group);
@@ -215,21 +215,21 @@ public class Service {
         }
         this.groupDao.save(group);
         addGroupMember(group, user);
-        this.activityDao.save(activityFactory
+        this.eventBus.pushActivity(activityFactory
                 .createGroupActivity(ActivityType.CREATED_GROUP, user, group));
         return group;
     }
 
     public void addGroupMember(Group group, User user) {
         this.groupDao.addMember(group, user);
-        this.activityDao.save(activityFactory
+        this.eventBus.pushActivity(activityFactory
                 .createGroupActivity(ActivityType.JOINED_GROUP, user, group));
     }
 
     public void removeGroupMember(Group group, User user)
             throws UserNotFoundException, GroupNotFoundException {
         this.groupDao.removeMember(group, user);
-        this.activityDao.save(activityFactory
+        this.eventBus.pushActivity(activityFactory
                 .createGroupActivity(ActivityType.LEFT_GROUP, user, group));
     }
 
@@ -254,7 +254,6 @@ public class Service {
         this.trackDao.create(validated);
         TrackActivity ac = activityFactory
                 .createTrackActivity(ActivityType.CREATED_TRACK, track.getUser(), track);
-        this.activityDao.save(ac);
         this.eventBus.pushActivity(ac);
         return track;
     }

@@ -17,9 +17,12 @@
  */
 package io.car.server.core.guice;
 
-import io.car.server.core.event.EventBus;
-
 import com.google.inject.AbstractModule;
+import com.google.inject.multibindings.Multibinder;
+
+import io.car.server.core.event.ActivityDaoEventBusListener;
+import io.car.server.core.event.EventBus;
+import io.car.server.core.event.EventBusListener;
 
 /**
  * 
@@ -30,7 +33,9 @@ public class EventModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		bind(EventBus.class);
-	}
-
+        bind(EventBus.class);
+        Multibinder<EventBusListener> b =
+                Multibinder.newSetBinder(binder(), EventBusListener.class);
+        b.addBinding().to(ActivityDaoEventBusListener.class);
+    }
 }
