@@ -97,6 +97,7 @@ public class GroupsResource extends AbstractResource {
         } else {
             group = getService().getGroup(groupName);
         }
+        checkRights(getAccessRights().canSee(group));
         return getResourceFactory().createGroupResource(group);
     }
 }

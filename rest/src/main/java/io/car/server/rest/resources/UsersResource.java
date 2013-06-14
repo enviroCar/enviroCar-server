@@ -59,7 +59,7 @@ public class UsersResource extends AbstractResource {
     @Schema(request = Schemas.USER_CREATE)
     @Consumes(MediaTypes.USER_CREATE)
     public Response create(User user) throws ValidationException,
-                                                       ResourceAlreadyExistException {
+                                             ResourceAlreadyExistException {
         return Response.created(
                 getUriInfo().getAbsolutePathBuilder()
                 .path(getService().createUser(user).getName())
@@ -69,7 +69,8 @@ public class UsersResource extends AbstractResource {
     @Path(USER)
     public UserResource user(@PathParam("username") String username) throws
             UserNotFoundException {
-        return getResourceFactory().createUserResource(getService()
-                .getUser(username));
+        User user = getService().getUser(username);
+        checkRights(getAccessRights().canSee(user));
+        return getResourceFactory().createUserResource(user);
     }
 }

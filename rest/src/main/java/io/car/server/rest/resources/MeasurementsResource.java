@@ -112,7 +112,9 @@ public class MeasurementsResource extends AbstractResource {
         if (track != null) {
             checkRights(getAccessRights().canSeeMeasurementsOf(track));
         }
-        return getResourceFactory().createMeasurementResource(getService()
-                .getMeasurement(id), user, track);
+
+        Measurement m = getService().getMeasurement(id);
+        checkRights(getAccessRights().canSee(m));
+        return getResourceFactory().createMeasurementResource(m, user, track);
     }
 }

@@ -23,6 +23,8 @@ import io.car.server.core.entities.Track;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface TrackRights {
+    boolean canSee(Track track);
+
     boolean canSeeUserOf(Track track);
 
     boolean canSeeNameOf(Track track);

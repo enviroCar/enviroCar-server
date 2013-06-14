@@ -15,10 +15,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package io.car.server.rest.rights;
 
 import io.car.server.core.entities.Phenomenon;
@@ -28,6 +24,8 @@ import io.car.server.core.entities.Phenomenon;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface PhenomenonRights {
+    boolean canSee(Phenomenon phenomenon);
+
     boolean canModify(Phenomenon phenomenon);
 
     boolean canDelete(Phenomenon phenomenon);

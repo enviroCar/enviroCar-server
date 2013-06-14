@@ -23,6 +23,7 @@ import io.car.server.core.entities.User;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface UserRights {
+    boolean canSee(User user);
 
     boolean canSeeNameOf(User user);
 

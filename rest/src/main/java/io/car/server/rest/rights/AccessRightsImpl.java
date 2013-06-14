@@ -330,4 +330,34 @@ public class AccessRightsImpl extends AbstractAccessRights {
     public boolean canSeeGeometryOf(Measurement t) {
         return true;
     }
+
+    @Override
+    public boolean canSee(User user) {
+        return isSelfFriendOfOrShareGroup(user);
+    }
+
+    @Override
+    public boolean canSee(Track track) {
+        return isSelfFriendOfOrShareGroup(track.getUser());
+    }
+
+    @Override
+    public boolean canSee(Measurement measurement) {
+        return true;
+    }
+
+    @Override
+    public boolean canSee(Group group) {
+        return true;
+    }
+
+    @Override
+    public boolean canSee(Sensor sensor) {
+        return true;
+    }
+
+    @Override
+    public boolean canSee(Phenomenon phenomenon) {
+        return true;
+    }
 }

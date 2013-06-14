@@ -29,6 +29,7 @@ import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
 import io.car.server.core.entities.Measurement;
+import io.car.server.core.entities.Sensor;
 import io.car.server.core.exception.IllegalModificationException;
 import io.car.server.core.exception.MeasurementNotFoundException;
 import io.car.server.core.exception.UserNotFoundException;
@@ -82,7 +83,8 @@ public class MeasurementResource extends AbstractResource {
     @Path(SENSOR)
     public SensorResource sensor() throws MeasurementNotFoundException {
         checkRights(getAccessRights().canSeeSensorOf(measurement));
-        return getResourceFactory()
-                .createSensorResource(measurement.getSensor());
+        Sensor sensor = measurement.getSensor();
+        checkRights(getAccessRights().canSee(sensor));
+        return getResourceFactory().createSensorResource(sensor);
     }
 }

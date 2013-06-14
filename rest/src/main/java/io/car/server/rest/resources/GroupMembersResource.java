@@ -80,6 +80,7 @@ public class GroupMembersResource extends AbstractResource {
             throws UserNotFoundException {
         checkRights(getAccessRights().canSeeMembersOf(group));
         User user = getService().getGroupMember(group, username);
+        checkRights(getAccessRights().canSee(user));
         return getResourceFactory().createGroupMemberResource(group, user);
     }
 }
