@@ -15,35 +15,22 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.core.event;
+package io.car.server.core.guice;
 
-import io.car.server.core.activities.Activity;
+import io.car.server.core.event.EventBus;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.inject.AbstractModule;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+/**
+ * 
+ * @author Daniel Nüst (d.nuest@52north.org)
+ *
+ */
+public class EventModule extends AbstractModule {
 
-import com.google.inject.Singleton;
-
-@Singleton
-public class EventBus {
-
-	private static final Logger log = LoggerFactory.getLogger(EventBus.class);
-
-	private List<EventBusListener> listeners = new ArrayList<EventBusListener>();
-
-	public EventBus() {
-		//
-	}
-
-	public void pushActivity(Activity ac) {
-		log.debug("New event pushed to bus: {}", ac);
-
-		for (EventBusListener ebl : this.listeners) {
-			ebl.onNewActivity(ac);
-		}
+	@Override
+	protected void configure() {
+		bind(EventBus.class);
 	}
 
 }
