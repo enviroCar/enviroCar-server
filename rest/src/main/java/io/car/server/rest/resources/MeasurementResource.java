@@ -81,6 +81,7 @@ public class MeasurementResource extends AbstractResource {
 
     @Path(SENSOR)
     public SensorResource sensor() throws MeasurementNotFoundException {
+        checkRights(getAccessRights().canSeeSensorOf(measurement));
         return getResourceFactory()
                 .createSensorResource(measurement.getSensor());
     }

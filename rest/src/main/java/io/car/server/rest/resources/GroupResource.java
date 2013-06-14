@@ -95,11 +95,13 @@ public class GroupResource extends AbstractResource {
 
     @Path(MEMBERS)
     public GroupMembersResource members() {
+        checkRights(getAccessRights().canSeeMembersOf(group));
         return getResourceFactory().createGroupMembersResource(group);
     }
 
     @Path(ACTIVITIES)
     public ActivitiesResource activities() {
+        checkRights(getAccessRights().canSeeActivitiesOf(group));
         return getResourceFactory().createActivitiesResource(group);
     }
 }

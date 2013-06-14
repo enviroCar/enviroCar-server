@@ -28,9 +28,9 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 
+import io.car.server.rest.JSONConstants;
 import io.car.server.rest.MediaTypes;
 import io.car.server.rest.Schemas;
-import io.car.server.rest.JSONConstants;
 import io.car.server.rest.validation.Schema;
 
 /**

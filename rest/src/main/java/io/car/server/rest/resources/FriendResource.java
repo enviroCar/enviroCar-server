@@ -43,7 +43,7 @@ public class FriendResource extends UserResource {
     @Override
     @Authenticated
     public void delete() throws ResourceNotFoundException {
-        checkRights(getAccessRights().canModify(user));
+        checkRights(getAccessRights().canUnfriend(user));
         getService().removeFriend(user, getUser());
     }
 }

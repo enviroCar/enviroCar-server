@@ -83,16 +83,19 @@ public class TrackResource extends AbstractResource {
 
     @Path(MEASUREMENTS)
     public MeasurementsResource measurements() {
+        checkRights(getAccessRights().canSeeMeasurementsOf(track));
         return getResourceFactory().createMeasurementsResource(null, track);
     }
 
     @Path(SENSOR)
     public SensorResource sensor() throws TrackNotFoundException {
+        checkRights(getAccessRights().canSeeSensorOf(track));
         return getResourceFactory().createSensorResource(track.getSensor());
     }
 
     @Path(STATISTICS)
     public StatisticsResource statistics() {
+        checkRights(getAccessRights().canSeeStatisticsOf(track));
         return getResourceFactory().createStatisticsResource(track, null);
     }
 }

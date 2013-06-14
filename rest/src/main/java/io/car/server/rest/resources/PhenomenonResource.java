@@ -59,6 +59,7 @@ public class PhenomenonResource extends AbstractResource {
     @Schema(response = Schemas.STATISTIC)
     @Produces(MediaTypes.STATISTIC)
     public Statistic getStatistics() {
+        checkRights(getAccessRights().canSeeStatisticsOf(phenomenon));
         return this.statisticsService.getStatistics(this.phenomenon);
     }
 }

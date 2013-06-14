@@ -107,41 +107,49 @@ public class UserResource extends AbstractResource {
 
     @Path(FRIENDS)
     public FriendsResource friends() {
+        checkRights(getAccessRights().canSeeFriendsOf(user));
         return getResourceFactory().createFriendsResource(this.user);
     }
 
     @Path(GROUPS)
     public GroupsResource groups() {
+        checkRights(getAccessRights().canSeeGroupsOf(user));
         return getResourceFactory().createGroupsResource(this.user);
     }
 
     @Path(TRACKS)
     public TracksResource tracks() {
+        checkRights(getAccessRights().canSeeTracksOf(user));
         return getResourceFactory().createTracksResource(this.user);
     }
 
     @Path(MEASUREMENTS)
     public MeasurementsResource measurements() {
+        checkRights(getAccessRights().canSeeMeasurementsOf(user));
         return getResourceFactory().createMeasurementsResource(this.user, null);
     }
 
     @Path(STATISTICS)
     public StatisticsResource statistics() {
+        checkRights(getAccessRights().canSeeStatisticsOf(user));
         return getResourceFactory().createStatisticsResource(null, this.user);
     }
 
     @Path(ACTIVITIES)
     public ActivitiesResource activities() {
+        checkRights(getAccessRights().canSeeActivitiesOf(user));
         return getResourceFactory().createActivitiesResource(this.user);
     }
 
     @Path(FRIEND_ACTIVITIES)
     public FriendsActivitiesResource friendActivities() {
+        checkRights(getAccessRights().canSeeFriendActivitiesOf(user));
         return getResourceFactory().createFriendActivitiesResource(this.user);
     }
 
     @Path(AVATAR)
     public AvatarResource avatar() {
+        checkRights(getAccessRights().canSeeAvatarOf(user));
         return getResourceFactory().createAvatarResource(this.user);
     }
 }
