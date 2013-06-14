@@ -50,10 +50,16 @@ public abstract class AbstractAccessRights implements AccessRights {
 
     @Override
     public boolean isSelf(User user) {
+        if (this.user == null || user == null) {
+            return false;
+        }
         return user.equals(this.user);
     }
 
     protected boolean isFriend(User user) {
+        if (this.user == null || user == null) {
+            return false;
+        }
         if (!isFriend.containsKey(user)) {
             isFriend.put(user, service.isFriend(this.user, user));
         }
@@ -61,6 +67,9 @@ public abstract class AbstractAccessRights implements AccessRights {
     }
 
     protected boolean isFriendOf(User user) {
+        if (this.user == null || user == null) {
+            return false;
+        }
         if (!isFriendOf.containsKey(user)) {
             isFriendOf.put(user, service.isFriend(user, this.user));
         }
@@ -68,6 +77,9 @@ public abstract class AbstractAccessRights implements AccessRights {
     }
 
     protected boolean shareGroup(User user) {
+        if (this.user == null || user == null) {
+            return false;
+        }
         if (!shareGroup.containsKey(user)) {
             shareGroup.put(user, service.shareGroup(this.user, user));
         }
@@ -75,6 +87,9 @@ public abstract class AbstractAccessRights implements AccessRights {
     }
 
     protected boolean isMember(Group group) {
+        if (this.user == null || group == null) {
+            return false;
+        }
         if (!isMember.containsKey(group)) {
             isMember.put(group, service.isGroupMember(group, this.user));
         }
