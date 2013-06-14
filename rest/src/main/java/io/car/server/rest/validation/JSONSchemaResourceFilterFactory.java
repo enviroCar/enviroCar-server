@@ -35,6 +35,7 @@ import javax.ws.rs.core.Response.Status;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -126,11 +127,10 @@ public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
         return null;
     }
 
-    protected void validate(String entity, String schema) throws
+    protected void validate(JsonNode entity, String schema) throws
             ValidationException, IOException {
         try {
-            validate(reader.readTree(entity), schemaFactory
-                    .getJsonSchema(schema));
+            validate(entity, schemaFactory.getJsonSchema(schema));
         } catch (ProcessingException ex) {
             throw new ValidationException(ex);
         }
@@ -210,10 +210,18 @@ public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
                 ByteArrayInputStream bais =
                         new ByteArrayInputStream(requestEntity);
                 request.setEntityInputStream(bais);
-                String enitity = new String(requestEntity, ReaderWriter
+                String entity = new String(requestEntity, ReaderWriter
                         .getCharset(request.getMediaType()));
-                JSONSchemaResourceFilterFactory.this
-                        .validate(enitity, schema);
+                if (entity.isEmpty()) {
+                    throw new WebApplicationException(Status.BAD_REQUEST);
+                }
+                JsonNode tree;
+                try {
+                    tree = reader.readTree(entity);
+                } catch (JsonParseException e) {
+                    throw new WebApplicationException(e, Status.BAD_REQUEST);
+                }
+                JSONSchemaResourceFilterFactory.this.validate(tree, schema);
             } catch (IOException ex) {
                 throw new ContainerException(ex);
             }
@@ -317,7 +325,8 @@ public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
             String entity =
                     new String(bytes, ReaderWriter.getCharset(mediaType));
             try {
-                JSONSchemaResourceFilterFactory.this.validate(entity, schema);
+                JSONSchemaResourceFilterFactory.this.validate(reader
+                        .readTree(entity), schema);
             } catch (JSONValidationException v) {
                 log.error("Created invalid response: Error:\n" +
                           writer.writeValueAsString(v.getError()) +
