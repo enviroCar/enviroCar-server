@@ -118,7 +118,11 @@ public class MongoUtils {
     private MongoUtils() {
     }
 
-    public static DBObject geoWithin(BSONObject bsonObject) {
-        return new BasicDBObject(Ops.GEOWITHIN, bsonObject);
+    public static DBObject geoWithin(BSONObject geometry) {
+        return new BasicDBObject(Ops.GEOWITHIN, geometry(geometry));
+    }
+
+    protected static BasicDBObject geometry(BSONObject geometry) {
+        return new BasicDBObject(Ops.GEOMETRY, geometry);
     }
 }

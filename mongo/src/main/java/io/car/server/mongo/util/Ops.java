@@ -34,4 +34,5 @@ public interface Ops {
     String PROJECT = "$project";
     String ADD_TO_SET = "$addToSet";
     String GEOWITHIN = "$geoWithin";
+    String GEOMETRY = "$geometry";
 }
