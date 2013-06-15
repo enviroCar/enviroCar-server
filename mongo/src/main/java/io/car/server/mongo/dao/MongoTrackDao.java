@@ -17,15 +17,6 @@
  */
 package io.car.server.mongo.dao;
 
-import org.bson.types.ObjectId;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.github.jmkgreen.morphia.query.Query;
-import com.github.jmkgreen.morphia.query.UpdateResults;
-import com.google.inject.Inject;
-import com.vividsolutions.jts.geom.Geometry;
-
 import io.car.server.core.dao.TrackDao;
 import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.Track;
@@ -35,6 +26,18 @@ import io.car.server.core.util.Pagination;
 import io.car.server.mongo.MongoDB;
 import io.car.server.mongo.entity.MongoTrack;
 import io.car.server.mongo.entity.MongoUser;
+
+import java.util.List;
+
+import org.bson.types.ObjectId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.github.jmkgreen.morphia.Key;
+import com.github.jmkgreen.morphia.query.Query;
+import com.github.jmkgreen.morphia.query.UpdateResults;
+import com.google.inject.Inject;
+import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * 
@@ -106,8 +109,9 @@ public class MongoTrackDao extends AbstractMongoDao<ObjectId, MongoTrack, Tracks
 
     @Override
     public Tracks getByBbox(Geometry bbox, Pagination p) {
-        // FIXME implement
-        throw new UnsupportedOperationException("not yet implemented");
+        List<Key<MongoTrack>> list = measurementDao.getTrackKeysByBbox(bbox);
+        return Tracks.from(getDatastore().getByKeys(MongoTrack.class, list)).build();
+//        throw new UnsupportedOperationException("not yet implemented");
     }
 
     @Override

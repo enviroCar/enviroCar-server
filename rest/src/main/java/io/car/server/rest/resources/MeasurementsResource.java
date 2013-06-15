@@ -17,20 +17,6 @@
  */
 package io.car.server.rest.resources;
 
-import javax.annotation.Nullable;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Response;
-
-import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
-
 import io.car.server.core.entities.Measurement;
 import io.car.server.core.entities.Measurements;
 import io.car.server.core.entities.Track;
@@ -46,6 +32,22 @@ import io.car.server.rest.RESTConstants;
 import io.car.server.rest.Schemas;
 import io.car.server.rest.auth.Authenticated;
 import io.car.server.rest.validation.Schema;
+
+import java.util.ArrayList;
+
+import javax.annotation.Nullable;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Response;
+
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 
 /**
  * @author Arne de Wall <a.dewall@52north.org>
@@ -67,9 +69,21 @@ public class MeasurementsResource extends AbstractResource {
     @Produces(MediaTypes.MEASUREMENTS)
     public Measurements get(
             @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit,
-            @QueryParam(RESTConstants.PAGE) @DefaultValue("0") int page)
+            @QueryParam(RESTConstants.PAGE) @DefaultValue("0") int page,
+            @QueryParam(RESTConstants.BBOX) @DefaultValue("") String bbox)
             throws UserNotFoundException, TrackNotFoundException {
         Pagination p = new Pagination(limit, page);
+        if (!bbox.equals("")) {
+            final String[] coords = bbox.split(",");
+            Double[] d = new ArrayList<Double>() {
+                private static final long serialVersionUID = -5786311066498093873L;
+                {
+                    for (String coord : coords)
+                        add(Double.parseDouble(coord));
+                }
+            }.toArray(new Double[coords.length]);
+            return getService().getMeasurementsByBbox(d[0], d[1], d[2], d[3], p);
+        }
         if (track == null) {
             if (user == null) {
                 return getService().getMeasurements(p);
