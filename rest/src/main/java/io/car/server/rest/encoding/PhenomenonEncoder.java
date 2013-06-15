@@ -17,25 +17,31 @@
  */
 package io.car.server.rest.encoding;
 
-import java.net.URI;
 
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.Provider;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import io.car.server.core.entities.Phenomenon;
 import io.car.server.rest.JSONConstants;
 import io.car.server.rest.MediaTypes;
-import io.car.server.rest.resources.PhenomenonResource;
-import io.car.server.rest.resources.PhenomenonsResource;
-import io.car.server.rest.resources.RootResource;
+import io.car.server.rest.rights.AccessRights;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
+@Provider
+@Produces(MediaType.APPLICATION_JSON)
 public class PhenomenonEncoder extends AbstractEntityEncoder<Phenomenon> {
+    public PhenomenonEncoder() {
+        super(Phenomenon.class);
+    }
+
     @Override
-    public ObjectNode encode(Phenomenon t, MediaType mediaType) {
+    public ObjectNode encode(Phenomenon t, AccessRights rights,
+                             MediaType mediaType) {
         ObjectNode phenomenon = getJsonFactory().objectNode();
         if (t.hasName()) {
             phenomenon.put(JSONConstants.NAME_KEY, t.getName());
@@ -52,16 +58,6 @@ public class PhenomenonEncoder extends AbstractEntityEncoder<Phenomenon> {
                 phenomenon.put(JSONConstants.MODIFIED_KEY, getDateTimeFormat()
                         .print(t.getModificationTime()));
             }
-            URI stats = getUriInfo().getAbsolutePathBuilder()
-                    .path(PhenomenonResource.STATISTIC).build();
-            phenomenon.put(JSONConstants.STATISTIC_KEY, stats.toString());
-        } else {
-            URI href = getUriInfo().getBaseUriBuilder()
-                    .path(RootResource.class)
-                    .path(RootResource.PHENOMENONS)
-                    .path(PhenomenonsResource.PHENOMENON)
-                    .build(t.getName());
-            phenomenon.put(JSONConstants.HREF_KEY, href.toString());
         }
         return phenomenon;
     }

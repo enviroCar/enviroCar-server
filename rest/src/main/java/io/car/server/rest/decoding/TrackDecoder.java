@@ -17,7 +17,9 @@
  */
 package io.car.server.rest.decoding;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.Provider;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
@@ -31,6 +33,8 @@ import io.car.server.core.util.GeoJSONConstants;
 import io.car.server.rest.JSONConstants;
 import io.car.server.rest.TrackWithMeasurments;
 
+@Provider
+@Consumes(MediaType.APPLICATION_JSON)
 public class TrackDecoder extends AbstractEntityDecoder<Track> {
     private EntityDecoder<Measurement> measurementDecoder;
     private SensorDao sensorDao;
@@ -39,6 +43,7 @@ public class TrackDecoder extends AbstractEntityDecoder<Track> {
     public TrackDecoder(EntityDecoder<Measurement> measurementDecoder,
                         SensorDao sensorDao,
                         MeasurementDao measurementDao) {
+        super(Track.class);
         this.measurementDecoder = measurementDecoder;
         this.sensorDao = sensorDao;
     }

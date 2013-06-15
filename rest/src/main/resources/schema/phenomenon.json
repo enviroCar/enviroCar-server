@@ -5,8 +5,7 @@
     "additionalProperties": false,
     "required": [
         "name",
-        "created",
-        "modified"
+        "unit"
     ],
     "properties": {
         "name": {
@@ -16,13 +15,14 @@
             "type": "string"
         },
         "created": {
-            "$ref": "http://schema.envirocar.org/definitions.json#/date-time"
+            "type": "string",
+            "format": "date-time"
+
         },
         "modified": {
-            "$ref": "http://schema.envirocar.org/definitions.json#/date-time"
-        },
-        "statistic": {
-            "$ref": "http://schema.envirocar.org/definitions.json#/href"
+            "type": "string",
+            "format": "date-time"
+
         }
     }
 }

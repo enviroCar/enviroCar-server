@@ -71,7 +71,7 @@ public abstract class AbstractResource {
     protected User getCurrentUser() {
         PrincipalImpl p = (PrincipalImpl) securityContext.get()
                 .getUserPrincipal();
-        return p.getUser();
+        return p == null ? null : p.getUser();
     }
 
 
@@ -80,6 +80,10 @@ public abstract class AbstractResource {
         this.accessRights = accessRights;
     }
 
+    @Inject
+    public void setSecurityContext(Provider<SecurityContext> securityContext) {
+        this.securityContext = securityContext;
+    }
     
     @Inject
     public void setUriInfo(Provider<UriInfo> uriInfo) {

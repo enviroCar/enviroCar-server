@@ -19,45 +19,39 @@ package io.car.server.rest.rights;
 
 import java.util.Map;
 
-import javax.ws.rs.core.SecurityContext;
-
 import com.google.common.collect.Maps;
-import com.google.inject.Inject;
 
 import io.car.server.core.Service;
 import io.car.server.core.entities.Group;
 import io.car.server.core.entities.User;
-import io.car.server.rest.auth.PrincipalImpl;
 
 public abstract class AbstractAccessRights implements AccessRights {
-    private User user;
-    private Service service;
+    private final User user;
+    private final Service service;
     private final Map<User, Boolean> isFriend = Maps.newHashMap();
     private final Map<User, Boolean> isFriendOf = Maps.newHashMap();
     private final Map<Group, Boolean> isMember = Maps.newHashMap();
     private final Map<User, Boolean> shareGroup = Maps.newHashMap();
 
-    @Inject
-    public void setService(Service service) {
+    public AbstractAccessRights(User user, Service service) {
+        this.user = user;
         this.service = service;
     }
 
-    @Inject
-    public void setSecurityContext(SecurityContext ctx) {
-        PrincipalImpl p = (PrincipalImpl) ctx.getUserPrincipal();
-        this.user = p == null ? null : p.getUser();
+    public AbstractAccessRights() {
+        this(null, null);
     }
 
     @Override
     public boolean isSelf(User user) {
-        if (this.user == null || user == null) {
+        if (this.user == null || user == null || service == null) {
             return false;
         }
         return user.equals(this.user);
     }
 
     protected boolean isFriend(User user) {
-        if (this.user == null || user == null) {
+        if (this.user == null || user == null || service == null) {
             return false;
         }
         if (!isFriend.containsKey(user)) {
@@ -67,7 +61,7 @@ public abstract class AbstractAccessRights implements AccessRights {
     }
 
     protected boolean isFriendOf(User user) {
-        if (this.user == null || user == null) {
+        if (this.user == null || user == null || service == null) {
             return false;
         }
         if (!isFriendOf.containsKey(user)) {
@@ -77,7 +71,7 @@ public abstract class AbstractAccessRights implements AccessRights {
     }
 
     protected boolean shareGroup(User user) {
-        if (this.user == null || user == null) {
+        if (this.user == null || user == null || service == null) {
             return false;
         }
         if (!shareGroup.containsKey(user)) {
@@ -87,7 +81,7 @@ public abstract class AbstractAccessRights implements AccessRights {
     }
 
     protected boolean isMember(Group group) {
-        if (this.user == null || group == null) {
+        if (this.user == null || group == null || service == null) {
             return false;
         }
         if (!isMember.containsKey(group)) {

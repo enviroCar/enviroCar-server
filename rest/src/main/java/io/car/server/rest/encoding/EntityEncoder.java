@@ -21,9 +21,11 @@ import javax.ws.rs.core.MediaType;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import io.car.server.rest.rights.AccessRights;
+
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface EntityEncoder<T> {
-    ObjectNode encode(T t, MediaType mt);
+    ObjectNode encode(T t, AccessRights rights, MediaType mt);
 }

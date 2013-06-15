@@ -17,37 +17,40 @@
  */
 package io.car.server.rest.encoding;
 
-import java.net.URI;
 
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriBuilder;
+import javax.ws.rs.ext.Provider;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.inject.Inject;
 
 import io.car.server.core.entities.User;
 import io.car.server.core.entities.Users;
 import io.car.server.rest.JSONConstants;
-import io.car.server.rest.resources.RootResource;
-import io.car.server.rest.resources.UsersResource;
+import io.car.server.rest.rights.AccessRights;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
+@Provider
+@Produces(MediaType.APPLICATION_JSON)
 public class UsersEncoder extends AbstractEntityEncoder<Users> {
+    private final EntityEncoder<User> userEncoder;
+
+    @Inject
+    public UsersEncoder(EntityEncoder<User> userEncoder) {
+        super(Users.class);
+        this.userEncoder = userEncoder;
+    }
+
     @Override
-    public ObjectNode encode(Users t, MediaType mediaType) {
+    public ObjectNode encode(Users t, AccessRights rights, MediaType mediaType) {
         ObjectNode root = getJsonFactory().objectNode();
         ArrayNode users = root.putArray(JSONConstants.USERS_KEY);
-        UriBuilder b = getUriInfo().getBaseUriBuilder()
-                .path(RootResource.class)
-                .path(RootResource.USERS)
-                .path(UsersResource.USER);
         for (User u : t) {
-            URI uri = b.build(u.getName());
-            ObjectNode user = users.addObject();
-            user.put(JSONConstants.NAME_KEY, u.getName());
-            user.put(JSONConstants.HREF_KEY, uri.toString());
+            users.add(userEncoder.encode(u, rights, mediaType));
         }
         return root;
     }

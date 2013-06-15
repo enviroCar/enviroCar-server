@@ -251,12 +251,18 @@ public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
         }
 
         protected void adjustContentType(ContainerResponse response) {
-            MediaType newMt = new MediaType("application", "json", ImmutableMap
-                    .<String, String>builder()
-                    .putAll(response.getMediaType().getParameters())
+            MediaType mediaType = response.getMediaType();
+            if (!mediaType.getParameters()
+                    .containsKey(MediaTypes.SCHEMA_ATTRIBUTE)) {
+                MediaType newMt =
+                        new MediaType("application", "json", ImmutableMap
+                        .<String, String>builder()
+                    .putAll(mediaType.getParameters())
                     .put(MediaTypes.SCHEMA_ATTRIBUTE, schema)
                     .build());
-            response.getHttpHeaders().putSingle(HttpHeaders.CONTENT_TYPE, newMt);
+                response.getHttpHeaders()
+                        .putSingle(HttpHeaders.CONTENT_TYPE, newMt);
+            }
         }
     }
 

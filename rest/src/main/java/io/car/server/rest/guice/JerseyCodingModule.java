@@ -17,18 +17,23 @@
  */
 package io.car.server.rest.guice;
 
+import static io.car.server.rest.validation.JSONSchemaResourceFilterFactory.VALIDATE_REQUESTS;
+import static io.car.server.rest.validation.JSONSchemaResourceFilterFactory.VALIDATE_RESPONSES;
+
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.github.fge.jsonschema.main.JsonSchemaFactory;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Scopes;
 import com.google.inject.Singleton;
 import com.google.inject.TypeLiteral;
-import com.google.inject.assistedinject.FactoryModuleBuilder;
+import com.google.inject.multibindings.Multibinder;
+import com.google.inject.name.Names;
 import com.vividsolutions.jts.geom.Geometry;
 
 import io.car.server.core.activities.Activities;
@@ -48,7 +53,6 @@ import io.car.server.core.entities.Users;
 import io.car.server.core.statistics.Statistic;
 import io.car.server.core.statistics.Statistics;
 import io.car.server.core.util.GeometryConverter;
-import io.car.server.rest.CodingFactory;
 import io.car.server.rest.decoding.EntityDecoder;
 import io.car.server.rest.decoding.GeoJSONDecoder;
 import io.car.server.rest.decoding.GroupDecoder;
@@ -75,6 +79,8 @@ import io.car.server.rest.encoding.TrackEncoder;
 import io.car.server.rest.encoding.TracksEncoder;
 import io.car.server.rest.encoding.UserEncoder;
 import io.car.server.rest.encoding.UsersEncoder;
+import io.car.server.rest.provider.JsonNodeProvider;
+import io.car.server.rest.provider.UserReferenceProvider;
 import io.car.server.rest.util.GeoJSON;
 
 /**
@@ -83,69 +89,13 @@ import io.car.server.rest.util.GeoJSON;
 public class JerseyCodingModule extends AbstractModule {
     @Override
     protected void configure() {
+        bind(GeoJSON.class).in(Scopes.SINGLETON);
         bind(new TypeLiteral<GeometryConverter<JsonNode>>() {
-        }).to(GeoJSON.class).in(Scopes.SINGLETON);
-        configureCodingFactory();
-    }
+        }).to(GeoJSON.class);
+        install(new EncoderModule());
+        install(new DecoderModule());
+        install(new ValidationModule());
 
-    protected void configureCodingFactory() {
-        FactoryModuleBuilder fmb = new FactoryModuleBuilder();
-        bind(fmb, new TypeLiteral<EntityEncoder<User>>() {
-        }, UserEncoder.class);
-        bind(fmb, new TypeLiteral<EntityDecoder<User>>() {
-        }, UserDecoder.class);
-        bind(fmb, new TypeLiteral<EntityEncoder<Users>>() {
-        }, UsersEncoder.class);
-        bind(fmb, new TypeLiteral<EntityEncoder<Sensor>>() {
-        }, SensorEncoder.class);
-        bind(fmb, new TypeLiteral<EntityDecoder<Sensor>>() {
-        }, SensorDecoder.class);
-        bind(fmb, new TypeLiteral<EntityEncoder<Sensors>>() {
-        }, SensorsEncoder.class);
-        bind(fmb, new TypeLiteral<EntityEncoder<Track>>() {
-        }, TrackEncoder.class);
-        bind(fmb, new TypeLiteral<EntityDecoder<Track>>() {
-        }, TrackDecoder.class);
-        bind(fmb, new TypeLiteral<EntityEncoder<Tracks>>() {
-        }, TracksEncoder.class);
-        bind(fmb, new TypeLiteral<EntityEncoder<Measurement>>() {
-        }, MeasurementEncoder.class);
-        bind(fmb, new TypeLiteral<EntityDecoder<Measurement>>() {
-        }, MeasurementDecoder.class);
-        bind(fmb, new TypeLiteral<EntityEncoder<Measurements>>() {
-        }, MeasurementsEncoder.class);
-        bind(fmb, new TypeLiteral<EntityEncoder<Phenomenon>>() {
-        }, PhenomenonEncoder.class);
-        bind(fmb, new TypeLiteral<EntityDecoder<Phenomenon>>() {
-        }, PhenomenonDecoder.class);
-        bind(fmb, new TypeLiteral<EntityEncoder<Phenomenons>>() {
-        }, PhenomenonsEncoder.class);
-        bind(fmb, new TypeLiteral<EntityEncoder<Group>>() {
-        }, GroupEncoder.class);
-        bind(fmb, new TypeLiteral<EntityDecoder<Group>>() {
-        }, GroupDecoder.class);
-        bind(fmb, new TypeLiteral<EntityEncoder<Groups>>() {
-        }, GroupsEncoder.class);
-        bind(fmb, new TypeLiteral<EntityEncoder<Statistic>>() {
-        }, StatisticEncoder.class);
-        bind(fmb, new TypeLiteral<EntityEncoder<Statistics>>() {
-        }, StatisticsEncoder.class);
-        bind(fmb, new TypeLiteral<EntityEncoder<Activity>>() {
-        }, ActivityEncoder.class);
-        bind(fmb, new TypeLiteral<EntityEncoder<Activities>>() {
-        }, ActivitiesEncoder.class);
-        bind(new TypeLiteral<EntityDecoder<Geometry>>() {
-        }).to(GeoJSONDecoder.class);
-        bind(new TypeLiteral<EntityEncoder<Geometry>>() {
-        }).to(GeoJSONEncoder.class);
-        install(fmb.build(CodingFactory.class));
-    }
-
-    protected <T> void bind(FactoryModuleBuilder fmb,
-                                        TypeLiteral<T> source,
-                                        Class<? extends T> target) {
-        fmb.implement(source, target);
-        bind(source).to(target);
     }
 
     @Provides
@@ -171,5 +121,154 @@ public class JerseyCodingModule extends AbstractModule {
     public ObjectMapper objectMapper(JsonNodeFactory factory) {
         return new ObjectMapper().setNodeFactory(factory)
                 .disable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS);
+    }
+
+    private class ValidationModule extends AbstractModule {
+        @Override
+        protected void configure() {
+            Multibinder<String> mb = Multibinder.newSetBinder(
+                    binder(), String.class, Names
+                    .named(JSONSchemaFactoryProvider.SCHEMAS));
+            mb.addBinding().toInstance("/schema/definitions.json");
+            mb.addBinding().toInstance("/schema/geometry.json");
+            mb.addBinding().toInstance("/schema/group.create.json");
+            mb.addBinding().toInstance("/schema/group.json");
+            mb.addBinding().toInstance("/schema/group.modify.json");
+            mb.addBinding().toInstance("/schema/groups.json");
+            mb.addBinding().toInstance("/schema/measurement.create.json");
+            mb.addBinding().toInstance("/schema/measurement.json");
+            mb.addBinding().toInstance("/schema/measurements.json");
+            mb.addBinding().toInstance("/schema/phenomenon.create.json");
+            mb.addBinding().toInstance("/schema/phenomenon.json");
+            mb.addBinding().toInstance("/schema/phenomenon.modify.json");
+            mb.addBinding().toInstance("/schema/phenomenons.json");
+            mb.addBinding().toInstance("/schema/root.json");
+            mb.addBinding().toInstance("/schema/sensor.create.json");
+            mb.addBinding().toInstance("/schema/sensor.json");
+            mb.addBinding().toInstance("/schema/sensors.json");
+            mb.addBinding().toInstance("/schema/track.create.json");
+            mb.addBinding().toInstance("/schema/track.json");
+            mb.addBinding().toInstance("/schema/track.modify.json");
+            mb.addBinding().toInstance("/schema/tracks.json");
+            mb.addBinding().toInstance("/schema/user.create.json");
+            mb.addBinding().toInstance("/schema/user.json");
+            mb.addBinding().toInstance("/schema/user.modify.json");
+            mb.addBinding().toInstance("/schema/user.ref.json");
+            mb.addBinding().toInstance("/schema/users.json");
+            mb.addBinding().toInstance("/schema/statistics.json");
+            mb.addBinding().toInstance("/schema/statistic.json");
+            mb.addBinding().toInstance("/schema/activity.json");
+            mb.addBinding().toInstance("/schema/activities.json");
+            bindConstant().annotatedWith(Names.named(VALIDATE_REQUESTS))
+                    .to(true);
+            bindConstant().annotatedWith(Names.named(VALIDATE_RESPONSES))
+                    .to(true);
+            bind(JsonSchemaFactory.class)
+                    .toProvider(JSONSchemaFactoryProvider.class)
+                    .in(Scopes.SINGLETON);
+        }
+    }
+
+    private class DecoderModule extends AbstractModule {
+        @Override
+        protected void configure() {
+            bind(UserDecoder.class).in(Scopes.SINGLETON);
+            bind(new TypeLiteral<EntityDecoder<User>>() {
+            }).to(UserDecoder.class);
+            bind(UserReferenceProvider.class).in(Scopes.SINGLETON);
+
+            bind(PhenomenonDecoder.class).in(Scopes.SINGLETON);
+            bind(new TypeLiteral<EntityDecoder<Phenomenon>>() {
+            }).to(PhenomenonDecoder.class);
+
+            bind(GroupDecoder.class).in(Scopes.SINGLETON);
+            bind(new TypeLiteral<EntityDecoder<Group>>() {
+            }).to(GroupDecoder.class);
+
+            bind(GeoJSONDecoder.class).in(Scopes.SINGLETON);
+            bind(new TypeLiteral<EntityDecoder<Geometry>>() {
+            }).to(GeoJSONDecoder.class);
+
+            bind(MeasurementDecoder.class).in(Scopes.SINGLETON);
+            bind(new TypeLiteral<EntityDecoder<Measurement>>() {
+            }).to(MeasurementDecoder.class);
+
+            bind(TrackDecoder.class).in(Scopes.SINGLETON);
+            bind(new TypeLiteral<EntityDecoder<Track>>() {
+            }).to(TrackDecoder.class);
+
+            bind(SensorDecoder.class).in(Scopes.SINGLETON);
+            bind(new TypeLiteral<EntityDecoder<Sensor>>() {
+            }).to(SensorDecoder.class);
+        }
+    }
+
+    private class EncoderModule extends AbstractModule {
+        @Override
+        protected void configure() {
+            bind(JsonNodeProvider.class).in(Scopes.SINGLETON);
+
+            bind(UserEncoder.class).in(Scopes.SINGLETON);
+            bind(new TypeLiteral<EntityEncoder<User>>() {
+            }).to(UserEncoder.class);
+            bind(UsersEncoder.class).in(Scopes.SINGLETON);
+            bind(new TypeLiteral<EntityEncoder<Users>>() {
+            }).to(UsersEncoder.class);
+
+            bind(SensorEncoder.class).in(Scopes.SINGLETON);
+            bind(new TypeLiteral<EntityEncoder<Sensor>>() {
+            }).to(SensorEncoder.class);
+            bind(SensorsEncoder.class).in(Scopes.SINGLETON);
+            bind(new TypeLiteral<EntityEncoder<Sensors>>() {
+            }).to(SensorsEncoder.class);
+
+            bind(TrackEncoder.class).in(Scopes.SINGLETON);
+            bind(new TypeLiteral<EntityEncoder<Track>>() {
+            }).to(TrackEncoder.class);
+            bind(TracksEncoder.class).in(Scopes.SINGLETON);
+            bind(new TypeLiteral<EntityEncoder<Tracks>>() {
+            }).to(TracksEncoder.class);
+
+            bind(MeasurementEncoder.class).in(Scopes.SINGLETON);
+            bind(new TypeLiteral<EntityEncoder<Measurement>>() {
+            }).to(MeasurementEncoder.class);
+            bind(MeasurementsEncoder.class).in(Scopes.SINGLETON);
+            bind(new TypeLiteral<EntityEncoder<Measurements>>() {
+            }).to(MeasurementsEncoder.class);
+
+            bind(PhenomenonEncoder.class).in(Scopes.SINGLETON);
+            bind(new TypeLiteral<EntityEncoder<Phenomenon>>() {
+            }).to(PhenomenonEncoder.class);
+
+            bind(PhenomenonsEncoder.class).in(Scopes.SINGLETON);
+            bind(new TypeLiteral<EntityEncoder<Phenomenons>>() {
+            }).to(PhenomenonsEncoder.class);
+
+            bind(GroupEncoder.class).in(Scopes.SINGLETON);
+            bind(new TypeLiteral<EntityEncoder<Group>>() {
+            }).to(GroupEncoder.class);
+
+            bind(GroupsEncoder.class).in(Scopes.SINGLETON);
+            bind(new TypeLiteral<EntityEncoder<Groups>>() {
+            }).to(GroupsEncoder.class);
+
+            bind(StatisticEncoder.class).in(Scopes.SINGLETON);
+            bind(new TypeLiteral<EntityEncoder<Statistic>>() {
+            }).to(StatisticEncoder.class);
+            bind(StatisticsEncoder.class).in(Scopes.SINGLETON);
+            bind(new TypeLiteral<EntityEncoder<Statistics>>() {
+            }).to(StatisticsEncoder.class);
+
+            bind(ActivityEncoder.class).in(Scopes.SINGLETON);
+            bind(new TypeLiteral<EntityEncoder<Activity>>() {
+            }).to(ActivityEncoder.class);
+            bind(ActivitiesEncoder.class).in(Scopes.SINGLETON);
+            bind(new TypeLiteral<EntityEncoder<Activities>>() {
+            }).to(ActivitiesEncoder.class);
+
+            bind(GeoJSONEncoder.class).in(Scopes.SINGLETON);
+            bind(new TypeLiteral<EntityEncoder<Geometry>>() {
+            }).to(GeoJSONEncoder.class);
+        }
     }
 }

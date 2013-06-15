@@ -44,70 +44,73 @@ import com.google.inject.Singleton;
 
 import io.car.server.core.entities.Track;
 import io.car.server.core.event.CreatedTrackEvent;
-import io.car.server.rest.CodingFactory;
 import io.car.server.rest.MediaTypes;
+import io.car.server.rest.encoding.EntityEncoder;
+import io.car.server.rest.rights.AccessRightsImpl;
 
 @Singleton
 public class HTTPPushListener {
     //TODO make configurable
     private static final String host =
             "https://localhost:6143/geoevent/rest/receiver/car-io-tracks-in-rest?f=generic-json";
-	private static final Logger logger = LoggerFactory.getLogger(HTTPPushListener.class);
+    private static final Logger logger = LoggerFactory
+            .getLogger(HTTPPushListener.class);
+    public static final AccessRightsImpl DEFAULT_ACCESS_RIGHTS =
+            new AccessRightsImpl();
     private final HttpClient client;
-    private final CodingFactory codingFactory;
+    private final EntityEncoder<Track> encoder;
 
     @Inject
-    public HTTPPushListener(CodingFactory codingFactory) throws Exception {
-		SSLSocketFactory sslsf = new SSLSocketFactory(new TrustStrategy() {
-
+    public HTTPPushListener(EntityEncoder<Track> encoder) throws Exception {
+        SSLSocketFactory sslsf = new SSLSocketFactory(new TrustStrategy() {
             @Override
-			public boolean isTrusted(final X509Certificate[] chain,
-					String authType) throws CertificateException {
-				return true;
-			}
+            public boolean isTrusted(final X509Certificate[] chain,
+                                     String authType) throws
+                    CertificateException {
+                return true;
+            }
+        });
 
-		});
+        Scheme httpsScheme2 = new Scheme("https", 443, sslsf);
+        SchemeRegistry schemeRegistry = new SchemeRegistry();
+        schemeRegistry.register(httpsScheme2);
 
-		Scheme httpsScheme2 = new Scheme("https", 443, sslsf);
-		SchemeRegistry schemeRegistry = new SchemeRegistry();
-		schemeRegistry.register(httpsScheme2);
+        BasicClientConnectionManager cm =
+                new BasicClientConnectionManager(schemeRegistry);
 
-		BasicClientConnectionManager cm = new BasicClientConnectionManager(schemeRegistry);
-		
         this.client = new DefaultHttpClient(cm);
-        this.codingFactory = codingFactory;
-	}
-	
+        this.encoder = encoder;
+    }
+
     @Subscribe
     public void onCreatedTrackEvent(CreatedTrackEvent e) {
         pushNewTrack(e.getTrack());
     }
 
-
     private synchronized void pushNewTrack(Track track) {
-        ObjectNode jsonTrack = this.codingFactory.createTrackEncoder()
-                .encode(track, MediaTypes.TRACK_TYPE);
-		String content = jsonTrack.toString();
-		HttpResponse resp = null;
-		try {
-			HttpPost hp = new HttpPost(host);
+        ObjectNode jsonTrack = encoder
+                .encode(track, DEFAULT_ACCESS_RIGHTS, MediaTypes.TRACK_TYPE);
+        String content = jsonTrack.toString();
+        logger.debug("Entity: {}", content);
+        HttpResponse resp = null;
+        try {
+            HttpPost hp = new HttpPost(host);
             hp.setEntity(new StringEntity(content,
                                           ContentType.create(MediaTypes.TRACK)));
-			resp = this.client.execute(hp);
-		} catch (ClientProtocolException e) {
-			logger.warn(e.getMessage(), e);
-		} catch (IOException e) {
-			logger.warn(e.getMessage(), e);
-		} finally {
-			if (resp != null) {
-				try {
-					EntityUtils.consume(resp.getEntity());
-				} catch (IOException e) {
-					logger.warn(e.getMessage());
-				}
-			}
-		}
-		
-	}
+            resp = this.client.execute(hp);
+        } catch (ClientProtocolException e) {
+            logger.warn(e.getMessage(), e);
+        } catch (IOException e) {
+            logger.warn(e.getMessage(), e);
+        } finally {
+            if (resp != null) {
+                try {
+                    EntityUtils.consume(resp.getEntity());
+                } catch (IOException e) {
+                    logger.warn(e.getMessage());
+                }
+            }
+        }
 
+    }
 }

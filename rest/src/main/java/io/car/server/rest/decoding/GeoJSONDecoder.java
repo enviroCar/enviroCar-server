@@ -17,7 +17,6 @@
  */
 package io.car.server.rest.decoding;
 
-import io.car.server.rest.util.GeoJSON;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response.Status;
@@ -27,6 +26,7 @@ import com.google.inject.Inject;
 import com.vividsolutions.jts.geom.Geometry;
 
 import io.car.server.core.exception.GeometryConverterException;
+import io.car.server.rest.util.GeoJSON;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
@@ -36,6 +36,7 @@ public class GeoJSONDecoder extends AbstractEntityDecoder<Geometry> {
 
     @Inject
     public GeoJSONDecoder(GeoJSON geoJSON) {
+        super(Geometry.class);
         this.geoJSON = geoJSON;
     }
 

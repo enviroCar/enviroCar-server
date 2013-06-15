@@ -117,6 +117,7 @@ public class ServiceImpl implements Service {
     private PasswordEncoder passwordEncoder;
     @Inject
     private EventBus eventBus;
+
     @Override
     public User createUser(User user) throws ValidationException,
                                              ResourceAlreadyExistException {
@@ -132,7 +133,6 @@ public class ServiceImpl implements Service {
     }
 
     @Override
-
     public User getUser(String name) throws UserNotFoundException {
         User user = this.userDao.getByName(name);
         if (user == null) {
@@ -140,10 +140,12 @@ public class ServiceImpl implements Service {
         }
         return user;
     }
+
     @Override
     public Users getUsers(Pagination p) {
         return this.userDao.get(p);
     }
+
     @Override
     public User modifyUser(User user, User changes) throws UserNotFoundException,
                                                            IllegalModificationException,
@@ -160,22 +162,26 @@ public class ServiceImpl implements Service {
         this.eventBus.post(new ChangedProfileEvent(user));
         return user;
     }
+
     @Override
     public void deleteUser(User user) {
         this.userDao.delete(user);
         this.eventBus.post(new DeletedUserEvent(user));
     }
+
     @Override
     public void removeFriend(User user, User friend)
             throws UserNotFoundException {
         this.userDao.removeFriend(user, friend);
         this.eventBus.post(new UnfriendedUserEvent(user, friend));
     }
+
     @Override
     public void addFriend(User user, User friend) throws UserNotFoundException {
         this.userDao.addFriend(user, friend);
         this.eventBus.post(new FriendedUserEvent(user, friend));
     }
+
     @Override
     public Group getGroup(String name) throws GroupNotFoundException {
         Group group = this.groupDao.getByName(name);
@@ -184,14 +190,17 @@ public class ServiceImpl implements Service {
         }
         return group;
     }
+
     @Override
     public Groups getGroups(Pagination p) {
         return this.groupDao.get(p);
     }
+
     @Override
     public Users getGroupMembers(Group group, Pagination pagination) {
         return this.groupDao.getMembers(group, pagination);
     }
+
     @Override
     public Group modifyGroup(Group group, Group changes)
             throws ValidationException, IllegalModificationException {
@@ -201,6 +210,7 @@ public class ServiceImpl implements Service {
         this.eventBus.post(new ChangedGroupEvent(group, group.getOwner()));
         return group;
     }
+
     @Override
     public Track modifyTrack(Track track, Track changes)
             throws ValidationException, IllegalModificationException {
@@ -210,15 +220,18 @@ public class ServiceImpl implements Service {
         this.eventBus.post(new ChangedTrackEvent(track.getUser(), track));
         return track;
     }
+
     @Override
     public void deleteGroup(Group group) throws GroupNotFoundException {
         this.groupDao.delete(group);
         this.eventBus.post(new DeletedGroupEvent(group, group.getOwner()));
     }
+
     @Override
     public Groups searchGroups(String search, Pagination p) {
         return this.groupDao.search(search, p);
     }
+
     @Override
     public Group createGroup(User user, Group group) throws
             ResourceAlreadyExistException {
@@ -232,25 +245,30 @@ public class ServiceImpl implements Service {
         this.eventBus.post(new CreatedGroupEvent(group, group.getOwner()));
         return group;
     }
+
     @Override
     public void addGroupMember(Group group, User user) {
         this.groupDao.addMember(group, user);
         this.eventBus.post(new JoinedGroupEvent(group, user));
     }
+
     @Override
     public void removeGroupMember(Group group, User user)
             throws UserNotFoundException, GroupNotFoundException {
         this.groupDao.removeMember(group, user);
         this.eventBus.post(new LeftGroupEvent(group, user));
     }
+
     @Override
     public Tracks getTracks(Pagination p) {
         return this.trackDao.get(p);
     }
+
     @Override
     public Tracks getTracks(User user, Pagination p) {
         return this.trackDao.getByUser(user, p);
     }
+
     @Override
     public Track getTrack(String id) throws TrackNotFoundException {
         Track track = trackDao.getById(id);
@@ -259,6 +277,7 @@ public class ServiceImpl implements Service {
         }
         return track;
     }
+
     @Override
     public Track createTrack(Track track) throws ValidationException {
         this.trackValidator.validateCreate(track);
@@ -268,20 +287,19 @@ public class ServiceImpl implements Service {
     }
 
     @Override
-
     public void deleteTrack(Track track) {
         this.trackDao.delete(track);
         this.eventBus.post(new DeletedTrackEvent(track, track.getUser()));
     }
 
     @Override
-
     public Measurement createMeasurement(Measurement m) {
         this.measurementValidator.validateCreate(m);
         this.measurementDao.create(m);
         this.eventBus.post(new CreatedMeasurementEvent(m.getUser(), m));
         return m;
     }
+
     @Override
     public Measurement createMeasurement(Track track, Measurement m) {
         this.measurementValidator.validateCreate(m);
@@ -291,24 +309,27 @@ public class ServiceImpl implements Service {
         this.eventBus.post(new CreatedMeasurementEvent(m.getUser(), m));
         return m;
     }
+
     @Override
     public Measurements getMeasurements(Pagination p) {
         return this.measurementDao.get(p);
     }
+
     @Override
     public Measurements getMeasurements(User user, Pagination p) {
         return this.measurementDao.getByUser(user, p);
     }
 
     @Override
-
     public Measurements getMeasurementsByUser(User user, Pagination p) {
         return this.measurementDao.getByUser(user, p);
     }
+
     @Override
     public Measurements getMeasurementsByTrack(Track track, Pagination p) {
         return this.measurementDao.getByTrack(track, p);
     }
+
     @Override
     public Measurement getMeasurement(String id) throws
             MeasurementNotFoundException {
@@ -318,6 +339,7 @@ public class ServiceImpl implements Service {
         }
         return m;
     }
+
     @Override
     public Measurement modifyMeasurement(Measurement m,
                                          Measurement changes)
@@ -333,6 +355,7 @@ public class ServiceImpl implements Service {
         this.measurementDao.delete(m);
         this.eventBus.post(new DeletedMeasurementEvent(m, m.getUser()));
     }
+
     @Override
     public Phenomenon getPhenomenonByName(String name)
             throws PhenomenonNotFoundException {
@@ -342,16 +365,19 @@ public class ServiceImpl implements Service {
         }
         return p;
     }
+
     @Override
     public Phenomenon createPhenomenon(Phenomenon phenomenon) {
         this.phenomenonDao.create(phenomenon);
         this.eventBus.post(new CreatedPhenomenonEvent(phenomenon));
         return phenomenon;
     }
+
     @Override
     public Phenomenons getPhenomenons(Pagination p) {
         return this.phenomenonDao.get(p);
     }
+
     @Override
     public Sensor getSensorByName(String id) throws SensorNotFoundException {
         Sensor s = this.sensorDao.getByIdentifier(id);
@@ -362,18 +388,17 @@ public class ServiceImpl implements Service {
     }
 
     @Override
-
     public Sensors getSensors(Set<PropertyFilter> filters, Pagination p) {
         return this.sensorDao.get(filters, p);
     }
 
     @Override
-
     public Sensor createSensor(Sensor sensor) {
         this.sensorDao.create(sensor);
         this.eventBus.post(new CreatedSensorEvent(sensor));
         return sensor;
     }
+
     @Override
     public Group getGroup(User user, String groupName) throws
             GroupNotFoundException {
@@ -383,6 +408,7 @@ public class ServiceImpl implements Service {
         }
         return g;
     }
+
     @Override
     public User getGroupMember(Group group, String username) throws
             UserNotFoundException {
@@ -394,13 +420,11 @@ public class ServiceImpl implements Service {
     }
 
     @Override
-
     public Users getFriends(User user) {
         return this.userDao.getFriends(user);
     }
 
     @Override
-
     public User getFriend(User user, String friendName) throws
             UserNotFoundException {
         User f = this.userDao.getFriend(user, friendName);
@@ -409,28 +433,32 @@ public class ServiceImpl implements Service {
         }
         return f;
     }
+
     @Override
     public Groups getGroups(User user, Pagination p) {
         return this.groupDao.getByMember(user, p);
     }
+
     @Override
     public Activities getActivities(Pagination p) {
         return activityDao.get(p);
     }
+
     @Override
     public Activities getActivities(User user, Pagination p) {
         return activityDao.get(user, p);
     }
 
     @Override
-
     public Activities getFriendActivities(User user, Pagination p) {
         return activityDao.getForFriends(user, p);
     }
+
     @Override
     public Activities getActivities(ActivityType type, Pagination p) {
         return activityDao.get(type, p);
     }
+
     @Override
     public Activities getActivities(ActivityType type, User user, Pagination p) {
         return activityDao.get(type, user, p);
@@ -440,10 +468,12 @@ public class ServiceImpl implements Service {
     public Activities getActivities(Group user, Pagination p) {
         return activityDao.get(user, p);
     }
+
     @Override
     public Activities getActivities(ActivityType type, Group user, Pagination p) {
         return activityDao.get(type, user, p);
     }
+
     @Override
     public Sensors getSensorsByType(String type, Set<PropertyFilter> filters,
                                     Pagination p) {

@@ -27,32 +27,26 @@
             "additionalProperties": false,
             "required": [
                 "id",
-                "sensor",
-                "created",
-                "modified",
-                "user"
+                "sensor"
             ],
             "properties": {
                 "id": {
                     "type": "string"
                 },
                 "created": {
-                    "$ref": "http://schema.envirocar.org/definitions.json#/date-time"
+                    "type": "string",
+                    "format": "date-time"
+
                 },
                 "modified": {
-                    "$ref": "http://schema.envirocar.org/definitions.json#/date-time"
+                    "type": "string",
+                    "format": "date-time"
                 },
                 "sensor": {
-                    "$ref": "http://schema.envirocar.org/definitions.json#/sensor-ref"
+                    "$ref": "http://schema.envirocar.org/sensor.json#"
                 },
                 "user": {
-                    "$ref": "http://schema.envirocar.org/definitions.json#/user-ref"
-                },
-                "measurements": {
-                    "$ref": "http://schema.envirocar.org/definitions.json#/href"
-                },
-                "statistics": {
-                    "$ref": "http://schema.envirocar.org/definitions.json#/href"
+                    "$ref": "http://schema.envirocar.org/user.json#"
                 },
                 "name": {
                     "type": "string"
