@@ -167,7 +167,7 @@ public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
         @Override
         public ContainerResponseFilter getResponseFilter() {
             return response == null || !validateResponses ? null
-                   : new JSONSchemaResponeFilter(response);
+                   : new JSONSchemaResponseFilter(response);
         }
     }
 
@@ -228,10 +228,10 @@ public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
         }
     }
 
-    private class JSONSchemaResponeFilter implements ContainerResponseFilter {
+    private class JSONSchemaResponseFilter implements ContainerResponseFilter {
         private String schema;
 
-        JSONSchemaResponeFilter(String schema) {
+        JSONSchemaResponseFilter(String schema) {
             this.schema = schema;
         }
 
@@ -239,7 +239,7 @@ public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
         public ContainerResponse filter(ContainerRequest request,
                                         ContainerResponse response) {
             MediaType mt = response.getMediaType();
-            if (mt.isCompatible(MediaType.APPLICATION_JSON_TYPE)) {
+            if (mt != null && mt.isCompatible(MediaType.APPLICATION_JSON_TYPE)) {
                 adjustContentType(response);
                 ContainerResponseWriter crw = response
                         .getContainerResponseWriter();
