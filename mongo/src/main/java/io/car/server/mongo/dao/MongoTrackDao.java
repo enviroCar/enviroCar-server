@@ -17,16 +17,6 @@
  */
 package io.car.server.mongo.dao;
 
-import io.car.server.core.dao.TrackDao;
-import io.car.server.core.entities.Sensor;
-import io.car.server.core.entities.Track;
-import io.car.server.core.entities.Tracks;
-import io.car.server.core.entities.User;
-import io.car.server.core.util.Pagination;
-import io.car.server.mongo.MongoDB;
-import io.car.server.mongo.entity.MongoTrack;
-import io.car.server.mongo.entity.MongoUser;
-
 import java.util.List;
 
 import org.bson.types.ObjectId;
@@ -38,6 +28,16 @@ import com.github.jmkgreen.morphia.query.Query;
 import com.github.jmkgreen.morphia.query.UpdateResults;
 import com.google.inject.Inject;
 import com.vividsolutions.jts.geom.Geometry;
+
+import io.car.server.core.dao.TrackDao;
+import io.car.server.core.entities.Sensor;
+import io.car.server.core.entities.Track;
+import io.car.server.core.entities.Tracks;
+import io.car.server.core.entities.User;
+import io.car.server.core.util.Pagination;
+import io.car.server.mongo.MongoDB;
+import io.car.server.mongo.entity.MongoTrack;
+import io.car.server.mongo.entity.MongoUser;
 
 /**
  * 
@@ -99,19 +99,11 @@ public class MongoTrackDao extends AbstractMongoDao<ObjectId, MongoTrack, Tracks
         delete(t.getId());
     }
 
-    @Override
-    public Tracks getByBbox(double minx, double miny, double maxx, double maxy,
-            Pagination p) {
-        Query<MongoTrack> q = q().field("measurements.location")
-                .within(minx, miny, maxx, maxy);
-        return fetch(q, p);
-    }
 
     @Override
     public Tracks getByBbox(Geometry bbox, Pagination p) {
         List<Key<MongoTrack>> list = measurementDao.getTrackKeysByBbox(bbox);
         return Tracks.from(getDatastore().getByKeys(MongoTrack.class, list)).build();
-//        throw new UnsupportedOperationException("not yet implemented");
     }
 
     @Override

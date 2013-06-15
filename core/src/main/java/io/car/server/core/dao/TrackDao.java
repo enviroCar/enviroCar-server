@@ -45,9 +45,6 @@ public interface TrackDao {
 
     Tracks getBySensor(Sensor sensor, Pagination p);
 
-    Tracks getByBbox(double minx, double miny, double maxx, double maxy,
-                     Pagination p);
-
     Tracks getByBbox(Geometry bbox, Pagination p);
 
     Tracks get(Pagination p);
