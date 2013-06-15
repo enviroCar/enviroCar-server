@@ -192,7 +192,7 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
         Iterable<DBObject> res = aggregate(matchPolygon(polygon), project(), group()).results();
         List<Key<MongoTrack>> keys = new ArrayList<Key<MongoTrack>>();
         for(DBObject obj : res){
-            BasicDBList list = (BasicDBList) obj.get("tracks");
+            BasicDBList list = (BasicDBList) obj.get(TRACKS);
             for(int i = 0; i < list.size(); i++){
                 DBRef ref = (DBRef) list.get(i);
                 Key<MongoTrack> key = getMapper().refToKey(ref);
