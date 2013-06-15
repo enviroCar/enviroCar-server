@@ -488,11 +488,7 @@ public class ServiceImpl implements Service {
 
     @Override
     public boolean isFriend(User user1, User user2) {
-        try {
-            return getFriend(user1, user2.getName()) != null;
-        } catch (UserNotFoundException ex) {
-            throw new RuntimeException(ex);
-        }
+        return this.userDao.getFriend(user1, user2.getName()) != null;
     }
 
     @Override
