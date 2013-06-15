@@ -29,8 +29,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
  */
 @Provider
 @Produces(MediaType.APPLICATION_JSON)
-public class JsonNodeProvider extends AbstractMessageBodyWriter<JsonNode> {
-    public JsonNodeProvider() {
+public class JsonNodeMessageBodyWriter extends AbstractMessageBodyWriter<JsonNode> {
+    public JsonNodeMessageBodyWriter() {
         super(JsonNode.class);
     }
 

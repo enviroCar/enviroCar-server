@@ -44,6 +44,7 @@ import com.google.inject.name.Names;
 
 import io.car.server.rest.guice.JSONSchemaFactoryProvider;
 import io.car.server.rest.guice.JerseyCodingModule;
+import io.car.server.rest.guice.JerseyValidationModule;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
@@ -55,7 +56,8 @@ public class SchemaValidationTest {
     private static ObjectWriter writer;
     @BeforeClass
     public static void createInjector() {
-        Injector i = Guice.createInjector(new JerseyCodingModule());
+        Injector i = Guice.createInjector(new JerseyCodingModule(),
+                                          new JerseyValidationModule());
         schemas = i.getInstance(Key.get(new TypeLiteral<Set<String>>() {
         }, Names.named(JSONSchemaFactoryProvider.SCHEMAS)));
         writer = i.getInstance(ObjectWriter.class);
