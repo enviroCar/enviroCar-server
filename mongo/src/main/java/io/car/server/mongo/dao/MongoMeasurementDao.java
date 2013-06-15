@@ -212,9 +212,8 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
         try {
             return MongoUtils.geoWithin(geometryConv.encode(polygon));
         } catch (GeometryConverterException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
-        return null;
     }
 
     private DBObject project() {
