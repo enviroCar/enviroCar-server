@@ -180,6 +180,9 @@ public class MongoUserDao extends AbstractMongoDao<String, MongoUser, Users>
                 friendRefs = userWithFriends.getFriends();
             }
         }
+        if (friendRefs == null) {
+            friendRefs = Collections.emptySet();
+        }
         return friendRefs;
     }
 }
