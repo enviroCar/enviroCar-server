@@ -498,4 +498,10 @@ public class ServiceImpl implements Service {
     public boolean shareGroup(User user, User user0) {
         return this.groupDao.shareGroup(user, user0);
     }
+
+    @Override
+    public Measurements getMeasurementsByBbox(Double minx, Double miny,
+            Double maxx, Double maxy, Pagination p) {
+        return this.measurementDao.getByBbox(minx, miny, maxx, maxy, p);
+    }
 }

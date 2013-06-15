@@ -19,6 +19,8 @@ package io.car.server.mongo.util;
 
 import java.util.List;
 
+import org.bson.BSONObject;
+
 import com.google.common.base.Joiner;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
@@ -114,5 +116,9 @@ public class MongoUtils {
     }
 
     private MongoUtils() {
+    }
+
+    public static DBObject geoWithin(BSONObject bsonObject) {
+        return new BasicDBObject(Ops.GEOWITHIN, bsonObject);
     }
 }

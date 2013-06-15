@@ -184,4 +184,7 @@ public interface Service {
     Groups searchGroups(String search, Pagination p);
 
     boolean shareGroup(User user, User user0);
+
+    Measurements getMeasurementsByBbox(Double minx, Double miny,
+            Double maxx, Double maxy, Pagination p);
 }
