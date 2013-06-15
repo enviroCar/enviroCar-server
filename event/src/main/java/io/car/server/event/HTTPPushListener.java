@@ -18,9 +18,13 @@
 package io.car.server.event;
 
 import java.io.IOException;
-import java.security.cert.CertificateException;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
 import java.security.cert.X509Certificate;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
@@ -37,6 +41,7 @@ import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
@@ -59,27 +64,14 @@ public class HTTPPushListener {
             new AccessRightsImpl();
     private final HttpClient client;
     private final EntityEncoder<Track> encoder;
+    private final ObjectWriter writer;
 
     @Inject
-    public HTTPPushListener(EntityEncoder<Track> encoder) throws Exception {
-        SSLSocketFactory sslsf = new SSLSocketFactory(new TrustStrategy() {
-            @Override
-            public boolean isTrusted(final X509Certificate[] chain,
-                                     String authType) throws
-                    CertificateException {
-                return true;
-            }
-        });
-
-        Scheme httpsScheme2 = new Scheme("https", 443, sslsf);
-        SchemeRegistry schemeRegistry = new SchemeRegistry();
-        schemeRegistry.register(httpsScheme2);
-
-        BasicClientConnectionManager cm =
-                new BasicClientConnectionManager(schemeRegistry);
-
-        this.client = new DefaultHttpClient(cm);
+    public HTTPPushListener(EntityEncoder<Track> encoder,
+                            ObjectWriter writer) throws Exception {
+        this.client = createClient();
         this.encoder = encoder;
+        this.writer = writer;
     }
 
     @Subscribe
@@ -88,15 +80,16 @@ public class HTTPPushListener {
     }
 
     private synchronized void pushNewTrack(Track track) {
-        ObjectNode jsonTrack = encoder
-                .encode(track, DEFAULT_ACCESS_RIGHTS, MediaTypes.TRACK_TYPE);
-        String content = jsonTrack.toString();
-        logger.debug("Entity: {}", content);
         HttpResponse resp = null;
         try {
+            ObjectNode jsonTrack = encoder.encode(track, DEFAULT_ACCESS_RIGHTS,
+                                                  MediaTypes.TRACK_TYPE);
+            String content = writer.writeValueAsString(jsonTrack);
+            logger.debug("Entity: {}", content);
+            HttpEntity entity = new StringEntity(
+                    content, ContentType.create(MediaTypes.TRACK));
             HttpPost hp = new HttpPost(host);
-            hp.setEntity(new StringEntity(content,
-                                          ContentType.create(MediaTypes.TRACK)));
+            hp.setEntity(entity);
             resp = this.client.execute(hp);
         } catch (ClientProtocolException e) {
             logger.warn(e.getMessage(), e);
@@ -111,6 +104,27 @@ public class HTTPPushListener {
                 }
             }
         }
+    }
 
+    private HttpClient createClient() throws UnrecoverableKeyException,
+                                             KeyManagementException,
+                                             KeyStoreException,
+                                             NoSuchAlgorithmException {
+        SSLSocketFactory sslsf = new SSLSocketFactory(new TrustStrategy() {
+            @Override
+            public boolean isTrusted(final X509Certificate[] chain,
+                                     String authType) {
+                //FIXME kind of bad practice...
+                return true;
+            }
+        });
+        Scheme httpsScheme2 = new Scheme("https", 443, sslsf);
+        SchemeRegistry schemeRegistry = new SchemeRegistry();
+        schemeRegistry.register(httpsScheme2);
+
+        BasicClientConnectionManager cm =
+                new BasicClientConnectionManager(schemeRegistry);
+
+        return new DefaultHttpClient(cm);
     }
 }
