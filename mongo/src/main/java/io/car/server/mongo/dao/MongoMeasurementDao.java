@@ -226,10 +226,10 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
 
     private DBObject project() {
         BasicDBObject fields = new BasicDBObject();
-        fields.put(MongoMeasurement.IDENTIFIER, 0);
-        fields.put(MongoMeasurement.PHENOMENONS, 0);
+//        fields.put(MongoMeasurement.IDENTIFIER, 0);
+//        fields.put(MongoMeasurement.PHENOMENONS, 0);
         fields.put(MongoMeasurement.TRACK, 1);
-        fields.put(MongoMeasurement.USER, 0);
+//        fields.put(MongoMeasurement.USER, 0);
         return MongoUtils.project(fields);
     }
 
@@ -239,6 +239,4 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
         fields.put(TRACKS, MongoUtils.addToSet(TRACK_VALUE));
         return MongoUtils.group(fields);
     }
-    
-
 }
