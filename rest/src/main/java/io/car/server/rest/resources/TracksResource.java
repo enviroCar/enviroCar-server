@@ -17,20 +17,6 @@
  */
 package io.car.server.rest.resources;
 
-import javax.annotation.Nullable;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Response;
-
-import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
-
 import io.car.server.core.entities.Measurement;
 import io.car.server.core.entities.Track;
 import io.car.server.core.entities.Tracks;
@@ -47,12 +33,33 @@ import io.car.server.rest.TrackWithMeasurments;
 import io.car.server.rest.auth.Authenticated;
 import io.car.server.rest.validation.Schema;
 
+import java.util.ArrayList;
+
+import javax.annotation.Nullable;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Response;
+
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.GeometryFactory;
+
 /**
  * @author Arne de Wall <a.dewall@52north.org>
  */
 public class TracksResource extends AbstractResource {
     public static final String TRACK = "{track}";
     private User user;
+    
+    @Inject
+    private GeometryFactory factory;
 
     @Inject
     public TracksResource(@Assisted @Nullable User user) {
@@ -64,9 +71,31 @@ public class TracksResource extends AbstractResource {
     @Produces(MediaTypes.TRACKS)
     public Tracks get(
             @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit,
-            @QueryParam(RESTConstants.PAGE) @DefaultValue("0") int page)
+            @QueryParam(RESTConstants.PAGE) @DefaultValue("0") int page,
+            @QueryParam(RESTConstants.BBOX) @DefaultValue("") String bbox)
             throws UserNotFoundException {
         Pagination p = new Pagination(limit, page);
+        if (!bbox.equals("")) {
+            final String[] coords = bbox.split(",");
+            Double[] d = new ArrayList<Double>() {
+                {
+                    for (String coord : coords)
+                        add(Double.parseDouble(coord));
+                }
+            }.toArray(new Double[coords.length]);
+            Coordinate[] coordinates = new Coordinate[] { 
+                    new Coordinate(d[0], d[1]),
+                    new Coordinate(d[2], d[1]), 
+                    new Coordinate(d[2], d[3]), 
+                    new Coordinate(d[0], d[3]), 
+                    new Coordinate(d[0], d[1]) };
+            return getService().getTracksByBbox(factory.createPolygon(coordinates), p);
+//            return getService().getTracksByBbox( //
+//                    Double.parseDouble(coords[0]),
+//                    Double.parseDouble(coords[1]),
+//                    Double.parseDouble(coords[2]),
+//                    Double.parseDouble(coords[3]), p);
+        }
         return user != null
                ? getService().getTracks(user, p)
                : getService().getTracks(p);

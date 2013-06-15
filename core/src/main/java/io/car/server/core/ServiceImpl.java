@@ -22,6 +22,7 @@ import java.util.Set;
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.vividsolutions.jts.geom.Polygon;
 
 import io.car.server.core.activities.Activities;
 import io.car.server.core.activities.ActivityType;
@@ -503,5 +504,10 @@ public class ServiceImpl implements Service {
     public Measurements getMeasurementsByBbox(Double minx, Double miny,
             Double maxx, Double maxy, Pagination p) {
         return this.measurementDao.getByBbox(minx, miny, maxx, maxy, p);
+    }
+
+    @Override
+    public Tracks getTracksByBbox(Polygon bbox, Pagination p) {
+        return this.trackDao.getByBbox(bbox, p);
     }
 }
