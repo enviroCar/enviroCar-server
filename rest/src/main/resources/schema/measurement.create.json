@@ -31,7 +31,8 @@
                     "description": "the id of an existing sensor"
                 },
                 "time": {
-                    "$ref": "http://schema.envirocar.org/definitions.json#/date-time"
+                    "type": "string",
+                    "format": "date-time"
                 },
                 "phenomenons": {
                     "type": "object",

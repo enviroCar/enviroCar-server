@@ -20,9 +20,9 @@ package io.car.server.rest.encoding;
 import static io.car.server.core.entities.Gender.FEMALE;
 import static io.car.server.core.entities.Gender.MALE;
 
-import java.net.URI;
-
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.Provider;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
@@ -30,132 +30,71 @@ import com.vividsolutions.jts.geom.Geometry;
 
 import io.car.server.core.entities.User;
 import io.car.server.rest.JSONConstants;
-import io.car.server.rest.MediaTypes;
-import io.car.server.rest.resources.RootResource;
-import io.car.server.rest.resources.UserResource;
-import io.car.server.rest.resources.UsersResource;
+import io.car.server.rest.rights.AccessRights;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
+@Provider
+@Produces(MediaType.APPLICATION_JSON)
 public class UserEncoder extends AbstractEntityEncoder<User> {
     private final EntityEncoder<Geometry> geometryEncoder;
 
     @Inject
     public UserEncoder(EntityEncoder<Geometry> geometryEncoder) {
+        super(User.class);
         this.geometryEncoder = geometryEncoder;
     }
 
     @Override
-    public ObjectNode encode(User t, MediaType mediaType) {
+    public ObjectNode encode(User t, AccessRights rights, MediaType mediaType) {
         ObjectNode j = getJsonFactory().objectNode();
-        if (t.hasName() && getRights().canSeeNameOf(t)) {
+        if (t.hasName() && rights.canSeeNameOf(t)) {
             j.put(JSONConstants.NAME_KEY, t.getName());
         }
-        if (mediaType.equals(MediaTypes.USER_TYPE)) {
-            if (t.hasMail() && getRights().canSeeMailOf(t)) {
-                j.put(JSONConstants.MAIL_KEY, t.getMail());
+        if (t.hasMail() && rights.canSeeMailOf(t)) {
+            j.put(JSONConstants.MAIL_KEY, t.getMail());
+        }
+        if (t.hasCreationTime() && rights.canSeeCreationTimeOf(t)) {
+            j.put(JSONConstants.CREATED_KEY,
+                  getDateTimeFormat().print(t.getCreationTime()));
+        }
+        if (t.hasModificationTime() && rights.canSeeModificationTimeOf(t)) {
+            j.put(JSONConstants.MODIFIED_KEY,
+                  getDateTimeFormat().print(t.getModificationTime()));
+        }
+        if (t.hasFirstName() && rights.canSeeFirstNameOf(t)) {
+            j.put(JSONConstants.FIRST_NAME_KEY, t.getFirstName());
+        }
+        if (t.hasLastName() && rights.canSeeLastNameOf(t)) {
+            j.put(JSONConstants.LAST_NAME_KEY, t.getLastName());
+        }
+        if (t.hasGender() && rights.canSeeGenderOf(t)) {
+            switch (t.getGender()) {
+                case MALE:
+                    j.put(JSONConstants.GENDER_KEY, JSONConstants.MALE);
+                    break;
+                case FEMALE:
+                    j.put(JSONConstants.GENDER_KEY, JSONConstants.FEMALE);
+                    break;
             }
-            if (t.hasCreationTime() && getRights().canSeeCreationTimeOf(t)) {
-                j.put(JSONConstants.CREATED_KEY,
-                      getDateTimeFormat().print(t.getCreationTime()));
-            }
-            if (t.hasModificationTime() && getRights()
-                    .canSeeModificationTimeOf(t)) {
-                j.put(JSONConstants.MODIFIED_KEY,
-                      getDateTimeFormat().print(t.getModificationTime()));
-            }
-            if (t.hasFirstName() && getRights().canSeeFirstNameOf(t)) {
-                j.put(JSONConstants.FIRST_NAME_KEY, t.getFirstName());
-            }
-            if (t.hasLastName() && getRights().canSeeLastNameOf(t)) {
-                j.put(JSONConstants.LAST_NAME_KEY, t.getLastName());
-            }
-            if (t.hasGender() && getRights().canSeeGenderOf(t)) {
-                switch (t.getGender()) {
-                    case MALE:
-                        j.put(JSONConstants.GENDER_KEY, JSONConstants.MALE);
-                        break;
-                    case FEMALE:
-                        j.put(JSONConstants.GENDER_KEY, JSONConstants.FEMALE);
-                        break;
-                }
-            }
-            if (t.hasDayOfBirth() && getRights().canSeeDayOfBirthOf(t)) {
-                j.put(JSONConstants.DAY_OF_BIRTH_KEY, t.getDayOfBirth());
-            }
-            if (t.hasAboutMe() && getRights().canSeeAboutMeOf(t)) {
-                j.put(JSONConstants.ABOUT_ME_KEY, t.getAboutMe());
-            }
-            if (t.hasCountry() && getRights().canSeeCountryOf(t)) {
-                j.put(JSONConstants.COUNTRY_KEY, t.getCountry());
-            }
-            if (t.hasLocation() && getRights().canSeeLocationOf(t)) {
-                j.put(JSONConstants.LOCATION_KEY,
-                      geometryEncoder.encode(t.getLocation(), mediaType));
-            }
-            if (t.hasLanguage() && getRights().canSeeLanguageOf(t)) {
-                j.put(JSONConstants.LANGUAGE_KEY, t.getLanguage());
-            }
-            encodeLinks(j, t);
-        } else {
-            URI uri = getUriInfo().getBaseUriBuilder()
-                    .path(RootResource.class)
-                    .path(RootResource.USERS)
-                    .path(UsersResource.USER).build(t.getName());
-            return j.put(JSONConstants.HREF_KEY, uri.toString());
+        }
+        if (t.hasDayOfBirth() && rights.canSeeDayOfBirthOf(t)) {
+            j.put(JSONConstants.DAY_OF_BIRTH_KEY, t.getDayOfBirth());
+        }
+        if (t.hasAboutMe() && rights.canSeeAboutMeOf(t)) {
+            j.put(JSONConstants.ABOUT_ME_KEY, t.getAboutMe());
+        }
+        if (t.hasCountry() && rights.canSeeCountryOf(t)) {
+            j.put(JSONConstants.COUNTRY_KEY, t.getCountry());
+        }
+        if (t.hasLocation() && rights.canSeeLocationOf(t)) {
+            j.put(JSONConstants.LOCATION_KEY,
+                  geometryEncoder.encode(t.getLocation(), rights, mediaType));
+        }
+        if (t.hasLanguage() && rights.canSeeLanguageOf(t)) {
+            j.put(JSONConstants.LANGUAGE_KEY, t.getLanguage());
         }
         return j;
-    }
-
-    protected void encodeLinks(ObjectNode j, User u) {
-        if (getRights().canSeeMeasurementsOf(u)) {
-            j.put(JSONConstants.MEASUREMENTS_KEY,
-                  getUriInfo().getAbsolutePathBuilder()
-                    .path(UserResource.MEASUREMENTS)
-                    .build().toString());
-        }
-        if (getRights().canSeeGroupsOf(u)) {
-            j.put(JSONConstants.GROUPS_KEY,
-                  getUriInfo().getAbsolutePathBuilder()
-                    .path(UserResource.GROUPS)
-                    .build().toString());
-        }
-        if (getRights().canSeeFriendsOf(u)) {
-            j.put(JSONConstants.FRIENDS_KEY,
-                  getUriInfo().getAbsolutePathBuilder()
-                    .path(UserResource.FRIENDS)
-                    .build().toString());
-        }
-        if (getRights().canSeeTracksOf(u)) {
-            j.put(JSONConstants.TRACKS_KEY,
-                  getUriInfo().getAbsolutePathBuilder()
-                    .path(UserResource.TRACKS)
-                    .build().toString());
-        }
-        if (getRights().canSeeStatisticsOf(u)) {
-            j.put(JSONConstants.STATISTICS_KEY,
-                  getUriInfo().getAbsolutePathBuilder()
-                    .path(UserResource.STATISTICS)
-                    .build().toString());
-        }
-        if (getRights().canSeeActivitiesOf(u)) {
-            j.put(JSONConstants.ACTIVITIES_KEY,
-                  getUriInfo().getAbsolutePathBuilder()
-                    .path(UserResource.ACTIVITIES)
-                    .build().toString());
-        }
-        if (getRights().canSeeFriendActivitiesOf(u)) {
-            j.put(JSONConstants.FRIEND_ACTIVITIES,
-                  getUriInfo().getAbsolutePathBuilder()
-                    .path(UserResource.FRIEND_ACTIVITIES)
-                    .build().toString());
-        }
-        if (getRights().canSeeAvatarOf(u)) {
-            j.put(JSONConstants.AVATAR_KEY,
-                  getUriInfo().getAbsolutePathBuilder()
-                    .path(UserResource.AVATAR)
-                    .build().toString());
-        }
     }
 }

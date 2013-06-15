@@ -34,7 +34,7 @@ public class UserUpdater implements EntityUpdater<User> {
     }
 
     @Override
-    public User update(User changes, User original) {
+    public void update(User changes, User original) {
         if (changes.getMail() != null) {
             original.setMail(changes.getMail());
         }
@@ -92,6 +92,5 @@ public class UserUpdater implements EntityUpdater<User> {
         if (changes.getUrl() != null) {
             original.setUrl(changes.getUrl());
         }
-        return original;
     }
 }

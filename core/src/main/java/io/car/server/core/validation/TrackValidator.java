@@ -27,20 +27,18 @@ import io.car.server.core.exception.ValidationException;
  */
 public class TrackValidator extends AbstractValidator<Track> {
     @Override
-    public Track validateCreate(Track t) throws ValidationException {
+    public void validateCreate(Track t) throws ValidationException {
         isNull("bbox", t.getBoundingBox());
         isNull("created", t.getCreationTime());
         isNull("modified", t.getModificationTime());
         isNotNull("sensor", t.getSensor());
         isNotNull("user", t.getUser());
-        return t;
     }
 
     @Override
-    public Track validateUpdate(Track t) throws ValidationException {
+    public void validateUpdate(Track t) throws ValidationException {
         isNull("created", t.getCreationTime());
         isNull("modified", t.getModificationTime());
         isNull("user", t.getUser());
-        return t;
     }
 }

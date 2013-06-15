@@ -13,7 +13,7 @@
     ],
     "properties": {
         "phenomenon": {
-            "$ref": "http://schema.envirocar.org/definitions.json#/phenomenon-ref"
+            "$ref": "http://schema.envirocar.org/phenomenon.json#"
         },
         "measurements": {
             "type": "integer",

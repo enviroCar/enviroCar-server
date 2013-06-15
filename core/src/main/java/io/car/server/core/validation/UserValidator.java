@@ -32,22 +32,20 @@ public class UserValidator extends AbstractValidator<User> {
     private final Pattern NAME_PATTERN = Pattern.compile("^[_A-Za-z0-9-]{6,}$");
 
     @Override
-    public User validateCreate(User user) throws ValidationException {
+    public void validateCreate(User user) throws ValidationException {
         matches("name", user.getName(), NAME_PATTERN);
         matches("mail", user.getMail(), EMAIL_PATTERN);
         isNotNullOrEmpty("token", user.getToken());
         isNull("created", user.getCreationTime());
         isNull("modified", user.getModificationTime());
-        return user;
     }
 
     @Override
-    public User validateUpdate(User user) throws ValidationException {
+    public void validateUpdate(User user) throws ValidationException {
         isNull("name", user.getName());
         isNullOrMatches("mail", user.getMail(), EMAIL_PATTERN);
         isNotEmpty("token", user.getToken());
         isNull("created", user.getCreationTime());
         isNull("modified", user.getModificationTime());
-        return user;
     }
 }

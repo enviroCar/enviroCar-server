@@ -27,11 +27,10 @@ import io.car.server.core.exception.IllegalModificationException;
  */
 public class TrackUpdater implements EntityUpdater<Track> {
     @Override
-    public Track update(Track changes, Track original)
+    public void update(Track changes, Track original)
             throws IllegalModificationException {
         if (changes.getBoundingBox() != null) {
             original.setBoundingBox(changes.getBoundingBox());
         }
-        return original;
     }
 }

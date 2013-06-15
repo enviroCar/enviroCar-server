@@ -21,9 +21,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.ext.Provider;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.Lists;
@@ -35,7 +37,13 @@ import io.car.server.rest.JSONConstants;
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
+@Provider
+@Consumes(MediaType.APPLICATION_JSON)
 public class SensorDecoder extends AbstractEntityDecoder<Sensor> {
+    public SensorDecoder() {
+        super(Sensor.class);
+    }
+
     @Override
     public Sensor decode(JsonNode j, MediaType mediaType) {
         Sensor s = getEntityFactory().createSensor();

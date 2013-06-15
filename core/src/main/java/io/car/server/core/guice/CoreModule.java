@@ -29,6 +29,7 @@ import com.vividsolutions.jts.geom.PrecisionModel;
 
 import io.car.server.core.Service;
 import io.car.server.core.ServiceImpl;
+import io.car.server.core.activities.ActivityListener;
 import io.car.server.core.statistics.StatisticsService;
 import io.car.server.core.statistics.StatisticsServiceImpl;
 import io.car.server.core.util.BCryptPasswordEncoder;
@@ -42,6 +43,7 @@ public class CoreModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(Service.class).to(ServiceImpl.class);
+        bind(ActivityListener.class).asEagerSingleton();
         bind(StatisticsService.class).to(StatisticsServiceImpl.class);
         bind(PasswordEncoder.class).to(BCryptPasswordEncoder.class);
         DateTimeZone.setDefault(DateTimeZone.UTC);
@@ -61,7 +63,7 @@ public class CoreModule extends AbstractModule {
 
     @Provides
     @Singleton
-    protected DateTimeFormatter formatter() {
+    public DateTimeFormatter formatter() {
         return ISODateTimeFormat.dateTimeNoMillis();
     }
 }

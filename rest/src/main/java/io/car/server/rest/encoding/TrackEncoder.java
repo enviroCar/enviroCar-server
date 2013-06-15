@@ -17,9 +17,9 @@
  */
 package io.car.server.rest.encoding;
 
-import java.net.URI;
-
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.Provider;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -32,10 +32,10 @@ import io.car.server.core.entities.User;
 import io.car.server.core.util.GeoJSONConstants;
 import io.car.server.rest.JSONConstants;
 import io.car.server.rest.MediaTypes;
-import io.car.server.rest.resources.RootResource;
-import io.car.server.rest.resources.TrackResource;
-import io.car.server.rest.resources.TracksResource;
+import io.car.server.rest.rights.AccessRights;
 
+@Provider
+@Produces(MediaType.APPLICATION_JSON)
 public class TrackEncoder extends AbstractEntityEncoder<Track> {
     private final EntityEncoder<Sensor> sensorEncoder;
     private final EntityEncoder<Measurements> measurementsEncoder;
@@ -45,13 +45,14 @@ public class TrackEncoder extends AbstractEntityEncoder<Track> {
     public TrackEncoder(EntityEncoder<Sensor> sensorEncoder,
                         EntityEncoder<Measurements> measurementsEncoder,
                         EntityEncoder<User> userEncoder) {
+        super(Track.class);
         this.sensorEncoder = sensorEncoder;
         this.userEncoder = userEncoder;
         this.measurementsEncoder = measurementsEncoder;
     }
 
     @Override
-    public ObjectNode encode(Track t, MediaType mediaType) {
+    public ObjectNode encode(Track t, AccessRights rights, MediaType mediaType) {
         ObjectNode track = getJsonFactory().objectNode();
 
         if (mediaType.equals(MediaTypes.TRACK_TYPE)) {
@@ -62,48 +63,37 @@ public class TrackEncoder extends AbstractEntityEncoder<Track> {
             if (t.hasIdentifier()) {
                 properties.put(JSONConstants.IDENTIFIER_KEY, t.getIdentifier());
             }
-            if (t.hasName() && getRights().canSeeNameOf(t)) {
+            if (t.hasName() && rights.canSeeNameOf(t)) {
                 properties.put(JSONConstants.NAME_KEY, t.getName());
             }
-            if (t.hasDescription() && getRights().canSeeDescriptionOf(t)) {
+            if (t.hasDescription() && rights.canSeeDescriptionOf(t)) {
                 properties
                         .put(JSONConstants.DESCRIPTION_KEY, t.getDescription());
             }
-            if (t.hasCreationTime() && getRights().canSeeCreationTimeOf(t)) {
+            if (t.hasCreationTime() && rights.canSeeCreationTimeOf(t)) {
                 properties.put(JSONConstants.CREATED_KEY,
                                getDateTimeFormat().print(t.getCreationTime()));
             }
-            if (t.hasModificationTime() && getRights()
+            if (t.hasModificationTime() && rights
                     .canSeeModificationTimeOf(t)) {
                 properties.put(JSONConstants.MODIFIED_KEY,
                                getDateTimeFormat()
                         .print(t.getModificationTime()));
             }
-            if (t.hasSensor() && getRights().canSeeSensorOf(t)) {
-                properties.put(JSONConstants.SENSOR_KEY,
-                               sensorEncoder.encode(t.getSensor(), mediaType));
+            if (t.hasSensor() && rights.canSeeSensorOf(t)) {
+                properties.put(JSONConstants.SENSOR_KEY, sensorEncoder
+                        .encode(t.getSensor(), rights, mediaType));
             }
-            if (t.hasUser() && getRights().canSeeUserOf(t)) {
-                properties.put(JSONConstants.USER_KEY,
-                               userEncoder.encode(t.getUser(), mediaType));
-            }
-            if (getRights().canSeeMeasurementsOf(t)) {
-                properties.put(JSONConstants.MEASUREMENTS_KEY,
-                               getUriInfo().getAbsolutePathBuilder()
-                        .path(TrackResource.MEASUREMENTS).build().toString());
-            }
-            if (getRights().canSeeStatisticsOf(t)) {
-                properties.put(JSONConstants.STATISTICS_KEY,
-                               getUriInfo().getAbsolutePathBuilder()
-                        .path(TrackResource.STATISTICS).build().toString());
+            if (t.hasUser() && rights.canSeeUserOf(t)) {
+                properties.put(JSONConstants.USER_KEY, userEncoder
+                        .encode(t.getUser(), rights, mediaType));
             }
             JsonNode features;
-            if (getRights().canSeeMeasurementsOf(t)) {
+            if (rights.canSeeMeasurementsOf(t)) {
                 Measurements values = getService()
                         .getMeasurementsByTrack(t, null);
-                features =
-                        measurementsEncoder
-                        .encode(values, mediaType)
+                features = measurementsEncoder
+                        .encode(values, rights, mediaType)
                         .path(GeoJSONConstants.FEATURES_KEY);
             } else {
                 features = track.arrayNode();
@@ -113,18 +103,14 @@ public class TrackEncoder extends AbstractEntityEncoder<Track> {
             if (t.hasIdentifier()) {
                 track.put(JSONConstants.IDENTIFIER_KEY, t.getIdentifier());
             }
-            if (t.hasModificationTime() && getRights()
+            if (t.hasModificationTime() && rights
                     .canSeeModificationTimeOf(t)) {
                 track.put(JSONConstants.MODIFIED_KEY, getDateTimeFormat()
                         .print(t.getModificationTime()));
             }
-            if (t.hasName() && getRights().canSeeNameOf(t)) {
+            if (t.hasName() && rights.canSeeNameOf(t)) {
                 track.put(JSONConstants.NAME_KEY, t.getName());
             }
-            URI uri = getUriInfo().getBaseUriBuilder().path(RootResource.class)
-                    .path(RootResource.TRACKS).path(TracksResource.TRACK)
-                    .build(t.getIdentifier());
-            track.put(JSONConstants.HREF_KEY, uri.toString());
         }
         return track;
     }

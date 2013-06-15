@@ -17,7 +17,9 @@
  */
 package io.car.server.rest.encoding;
 
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.Provider;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -26,24 +28,28 @@ import com.google.inject.Inject;
 import io.car.server.core.activities.Activities;
 import io.car.server.core.activities.Activity;
 import io.car.server.rest.JSONConstants;
+import io.car.server.rest.rights.AccessRights;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
+@Provider
+@Produces(MediaType.APPLICATION_JSON)
 public class ActivitiesEncoder extends AbstractEntityEncoder<Activities> {
     private final EntityEncoder<Activity> activityEncoder;
 
     @Inject
     public ActivitiesEncoder(EntityEncoder<Activity> activityEncoder) {
+        super(Activities.class);
         this.activityEncoder = activityEncoder;
     }
 
     @Override
-    public ObjectNode encode(Activities t, MediaType mt) {
+    public ObjectNode encode(Activities t, AccessRights rights, MediaType mt) {
         ObjectNode root = getJsonFactory().objectNode();
         ArrayNode activities = root.putArray(JSONConstants.ACTIVITIES_KEY);
         for (Activity a : t) {
-            activities.add(activityEncoder.encode(a, mt));
+            activities.add(activityEncoder.encode(a, rights, mt));
         }
         return root;
     }

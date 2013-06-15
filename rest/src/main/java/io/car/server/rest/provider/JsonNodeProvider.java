@@ -17,31 +17,25 @@
  */
 package io.car.server.rest.provider;
 
-import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
 @Produces(MediaType.APPLICATION_JSON)
-@Consumes(MediaType.APPLICATION_JSON)
-public class JsonNodeProvider extends AbstractJsonEntityProvider<JsonNode> {
+public class JsonNodeProvider extends AbstractMessageBodyWriter<JsonNode> {
     public JsonNodeProvider() {
         super(JsonNode.class);
     }
 
     @Override
-    public JsonNode read(JsonNode j, MediaType mediaType) {
-        return j;
-    }
-
-    @Override
-    public JsonNode write(JsonNode t, MediaType mediaType) {
-        return t;
+    public ObjectNode encode(JsonNode t, MediaType mt) {
+        return (ObjectNode) t;
     }
 }

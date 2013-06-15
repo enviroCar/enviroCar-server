@@ -17,7 +17,9 @@
  */
 package io.car.server.rest.decoding;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.Provider;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -27,7 +29,13 @@ import io.car.server.rest.JSONConstants;
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
+@Provider
+@Consumes(MediaType.APPLICATION_JSON)
 public class PhenomenonDecoder extends AbstractEntityDecoder<Phenomenon> {
+    public PhenomenonDecoder() {
+        super(Phenomenon.class);
+    }
+
     @Override
     public Phenomenon decode(JsonNode j, MediaType mediaType) {
         Phenomenon p = getEntityFactory().createPhenomenon();

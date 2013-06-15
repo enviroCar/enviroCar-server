@@ -27,11 +27,10 @@ import io.car.server.core.exception.IllegalModificationException;
  */
 public class MeasurementUpdater implements EntityUpdater<Measurement> {
     @Override
-    public Measurement update(Measurement changes, Measurement original)
+    public void update(Measurement changes, Measurement original)
             throws IllegalModificationException {
         if (changes.getGeometry() != null) {
             original.setGeometry(changes.getGeometry());
         }
-        return original;
     }
 }

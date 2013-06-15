@@ -25,7 +25,7 @@ import io.car.server.core.exception.IllegalModificationException;
  */
 public class GroupUpdater implements EntityUpdater<Group> {
     @Override
-    public Group update(Group changes, Group original) throws
+    public void update(Group changes, Group original) throws
             IllegalModificationException {
         if (changes.getDescription() != null) {
             original.setDescription(changes.getDescription());
@@ -33,6 +33,5 @@ public class GroupUpdater implements EntityUpdater<Group> {
         if (changes.getName() != null) {
             original.setName(changes.getName());
         }
-        return original;
     }
 }

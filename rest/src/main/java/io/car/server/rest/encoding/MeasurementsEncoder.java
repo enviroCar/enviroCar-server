@@ -17,7 +17,9 @@
  */
 package io.car.server.rest.encoding;
 
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.Provider;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
@@ -27,29 +29,34 @@ import com.google.inject.Inject;
 import io.car.server.core.entities.Measurement;
 import io.car.server.core.entities.Measurements;
 import io.car.server.core.util.GeoJSONConstants;
+import io.car.server.rest.rights.AccessRights;
 
 /**
  *
  * @author Christian Autermann <autermann@uni-muenster.de>
  * @author Arne de Wall <a.dewall@52north.org>
  */
-public class MeasurementsEncoder implements EntityEncoder<Measurements> {
+@Provider
+@Produces(MediaType.APPLICATION_JSON)
+public class MeasurementsEncoder extends AbstractEntityEncoder<Measurements> {
     private final EntityEncoder<Measurement> measurementEncoder;
     private final JsonNodeFactory factory;
 
     @Inject
     public MeasurementsEncoder(JsonNodeFactory factory,
-                             EntityEncoder<Measurement> measurementEncoder) {
+                               EntityEncoder<Measurement> measurementEncoder) {
+        super(Measurements.class);
         this.measurementEncoder = measurementEncoder;
         this.factory = factory;
     }
 
     @Override
-    public ObjectNode encode(Measurements t, MediaType mediaType) {
+    public ObjectNode encode(Measurements t, AccessRights rights,
+                             MediaType mediaType) {
         ObjectNode on = factory.objectNode();
         ArrayNode an = on.putArray(GeoJSONConstants.FEATURES_KEY);
         for (Measurement measurement : t) {
-            an.add(measurementEncoder.encode(measurement, mediaType));
+            an.add(measurementEncoder.encode(measurement, rights, mediaType));
         }
         on.put(GeoJSONConstants.TYPE_KEY,
                GeoJSONConstants.FEATURE_COLLECTION_TYPE);
