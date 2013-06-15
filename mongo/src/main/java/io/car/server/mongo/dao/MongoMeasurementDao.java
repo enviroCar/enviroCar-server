@@ -27,7 +27,6 @@ import io.car.server.core.util.GeometryConverter;
 import io.car.server.core.util.Pagination;
 import io.car.server.mongo.MongoDB;
 import io.car.server.mongo.entity.MongoMeasurement;
-import io.car.server.mongo.entity.MongoStatistic;
 import io.car.server.mongo.entity.MongoTrack;
 import io.car.server.mongo.entity.MongoUser;
 import io.car.server.mongo.util.MongoUtils;
@@ -62,8 +61,9 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
     
     private static final Logger log = LoggerFactory
             .getLogger(MongoMeasurementDao.class);
+    private static final String TRACKS = "tracks";
     
-    private static final String TRACK_NAME_PATH = MongoUtils.path(
+    private static final String TRACK_NAME_PATH = MongoUtils.path(TRACKS,
             MongoMeasurement.TRACK, MongoMeasurement.IDENTIFIER);
     private static final String TRACK_NAME_VALUE = MongoUtils
             .valueOf(TRACK_NAME_PATH);
@@ -202,6 +202,15 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
         return keys;
     }
     
+    private AggregationOutput aggregate(DBObject firstOp,
+            DBObject... additionalOps) {
+        AggregationOutput result = mongoDB.getDatastore()
+                .getCollection(MongoMeasurement.class)
+                .aggregate(firstOp, additionalOps);
+        result.getCommandResult().throwOnError();
+        return result;
+    }
+    
     private DBObject matchPolygon(Geometry polygon) {
         return MongoUtils.match(MongoMeasurement.GEOMETRY, withinPolygon(polygon));
     }
@@ -226,17 +235,10 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
 
     private DBObject group() {
         BasicDBObject fields = new BasicDBObject();
-        fields.put(ID, 1);
-        fields.put(MongoStatistic.TRACKS, MongoUtils.addToSet(TRACK_VALUE));
+        fields.put(ID, TRACK_NAME_VALUE);
+        fields.put(TRACKS, MongoUtils.addToSet(TRACK_VALUE));
         return MongoUtils.group(fields);
     }
     
-    private AggregationOutput aggregate(DBObject firstOp,
-            DBObject... additionalOps) {
-        AggregationOutput result = mongoDB.getDatastore()
-                .getCollection(MongoMeasurement.class)
-                .aggregate(firstOp, additionalOps);
-        result.getCommandResult().throwOnError();
-        return result;
-    }
+
 }
