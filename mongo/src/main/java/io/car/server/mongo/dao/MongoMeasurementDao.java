@@ -17,20 +17,6 @@
  */
 package io.car.server.mongo.dao;
 
-import io.car.server.core.dao.MeasurementDao;
-import io.car.server.core.entities.Measurement;
-import io.car.server.core.entities.Measurements;
-import io.car.server.core.entities.Track;
-import io.car.server.core.entities.User;
-import io.car.server.core.exception.GeometryConverterException;
-import io.car.server.core.util.GeometryConverter;
-import io.car.server.core.util.Pagination;
-import io.car.server.mongo.MongoDB;
-import io.car.server.mongo.entity.MongoMeasurement;
-import io.car.server.mongo.entity.MongoTrack;
-import io.car.server.mongo.entity.MongoUser;
-import io.car.server.mongo.util.MongoUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,6 +35,20 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import com.vividsolutions.jts.geom.Geometry;
+
+import io.car.server.core.dao.MeasurementDao;
+import io.car.server.core.entities.Measurement;
+import io.car.server.core.entities.Measurements;
+import io.car.server.core.entities.Track;
+import io.car.server.core.entities.User;
+import io.car.server.core.exception.GeometryConverterException;
+import io.car.server.core.util.GeometryConverter;
+import io.car.server.core.util.Pagination;
+import io.car.server.mongo.MongoDB;
+import io.car.server.mongo.entity.MongoMeasurement;
+import io.car.server.mongo.entity.MongoTrack;
+import io.car.server.mongo.entity.MongoUser;
+import io.car.server.mongo.util.MongoUtils;
 
 /**
  *
@@ -115,13 +115,6 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
     public Measurements getByBbox(Geometry bbox, Pagination p) {
         // FIXME implement
         throw new UnsupportedOperationException("not yet implemented");
-    }
-
-    @Override
-    public Measurements getByBbox(double minx, double miny, double maxx,
-                                  double maxy, Pagination p) {
-        return fetch(q().field(MongoMeasurement.GEOMETRY)
-                .within(minx, miny, maxx, maxy), p);
     }
 
     @Override

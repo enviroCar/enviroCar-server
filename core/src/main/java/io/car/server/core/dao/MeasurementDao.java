@@ -45,9 +45,6 @@ public interface MeasurementDao {
 
     Measurements getByBbox(Geometry bbox, Pagination p);
 
-    Measurements getByBbox(double minx, double miny, double maxx, double maxy,
-                           Pagination p);
-
     Measurements get(Pagination p);
 
     Measurements getByUser(User user, Pagination p);

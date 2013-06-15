@@ -187,8 +187,7 @@ public interface Service {
 
     boolean shareGroup(User user, User user0);
 
-    Measurements getMeasurementsByBbox(Double minx, Double miny,
-            Double maxx, Double maxy, Pagination p);
+    Measurements getMeasurementsByBbox(Polygon bbox, Pagination p);
 
     Tracks getTracksByBbox(Polygon bbox, Pagination p);
 }

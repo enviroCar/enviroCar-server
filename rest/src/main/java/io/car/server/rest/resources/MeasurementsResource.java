@@ -17,24 +17,6 @@
  */
 package io.car.server.rest.resources;
 
-import io.car.server.core.entities.Measurement;
-import io.car.server.core.entities.Measurements;
-import io.car.server.core.entities.Track;
-import io.car.server.core.entities.User;
-import io.car.server.core.exception.MeasurementNotFoundException;
-import io.car.server.core.exception.ResourceAlreadyExistException;
-import io.car.server.core.exception.TrackNotFoundException;
-import io.car.server.core.exception.UserNotFoundException;
-import io.car.server.core.exception.ValidationException;
-import io.car.server.core.util.Pagination;
-import io.car.server.rest.MediaTypes;
-import io.car.server.rest.RESTConstants;
-import io.car.server.rest.Schemas;
-import io.car.server.rest.auth.Authenticated;
-import io.car.server.rest.validation.Schema;
-
-import java.util.ArrayList;
-
 import javax.annotation.Nullable;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
@@ -48,6 +30,24 @@ import javax.ws.rs.core.Response;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
+import com.vividsolutions.jts.geom.GeometryFactory;
+
+import io.car.server.core.entities.Measurement;
+import io.car.server.core.entities.Measurements;
+import io.car.server.core.entities.Track;
+import io.car.server.core.entities.User;
+import io.car.server.core.exception.MeasurementNotFoundException;
+import io.car.server.core.exception.ResourceAlreadyExistException;
+import io.car.server.core.exception.TrackNotFoundException;
+import io.car.server.core.exception.UserNotFoundException;
+import io.car.server.core.exception.ValidationException;
+import io.car.server.core.util.Pagination;
+import io.car.server.rest.BoundingBox;
+import io.car.server.rest.MediaTypes;
+import io.car.server.rest.RESTConstants;
+import io.car.server.rest.Schemas;
+import io.car.server.rest.auth.Authenticated;
+import io.car.server.rest.validation.Schema;
 
 /**
  * @author Arne de Wall <a.dewall@52north.org>
@@ -56,12 +56,15 @@ public class MeasurementsResource extends AbstractResource {
     public static final String MEASUREMENT = "{measurement}";
     private final Track track;
     private final User user;
+    private final GeometryFactory geometryFactory;
 
     @Inject
     public MeasurementsResource(@Assisted @Nullable Track track,
-                                @Assisted @Nullable User user) {
+                                @Assisted @Nullable User user,
+                                GeometryFactory geometryFactory) {
         this.track = track;
         this.user = user;
+        this.geometryFactory = geometryFactory;
     }
 
     @GET
@@ -70,19 +73,13 @@ public class MeasurementsResource extends AbstractResource {
     public Measurements get(
             @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit,
             @QueryParam(RESTConstants.PAGE) @DefaultValue("0") int page,
-            @QueryParam(RESTConstants.BBOX) @DefaultValue("") String bbox)
+            @QueryParam(RESTConstants.BBOX) BoundingBox bbox)
             throws UserNotFoundException, TrackNotFoundException {
         Pagination p = new Pagination(limit, page);
-        if (!bbox.equals("")) {
-            final String[] coords = bbox.split(",");
-            Double[] d = new ArrayList<Double>() {
-                private static final long serialVersionUID = -5786311066498093873L;
-                {
-                    for (String coord : coords)
-                        add(Double.parseDouble(coord));
-                }
-            }.toArray(new Double[coords.length]);
-            return getService().getMeasurementsByBbox(d[0], d[1], d[2], d[3], p);
+        if (bbox != null) {
+            //FIXME if user != null ||  track != null
+            return getService().getMeasurementsByBbox(bbox
+                    .asPolygon(geometryFactory), p);
         }
         if (track == null) {
             if (user == null) {

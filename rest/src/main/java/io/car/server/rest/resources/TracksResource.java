@@ -17,24 +17,6 @@
  */
 package io.car.server.rest.resources;
 
-import io.car.server.core.entities.Measurement;
-import io.car.server.core.entities.Track;
-import io.car.server.core.entities.Tracks;
-import io.car.server.core.entities.User;
-import io.car.server.core.exception.ResourceAlreadyExistException;
-import io.car.server.core.exception.TrackNotFoundException;
-import io.car.server.core.exception.UserNotFoundException;
-import io.car.server.core.exception.ValidationException;
-import io.car.server.core.util.Pagination;
-import io.car.server.rest.MediaTypes;
-import io.car.server.rest.RESTConstants;
-import io.car.server.rest.Schemas;
-import io.car.server.rest.TrackWithMeasurments;
-import io.car.server.rest.auth.Authenticated;
-import io.car.server.rest.validation.Schema;
-
-import java.util.ArrayList;
-
 import javax.annotation.Nullable;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
@@ -48,22 +30,38 @@ import javax.ws.rs.core.Response;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
-import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
+
+import io.car.server.core.entities.Measurement;
+import io.car.server.core.entities.Track;
+import io.car.server.core.entities.Tracks;
+import io.car.server.core.entities.User;
+import io.car.server.core.exception.ResourceAlreadyExistException;
+import io.car.server.core.exception.TrackNotFoundException;
+import io.car.server.core.exception.UserNotFoundException;
+import io.car.server.core.exception.ValidationException;
+import io.car.server.core.util.Pagination;
+import io.car.server.rest.BoundingBox;
+import io.car.server.rest.MediaTypes;
+import io.car.server.rest.RESTConstants;
+import io.car.server.rest.Schemas;
+import io.car.server.rest.TrackWithMeasurments;
+import io.car.server.rest.auth.Authenticated;
+import io.car.server.rest.validation.Schema;
 
 /**
  * @author Arne de Wall <a.dewall@52north.org>
  */
 public class TracksResource extends AbstractResource {
     public static final String TRACK = "{track}";
-    private User user;
-    
-    @Inject
-    private GeometryFactory factory;
+    private final User user;
+    private final GeometryFactory factory;
 
     @Inject
-    public TracksResource(@Assisted @Nullable User user) {
+    public TracksResource(@Assisted @Nullable User user,
+                          GeometryFactory factory) {
         this.user = user;
+        this.factory = factory;
     }
 
     @GET
@@ -72,33 +70,17 @@ public class TracksResource extends AbstractResource {
     public Tracks get(
             @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit,
             @QueryParam(RESTConstants.PAGE) @DefaultValue("0") int page,
-            @QueryParam(RESTConstants.BBOX) @DefaultValue("") String bbox)
+            @QueryParam(RESTConstants.BBOX) BoundingBox bbox)
             throws UserNotFoundException {
         Pagination p = new Pagination(limit, page);
-        if (!bbox.equals("")) {
-            final String[] coords = bbox.split(",");
-            Double[] d = new ArrayList<Double>() {
-                {
-                    for (String coord : coords)
-                        add(Double.parseDouble(coord));
-                }
-            }.toArray(new Double[coords.length]);
-            Coordinate[] coordinates = new Coordinate[] { 
-                    new Coordinate(d[0], d[1]),
-                    new Coordinate(d[2], d[1]), 
-                    new Coordinate(d[2], d[3]), 
-                    new Coordinate(d[0], d[3]), 
-                    new Coordinate(d[0], d[1]) };
-            return getService().getTracksByBbox(factory.createPolygon(coordinates), p);
-//            return getService().getTracksByBbox( //
-//                    Double.parseDouble(coords[0]),
-//                    Double.parseDouble(coords[1]),
-//                    Double.parseDouble(coords[2]),
-//                    Double.parseDouble(coords[3]), p);
+        if (bbox != null) {
+            //FIXME if user != null
+            return getService().getTracksByBbox(bbox.asPolygon(factory), p);
+        } else {
+            return user != null
+                   ? getService().getTracks(user, p)
+                   : getService().getTracks(p);
         }
-        return user != null
-               ? getService().getTracks(user, p)
-               : getService().getTracks(p);
     }
 
     @POST

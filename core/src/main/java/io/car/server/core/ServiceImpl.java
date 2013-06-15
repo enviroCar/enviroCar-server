@@ -497,9 +497,8 @@ public class ServiceImpl implements Service {
     }
 
     @Override
-    public Measurements getMeasurementsByBbox(Double minx, Double miny,
-            Double maxx, Double maxy, Pagination p) {
-        return this.measurementDao.getByBbox(minx, miny, maxx, maxy, p);
+    public Measurements getMeasurementsByBbox(Polygon bbox, Pagination p) {
+        return this.measurementDao.getByBbox(bbox, p);
     }
 
     @Override
