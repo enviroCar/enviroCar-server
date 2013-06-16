@@ -27,6 +27,7 @@ import com.github.jmkgreen.morphia.annotations.Entity;
 import com.github.jmkgreen.morphia.annotations.Id;
 import com.github.jmkgreen.morphia.annotations.Property;
 import com.github.jmkgreen.morphia.annotations.Transient;
+import com.github.jmkgreen.morphia.mapping.Mapper;
 import com.google.common.base.Objects;
 import com.vividsolutions.jts.geom.Geometry;
 
@@ -36,6 +37,7 @@ import io.car.server.core.entities.User;
 
 @Entity("tracks")
 public class MongoTrack extends MongoEntityBase implements Track {
+    public static final String ID = Mapper.ID_KEY;
     public static final String USER = "user";
     public static final String SENSOR = "sensor";
     public static final String NAME = "name";

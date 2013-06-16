@@ -185,18 +185,16 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
     }
 
     List<Key<MongoTrack>> getTrackKeysByBbox(Geometry polygon) {
-        Iterable<DBObject> res =
-                aggregate(matchPolygon(polygon), project(), group()).results();
-        List<Key<MongoTrack>> keys = Lists.newLinkedList();
-        for (DBObject obj : res) {
-            BasicDBList list = (BasicDBList) obj.get(TRACKS);
-            for (int i = 0; i < list.size(); i++) {
-                DBRef ref = (DBRef) list.get(i);
-                Key<MongoTrack> key = getMapper().refToKey(ref);
-                keys.add(key);
-            }
-        }
-        return keys;
+        return toKeyList(aggregate(matchPolygon(polygon),
+                                   project(),
+                                   group()).results());
+    }
+
+    List<Key<MongoTrack>> getTrackKeysByBbox(Geometry polygon, User user) {
+        return toKeyList(aggregate(matchPolygon(polygon),
+                                   matchUser(user),
+                                   project(),
+                                   group()).results());
     }
 
     private AggregationOutput aggregate(DBObject firstOp,
@@ -211,6 +209,11 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
     private DBObject matchPolygon(Geometry polygon) {
         return MongoUtils
                 .match(MongoMeasurement.GEOMETRY, withinPolygon(polygon));
+    }
+
+    private DBObject matchUser(User user) {
+        return MongoUtils
+                .match(MongoMeasurement.USER, mongoDB.reference(user));
     }
 
     private DBObject withinPolygon(Geometry polygon) {
@@ -230,5 +233,19 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
         fields.put(ID, TRACK_NAME_VALUE);
         fields.put(TRACKS, MongoUtils.addToSet(TRACK_VALUE));
         return MongoUtils.group(fields);
+    }
+
+    protected List<Key<MongoTrack>> toKeyList(
+            Iterable<DBObject> res) {
+        List<Key<MongoTrack>> keys = Lists.newLinkedList();
+        for (DBObject obj : res) {
+            BasicDBList list = (BasicDBList) obj.get(TRACKS);
+            for (int i = 0; i < list.size(); i++) {
+                DBRef ref = (DBRef) list.get(i);
+                Key<MongoTrack> key = getMapper().refToKey(ref);
+                keys.add(key);
+            }
+        }
+        return keys;
     }
 }
