@@ -77,7 +77,7 @@ public class MongoTrackDao extends AbstractMongoDao<ObjectId, MongoTrack, Tracks
 
     @Override
     public Tracks getByUser(User user, Pagination p) {
-        return fetch(q().field(MongoTrack.USER).equal(reference(user)), p);
+        return fetch(q().field(MongoTrack.USER).equal(key(user)), p);
     }
 
     @Override
@@ -107,6 +107,13 @@ public class MongoTrackDao extends AbstractMongoDao<ObjectId, MongoTrack, Tracks
     }
 
     @Override
+    public Tracks getByBbox(Geometry bbox, User user, Pagination p) {
+        List<Key<MongoTrack>> ids = measurementDao
+                .getTrackKeysByBbox(bbox, user);
+        return fetch(q().field(MongoTrack.ID).in(ids), p);
+    }
+
+    @Override
     public Tracks get(Pagination p) {
         return fetch(q().order(MongoTrack.CREATION_DATE), p);
     }
@@ -123,7 +130,7 @@ public class MongoTrackDao extends AbstractMongoDao<ObjectId, MongoTrack, Tracks
 
     void removeUser(MongoUser user) {
         UpdateResults<MongoTrack> result = update(
-                q().field(MongoTrack.USER).equal(reference(user)),
+                q().field(MongoTrack.USER).equal(key(user)),
                 up().unset(MongoTrack.USER));
         if (result.getHadError()) {
             log.error("Error removing user {} from tracks: {}",
@@ -135,9 +142,8 @@ public class MongoTrackDao extends AbstractMongoDao<ObjectId, MongoTrack, Tracks
     }
 
     @Override
-    protected Tracks createPaginatedIterable(
-            Iterable<MongoTrack> i,
-            Pagination p, long count) {
+    protected Tracks createPaginatedIterable(Iterable<MongoTrack> i,
+                                             Pagination p, long count) {
         return Tracks.from(i).withPagination(p).withElements(count).build();
     }
 
@@ -149,12 +155,5 @@ public class MongoTrackDao extends AbstractMongoDao<ObjectId, MongoTrack, Tracks
     @Override
     protected Tracks fetch(Query<MongoTrack> q, Pagination p) {
         return super.fetch(q.order(MongoTrack.RECENTLY_MODIFIED_ORDER), p);
-    }
-
-    @Override
-    public Tracks getByBbox(Geometry bbox, User user, Pagination p) {
-        List<Key<MongoTrack>> ids = measurementDao
-                .getTrackKeysByBbox(bbox, user);
-        return fetch(q().field(MongoTrack.ID).in(ids), p);
     }
 }

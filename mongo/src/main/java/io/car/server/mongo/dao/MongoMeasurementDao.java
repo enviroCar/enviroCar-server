@@ -17,6 +17,8 @@
  */
 package io.car.server.mongo.dao;
 
+import static com.github.jmkgreen.morphia.query.QueryImpl.parseFieldsString;
+
 import java.util.List;
 
 import org.bson.BSONObject;
@@ -24,14 +26,19 @@ import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.github.jmkgreen.morphia.Datastore;
 import com.github.jmkgreen.morphia.Key;
 import com.github.jmkgreen.morphia.mapping.Mapper;
+import com.github.jmkgreen.morphia.mapping.cache.EntityCache;
+import com.github.jmkgreen.morphia.query.MorphiaIterator;
 import com.github.jmkgreen.morphia.query.UpdateResults;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.mongodb.AggregationOutput;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import com.vividsolutions.jts.geom.Geometry;
@@ -104,14 +111,13 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
     @Override
     public Measurements getByTrack(Track track, Pagination p) {
         return fetch(q().field(MongoMeasurement.TRACK)
-                .equal(reference(track))
+                .equal(key(track))
                 .order(MongoMeasurement.TIME), p);
     }
 
     @Override
     public Measurements getByBbox(Geometry bbox, Track track, Pagination p) {
-        /* TODO implement io.car.server.mongo.dao.MongoMeasurementDao.getByBbox() */
-        throw new UnsupportedOperationException("io.car.server.mongo.dao.MongoMeasurementDao.getByBbox() not yet implemented");
+        
     }
 
     @Override
@@ -146,13 +152,13 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
     public Measurements getByUser(User user, Pagination p) {
         return fetch(q()
                 .field(MongoMeasurement.USER)
-                .equal(reference(user))
+                .equal(key(user))
                 .order(MongoMeasurement.TIME), p);
     }
 
     void removeUser(MongoUser user) {
         UpdateResults<MongoMeasurement> result = update(
-                q().field(MongoMeasurement.USER).equal(reference(user)),
+                q().field(MongoMeasurement.USER).equal(key(user)),
                 up().unset(MongoMeasurement.USER));
         if (result.getHadError()) {
             log.error("Error removing user {} from measurement: {}",
@@ -173,7 +179,7 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
 
     void removeTrack(MongoTrack track) {
         UpdateResults<MongoMeasurement> result = update(
-                q().field(MongoMeasurement.TRACK).equal(reference(track)),
+                q().field(MongoMeasurement.TRACK).equal(key(track)),
                 up().unset(MongoMeasurement.TRACK));
         if (result.getHadError()) {
             log.error("Error removing track {} from measurements: {}",
@@ -212,8 +218,7 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
     }
 
     private DBObject matchUser(User user) {
-        return MongoUtils
-                .match(MongoMeasurement.USER, mongoDB.reference(user));
+        return MongoUtils.match(MongoMeasurement.USER, mongoDB.ref(user));
     }
 
     private DBObject withinPolygon(Geometry polygon) {
@@ -247,5 +252,34 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
             }
         }
         return keys;
+    }
+
+    private Measurements query(DBObject query, Pagination p) {
+        final Mapper mapper = this.mongoDB.getMapper();
+        final EntityCache cache = mapper.createEntityCache();
+        final Datastore ds = this.mongoDB.getDatastore();
+        final Class<MongoMeasurement> c = MongoMeasurement.class;
+        final DBCollection coll = ds.getCollection(c);
+        final String kind = coll.getName();
+
+        DBCursor cursor = coll.find(query, null);
+        long count = 0;
+
+        cursor.setDecoderFactory(ds.getDecoderFact());
+        if (p != null) {
+            count = coll.count(query);
+            if (p.getOffset() > 0) {
+                cursor.skip(p.getOffset());
+            }
+            if (p.getLimit() > 0) {
+                cursor.limit(p.getLimit());
+            }
+        }
+        cursor.sort(parseFieldsString(MongoMeasurement.TIME, c,
+                                      mapper, true));
+        Iterable<MongoMeasurement> i =
+                new MorphiaIterator<MongoMeasurement, MongoMeasurement>(
+                cursor, mapper, c, kind, cache);
+        return createPaginatedIterable(i, p, count);
     }
 }

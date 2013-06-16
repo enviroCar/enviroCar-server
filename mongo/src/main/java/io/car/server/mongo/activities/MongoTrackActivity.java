@@ -48,7 +48,7 @@ public class MongoTrackActivity extends MongoActivity implements TrackActivity {
                               @Assisted Track track) {
         super(mongoDB, user, type);
         this._track = (MongoTrack) track;
-        this.track = mongoDB.reference(this._track);
+        this.track = mongoDB.key(this._track);
     }
 
     @Inject
@@ -59,7 +59,7 @@ public class MongoTrackActivity extends MongoActivity implements TrackActivity {
     @Override
     public MongoTrack getTrack() {
         if (this._track == null) {
-            this._track = getMongoDB().dereference(MongoTrack.class, this.track);
+            this._track = getMongoDB().deref(MongoTrack.class, this.track);
         }
         return this._track;
     }
@@ -67,7 +67,7 @@ public class MongoTrackActivity extends MongoActivity implements TrackActivity {
     @Override
     public void setTrack(Track track) {
         this._track = (MongoTrack) track;
-        this.track = getMongoDB().reference(this._track);
+        this.track = getMongoDB().key(this._track);
     }
 
     @Override

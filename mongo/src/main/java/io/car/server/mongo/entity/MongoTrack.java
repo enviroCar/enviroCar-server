@@ -61,7 +61,7 @@ public class MongoTrack extends MongoEntityBase implements Track {
     @Override
     public MongoUser getUser() {
         if (this._user == null) {
-            this._user = getMongoDB().dereference(MongoUser.class, this.user);
+            this._user = getMongoDB().deref(MongoUser.class, this.user);
         }
         return this._user;
     }
@@ -69,7 +69,7 @@ public class MongoTrack extends MongoEntityBase implements Track {
     @Override
     public void setUser(User user) {
         this._user = (MongoUser) user;
-        this.user = getMongoDB().reference(this._user);
+        this.user = getMongoDB().key(this._user);
     }
 
     @Override

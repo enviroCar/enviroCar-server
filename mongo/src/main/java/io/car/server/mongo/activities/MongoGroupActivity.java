@@ -48,7 +48,7 @@ public class MongoGroupActivity extends MongoActivity implements GroupActivity {
                               @Assisted Group group) {
         super(mongoDB, user, type);
         this._group = (MongoGroup) group;
-        this.group = mongoDB.reference(this._group);
+        this.group = mongoDB.key(this._group);
     }
 
     @Inject
@@ -60,7 +60,7 @@ public class MongoGroupActivity extends MongoActivity implements GroupActivity {
     @Override
     public MongoGroup getGroup() {
         if (this._group == null) {
-            this._group = getMongoDB().dereference(MongoGroup.class, this.group);
+            this._group = getMongoDB().deref(MongoGroup.class, this.group);
         }
         return this._group;
     }
@@ -68,7 +68,7 @@ public class MongoGroupActivity extends MongoActivity implements GroupActivity {
     @Override
     public void setGroup(Group group) {
         this._group = (MongoGroup) group;
-        this.group = getMongoDB().reference(this._group);
+        this.group = getMongoDB().key(this._group);
     }
 
     @Override

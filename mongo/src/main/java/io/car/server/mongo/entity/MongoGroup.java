@@ -84,14 +84,14 @@ public class MongoGroup extends MongoEntityBase implements Group {
     @Override
     public void setOwner(User user) {
         this._owner = (MongoUser) user;
-        this.owner = getMongoDB().reference(this._owner);
+        this.owner = getMongoDB().key(this._owner);
 
     }
 
     @Override
     public MongoUser getOwner() {
         if (this._owner == null) {
-            this._owner = getMongoDB().dereference(MongoUser.class, this.owner);
+            this._owner = getMongoDB().deref(MongoUser.class, this.owner);
         }
         return this._owner;
     }

@@ -43,6 +43,7 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
+import com.mongodb.DBRef;
 import com.mongodb.MongoClient;
 import com.mongodb.ServerAddress;
 
@@ -129,16 +130,16 @@ public class MongoDB {
                                                  "2dsphere"));
     }
 
-    public <T> T dereference(Class<T> c, Key<T> key) {
+    public <T> T deref(Class<T> c, Key<T> key) {
         return key == null ? null : getDatastore().getByKey(c, key);
     }
 
-    public <T> Iterable<T> dereference(Class<T> c, Iterable<Key<T>> keys) {
-        return dereference(c, Lists.newArrayList(keys));
+    public <T> Iterable<T> deref(Class<T> c, Iterable<Key<T>> keys) {
+        return deref(c, Lists.newArrayList(keys));
     }
 
     @SuppressWarnings("unchecked")
-    protected <T> Iterable<T> dereference(Class<T> clazz, List<Key<T>> keys) {
+    protected <T> Iterable<T> deref(Class<T> clazz, List<Key<T>> keys) {
         if (keys == null || keys.isEmpty()) {
             return Collections.emptyList();
         }
@@ -163,8 +164,12 @@ public class MongoDB {
         return Iterables.concat(fetched);
     }
 
-    public <T> Key<T> reference(T entity) {
+    public <T> Key<T> key(T entity) {
         return entity == null ? null : getMapper().getKey(entity);
+    }
+
+    public <T> DBRef ref(T entity) {
+        return entity == null ? null : getMapper().keyToRef(key(entity));
     }
 
     protected <T> ListMultimap<String, Key<T>> getKindMap(Class<T> clazz,
