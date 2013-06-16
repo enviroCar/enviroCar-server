@@ -505,4 +505,21 @@ public class ServiceImpl implements Service {
     public Tracks getTracksByBbox(Polygon bbox, Pagination p) {
         return this.trackDao.getByBbox(bbox, p);
     }
+
+    @Override
+    public Measurements getMeasurementsByBbox(Polygon bbox, User user,
+                                              Pagination p) {
+        return this.measurementDao.getByBbox(bbox, user, p);
+    }
+
+    @Override
+    public Measurements getMeasurementsByBbox(Polygon bbox, Track track,
+                                              Pagination p) {
+        return this.measurementDao.getByBbox(bbox, track, p);
+    }
+
+    @Override
+    public Tracks getTracksByBbox(Polygon bbox, User user, Pagination p) {
+        return this.trackDao.getByBbox(bbox, user, p);
+    }
 }

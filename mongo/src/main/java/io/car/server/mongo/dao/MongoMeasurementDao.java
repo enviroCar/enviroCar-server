@@ -17,7 +17,6 @@
  */
 package io.car.server.mongo.dao;
 
-import static com.github.jmkgreen.morphia.query.QueryImpl.parseFieldsString;
 
 import java.util.List;
 
@@ -29,14 +28,15 @@ import org.slf4j.LoggerFactory;
 import com.github.jmkgreen.morphia.Datastore;
 import com.github.jmkgreen.morphia.Key;
 import com.github.jmkgreen.morphia.mapping.Mapper;
-import com.github.jmkgreen.morphia.mapping.cache.EntityCache;
 import com.github.jmkgreen.morphia.query.MorphiaIterator;
+import com.github.jmkgreen.morphia.query.QueryImpl;
 import com.github.jmkgreen.morphia.query.UpdateResults;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.mongodb.AggregationOutput;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
+import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
@@ -117,19 +117,25 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
 
     @Override
     public Measurements getByBbox(Geometry bbox, Track track, Pagination p) {
-        
+        BasicDBObjectBuilder b = new BasicDBObjectBuilder();
+        b.add(MongoMeasurement.GEOMETRY, withinPolygon(bbox));
+        b.add(MongoMeasurement.TRACK, ref(track));
+        return query(b.get(), p);
     }
 
     @Override
     public Measurements getByBbox(Geometry bbox, User user, Pagination p) {
-        /* TODO implement io.car.server.mongo.dao.MongoMeasurementDao.getByBbox() */
-        throw new UnsupportedOperationException("io.car.server.mongo.dao.MongoMeasurementDao.getByBbox() not yet implemented");
+        BasicDBObjectBuilder b = new BasicDBObjectBuilder();
+        b.add(MongoMeasurement.GEOMETRY, withinPolygon(bbox));
+        b.add(MongoMeasurement.USER, ref(user));
+        return query(b.get(), p);
     }
 
     @Override
     public Measurements getByBbox(Geometry bbox, Pagination p) {
-        // FIXME implement
-        throw new UnsupportedOperationException("not yet implemented");
+        BasicDBObjectBuilder b = new BasicDBObjectBuilder();
+        b.add(MongoMeasurement.GEOMETRY, withinPolygon(bbox));
+        return query(b.get(), p);
     }
 
     @Override
@@ -218,7 +224,7 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
     }
 
     private DBObject matchUser(User user) {
-        return MongoUtils.match(MongoMeasurement.USER, mongoDB.ref(user));
+        return MongoUtils.match(MongoMeasurement.USER, ref(user));
     }
 
     private DBObject withinPolygon(Geometry polygon) {
@@ -256,11 +262,8 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
 
     private Measurements query(DBObject query, Pagination p) {
         final Mapper mapper = this.mongoDB.getMapper();
-        final EntityCache cache = mapper.createEntityCache();
         final Datastore ds = this.mongoDB.getDatastore();
-        final Class<MongoMeasurement> c = MongoMeasurement.class;
-        final DBCollection coll = ds.getCollection(c);
-        final String kind = coll.getName();
+        final DBCollection coll = ds.getCollection(MongoMeasurement.class);
 
         DBCursor cursor = coll.find(query, null);
         long count = 0;
@@ -275,11 +278,13 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
                 cursor.limit(p.getLimit());
             }
         }
-        cursor.sort(parseFieldsString(MongoMeasurement.TIME, c,
-                                      mapper, true));
+        cursor.sort(QueryImpl.parseFieldsString(MongoMeasurement.TIME,
+                                                MongoMeasurement.class,
+                                                mapper, true));
         Iterable<MongoMeasurement> i =
                 new MorphiaIterator<MongoMeasurement, MongoMeasurement>(
-                cursor, mapper, c, kind, cache);
+                cursor, mapper, MongoMeasurement.class, coll.getName(),
+                mapper.createEntityCache());
         return createPaginatedIterable(i, p, count);
     }
 }
