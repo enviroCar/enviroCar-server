@@ -23,8 +23,6 @@ package io.car.server.mongo.dao;
 
 import java.util.List;
 
-import org.bson.types.ObjectId;
-
 import com.github.jmkgreen.morphia.Key;
 import com.github.jmkgreen.morphia.dao.BasicDAO;
 import com.github.jmkgreen.morphia.mapping.Mapper;
@@ -132,8 +130,8 @@ public class MongoStatisticsDao implements StatisticsDao {
     }
 
     private MongoStatisticKey key(Track track, User user) {
-        return new MongoStatisticKey(mongoDB.reference((MongoTrack) track),
-                                     mongoDB.reference((MongoUser) user));
+        return new MongoStatisticKey(mongoDB.key((MongoTrack) track),
+                                     mongoDB.key((MongoUser) user));
     }
 
     private MongoStatistics getStatistics1(Track track) {
@@ -242,10 +240,6 @@ public class MongoStatisticsDao implements StatisticsDao {
         DBRef ref = mongoDB.getMapper().keyToRef(mongoDB.getMapper()
                 .getKey((MongoUser) user));
         return MongoUtils.match(MongoMeasurement.USER, ref);
-    }
-
-    private DBObject matchesTrack(String track) {
-        return matchesTrack(new Key<MongoTrack>(MongoTrack.class, new ObjectId(track)));
     }
 
     private DBObject matchesTrack(Track track) {

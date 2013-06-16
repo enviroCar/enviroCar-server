@@ -103,7 +103,7 @@ public class MongoUserDao extends AbstractMongoDao<String, MongoUser, Users>
         trackDao.removeUser(user);
         measurementDao.removeUser(user);
         groupDao.removeUser(user);
-        Key<MongoUser> userRef = reference(user);
+        Key<MongoUser> userRef = key(user);
         UpdateResults<MongoUser> result = update(
                 q().field(MongoUser.FRIENDS).hasThisElement(userRef),
                 up().removeAll(MongoUser.FRIENDS, userRef));
@@ -128,7 +128,7 @@ public class MongoUserDao extends AbstractMongoDao<String, MongoUser, Users>
         Iterable<MongoUser> friends;
         Set<Key<MongoUser>> friendRefs = getFriendRefs(user);
         if (friendRefs != null) {
-            friends = dereference(MongoUser.class, friendRefs);
+            friends = deref(MongoUser.class, friendRefs);
         } else {
             friends = Collections.emptyList();
         }
@@ -139,10 +139,10 @@ public class MongoUserDao extends AbstractMongoDao<String, MongoUser, Users>
     public User getFriend(User user, String friendName) {
         Set<Key<MongoUser>> friendRefs = getFriendRefs(user);
         if (friendRefs != null) {
-            Key<MongoUser> friendRef = reference(new MongoUser(friendName));
+            Key<MongoUser> friendRef = key(new MongoUser(friendName));
             getMapper().updateKind(friendRef);
             if (friendRefs.contains(friendRef)) {
-                return dereference(MongoUser.class, friendRef);
+                return deref(MongoUser.class, friendRef);
             }
         }
         return null;
@@ -152,7 +152,7 @@ public class MongoUserDao extends AbstractMongoDao<String, MongoUser, Users>
     public void addFriend(User user, User friend) {
         MongoUser g = (MongoUser) user;
         update(g.getName(), up()
-                .add(MongoUser.FRIENDS, reference(friend))
+                .add(MongoUser.FRIENDS, key(friend))
                 .set(MongoUser.LAST_MODIFIED, new DateTime()));
     }
 
@@ -160,7 +160,7 @@ public class MongoUserDao extends AbstractMongoDao<String, MongoUser, Users>
     public void removeFriend(User user, User friend) {
         MongoUser g = (MongoUser) user;
         update(g.getName(), up()
-                .removeAll(MongoUser.FRIENDS, reference(friend))
+                .removeAll(MongoUser.FRIENDS, key(friend))
                 .set(MongoUser.LAST_MODIFIED, new DateTime()));
     }
 

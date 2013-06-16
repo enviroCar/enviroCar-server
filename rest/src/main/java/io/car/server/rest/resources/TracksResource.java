@@ -30,6 +30,8 @@ import javax.ws.rs.core.Response;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.Polygon;
 
 import io.car.server.core.entities.Measurement;
 import io.car.server.core.entities.Track;
@@ -40,6 +42,7 @@ import io.car.server.core.exception.TrackNotFoundException;
 import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.core.exception.ValidationException;
 import io.car.server.core.util.Pagination;
+import io.car.server.rest.BoundingBox;
 import io.car.server.rest.MediaTypes;
 import io.car.server.rest.RESTConstants;
 import io.car.server.rest.Schemas;
@@ -52,11 +55,14 @@ import io.car.server.rest.validation.Schema;
  */
 public class TracksResource extends AbstractResource {
     public static final String TRACK = "{track}";
-    private User user;
+    private final User user;
+    private final GeometryFactory factory;
 
     @Inject
-    public TracksResource(@Assisted @Nullable User user) {
+    public TracksResource(@Assisted @Nullable User user,
+                          GeometryFactory factory) {
         this.user = user;
+        this.factory = factory;
     }
 
     @GET
@@ -64,12 +70,20 @@ public class TracksResource extends AbstractResource {
     @Produces(MediaTypes.TRACKS)
     public Tracks get(
             @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit,
-            @QueryParam(RESTConstants.PAGE) @DefaultValue("0") int page)
+            @QueryParam(RESTConstants.PAGE) @DefaultValue("0") int page,
+            @QueryParam(RESTConstants.BBOX) BoundingBox bbox)
             throws UserNotFoundException {
         Pagination p = new Pagination(limit, page);
-        return user != null
-               ? getService().getTracks(user, p)
-               : getService().getTracks(p);
+        if (bbox != null) {
+            Polygon poly = bbox.asPolygon(factory);
+            return user != null
+                   ? getService().getTracksByBbox(poly, user, p)
+                   : getService().getTracksByBbox(poly, p);
+        } else {
+            return user != null
+                   ? getService().getTracks(user, p)
+                   : getService().getTracks(p);
+        }
     }
 
     @POST

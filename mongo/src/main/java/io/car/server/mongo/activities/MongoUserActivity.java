@@ -47,7 +47,7 @@ public class MongoUserActivity extends MongoActivity implements UserActivity {
                              @Assisted("other") User other) {
         super(mongoDB, user, type);
         this._other = (MongoUser) other;
-        this.other = mongoDB.reference(this._other);
+        this.other = mongoDB.key(this._other);
     }
 
     @Inject
@@ -58,7 +58,7 @@ public class MongoUserActivity extends MongoActivity implements UserActivity {
     @Override
     public MongoUser getOther() {
         if (this._other == null) {
-            this._other = getMongoDB().dereference(MongoUser.class, this.other);
+            this._other = getMongoDB().deref(MongoUser.class, this.other);
         }
         return this._other;
     }
@@ -66,7 +66,7 @@ public class MongoUserActivity extends MongoActivity implements UserActivity {
     @Override
     public void setOther(User user) {
         this._other = (MongoUser) user;
-        this.other = getMongoDB().reference(this._other);
+        this.other = getMongoDB().key(this._other);
     }
 
     @Override

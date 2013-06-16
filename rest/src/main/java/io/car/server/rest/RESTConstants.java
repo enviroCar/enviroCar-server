@@ -25,4 +25,5 @@ public interface RESTConstants {
     String PAGE = "page";
     String SEARCH = "q";
     String TYPE = "type";
+    String BBOX = "bbox";
 }

@@ -26,6 +26,7 @@ import com.github.jmkgreen.morphia.mapping.Mapper;
 import com.github.jmkgreen.morphia.query.Query;
 import com.github.jmkgreen.morphia.query.UpdateOperations;
 import com.github.jmkgreen.morphia.query.UpdateResults;
+import com.mongodb.DBRef;
 import com.mongodb.WriteResult;
 
 import io.car.server.core.util.PaginatedIterable;
@@ -107,16 +108,20 @@ public abstract class AbstractMongoDao<K, E, C extends PaginatedIterable<? super
                 .set(MongoEntityBase.LAST_MODIFIED, new DateTime()));
     }
 
-    public <T> T dereference(Class<T> c, Key<T> key) {
-        return mongoDB.dereference(c, key);
+    public <T> T deref(Class<T> c, Key<T> key) {
+        return mongoDB.deref(c, key);
     }
 
-    public <T> Iterable<T> dereference(Class<T> c, Iterable<Key<T>> keys) {
-        return mongoDB.dereference(c, keys);
+    public <T> Iterable<T> deref(Class<T> c, Iterable<Key<T>> keys) {
+        return mongoDB.deref(c, keys);
     }
 
-    public <T> Key<T> reference(T entity) {
-        return mongoDB.reference(entity);
+    public <T> Key<T> key(T entity) {
+        return mongoDB.key(entity);
+    }
+
+    public <T> DBRef ref(T entity) {
+        return mongoDB.ref(entity);
     }
 
     public Datastore getDatastore() {

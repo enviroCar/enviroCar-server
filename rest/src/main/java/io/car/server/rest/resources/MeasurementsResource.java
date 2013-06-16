@@ -30,6 +30,8 @@ import javax.ws.rs.core.Response;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.Polygon;
 
 import io.car.server.core.entities.Measurement;
 import io.car.server.core.entities.Measurements;
@@ -41,6 +43,7 @@ import io.car.server.core.exception.TrackNotFoundException;
 import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.core.exception.ValidationException;
 import io.car.server.core.util.Pagination;
+import io.car.server.rest.BoundingBox;
 import io.car.server.rest.MediaTypes;
 import io.car.server.rest.RESTConstants;
 import io.car.server.rest.Schemas;
@@ -54,12 +57,15 @@ public class MeasurementsResource extends AbstractResource {
     public static final String MEASUREMENT = "{measurement}";
     private final Track track;
     private final User user;
+    private final GeometryFactory geometryFactory;
 
     @Inject
     public MeasurementsResource(@Assisted @Nullable Track track,
-                                @Assisted @Nullable User user) {
+                                @Assisted @Nullable User user,
+                                GeometryFactory geometryFactory) {
         this.track = track;
         this.user = user;
+        this.geometryFactory = geometryFactory;
     }
 
     @GET
@@ -67,17 +73,26 @@ public class MeasurementsResource extends AbstractResource {
     @Produces(MediaTypes.MEASUREMENTS)
     public Measurements get(
             @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit,
-            @QueryParam(RESTConstants.PAGE) @DefaultValue("0") int page)
+            @QueryParam(RESTConstants.PAGE) @DefaultValue("0") int page,
+            @QueryParam(RESTConstants.BBOX) BoundingBox bbox)
             throws UserNotFoundException, TrackNotFoundException {
         Pagination p = new Pagination(limit, page);
-        if (track == null) {
-            if (user == null) {
-                return getService().getMeasurements(p);
+        if (bbox != null) {
+            Polygon poly = bbox.asPolygon(geometryFactory);
+            if (track != null) {
+                return getService().getMeasurementsByBbox(poly, track, p);
+            } else if (user != null) {
+                return getService().getMeasurementsByBbox(poly, user, p);
             } else {
-                return getService().getMeasurements(user, p);
+                return getService().getMeasurementsByBbox(poly, p);
             }
-        } else {
+        }
+        if (track != null) {
             return getService().getMeasurementsByTrack(track, p);
+        } else if (user != null) {
+            return getService().getMeasurements(user, p);
+        } else {
+            return getService().getMeasurements(p);
         }
     }
 

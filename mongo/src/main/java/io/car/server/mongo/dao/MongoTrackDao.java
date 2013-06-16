@@ -17,10 +17,13 @@
  */
 package io.car.server.mongo.dao;
 
+import java.util.List;
+
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.github.jmkgreen.morphia.Key;
 import com.github.jmkgreen.morphia.query.Query;
 import com.github.jmkgreen.morphia.query.UpdateResults;
 import com.google.inject.Inject;
@@ -74,7 +77,7 @@ public class MongoTrackDao extends AbstractMongoDao<ObjectId, MongoTrack, Tracks
 
     @Override
     public Tracks getByUser(User user, Pagination p) {
-        return fetch(q().field(MongoTrack.USER).equal(reference(user)), p);
+        return fetch(q().field(MongoTrack.USER).equal(key(user)), p);
     }
 
     @Override
@@ -96,18 +99,18 @@ public class MongoTrackDao extends AbstractMongoDao<ObjectId, MongoTrack, Tracks
         delete(t.getId());
     }
 
-    @Override
-    public Tracks getByBbox(double minx, double miny, double maxx, double maxy,
-            Pagination p) {
-        Query<MongoTrack> q = q().field("measurements.location")
-                .within(minx, miny, maxx, maxy);
-        return fetch(q, p);
-    }
 
     @Override
     public Tracks getByBbox(Geometry bbox, Pagination p) {
-        // FIXME implement
-        throw new UnsupportedOperationException("not yet implemented");
+        List<Key<MongoTrack>> ids = measurementDao.getTrackKeysByBbox(bbox);
+        return fetch(q().field(MongoTrack.ID).in(ids), p);
+    }
+
+    @Override
+    public Tracks getByBbox(Geometry bbox, User user, Pagination p) {
+        List<Key<MongoTrack>> ids = measurementDao
+                .getTrackKeysByBbox(bbox, user);
+        return fetch(q().field(MongoTrack.ID).in(ids), p);
     }
 
     @Override
@@ -127,7 +130,7 @@ public class MongoTrackDao extends AbstractMongoDao<ObjectId, MongoTrack, Tracks
 
     void removeUser(MongoUser user) {
         UpdateResults<MongoTrack> result = update(
-                q().field(MongoTrack.USER).equal(reference(user)),
+                q().field(MongoTrack.USER).equal(key(user)),
                 up().unset(MongoTrack.USER));
         if (result.getHadError()) {
             log.error("Error removing user {} from tracks: {}",
@@ -139,9 +142,8 @@ public class MongoTrackDao extends AbstractMongoDao<ObjectId, MongoTrack, Tracks
     }
 
     @Override
-    protected Tracks createPaginatedIterable(
-            Iterable<MongoTrack> i,
-            Pagination p, long count) {
+    protected Tracks createPaginatedIterable(Iterable<MongoTrack> i,
+                                             Pagination p, long count) {
         return Tracks.from(i).withPagination(p).withElements(count).build();
     }
 
