@@ -102,9 +102,8 @@ public class MongoTrackDao extends AbstractMongoDao<ObjectId, MongoTrack, Tracks
 
     @Override
     public Tracks getByBbox(Geometry bbox, Pagination p) {
-        // FIXME pagination
-        List<Key<MongoTrack>> list = measurementDao.getTrackKeysByBbox(bbox);
-        return Tracks.from(getDatastore().getByKeys(MongoTrack.class, list)).build();
+        List<Key<MongoTrack>> ids = measurementDao.getTrackKeysByBbox(bbox);
+        return fetch(q().field(MongoTrack.ID).in(ids), p);
     }
 
     @Override
@@ -156,7 +155,6 @@ public class MongoTrackDao extends AbstractMongoDao<ObjectId, MongoTrack, Tracks
     public Tracks getByBbox(Geometry bbox, User user, Pagination p) {
         List<Key<MongoTrack>> ids = measurementDao
                 .getTrackKeysByBbox(bbox, user);
-        return Tracks.from(getDatastore().getByKeys(MongoTrack.class, list))
-                .build();
+        return fetch(q().field(MongoTrack.ID).in(ids), p);
     }
 }
