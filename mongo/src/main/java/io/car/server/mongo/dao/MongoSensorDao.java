@@ -28,9 +28,10 @@ import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
 
 import io.car.server.core.dao.SensorDao;
-import io.car.server.core.entities.PropertyFilter;
 import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.Sensors;
+import io.car.server.core.filter.PropertyFilter;
+import io.car.server.core.filter.SensorFilter;
 import io.car.server.core.util.Pagination;
 import io.car.server.mongo.MongoDB;
 import io.car.server.mongo.entity.MongoSensor;
@@ -58,8 +59,15 @@ public class MongoSensorDao extends AbstractMongoDao<ObjectId, MongoSensor, Sens
     }
 
     @Override
-    public Sensors get(Set<PropertyFilter> filters, Pagination p) {
-        return fetch(forFilters(filters), p);
+    public Sensors get(SensorFilter request) {
+        Query<MongoSensor> q = q();
+        if (request.hasType()) {
+            q.field(MongoSensor.TYPE).equal(request.getType());
+        }
+        if (request.hasFilters()) {
+            applyFilters(q, request.getFilters());
+        }
+        return fetch(q, request.getPagination());
     }
 
     @Override
@@ -75,15 +83,10 @@ public class MongoSensorDao extends AbstractMongoDao<ObjectId, MongoSensor, Sens
         return Sensors.from(i).withElements(count).withPagination(p).build();
     }
 
-    @Override
-    public Sensors getByType(String type, Set<PropertyFilter> filters,
-                             Pagination p) {
-        return fetch(forFilters(filters).field(MongoSensor.TYPE).equal(type), p);
-    }
-
-    private Query<MongoSensor> forFilters(Set<PropertyFilter> filters) {
+    private Query<MongoSensor> applyFilters(Query<MongoSensor> q,
+                                            Set<PropertyFilter> filters) {
         if (filters == null || filters.isEmpty()) {
-            return q();
+            return q;
         }
         Multimap<String, Object> map = LinkedListMultimap.create();
         for (PropertyFilter f : filters) {
@@ -103,7 +106,7 @@ public class MongoSensorDao extends AbstractMongoDao<ObjectId, MongoSensor, Sens
                 }
             }
         }
-        Query<MongoSensor> q = q().disableValidation();
+        q.disableValidation();
         for (String field : map.keySet()) {
             q.field(field).in(map.get(field));
         }

@@ -28,6 +28,7 @@ import com.google.inject.assistedinject.AssistedInject;
 import io.car.server.core.activities.Activities;
 import io.car.server.core.activities.ActivityType;
 import io.car.server.core.entities.User;
+import io.car.server.core.filter.ActivityFilter;
 import io.car.server.core.util.Pagination;
 import io.car.server.rest.MediaTypes;
 import io.car.server.rest.RESTConstants;
@@ -54,6 +55,6 @@ public class FriendsActivitiesResource extends AbstractResource {
             @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit,
             @QueryParam(RESTConstants.PAGE) @DefaultValue("0") int page) {
         return getService()
-                .getFriendActivities(user, new Pagination(limit, page));
+                .getActivities(new ActivityFilter(user, new Pagination(limit, page)));
     }
 }

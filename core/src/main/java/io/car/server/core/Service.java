@@ -17,19 +17,13 @@
  */
 package io.car.server.core;
 
-import java.util.Set;
-
-import com.vividsolutions.jts.geom.Polygon;
-
 import io.car.server.core.activities.Activities;
-import io.car.server.core.activities.ActivityType;
 import io.car.server.core.entities.Group;
 import io.car.server.core.entities.Groups;
 import io.car.server.core.entities.Measurement;
 import io.car.server.core.entities.Measurements;
 import io.car.server.core.entities.Phenomenon;
 import io.car.server.core.entities.Phenomenons;
-import io.car.server.core.entities.PropertyFilter;
 import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.Sensors;
 import io.car.server.core.entities.Track;
@@ -45,6 +39,10 @@ import io.car.server.core.exception.SensorNotFoundException;
 import io.car.server.core.exception.TrackNotFoundException;
 import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.core.exception.ValidationException;
+import io.car.server.core.filter.ActivityFilter;
+import io.car.server.core.filter.MeasurementFilter;
+import io.car.server.core.filter.SensorFilter;
+import io.car.server.core.filter.TrackFilter;
 import io.car.server.core.util.Pagination;
 
 /**
@@ -83,22 +81,10 @@ public interface Service {
 
     void deleteUser(User user);
 
-    Activities getActivities(Pagination p);
-
-    Activities getActivities(User user, Pagination p);
-
-    Activities getActivities(ActivityType type, Pagination p);
-
-    Activities getActivities(ActivityType type, User user, Pagination p);
-
-    Activities getActivities(Group user, Pagination p);
-
-    Activities getActivities(ActivityType type, Group user, Pagination p);
+    Activities getActivities(ActivityFilter request);
 
     User getFriend(User user, String friendName) throws
             UserNotFoundException;
-
-    Activities getFriendActivities(User user, Pagination p);
 
     Users getFriends(User user);
 
@@ -120,14 +106,6 @@ public interface Service {
     Measurement getMeasurement(String id) throws
             MeasurementNotFoundException;
 
-    Measurements getMeasurements(Pagination p);
-
-    Measurements getMeasurements(User user, Pagination p);
-
-    Measurements getMeasurementsByTrack(Track track, Pagination p);
-
-    Measurements getMeasurementsByUser(User user, Pagination p);
-
     Phenomenon getPhenomenonByName(String name) throws
             PhenomenonNotFoundException;
 
@@ -136,18 +114,8 @@ public interface Service {
     Sensor getSensorByName(String id) throws
             SensorNotFoundException;
 
-    Sensors getSensors(
-            Set<PropertyFilter> filters, Pagination p);
-
-    Sensors getSensorsByType(String type,
-                             Set<PropertyFilter> filters, Pagination p);
-
     Track getTrack(String id) throws
             TrackNotFoundException;
-
-    Tracks getTracks(Pagination p);
-
-    Tracks getTracks(User user, Pagination p);
 
     User getUser(String name) throws
             UserNotFoundException;
@@ -187,13 +155,9 @@ public interface Service {
 
     boolean shareGroup(User user, User user0);
 
-    Measurements getMeasurementsByBbox(Polygon bbox, Pagination p);
+    Measurements getMeasurements(MeasurementFilter request);
 
-    Measurements getMeasurementsByBbox(Polygon bbox, User user, Pagination p);
+    Tracks getTracks(TrackFilter request);
 
-    Measurements getMeasurementsByBbox(Polygon bbox, Track track, Pagination p);
-
-    Tracks getTracksByBbox(Polygon bbox, Pagination p);
-
-    Tracks getTracksByBbox(Polygon bbox, User user, Pagination p);
+    Sensors getSensors(SensorFilter request);
 }

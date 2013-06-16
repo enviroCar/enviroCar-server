@@ -33,6 +33,7 @@ import com.google.inject.assistedinject.Assisted;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Polygon;
 
+import io.car.server.core.filter.MeasurementFilter;
 import io.car.server.core.entities.Measurement;
 import io.car.server.core.entities.Measurements;
 import io.car.server.core.entities.Track;
@@ -76,24 +77,13 @@ public class MeasurementsResource extends AbstractResource {
             @QueryParam(RESTConstants.PAGE) @DefaultValue("0") int page,
             @QueryParam(RESTConstants.BBOX) BoundingBox bbox)
             throws UserNotFoundException, TrackNotFoundException {
-        Pagination p = new Pagination(limit, page);
+        Polygon poly = null;
         if (bbox != null) {
-            Polygon poly = bbox.asPolygon(geometryFactory);
-            if (track != null) {
-                return getService().getMeasurementsByBbox(poly, track, p);
-            } else if (user != null) {
-                return getService().getMeasurementsByBbox(poly, user, p);
-            } else {
-                return getService().getMeasurementsByBbox(poly, p);
-            }
+            poly = bbox.asPolygon(geometryFactory);
         }
-        if (track != null) {
-            return getService().getMeasurementsByTrack(track, p);
-        } else if (user != null) {
-            return getService().getMeasurements(user, p);
-        } else {
-            return getService().getMeasurements(p);
-        }
+        return getService()
+                .getMeasurements(new MeasurementFilter(track, user, poly,
+                                                        new Pagination(limit, page)));
     }
 
     @POST

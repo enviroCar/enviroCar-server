@@ -33,10 +33,11 @@ import javax.ws.rs.core.Response;
 
 import com.google.common.collect.Sets;
 
-import io.car.server.core.entities.PropertyFilter;
 import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.Sensors;
 import io.car.server.core.exception.SensorNotFoundException;
+import io.car.server.core.filter.PropertyFilter;
+import io.car.server.core.filter.SensorFilter;
 import io.car.server.core.util.Pagination;
 import io.car.server.rest.MediaTypes;
 import io.car.server.rest.RESTConstants;
@@ -73,11 +74,7 @@ public class SensorsResource extends AbstractResource {
             }
         }
         Pagination p = new Pagination(limit, page);
-        if (type == null) {
-            return getService().getSensors(filters, p);
-        } else {
-            return getService().getSensorsByType(type, filters, p);
-        }
+        return getService().getSensors(new SensorFilter(type, filters, p));
     }
 
     @POST

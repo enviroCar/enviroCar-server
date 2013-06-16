@@ -17,15 +17,11 @@
  */
 package io.car.server.core;
 
-import java.util.Set;
-
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.vividsolutions.jts.geom.Polygon;
 
 import io.car.server.core.activities.Activities;
-import io.car.server.core.activities.ActivityType;
 import io.car.server.core.dao.ActivityDao;
 import io.car.server.core.dao.GroupDao;
 import io.car.server.core.dao.MeasurementDao;
@@ -39,7 +35,6 @@ import io.car.server.core.entities.Measurement;
 import io.car.server.core.entities.Measurements;
 import io.car.server.core.entities.Phenomenon;
 import io.car.server.core.entities.Phenomenons;
-import io.car.server.core.entities.PropertyFilter;
 import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.Sensors;
 import io.car.server.core.entities.Track;
@@ -72,6 +67,10 @@ import io.car.server.core.exception.SensorNotFoundException;
 import io.car.server.core.exception.TrackNotFoundException;
 import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.core.exception.ValidationException;
+import io.car.server.core.filter.ActivityFilter;
+import io.car.server.core.filter.MeasurementFilter;
+import io.car.server.core.filter.SensorFilter;
+import io.car.server.core.filter.TrackFilter;
 import io.car.server.core.update.EntityUpdater;
 import io.car.server.core.util.Pagination;
 import io.car.server.core.util.PasswordEncoder;
@@ -261,16 +260,6 @@ public class ServiceImpl implements Service {
     }
 
     @Override
-    public Tracks getTracks(Pagination p) {
-        return this.trackDao.get(p);
-    }
-
-    @Override
-    public Tracks getTracks(User user, Pagination p) {
-        return this.trackDao.getByUser(user, p);
-    }
-
-    @Override
     public Track getTrack(String id) throws TrackNotFoundException {
         Track track = trackDao.getById(id);
         if (track == null) {
@@ -312,26 +301,6 @@ public class ServiceImpl implements Service {
     }
 
     @Override
-    public Measurements getMeasurements(Pagination p) {
-        return this.measurementDao.get(p);
-    }
-
-    @Override
-    public Measurements getMeasurements(User user, Pagination p) {
-        return this.measurementDao.getByUser(user, p);
-    }
-
-    @Override
-    public Measurements getMeasurementsByUser(User user, Pagination p) {
-        return this.measurementDao.getByUser(user, p);
-    }
-
-    @Override
-    public Measurements getMeasurementsByTrack(Track track, Pagination p) {
-        return this.measurementDao.getByTrack(track, p);
-    }
-
-    @Override
     public Measurement getMeasurement(String id) throws
             MeasurementNotFoundException {
         Measurement m = this.measurementDao.getById(id);
@@ -352,6 +321,7 @@ public class ServiceImpl implements Service {
         return m;
     }
 
+    @Override
     public void deleteMeasurement(Measurement m) {
         this.measurementDao.delete(m);
         this.eventBus.post(new DeletedMeasurementEvent(m, m.getUser()));
@@ -386,11 +356,6 @@ public class ServiceImpl implements Service {
             throw new SensorNotFoundException(id);
         }
         return s;
-    }
-
-    @Override
-    public Sensors getSensors(Set<PropertyFilter> filters, Pagination p) {
-        return this.sensorDao.get(filters, p);
     }
 
     @Override
@@ -441,44 +406,8 @@ public class ServiceImpl implements Service {
     }
 
     @Override
-    public Activities getActivities(Pagination p) {
-        return activityDao.get(p);
-    }
-
-    @Override
-    public Activities getActivities(User user, Pagination p) {
-        return activityDao.get(user, p);
-    }
-
-    @Override
-    public Activities getFriendActivities(User user, Pagination p) {
-        return activityDao.getForFriends(user, p);
-    }
-
-    @Override
-    public Activities getActivities(ActivityType type, Pagination p) {
-        return activityDao.get(type, p);
-    }
-
-    @Override
-    public Activities getActivities(ActivityType type, User user, Pagination p) {
-        return activityDao.get(type, user, p);
-    }
-
-    @Override
-    public Activities getActivities(Group user, Pagination p) {
-        return activityDao.get(user, p);
-    }
-
-    @Override
-    public Activities getActivities(ActivityType type, Group user, Pagination p) {
-        return activityDao.get(type, user, p);
-    }
-
-    @Override
-    public Sensors getSensorsByType(String type, Set<PropertyFilter> filters,
-                                    Pagination p) {
-        return this.sensorDao.getByType(type, filters, p);
+    public Activities getActivities(ActivityFilter request) {
+        return this.activityDao.get(request);
     }
 
     @Override
@@ -497,29 +426,17 @@ public class ServiceImpl implements Service {
     }
 
     @Override
-    public Measurements getMeasurementsByBbox(Polygon bbox, Pagination p) {
-        return this.measurementDao.getByBbox(bbox, p);
+    public Measurements getMeasurements(MeasurementFilter request) {
+        return this.measurementDao.get(request);
     }
 
     @Override
-    public Tracks getTracksByBbox(Polygon bbox, Pagination p) {
-        return this.trackDao.getByBbox(bbox, p);
+    public Tracks getTracks(TrackFilter request) {
+        return this.trackDao.get(request);
     }
 
     @Override
-    public Measurements getMeasurementsByBbox(Polygon bbox, User user,
-                                              Pagination p) {
-        return this.measurementDao.getByBbox(bbox, user, p);
-    }
-
-    @Override
-    public Measurements getMeasurementsByBbox(Polygon bbox, Track track,
-                                              Pagination p) {
-        return this.measurementDao.getByBbox(bbox, track, p);
-    }
-
-    @Override
-    public Tracks getTracksByBbox(Polygon bbox, User user, Pagination p) {
-        return this.trackDao.getByBbox(bbox, user, p);
+    public Sensors getSensors(SensorFilter request) {
+        return this.sensorDao.get(request);
     }
 }

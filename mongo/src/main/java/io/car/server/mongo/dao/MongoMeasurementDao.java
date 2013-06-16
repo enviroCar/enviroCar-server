@@ -29,6 +29,7 @@ import com.github.jmkgreen.morphia.Datastore;
 import com.github.jmkgreen.morphia.Key;
 import com.github.jmkgreen.morphia.mapping.Mapper;
 import com.github.jmkgreen.morphia.query.MorphiaIterator;
+import com.github.jmkgreen.morphia.query.Query;
 import com.github.jmkgreen.morphia.query.QueryImpl;
 import com.github.jmkgreen.morphia.query.UpdateResults;
 import com.google.common.collect.Lists;
@@ -43,10 +44,10 @@ import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import com.vividsolutions.jts.geom.Geometry;
 
+import io.car.server.core.filter.MeasurementFilter;
 import io.car.server.core.dao.MeasurementDao;
 import io.car.server.core.entities.Measurement;
 import io.car.server.core.entities.Measurements;
-import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
 import io.car.server.core.exception.GeometryConverterException;
 import io.car.server.core.util.GeometryConverter;
@@ -103,44 +104,40 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
     }
 
     @Override
-    public Measurements getByPhenomenon(String phenomenon, Pagination p) {
-        //FIXME this one won't work
-        return fetch(q().field(MongoMeasurement.PHENOMENONS).equal(phenomenon), p);
+    public Measurements get(MeasurementFilter request) {
+        if (request.hasGeometry()) {
+            return getMongo(request);
+        } else {
+            return getMorphia(request);
+        }
     }
 
-    @Override
-    public Measurements getByTrack(Track track, Pagination p) {
-        return fetch(q().field(MongoMeasurement.TRACK)
-                .equal(key(track))
-                .order(MongoMeasurement.TIME), p);
+    private Measurements getMorphia(MeasurementFilter request) {
+        Query<MongoMeasurement> q = q().order(MongoMeasurement.TIME);;
+        if (request.hasTrack()) {
+            q.field(MongoMeasurement.TRACK)
+                    .equal(key(request.getTrack()));
+        }
+        if (request.hasUser()) {
+            q.field(MongoMeasurement.USER)
+                    .equal(key(request.getUser()));
+        }
+        return fetch(q, request.getPagination());
     }
 
-    @Override
-    public Measurements getByBbox(Geometry bbox, Track track, Pagination p) {
-        BasicDBObjectBuilder b = new BasicDBObjectBuilder();
-        b.add(MongoMeasurement.GEOMETRY, withinPolygon(bbox));
-        b.add(MongoMeasurement.TRACK, ref(track));
-        return query(b.get(), p);
-    }
-
-    @Override
-    public Measurements getByBbox(Geometry bbox, User user, Pagination p) {
-        BasicDBObjectBuilder b = new BasicDBObjectBuilder();
-        b.add(MongoMeasurement.GEOMETRY, withinPolygon(bbox));
-        b.add(MongoMeasurement.USER, ref(user));
-        return query(b.get(), p);
-    }
-
-    @Override
-    public Measurements getByBbox(Geometry bbox, Pagination p) {
-        BasicDBObjectBuilder b = new BasicDBObjectBuilder();
-        b.add(MongoMeasurement.GEOMETRY, withinPolygon(bbox));
-        return query(b.get(), p);
-    }
-
-    @Override
-    public Measurements get(Pagination p) {
-        return fetch(q().order(MongoMeasurement.TIME), p);
+    private Measurements getMongo(MeasurementFilter request) {
+        BasicDBObjectBuilder q = new BasicDBObjectBuilder();
+        if (request.hasGeometry()) {
+            q.add(MongoMeasurement.GEOMETRY,
+                  withinPolygon(request.getGeometry()));
+        }
+        if (request.hasTrack()) {
+            q.add(MongoMeasurement.TRACK, ref(request.getTrack()));
+        }
+        if (request.hasUser()) {
+            q.add(MongoMeasurement.USER, ref(request.getUser()));
+        }
+        return query(q.get(), request.getPagination());
     }
 
     @Override
@@ -152,14 +149,6 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
             return null;
         }
         return get(oid);
-    }
-
-    @Override
-    public Measurements getByUser(User user, Pagination p) {
-        return fetch(q()
-                .field(MongoMeasurement.USER)
-                .equal(key(user))
-                .order(MongoMeasurement.TIME), p);
     }
 
     void removeUser(MongoUser user) {

@@ -30,6 +30,7 @@ import io.car.server.core.activities.Activities;
 import io.car.server.core.activities.ActivityType;
 import io.car.server.core.entities.Group;
 import io.car.server.core.entities.User;
+import io.car.server.core.filter.ActivityFilter;
 import io.car.server.core.util.Pagination;
 import io.car.server.rest.MediaTypes;
 import io.car.server.rest.RESTConstants;
@@ -65,25 +66,7 @@ public class ActivitiesResource extends AbstractResource {
             @QueryParam(RESTConstants.TYPE) ActivityType type,
             @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit,
             @QueryParam(RESTConstants.PAGE) @DefaultValue("0") int page) {
-        Pagination p = new Pagination(limit, page);
-        if (user != null) {
-            if (type == null) {
-                return getService().getActivities(user, p);
-            } else {
-                return getService().getActivities(type, user, p);
-            }
-        } else if (group != null) {
-            if (type == null) {
-                return getService().getActivities(group, p);
-            } else {
-                return getService().getActivities(type, group, p);
-            }
-        } else {
-            if (type == null) {
-                return getService().getActivities(p);
-            } else {
-                return getService().getActivities(type, p);
-            }
-        }
+        return getService()
+                .getActivities(new ActivityFilter(group, user, type, new Pagination(limit, page)));
     }
 }

@@ -17,6 +17,8 @@
  */
 package io.car.server.core.entities;
 
+import java.util.Collections;
+
 import io.car.server.core.util.Pagination;
 import io.car.server.core.util.UpCastingIterable;
 
@@ -29,6 +31,10 @@ public class Tracks extends UpCastingIterable<Track> {
     protected Tracks(Iterable<? extends Track> delegate,
                      Pagination pagination, long elements) {
         super(delegate, pagination, elements);
+    }
+
+    public static Tracks none() {
+        return new Tracks(Collections.<Track>emptyList(), null, 0);
     }
 
     public static class TracksBuilder {

@@ -26,14 +26,13 @@ import org.slf4j.LoggerFactory;
 import com.github.jmkgreen.morphia.Key;
 import com.github.jmkgreen.morphia.query.Query;
 import com.github.jmkgreen.morphia.query.UpdateResults;
+import com.google.common.collect.Lists;
 import com.google.inject.Inject;
-import com.vividsolutions.jts.geom.Geometry;
 
 import io.car.server.core.dao.TrackDao;
-import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.Track;
 import io.car.server.core.entities.Tracks;
-import io.car.server.core.entities.User;
+import io.car.server.core.filter.TrackFilter;
 import io.car.server.core.util.Pagination;
 import io.car.server.mongo.MongoDB;
 import io.car.server.mongo.entity.MongoTrack;
@@ -76,11 +75,6 @@ public class MongoTrackDao extends AbstractMongoDao<ObjectId, MongoTrack, Tracks
     }
 
     @Override
-    public Tracks getByUser(User user, Pagination p) {
-        return fetch(q().field(MongoTrack.USER).equal(key(user)), p);
-    }
-
-    @Override
     public Track create(Track track) {
         return save(track);
     }
@@ -99,28 +93,27 @@ public class MongoTrackDao extends AbstractMongoDao<ObjectId, MongoTrack, Tracks
         delete(t.getId());
     }
 
-
     @Override
-    public Tracks getByBbox(Geometry bbox, Pagination p) {
-        List<Key<MongoTrack>> ids = measurementDao.getTrackKeysByBbox(bbox);
-        return fetch(q().field(MongoTrack.ID).in(ids), p);
-    }
-
-    @Override
-    public Tracks getByBbox(Geometry bbox, User user, Pagination p) {
-        List<Key<MongoTrack>> ids = measurementDao
-                .getTrackKeysByBbox(bbox, user);
-        return fetch(q().field(MongoTrack.ID).in(ids), p);
-    }
-
-    @Override
-    public Tracks get(Pagination p) {
-        return fetch(q().order(MongoTrack.CREATION_DATE), p);
-    }
-
-    @Override
-    public Tracks getBySensor(Sensor car, Pagination p) {
-        return fetch(q().field(MongoTrack.SENSOR).equal(car), p);
+    public Tracks get(TrackFilter request) {
+        Query<MongoTrack> q = q();
+        if (request.hasGeometry()) {
+            List<Key<MongoTrack>> keys;
+            if (request.hasUser()) {
+                keys = measurementDao
+                        .getTrackKeysByBbox(request.getGeometry(),
+                                            request.getUser());
+            } else {
+                keys = measurementDao
+                        .getTrackKeysByBbox(request.getGeometry());
+            }
+            if (keys.isEmpty()) {
+                return Tracks.none();
+            }
+            q.field(MongoTrack.ID).in(toIdList(keys));
+        } else if (request.hasUser()) {
+            q.field(MongoTrack.USER).equal(key(request.getUser()));
+        }
+        return fetch(q, request.getPagination());
     }
 
     @Override
@@ -155,5 +148,13 @@ public class MongoTrackDao extends AbstractMongoDao<ObjectId, MongoTrack, Tracks
     @Override
     protected Tracks fetch(Query<MongoTrack> q, Pagination p) {
         return super.fetch(q.order(MongoTrack.RECENTLY_MODIFIED_ORDER), p);
+    }
+
+    protected <T> List<Object> toIdList(List<Key<T>> keys) {
+        List<Object> ids = Lists.newArrayListWithExpectedSize(keys.size());
+        for (Key<T> key : keys) {
+            ids.add(key.getId());
+        }
+        return ids;
     }
 }

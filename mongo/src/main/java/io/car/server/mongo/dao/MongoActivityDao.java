@@ -19,20 +19,15 @@ package io.car.server.mongo.dao;
 
 import static io.car.server.mongo.util.MongoUtils.reverse;
 
-import java.util.Set;
-
 import org.bson.types.ObjectId;
 
-import com.github.jmkgreen.morphia.Key;
 import com.github.jmkgreen.morphia.query.Query;
 import com.google.inject.Inject;
 
 import io.car.server.core.activities.Activities;
 import io.car.server.core.activities.Activity;
-import io.car.server.core.activities.ActivityType;
 import io.car.server.core.dao.ActivityDao;
-import io.car.server.core.entities.Group;
-import io.car.server.core.entities.User;
+import io.car.server.core.filter.ActivityFilter;
 import io.car.server.core.util.Pagination;
 import io.car.server.mongo.MongoDB;
 import io.car.server.mongo.activities.MongoActivity;
@@ -81,39 +76,27 @@ public class MongoActivityDao extends AbstractMongoDao<ObjectId, MongoActivity, 
     }
 
     @Override
-    public Activities get(Pagination p) {
-        return fetch(q(), p);
-    }
-
-    @Override
-    public Activities get(User user, Pagination p) {
-        return fetch(q().field(MongoActivity.USER).equal(key(user)), p);
-    }
-
-    @Override
-    public Activities get(ActivityType type, Pagination p) {
-        return fetch(q().field(MongoActivity.TYPE).equal(type), p);
-    }
-
-    @Override
-    public Activities get(ActivityType type, User user, Pagination p) {
-        return fetch(q()
-                .field(MongoActivity.USER).equal(key(user))
-                .field(MongoActivity.TYPE).equal(type), p);
-    }
-
-    @Override
-    public Activities get(Group group, Pagination p) {
-        Set<Key<MongoUser>> members = this.groupDao.getMemberRefs(group);
-        return fetch(q().field(MongoActivity.USER).in(members), p);
-    }
-
-    @Override
-    public Activities get(ActivityType type, Group group, Pagination p) {
-        Set<Key<MongoUser>> members = this.groupDao.getMemberRefs(group);
-        return fetch(q()
-                .field(MongoActivity.USER).in(members)
-                .field(MongoActivity.TYPE).equal(type), p);
+    public Activities get(ActivityFilter request) {
+        Query<MongoActivity> q = q();
+        if (request.hasUser()) {
+            MongoUser u = (MongoUser) request.getUser();
+            if (request.isFriendActivities()) {
+                q.field(MongoActivity.USER)
+                        .in(userDao.getFriendRefs(u));
+            } else {
+                q.field(MongoActivity.USER)
+                        .equal(key(u));
+            }
+        }
+        if (request.hasGroup()) {
+            q.field(MongoActivity.USER)
+                    .in(groupDao.getMemberRefs(request.getGroup()));
+        }
+        if (request.hasType()) {
+            q.field(MongoActivity.TYPE)
+                    .equal(request.getType());
+        }
+        return fetch(q, request.getPagination());
     }
 
     @Override
@@ -124,12 +107,5 @@ public class MongoActivityDao extends AbstractMongoDao<ObjectId, MongoActivity, 
     @Override
     protected Activities fetch(Query<MongoActivity> q, Pagination p) {
         return super.fetch(q.order(reverse(MongoActivity.TIME)), p);
-    }
-
-    @Override
-    public Activities getForFriends(User user, Pagination p) {
-        MongoUser u = (MongoUser) user;
-        Set<Key<MongoUser>> friends = userDao.getFriendRefs(u);
-        return fetch(q().field(MongoActivity.USER).in(friends), p);
     }
 }

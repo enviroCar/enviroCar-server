@@ -25,6 +25,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 
+import io.car.server.core.filter.MeasurementFilter;
 import io.car.server.core.entities.Measurements;
 import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.Track;
@@ -91,7 +92,7 @@ public class TrackEncoder extends AbstractEntityEncoder<Track> {
             JsonNode features;
             if (rights.canSeeMeasurementsOf(t)) {
                 Measurements values = getService()
-                        .getMeasurementsByTrack(t, null);
+                        .getMeasurements(new MeasurementFilter(t));
                 features = measurementsEncoder
                         .encode(values, rights, mediaType)
                         .path(GeoJSONConstants.FEATURES_KEY);
