@@ -17,6 +17,8 @@
  */
 package io.car.server.rest;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response.Status;
 
@@ -28,12 +30,17 @@ import com.vividsolutions.jts.geom.Polygon;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class BoundingBox {
+    public static final int MIN_Y = -90;
+    public static final int MAX_Y = 90;
+    public static final int MIN_X = 0;
+    public static final int MAX_X = 180;
     private final Coordinate lowerleft;
     private final Coordinate lowerRight;
     private final Coordinate upperRight;
     private final Coordinate upperLeft;
 
     public BoundingBox(double minx, double miny, double maxx, double maxy) {
+        validate(miny, maxy, minx, maxx);
         this.upperRight = new Coordinate(maxx, maxy);
         this.upperLeft = new Coordinate(minx, maxy);
         this.lowerRight = new Coordinate(maxx, miny);
@@ -83,6 +90,25 @@ public class BoundingBox {
             return new BoundingBox(minx, miny, maxx, maxy);
         } catch (NumberFormatException e) {
             throw new WebApplicationException(e, Status.BAD_REQUEST);
+        } catch (IllegalArgumentException e) {
+            throw new WebApplicationException(e, Status.BAD_REQUEST);
         }
+    }
+
+    private void validate(double miny, double maxy, double minx, double maxx) {
+        checkArgument(Double.compare(miny, MAX_Y) <= 0 &&
+                      Double.compare(miny, MIN_Y) >= 0,
+                      "Not in bounds (%s <= val <= %s)", MIN_Y, MAX_Y);
+        checkArgument(Double.compare(maxy, MAX_Y) <= 0 &&
+                      Double.compare(maxy, MIN_Y) >= 0,
+                      "Not in bounds (%s <= val <= %s)", MIN_Y, MAX_Y);
+        checkArgument(Double.compare(minx, MAX_X) <= 0 &&
+                      Double.compare(minx, MIN_X) >= 0,
+                      "Not in bounds (%s <= val <= %s)", MIN_X, MAX_X);
+        checkArgument(Double.compare(maxx, MAX_X) <= 0 &&
+                      Double.compare(maxx, MIN_X) >= 0,
+                      "Not in bounds (%s <= val <= %s)", MIN_X, MAX_X);
+        checkArgument(Double.compare(minx, maxx) < 0, "maxx <= minx");
+        checkArgument(Double.compare(miny, maxy) < 0, "maxy <= miny");
     }
 }
