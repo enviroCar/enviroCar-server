@@ -31,6 +31,7 @@ import javax.ws.rs.core.Response;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.Polygon;
 
 import io.car.server.core.entities.Measurement;
 import io.car.server.core.entities.Track;
@@ -74,8 +75,10 @@ public class TracksResource extends AbstractResource {
             throws UserNotFoundException {
         Pagination p = new Pagination(limit, page);
         if (bbox != null) {
-            //FIXME if user != null
-            return getService().getTracksByBbox(bbox.asPolygon(factory), p);
+            Polygon poly = bbox.asPolygon(factory);
+            return user != null
+                   ? getService().getTracksByBbox(poly, user, p)
+                   : getService().getTracksByBbox(poly, p);
         } else {
             return user != null
                    ? getService().getTracks(user, p)

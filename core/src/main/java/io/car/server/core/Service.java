@@ -189,5 +189,11 @@ public interface Service {
 
     Measurements getMeasurementsByBbox(Polygon bbox, Pagination p);
 
+    Measurements getMeasurementsByBbox(Polygon bbox, User user, Pagination p);
+
+    Measurements getMeasurementsByBbox(Polygon bbox, Track track, Pagination p);
+
     Tracks getTracksByBbox(Polygon bbox, Pagination p);
+
+    Tracks getTracksByBbox(Polygon bbox, User user, Pagination p);
 }

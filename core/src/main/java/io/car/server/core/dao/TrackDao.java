@@ -47,5 +47,7 @@ public interface TrackDao {
 
     Tracks getByBbox(Geometry bbox, Pagination p);
 
+    Tracks getByBbox(Geometry bbox, User user, Pagination p);
+
     Tracks get(Pagination p);
 }

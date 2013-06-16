@@ -150,4 +150,10 @@ public class MongoTrackDao extends AbstractMongoDao<ObjectId, MongoTrack, Tracks
     protected Tracks fetch(Query<MongoTrack> q, Pagination p) {
         return super.fetch(q.order(MongoTrack.RECENTLY_MODIFIED_ORDER), p);
     }
+
+    @Override
+    public Tracks getByBbox(Geometry bbox, User user, Pagination p) {
+        /* TODO implement io.car.server.mongo.dao.MongoTrackDao.getByBbox() */
+        throw new UnsupportedOperationException("io.car.server.mongo.dao.MongoTrackDao.getByBbox() not yet implemented");
+    }
 }

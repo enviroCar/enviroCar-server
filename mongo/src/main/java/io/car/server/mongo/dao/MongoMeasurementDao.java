@@ -17,7 +17,6 @@
  */
 package io.car.server.mongo.dao;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.bson.BSONObject;
@@ -28,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import com.github.jmkgreen.morphia.Key;
 import com.github.jmkgreen.morphia.mapping.Mapper;
 import com.github.jmkgreen.morphia.query.UpdateResults;
+import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.mongodb.AggregationOutput;
 import com.mongodb.BasicDBList;
@@ -58,27 +58,24 @@ import io.car.server.mongo.util.MongoUtils;
 public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasurement, Measurements>
         implements MeasurementDao {
     public static final String ID = Mapper.ID_KEY;
-    
     private static final Logger log = LoggerFactory
             .getLogger(MongoMeasurementDao.class);
     private static final String TRACKS = "tracks";
-    
     private static final String TRACK_NAME_PATH = MongoUtils.path(TRACKS,
-            MongoMeasurement.TRACK, MongoMeasurement.IDENTIFIER);
+                                                                  MongoMeasurement.TRACK, MongoMeasurement.IDENTIFIER);
     private static final String TRACK_NAME_VALUE = MongoUtils
             .valueOf(TRACK_NAME_PATH);
     public static final String TRACK_VALUE = MongoUtils
             .valueOf(MongoMeasurement.TRACK);
-
     private final MongoDB mongoDB;
-    
+    private final GeometryConverter<BSONObject> geometryConverter;
+
     @Inject
-    private GeometryConverter<BSONObject> geometryConv;
-    
-    @Inject
-    protected MongoMeasurementDao(MongoDB mongoDB) {
+    protected MongoMeasurementDao(MongoDB mongoDB,
+                                  GeometryConverter<BSONObject> geometryConverter) {
         super(MongoMeasurement.class, mongoDB);
         this.mongoDB = mongoDB;
+        this.geometryConverter = geometryConverter;
     }
 
     @Override
@@ -109,6 +106,18 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
         return fetch(q().field(MongoMeasurement.TRACK)
                 .equal(reference(track))
                 .order(MongoMeasurement.TIME), p);
+    }
+
+    @Override
+    public Measurements getByBbox(Geometry bbox, Track track, Pagination p) {
+        /* TODO implement io.car.server.mongo.dao.MongoMeasurementDao.getByBbox() */
+        throw new UnsupportedOperationException("io.car.server.mongo.dao.MongoMeasurementDao.getByBbox() not yet implemented");
+    }
+
+    @Override
+    public Measurements getByBbox(Geometry bbox, User user, Pagination p) {
+        /* TODO implement io.car.server.mongo.dao.MongoMeasurementDao.getByBbox() */
+        throw new UnsupportedOperationException("io.car.server.mongo.dao.MongoMeasurementDao.getByBbox() not yet implemented");
     }
 
     @Override
@@ -174,19 +183,14 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
                       track, result.getUpdatedCount());
         }
     }
-    
-    void getTrackKeysByBbox(double minx, double miny, double maxx,
-            double maxy, Pagination p) {
-        fetch(q().field(MongoMeasurement.GEOMETRY)
-                .within(minx, miny, maxx, maxy), p);
-    }
-    
-    List<Key<MongoTrack>> getTrackKeysByBbox(Geometry polygon){
-        Iterable<DBObject> res = aggregate(matchPolygon(polygon), project(), group()).results();
-        List<Key<MongoTrack>> keys = new ArrayList<Key<MongoTrack>>();
-        for(DBObject obj : res){
+
+    List<Key<MongoTrack>> getTrackKeysByBbox(Geometry polygon) {
+        Iterable<DBObject> res =
+                aggregate(matchPolygon(polygon), project(), group()).results();
+        List<Key<MongoTrack>> keys = Lists.newLinkedList();
+        for (DBObject obj : res) {
             BasicDBList list = (BasicDBList) obj.get(TRACKS);
-            for(int i = 0; i < list.size(); i++){
+            for (int i = 0; i < list.size(); i++) {
                 DBRef ref = (DBRef) list.get(i);
                 Key<MongoTrack> key = getMapper().refToKey(ref);
                 keys.add(key);
@@ -194,35 +198,31 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
         }
         return keys;
     }
-    
+
     private AggregationOutput aggregate(DBObject firstOp,
-            DBObject... additionalOps) {
+                                        DBObject... additionalOps) {
         AggregationOutput result = mongoDB.getDatastore()
                 .getCollection(MongoMeasurement.class)
                 .aggregate(firstOp, additionalOps);
         result.getCommandResult().throwOnError();
         return result;
     }
-    
+
     private DBObject matchPolygon(Geometry polygon) {
-        return MongoUtils.match(MongoMeasurement.GEOMETRY, withinPolygon(polygon));
+        return MongoUtils
+                .match(MongoMeasurement.GEOMETRY, withinPolygon(polygon));
     }
-    
-    private DBObject withinPolygon(Geometry polygon){
+
+    private DBObject withinPolygon(Geometry polygon) {
         try {
-            return MongoUtils.geoWithin(geometryConv.encode(polygon));
+            return MongoUtils.geoWithin(geometryConverter.encode(polygon));
         } catch (GeometryConverterException e) {
             throw new RuntimeException(e);
         }
     }
 
     private DBObject project() {
-        BasicDBObject fields = new BasicDBObject();
-//        fields.put(MongoMeasurement.IDENTIFIER, 0);
-//        fields.put(MongoMeasurement.PHENOMENONS, 0);
-        fields.put(MongoMeasurement.TRACK, 1);
-//        fields.put(MongoMeasurement.USER, 0);
-        return MongoUtils.project(fields);
+        return MongoUtils.project(new BasicDBObject(MongoMeasurement.TRACK, 1));
     }
 
     private DBObject group() {
