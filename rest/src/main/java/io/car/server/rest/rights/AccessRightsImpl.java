@@ -143,17 +143,17 @@ public class AccessRightsImpl extends AbstractAccessRights {
 
     @Override
     public boolean canJoinGroup(Group group) {
-        return true;
+        return isAuthenticated();
     }
 
     @Override
     public boolean canLeaveGroup(Group group) {
-        return true;
+        return isAuthenticated();
     }
 
     @Override
     public boolean canSeeNameOf(User user) {
-        return true;
+        return isAuthenticated();
     }
 
     @Override
@@ -233,7 +233,7 @@ public class AccessRightsImpl extends AbstractAccessRights {
 
     @Override
     public boolean canSeeAvatarOf(User user) {
-        return true;
+        return isAuthenticated();
     }
 
     @Override
