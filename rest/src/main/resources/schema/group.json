@@ -24,8 +24,6 @@
     "required": [
         "name",
         "description",
-        "created",
-        "modified",
         "owner"
     ],
     "type": "object"

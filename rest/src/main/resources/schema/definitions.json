@@ -50,5 +50,23 @@
                 "pattern": "^[a-z]{2}[-_][A-Z]{2}$"
             }
         }
+    },
+    "track-ref": {
+        "type": "object",
+        "required": [
+            "id"
+        ],
+        "properties": {
+            "id": {
+                "type": "string"
+            },
+            "modified": {
+                "type": "string",
+                "format": "date-time"
+            },
+            "name": {
+                "type": "string"
+            }
+        }
     }
 }
