@@ -23,7 +23,7 @@ import io.car.server.core.util.UpCastingIterable;
 /**
  * TODO JavaDoc
  *
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class Measurements extends UpCastingIterable<Measurement> {
     public static MeasurementsBuilder from(

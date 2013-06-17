@@ -33,8 +33,8 @@
             "$ref": "#/definitions/user-activity"
         }
     ],
-    "definititions": {
-        "group-activitiy": {
+    "definitions": {
+        "group-activity": {
             "properties": {
                 "group": {
                     "$ref": "http://schema.envirocar.org/group.json#"
@@ -53,7 +53,7 @@
         "track-activity": {
             "properties": {
                 "track": {
-                    "$ref": "http://schema.envirocar.org/track.json#"
+                    "$ref": "http://schema.envirocar.org/definitions.json#/track-ref"
                 },
                 "type": {
                     "enum": [
@@ -66,13 +66,13 @@
             "properties": {
                 "other": {
                     "$ref": "http://schema.envirocar.org/user.json#"
+                },
+                "type": {
+                    "enum": [
+                        "FRIENDED_USER",
+                        "UNFRIENDED_USER"
+                    ]
                 }
-            },
-            "type": {
-                "enum": [
-                    "FRIENDED_USER",
-                    "UNFRIENDED_USER"
-                ]
             }
         },
         "self-activity": {

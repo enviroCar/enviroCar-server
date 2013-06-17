@@ -38,7 +38,7 @@ import io.car.server.core.entities.User;
 /**
  * TODO JavaDoc
  *
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Entity("tracks")
 public class MongoTrack extends MongoEntityBase implements Track {

@@ -36,7 +36,7 @@ import io.car.server.rest.TrackWithMeasurments;
 /**
  * TODO JavaDoc
  *
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
 @Consumes(MediaType.APPLICATION_JSON)

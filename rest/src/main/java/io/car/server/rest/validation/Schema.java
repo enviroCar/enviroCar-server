@@ -26,7 +26,7 @@ import java.lang.annotation.Target;
 /**
  * TODO JavaDoc
  *
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Documented
 @Target({ ElementType.METHOD })

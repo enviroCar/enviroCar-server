@@ -27,7 +27,7 @@ import io.car.server.core.entities.Phenomenon;
 /**
  * TODO JavaDoc
  *
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Embedded
 public class MongoMeasurementValue implements MeasurementValue {
