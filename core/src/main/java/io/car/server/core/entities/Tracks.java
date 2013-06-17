@@ -25,7 +25,7 @@ import io.car.server.core.util.UpCastingIterable;
 /**
  * TODO JavaDoc
  *
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class Tracks extends UpCastingIterable<Track> {
     public static TracksBuilder from(

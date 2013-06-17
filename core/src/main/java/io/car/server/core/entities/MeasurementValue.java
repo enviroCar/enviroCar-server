@@ -20,7 +20,7 @@ package io.car.server.core.entities;
 /**
  * TODO JavaDoc
  *
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface MeasurementValue {
     Object getValue();

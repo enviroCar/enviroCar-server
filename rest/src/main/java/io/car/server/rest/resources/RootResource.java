@@ -35,7 +35,7 @@ import io.car.server.rest.validation.Schema;
  * TODO JavaDoc
  *
  * @author Arne de Wall <a.dewall@52north.org>
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Path("/")
 public class RootResource extends AbstractResource {
