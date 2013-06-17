@@ -29,10 +29,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.github.fge.jsonschema.exceptions.ProcessingException;
 import com.github.fge.jsonschema.main.JsonSchema;
 import com.github.fge.jsonschema.main.JsonSchemaFactory;
@@ -46,29 +43,31 @@ import com.google.inject.TypeLiteral;
 import com.google.inject.name.Names;
 
 import io.car.server.rest.guice.JSONSchemaFactoryProvider;
-import io.car.server.rest.guice.JSONSchemaModule;
+import io.car.server.rest.guice.JerseyCodingModule;
+import io.car.server.rest.guice.JerseyValidationModule;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class SchemaValidationTest {
     private static final Logger log = LoggerFactory
             .getLogger(SchemaValidationTest.class);
     private static Set<String> schemas;
+    private static ObjectWriter writer;
 
     @BeforeClass
     public static void createInjector() {
-        Injector i = Guice.createInjector(new JSONSchemaModule());
+        Injector i = Guice.createInjector(new JerseyCodingModule(),
+                                          new JerseyValidationModule());
         schemas = i.getInstance(Key.get(new TypeLiteral<Set<String>>() {
         }, Names.named(JSONSchemaFactoryProvider.SCHEMAS)));
+        writer = i.getInstance(ObjectWriter.class);
     }
 
     @Test
     public void validate() throws ProcessingException, IOException {
-        ObjectWriter writer = new ObjectMapper().setNodeFactory(JsonNodeFactory
-                .withExactBigDecimals(false))
-                .enable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS)
-                .writer();
         JsonSchemaFactory fac = JsonSchemaFactory.byDefault();
         JsonSchema schemaV4 = fac.getJsonSchema("resource:/draftv4/schema");
         for (String schema : schemas) {

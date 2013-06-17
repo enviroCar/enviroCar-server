@@ -17,18 +17,14 @@
  */
 package io.car.server.core.dao;
 
-import com.vividsolutions.jts.geom.Geometry;
-
 import io.car.server.core.entities.Measurement;
 import io.car.server.core.entities.Measurements;
-import io.car.server.core.entities.Track;
-import io.car.server.core.entities.User;
-import io.car.server.core.util.Pagination;
+import io.car.server.core.filter.MeasurementFilter;
 
 /**
+ * TODO JavaDoc
  *
  * @author Arne de Wall <a.dewall@52north.org>
- *
  */
 public interface MeasurementDao {
     Measurement create(Measurement measurement);
@@ -39,16 +35,5 @@ public interface MeasurementDao {
 
     Measurement getById(String id);
 
-    Measurements getByPhenomenon(String string, Pagination p);
-
-    Measurements getByTrack(Track track, Pagination p);
-
-    Measurements getByBbox(Geometry bbox, Pagination p);
-
-    Measurements getByBbox(double minx, double miny, double maxx, double maxy,
-                           Pagination p);
-
-    Measurements get(Pagination p);
-
-    Measurements getByUser(User user, Pagination p);
+    Measurements get(MeasurementFilter request);
 }

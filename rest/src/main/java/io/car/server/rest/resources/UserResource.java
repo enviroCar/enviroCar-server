@@ -26,10 +26,8 @@ import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriBuilder;
 
 import com.google.common.base.Preconditions;
@@ -48,6 +46,8 @@ import io.car.server.rest.auth.Authenticated;
 import io.car.server.rest.validation.Schema;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  * @author Arne de Wall <a.dewall@52north.org>
  */
@@ -78,10 +78,8 @@ public class UserResource extends AbstractResource {
     public Response modify(User changes) throws
             UserNotFoundException, IllegalModificationException,
             ValidationException, ResourceAlreadyExistException {
-        if (!canModifyUser(user)) {
-            throw new WebApplicationException(Status.FORBIDDEN);
-        }
-        User modified = getService().modifyUser(user, changes);
+        checkRights(getRights().canModify(user));
+        User modified = getUserService().modifyUser(user, changes);
         if (modified.getName().equals(user.getName())) {
             return Response.noContent().build();
         } else {
@@ -105,49 +103,55 @@ public class UserResource extends AbstractResource {
     @DELETE
     @Authenticated
     public void delete() throws ResourceNotFoundException {
-        if (!canModifyUser(this.user)) {
-            throw new WebApplicationException(Status.FORBIDDEN);
-        }
-        getService().deleteUser(this.user);
+        checkRights(getRights().canDelete(user));
+        getUserService().deleteUser(this.user);
     }
 
     @Path(FRIENDS)
     public FriendsResource friends() {
+        checkRights(getRights().canSeeFriendsOf(user));
         return getResourceFactory().createFriendsResource(this.user);
     }
 
     @Path(GROUPS)
     public GroupsResource groups() {
+        checkRights(getRights().canSeeGroupsOf(user));
         return getResourceFactory().createGroupsResource(this.user);
     }
 
     @Path(TRACKS)
     public TracksResource tracks() {
+        checkRights(getRights().canSeeTracksOf(user));
         return getResourceFactory().createTracksResource(this.user);
     }
 
     @Path(MEASUREMENTS)
     public MeasurementsResource measurements() {
+        checkRights(getRights().canSeeMeasurementsOf(user));
         return getResourceFactory().createMeasurementsResource(this.user, null);
     }
 
     @Path(STATISTICS)
     public StatisticsResource statistics() {
+        checkRights(getRights().canSeeStatisticsOf(user));
         return getResourceFactory().createStatisticsResource(null, this.user);
     }
 
     @Path(ACTIVITIES)
     public ActivitiesResource activities() {
+        checkRights(getRights().canSeeActivitiesOf(user));
         return getResourceFactory().createActivitiesResource(this.user);
     }
 
     @Path(FRIEND_ACTIVITIES)
     public FriendsActivitiesResource friendActivities() {
+        checkRights(getRights().canSeeFriendActivitiesOf(user));
         return getResourceFactory().createFriendActivitiesResource(this.user);
     }
 
     @Path(AVATAR)
     public AvatarResource avatar() {
+        checkRights(getRights().canSeeAvatarOf(user));
         return getResourceFactory().createAvatarResource(this.user);
     }
 }

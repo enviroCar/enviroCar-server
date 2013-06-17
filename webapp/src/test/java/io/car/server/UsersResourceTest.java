@@ -17,41 +17,36 @@
  */
 package io.car.server;
 
-import static io.car.server.matchers.JerseyMatchers.hasProperty;
-import static io.car.server.matchers.JerseyMatchers.hasStatus;
-import static io.car.server.matchers.JerseyMatchers.isCompatible;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 
-import javax.ws.rs.core.MediaType;
-
 import org.junit.Test;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.ClientResponse.Status;
-
-import io.car.server.rest.JSONConstants;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class UsersResourceTest extends ResourceTestBase {
     @Test
     public void testGetUsers() {
-        ClientResponse response = resource()
-                .path("/rest/users")
-                .accept(MediaType.APPLICATION_JSON)
-                .get(ClientResponse.class);
-
-        assertThat(response, hasStatus(Status.OK));
-        assertThat(response.getType(), isCompatible(MediaType.APPLICATION_JSON_TYPE));
-
-        JsonNode root = response.getEntity(JsonNode.class);
-        assertThat(root, is(notNullValue()));
-
-        assertThat(root, hasProperty(JSONConstants.USERS_KEY));
-        assertThat(root.get(JSONConstants.USERS_KEY).isArray(), is(true));
+        assertThat(resource().path("/rest/users")
+                .get(ClientResponse.class).getStatus(), is(403));
+//        ClientResponse response = resource()
+//                .path("/rest/users")
+//                .accept(MediaType.APPLICATION_JSON)
+//                .get(ClientResponse.class);
+//
+//        assertThat(response, hasStatus(Status.OK));
+//        assertThat(response.getType(), isCompatible(MediaType.APPLICATION_JSON_TYPE));
+//
+//        JsonNode root = response.getEntity(JsonNode.class);
+//        assertThat(root, is(notNullValue()));
+//
+//        assertThat(root, hasProperty(JSONConstants.USERS_KEY));
+//        assertThat(root.get(JSONConstants.USERS_KEY).isArray(), is(true));
     }
 
     @Test

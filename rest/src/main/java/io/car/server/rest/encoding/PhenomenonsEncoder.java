@@ -17,7 +17,9 @@
  */
 package io.car.server.rest.encoding;
 
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.Provider;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -26,24 +28,31 @@ import com.google.inject.Inject;
 import io.car.server.core.entities.Phenomenon;
 import io.car.server.core.entities.Phenomenons;
 import io.car.server.rest.JSONConstants;
+import io.car.server.rest.rights.AccessRights;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
+@Provider
+@Produces(MediaType.APPLICATION_JSON)
 public class PhenomenonsEncoder extends AbstractEntityEncoder<Phenomenons> {
     private final EntityEncoder<Phenomenon> phenomenonEncoder;
 
     @Inject
     public PhenomenonsEncoder(EntityEncoder<Phenomenon> phenomenonEncoder) {
+        super(Phenomenons.class);
         this.phenomenonEncoder = phenomenonEncoder;
     }
 
     @Override
-    public ObjectNode encode(Phenomenons t, MediaType mediaType) {
+    public ObjectNode encode(Phenomenons t, AccessRights rights,
+                             MediaType mediaType) {
         ObjectNode root = getJsonFactory().objectNode();
         ArrayNode phenomenons = root.putArray(JSONConstants.PHENOMENONS_KEY);
         for (Phenomenon u : t) {
-            phenomenons.add(phenomenonEncoder.encode(u, mediaType));
+            phenomenons.add(phenomenonEncoder.encode(u, rights, mediaType));
         }
         return root;
     }

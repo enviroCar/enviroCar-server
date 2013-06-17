@@ -17,9 +17,9 @@
  */
 package io.car.server.rest.encoding;
 
-import java.net.URI;
-
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.Provider;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
@@ -27,48 +27,45 @@ import com.google.inject.Inject;
 import io.car.server.core.entities.Group;
 import io.car.server.core.entities.User;
 import io.car.server.rest.JSONConstants;
-import io.car.server.rest.MediaTypes;
-import io.car.server.rest.resources.GroupResource;
+import io.car.server.rest.rights.AccessRights;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
+@Provider
+@Produces(MediaType.APPLICATION_JSON)
 public class GroupEncoder extends AbstractEntityEncoder<Group> {
     private EntityEncoder<User> userEncoder;
 
     @Inject
     public GroupEncoder(EntityEncoder<User> userProvider) {
+        super(Group.class);
         this.userEncoder = userProvider;
     }
 
     @Override
-    public ObjectNode encode(Group t, MediaType mediaType) {
+    public ObjectNode encode(Group t, AccessRights rights, MediaType mediaType) {
         ObjectNode group = getJsonFactory().objectNode();
-        if (t.hasName()) {
+        if (t.hasName() && rights.canSeeNameOf(t)) {
             group.put(JSONConstants.NAME_KEY, t.getName());
         }
-        if (t.hasDescription()) {
+        if (t.hasDescription() && rights.canSeeDescriptionOf(t)) {
             group.put(JSONConstants.DESCRIPTION_KEY, t.getDescription());
         }
-        if (t.getOwner() != null) {
+        if (t.hasOwner() && rights.canSeeOwnerOf(t)) {
             group.put(JSONConstants.OWNER_KEY,
-                      userEncoder.encode(t.getOwner(), mediaType));
+                      userEncoder.encode(t.getOwner(), rights, mediaType));
         }
-        if (mediaType.equals(MediaTypes.GROUP_TYPE)) {
-            if (t.hasCreationTime()) {
-                group.put(JSONConstants.CREATED_KEY,
-                          getDateTimeFormat().print(t.getCreationTime()));
-            }
-            if (t.hasModificationTime()) {
-                group.put(JSONConstants.MODIFIED_KEY,
-                          getDateTimeFormat().print(t.getModificationTime()));
-            }
-            URI members = getUriInfo().getAbsolutePathBuilder()
-                    .path(GroupResource.MEMBERS).build();
-            group.put(JSONConstants.MEMBERS_KEY, members.toString());
-            URI activities = getUriInfo().getAbsolutePathBuilder()
-                    .path(GroupResource.ACTIVITIES).build();
-            group.put(JSONConstants.ACTIVITIES_KEY, activities.toString());
+        if (t.hasCreationTime() && rights.canSeeCreationTimeOf(t)) {
+            group.put(JSONConstants.CREATED_KEY,
+                      getDateTimeFormat().print(t.getCreationTime()));
+        }
+        if (t.hasModificationTime() && rights
+                .canSeeModificationTimeOf(t)) {
+            group.put(JSONConstants.MODIFIED_KEY,
+                      getDateTimeFormat().print(t.getModificationTime()));
         }
         return group;
     }

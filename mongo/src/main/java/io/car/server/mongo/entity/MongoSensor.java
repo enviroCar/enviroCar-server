@@ -17,8 +17,6 @@
  */
 package io.car.server.mongo.entity;
 
-import io.car.server.core.entities.Sensor;
-
 import java.util.Map;
 
 import org.bson.types.ObjectId;
@@ -30,7 +28,11 @@ import com.github.jmkgreen.morphia.mapping.Mapper;
 import com.google.common.base.Objects;
 import com.google.common.collect.Maps;
 
+import io.car.server.core.entities.Sensor;
+
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Entity("sensors")
@@ -38,14 +40,12 @@ public class MongoSensor extends MongoEntityBase implements Sensor {
     public static final String NAME = Mapper.ID_KEY;
     public static final String TYPE = "type";
     public static final String PROPERTIES = "properties";
-    
     @Id
     private ObjectId id = new ObjectId();
     @Property(TYPE)
     private String type;
     @Property(PROPERTIES)
     private Map<String, Object> properties = Maps.newHashMap();
-
 
     @Override
     public String toString() {
@@ -96,7 +96,7 @@ public class MongoSensor extends MongoEntityBase implements Sensor {
     }
 
     @Override
-    public boolean hasProperties() {    
+    public boolean hasProperties() {
         return properties.size() > 0;
     }
 

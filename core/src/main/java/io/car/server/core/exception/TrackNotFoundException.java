@@ -18,9 +18,9 @@
 package io.car.server.core.exception;
 
 /**
+ * TODO JavaDoc
  *
  * @author Arne de Wall <a.dewall@52north.org>
- *
  */
 public class TrackNotFoundException extends ResourceNotFoundException {
     private static final long serialVersionUID = 9183814565661472011L;

@@ -17,17 +17,26 @@
  */
 package io.car.server.rest.decoding;
 
-import io.car.server.rest.JSONConstants;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.Provider;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
 import io.car.server.core.entities.Group;
+import io.car.server.rest.JSONConstants;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
+@Provider
+@Consumes(MediaType.APPLICATION_JSON)
 public class GroupDecoder extends AbstractEntityDecoder<Group> {
+    public GroupDecoder() {
+        super(Group.class);
+    }
 
     @Override
     public Group decode(JsonNode j, MediaType mediaType) {

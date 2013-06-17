@@ -17,7 +17,6 @@
  */
 package io.car.server.mongo.dao;
 
-
 import com.google.inject.Inject;
 
 import io.car.server.core.dao.PhenomenonDao;
@@ -29,6 +28,8 @@ import io.car.server.mongo.entity.MongoPhenomenon;
 import io.car.server.mongo.entity.MongoSensor;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  * @author Jan Wirwahn <jan.wirwahn@wwu.de>
  */

@@ -67,6 +67,8 @@ import io.car.server.rest.JSONConstants;
 import io.car.server.rest.MediaTypes;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
@@ -167,7 +169,7 @@ public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
         @Override
         public ContainerResponseFilter getResponseFilter() {
             return response == null || !validateResponses ? null
-                   : new JSONSchemaResponeFilter(response);
+                   : new JSONSchemaResponseFilter(response);
         }
     }
 
@@ -228,10 +230,10 @@ public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
         }
     }
 
-    private class JSONSchemaResponeFilter implements ContainerResponseFilter {
+    private class JSONSchemaResponseFilter implements ContainerResponseFilter {
         private String schema;
 
-        JSONSchemaResponeFilter(String schema) {
+        JSONSchemaResponseFilter(String schema) {
             this.schema = schema;
         }
 
@@ -239,7 +241,7 @@ public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
         public ContainerResponse filter(ContainerRequest request,
                                         ContainerResponse response) {
             MediaType mt = response.getMediaType();
-            if (mt.isCompatible(MediaType.APPLICATION_JSON_TYPE)) {
+            if (mt != null && mt.isCompatible(MediaType.APPLICATION_JSON_TYPE)) {
                 adjustContentType(response);
                 ContainerResponseWriter crw = response
                         .getContainerResponseWriter();
@@ -251,12 +253,18 @@ public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
         }
 
         protected void adjustContentType(ContainerResponse response) {
-            MediaType newMt = new MediaType("application", "json", ImmutableMap
-                    .<String, String>builder()
-                    .putAll(response.getMediaType().getParameters())
-                    .put(MediaTypes.SCHEMA_ATTRIBUTE, schema)
-                    .build());
-            response.getHttpHeaders().putSingle(HttpHeaders.CONTENT_TYPE, newMt);
+            MediaType mediaType = response.getMediaType();
+            if (!mediaType.getParameters()
+                    .containsKey(MediaTypes.SCHEMA_ATTRIBUTE)) {
+                MediaType newMt =
+                        new MediaType("application", "json", ImmutableMap
+                        .<String, String>builder()
+                        .putAll(mediaType.getParameters())
+                        .put(MediaTypes.SCHEMA_ATTRIBUTE, schema)
+                        .build());
+                response.getHttpHeaders()
+                        .putSingle(HttpHeaders.CONTENT_TYPE, newMt);
+            }
         }
     }
 

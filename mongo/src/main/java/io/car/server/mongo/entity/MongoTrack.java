@@ -27,6 +27,7 @@ import com.github.jmkgreen.morphia.annotations.Entity;
 import com.github.jmkgreen.morphia.annotations.Id;
 import com.github.jmkgreen.morphia.annotations.Property;
 import com.github.jmkgreen.morphia.annotations.Transient;
+import com.github.jmkgreen.morphia.mapping.Mapper;
 import com.google.common.base.Objects;
 import com.vividsolutions.jts.geom.Geometry;
 
@@ -34,8 +35,14 @@ import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
 
+/**
+ * TODO JavaDoc
+ *
+ * @author Christian Autermann <c.autermann@52north.org>
+ */
 @Entity("tracks")
 public class MongoTrack extends MongoEntityBase implements Track {
+    public static final String ID = Mapper.ID_KEY;
     public static final String USER = "user";
     public static final String SENSOR = "sensor";
     public static final String NAME = "name";
@@ -59,7 +66,7 @@ public class MongoTrack extends MongoEntityBase implements Track {
     @Override
     public MongoUser getUser() {
         if (this._user == null) {
-            this._user = getMongoDB().dereference(MongoUser.class, this.user);
+            this._user = getMongoDB().deref(MongoUser.class, this.user);
         }
         return this._user;
     }
@@ -67,7 +74,7 @@ public class MongoTrack extends MongoEntityBase implements Track {
     @Override
     public void setUser(User user) {
         this._user = (MongoUser) user;
-        this.user = getMongoDB().reference(this._user);
+        this.user = getMongoDB().key(this._user);
     }
 
     @Override

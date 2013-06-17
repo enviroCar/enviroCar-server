@@ -11,7 +11,7 @@
             "type": "array",
             "minItems": 0,
             "items": {
-                "$ref": "http://schema.envirocar.org/definitions.json#/phenomenon-ref"
+                "$ref": "http://schema.envirocar.org/phenomenon.json#"
             }
         }
     }

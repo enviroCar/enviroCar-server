@@ -20,6 +20,11 @@ package io.car.server.core.entities;
 import io.car.server.core.util.Pagination;
 import io.car.server.core.util.UpCastingIterable;
 
+/**
+ * TODO JavaDoc
+ *
+ * @author Christian Autermann <c.autermann@52north.org>
+ */
 public class Measurements extends UpCastingIterable<Measurement> {
     public static MeasurementsBuilder from(
             Iterable<? extends Measurement> delegate) {

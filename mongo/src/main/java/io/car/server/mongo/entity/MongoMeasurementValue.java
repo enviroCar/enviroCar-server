@@ -24,6 +24,11 @@ import com.google.common.base.Objects;
 import io.car.server.core.entities.MeasurementValue;
 import io.car.server.core.entities.Phenomenon;
 
+/**
+ * TODO JavaDoc
+ *
+ * @author Christian Autermann <c.autermann@52north.org>
+ */
 @Embedded
 public class MongoMeasurementValue implements MeasurementValue {
     public static final String VALUE = "value";

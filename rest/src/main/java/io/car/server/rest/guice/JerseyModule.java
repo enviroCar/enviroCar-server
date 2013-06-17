@@ -32,6 +32,8 @@ import io.car.server.rest.auth.AuthenticationResourceFilterFactory;
 import io.car.server.rest.validation.JSONSchemaResourceFilterFactory;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class JerseyModule extends JerseyServletModule {

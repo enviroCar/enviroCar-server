@@ -15,36 +15,19 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package io.car.server.core.dao;
 
 import io.car.server.core.activities.Activities;
 import io.car.server.core.activities.Activity;
-import io.car.server.core.activities.ActivityType;
-import io.car.server.core.entities.Group;
-import io.car.server.core.entities.User;
-import io.car.server.core.util.Pagination;
+import io.car.server.core.filter.ActivityFilter;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface ActivityDao {
     void save(Activity activity);
 
-    Activities get(Pagination p);
-
-    Activities get(User user, Pagination p);
-
-    Activities get(ActivityType type, Pagination p);
-
-    Activities get(ActivityType type, User user, Pagination p);
-
-    Activities get(Group group, Pagination p);
-
-    Activities get(ActivityType type, Group group, Pagination p);
-
-    Activities getForFriends(User user, Pagination p);
+    Activities get(ActivityFilter request);
 }

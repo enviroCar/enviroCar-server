@@ -26,12 +26,12 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.Polygon;
 
 import io.car.server.core.entities.Measurement;
 import io.car.server.core.entities.Track;
@@ -41,7 +41,9 @@ import io.car.server.core.exception.ResourceAlreadyExistException;
 import io.car.server.core.exception.TrackNotFoundException;
 import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.core.exception.ValidationException;
+import io.car.server.core.filter.TrackFilter;
 import io.car.server.core.util.Pagination;
+import io.car.server.rest.BoundingBox;
 import io.car.server.rest.MediaTypes;
 import io.car.server.rest.RESTConstants;
 import io.car.server.rest.Schemas;
@@ -50,15 +52,20 @@ import io.car.server.rest.auth.Authenticated;
 import io.car.server.rest.validation.Schema;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Arne de Wall <a.dewall@52north.org>
  */
 public class TracksResource extends AbstractResource {
     public static final String TRACK = "{track}";
-    private User user;
+    private final User user;
+    private final GeometryFactory factory;
 
     @Inject
-    public TracksResource(@Assisted @Nullable User user) {
+    public TracksResource(@Assisted @Nullable User user,
+                          GeometryFactory factory) {
         this.user = user;
+        this.factory = factory;
     }
 
     @GET
@@ -66,12 +73,15 @@ public class TracksResource extends AbstractResource {
     @Produces(MediaTypes.TRACKS)
     public Tracks get(
             @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit,
-            @QueryParam(RESTConstants.PAGE) @DefaultValue("0") int page)
+            @QueryParam(RESTConstants.PAGE) @DefaultValue("0") int page,
+            @QueryParam(RESTConstants.BBOX) BoundingBox bbox)
             throws UserNotFoundException {
-        Pagination p = new Pagination(limit, page);
-        return user != null
-               ? getService().getTracks(user, p)
-               : getService().getTracks(p);
+        Polygon poly = null;
+        if (bbox != null) {
+            poly = bbox.asPolygon(factory);
+        }
+        return getDataService()
+                .getTracks(new TrackFilter(user, poly, new Pagination(limit, page)));
     }
 
     @POST
@@ -81,32 +91,32 @@ public class TracksResource extends AbstractResource {
     public Response create(Track track) throws ValidationException,
                                                ResourceAlreadyExistException,
                                                UserNotFoundException {
-        if (user != null && !canModifyUser(user)) {
-            throw new WebApplicationException(Status.FORBIDDEN);
+        if (user != null) {
+            checkRights(getRights().isSelf(user));
         }
-        User u = getService().getUser(getCurrentUser());
-        track.setUser(u);
+        track.setUser(getCurrentUser());
 
         if (track instanceof TrackWithMeasurments) {
             TrackWithMeasurments twm = (TrackWithMeasurments) track;
-            track = getService().createTrack(twm.getTrack());
+            track = getDataService().createTrack(twm.getTrack());
 
             for (Measurement m : twm.getMeasurements()) {
-                m.setUser(u);
-                getService().createMeasurement(twm.getTrack(), m);
+                m.setUser(getCurrentUser());
+                getDataService().createMeasurement(twm.getTrack(), m);
             }
 
         } else {
-            track = getService().createTrack(track);
+            track = getDataService().createTrack(track);
         }
         return Response.created(getUriInfo().getAbsolutePathBuilder()
                 .path(track.getIdentifier()).build()).build();
     }
 
     @Path(TRACK)
-    public TrackResource user(@PathParam("track") String track)
+    public TrackResource track(@PathParam("track") String id)
             throws TrackNotFoundException {
-        return getResourceFactory().createTrackResource(getService()
-                .getTrack(track));
+        Track track = getDataService().getTrack(id);
+        checkRights(getRights().canSee(track));
+        return getResourceFactory().createTrackResource(track);
     }
 }

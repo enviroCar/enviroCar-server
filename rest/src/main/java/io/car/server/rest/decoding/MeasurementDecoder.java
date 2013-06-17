@@ -20,7 +20,9 @@ package io.car.server.rest.decoding;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.Provider;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
@@ -35,9 +37,13 @@ import io.car.server.core.util.GeoJSONConstants;
 import io.car.server.rest.JSONConstants;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Arne de Wall <a.dewall@52north.org>
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
+@Provider
+@Consumes(MediaType.APPLICATION_JSON)
 public class MeasurementDecoder extends AbstractEntityDecoder<Measurement> {
     private final EntityDecoder<Geometry> geometryDecoder;
     private final PhenomenonDao phenomenonDao;
@@ -47,6 +53,7 @@ public class MeasurementDecoder extends AbstractEntityDecoder<Measurement> {
     public MeasurementDecoder(EntityDecoder<Geometry> geometryDecoder,
                               PhenomenonDao phenomenonDao,
                               SensorDao sensorDao) {
+        super(Measurement.class);
         this.geometryDecoder = geometryDecoder;
         this.phenomenonDao = phenomenonDao;
         this.sensorDao = sensorDao;

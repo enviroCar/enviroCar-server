@@ -31,6 +31,8 @@ import io.car.server.core.update.TrackUpdater;
 import io.car.server.core.update.UserUpdater;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class UpdaterModule extends AbstractModule {

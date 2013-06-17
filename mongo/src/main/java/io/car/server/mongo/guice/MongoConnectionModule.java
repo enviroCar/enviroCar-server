@@ -32,6 +32,8 @@ import com.google.inject.util.Providers;
 import io.car.server.mongo.MongoDB;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class MongoConnectionModule extends AbstractModule {

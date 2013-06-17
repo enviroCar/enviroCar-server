@@ -23,6 +23,8 @@ import org.hamcrest.Description;
 import com.fasterxml.jackson.databind.JsonNode;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class IsJsonObjectWithProperty extends BaseMatcher<JsonNode> {

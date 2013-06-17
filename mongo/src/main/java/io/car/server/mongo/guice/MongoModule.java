@@ -54,6 +54,8 @@ import io.car.server.mongo.entity.MongoTrack;
 import io.car.server.mongo.entity.MongoUser;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class MongoModule extends AbstractModule {
