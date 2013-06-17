@@ -35,6 +35,11 @@ import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
 
+/**
+ * TODO JavaDoc
+ *
+ * @author Christian Autermann <c.autermann@52north.org>
+ */
 @Entity("tracks")
 public class MongoTrack extends MongoEntityBase implements Track {
     public static final String ID = Mapper.ID_KEY;

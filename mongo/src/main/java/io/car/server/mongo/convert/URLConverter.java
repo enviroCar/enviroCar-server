@@ -25,6 +25,11 @@ import com.github.jmkgreen.morphia.converters.TypeConverter;
 import com.github.jmkgreen.morphia.mapping.MappedField;
 import com.github.jmkgreen.morphia.mapping.MappingException;
 
+/**
+ * TODO JavaDoc
+ *
+ * @author Christian Autermann <c.autermann@52north.org>
+ */
 public class URLConverter extends TypeConverter implements SimpleValueConverter {
     public URLConverter() {
         super(URL.class);

@@ -31,12 +31,14 @@ import io.car.server.rest.provider.JsonNodeMessageBodyReader;
 import io.car.server.rest.provider.JsonNodeMessageBodyWriter;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class ResourceTestBase {
     @BeforeClass
     public static void start() throws Exception {
-        CarIoServer.getInstance();
+        EnviroCarServer.getInstance();
     }
     @Inject
     private DB db;
@@ -47,7 +49,7 @@ public class ResourceTestBase {
 
     @Before
     public void inject() throws Exception {
-        CarIoServer.getInstance().getInjector().injectMembers(this);
+        EnviroCarServer.getInstance().getInjector().injectMembers(this);
     }
 
     protected WebResource resource() {

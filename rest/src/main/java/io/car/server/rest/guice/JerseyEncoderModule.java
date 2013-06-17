@@ -17,7 +17,6 @@
  */
 package io.car.server.rest.guice;
 
-
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
 import com.google.inject.TypeLiteral;
@@ -60,10 +59,11 @@ import io.car.server.rest.encoding.UsersEncoder;
 import io.car.server.rest.provider.JsonNodeMessageBodyWriter;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class JerseyEncoderModule extends AbstractModule {
-
     @Override
     protected void configure() {
         bind(JsonNodeMessageBodyWriter.class).in(Scopes.SINGLETON);
@@ -119,5 +119,4 @@ public class JerseyEncoderModule extends AbstractModule {
         bind(new TypeLiteral<EntityEncoder<Geometry>>() {
         }).to(GeoJSONEncoder.class);
     }
-
 }

@@ -17,7 +17,6 @@
  */
 package io.car.server.rest.guice;
 
-
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
 import com.google.inject.TypeLiteral;
@@ -41,10 +40,11 @@ import io.car.server.rest.provider.JsonNodeMessageBodyReader;
 import io.car.server.rest.provider.UserReferenceProvider;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class JerseyDecoderModule extends AbstractModule {
-
     @Override
     protected void configure() {
         bind(JsonNodeMessageBodyReader.class).in(Scopes.SINGLETON);
@@ -71,5 +71,4 @@ public class JerseyDecoderModule extends AbstractModule {
         bind(new TypeLiteral<EntityDecoder<Sensor>>() {
         }).to(SensorDecoder.class);
     }
-
 }

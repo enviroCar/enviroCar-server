@@ -21,10 +21,11 @@ import io.car.server.core.entities.Group;
 import io.car.server.core.entities.User;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class ChangedGroupEvent implements GroupEvent {
-
     private final Group group;
     private final User user;
 
@@ -42,5 +43,4 @@ public class ChangedGroupEvent implements GroupEvent {
     public User getUser() {
         return user;
     }
-
 }

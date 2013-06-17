@@ -29,6 +29,8 @@ import io.car.server.rest.UserReference;
 import io.car.server.rest.decoding.EntityDecoder;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider

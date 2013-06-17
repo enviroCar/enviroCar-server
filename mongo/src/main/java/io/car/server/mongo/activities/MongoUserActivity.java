@@ -31,6 +31,8 @@ import io.car.server.mongo.MongoDB;
 import io.car.server.mongo.entity.MongoUser;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class MongoUserActivity extends MongoActivity implements UserActivity {

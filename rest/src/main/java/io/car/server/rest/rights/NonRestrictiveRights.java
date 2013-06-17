@@ -17,7 +17,6 @@
  */
 package io.car.server.rest.rights;
 
-
 import io.car.server.core.entities.Group;
 import io.car.server.core.entities.Measurement;
 import io.car.server.core.entities.Phenomenon;
@@ -26,10 +25,11 @@ import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class NonRestrictiveRights implements AccessRights {
-
     @Override
     public boolean isSelf(User user) {
         return true;

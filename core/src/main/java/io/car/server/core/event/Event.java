@@ -18,8 +18,9 @@
 package io.car.server.core.event;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface Event {
-
 }

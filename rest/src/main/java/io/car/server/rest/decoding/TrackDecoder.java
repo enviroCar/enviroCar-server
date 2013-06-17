@@ -33,6 +33,11 @@ import io.car.server.core.util.GeoJSONConstants;
 import io.car.server.rest.JSONConstants;
 import io.car.server.rest.TrackWithMeasurments;
 
+/**
+ * TODO JavaDoc
+ *
+ * @author Christian Autermann <c.autermann@52north.org>
+ */
 @Provider
 @Consumes(MediaType.APPLICATION_JSON)
 public class TrackDecoder extends AbstractEntityDecoder<Track> {

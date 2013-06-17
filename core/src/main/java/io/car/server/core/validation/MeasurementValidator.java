@@ -22,9 +22,9 @@ import io.car.server.core.entities.MeasurementValue;
 import io.car.server.core.exception.ValidationException;
 
 /**
+ * TODO JavaDoc
  *
  * @author Arne de Wall <a.dewall@52north.org>
- *
  */
 public class MeasurementValidator extends AbstractValidator<Measurement> {
     @Override

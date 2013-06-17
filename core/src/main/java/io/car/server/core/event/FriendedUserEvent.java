@@ -20,6 +20,8 @@ package io.car.server.core.event;
 import io.car.server.core.entities.User;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class FriendedUserEvent implements UserEvent {
@@ -40,5 +42,4 @@ public class FriendedUserEvent implements UserEvent {
     public User getOther() {
         return other;
     }
-
 }

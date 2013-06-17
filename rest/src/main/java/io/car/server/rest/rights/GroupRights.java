@@ -20,6 +20,8 @@ package io.car.server.rest.rights;
 import io.car.server.core.entities.Group;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface GroupRights {

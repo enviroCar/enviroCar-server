@@ -26,9 +26,14 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class MongoUtils {
+    private MongoUtils() {
+    }
+
     public static double asDouble(DBObject dbo, String attr) {
         return ((Number) dbo.get(attr)).doubleValue();
     }
@@ -37,13 +42,11 @@ public class MongoUtils {
         return "$" + property;
     }
 
-    public static String valueOf(String first, String second,
-                                 String... paths) {
+    public static String valueOf(String first, String second, String... paths) {
         return "$" + path(first, second, paths);
     }
 
-    public static String path(String first, String second,
-                              String... paths) {
+    public static String path(String first, String second, String... paths) {
         return Joiner.on(".").join(first, second, (Object[]) paths);
     }
 
@@ -113,9 +116,6 @@ public class MongoUtils {
 
     public static String reverse(String order) {
         return "-" + order;
-    }
-
-    private MongoUtils() {
     }
 
     public static DBObject geoWithin(BSONObject geometry) {

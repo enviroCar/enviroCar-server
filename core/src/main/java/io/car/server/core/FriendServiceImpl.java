@@ -28,6 +28,8 @@ import io.car.server.core.event.UnfriendedUserEvent;
 import io.car.server.core.exception.UserNotFoundException;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  * @author Arne de Wall <a.dewall@52north.org>
  * @author Jan Wirwahn <jan.wirwahn@wwu.de>

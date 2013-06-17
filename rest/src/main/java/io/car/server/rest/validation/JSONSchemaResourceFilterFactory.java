@@ -67,6 +67,8 @@ import io.car.server.rest.JSONConstants;
 import io.car.server.rest.MediaTypes;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
@@ -257,9 +259,9 @@ public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
                 MediaType newMt =
                         new MediaType("application", "json", ImmutableMap
                         .<String, String>builder()
-                    .putAll(mediaType.getParameters())
-                    .put(MediaTypes.SCHEMA_ATTRIBUTE, schema)
-                    .build());
+                        .putAll(mediaType.getParameters())
+                        .put(MediaTypes.SCHEMA_ATTRIBUTE, schema)
+                        .build());
                 response.getHttpHeaders()
                         .putSingle(HttpHeaders.CONTENT_TYPE, newMt);
             }

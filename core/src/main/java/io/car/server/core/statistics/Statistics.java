@@ -21,6 +21,8 @@ import io.car.server.core.util.Pagination;
 import io.car.server.core.util.UpCastingIterable;
 
 /**
+ * TODO JavaDoc
+ *
  * @author jan
  */
 public class Statistics extends UpCastingIterable<Statistic> {

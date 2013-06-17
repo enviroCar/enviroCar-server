@@ -23,6 +23,8 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Module;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class ServiceLoaderConfigurationModule extends AbstractModule {

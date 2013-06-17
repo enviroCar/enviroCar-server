@@ -29,6 +29,8 @@ import com.vividsolutions.jts.geom.Polygon;
 import io.car.server.core.exception.GeometryConverterException;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface GeometryConverter<T> {

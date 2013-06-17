@@ -29,6 +29,8 @@ import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.rest.auth.Authenticated;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class GroupMemberResource extends UserResource {

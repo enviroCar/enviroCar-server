@@ -34,6 +34,8 @@ import com.sun.jersey.api.client.ClientResponse.Status;
 import io.car.server.rest.JSONConstants;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class RootResourceTest extends ResourceTestBase {

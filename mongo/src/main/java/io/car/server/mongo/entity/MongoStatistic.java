@@ -24,6 +24,8 @@ import io.car.server.core.entities.Phenomenon;
 import io.car.server.core.statistics.Statistic;
 
 /**
+ * TODO JavaDoc
+ *
  * @author jan
  */
 @Embedded

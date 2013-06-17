@@ -35,6 +35,8 @@ import io.car.server.rest.auth.PrincipalImpl;
 import io.car.server.rest.rights.AccessRights;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public abstract class AbstractResource {

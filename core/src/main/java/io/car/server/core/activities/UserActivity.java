@@ -20,6 +20,7 @@ package io.car.server.core.activities;
 import io.car.server.core.entities.User;
 
 /**
+ * TODO JavaDoc
  *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */

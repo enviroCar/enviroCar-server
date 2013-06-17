@@ -17,7 +17,6 @@
  */
 package io.car.server.rest.guice;
 
-
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -29,10 +28,13 @@ import com.google.inject.Provides;
 import com.google.inject.Scopes;
 import com.google.inject.Singleton;
 import com.google.inject.TypeLiteral;
+
 import io.car.server.core.util.GeometryConverter;
 import io.car.server.rest.util.GeoJSON;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class JerseyCodingModule extends AbstractModule {

@@ -20,6 +20,8 @@ package io.car.server.core.event;
 import io.car.server.core.entities.Track;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface TrackEvent extends UserCausedEvent {

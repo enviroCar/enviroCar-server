@@ -32,6 +32,8 @@ import io.car.server.mongo.MongoDB;
 import io.car.server.mongo.entity.MongoGroup;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class MongoGroupActivity extends MongoActivity implements GroupActivity {
@@ -55,7 +57,6 @@ public class MongoGroupActivity extends MongoActivity implements GroupActivity {
     public MongoGroupActivity(MongoDB mongoDB) {
         this(mongoDB, null, null, null);
     }
-
 
     @Override
     public MongoGroup getGroup() {

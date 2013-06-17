@@ -42,6 +42,8 @@ import io.car.server.mongo.MongoDB;
 import io.car.server.mongo.entity.MongoUser;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Polymorphic
@@ -90,6 +92,7 @@ public class MongoActivity implements Activity {
     public void setId(ObjectId id) {
         this.id = id;
     }
+
     public boolean hasId() {
         return getId() != null;
     }

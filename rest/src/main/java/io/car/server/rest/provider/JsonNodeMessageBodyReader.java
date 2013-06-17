@@ -24,12 +24,13 @@ import javax.ws.rs.ext.Provider;
 import com.fasterxml.jackson.databind.JsonNode;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
 @Consumes(MediaType.APPLICATION_JSON)
 public class JsonNodeMessageBodyReader extends AbstractMessageBodyReader<JsonNode> {
-
     public JsonNodeMessageBodyReader() {
         super(JsonNode.class);
     }

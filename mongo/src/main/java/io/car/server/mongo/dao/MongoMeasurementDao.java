@@ -17,7 +17,6 @@
  */
 package io.car.server.mongo.dao;
 
-
 import java.util.List;
 
 import org.bson.BSONObject;
@@ -44,12 +43,12 @@ import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import com.vividsolutions.jts.geom.Geometry;
 
-import io.car.server.core.filter.MeasurementFilter;
 import io.car.server.core.dao.MeasurementDao;
 import io.car.server.core.entities.Measurement;
 import io.car.server.core.entities.Measurements;
 import io.car.server.core.entities.User;
 import io.car.server.core.exception.GeometryConverterException;
+import io.car.server.core.filter.MeasurementFilter;
 import io.car.server.core.util.GeometryConverter;
 import io.car.server.core.util.Pagination;
 import io.car.server.mongo.MongoDB;
@@ -59,9 +58,9 @@ import io.car.server.mongo.entity.MongoUser;
 import io.car.server.mongo.util.MongoUtils;
 
 /**
+ * TODO JavaDoc
  *
  * @author Arne de Wall
- *
  */
 public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasurement, Measurements>
         implements MeasurementDao {

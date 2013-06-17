@@ -26,6 +26,11 @@ import io.car.server.core.GroupService;
 import io.car.server.core.entities.Group;
 import io.car.server.core.entities.User;
 
+/**
+ * TODO JavaDoc
+ *
+ * @author Christian Autermann <c.autermann@52north.org>
+ */
 public abstract class AbstractAccessRights implements AccessRights {
     private final User user;
     private final GroupService groupService;

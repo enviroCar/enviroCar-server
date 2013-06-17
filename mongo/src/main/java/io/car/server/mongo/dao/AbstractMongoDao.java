@@ -35,8 +35,10 @@ import io.car.server.mongo.MongoDB;
 import io.car.server.mongo.entity.MongoEntityBase;
 
 /**
+ * TODO JavaDoc
+ *
  * @param <K> the key type
- * @param <E> the entitiy type
+ * @param <E> the entity type
  * @param <C> the collection type
  *
  * @author Christian Autermann <autermann@uni-muenster.de>

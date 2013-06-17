@@ -22,6 +22,11 @@ import java.util.Collections;
 import io.car.server.core.util.Pagination;
 import io.car.server.core.util.UpCastingIterable;
 
+/**
+ * TODO JavaDoc
+ *
+ * @author Christian Autermann <c.autermann@52north.org>
+ */
 public class Tracks extends UpCastingIterable<Track> {
     public static TracksBuilder from(
             Iterable<? extends Track> delegate) {

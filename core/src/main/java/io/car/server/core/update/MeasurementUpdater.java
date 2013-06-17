@@ -21,9 +21,9 @@ import io.car.server.core.entities.Measurement;
 import io.car.server.core.exception.IllegalModificationException;
 
 /**
+ * TODO JavaDoc
  *
  * @author Arne de Wall <a.dewall@52north.org>
- *
  */
 public class MeasurementUpdater implements EntityUpdater<Measurement> {
     @Override

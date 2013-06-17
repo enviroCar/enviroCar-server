@@ -37,6 +37,8 @@ import io.car.server.core.util.GeoJSONConstants;
 import io.car.server.rest.JSONConstants;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Arne de Wall <a.dewall@52north.org>
  * @author Christian Autermann <autermann@uni-muenster.de>
  */

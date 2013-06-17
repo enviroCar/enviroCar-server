@@ -20,6 +20,8 @@ package io.car.server.mongo.util;
 import com.mongodb.QueryOperators;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface Ops {

@@ -39,6 +39,8 @@ import io.car.server.rest.rights.AccessRights;
 import io.car.server.rest.rights.AccessRightsImpl;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class JerseyResourceModule extends AbstractModule {

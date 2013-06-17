@@ -39,6 +39,8 @@ import com.google.inject.Inject;
 import io.car.server.rest.JSONConstants;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public abstract class AbstractMessageBodyReader<T>

@@ -23,6 +23,8 @@ import io.car.server.core.entities.User;
 import io.car.server.core.exception.ValidationException;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class UserValidator extends AbstractValidator<User> {

@@ -32,6 +32,8 @@ import io.car.server.rest.rights.AccessRights;
 import io.car.server.rest.util.GeoJSON;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
@@ -53,5 +55,4 @@ public class GeoJSONEncoder extends AbstractEntityEncoder<Geometry> {
             throw new WebApplicationException(ex, Status.INTERNAL_SERVER_ERROR);
         }
     }
-
 }

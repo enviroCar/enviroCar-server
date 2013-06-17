@@ -27,6 +27,8 @@ import io.car.server.core.entities.Phenomenon;
 import io.car.server.rest.JSONConstants;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider

@@ -24,10 +24,11 @@ import javax.ws.rs.core.SecurityContext;
 import io.car.server.core.entities.User;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class SecurityContextImpl implements SecurityContext {
-
     private final PrincipalImpl principal;
     private final boolean secure;
 
@@ -59,5 +60,4 @@ public class SecurityContextImpl implements SecurityContext {
     public String getAuthenticationScheme() {
         return AuthConstants.AUTH_SCHEME;
     }
-
 }

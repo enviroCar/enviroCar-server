@@ -22,6 +22,8 @@ import io.car.server.core.entities.Users;
 import io.car.server.core.exception.UserNotFoundException;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface FriendService {

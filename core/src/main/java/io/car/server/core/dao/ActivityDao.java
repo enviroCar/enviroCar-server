@@ -22,6 +22,8 @@ import io.car.server.core.activities.Activity;
 import io.car.server.core.filter.ActivityFilter;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface ActivityDao {

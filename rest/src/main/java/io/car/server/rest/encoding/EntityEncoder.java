@@ -24,6 +24,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.car.server.rest.rights.AccessRights;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface EntityEncoder<T> {

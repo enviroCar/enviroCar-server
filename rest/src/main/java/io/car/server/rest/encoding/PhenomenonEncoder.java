@@ -17,7 +17,6 @@
  */
 package io.car.server.rest.encoding;
 
-
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
@@ -30,6 +29,8 @@ import io.car.server.rest.MediaTypes;
 import io.car.server.rest.rights.AccessRights;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider

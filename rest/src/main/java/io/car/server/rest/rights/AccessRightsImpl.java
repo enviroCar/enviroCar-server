@@ -26,6 +26,11 @@ import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
 
+/**
+ * TODO JavaDoc
+ *
+ * @author Christian Autermann <c.autermann@52north.org>
+ */
 public class AccessRightsImpl extends AbstractAccessRights {
     public AccessRightsImpl() {
         super();

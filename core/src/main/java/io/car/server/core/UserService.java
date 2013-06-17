@@ -28,6 +28,8 @@ import io.car.server.core.filter.ActivityFilter;
 import io.car.server.core.util.Pagination;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface UserService {

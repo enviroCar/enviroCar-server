@@ -25,18 +25,20 @@ import com.google.inject.Injector;
 import com.google.inject.servlet.GuiceFilter;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class CarIoServer {
-    private static CarIoServer instance;
+public class EnviroCarServer {
+    private static EnviroCarServer instance;
 
-    public static CarIoServer getInstance() throws Exception {
-        return instance == null ? instance = new CarIoServer() : instance;
+    public static EnviroCarServer getInstance() throws Exception {
+        return instance == null ? instance = new EnviroCarServer() : instance;
     }
     private Server server;
     private Injector injector;
 
-    public CarIoServer() throws Exception {
+    public EnviroCarServer() throws Exception {
         server = new Server(9998);
         server.setStopAtShutdown(true);
         ServletContextHandler sch = new ServletContextHandler(server, "/");

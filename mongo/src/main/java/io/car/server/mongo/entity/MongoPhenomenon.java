@@ -26,6 +26,8 @@ import com.google.common.base.Objects;
 import io.car.server.core.entities.Phenomenon;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Entity("phenomenons")

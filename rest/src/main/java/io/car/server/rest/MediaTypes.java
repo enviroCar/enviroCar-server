@@ -20,6 +20,8 @@ package io.car.server.rest;
 import javax.ws.rs.core.MediaType;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  * @author Arne de Wall
  */

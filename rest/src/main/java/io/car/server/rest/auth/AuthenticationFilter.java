@@ -32,6 +32,8 @@ import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.core.util.PasswordEncoder;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class AuthenticationFilter implements ContainerRequestFilter {

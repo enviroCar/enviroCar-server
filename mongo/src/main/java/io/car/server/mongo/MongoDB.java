@@ -50,6 +50,8 @@ import com.mongodb.ServerAddress;
 import io.car.server.mongo.entity.MongoMeasurement;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Singleton

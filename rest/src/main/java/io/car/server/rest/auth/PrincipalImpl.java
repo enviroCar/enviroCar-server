@@ -22,6 +22,8 @@ import java.security.Principal;
 import io.car.server.core.entities.User;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class PrincipalImpl implements Principal {

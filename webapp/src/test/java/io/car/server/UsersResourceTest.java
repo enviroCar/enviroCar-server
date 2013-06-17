@@ -25,6 +25,8 @@ import org.junit.Test;
 import com.sun.jersey.api.client.ClientResponse;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class UsersResourceTest extends ResourceTestBase {

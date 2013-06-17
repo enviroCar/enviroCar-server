@@ -38,6 +38,8 @@ import io.car.server.mongo.entity.MongoSensor;
 import io.car.server.mongo.util.MongoUtils;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class MongoSensorDao extends AbstractMongoDao<ObjectId, MongoSensor, Sensors>

@@ -22,9 +22,9 @@ import io.car.server.core.entities.Measurements;
 import io.car.server.core.filter.MeasurementFilter;
 
 /**
+ * TODO JavaDoc
  *
  * @author Arne de Wall <a.dewall@52north.org>
- *
  */
 public interface MeasurementDao {
     Measurement create(Measurement measurement);

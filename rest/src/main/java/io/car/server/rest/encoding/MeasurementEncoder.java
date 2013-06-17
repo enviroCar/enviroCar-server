@@ -35,6 +35,8 @@ import io.car.server.rest.MediaTypes;
 import io.car.server.rest.rights.AccessRights;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Arne de Wall <a.dewall@52north.org>
  * @author Christian Autermann <autermann@uni-muenster.de>
  */

@@ -25,6 +25,8 @@ import io.car.server.core.entities.EntityFactory;
 import io.car.server.rest.provider.AbstractMessageBodyReader;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public abstract class AbstractEntityDecoder<T>

@@ -46,6 +46,8 @@ import io.car.server.core.exception.GeometryConverterException;
 import io.car.server.rest.util.GeoJSON;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class GeoJSONTest {

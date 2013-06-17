@@ -32,6 +32,8 @@ import io.car.server.core.entities.Group;
 import io.car.server.core.entities.User;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Entity("groups")

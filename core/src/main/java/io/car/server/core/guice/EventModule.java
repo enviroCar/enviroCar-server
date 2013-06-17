@@ -32,6 +32,8 @@ import com.google.inject.spi.TypeListener;
 import io.car.server.core.util.GroupedAndNamedThreadFactory;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class EventModule extends AbstractModule {

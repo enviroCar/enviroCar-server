@@ -47,6 +47,8 @@ import io.car.server.rest.guice.JerseyCodingModule;
 import io.car.server.rest.guice.JerseyValidationModule;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class SchemaValidationTest {
@@ -54,6 +56,7 @@ public class SchemaValidationTest {
             .getLogger(SchemaValidationTest.class);
     private static Set<String> schemas;
     private static ObjectWriter writer;
+
     @BeforeClass
     public static void createInjector() {
         Injector i = Guice.createInjector(new JerseyCodingModule(),

@@ -20,7 +20,6 @@ package io.car.server.core.activities;
 import com.google.common.eventbus.AllowConcurrentEvents;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 import io.car.server.core.dao.ActivityDao;
 import io.car.server.core.event.ChangedGroupEvent;
@@ -34,9 +33,10 @@ import io.car.server.core.event.LeftGroupEvent;
 import io.car.server.core.event.UnfriendedUserEvent;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-@Singleton
 public class ActivityListener {
     private final ActivityDao dao;
     private final ActivityFactory fac;

@@ -17,7 +17,6 @@
  */
 package io.car.server.rest.guice;
 
-
 import static io.car.server.rest.validation.JSONSchemaResourceFilterFactory.*;
 
 import com.github.fge.jsonschema.main.JsonSchemaFactory;
@@ -27,14 +26,16 @@ import com.google.inject.multibindings.Multibinder;
 import com.google.inject.name.Names;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class JerseyValidationModule extends AbstractModule {
-
     @Override
     protected void configure() {
-        Multibinder<String> mb = Multibinder.newSetBinder(binder(), String.class,
-                Names.named(JSONSchemaFactoryProvider.SCHEMAS));
+        Multibinder<String> mb = Multibinder
+                .newSetBinder(binder(), String.class,
+                              Names.named(JSONSchemaFactoryProvider.SCHEMAS));
         mb.addBinding().toInstance("/schema/definitions.json");
         mb.addBinding().toInstance("/schema/geometry.json");
         mb.addBinding().toInstance("/schema/group.create.json");
@@ -71,5 +72,4 @@ public class JerseyValidationModule extends AbstractModule {
                 toProvider(JSONSchemaFactoryProvider.class)
                 .in(Scopes.SINGLETON);
     }
-
 }

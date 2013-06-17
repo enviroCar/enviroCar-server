@@ -41,6 +41,8 @@ import io.car.server.mongo.entity.MongoGroup;
 import io.car.server.mongo.entity.MongoUser;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class MongoGroupDao extends AbstractMongoDao<String, MongoGroup, Groups>

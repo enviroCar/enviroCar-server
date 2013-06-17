@@ -32,9 +32,10 @@ import io.car.server.rest.Schemas;
 import io.car.server.rest.validation.Schema;
 
 /**
+ * TODO JavaDoc
  *
  * @author Arne de Wall <a.dewall@52north.org>
- *
+ * @author Christian Autermann <c.autermann@52north.org>
  */
 @Path("/")
 public class RootResource extends AbstractResource {

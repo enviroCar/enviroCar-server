@@ -30,6 +30,11 @@ import io.car.server.core.entities.Tracks;
 import io.car.server.rest.JSONConstants;
 import io.car.server.rest.rights.AccessRights;
 
+/**
+ * TODO JavaDoc
+ *
+ * @author Christian Autermann <c.autermann@52north.org>
+ */
 @Provider
 @Produces(MediaType.APPLICATION_JSON)
 public class TracksEncoder extends AbstractEntityEncoder<Tracks> {

@@ -25,6 +25,8 @@ import io.car.server.core.statistics.Statistic;
 import io.car.server.core.statistics.Statistics;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface StatisticsService {

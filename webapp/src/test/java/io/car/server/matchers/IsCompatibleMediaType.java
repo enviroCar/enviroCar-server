@@ -23,6 +23,8 @@ import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class IsCompatibleMediaType extends BaseMatcher<MediaType> {

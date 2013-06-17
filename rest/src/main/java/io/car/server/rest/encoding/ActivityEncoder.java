@@ -35,12 +35,13 @@ import io.car.server.rest.JSONConstants;
 import io.car.server.rest.rights.AccessRights;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
 @Produces(MediaType.APPLICATION_JSON)
 public class ActivityEncoder extends AbstractEntityEncoder<Activity> {
-
     private final EntityEncoder<User> userEncoder;
     private final EntityEncoder<Track> trackEncoder;
     private final EntityEncoder<Group> groupEncoder;
