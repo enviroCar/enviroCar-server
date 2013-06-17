@@ -37,7 +37,6 @@ import io.car.server.rest.RESTConstants;
 import io.car.server.rest.Schemas;
 import io.car.server.rest.validation.Schema;
 
-
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
@@ -66,7 +65,7 @@ public class ActivitiesResource extends AbstractResource {
             @QueryParam(RESTConstants.TYPE) ActivityType type,
             @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit,
             @QueryParam(RESTConstants.PAGE) @DefaultValue("0") int page) {
-        return getService()
+        return getUserService()
                 .getActivities(new ActivityFilter(group, user, type, new Pagination(limit, page)));
     }
 }

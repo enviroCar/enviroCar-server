@@ -21,7 +21,6 @@ import org.joda.time.format.DateTimeFormatter;
 
 import com.google.inject.Inject;
 
-import io.car.server.core.Service;
 import io.car.server.core.entities.EntityFactory;
 import io.car.server.rest.provider.AbstractMessageBodyReader;
 
@@ -32,7 +31,6 @@ public abstract class AbstractEntityDecoder<T>
         extends AbstractMessageBodyReader<T>
         implements EntityDecoder<T> {
     private DateTimeFormatter dateTimeFormat;
-    private Service service;
     private EntityFactory entityFactory;
 
     public AbstractEntityDecoder(Class<T> type) {
@@ -55,14 +53,5 @@ public abstract class AbstractEntityDecoder<T>
     @Inject
     public void setDateTimeFormat(DateTimeFormatter dateTimeFormat) {
         this.dateTimeFormat = dateTimeFormat;
-    }
-
-    public Service getService() {
-        return service;
-    }
-
-    @Inject
-    public void setService(Service service) {
-        this.service = service;
     }
 }

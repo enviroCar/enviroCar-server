@@ -15,16 +15,14 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-package io.car.server.core.statistics;
+package io.car.server.core;
 
 import io.car.server.core.entities.Phenomenon;
 import io.car.server.core.entities.Phenomenons;
 import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
+import io.car.server.core.statistics.Statistic;
+import io.car.server.core.statistics.Statistics;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>

@@ -60,7 +60,8 @@ public class GroupMembersResource extends AbstractResource {
     public Users get(
             @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit,
             @QueryParam(RESTConstants.PAGE) @DefaultValue("0") int page) {
-        return getService().getGroupMembers(group, new Pagination(limit, page));
+        return getGroupService()
+                .getGroupMembers(group, new Pagination(limit, page));
     }
 
     @POST
@@ -69,17 +70,17 @@ public class GroupMembersResource extends AbstractResource {
     @Consumes(MediaTypes.USER_REF)
     public void add(UserReference user) throws UserNotFoundException,
                                                GroupNotFoundException {
-        User u = getService().getUser(user.getName());
+        User u = getUserService().getUser(user.getName());
         checkRights(getRights().isSelf(u) &&
                     getRights().canJoinGroup(group));
-        getService().addGroupMember(group, u);
+        getGroupService().addGroupMember(group, u);
     }
 
     @Path(MEMBER)
     public GroupMemberResource member(@PathParam("member") String username)
             throws UserNotFoundException {
         checkRights(getRights().canSeeMembersOf(group));
-        User user = getService().getGroupMember(group, username);
+        User user = getGroupService().getGroupMember(group, username);
         checkRights(getRights().canSee(user));
         return getResourceFactory().createGroupMemberResource(group, user);
     }

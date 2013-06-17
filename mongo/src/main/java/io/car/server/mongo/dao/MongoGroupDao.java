@@ -103,7 +103,6 @@ public class MongoGroupDao extends AbstractMongoDao<String, MongoGroup, Groups>
         return fetch(q, p);
     }
 
-
     void removeUser(MongoUser user) {
         removeOwner(user);
         removeMember(user);
@@ -221,6 +220,7 @@ public class MongoGroupDao extends AbstractMongoDao<String, MongoGroup, Groups>
 
     @Override
     public boolean shareGroup(User user1, User user2) {
+        @SuppressWarnings("unchecked")
         Iterable<Key<User>> users = Lists.newArrayList(key(user1),
                                                        key(user2));
         return q().field(MongoGroup.MEMBERS).hasAllOf(users).getKey() != null;

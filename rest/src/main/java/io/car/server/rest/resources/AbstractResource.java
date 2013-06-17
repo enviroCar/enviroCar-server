@@ -25,7 +25,10 @@ import javax.ws.rs.core.UriInfo;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
-import io.car.server.core.Service;
+import io.car.server.core.DataService;
+import io.car.server.core.FriendService;
+import io.car.server.core.GroupService;
+import io.car.server.core.UserService;
 import io.car.server.core.entities.EntityFactory;
 import io.car.server.core.entities.User;
 import io.car.server.rest.auth.PrincipalImpl;
@@ -36,22 +39,37 @@ import io.car.server.rest.rights.AccessRights;
  */
 public abstract class AbstractResource {
     private Provider<SecurityContext> securityContext;
-    private Provider<AccessRights> accessRights;
-    private Provider<Service> service;
+    private Provider<AccessRights> rights;
+    private Provider<DataService> dataService;
+    private Provider<FriendService> friendService;
+    private Provider<GroupService> groupService;
+    private Provider<UserService> userService;
     private Provider<UriInfo> uriInfo;
     private Provider<ResourceFactory> resourceFactory;
     private Provider<EntityFactory> entityFactory;
 
     protected AccessRights getRights() {
-        return accessRights.get();
+        return rights.get();
     }
 
     protected UriInfo getUriInfo() {
         return uriInfo.get();
     }
 
-    protected Service getService() {
-        return service.get();
+    protected DataService getDataService() {
+        return dataService.get();
+    }
+
+    protected FriendService getFriendService() {
+        return friendService.get();
+    }
+
+    protected GroupService getGroupService() {
+        return groupService.get();
+    }
+
+    protected UserService getUserService() {
+        return userService.get();
     }
 
     protected ResourceFactory getResourceFactory() {
@@ -74,25 +92,19 @@ public abstract class AbstractResource {
         return p == null ? null : p.getUser();
     }
 
-
     @Inject
     public void setRights(Provider<AccessRights> accessRights) {
-        this.accessRights = accessRights;
+        this.rights = accessRights;
     }
 
     @Inject
     public void setSecurityContext(Provider<SecurityContext> securityContext) {
         this.securityContext = securityContext;
     }
-    
+
     @Inject
     public void setUriInfo(Provider<UriInfo> uriInfo) {
         this.uriInfo = uriInfo;
-    }
-
-    @Inject
-    public void setUserService(Provider<Service> service) {
-        this.service = service;
     }
 
     @Inject
@@ -103,5 +115,25 @@ public abstract class AbstractResource {
     @Inject
     public void setEntityFactory(Provider<EntityFactory> entityFactory) {
         this.entityFactory = entityFactory;
+    }
+
+    @Inject
+    public void setDataService(Provider<DataService> dataService) {
+        this.dataService = dataService;
+    }
+
+    @Inject
+    public void setFriendService(Provider<FriendService> friendService) {
+        this.friendService = friendService;
+    }
+
+    @Inject
+    public void setGroupService(Provider<GroupService> groupService) {
+        this.groupService = groupService;
+    }
+
+    @Inject
+    public void setUserService(Provider<UserService> userService) {
+        this.userService = userService;
     }
 }

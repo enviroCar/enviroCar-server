@@ -25,11 +25,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 
-import io.car.server.core.filter.MeasurementFilter;
+import io.car.server.core.DataService;
 import io.car.server.core.entities.Measurements;
 import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
+import io.car.server.core.filter.MeasurementFilter;
 import io.car.server.core.util.GeoJSONConstants;
 import io.car.server.rest.JSONConstants;
 import io.car.server.rest.MediaTypes;
@@ -41,15 +42,18 @@ public class TrackEncoder extends AbstractEntityEncoder<Track> {
     private final EntityEncoder<Sensor> sensorEncoder;
     private final EntityEncoder<Measurements> measurementsEncoder;
     private final EntityEncoder<User> userEncoder;
+    private final DataService dataService;
 
     @Inject
     public TrackEncoder(EntityEncoder<Sensor> sensorEncoder,
                         EntityEncoder<Measurements> measurementsEncoder,
-                        EntityEncoder<User> userEncoder) {
+                        EntityEncoder<User> userEncoder,
+                        DataService dataService) {
         super(Track.class);
         this.sensorEncoder = sensorEncoder;
         this.userEncoder = userEncoder;
         this.measurementsEncoder = measurementsEncoder;
+        this.dataService = dataService;
     }
 
     @Override
@@ -91,7 +95,7 @@ public class TrackEncoder extends AbstractEntityEncoder<Track> {
             }
             JsonNode features;
             if (rights.canSeeMeasurementsOf(t)) {
-                Measurements values = getService()
+                Measurements values = dataService
                         .getMeasurements(new MeasurementFilter(t));
                 features = measurementsEncoder
                         .encode(values, rights, mediaType)

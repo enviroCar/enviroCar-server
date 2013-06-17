@@ -27,7 +27,7 @@ import com.google.inject.assistedinject.Assisted;
 import io.car.server.core.entities.Phenomenon;
 import io.car.server.core.exception.PhenomenonNotFoundException;
 import io.car.server.core.statistics.Statistic;
-import io.car.server.core.statistics.StatisticsService;
+import io.car.server.core.StatisticsService;
 import io.car.server.rest.MediaTypes;
 import io.car.server.rest.Schemas;
 import io.car.server.rest.validation.Schema;

@@ -52,7 +52,7 @@ public class UsersResource extends AbstractResource {
             @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit,
             @QueryParam(RESTConstants.PAGE) @DefaultValue("0") int page) {
         checkRights(getRights().canSeeUsers());
-        return getService().getUsers(new Pagination(limit, page));
+        return getUserService().getUsers(new Pagination(limit, page));
     }
 
     @POST
@@ -63,14 +63,14 @@ public class UsersResource extends AbstractResource {
                                              ResourceAlreadyExistException {
         return Response.created(
                 getUriInfo().getAbsolutePathBuilder()
-                .path(getService().createUser(user).getName())
+                .path(getUserService().createUser(user).getName())
                 .build()).build();
     }
 
     @Path(USER)
     public UserResource user(@PathParam("username") String username) throws
             UserNotFoundException {
-        User user = getService().getUser(username);
+        User user = getUserService().getUser(username);
         checkRights(getRights().canSee(user));
         return getResourceFactory().createUserResource(user);
     }

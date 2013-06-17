@@ -15,10 +15,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package io.car.server.core.statistics;
 
 import io.car.server.core.entities.Phenomenon;
@@ -27,7 +23,6 @@ import io.car.server.core.entities.Phenomenon;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface Statistic {
-
     double getMax();
 
     double getMean();

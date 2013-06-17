@@ -26,7 +26,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
-import io.car.server.core.Service;
 import io.car.server.rest.provider.AbstractMessageBodyWriter;
 import io.car.server.rest.rights.AccessRights;
 
@@ -38,9 +37,7 @@ public abstract class AbstractEntityEncoder<T>
         implements EntityEncoder<T> {
     private JsonNodeFactory jsonFactory;
     private DateTimeFormatter dateTimeFormat;
-    private Service service;
     private Provider<AccessRights> rights;
-
 
     public AbstractEntityEncoder(Class<T> classType) {
         super(classType);
@@ -62,15 +59,6 @@ public abstract class AbstractEntityEncoder<T>
     @Inject
     public void setDateTimeFormat(DateTimeFormatter dateTimeFormat) {
         this.dateTimeFormat = dateTimeFormat;
-    }
-
-    public Service getService() {
-        return service;
-    }
-
-    @Inject
-    public void setService(Service service) {
-        this.service = service;
     }
 
     @Inject

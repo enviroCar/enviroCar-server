@@ -15,17 +15,38 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.core.dao;
+package io.car.server.core;
 
 import io.car.server.core.activities.Activities;
-import io.car.server.core.activities.Activity;
+import io.car.server.core.entities.User;
+import io.car.server.core.entities.Users;
+import io.car.server.core.exception.IllegalModificationException;
+import io.car.server.core.exception.ResourceAlreadyExistException;
+import io.car.server.core.exception.UserNotFoundException;
+import io.car.server.core.exception.ValidationException;
 import io.car.server.core.filter.ActivityFilter;
+import io.car.server.core.util.Pagination;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public interface ActivityDao {
-    void save(Activity activity);
+public interface UserService {
+    User createUser(User user)
+            throws ValidationException,
+                   ResourceAlreadyExistException;
 
-    Activities get(ActivityFilter request);
+    Users getUsers(Pagination p);
+
+    User getUser(String name) throws
+            UserNotFoundException;
+
+    void deleteUser(User user);
+
+    User modifyUser(User user, User changes)
+            throws UserNotFoundException,
+                   IllegalModificationException,
+                   ValidationException,
+                   ResourceAlreadyExistException;
+
+    Activities getActivities(ActivityFilter request);
 }

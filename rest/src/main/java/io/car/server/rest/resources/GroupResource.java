@@ -72,7 +72,7 @@ public class GroupResource extends AbstractResource {
                                                  IllegalModificationException,
                                                  GroupNotFoundException {
         checkRights(getRights().canModify(group));
-        Group modified = getService().modifyGroup(group, changes);
+        Group modified = getGroupService().modifyGroup(group, changes);
         if (modified.getName().equals(group.getName())) {
             return Response.noContent().build();
         } else {
@@ -90,7 +90,7 @@ public class GroupResource extends AbstractResource {
     @Authenticated
     public void delete() throws UserNotFoundException, GroupNotFoundException {
         checkRights(getRights().canDelete(group));
-        getService().deleteGroup(group);
+        getGroupService().deleteGroup(group);
     }
 
     @Path(MEMBERS)

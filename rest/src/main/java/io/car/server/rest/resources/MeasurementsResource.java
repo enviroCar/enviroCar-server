@@ -33,7 +33,6 @@ import com.google.inject.assistedinject.Assisted;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Polygon;
 
-import io.car.server.core.filter.MeasurementFilter;
 import io.car.server.core.entities.Measurement;
 import io.car.server.core.entities.Measurements;
 import io.car.server.core.entities.Track;
@@ -43,6 +42,7 @@ import io.car.server.core.exception.ResourceAlreadyExistException;
 import io.car.server.core.exception.TrackNotFoundException;
 import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.core.exception.ValidationException;
+import io.car.server.core.filter.MeasurementFilter;
 import io.car.server.core.util.Pagination;
 import io.car.server.rest.BoundingBox;
 import io.car.server.rest.MediaTypes;
@@ -81,9 +81,9 @@ public class MeasurementsResource extends AbstractResource {
         if (bbox != null) {
             poly = bbox.asPolygon(geometryFactory);
         }
-        return getService()
+        return getDataService()
                 .getMeasurements(new MeasurementFilter(track, user, poly,
-                                                        new Pagination(limit, page)));
+                                                       new Pagination(limit, page)));
     }
 
     @POST
@@ -97,10 +97,10 @@ public class MeasurementsResource extends AbstractResource {
         if (track != null) {
             checkRights(getRights().canModify(track));
             measurement.setUser(getCurrentUser());
-            m = getService().createMeasurement(track, measurement);
+            m = getDataService().createMeasurement(track, measurement);
         } else {
             measurement.setUser(getCurrentUser());
-            m = getService().createMeasurement(measurement);
+            m = getDataService().createMeasurement(measurement);
         }
         return Response.created(
                 getUriInfo()
@@ -118,7 +118,7 @@ public class MeasurementsResource extends AbstractResource {
             checkRights(getRights().canSeeMeasurementsOf(track));
         }
 
-        Measurement m = getService().getMeasurement(id);
+        Measurement m = getDataService().getMeasurement(id);
         checkRights(getRights().canSee(m));
         return getResourceFactory().createMeasurementResource(m, user, track);
     }

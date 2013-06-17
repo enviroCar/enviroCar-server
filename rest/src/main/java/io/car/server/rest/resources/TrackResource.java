@@ -63,7 +63,7 @@ public class TrackResource extends AbstractResource {
                                                  IllegalModificationException,
                                                  ValidationException {
         checkRights(getRights().canModify(track));
-        getService().modifyTrack(track, changes);
+        getDataService().modifyTrack(track, changes);
         return Response.ok().build();
     }
 
@@ -78,7 +78,7 @@ public class TrackResource extends AbstractResource {
     @Authenticated
     public void delete() throws TrackNotFoundException, UserNotFoundException {
         checkRights(getRights().canDelete(track));
-        getService().deleteTrack(track);
+        getDataService().deleteTrack(track);
     }
 
     @Path(MEASUREMENTS)

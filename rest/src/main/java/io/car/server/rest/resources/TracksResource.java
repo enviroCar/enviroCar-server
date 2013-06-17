@@ -33,7 +33,6 @@ import com.google.inject.assistedinject.Assisted;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Polygon;
 
-import io.car.server.core.filter.TrackFilter;
 import io.car.server.core.entities.Measurement;
 import io.car.server.core.entities.Track;
 import io.car.server.core.entities.Tracks;
@@ -42,6 +41,7 @@ import io.car.server.core.exception.ResourceAlreadyExistException;
 import io.car.server.core.exception.TrackNotFoundException;
 import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.core.exception.ValidationException;
+import io.car.server.core.filter.TrackFilter;
 import io.car.server.core.util.Pagination;
 import io.car.server.rest.BoundingBox;
 import io.car.server.rest.MediaTypes;
@@ -78,7 +78,7 @@ public class TracksResource extends AbstractResource {
         if (bbox != null) {
             poly = bbox.asPolygon(factory);
         }
-        return getService()
+        return getDataService()
                 .getTracks(new TrackFilter(user, poly, new Pagination(limit, page)));
     }
 
@@ -96,15 +96,15 @@ public class TracksResource extends AbstractResource {
 
         if (track instanceof TrackWithMeasurments) {
             TrackWithMeasurments twm = (TrackWithMeasurments) track;
-            track = getService().createTrack(twm.getTrack());
+            track = getDataService().createTrack(twm.getTrack());
 
             for (Measurement m : twm.getMeasurements()) {
                 m.setUser(getCurrentUser());
-                getService().createMeasurement(twm.getTrack(), m);
+                getDataService().createMeasurement(twm.getTrack(), m);
             }
 
         } else {
-            track = getService().createTrack(track);
+            track = getDataService().createTrack(track);
         }
         return Response.created(getUriInfo().getAbsolutePathBuilder()
                 .path(track.getIdentifier()).build()).build();
@@ -113,7 +113,7 @@ public class TracksResource extends AbstractResource {
     @Path(TRACK)
     public TrackResource track(@PathParam("track") String id)
             throws TrackNotFoundException {
-        Track track = getService().getTrack(id);
+        Track track = getDataService().getTrack(id);
         checkRights(getRights().canSee(track));
         return getResourceFactory().createTrackResource(track);
     }

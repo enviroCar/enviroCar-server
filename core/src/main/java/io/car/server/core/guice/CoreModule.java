@@ -27,11 +27,17 @@ import com.google.inject.Singleton;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.PrecisionModel;
 
-import io.car.server.core.Service;
-import io.car.server.core.ServiceImpl;
+import io.car.server.core.DataService;
+import io.car.server.core.DataServiceImpl;
+import io.car.server.core.FriendService;
+import io.car.server.core.FriendServiceImpl;
+import io.car.server.core.GroupService;
+import io.car.server.core.GroupServiceImpl;
+import io.car.server.core.StatisticsService;
+import io.car.server.core.StatisticsServiceImpl;
+import io.car.server.core.UserService;
+import io.car.server.core.UserServiceImpl;
 import io.car.server.core.activities.ActivityListener;
-import io.car.server.core.statistics.StatisticsService;
-import io.car.server.core.statistics.StatisticsServiceImpl;
 import io.car.server.core.util.BCryptPasswordEncoder;
 import io.car.server.core.util.PasswordEncoder;
 
@@ -42,9 +48,12 @@ import io.car.server.core.util.PasswordEncoder;
 public class CoreModule extends AbstractModule {
     @Override
     protected void configure() {
-        bind(Service.class).to(ServiceImpl.class);
-        bind(ActivityListener.class).asEagerSingleton();
+        bind(DataService.class).to(DataServiceImpl.class);
+        bind(UserService.class).to(UserServiceImpl.class);
+        bind(FriendService.class).to(FriendServiceImpl.class);
+        bind(GroupService.class).to(GroupServiceImpl.class);
         bind(StatisticsService.class).to(StatisticsServiceImpl.class);
+        bind(ActivityListener.class).asEagerSingleton();
         bind(PasswordEncoder.class).to(BCryptPasswordEncoder.class);
         DateTimeZone.setDefault(DateTimeZone.UTC);
     }

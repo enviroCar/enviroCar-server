@@ -122,9 +122,8 @@ public class MongoSensorDao extends AbstractMongoDao<ObjectId, MongoSensor, Sens
     }
 
     public boolean isNumeric(String str) {
-        DecimalFormatSymbols currentLocaleSymbols = DecimalFormatSymbols
-                .getInstance();
-        char localeMinusSign = currentLocaleSymbols.getMinusSign();
+        DecimalFormatSymbols symbols = DecimalFormatSymbols.getInstance();
+        char localeMinusSign = symbols.getMinusSign();
 
         if (!Character.isDigit(str.charAt(0)) &&
             str.charAt(0) != localeMinusSign) {
@@ -132,7 +131,7 @@ public class MongoSensorDao extends AbstractMongoDao<ObjectId, MongoSensor, Sens
         }
 
         boolean isDecimalSeparatorFound = false;
-        char localeDecimalSeparator = currentLocaleSymbols.getDecimalSeparator();
+        char localeDecimalSeparator = symbols.getDecimalSeparator();
 
         for (char c : str.substring(1).toCharArray()) {
             if (!Character.isDigit(c)) {

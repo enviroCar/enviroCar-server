@@ -77,7 +77,7 @@ public class UserResource extends AbstractResource {
             UserNotFoundException, IllegalModificationException,
             ValidationException, ResourceAlreadyExistException {
         checkRights(getRights().canModify(user));
-        User modified = getService().modifyUser(user, changes);
+        User modified = getUserService().modifyUser(user, changes);
         if (modified.getName().equals(user.getName())) {
             return Response.noContent().build();
         } else {
@@ -102,7 +102,7 @@ public class UserResource extends AbstractResource {
     @Authenticated
     public void delete() throws ResourceNotFoundException {
         checkRights(getRights().canDelete(user));
-        getService().deleteUser(this.user);
+        getUserService().deleteUser(this.user);
     }
 
     @Path(FRIENDS)

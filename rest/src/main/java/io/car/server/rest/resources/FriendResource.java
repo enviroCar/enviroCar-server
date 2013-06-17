@@ -17,7 +17,6 @@
  */
 package io.car.server.rest.resources;
 
-
 import javax.ws.rs.DELETE;
 
 import com.google.inject.Inject;
@@ -32,6 +31,7 @@ import io.car.server.rest.auth.Authenticated;
  */
 public class FriendResource extends UserResource {
     private User user;
+
     @Inject
     public FriendResource(@Assisted("user") User user,
                           @Assisted("friend") User friend) {
@@ -44,6 +44,6 @@ public class FriendResource extends UserResource {
     @Authenticated
     public void delete() throws ResourceNotFoundException {
         checkRights(getRights().canUnfriend(user));
-        getService().removeFriend(user, getUser());
+        getFriendService().removeFriend(user, getUser());
     }
 }

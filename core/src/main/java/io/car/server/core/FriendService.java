@@ -15,20 +15,26 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.rights;
+package io.car.server.core;
 
-import io.car.server.core.entities.Sensor;
+import io.car.server.core.entities.User;
+import io.car.server.core.entities.Users;
+import io.car.server.core.exception.UserNotFoundException;
 
 /**
- *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public interface SensorRights {
-    boolean canSeeSensors();
+public interface FriendService {
+    void addFriend(User user, User friend) throws
+            UserNotFoundException;
 
-    boolean canSee(Sensor sensor);
+    User getFriend(User user, String friendName)
+            throws UserNotFoundException;
 
-    boolean canModify(Sensor sensor);
+    boolean isFriend(User user1, User user2);
 
-    boolean canDelete(Sensor sensor);
+    Users getFriends(User user);
+
+    void removeFriend(User user, User friend)
+            throws UserNotFoundException;
 }

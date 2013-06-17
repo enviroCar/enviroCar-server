@@ -74,7 +74,7 @@ public class SensorsResource extends AbstractResource {
             }
         }
         Pagination p = new Pagination(limit, page);
-        return getService().getSensors(new SensorFilter(type, filters, p));
+        return getDataService().getSensors(new SensorFilter(type, filters, p));
     }
 
     @POST
@@ -84,14 +84,14 @@ public class SensorsResource extends AbstractResource {
     public Response create(Sensor sensor) {
         return Response.created(
                 getUriInfo().getAbsolutePathBuilder()
-                .path(getService().createSensor(sensor).getIdentifier())
+                .path(getDataService().createSensor(sensor).getIdentifier())
                 .build()).build();
     }
 
     @Path(SENSOR)
     public SensorResource sensor(@PathParam("sensor") String id)
             throws SensorNotFoundException {
-        Sensor sensor = getService().getSensorByName(id);
+        Sensor sensor = getDataService().getSensorByName(id);
         checkRights(getRights().canSee(sensor));
         return getResourceFactory().createSensorResource(sensor);
     }

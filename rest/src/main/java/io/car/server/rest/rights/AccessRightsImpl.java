@@ -17,7 +17,8 @@
  */
 package io.car.server.rest.rights;
 
-import io.car.server.core.Service;
+import io.car.server.core.FriendService;
+import io.car.server.core.GroupService;
 import io.car.server.core.entities.Group;
 import io.car.server.core.entities.Measurement;
 import io.car.server.core.entities.Phenomenon;
@@ -26,12 +27,13 @@ import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
 
 public class AccessRightsImpl extends AbstractAccessRights {
-    public AccessRightsImpl(User user, Service service) {
-        super(user, service);
-    }
-
     public AccessRightsImpl() {
         super();
+    }
+
+    public AccessRightsImpl(User user, GroupService groupService,
+                            FriendService friendService) {
+        super(user, groupService, friendService);
     }
 
     @Override
