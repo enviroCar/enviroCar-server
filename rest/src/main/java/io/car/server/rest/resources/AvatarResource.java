@@ -21,6 +21,7 @@ import java.net.URI;
 
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
+import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
@@ -31,6 +32,7 @@ import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
 import io.car.server.core.entities.User;
+import io.car.server.rest.MediaTypes;
 
 /**
  * TODO JavaDoc
@@ -50,6 +52,7 @@ public class AvatarResource extends AbstractResource {
     }
 
     @GET
+    @Produces(MediaTypes.IMAGE_JPEG)
     public Response get(@QueryParam(SIZE) @DefaultValue(DEFAULT_SIZE) int size) {
         return Response.temporaryRedirect(getURI(user, size)).build();
     }
