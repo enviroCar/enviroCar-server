@@ -106,4 +106,6 @@ public interface MediaTypes {
     String ACTIVITIES = "application/json; schema=\"" +
                         Schemas.ACTIVITIES + "\"";
     MediaType ACTIVITIES_TYPE = MediaType.valueOf(ACTIVITIES);
+    String IMAGE_JPEG = "image/jpeg";
+    MediaType IMAGE_JPEG_TYPE = MediaType.valueOf(IMAGE_JPEG);
 }
