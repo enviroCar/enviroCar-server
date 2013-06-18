@@ -23,6 +23,7 @@ package io.car.server.rest;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface JSONConstants {
+    String INSTANCE_KEY = "instance";
     String FRIEND_ACTIVITIES = "friendActivities";
     String GROUP_KEY = "group";
     String OTHER_KEY = "other";
@@ -40,7 +41,7 @@ public interface JSONConstants {
     String BBOX_KEY = "bbox";
     String CREATED_KEY = "created";
     String DESCRIPTION_KEY = "description";
-    String ERRORS = "errors";
+    String ERRORS_KEY = "errors";
     String FRIENDS_KEY = "friends";
     String GEOMETRY_KEY = "geometry";
     String GROUPS_KEY = "groups";

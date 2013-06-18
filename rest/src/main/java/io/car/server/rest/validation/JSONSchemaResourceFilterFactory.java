@@ -138,15 +138,16 @@ public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
         }
     }
 
-    protected void validate(JsonNode t, JsonSchema schema) throws
+    protected void validate(JsonNode instance, JsonSchema schema) throws
             ValidationException, ProcessingException {
-        ProcessingReport report = schema.validate(t);
+        ProcessingReport report = schema.validate(instance);
         if (!report.isSuccess()) {
             ObjectNode error = factory.objectNode();
-            ArrayNode errors = error.putArray(JSONConstants.ERRORS);
+            ArrayNode errors = error.putArray(JSONConstants.ERRORS_KEY);
             for (ProcessingMessage message : report) {
                 errors.add(message.asJson());
             }
+            error.put(JSONConstants.INSTANCE_KEY, instance);
             throw new JSONValidationException(error);
         }
     }
@@ -337,8 +338,7 @@ public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
                         .readTree(entity), schema);
             } catch (JSONValidationException v) {
                 log.error("Created invalid response: Error:\n" +
-                          writer.writeValueAsString(v.getError()) +
-                          "\nGenerated Response:\n" + entity + "\n", v);
+                          writer.writeValueAsString(v.getError()), v);
             } catch (ValidationException v) {
                 log.error("Created invalid response: Error:\n" +
                           v.getMessage() + "\nGenerated Response:\n" +
