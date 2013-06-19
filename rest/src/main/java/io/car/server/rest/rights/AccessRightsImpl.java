@@ -410,4 +410,9 @@ public class AccessRightsImpl extends AbstractAccessRights {
     public boolean canSeeStatistics() {
         return true;
     }
+
+    @Override
+    public boolean canSeeStatisticsOf(Sensor sensor) {
+        return true;
+    }
 }

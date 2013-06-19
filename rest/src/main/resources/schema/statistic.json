@@ -6,9 +6,9 @@
         "min",
         "max",
         "avg",
-    "measurements",
-    "users",
-    "tracks",
+        "measurements",
+        "users",
+        "tracks",
         "phenomenon"
     ],
     "properties": {
@@ -24,6 +24,10 @@
             "minimum": 0
         },
         "tracks": {
+            "type": "integer",
+            "minimum": 0
+        },
+        "sensors": {
             "type": "integer",
             "minimum": 0
         },

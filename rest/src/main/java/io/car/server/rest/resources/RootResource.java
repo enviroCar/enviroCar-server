@@ -130,6 +130,6 @@ public class RootResource extends AbstractResource {
     @Path(STATISTICS)
     public StatisticsResource statistics() {
         checkRights(getRights().canSeeStatistics());
-        return getResourceFactory().createStatisticsResource(null, null);
+        return getResourceFactory().createStatisticsResource();
     }
 }

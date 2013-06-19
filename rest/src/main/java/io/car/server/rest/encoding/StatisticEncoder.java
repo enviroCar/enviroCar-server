@@ -54,6 +54,7 @@ public class StatisticEncoder extends AbstractEntityEncoder<Statistic> {
         statistic.put(JSONConstants.MEASUREMENTS_KEY, t.getMeasurements());
         statistic.put(JSONConstants.TRACKS_KEY, t.getTracks());
         statistic.put(JSONConstants.USERS_KEY, t.getUsers());
+        statistic.put(JSONConstants.SENSORS_KEY, t.getSensors());
         statistic.put(JSONConstants.PHENOMENON_KEY,
                       phenomenonEncoder.encode(t.getPhenomenon(), rights, mt));
         return statistic;

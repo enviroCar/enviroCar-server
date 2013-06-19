@@ -32,4 +32,6 @@ public interface SensorRights {
     boolean canModify(Sensor sensor);
 
     boolean canDelete(Sensor sensor);
+
+    boolean canSeeStatisticsOf(Sensor sensor);
 }
