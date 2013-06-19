@@ -114,4 +114,12 @@ public class MongoSensor extends MongoEntityBase implements Sensor {
     public boolean hasIdentifier() {
         return this.id != null;
     }
+
+    public ObjectId getId() {
+        return id;
+    }
+
+    public void setId(ObjectId id) {
+        this.id = id;
+    }
 }

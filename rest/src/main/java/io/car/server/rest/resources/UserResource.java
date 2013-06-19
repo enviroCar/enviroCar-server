@@ -134,7 +134,7 @@ public class UserResource extends AbstractResource {
     @Path(STATISTICS)
     public StatisticsResource statistics() {
         checkRights(getRights().canSeeStatisticsOf(user));
-        return getResourceFactory().createStatisticsResource(null, this.user);
+        return getResourceFactory().createStatisticsResource(this.user);
     }
 
     @Path(ACTIVITIES)

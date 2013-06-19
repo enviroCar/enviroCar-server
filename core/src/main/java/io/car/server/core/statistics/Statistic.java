@@ -37,5 +37,7 @@ public interface Statistic {
 
     long getMeasurements();
 
+    long getSensors();
+
     Phenomenon getPhenomenon();
 }

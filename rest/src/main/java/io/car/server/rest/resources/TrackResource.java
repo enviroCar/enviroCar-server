@@ -96,6 +96,6 @@ public class TrackResource extends AbstractResource {
     @Path(STATISTICS)
     public StatisticsResource statistics() {
         checkRights(getRights().canSeeStatisticsOf(track));
-        return getResourceFactory().createStatisticsResource(track, null);
+        return getResourceFactory().createStatisticsResource(track);
     }
 }

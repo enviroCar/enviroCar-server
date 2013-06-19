@@ -21,9 +21,7 @@ import com.google.inject.Inject;
 
 import io.car.server.core.dao.StatisticsDao;
 import io.car.server.core.entities.Phenomenon;
-import io.car.server.core.entities.Phenomenons;
-import io.car.server.core.entities.Track;
-import io.car.server.core.entities.User;
+import io.car.server.core.filter.StatisticsFilter;
 import io.car.server.core.statistics.Statistic;
 import io.car.server.core.statistics.Statistics;
 
@@ -41,48 +39,13 @@ public class StatisticsServiceImpl implements StatisticsService {
     }
 
     @Override
-    public Statistics getStatisticsForTrack(Track track) {
-        return dao.getStatisticsForTrack(track);
+    public Statistics getStatistics(StatisticsFilter request) {
+        return this.dao.getStatistics(request);
     }
 
     @Override
-    public Statistics getStatisticsForUser(User user) {
-        return dao.getStatisticsForUser(user);
-    }
-
-    @Override
-    public Statistics getStatistics() {
-        return dao.getStatistics();
-    }
-
-    @Override
-    public Statistic getStatisticsForTrack(Track track, Phenomenon phenomenon) {
-        return dao.getStatisticsForTrack(track, phenomenon);
-    }
-
-    @Override
-    public Statistic getStatisticsForUser(User user, Phenomenon phenomenon) {
-        return dao.getStatisticsForUser(user, phenomenon);
-    }
-
-    @Override
-    public Statistic getStatistics(Phenomenon phenomenon) {
-        return dao.getStatistics(phenomenon);
-    }
-
-    @Override
-    public Statistics getStatisticsForTrack(Track track,
-                                            Phenomenons phenomenon) {
-        return dao.getStatisticsForTrack(track, phenomenon);
-    }
-
-    @Override
-    public Statistics getStatisticsForUser(User user, Phenomenons phenomenon) {
-        return dao.getStatisticsForUser(user, phenomenon);
-    }
-
-    @Override
-    public Statistics getStatistics(Phenomenons phenomenons) {
-        return dao.getStatistics(phenomenons);
+    public Statistic getStatistic(StatisticsFilter request,
+                                  Phenomenon phenomenon) {
+        return this.dao.getStatistic(request, phenomenon);
     }
 }

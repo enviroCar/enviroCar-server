@@ -18,9 +18,7 @@
 package io.car.server.core.dao;
 
 import io.car.server.core.entities.Phenomenon;
-import io.car.server.core.entities.Phenomenons;
-import io.car.server.core.entities.Track;
-import io.car.server.core.entities.User;
+import io.car.server.core.filter.StatisticsFilter;
 import io.car.server.core.statistics.Statistic;
 import io.car.server.core.statistics.Statistics;
 
@@ -30,21 +28,7 @@ import io.car.server.core.statistics.Statistics;
  * @author jan
  */
 public interface StatisticsDao {
-    Statistics getStatisticsForTrack(Track track);
+    Statistics getStatistics(StatisticsFilter request);
 
-    Statistics getStatisticsForUser(User user);
-
-    Statistics getStatistics();
-
-    Statistic getStatisticsForTrack(Track track, Phenomenon phenomenon);
-
-    Statistic getStatisticsForUser(User user, Phenomenon phenomenon);
-
-    Statistic getStatistics(Phenomenon phenomenon);
-
-    Statistics getStatisticsForTrack(Track track, Phenomenons phenomenons);
-
-    Statistics getStatisticsForUser(User user, Phenomenons phenomenons);
-
-    Statistics getStatistics(Phenomenons phenomenons);
+    Statistic getStatistic(StatisticsFilter request, Phenomenon phenomenon);
 }
