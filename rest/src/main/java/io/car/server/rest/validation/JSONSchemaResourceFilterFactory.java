@@ -26,6 +26,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 
+import javax.ws.rs.HttpMethod;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -242,7 +243,8 @@ public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
         public ContainerResponse filter(ContainerRequest request,
                                         ContainerResponse response) {
             MediaType mt = response.getMediaType();
-            if (mt != null && mt.isCompatible(MediaType.APPLICATION_JSON_TYPE)) {
+            if (mt != null && mt.isCompatible(MediaType.APPLICATION_JSON_TYPE) &&
+                !request.getMethod().equals(HttpMethod.HEAD)) {
                 adjustContentType(response);
                 ContainerResponseWriter crw = response
                         .getContainerResponseWriter();
