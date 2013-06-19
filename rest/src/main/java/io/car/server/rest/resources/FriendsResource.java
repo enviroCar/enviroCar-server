@@ -54,7 +54,10 @@ public class FriendsResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.USERS)
-    @Produces({ MediaTypes.USERS })
+    @Produces({ MediaTypes.USERS,
+                MediaTypes.XML_RDF,
+                MediaTypes.TURTLE,
+                MediaTypes.TURTLE_ALT })
     public Users get() {
         return getFriendService().getFriends(user);
     }

@@ -61,7 +61,10 @@ public class GroupsResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.GROUPS)
-    @Produces({ MediaTypes.GROUPS })
+    @Produces({ MediaTypes.GROUPS,
+                MediaTypes.XML_RDF,
+                MediaTypes.TURTLE,
+                MediaTypes.TURTLE_ALT })
     public Groups get(
             @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit,
             @QueryParam(RESTConstants.PAGE) @DefaultValue("0") int page,

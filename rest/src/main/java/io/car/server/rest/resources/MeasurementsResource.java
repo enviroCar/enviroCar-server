@@ -73,7 +73,10 @@ public class MeasurementsResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.MEASUREMENTS)
-    @Produces({ MediaTypes.MEASUREMENTS })
+    @Produces({ MediaTypes.MEASUREMENTS,
+                MediaTypes.XML_RDF,
+                MediaTypes.TURTLE,
+                MediaTypes.TURTLE_ALT })
     public Measurements get(
             @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit,
             @QueryParam(RESTConstants.PAGE) @DefaultValue("0") int page,

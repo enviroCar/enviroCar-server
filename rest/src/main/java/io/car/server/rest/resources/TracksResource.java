@@ -70,7 +70,10 @@ public class TracksResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.TRACKS)
-    @Produces({ MediaTypes.TRACKS })
+    @Produces({ MediaTypes.TRACKS,
+                MediaTypes.XML_RDF,
+                MediaTypes.TURTLE,
+                MediaTypes.TURTLE_ALT })
     public Tracks get(
             @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit,
             @QueryParam(RESTConstants.PAGE) @DefaultValue("0") int page,
