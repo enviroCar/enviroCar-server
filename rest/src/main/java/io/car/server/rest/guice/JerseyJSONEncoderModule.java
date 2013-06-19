@@ -41,7 +41,7 @@ import io.car.server.core.statistics.Statistics;
 import io.car.server.rest.encoding.json.ActivitiesJSONEncoder;
 import io.car.server.rest.encoding.json.ActivityJSONEncoder;
 import io.car.server.rest.encoding.JSONEntityEncoder;
-import io.car.server.rest.encoding.json.GeoJSONEncoder;
+import io.car.server.rest.encoding.json.GeometryJSONEncoder;
 import io.car.server.rest.encoding.json.GroupJSONEncoder;
 import io.car.server.rest.encoding.json.GroupsJSONEncoder;
 import io.car.server.rest.encoding.json.MeasurementJSONEncoder;
@@ -56,7 +56,7 @@ import io.car.server.rest.encoding.json.TrackJSONEncoder;
 import io.car.server.rest.encoding.json.TracksJSONEncoder;
 import io.car.server.rest.encoding.json.UserJSONEncoder;
 import io.car.server.rest.encoding.json.UsersJSONEncoder;
-import io.car.server.rest.provider.JsonNodeMessageBodyWriter;
+import io.car.server.rest.encoding.json.JsonNodeMessageBodyWriter;
 
 /**
  * TODO JavaDoc
@@ -115,8 +115,8 @@ public class JerseyJSONEncoderModule extends AbstractModule {
         bind(ActivitiesJSONEncoder.class).in(Scopes.SINGLETON);
         bind(new TypeLiteral<JSONEntityEncoder<Activities>>() {
         }).to(ActivitiesJSONEncoder.class);
-        bind(GeoJSONEncoder.class).in(Scopes.SINGLETON);
+        bind(GeometryJSONEncoder.class).in(Scopes.SINGLETON);
         bind(new TypeLiteral<JSONEntityEncoder<Geometry>>() {
-        }).to(GeoJSONEncoder.class);
+        }).to(GeometryJSONEncoder.class);
     }
 }

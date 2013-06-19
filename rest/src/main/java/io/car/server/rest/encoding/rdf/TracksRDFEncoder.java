@@ -15,16 +15,16 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.decoding;
+package io.car.server.rest.encoding.rdf;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.core.MediaType;
+import java.util.Set;
+
 import javax.ws.rs.ext.Provider;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import com.google.inject.Inject;
 
-import io.car.server.core.entities.Phenomenon;
-import io.car.server.rest.JSONConstants;
+import io.car.server.core.entities.Track;
+import io.car.server.core.entities.Tracks;
 
 /**
  * TODO JavaDoc
@@ -32,17 +32,9 @@ import io.car.server.rest.JSONConstants;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
-@Consumes(MediaType.APPLICATION_JSON)
-public class PhenomenonDecoder extends AbstractEntityDecoder<Phenomenon> {
-    public PhenomenonDecoder() {
-        super(Phenomenon.class);
-    }
-
-    @Override
-    public Phenomenon decode(JsonNode j, MediaType mediaType) {
-        Phenomenon p = getEntityFactory().createPhenomenon();
-        p.setName(j.path(JSONConstants.NAME_KEY).textValue());
-        p.setUnit(j.path(JSONConstants.UNIT_KEY).textValue());
-        return p;
+public class TracksRDFEncoder extends AbstractCollectionRDFEntityEncoder<Track, Tracks> {
+    @Inject
+    public TracksRDFEncoder(Set<RDFLinker<Track>> linkers) {
+        super(Tracks.class, linkers);
     }
 }

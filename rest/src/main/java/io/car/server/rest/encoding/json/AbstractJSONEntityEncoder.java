@@ -27,7 +27,6 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import io.car.server.rest.encoding.JSONEntityEncoder;
-import io.car.server.rest.provider.AbstractJSONMessageBodyWriter;
 import io.car.server.rest.rights.AccessRights;
 
 /**

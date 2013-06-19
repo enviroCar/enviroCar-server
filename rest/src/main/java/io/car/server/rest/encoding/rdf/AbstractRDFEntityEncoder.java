@@ -25,7 +25,6 @@ import com.google.inject.Provider;
 import com.hp.hpl.jena.rdf.model.Model;
 
 import io.car.server.rest.encoding.RDFEntityEncoder;
-import io.car.server.rest.provider.AbstractRDFMessageBodyWriter;
 import io.car.server.rest.rights.AccessRights;
 
 /**

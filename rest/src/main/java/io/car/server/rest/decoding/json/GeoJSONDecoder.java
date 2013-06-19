@@ -15,15 +15,19 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.encoding.rdf;
+package io.car.server.rest.decoding.json;
 
-import java.util.Set;
-
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.Provider;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
+import com.vividsolutions.jts.geom.Geometry;
 
-import io.car.server.core.entities.User;
+import io.car.server.core.exception.GeometryConverterException;
+import io.car.server.rest.util.GeoJSON;
 
 /**
  * TODO JavaDoc
@@ -31,9 +35,21 @@ import io.car.server.core.entities.User;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
-public class UserRDFEncoder extends AbstractLinkerRDFEntityEncoder<User> {
+public class GeoJSONDecoder extends AbstractJSONEntityDecoder<Geometry> {
+    private final GeoJSON geoJSON;
+
     @Inject
-    public UserRDFEncoder(Set<RDFLinker<User>> linker) {
-        super(User.class, linker);
+    public GeoJSONDecoder(GeoJSON geoJSON) {
+        super(Geometry.class);
+        this.geoJSON = geoJSON;
+    }
+
+    @Override
+    public Geometry decode(JsonNode j, MediaType mt) {
+        try {
+            return geoJSON.decode(j);
+        } catch (GeometryConverterException ex) {
+            throw new WebApplicationException(ex, Status.BAD_REQUEST);
+        }
     }
 }

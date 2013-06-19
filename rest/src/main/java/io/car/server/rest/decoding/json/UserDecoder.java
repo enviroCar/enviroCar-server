@@ -15,12 +15,11 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.decoding;
+package io.car.server.rest.decoding.json;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import javax.ws.rs.Consumes;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response.Status;
@@ -40,12 +39,11 @@ import io.car.server.rest.JSONConstants;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
-@Consumes(MediaType.APPLICATION_JSON)
-public class UserDecoder extends AbstractEntityDecoder<User> {
-    private final EntityDecoder<Geometry> geometryDecoder;
+public class UserDecoder extends AbstractJSONEntityDecoder<User> {
+    private final JSONEntityDecoder<Geometry> geometryDecoder;
 
     @Inject
-    public UserDecoder(EntityDecoder<Geometry> geometryDecoder) {
+    public UserDecoder(JSONEntityDecoder<Geometry> geometryDecoder) {
         super(User.class);
         this.geometryDecoder = geometryDecoder;
     }

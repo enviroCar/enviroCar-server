@@ -5,3 +5,4 @@ io.car.server.rest.guice.JerseyJSONEncoderModule
 io.car.server.rest.guice.JerseyRDFEncoderModule
 io.car.server.rest.guice.JerseyValidationModule
 io.car.server.rest.guice.JerseyModule
+io.car.server.rest.guice.DefaultRDFLinkerModule

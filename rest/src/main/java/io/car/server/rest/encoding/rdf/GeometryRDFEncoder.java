@@ -22,8 +22,7 @@ import java.util.Set;
 import javax.ws.rs.ext.Provider;
 
 import com.google.inject.Inject;
-
-import io.car.server.core.entities.User;
+import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * TODO JavaDoc
@@ -31,9 +30,9 @@ import io.car.server.core.entities.User;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
-public class UserRDFEncoder extends AbstractLinkerRDFEntityEncoder<User> {
+public class GeometryRDFEncoder extends AbstractLinkerRDFEntityEncoder<Geometry> {
     @Inject
-    public UserRDFEncoder(Set<RDFLinker<User>> linker) {
-        super(User.class, linker);
+    public GeometryRDFEncoder(Set<RDFLinker<Geometry>> linkers) {
+        super(Geometry.class, linkers);
     }
 }

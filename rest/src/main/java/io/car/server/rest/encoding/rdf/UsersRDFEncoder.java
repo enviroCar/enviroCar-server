@@ -15,18 +15,16 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.provider;
+package io.car.server.rest.encoding.rdf;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.core.MediaType;
+import java.util.Set;
+
 import javax.ws.rs.ext.Provider;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
 
 import io.car.server.core.entities.User;
-import io.car.server.rest.UserReference;
-import io.car.server.rest.decoding.EntityDecoder;
+import io.car.server.core.entities.Users;
 
 /**
  * TODO JavaDoc
@@ -34,19 +32,9 @@ import io.car.server.rest.decoding.EntityDecoder;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
-@Consumes(MediaType.APPLICATION_JSON)
-public class UserReferenceProvider extends AbstractJSONMessageBodyReader<UserReference> {
-    private final EntityDecoder<User> userDecoder;
-
+public class UsersRDFEncoder extends AbstractCollectionRDFEntityEncoder<User, Users> {
     @Inject
-    public UserReferenceProvider(EntityDecoder<User> userDecoder) {
-        super(UserReference.class);
-        this.userDecoder = userDecoder;
-    }
-
-    @Override
-    public UserReference decode(JsonNode j, MediaType mt) {
-        User user = userDecoder.decode(j, mt);
-        return new UserReference(user.getName());
+    public UsersRDFEncoder(Set<RDFLinker<User>> linkers) {
+        super(Users.class, linkers);
     }
 }

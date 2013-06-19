@@ -15,9 +15,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.decoding;
+package io.car.server.rest.decoding.json;
 
-import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
@@ -39,13 +38,12 @@ import io.car.server.rest.TrackWithMeasurments;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
-@Consumes(MediaType.APPLICATION_JSON)
-public class TrackDecoder extends AbstractEntityDecoder<Track> {
-    private EntityDecoder<Measurement> measurementDecoder;
+public class TrackDecoder extends AbstractJSONEntityDecoder<Track> {
+    private JSONEntityDecoder<Measurement> measurementDecoder;
     private SensorDao sensorDao;
 
     @Inject
-    public TrackDecoder(EntityDecoder<Measurement> measurementDecoder,
+    public TrackDecoder(JSONEntityDecoder<Measurement> measurementDecoder,
                         SensorDao sensorDao,
                         MeasurementDao measurementDao) {
         super(Track.class);

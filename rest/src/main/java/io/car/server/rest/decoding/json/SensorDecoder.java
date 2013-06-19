@@ -15,13 +15,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.decoding;
+package io.car.server.rest.decoding.json;
 
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.ws.rs.Consumes;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response.Status;
@@ -40,8 +39,7 @@ import io.car.server.rest.JSONConstants;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
-@Consumes(MediaType.APPLICATION_JSON)
-public class SensorDecoder extends AbstractEntityDecoder<Sensor> {
+public class SensorDecoder extends AbstractJSONEntityDecoder<Sensor> {
     public SensorDecoder() {
         super(Sensor.class);
     }

@@ -23,7 +23,8 @@ import javax.ws.rs.ext.Provider;
 
 import com.google.inject.Inject;
 
-import io.car.server.core.entities.User;
+import io.car.server.core.statistics.Statistic;
+import io.car.server.core.statistics.Statistics;
 
 /**
  * TODO JavaDoc
@@ -31,9 +32,9 @@ import io.car.server.core.entities.User;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
-public class UserRDFEncoder extends AbstractLinkerRDFEntityEncoder<User> {
+public class StatisticsRDFEncoder extends AbstractCollectionRDFEntityEncoder<Statistic, Statistics> {
     @Inject
-    public UserRDFEncoder(Set<RDFLinker<User>> linker) {
-        super(User.class, linker);
+    public StatisticsRDFEncoder(Set<RDFLinker<Statistic>> linkers) {
+        super(Statistics.class, linkers);
     }
 }

@@ -15,45 +15,26 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.decoding;
+package io.car.server.rest.encoding.rdf;
 
-import org.joda.time.format.DateTimeFormatter;
+import java.util.Set;
+
+import javax.ws.rs.ext.Provider;
 
 import com.google.inject.Inject;
 
-import io.car.server.core.entities.EntityFactory;
-import io.car.server.rest.provider.AbstractJSONMessageBodyReader;
+import io.car.server.core.entities.Group;
+import io.car.server.core.entities.Groups;
 
 /**
  * TODO JavaDoc
  *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public abstract class AbstractEntityDecoder<T>
-        extends AbstractJSONMessageBodyReader<T>
-        implements EntityDecoder<T> {
-    private DateTimeFormatter dateTimeFormat;
-    private EntityFactory entityFactory;
-
-    public AbstractEntityDecoder(Class<T> type) {
-        super(type);
-    }
-
-    public EntityFactory getEntityFactory() {
-        return entityFactory;
-    }
-
+@Provider
+public class GroupsRDFEncoder extends AbstractCollectionRDFEntityEncoder<Group, Groups> {
     @Inject
-    public void setEntityFactory(EntityFactory entityFactory) {
-        this.entityFactory = entityFactory;
-    }
-
-    public DateTimeFormatter getDateTimeFormat() {
-        return dateTimeFormat;
-    }
-
-    @Inject
-    public void setDateTimeFormat(DateTimeFormatter dateTimeFormat) {
-        this.dateTimeFormat = dateTimeFormat;
+    public GroupsRDFEncoder(Set<RDFLinker<Group>> linkers) {
+        super(Groups.class, linkers);
     }
 }

@@ -15,12 +15,11 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.decoding;
+package io.car.server.rest.decoding.json;
 
 import java.util.Iterator;
 import java.util.Map.Entry;
 
-import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
@@ -43,14 +42,13 @@ import io.car.server.rest.JSONConstants;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
-@Consumes(MediaType.APPLICATION_JSON)
-public class MeasurementDecoder extends AbstractEntityDecoder<Measurement> {
-    private final EntityDecoder<Geometry> geometryDecoder;
+public class MeasurementDecoder extends AbstractJSONEntityDecoder<Measurement> {
+    private final JSONEntityDecoder<Geometry> geometryDecoder;
     private final PhenomenonDao phenomenonDao;
     private final SensorDao sensorDao;
 
     @Inject
-    public MeasurementDecoder(EntityDecoder<Geometry> geometryDecoder,
+    public MeasurementDecoder(JSONEntityDecoder<Geometry> geometryDecoder,
                               PhenomenonDao phenomenonDao,
                               SensorDao sensorDao) {
         super(Measurement.class);

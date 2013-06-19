@@ -17,19 +17,17 @@
  */
 package io.car.server.rest.encoding.json;
 
+import io.car.server.rest.decoding.json.AbstractJSONMessageBodyReader;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.Provider;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
-import com.vividsolutions.jts.geom.Geometry;
 
-import io.car.server.core.exception.GeometryConverterException;
-import io.car.server.rest.rights.AccessRights;
-import io.car.server.rest.util.GeoJSON;
+import io.car.server.core.entities.User;
+import io.car.server.rest.UserReference;
+import io.car.server.rest.decoding.json.JSONEntityDecoder;
 
 /**
  * TODO JavaDoc
@@ -38,21 +36,18 @@ import io.car.server.rest.util.GeoJSON;
  */
 @Provider
 @Consumes(MediaType.APPLICATION_JSON)
-public class GeoJSONEncoder extends AbstractJSONEntityEncoder<Geometry> {
-    private final GeoJSON geoJSON;
+public class UserReferenceProvider extends AbstractJSONMessageBodyReader<UserReference> {
+    private final JSONEntityDecoder<User> userDecoder;
 
     @Inject
-    public GeoJSONEncoder(GeoJSON geoJSON) {
-        super(Geometry.class);
-        this.geoJSON = geoJSON;
+    public UserReferenceProvider(JSONEntityDecoder<User> userDecoder) {
+        super(UserReference.class);
+        this.userDecoder = userDecoder;
     }
 
     @Override
-    public ObjectNode encodeJSON(Geometry t, AccessRights rights, MediaType mt) {
-        try {
-            return geoJSON.encode(t);
-        } catch (GeometryConverterException ex) {
-            throw new WebApplicationException(ex, Status.INTERNAL_SERVER_ERROR);
-        }
+    public UserReference decode(JsonNode j, MediaType mt) {
+        User user = userDecoder.decode(j, mt);
+        return new UserReference(user.getName());
     }
 }

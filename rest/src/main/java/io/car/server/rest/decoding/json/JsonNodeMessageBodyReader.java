@@ -15,15 +15,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.encoding.rdf;
+package io.car.server.rest.decoding.json;
 
-import java.util.Set;
-
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
-import com.google.inject.Inject;
-
-import io.car.server.core.entities.User;
+import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * TODO JavaDoc
@@ -31,9 +28,13 @@ import io.car.server.core.entities.User;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
-public class UserRDFEncoder extends AbstractLinkerRDFEntityEncoder<User> {
-    @Inject
-    public UserRDFEncoder(Set<RDFLinker<User>> linker) {
-        super(User.class, linker);
+public class JsonNodeMessageBodyReader extends AbstractJSONMessageBodyReader<JsonNode> {
+    public JsonNodeMessageBodyReader() {
+        super(JsonNode.class);
+    }
+
+    @Override
+    public JsonNode decode(JsonNode j, MediaType mt) {
+        return j;
     }
 }

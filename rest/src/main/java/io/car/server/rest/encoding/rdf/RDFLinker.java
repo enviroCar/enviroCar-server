@@ -17,23 +17,19 @@
  */
 package io.car.server.rest.encoding.rdf;
 
-import java.util.Set;
+import javax.ws.rs.core.UriBuilder;
 
-import javax.ws.rs.ext.Provider;
+import com.google.inject.Provider;
+import com.hp.hpl.jena.rdf.model.Model;
 
-import com.google.inject.Inject;
-
-import io.car.server.core.entities.User;
+import io.car.server.rest.rights.AccessRights;
 
 /**
  * TODO JavaDoc
  *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-@Provider
-public class UserRDFEncoder extends AbstractLinkerRDFEntityEncoder<User> {
-    @Inject
-    public UserRDFEncoder(Set<RDFLinker<User>> linker) {
-        super(User.class, linker);
-    }
+public interface RDFLinker<T> {
+    void link(Model m, T t, AccessRights rights,
+              Provider<UriBuilder> uriBuilder);
 }

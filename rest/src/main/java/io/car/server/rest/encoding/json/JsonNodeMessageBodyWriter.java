@@ -15,15 +15,17 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.encoding.rdf;
+package io.car.server.rest.encoding.json;
 
-import java.util.Set;
-
+import io.car.server.rest.encoding.json.AbstractJSONMessageBodyWriter;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
-import com.google.inject.Inject;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import io.car.server.core.entities.User;
+import io.car.server.rest.rights.AccessRights;
 
 /**
  * TODO JavaDoc
@@ -31,9 +33,19 @@ import io.car.server.core.entities.User;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
-public class UserRDFEncoder extends AbstractLinkerRDFEntityEncoder<User> {
-    @Inject
-    public UserRDFEncoder(Set<RDFLinker<User>> linker) {
-        super(User.class, linker);
+@Produces(MediaType.APPLICATION_JSON)
+public class JsonNodeMessageBodyWriter extends AbstractJSONMessageBodyWriter<JsonNode> {
+    public JsonNodeMessageBodyWriter() {
+        super(JsonNode.class);
+    }
+
+    @Override
+    public ObjectNode encodeJSON(JsonNode t, MediaType mt) {
+        return (ObjectNode) t;
+    }
+
+    @Override
+    public ObjectNode encodeJSON(JsonNode t, AccessRights rights, MediaType mt) {
+        return (ObjectNode) t;
     }
 }

@@ -15,39 +15,44 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.decoding;
+package io.car.server.rest.decoding.json;
 
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response.Status;
+import org.joda.time.format.DateTimeFormatter;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
-import com.vividsolutions.jts.geom.Geometry;
 
-import io.car.server.core.exception.GeometryConverterException;
-import io.car.server.rest.util.GeoJSON;
+import io.car.server.core.entities.EntityFactory;
 
 /**
  * TODO JavaDoc
  *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class GeoJSONDecoder extends AbstractEntityDecoder<Geometry> {
-    private final GeoJSON geoJSON;
+public abstract class AbstractJSONEntityDecoder<T>
+        extends AbstractJSONMessageBodyReader<T>
+        implements JSONEntityDecoder<T> {
+    private DateTimeFormatter dateTimeFormat;
+    private EntityFactory entityFactory;
 
-    @Inject
-    public GeoJSONDecoder(GeoJSON geoJSON) {
-        super(Geometry.class);
-        this.geoJSON = geoJSON;
+    public AbstractJSONEntityDecoder(Class<T> type) {
+        super(type);
     }
 
-    @Override
-    public Geometry decode(JsonNode j, MediaType mt) {
-        try {
-            return geoJSON.decode(j);
-        } catch (GeometryConverterException ex) {
-            throw new WebApplicationException(ex, Status.BAD_REQUEST);
-        }
+    public EntityFactory getEntityFactory() {
+        return entityFactory;
+    }
+
+    @Inject
+    public void setEntityFactory(EntityFactory entityFactory) {
+        this.entityFactory = entityFactory;
+    }
+
+    public DateTimeFormatter getDateTimeFormat() {
+        return dateTimeFormat;
+    }
+
+    @Inject
+    public void setDateTimeFormat(DateTimeFormatter dateTimeFormat) {
+        this.dateTimeFormat = dateTimeFormat;
     }
 }
