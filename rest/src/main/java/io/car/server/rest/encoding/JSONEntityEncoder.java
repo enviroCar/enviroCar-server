@@ -15,13 +15,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.provider;
+package io.car.server.rest.encoding;
 
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.ext.Provider;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import io.car.server.rest.rights.AccessRights;
@@ -31,20 +28,6 @@ import io.car.server.rest.rights.AccessRights;
  *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-@Provider
-@Produces(MediaType.APPLICATION_JSON)
-public class JsonNodeMessageBodyWriter extends AbstractJSONMessageBodyWriter<JsonNode> {
-    public JsonNodeMessageBodyWriter() {
-        super(JsonNode.class);
-    }
-
-    @Override
-    public ObjectNode encodeJSON(JsonNode t, MediaType mt) {
-        return (ObjectNode) t;
-    }
-
-    @Override
-    public ObjectNode encodeJSON(JsonNode t, AccessRights rights, MediaType mt) {
-        return (ObjectNode) t;
-    }
+public interface JSONEntityEncoder<T> {
+    ObjectNode encodeJSON(T t, AccessRights rights, MediaType mt);
 }

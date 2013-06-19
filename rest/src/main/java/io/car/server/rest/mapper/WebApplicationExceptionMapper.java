@@ -15,22 +15,23 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.encoding;
+package io.car.server.rest.mapper;
 
-import javax.ws.rs.core.MediaType;
-
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.hp.hpl.jena.rdf.model.Model;
-
-import io.car.server.rest.rights.AccessRights;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.ExceptionMapper;
+import javax.ws.rs.ext.Provider;
 
 /**
  * TODO JavaDoc
  *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public interface EntityEncoder<T> {
-    ObjectNode encodeJSON(T t, AccessRights rights, MediaType mt);
-
-    Model encodeRDF(T t, AccessRights rights, MediaType mt);
+@Provider
+public class WebApplicationExceptionMapper implements
+        ExceptionMapper<WebApplicationException> {
+    @Override
+    public Response toResponse(WebApplicationException exception) {
+        return exception.getResponse();
+    }
 }

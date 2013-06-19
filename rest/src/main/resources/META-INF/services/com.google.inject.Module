@@ -1,6 +1,7 @@
 io.car.server.rest.guice.JerseyResourceModule
 io.car.server.rest.guice.JerseyCodingModule
 io.car.server.rest.guice.JerseyDecoderModule
-io.car.server.rest.guice.JerseyEncoderModule
+io.car.server.rest.guice.JerseyJSONEncoderModule
+io.car.server.rest.guice.JerseyRDFEncoderModule
 io.car.server.rest.guice.JerseyValidationModule
 io.car.server.rest.guice.JerseyModule

@@ -55,7 +55,7 @@ public class MeasurementResource extends AbstractResource {
 
     @PUT
     @Schema(request = Schemas.MEASUREMENT_MODIFY)
-    @Consumes(MediaTypes.MEASUREMENT_MODIFY)
+    @Consumes({ MediaTypes.MEASUREMENT_MODIFY })
     @Authenticated
     public Response modify(Measurement changes)
             throws MeasurementNotFoundException, UserNotFoundException,
@@ -67,8 +67,7 @@ public class MeasurementResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.MEASUREMENT)
-    @Produces({ MediaTypes.MEASUREMENT, MediaTypes.XML_RDF, MediaTypes.TURTLE,
-                MediaTypes.TURTLE_ALT })
+    @Produces({ MediaTypes.MEASUREMENT })
     public Measurement get() throws MeasurementNotFoundException {
         return measurement;
     }

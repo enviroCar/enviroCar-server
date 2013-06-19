@@ -30,7 +30,7 @@ import com.fasterxml.jackson.databind.JsonNode;
  */
 @Provider
 @Consumes(MediaType.APPLICATION_JSON)
-public class JsonNodeMessageBodyReader extends AbstractMessageBodyReader<JsonNode> {
+public class JsonNodeMessageBodyReader extends AbstractJSONMessageBodyReader<JsonNode> {
     public JsonNodeMessageBodyReader() {
         super(JsonNode.class);
     }

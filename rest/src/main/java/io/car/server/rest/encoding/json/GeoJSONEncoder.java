@@ -15,16 +15,21 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.provider;
+package io.car.server.rest.encoding.json;
 
-import javax.ws.rs.Produces;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.Provider;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.inject.Inject;
+import com.vividsolutions.jts.geom.Geometry;
 
+import io.car.server.core.exception.GeometryConverterException;
 import io.car.server.rest.rights.AccessRights;
+import io.car.server.rest.util.GeoJSON;
 
 /**
  * TODO JavaDoc
@@ -32,19 +37,22 @@ import io.car.server.rest.rights.AccessRights;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
-@Produces(MediaType.APPLICATION_JSON)
-public class JsonNodeMessageBodyWriter extends AbstractJSONMessageBodyWriter<JsonNode> {
-    public JsonNodeMessageBodyWriter() {
-        super(JsonNode.class);
+@Consumes(MediaType.APPLICATION_JSON)
+public class GeoJSONEncoder extends AbstractJSONEntityEncoder<Geometry> {
+    private final GeoJSON geoJSON;
+
+    @Inject
+    public GeoJSONEncoder(GeoJSON geoJSON) {
+        super(Geometry.class);
+        this.geoJSON = geoJSON;
     }
 
     @Override
-    public ObjectNode encodeJSON(JsonNode t, MediaType mt) {
-        return (ObjectNode) t;
-    }
-
-    @Override
-    public ObjectNode encodeJSON(JsonNode t, AccessRights rights, MediaType mt) {
-        return (ObjectNode) t;
+    public ObjectNode encodeJSON(Geometry t, AccessRights rights, MediaType mt) {
+        try {
+            return geoJSON.encode(t);
+        } catch (GeometryConverterException ex) {
+            throw new WebApplicationException(ex, Status.INTERNAL_SERVER_ERROR);
+        }
     }
 }

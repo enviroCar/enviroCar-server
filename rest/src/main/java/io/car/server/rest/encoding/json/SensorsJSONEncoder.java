@@ -15,20 +15,19 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.encoding;
+package io.car.server.rest.encoding.json;
 
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
-import com.hp.hpl.jena.rdf.model.Model;
 
-import io.car.server.core.statistics.Statistic;
-import io.car.server.core.statistics.Statistics;
+import io.car.server.core.entities.Sensor;
+import io.car.server.core.entities.Sensors;
 import io.car.server.rest.JSONConstants;
+import io.car.server.rest.encoding.JSONEntityEncoder;
 import io.car.server.rest.rights.AccessRights;
 
 /**
@@ -37,29 +36,23 @@ import io.car.server.rest.rights.AccessRights;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
-@Produces(MediaType.APPLICATION_JSON)
-public class StatisticsEncoder extends AbstractEntityEncoder<Statistics> {
-    private final EntityEncoder<Statistic> statisticEncoder;
+public class SensorsJSONEncoder extends AbstractJSONEntityEncoder<Sensors> {
+    private final JSONEntityEncoder<Sensor> sensorEncoder;
 
     @Inject
-    public StatisticsEncoder(EntityEncoder<Statistic> statisticEncoder) {
-        super(Statistics.class);
-        this.statisticEncoder = statisticEncoder;
+    public SensorsJSONEncoder(JSONEntityEncoder<Sensor> sensorEncoder) {
+        super(Sensors.class);
+        this.sensorEncoder = sensorEncoder;
     }
 
     @Override
-    public ObjectNode encodeJSON(Statistics t, AccessRights rights, MediaType mt) {
+    public ObjectNode encodeJSON(Sensors t, AccessRights rights,
+                                 MediaType mediaType) {
         ObjectNode root = getJsonFactory().objectNode();
-        ArrayNode statistics = root.putArray(JSONConstants.STATISTICS_KEY);
-        for (Statistic s : t) {
-            statistics.add(statisticEncoder.encodeJSON(s, rights, mt));
+        ArrayNode sensors = root.putArray(JSONConstants.SENSORS_KEY);
+        for (Sensor u : t) {
+            sensors.add(sensorEncoder.encodeJSON(u, rights, mediaType));
         }
         return root;
-    }
-
-    @Override
-    public Model encodeRDF(Statistics t, AccessRights rights, MediaType mt) {
-        /* TODO implement io.car.server.rest.encoding.StatisticsEncoder.encodeRDF() */
-        throw new UnsupportedOperationException("io.car.server.rest.encoding.StatisticsEncoder.encodeRDF() not yet implemented");
     }
 }

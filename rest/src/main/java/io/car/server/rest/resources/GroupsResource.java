@@ -61,8 +61,7 @@ public class GroupsResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.GROUPS)
-    @Produces({ MediaTypes.GROUPS, MediaTypes.XML_RDF, MediaTypes.TURTLE,
-                MediaTypes.TURTLE_ALT })
+    @Produces({ MediaTypes.GROUPS })
     public Groups get(
             @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit,
             @QueryParam(RESTConstants.PAGE) @DefaultValue("0") int page,
@@ -82,7 +81,7 @@ public class GroupsResource extends AbstractResource {
     @POST
     @Authenticated
     @Schema(request = Schemas.GROUP_CREATE)
-    @Consumes(MediaTypes.GROUP_CREATE)
+    @Consumes({ MediaTypes.GROUP_CREATE })
     public Response createGroup(Group group) throws UserNotFoundException,
                                                     ResourceAlreadyExistException,
                                                     ValidationException {

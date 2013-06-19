@@ -15,23 +15,21 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.encoding;
+package io.car.server.rest.encoding.json;
 
 import static io.car.server.core.entities.Gender.FEMALE;
 import static io.car.server.core.entities.Gender.MALE;
 
-
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
-import com.hp.hpl.jena.rdf.model.Model;
 import com.vividsolutions.jts.geom.Geometry;
 
 import io.car.server.core.entities.User;
 import io.car.server.rest.JSONConstants;
+import io.car.server.rest.encoding.JSONEntityEncoder;
 import io.car.server.rest.rights.AccessRights;
 
 /**
@@ -40,12 +38,11 @@ import io.car.server.rest.rights.AccessRights;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
-@Produces(MediaType.APPLICATION_JSON)
-public class UserEncoder extends AbstractEntityEncoder<User> {
-    private final EntityEncoder<Geometry> geometryEncoder;
+public class UserJSONEncoder extends AbstractJSONEntityEncoder<User> {
+    private final JSONEntityEncoder<Geometry> geometryEncoder;
 
     @Inject
-    public UserEncoder(EntityEncoder<Geometry> geometryEncoder) {
+    public UserJSONEncoder(JSONEntityEncoder<Geometry> geometryEncoder) {
         super(User.class);
         this.geometryEncoder = geometryEncoder;
     }
@@ -101,20 +98,5 @@ public class UserEncoder extends AbstractEntityEncoder<User> {
             j.put(JSONConstants.LANGUAGE_KEY, t.getLanguage());
         }
         return j;
-    }
-
-    @Override
-    public Model encodeRDF(User t, AccessRights rights, MediaType mt) {
-//        Model model = ModelFactory.createDefaultModel();
-//        URI uri = getUriInfo().getBaseUriBuilder()
-//                .path(RootResource.class)
-//                .path(RootResource.USERS)
-//                .path(UsersResource.USER).build(t.getName());
-//        model.createResource(uri.toASCIIString())
-//                .addProperty(VCARD.EMAIL, t.getMail())
-//                .addProperty(VCARD.NICKNAME, t.getName());
-//        return model;
-        /* TODO implement io.car.server.rest.encoding.UserEncoder.encodeRDF() */
-        throw new UnsupportedOperationException("io.car.server.rest.encoding.UserEncoder.encodeRDF() not yet implemented");
     }
 }

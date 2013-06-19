@@ -59,8 +59,7 @@ public class StatisticsResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.STATISTICS)
-    @Produces({ MediaTypes.STATISTICS, MediaTypes.XML_RDF, MediaTypes.TURTLE,
-                MediaTypes.TURTLE_ALT })
+    @Produces({ MediaTypes.STATISTICS })
     public Statistics statistics() {
         if (track != null) {
             return this.statisticService.getStatisticsForTrack(track);
@@ -74,8 +73,7 @@ public class StatisticsResource extends AbstractResource {
     @GET
     @Path(PHENOMENON)
     @Schema(response = Schemas.STATISTIC)
-    @Produces({ MediaTypes.STATISTIC, MediaTypes.XML_RDF, MediaTypes.TURTLE,
-                MediaTypes.TURTLE_ALT })
+    @Produces({ MediaTypes.STATISTIC })
     public Statistic statistics(@PathParam("phenomenon") String phenomenon)
             throws PhenomenonNotFoundException {
         Phenomenon p = getDataService().getPhenomenonByName(phenomenon);

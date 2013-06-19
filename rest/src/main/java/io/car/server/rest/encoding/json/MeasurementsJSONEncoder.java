@@ -15,9 +15,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.encoding;
+package io.car.server.rest.encoding.json;
 
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
@@ -25,11 +24,11 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
-import com.hp.hpl.jena.rdf.model.Model;
 
 import io.car.server.core.entities.Measurement;
 import io.car.server.core.entities.Measurements;
 import io.car.server.core.util.GeoJSONConstants;
+import io.car.server.rest.encoding.JSONEntityEncoder;
 import io.car.server.rest.rights.AccessRights;
 
 /**
@@ -39,14 +38,13 @@ import io.car.server.rest.rights.AccessRights;
  * @author Arne de Wall <a.dewall@52north.org>
  */
 @Provider
-@Produces(MediaType.APPLICATION_JSON)
-public class MeasurementsEncoder extends AbstractEntityEncoder<Measurements> {
-    private final EntityEncoder<Measurement> measurementEncoder;
+public class MeasurementsJSONEncoder extends AbstractJSONEntityEncoder<Measurements> {
+    private final JSONEntityEncoder<Measurement> measurementEncoder;
     private final JsonNodeFactory factory;
 
     @Inject
-    public MeasurementsEncoder(JsonNodeFactory factory,
-                               EntityEncoder<Measurement> measurementEncoder) {
+    public MeasurementsJSONEncoder(JsonNodeFactory factory,
+                               JSONEntityEncoder<Measurement> measurementEncoder) {
         super(Measurements.class);
         this.measurementEncoder = measurementEncoder;
         this.factory = factory;
@@ -64,11 +62,5 @@ public class MeasurementsEncoder extends AbstractEntityEncoder<Measurements> {
         on.put(GeoJSONConstants.TYPE_KEY,
                GeoJSONConstants.FEATURE_COLLECTION_TYPE);
         return on;
-    }
-
-    @Override
-    public Model encodeRDF(Measurements t, AccessRights rights, MediaType mt) {
-        /* TODO implement io.car.server.rest.encoding.MeasurementsEncoder.encodeRDF() */
-        throw new UnsupportedOperationException("io.car.server.rest.encoding.MeasurementsEncoder.encodeRDF() not yet implemented");
     }
 }

@@ -15,20 +15,19 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.encoding;
+package io.car.server.rest.encoding.json;
 
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
-import com.hp.hpl.jena.rdf.model.Model;
 
-import io.car.server.core.entities.User;
-import io.car.server.core.entities.Users;
+import io.car.server.core.entities.Phenomenon;
+import io.car.server.core.entities.Phenomenons;
 import io.car.server.rest.JSONConstants;
+import io.car.server.rest.encoding.JSONEntityEncoder;
 import io.car.server.rest.rights.AccessRights;
 
 /**
@@ -37,30 +36,23 @@ import io.car.server.rest.rights.AccessRights;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
-@Produces(MediaType.APPLICATION_JSON)
-public class UsersEncoder extends AbstractEntityEncoder<Users> {
-    private final EntityEncoder<User> userEncoder;
+public class PhenomenonsJSONEncoder extends AbstractJSONEntityEncoder<Phenomenons> {
+    private final JSONEntityEncoder<Phenomenon> phenomenonEncoder;
 
     @Inject
-    public UsersEncoder(EntityEncoder<User> userEncoder) {
-        super(Users.class);
-        this.userEncoder = userEncoder;
+    public PhenomenonsJSONEncoder(JSONEntityEncoder<Phenomenon> phenomenonEncoder) {
+        super(Phenomenons.class);
+        this.phenomenonEncoder = phenomenonEncoder;
     }
 
     @Override
-    public ObjectNode encodeJSON(Users t, AccessRights rights,
+    public ObjectNode encodeJSON(Phenomenons t, AccessRights rights,
                                  MediaType mediaType) {
         ObjectNode root = getJsonFactory().objectNode();
-        ArrayNode users = root.putArray(JSONConstants.USERS_KEY);
-        for (User u : t) {
-            users.add(userEncoder.encodeJSON(u, rights, mediaType));
+        ArrayNode phenomenons = root.putArray(JSONConstants.PHENOMENONS_KEY);
+        for (Phenomenon u : t) {
+            phenomenons.add(phenomenonEncoder.encodeJSON(u, rights, mediaType));
         }
         return root;
-    }
-
-    @Override
-    public Model encodeRDF(Users t, AccessRights rights, MediaType mt) {
-        /* TODO implement io.car.server.rest.encoding.UsersEncoder.encodeRDF() */
-        throw new UnsupportedOperationException("io.car.server.rest.encoding.UsersEncoder.encodeRDF() not yet implemented");
     }
 }

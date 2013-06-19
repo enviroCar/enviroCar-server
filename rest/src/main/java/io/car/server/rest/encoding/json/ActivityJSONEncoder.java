@@ -15,15 +15,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.encoding;
+package io.car.server.rest.encoding.json;
 
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
-import com.hp.hpl.jena.rdf.model.Model;
 
 import io.car.server.core.activities.Activity;
 import io.car.server.core.activities.GroupActivity;
@@ -33,6 +31,7 @@ import io.car.server.core.entities.Group;
 import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
 import io.car.server.rest.JSONConstants;
+import io.car.server.rest.encoding.JSONEntityEncoder;
 import io.car.server.rest.rights.AccessRights;
 
 /**
@@ -41,16 +40,15 @@ import io.car.server.rest.rights.AccessRights;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
-@Produces(MediaType.APPLICATION_JSON)
-public class ActivityEncoder extends AbstractEntityEncoder<Activity> {
-    private final EntityEncoder<User> userEncoder;
-    private final EntityEncoder<Track> trackEncoder;
-    private final EntityEncoder<Group> groupEncoder;
+public class ActivityJSONEncoder extends AbstractJSONEntityEncoder<Activity> {
+    private final JSONEntityEncoder<User> userEncoder;
+    private final JSONEntityEncoder<Track> trackEncoder;
+    private final JSONEntityEncoder<Group> groupEncoder;
 
     @Inject
-    public ActivityEncoder(EntityEncoder<User> userEncoder,
-                           EntityEncoder<Track> trackEncoder,
-                           EntityEncoder<Group> groupEncoder) {
+    public ActivityJSONEncoder(JSONEntityEncoder<User> userEncoder,
+                           JSONEntityEncoder<Track> trackEncoder,
+                           JSONEntityEncoder<Group> groupEncoder) {
         super(Activity.class);
         this.userEncoder = userEncoder;
         this.trackEncoder = trackEncoder;
@@ -91,11 +89,5 @@ public class ActivityEncoder extends AbstractEntityEncoder<Activity> {
             }
         }
         return root;
-    }
-
-    @Override
-    public Model encodeRDF(Activity t, AccessRights rights, MediaType mt) {
-        /* TODO implement io.car.server.rest.encoding.ActivityEncoder.encodeRDF() */
-        throw new UnsupportedOperationException("io.car.server.rest.encoding.ActivityEncoder.encodeRDF() not yet implemented");
     }
 }

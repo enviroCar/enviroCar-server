@@ -22,7 +22,7 @@ import org.joda.time.format.DateTimeFormatter;
 import com.google.inject.Inject;
 
 import io.car.server.core.entities.EntityFactory;
-import io.car.server.rest.provider.AbstractMessageBodyReader;
+import io.car.server.rest.provider.AbstractJSONMessageBodyReader;
 
 /**
  * TODO JavaDoc
@@ -30,7 +30,7 @@ import io.car.server.rest.provider.AbstractMessageBodyReader;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public abstract class AbstractEntityDecoder<T>
-        extends AbstractMessageBodyReader<T>
+        extends AbstractJSONMessageBodyReader<T>
         implements EntityDecoder<T> {
     private DateTimeFormatter dateTimeFormat;
     private EntityFactory entityFactory;

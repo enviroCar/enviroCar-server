@@ -15,17 +15,15 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.encoding;
+package io.car.server.rest.encoding.json;
 
 import java.util.Map;
 
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Maps;
-import com.hp.hpl.jena.rdf.model.Model;
 
 import io.car.server.core.entities.Sensor;
 import io.car.server.rest.JSONConstants;
@@ -38,9 +36,8 @@ import io.car.server.rest.rights.AccessRights;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
-@Produces(MediaType.APPLICATION_JSON)
-public class SensorEncoder extends AbstractEntityEncoder<Sensor> {
-    public SensorEncoder() {
+public class SensorJSONEncoder extends AbstractJSONEntityEncoder<Sensor> {
+    public SensorJSONEncoder() {
         super(Sensor.class);
     }
 
@@ -71,11 +68,5 @@ public class SensorEncoder extends AbstractEntityEncoder<Sensor> {
 
         sensor.putPOJO(JSONConstants.PROPERTIES_KEY, properties);
         return sensor;
-    }
-
-    @Override
-    public Model encodeRDF(Sensor t, AccessRights rights, MediaType mt) {
-        /* TODO implement io.car.server.rest.encoding.SensorEncoder.encodeRDF() */
-        throw new UnsupportedOperationException("io.car.server.rest.encoding.SensorEncoder.encodeRDF() not yet implemented");
     }
 }

@@ -54,8 +54,7 @@ public class FriendsResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.USERS)
-    @Produces({ MediaTypes.USERS, MediaTypes.XML_RDF, MediaTypes.TURTLE,
-                MediaTypes.TURTLE_ALT })
+    @Produces({ MediaTypes.USERS })
     public Users get() {
         return getFriendService().getFriends(user);
     }
@@ -63,7 +62,7 @@ public class FriendsResource extends AbstractResource {
     @POST
     @Authenticated
     @Schema(request = Schemas.USER_REF)
-    @Consumes(MediaTypes.USER_REF)
+    @Consumes({ MediaTypes.USER_REF })
     public void add(UserReference friend) throws UserNotFoundException {
         if (friend.getName() == null ||
             friend.getName().equals(getCurrentUser().getName())) {

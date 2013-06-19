@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
@@ -43,7 +44,8 @@ import io.car.server.rest.JSONConstants;
  *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public abstract class AbstractMessageBodyReader<T>
+@Consumes(MediaType.APPLICATION_JSON)
+public abstract class AbstractJSONMessageBodyReader<T>
         implements MessageBodyReader<T> {
     @Inject
     private ObjectReader reader;
@@ -51,7 +53,7 @@ public abstract class AbstractMessageBodyReader<T>
     private JsonNodeFactory factory;
     private final Class<T> classType;
 
-    public AbstractMessageBodyReader(Class<T> classType) {
+    public AbstractJSONMessageBodyReader(Class<T> classType) {
         this.classType = classType;
     }
 

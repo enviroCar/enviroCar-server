@@ -15,16 +15,14 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.encoding;
+package io.car.server.rest.encoding.json;
 
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
-import com.hp.hpl.jena.rdf.model.Model;
 
 import io.car.server.core.DataService;
 import io.car.server.core.entities.Measurements;
@@ -35,6 +33,7 @@ import io.car.server.core.filter.MeasurementFilter;
 import io.car.server.core.util.GeoJSONConstants;
 import io.car.server.rest.JSONConstants;
 import io.car.server.rest.MediaTypes;
+import io.car.server.rest.encoding.JSONEntityEncoder;
 import io.car.server.rest.rights.AccessRights;
 
 /**
@@ -43,17 +42,16 @@ import io.car.server.rest.rights.AccessRights;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
-@Produces(MediaType.APPLICATION_JSON)
-public class TrackEncoder extends AbstractEntityEncoder<Track> {
-    private final EntityEncoder<Sensor> sensorEncoder;
-    private final EntityEncoder<Measurements> measurementsEncoder;
-    private final EntityEncoder<User> userEncoder;
+public class TrackJSONEncoder extends AbstractJSONEntityEncoder<Track> {
+    private final JSONEntityEncoder<Sensor> sensorEncoder;
+    private final JSONEntityEncoder<Measurements> measurementsEncoder;
+    private final JSONEntityEncoder<User> userEncoder;
     private final DataService dataService;
 
     @Inject
-    public TrackEncoder(EntityEncoder<Sensor> sensorEncoder,
-                        EntityEncoder<Measurements> measurementsEncoder,
-                        EntityEncoder<User> userEncoder,
+    public TrackJSONEncoder(JSONEntityEncoder<Sensor> sensorEncoder,
+                        JSONEntityEncoder<Measurements> measurementsEncoder,
+                        JSONEntityEncoder<User> userEncoder,
                         DataService dataService) {
         super(Track.class);
         this.sensorEncoder = sensorEncoder;
@@ -125,11 +123,5 @@ public class TrackEncoder extends AbstractEntityEncoder<Track> {
             }
         }
         return track;
-    }
-
-    @Override
-    public Model encodeRDF(Track t, AccessRights rights, MediaType mt) {
-        /* TODO implement io.car.server.rest.encoding.TrackEncoder.encodeRDF() */
-        throw new UnsupportedOperationException("io.car.server.rest.encoding.TrackEncoder.encodeRDF() not yet implemented");
     }
 }

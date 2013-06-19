@@ -15,20 +15,19 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.encoding;
+package io.car.server.rest.encoding.json;
 
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
-import com.hp.hpl.jena.rdf.model.Model;
 
-import io.car.server.core.activities.Activities;
-import io.car.server.core.activities.Activity;
+import io.car.server.core.entities.Group;
+import io.car.server.core.entities.Groups;
 import io.car.server.rest.JSONConstants;
+import io.car.server.rest.encoding.JSONEntityEncoder;
 import io.car.server.rest.rights.AccessRights;
 
 /**
@@ -37,29 +36,24 @@ import io.car.server.rest.rights.AccessRights;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
-@Produces(MediaType.APPLICATION_JSON)
-public class ActivitiesEncoder extends AbstractEntityEncoder<Activities> {
-    private final EntityEncoder<Activity> activityEncoder;
+public class GroupsJSONEncoder extends AbstractJSONEntityEncoder<Groups> {
+    private final JSONEntityEncoder<Group> groupEncoder;
 
     @Inject
-    public ActivitiesEncoder(EntityEncoder<Activity> activityEncoder) {
-        super(Activities.class);
-        this.activityEncoder = activityEncoder;
+    public GroupsJSONEncoder(JSONEntityEncoder<Group> groupEncoder) {
+        super(Groups.class);
+        this.groupEncoder = groupEncoder;
     }
 
     @Override
-    public ObjectNode encodeJSON(Activities t, AccessRights rights, MediaType mt) {
+    public ObjectNode encodeJSON(Groups t,
+                                 AccessRights rights,
+                                 MediaType mediaType) {
         ObjectNode root = getJsonFactory().objectNode();
-        ArrayNode activities = root.putArray(JSONConstants.ACTIVITIES_KEY);
-        for (Activity a : t) {
-            activities.add(activityEncoder.encodeJSON(a, rights, mt));
+        ArrayNode groups = root.putArray(JSONConstants.GROUPS_KEY);
+        for (Group u : t) {
+            groups.add(groupEncoder.encodeJSON(u, rights, mediaType));
         }
         return root;
-    }
-
-    @Override
-    public Model encodeRDF(Activities t, AccessRights rights, MediaType mt) {
-        /* TODO implement io.car.server.rest.encoding.ActivitiesEncoder.encodeRDF() */
-        throw new UnsupportedOperationException("io.car.server.rest.encoding.ActivitiesEncoder.encodeRDF() not yet implemented");
     }
 }

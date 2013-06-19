@@ -15,22 +15,20 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.encoding;
+package io.car.server.rest.encoding.json;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.Provider;
 
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.vividsolutions.jts.geom.Geometry;
 
-import io.car.server.core.exception.GeometryConverterException;
+import io.car.server.core.activities.Activities;
+import io.car.server.core.activities.Activity;
+import io.car.server.rest.JSONConstants;
+import io.car.server.rest.encoding.JSONEntityEncoder;
 import io.car.server.rest.rights.AccessRights;
-import io.car.server.rest.util.GeoJSON;
 
 /**
  * TODO JavaDoc
@@ -38,28 +36,22 @@ import io.car.server.rest.util.GeoJSON;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
-@Consumes(MediaType.APPLICATION_JSON)
-public class GeoJSONEncoder extends AbstractEntityEncoder<Geometry> {
-    private final GeoJSON geoJSON;
+public class ActivitiesJSONEncoder extends AbstractJSONEntityEncoder<Activities> {
+    private final JSONEntityEncoder<Activity> activityEncoder;
 
     @Inject
-    public GeoJSONEncoder(GeoJSON geoJSON) {
-        super(Geometry.class);
-        this.geoJSON = geoJSON;
+    public ActivitiesJSONEncoder(JSONEntityEncoder<Activity> activityEncoder) {
+        super(Activities.class);
+        this.activityEncoder = activityEncoder;
     }
 
     @Override
-    public ObjectNode encodeJSON(Geometry t, AccessRights rights, MediaType mt) {
-        try {
-            return geoJSON.encode(t);
-        } catch (GeometryConverterException ex) {
-            throw new WebApplicationException(ex, Status.INTERNAL_SERVER_ERROR);
+    public ObjectNode encodeJSON(Activities t, AccessRights rights, MediaType mt) {
+        ObjectNode root = getJsonFactory().objectNode();
+        ArrayNode activities = root.putArray(JSONConstants.ACTIVITIES_KEY);
+        for (Activity a : t) {
+            activities.add(activityEncoder.encodeJSON(a, rights, mt));
         }
-    }
-
-    @Override
-    public Model encodeRDF(Geometry t, AccessRights rights, MediaType mt) {
-        /* TODO implement io.car.server.rest.encoding.GeoJSONEncoder.encodeRDF() */
-        throw new UnsupportedOperationException("io.car.server.rest.encoding.GeoJSONEncoder.encodeRDF() not yet implemented");
+        return root;
     }
 }

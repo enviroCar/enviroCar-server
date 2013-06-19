@@ -243,14 +243,15 @@ public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
         public ContainerResponse filter(ContainerRequest request,
                                         ContainerResponse response) {
             MediaType mt = response.getMediaType();
-            if (mt != null && mt.isCompatible(MediaType.APPLICATION_JSON_TYPE) &&
-                !request.getMethod().equals(HttpMethod.HEAD)) {
+            if (mt != null && mt.isCompatible(MediaType.APPLICATION_JSON_TYPE)) {
                 adjustContentType(response);
-                ContainerResponseWriter crw = response
-                        .getContainerResponseWriter();
-                ContainerResponseWriter vcrw =
-                        new ValidatingWriter(crw, schema);
-                response.setContainerResponseWriter(vcrw);
+                if (request.getMethod().equals(HttpMethod.HEAD)) {
+                    ContainerResponseWriter crw = response
+                            .getContainerResponseWriter();
+                    ContainerResponseWriter vcrw =
+                            new ValidatingWriter(crw, schema);
+                    response.setContainerResponseWriter(vcrw);
+                }
             }
             return response;
         }

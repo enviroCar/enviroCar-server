@@ -58,8 +58,7 @@ public class GroupMembersResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.USERS)
-    @Produces({ MediaTypes.USERS, MediaTypes.XML_RDF, MediaTypes.TURTLE,
-                MediaTypes.TURTLE_ALT })
+    @Produces({ MediaTypes.USERS })
     public Users get(
             @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit,
             @QueryParam(RESTConstants.PAGE) @DefaultValue("0") int page) {
@@ -70,7 +69,7 @@ public class GroupMembersResource extends AbstractResource {
     @POST
     @Authenticated
     @Schema(request = Schemas.USER_REF)
-    @Consumes(MediaTypes.USER_REF)
+    @Consumes({ MediaTypes.USER_REF })
     public void add(UserReference user) throws UserNotFoundException,
                                                GroupNotFoundException {
         User u = getUserService().getUser(user.getName());

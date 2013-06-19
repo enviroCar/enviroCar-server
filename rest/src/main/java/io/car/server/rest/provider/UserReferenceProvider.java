@@ -35,7 +35,7 @@ import io.car.server.rest.decoding.EntityDecoder;
  */
 @Provider
 @Consumes(MediaType.APPLICATION_JSON)
-public class UserReferenceProvider extends AbstractMessageBodyReader<UserReference> {
+public class UserReferenceProvider extends AbstractJSONMessageBodyReader<UserReference> {
     private final EntityDecoder<User> userDecoder;
 
     @Inject

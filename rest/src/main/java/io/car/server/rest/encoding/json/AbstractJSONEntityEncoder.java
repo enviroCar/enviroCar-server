@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.encoding;
+package io.car.server.rest.encoding.json;
 
 import javax.ws.rs.core.MediaType;
 
@@ -25,9 +25,9 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-import com.hp.hpl.jena.rdf.model.Model;
 
-import io.car.server.rest.provider.AbstractMessageBodyWriter;
+import io.car.server.rest.encoding.JSONEntityEncoder;
+import io.car.server.rest.provider.AbstractJSONMessageBodyWriter;
 import io.car.server.rest.rights.AccessRights;
 
 /**
@@ -35,14 +35,14 @@ import io.car.server.rest.rights.AccessRights;
  *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public abstract class AbstractEntityEncoder<T>
-        extends AbstractMessageBodyWriter<T>
-        implements EntityEncoder<T> {
+public abstract class AbstractJSONEntityEncoder<T>
+        extends AbstractJSONMessageBodyWriter<T>
+        implements JSONEntityEncoder<T> {
     private JsonNodeFactory jsonFactory;
     private DateTimeFormatter dateTimeFormat;
     private Provider<AccessRights> rights;
 
-    public AbstractEntityEncoder(Class<T> classType) {
+    public AbstractJSONEntityEncoder(Class<T> classType) {
         super(classType);
     }
 
@@ -70,12 +70,7 @@ public abstract class AbstractEntityEncoder<T>
     }
 
     @Override
-    public final ObjectNode encodeJSON(T t, MediaType mt) {
+    public ObjectNode encodeJSON(T t, MediaType mt) {
         return encodeJSON(t, rights.get(), mt);
-    }
-
-    @Override
-    public final Model encodeRDF(T t, MediaType mt) {
-        return encodeRDF(t, rights.get(), mt);
     }
 }

@@ -15,20 +15,16 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.encoding;
+package io.car.server.rest.encoding.json;
 
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.inject.Inject;
-import com.hp.hpl.jena.rdf.model.Model;
 
-import io.car.server.core.entities.Sensor;
-import io.car.server.core.entities.Sensors;
+import io.car.server.core.entities.Phenomenon;
 import io.car.server.rest.JSONConstants;
+import io.car.server.rest.MediaTypes;
 import io.car.server.rest.rights.AccessRights;
 
 /**
@@ -37,30 +33,31 @@ import io.car.server.rest.rights.AccessRights;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
-@Produces(MediaType.APPLICATION_JSON)
-public class SensorsEncoder extends AbstractEntityEncoder<Sensors> {
-    private final EntityEncoder<Sensor> sensorEncoder;
-
-    @Inject
-    public SensorsEncoder(EntityEncoder<Sensor> sensorEncoder) {
-        super(Sensors.class);
-        this.sensorEncoder = sensorEncoder;
+public class PhenomenonJSONEncoder extends AbstractJSONEntityEncoder<Phenomenon> {
+    public PhenomenonJSONEncoder() {
+        super(Phenomenon.class);
     }
 
     @Override
-    public ObjectNode encodeJSON(Sensors t, AccessRights rights,
+    public ObjectNode encodeJSON(Phenomenon t, AccessRights rights,
                                  MediaType mediaType) {
-        ObjectNode root = getJsonFactory().objectNode();
-        ArrayNode sensors = root.putArray(JSONConstants.SENSORS_KEY);
-        for (Sensor u : t) {
-            sensors.add(sensorEncoder.encodeJSON(u, rights, mediaType));
+        ObjectNode phenomenon = getJsonFactory().objectNode();
+        if (t.hasName()) {
+            phenomenon.put(JSONConstants.NAME_KEY, t.getName());
         }
-        return root;
-    }
-
-    @Override
-    public Model encodeRDF(Sensors t, AccessRights rights, MediaType mt) {
-        /* TODO implement io.car.server.rest.encoding.SensorsEncoder.encodeRDF() */
-        throw new UnsupportedOperationException("io.car.server.rest.encoding.SensorsEncoder.encodeRDF() not yet implemented");
+        if (t.hasUnit()) {
+            phenomenon.put(JSONConstants.UNIT_KEY, t.getUnit());
+        }
+        if (mediaType.equals(MediaTypes.PHENOMENON_TYPE)) {
+            if (t.hasCreationTime()) {
+                phenomenon.put(JSONConstants.CREATED_KEY, getDateTimeFormat()
+                        .print(t.getCreationTime()));
+            }
+            if (t.hasModificationTime()) {
+                phenomenon.put(JSONConstants.MODIFIED_KEY, getDateTimeFormat()
+                        .print(t.getModificationTime()));
+            }
+        }
+        return phenomenon;
     }
 }

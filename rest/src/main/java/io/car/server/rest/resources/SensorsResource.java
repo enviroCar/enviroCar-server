@@ -56,8 +56,7 @@ public class SensorsResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.SENSORS)
-    @Produces({ MediaTypes.SENSORS, MediaTypes.XML_RDF, MediaTypes.TURTLE,
-                MediaTypes.TURTLE_ALT })
+    @Produces({ MediaTypes.SENSORS })
     public Sensors get(
             @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit,
             @QueryParam(RESTConstants.PAGE) @DefaultValue("0") int page,
@@ -83,7 +82,7 @@ public class SensorsResource extends AbstractResource {
     @POST
     @Authenticated
     @Schema(request = Schemas.SENSOR_CREATE)
-    @Consumes(MediaTypes.SENSOR_CREATE)
+    @Consumes({ MediaTypes.SENSOR_CREATE })
     public Response create(Sensor sensor) {
         return Response.created(
                 getUriInfo().getAbsolutePathBuilder()

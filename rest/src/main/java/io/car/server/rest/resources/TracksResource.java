@@ -70,8 +70,7 @@ public class TracksResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.TRACKS)
-    @Produces({ MediaTypes.TRACKS, MediaTypes.XML_RDF, MediaTypes.TURTLE,
-                MediaTypes.TURTLE_ALT })
+    @Produces({ MediaTypes.TRACKS })
     public Tracks get(
             @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit,
             @QueryParam(RESTConstants.PAGE) @DefaultValue("0") int page,
@@ -87,7 +86,7 @@ public class TracksResource extends AbstractResource {
 
     @POST
     @Schema(request = Schemas.TRACK_CREATE)
-    @Consumes(MediaTypes.TRACK_CREATE)
+    @Consumes({ MediaTypes.TRACK_CREATE })
     @Authenticated
     public Response create(Track track) throws ValidationException,
                                                ResourceAlreadyExistException,

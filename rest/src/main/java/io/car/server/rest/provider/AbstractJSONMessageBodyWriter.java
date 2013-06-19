@@ -22,47 +22,39 @@ import java.io.OutputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 
+import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.MessageBodyWriter;
 
-import org.apache.jena.riot.RDFDataMgr;
-import org.apache.jena.riot.RDFFormat;
-
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
-import com.hp.hpl.jena.rdf.model.Model;
 
-import io.car.server.rest.MediaTypes;
+import io.car.server.rest.encoding.JSONEntityEncoder;
 
 /**
  * TODO JavaDoc
  *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public abstract class AbstractMessageBodyWriter<T>
-        implements MessageBodyWriter<T> {
+@Produces(MediaType.APPLICATION_JSON)
+public abstract class AbstractJSONMessageBodyWriter<T>
+        implements MessageBodyWriter<T>, JSONEntityEncoder<T> {
     @Inject
     private ObjectWriter writer;
     private final Class<T> classType;
 
-    public AbstractMessageBodyWriter(Class<T> classType) {
+    public AbstractJSONMessageBodyWriter(Class<T> classType) {
         this.classType = classType;
     }
 
     @Override
     public boolean isWriteable(Class<?> type, Type genericType,
                                Annotation[] annotations, MediaType mediaType) {
-        if (this.classType.isAssignableFrom(type)) {
-            return mediaType.isCompatible(MediaType.APPLICATION_JSON_TYPE) ||
-                   mediaType.isCompatible(MediaTypes.XML_RDF_TYPE) ||
-                   mediaType.isCompatible(MediaTypes.TURTLE_TYPE) ||
-                   mediaType.isCompatible(MediaTypes.TURTLE_ALT_TYPE);
-        } else {
-            return false;
-        }
+        return this.classType.isAssignableFrom(type) &&
+               mediaType.isCompatible(MediaType.APPLICATION_JSON_TYPE);
     }
 
     @Override
@@ -70,14 +62,7 @@ public abstract class AbstractMessageBodyWriter<T>
                         MultivaluedMap<String, Object> h,
                         OutputStream out) throws IOException,
                                                  WebApplicationException {
-        if (mt.isCompatible(MediaType.APPLICATION_JSON_TYPE)) {
-            writer.writeValue(out, encodeJSON(t, mt));
-        } else if (mt.isCompatible(MediaTypes.XML_RDF_TYPE)) {
-            RDFDataMgr.write(out, encodeRDF(t, mt), RDFFormat.RDFXML);
-        } else if (mt.isCompatible(MediaTypes.TURTLE_TYPE) ||
-                   mt.isCompatible(MediaTypes.TURTLE_ALT_TYPE)) {
-            RDFDataMgr.write(out, encodeRDF(t, mt), RDFFormat.TURTLE);
-        }
+        writer.writeValue(out, encodeJSON(t, mt));
         out.flush();
     }
 
@@ -88,6 +73,4 @@ public abstract class AbstractMessageBodyWriter<T>
     }
 
     public abstract ObjectNode encodeJSON(T t, MediaType mt);
-
-    public abstract Model encodeRDF(T t, MediaType mt);
 }

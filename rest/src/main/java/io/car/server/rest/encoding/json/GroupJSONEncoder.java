@@ -15,19 +15,18 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.car.server.rest.encoding;
+package io.car.server.rest.encoding.json;
 
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
-import com.hp.hpl.jena.rdf.model.Model;
 
 import io.car.server.core.entities.Group;
 import io.car.server.core.entities.User;
 import io.car.server.rest.JSONConstants;
+import io.car.server.rest.encoding.JSONEntityEncoder;
 import io.car.server.rest.rights.AccessRights;
 
 /**
@@ -36,12 +35,11 @@ import io.car.server.rest.rights.AccessRights;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
-@Produces(MediaType.APPLICATION_JSON)
-public class GroupEncoder extends AbstractEntityEncoder<Group> {
-    private EntityEncoder<User> userEncoder;
+public class GroupJSONEncoder extends AbstractJSONEntityEncoder<Group> {
+    private JSONEntityEncoder<User> userEncoder;
 
     @Inject
-    public GroupEncoder(EntityEncoder<User> userProvider) {
+    public GroupJSONEncoder(JSONEntityEncoder<User> userProvider) {
         super(Group.class);
         this.userEncoder = userProvider;
     }
@@ -70,11 +68,5 @@ public class GroupEncoder extends AbstractEntityEncoder<Group> {
                       getDateTimeFormat().print(t.getModificationTime()));
         }
         return group;
-    }
-
-    @Override
-    public Model encodeRDF(Group t, AccessRights rights, MediaType mt) {
-        /* TODO implement io.car.server.rest.encoding.GroupEncoder.encodeRDF() */
-        throw new UnsupportedOperationException("io.car.server.rest.encoding.GroupEncoder.encodeRDF() not yet implemented");
     }
 }

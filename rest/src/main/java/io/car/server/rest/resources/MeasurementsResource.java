@@ -73,8 +73,7 @@ public class MeasurementsResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.MEASUREMENTS)
-    @Produces({ MediaTypes.MEASUREMENTS, MediaTypes.XML_RDF, MediaTypes.TURTLE,
-                MediaTypes.TURTLE_ALT })
+    @Produces({ MediaTypes.MEASUREMENTS })
     public Measurements get(
             @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit,
             @QueryParam(RESTConstants.PAGE) @DefaultValue("0") int page,
@@ -92,7 +91,7 @@ public class MeasurementsResource extends AbstractResource {
     @POST
     @Authenticated
     @Schema(request = Schemas.MEASUREMENT_CREATE)
-    @Consumes(MediaTypes.MEASUREMENT_CREATE)
+    @Consumes({ MediaTypes.MEASUREMENT_CREATE })
     public Response create(Measurement measurement) throws
             ResourceAlreadyExistException, ValidationException,
             UserNotFoundException {
