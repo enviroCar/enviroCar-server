@@ -23,14 +23,16 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
-import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
+import com.google.inject.assistedinject.AssistedInject;
 
 import io.car.server.core.StatisticsService;
 import io.car.server.core.entities.Phenomenon;
+import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
 import io.car.server.core.exception.PhenomenonNotFoundException;
+import io.car.server.core.filter.StatisticsFilter;
 import io.car.server.core.statistics.Statistic;
 import io.car.server.core.statistics.Statistics;
 import io.car.server.rest.MediaTypes;
@@ -46,15 +48,38 @@ public class StatisticsResource extends AbstractResource {
     private static final String PHENOMENON = "{phenomenon}";
     private final Track track;
     private final User user;
+    private final Sensor sensor;
     private final StatisticsService statisticService;
 
-    @Inject
+    @AssistedInject
+    public StatisticsResource(@Assisted User user,
+                              StatisticsService statisticService) {
+        this(null, user, null, statisticService);
+    }
+
+    @AssistedInject
     public StatisticsResource(@Assisted @Nullable Track track,
-                              @Assisted @Nullable User user,
+                              StatisticsService statisticService) {
+        this(track, null, null, statisticService);
+    }
+
+    @AssistedInject
+    public StatisticsResource(@Assisted Sensor sensor,
+                              StatisticsService statisticService) {
+        this(null, null, sensor, statisticService);
+    }
+
+    @AssistedInject
+    public StatisticsResource(StatisticsService statisticService) {
+        this(null, null, null, statisticService);
+    }
+
+    public StatisticsResource(Track track, User user, Sensor sensor,
                               StatisticsService statisticService) {
         this.track = track;
         this.user = user;
         this.statisticService = statisticService;
+        this.sensor = sensor;
     }
 
     @GET
@@ -64,13 +89,8 @@ public class StatisticsResource extends AbstractResource {
                 MediaTypes.TURTLE,
                 MediaTypes.TURTLE_ALT })
     public Statistics statistics() {
-        if (track != null) {
-            return this.statisticService.getStatisticsForTrack(track);
-        } else if (user != null) {
-            return this.statisticService.getStatisticsForUser(user);
-        } else {
-            return this.statisticService.getStatistics();
-        }
+        return this.statisticService
+                .getStatistics(new StatisticsFilter(user, track, sensor));
     }
 
     @GET
@@ -83,12 +103,7 @@ public class StatisticsResource extends AbstractResource {
     public Statistic statistics(@PathParam("phenomenon") String phenomenon)
             throws PhenomenonNotFoundException {
         Phenomenon p = getDataService().getPhenomenonByName(phenomenon);
-        if (track != null) {
-            return this.statisticService.getStatisticsForTrack(track, p);
-        } else if (user != null) {
-            return this.statisticService.getStatisticsForUser(user, p);
-        } else {
-            return this.statisticService.getStatistics(p);
-        }
+        return this.statisticService
+                .getStatistic(new StatisticsFilter(user, track, sensor), p);
     }
 }

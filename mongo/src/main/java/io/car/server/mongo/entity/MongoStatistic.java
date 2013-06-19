@@ -37,6 +37,7 @@ public class MongoStatistic implements Statistic {
     public static final String MEASUREMENTS = "measurements";
     public static final String TRACKS = "tracks";
     public static final String PHENOMENON = "phenomenon";
+    public static final String SENSORS = "sensors";
     @Embedded
     private MongoPhenomenon phenomenon;
     @Property(TRACKS)
@@ -45,6 +46,8 @@ public class MongoStatistic implements Statistic {
     private long users;
     @Property(MEASUREMENTS)
     private long measurements;
+    @Property(SENSORS)
+    private long sensors;
     @Property(MEAN)
     private double mean;
     @Property(MIN)
@@ -113,5 +116,14 @@ public class MongoStatistic implements Statistic {
 
     public void setMax(double max) {
         this.max = max;
+    }
+
+    @Override
+    public long getSensors() {
+        return sensors;
+    }
+
+    public void setSensors(long sensors) {
+        this.sensors = sensors;
     }
 }

@@ -32,22 +32,27 @@ public class MongoStatisticKey {
     public static final String ALL = "all";
     public static final String TRACK = "track";
     public static final String USER = "user";
+    public static final String SENSOR = "sensor";
     @Property(TRACK)
     private Key<MongoTrack> track;
     @Property(USER)
     private Key<MongoUser> user;
+    @Property(SENSOR)
+    private Key<MongoSensor> sensor;
     @Property(ALL)
     private boolean all = true;
 
     public MongoStatisticKey(Key<MongoTrack> track,
-                             Key<MongoUser> user) {
+                             Key<MongoUser> user,
+                             Key<MongoSensor> sensor) {
         this.track = track;
         this.user = user;
-        all = track == null && user == null;
+        this.sensor = sensor;
+        all = track == null && user == null && sensor == null;
     }
 
     public MongoStatisticKey() {
-        this(null, null);
+        this(null, null, null);
     }
 
     public Key<MongoTrack> getTrack() {
@@ -56,7 +61,7 @@ public class MongoStatisticKey {
 
     public void setTrack(Key<MongoTrack> track) {
         this.track = track;
-        all = track == null && user == null;
+        this.all = track == null && user == null && sensor == null;
     }
 
     public Key<MongoUser> getUser() {
@@ -65,12 +70,21 @@ public class MongoStatisticKey {
 
     public void setUser(Key<MongoUser> user) {
         this.user = user;
-        all = track == null && user == null;
+        this.all = track == null && user == null && sensor == null;
+    }
+
+    public Key<MongoSensor> getSensor() {
+        return sensor;
+    }
+
+    public void setSensor(Key<MongoSensor> sensor) {
+        this.sensor = sensor;
+        this.all = track == null && user == null && sensor == null;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(this.track, this.user);
+        return Objects.hashCode(this.track, this.user, this.sensor);
     }
 
     @Override
@@ -83,7 +97,8 @@ public class MongoStatisticKey {
         }
         final MongoStatisticKey other = (MongoStatisticKey) obj;
         return Objects.equal(this.track, other.track) &&
-               Objects.equal(this.user, other.user);
+               Objects.equal(this.user, other.user) &&
+               Objects.equal(this.sensor, other.sensor);
 
     }
 
@@ -96,6 +111,7 @@ public class MongoStatisticKey {
         if (all) {
             this.user = null;
             this.track = null;
+            this.sensor = null;
         }
     }
 }

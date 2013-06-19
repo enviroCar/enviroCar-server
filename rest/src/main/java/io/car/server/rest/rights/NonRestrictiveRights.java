@@ -404,4 +404,9 @@ public class NonRestrictiveRights implements AccessRights {
     public boolean canSeeStatisticsOf(Phenomenon phenomenon) {
         return true;
     }
+
+    @Override
+    public boolean canSeeStatisticsOf(Sensor sensor) {
+        return true;
+    }
 }

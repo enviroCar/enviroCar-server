@@ -18,6 +18,7 @@
 package io.car.server.rest.resources;
 
 import javax.ws.rs.GET;
+import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
 import com.google.inject.Inject;
@@ -34,6 +35,7 @@ import io.car.server.rest.validation.Schema;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class SensorResource extends AbstractResource {
+    public static final String STATISTICS = "statistics";
     private Sensor sensor;
 
     @Inject
@@ -49,5 +51,11 @@ public class SensorResource extends AbstractResource {
                 MediaTypes.TURTLE_ALT })
     public Sensor get() {
         return this.sensor;
+    }
+
+    @Path(STATISTICS)
+    public StatisticsResource statistics() {
+        getRights().canSeeStatisticsOf(this.sensor);
+        return getResourceFactory().createStatisticsResource(this.sensor);
     }
 }

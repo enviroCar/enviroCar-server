@@ -27,6 +27,7 @@ import com.google.inject.assistedinject.Assisted;
 import io.car.server.core.StatisticsService;
 import io.car.server.core.entities.Phenomenon;
 import io.car.server.core.exception.PhenomenonNotFoundException;
+import io.car.server.core.filter.StatisticsFilter;
 import io.car.server.core.statistics.Statistic;
 import io.car.server.rest.MediaTypes;
 import io.car.server.rest.Schemas;
@@ -68,6 +69,7 @@ public class PhenomenonResource extends AbstractResource {
                 MediaTypes.TURTLE_ALT })
     public Statistic getStatistics() {
         checkRights(getRights().canSeeStatisticsOf(phenomenon));
-        return this.statisticsService.getStatistics(this.phenomenon);
+        return this.statisticsService
+                .getStatistic(new StatisticsFilter(), this.phenomenon);
     }
 }
