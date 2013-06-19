@@ -26,9 +26,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.sun.jersey.api.client.ClientResponse;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class JerseyMatchers {
+    private JerseyMatchers() {
+    }
+
     public static Matcher<MediaType> isCompatible(MediaType type) {
         return new IsCompatibleMediaType(type);
     }
@@ -39,8 +44,5 @@ public class JerseyMatchers {
 
     public static Matcher<ClientResponse> hasStatus(StatusType status) {
         return new IsResponseStatus(status);
-    }
-
-    private JerseyMatchers() {
     }
 }

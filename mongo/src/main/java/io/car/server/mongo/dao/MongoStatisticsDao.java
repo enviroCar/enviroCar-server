@@ -15,15 +15,9 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package io.car.server.mongo.dao;
 
 import java.util.List;
-
-import org.bson.types.ObjectId;
 
 import com.github.jmkgreen.morphia.Key;
 import com.github.jmkgreen.morphia.dao.BasicDAO;
@@ -55,6 +49,8 @@ import io.car.server.mongo.entity.MongoUser;
 import io.car.server.mongo.util.MongoUtils;
 
 /**
+ * TODO JavaDoc
+ *
  * @author jan
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
@@ -118,12 +114,14 @@ public class MongoStatisticsDao implements StatisticsDao {
 
     @Override
     public Statistics getStatisticsForTrack(Track track, Phenomenons phens) {
-        return Statistics.from(getStatistics1(track).getStatistics(phens)).build();
+        return Statistics.from(getStatistics1(track).getStatistics(phens))
+                .build();
     }
 
     @Override
     public Statistics getStatisticsForUser(User user, Phenomenons phens) {
-        return Statistics.from(getStatistics1(user).getStatistics(phens)).build();
+        return Statistics.from(getStatistics1(user).getStatistics(phens))
+                .build();
     }
 
     @Override
@@ -132,8 +130,8 @@ public class MongoStatisticsDao implements StatisticsDao {
     }
 
     private MongoStatisticKey key(Track track, User user) {
-        return new MongoStatisticKey(mongoDB.reference((MongoTrack) track),
-                                     mongoDB.reference((MongoUser) user));
+        return new MongoStatisticKey(mongoDB.key((MongoTrack) track),
+                                     mongoDB.key((MongoUser) user));
     }
 
     private MongoStatistics getStatistics1(Track track) {
@@ -242,10 +240,6 @@ public class MongoStatisticsDao implements StatisticsDao {
         DBRef ref = mongoDB.getMapper().keyToRef(mongoDB.getMapper()
                 .getKey((MongoUser) user));
         return MongoUtils.match(MongoMeasurement.USER, ref);
-    }
-
-    private DBObject matchesTrack(String track) {
-        return matchesTrack(new Key<MongoTrack>(MongoTrack.class, new ObjectId(track)));
     }
 
     private DBObject matchesTrack(Track track) {

@@ -17,9 +17,11 @@
  */
 package io.car.server.rest.encoding;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.ext.Provider;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
@@ -27,21 +29,27 @@ import com.hp.hpl.jena.rdf.model.Model;
 import com.vividsolutions.jts.geom.Geometry;
 
 import io.car.server.core.exception.GeometryConverterException;
+import io.car.server.rest.rights.AccessRights;
 import io.car.server.rest.util.GeoJSON;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
+@Provider
+@Consumes(MediaType.APPLICATION_JSON)
 public class GeoJSONEncoder extends AbstractEntityEncoder<Geometry> {
     private final GeoJSON geoJSON;
 
     @Inject
     public GeoJSONEncoder(GeoJSON geoJSON) {
+        super(Geometry.class);
         this.geoJSON = geoJSON;
     }
 
     @Override
-    public ObjectNode encodeJSON(Geometry t, MediaType mt) {
+    public ObjectNode encodeJSON(Geometry t, AccessRights rights, MediaType mt) {
         try {
             return geoJSON.encode(t);
         } catch (GeometryConverterException ex) {
@@ -50,9 +58,8 @@ public class GeoJSONEncoder extends AbstractEntityEncoder<Geometry> {
     }
 
     @Override
-    public Model encodeRDF(Geometry t, MediaType mt) {
+    public Model encodeRDF(Geometry t, AccessRights rights, MediaType mt) {
         /* TODO implement io.car.server.rest.encoding.GeoJSONEncoder.encodeRDF() */
         throw new UnsupportedOperationException("io.car.server.rest.encoding.GeoJSONEncoder.encodeRDF() not yet implemented");
     }
-
 }

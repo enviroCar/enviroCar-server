@@ -35,6 +35,8 @@ import io.car.server.core.entities.BaseEntity;
 import io.car.server.mongo.MongoDB;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public abstract class MongoEntityBase implements BaseEntity {

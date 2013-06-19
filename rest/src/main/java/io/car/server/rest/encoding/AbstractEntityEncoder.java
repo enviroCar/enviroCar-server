@@ -17,31 +17,33 @@
  */
 package io.car.server.rest.encoding;
 
-import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.MediaType;
 
 import org.joda.time.format.DateTimeFormatter;
 
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
+import com.hp.hpl.jena.rdf.model.Model;
 
-import io.car.server.core.Service;
+import io.car.server.rest.provider.AbstractMessageBodyWriter;
+import io.car.server.rest.rights.AccessRights;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public abstract class AbstractEntityEncoder<T> implements EntityEncoder<T> {
-    private UriInfo uriInfo;
+public abstract class AbstractEntityEncoder<T>
+        extends AbstractMessageBodyWriter<T>
+        implements EntityEncoder<T> {
     private JsonNodeFactory jsonFactory;
     private DateTimeFormatter dateTimeFormat;
-    private Service service;
+    private Provider<AccessRights> rights;
 
-    public UriInfo getUriInfo() {
-        return uriInfo;
-    }
-
-    @Inject
-    public void setUriInfo(UriInfo uriInfo) {
-        this.uriInfo = uriInfo;
+    public AbstractEntityEncoder(Class<T> classType) {
+        super(classType);
     }
 
     public JsonNodeFactory getJsonFactory() {
@@ -62,12 +64,18 @@ public abstract class AbstractEntityEncoder<T> implements EntityEncoder<T> {
         this.dateTimeFormat = dateTimeFormat;
     }
 
-    public Service getService() {
-        return service;
+    @Inject
+    public void setRights(Provider<AccessRights> rights) {
+        this.rights = rights;
     }
 
-    @Inject
-    public void setService(Service service) {
-        this.service = service;
+    @Override
+    public final ObjectNode encodeJSON(T t, MediaType mt) {
+        return encodeJSON(t, rights.get(), mt);
+    }
+
+    @Override
+    public final Model encodeRDF(T t, MediaType mt) {
+        return encodeRDF(t, rights.get(), mt);
     }
 }

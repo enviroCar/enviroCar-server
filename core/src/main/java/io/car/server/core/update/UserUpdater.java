@@ -23,6 +23,8 @@ import io.car.server.core.entities.User;
 import io.car.server.core.util.PasswordEncoder;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class UserUpdater implements EntityUpdater<User> {
@@ -34,7 +36,7 @@ public class UserUpdater implements EntityUpdater<User> {
     }
 
     @Override
-    public User update(User changes, User original) {
+    public void update(User changes, User original) {
         if (changes.getMail() != null) {
             original.setMail(changes.getMail());
         }
@@ -92,6 +94,5 @@ public class UserUpdater implements EntityUpdater<User> {
         if (changes.getUrl() != null) {
             original.setUrl(changes.getUrl());
         }
-        return original;
     }
 }

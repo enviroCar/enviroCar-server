@@ -17,10 +17,11 @@
  */
 package io.car.server.rest.encoding;
 
-import java.net.URI;
 import java.util.Map;
 
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.Provider;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Maps;
@@ -29,15 +30,23 @@ import com.hp.hpl.jena.rdf.model.Model;
 import io.car.server.core.entities.Sensor;
 import io.car.server.rest.JSONConstants;
 import io.car.server.rest.MediaTypes;
-import io.car.server.rest.resources.RootResource;
-import io.car.server.rest.resources.SensorsResource;
+import io.car.server.rest.rights.AccessRights;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
+@Provider
+@Produces(MediaType.APPLICATION_JSON)
 public class SensorEncoder extends AbstractEntityEncoder<Sensor> {
+    public SensorEncoder() {
+        super(Sensor.class);
+    }
+
     @Override
-    public ObjectNode encodeJSON(Sensor t, MediaType mediaType) {
+    public ObjectNode encodeJSON(Sensor t, AccessRights rights,
+                                 MediaType mediaType) {
         ObjectNode sensor = getJsonFactory().objectNode();
         if (t.hasType()) {
             sensor.put(JSONConstants.TYPE_KEY, t.getType());
@@ -58,13 +67,6 @@ public class SensorEncoder extends AbstractEntityEncoder<Sensor> {
                                getDateTimeFormat()
                         .print(t.getModificationTime()));
             }
-        } else {
-            URI href = getUriInfo().getBaseUriBuilder()
-                    .path(RootResource.class)
-                    .path(RootResource.SENSORS)
-                    .path(SensorsResource.SENSOR)
-                    .build(t.getIdentifier());
-            sensor.put(JSONConstants.HREF_KEY, href.toString());
         }
 
         sensor.putPOJO(JSONConstants.PROPERTIES_KEY, properties);
@@ -72,7 +74,7 @@ public class SensorEncoder extends AbstractEntityEncoder<Sensor> {
     }
 
     @Override
-    public Model encodeRDF(Sensor t, MediaType mt) {
+    public Model encodeRDF(Sensor t, AccessRights rights, MediaType mt) {
         /* TODO implement io.car.server.rest.encoding.SensorEncoder.encodeRDF() */
         throw new UnsupportedOperationException("io.car.server.rest.encoding.SensorEncoder.encodeRDF() not yet implemented");
     }

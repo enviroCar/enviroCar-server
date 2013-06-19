@@ -17,18 +17,14 @@
  */
 package io.car.server.core.dao;
 
-import com.vividsolutions.jts.geom.Geometry;
-
-import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.Track;
 import io.car.server.core.entities.Tracks;
-import io.car.server.core.entities.User;
-import io.car.server.core.util.Pagination;
+import io.car.server.core.filter.TrackFilter;
 
 /**
+ * TODO JavaDoc
  *
  * @author Arne de Wall <a.dewall@52north.org>
- *
  */
 public interface TrackDao {
     Track create(Track track);
@@ -41,14 +37,5 @@ public interface TrackDao {
 
     Track getById(String id);
 
-    Tracks getByUser(User user, Pagination p);
-
-    Tracks getBySensor(Sensor sensor, Pagination p);
-
-    Tracks getByBbox(double minx, double miny, double maxx, double maxy,
-                     Pagination p);
-
-    Tracks getByBbox(Geometry bbox, Pagination p);
-
-    Tracks get(Pagination p);
+    Tracks get(TrackFilter request);
 }

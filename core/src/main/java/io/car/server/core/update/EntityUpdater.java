@@ -20,8 +20,10 @@ package io.car.server.core.update;
 import io.car.server.core.exception.IllegalModificationException;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface EntityUpdater<T> {
-    T update(T changes, T original) throws IllegalModificationException;
+    void update(T changes, T original) throws IllegalModificationException;
 }

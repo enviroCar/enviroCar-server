@@ -17,7 +17,9 @@
  */
 package io.car.server.rest.encoding;
 
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.Provider;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -27,30 +29,36 @@ import com.hp.hpl.jena.rdf.model.Model;
 import io.car.server.core.activities.Activities;
 import io.car.server.core.activities.Activity;
 import io.car.server.rest.JSONConstants;
+import io.car.server.rest.rights.AccessRights;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
+@Provider
+@Produces(MediaType.APPLICATION_JSON)
 public class ActivitiesEncoder extends AbstractEntityEncoder<Activities> {
     private final EntityEncoder<Activity> activityEncoder;
 
     @Inject
     public ActivitiesEncoder(EntityEncoder<Activity> activityEncoder) {
+        super(Activities.class);
         this.activityEncoder = activityEncoder;
     }
 
     @Override
-    public ObjectNode encodeJSON(Activities t, MediaType mt) {
+    public ObjectNode encodeJSON(Activities t, AccessRights rights, MediaType mt) {
         ObjectNode root = getJsonFactory().objectNode();
         ArrayNode activities = root.putArray(JSONConstants.ACTIVITIES_KEY);
         for (Activity a : t) {
-            activities.add(activityEncoder.encodeJSON(a, mt));
+            activities.add(activityEncoder.encodeJSON(a, rights, mt));
         }
         return root;
     }
 
     @Override
-    public Model encodeRDF(Activities t, MediaType mt) {
+    public Model encodeRDF(Activities t, AccessRights rights, MediaType mt) {
         /* TODO implement io.car.server.rest.encoding.ActivitiesEncoder.encodeRDF() */
         throw new UnsupportedOperationException("io.car.server.rest.encoding.ActivitiesEncoder.encodeRDF() not yet implemented");
     }

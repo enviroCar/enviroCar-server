@@ -22,6 +22,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import io.car.server.core.exception.ValidationException;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class JSONValidationException extends ValidationException {

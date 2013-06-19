@@ -20,9 +20,9 @@ package io.car.server.core.entities;
 import com.vividsolutions.jts.geom.Geometry;
 
 /**
+ * TODO JavaDoc
  *
  * @author Arne de Wall <a.dewall@52north.org>
- *
  */
 public interface Track extends BaseEntity {
     String getName();

@@ -9,10 +9,11 @@
     ],
     "properties": {
         "time": {
-            "$ref": "http://schema.envirocar.org/definitions.json#/date-time"
+            "type": "string",
+            "format": "date-time"
         },
         "user": {
-            "$ref": "http://schema.envirocar.org/user-ref.json#"
+            "$ref": "http://schema.envirocar.org/user.json#"
         },
         "type": {
             "type": "string"
@@ -32,11 +33,11 @@
             "$ref": "#/definitions/user-activity"
         }
     ],
-    "definititions": {
-        "group-activitiy": {
+    "definitions": {
+        "group-activity": {
             "properties": {
                 "group": {
-                    "$ref": "http://schema.envirocar.org/definitions.json#/group-ref"
+                    "$ref": "http://schema.envirocar.org/group.json#"
                 },
                 "type": {
                     "enum": [
@@ -64,14 +65,14 @@
         "user-activity": {
             "properties": {
                 "other": {
-                    "$ref": "http://schema.envirocar.org/definitions.json#/user-ref"
+                    "$ref": "http://schema.envirocar.org/user.json#"
+                },
+                "type": {
+                    "enum": [
+                        "FRIENDED_USER",
+                        "UNFRIENDED_USER"
+                    ]
                 }
-            },
-            "type": {
-                "enum": [
-                    "FRIENDED_USER",
-                    "UNFRIENDED_USER"
-                ]
             }
         },
         "self-activity": {

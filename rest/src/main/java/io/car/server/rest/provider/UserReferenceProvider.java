@@ -22,35 +22,31 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.hp.hpl.jena.rdf.model.Model;
+import com.google.inject.Inject;
 
 import io.car.server.core.entities.User;
 import io.car.server.rest.UserReference;
+import io.car.server.rest.decoding.EntityDecoder;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
 @Consumes(MediaType.APPLICATION_JSON)
-public class UserReferenceProvider extends AbstractEntityProvider<UserReference> {
+public class UserReferenceProvider extends AbstractMessageBodyReader<UserReference> {
+    private final EntityDecoder<User> userDecoder;
 
-    public UserReferenceProvider() {
+    @Inject
+    public UserReferenceProvider(EntityDecoder<User> userDecoder) {
         super(UserReference.class);
+        this.userDecoder = userDecoder;
     }
 
     @Override
-    public UserReference read(JsonNode j, MediaType mediaType) {
-        User user = getCodingFactory().createUserDecoder().decode(j, mediaType);
+    public UserReference decode(JsonNode j, MediaType mt) {
+        User user = userDecoder.decode(j, mt);
         return new UserReference(user.getName());
-    }
-
-    @Override
-    public JsonNode writeJSON(UserReference t, MediaType mediaType) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Model writeRDF(UserReference t, MediaType mediaType) {
-        throw new UnsupportedOperationException();
     }
 }

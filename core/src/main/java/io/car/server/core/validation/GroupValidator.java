@@ -21,26 +21,26 @@ import io.car.server.core.entities.Group;
 import io.car.server.core.exception.ValidationException;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class GroupValidator extends AbstractValidator<Group> {
     @Override
-    public Group validateCreate(Group t) throws ValidationException {
+    public void validateCreate(Group t) throws ValidationException {
         isNotNullOrEmpty("name", t.getName());
         isNotNullOrEmpty("description", t.getDescription());
         isNotNull("owner", t.getOwner());
         isNull("created", t.getCreationTime());
         isNull("modified", t.getModificationTime());
-        return t;
     }
 
     @Override
-    public Group validateUpdate(Group t) throws ValidationException {
+    public void validateUpdate(Group t) throws ValidationException {
         isNull("name", t.getName());
         isNotEmpty("description", t.getDescription());
         isNull("owner", t.getOwner());
         isNull("created", t.getCreationTime());
         isNull("modified", t.getModificationTime());
-        return t;
     }
 }

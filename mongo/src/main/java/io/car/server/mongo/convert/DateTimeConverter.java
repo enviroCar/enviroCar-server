@@ -26,6 +26,11 @@ import com.github.jmkgreen.morphia.converters.TypeConverter;
 import com.github.jmkgreen.morphia.mapping.MappedField;
 import com.github.jmkgreen.morphia.mapping.MappingException;
 
+/**
+ * TODO JavaDoc
+ *
+ * @author Christian Autermann <autermann@uni-muenster.de>
+ */
 public class DateTimeConverter extends TypeConverter implements
         SimpleValueConverter {
     public DateTimeConverter() {

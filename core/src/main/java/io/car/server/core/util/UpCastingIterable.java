@@ -22,8 +22,9 @@ import java.util.Iterator;
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 
-
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class UpCastingIterable<T> extends PaginatedIterable<T> {

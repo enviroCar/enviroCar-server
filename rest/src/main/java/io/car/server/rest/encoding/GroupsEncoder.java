@@ -17,43 +17,50 @@
  */
 package io.car.server.rest.encoding;
 
-import java.net.URI;
-
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.Provider;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.inject.Inject;
 import com.hp.hpl.jena.rdf.model.Model;
 
 import io.car.server.core.entities.Group;
 import io.car.server.core.entities.Groups;
 import io.car.server.rest.JSONConstants;
-import io.car.server.rest.resources.GroupsResource;
-import io.car.server.rest.resources.RootResource;
+import io.car.server.rest.rights.AccessRights;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
+@Provider
+@Produces(MediaType.APPLICATION_JSON)
 public class GroupsEncoder extends AbstractEntityEncoder<Groups> {
+    private final EntityEncoder<Group> groupEncoder;
+
+    @Inject
+    public GroupsEncoder(EntityEncoder<Group> groupEncoder) {
+        super(Groups.class);
+        this.groupEncoder = groupEncoder;
+    }
+
     @Override
-    public ObjectNode encodeJSON(Groups t, MediaType mediaType) {
+    public ObjectNode encodeJSON(Groups t,
+                                 AccessRights rights,
+                                 MediaType mediaType) {
         ObjectNode root = getJsonFactory().objectNode();
         ArrayNode groups = root.putArray(JSONConstants.GROUPS_KEY);
         for (Group u : t) {
-            URI uri = getUriInfo().getBaseUriBuilder()
-                    .path(RootResource.class)
-                    .path(RootResource.GROUPS)
-                    .path(GroupsResource.GROUP)
-                    .build(u.getName());
-            groups.addObject()
-                    .put(JSONConstants.NAME_KEY, u.getName())
-                    .put(JSONConstants.HREF_KEY, uri.toString());
+            groups.add(groupEncoder.encodeJSON(u, rights, mediaType));
         }
         return root;
     }
 
     @Override
-    public Model encodeRDF(Groups t, MediaType mt) {
+    public Model encodeRDF(Groups t, AccessRights rights, MediaType mt) {
         /* TODO implement io.car.server.rest.encoding.GroupsEncoder.encodeRDF() */
         throw new UnsupportedOperationException("io.car.server.rest.encoding.GroupsEncoder.encodeRDF() not yet implemented");
     }

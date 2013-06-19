@@ -17,7 +17,9 @@
  */
 package io.car.server.rest.encoding;
 
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.Provider;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
@@ -26,20 +28,26 @@ import com.hp.hpl.jena.rdf.model.Model;
 import io.car.server.core.entities.Phenomenon;
 import io.car.server.core.statistics.Statistic;
 import io.car.server.rest.JSONConstants;
+import io.car.server.rest.rights.AccessRights;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
+@Provider
+@Produces(MediaType.APPLICATION_JSON)
 public class StatisticEncoder extends AbstractEntityEncoder<Statistic> {
     private final EntityEncoder<Phenomenon> phenomenonEncoder;
 
     @Inject
     public StatisticEncoder(EntityEncoder<Phenomenon> phenomenonEncoder) {
+        super(Statistic.class);
         this.phenomenonEncoder = phenomenonEncoder;
     }
 
     @Override
-    public ObjectNode encodeJSON(Statistic t, MediaType mt) {
+    public ObjectNode encodeJSON(Statistic t, AccessRights rights, MediaType mt) {
         ObjectNode statistic = getJsonFactory().objectNode();
         statistic.put(JSONConstants.MAX_KEY, t.getMax());
         statistic.put(JSONConstants.AVG_KEY, t.getMean());
@@ -48,12 +56,13 @@ public class StatisticEncoder extends AbstractEntityEncoder<Statistic> {
         statistic.put(JSONConstants.TRACKS_KEY, t.getTracks());
         statistic.put(JSONConstants.USERS_KEY, t.getUsers());
         statistic.put(JSONConstants.PHENOMENON_KEY,
-                      phenomenonEncoder.encodeJSON(t.getPhenomenon(), mt));
+                      phenomenonEncoder
+                .encodeJSON(t.getPhenomenon(), rights, mt));
         return statistic;
     }
 
     @Override
-    public Model encodeRDF(Statistic t, MediaType mt) {
+    public Model encodeRDF(Statistic t, AccessRights rights, MediaType mt) {
         /* TODO implement io.car.server.rest.encoding.StatisticEncoder.encodeRDF() */
         throw new UnsupportedOperationException("io.car.server.rest.encoding.StatisticEncoder.encodeRDF() not yet implemented");
     }

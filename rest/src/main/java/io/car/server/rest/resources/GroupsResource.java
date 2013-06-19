@@ -46,6 +46,8 @@ import io.car.server.rest.auth.Authenticated;
 import io.car.server.rest.validation.Schema;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class GroupsResource extends AbstractResource {
@@ -67,12 +69,12 @@ public class GroupsResource extends AbstractResource {
             @QueryParam(RESTConstants.SEARCH) String search) {
         Pagination p = new Pagination(limit, page);
         if (user != null) {
-            return getService().getGroups(user, p);
+            return getGroupService().getGroups(user, p);
         } else {
             if (search != null && !search.trim().isEmpty()) {
-                return getService().searchGroups(search, p);
+                return getGroupService().searchGroups(search, p);
             } else {
-                return getService().getGroups(p);
+                return getGroupService().getGroups(p);
             }
         }
     }
@@ -84,8 +86,7 @@ public class GroupsResource extends AbstractResource {
     public Response createGroup(Group group) throws UserNotFoundException,
                                                     ResourceAlreadyExistException,
                                                     ValidationException {
-        User currentUser = getService().getUser(getCurrentUser());
-        Group g = getService().createGroup(currentUser, group);
+        Group g = getGroupService().createGroup(getCurrentUser(), group);
         return Response.created(getUriInfo().getAbsolutePathBuilder().path(g
                 .getName()).build()).build();
     }
@@ -95,10 +96,11 @@ public class GroupsResource extends AbstractResource {
             GroupNotFoundException {
         Group group;
         if (user != null) {
-            group = getService().getGroup(user, groupName);
+            group = getGroupService().getGroup(user, groupName);
         } else {
-            group = getService().getGroup(groupName);
+            group = getGroupService().getGroup(groupName);
         }
+        checkRights(getRights().canSee(group));
         return getResourceFactory().createGroupResource(group);
     }
 }

@@ -20,142 +20,101 @@ package io.car.server.rest.encoding;
 import static io.car.server.core.entities.Gender.FEMALE;
 import static io.car.server.core.entities.Gender.MALE;
 
-import java.net.URI;
 
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.Provider;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.vocabulary.VCARD;
 import com.vividsolutions.jts.geom.Geometry;
 
 import io.car.server.core.entities.User;
 import io.car.server.rest.JSONConstants;
-import io.car.server.rest.MediaTypes;
-import io.car.server.rest.resources.RootResource;
-import io.car.server.rest.resources.UserResource;
-import io.car.server.rest.resources.UsersResource;
+import io.car.server.rest.rights.AccessRights;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
+@Provider
+@Produces(MediaType.APPLICATION_JSON)
 public class UserEncoder extends AbstractEntityEncoder<User> {
     private final EntityEncoder<Geometry> geometryEncoder;
 
     @Inject
     public UserEncoder(EntityEncoder<Geometry> geometryEncoder) {
+        super(User.class);
         this.geometryEncoder = geometryEncoder;
     }
 
     @Override
-    public ObjectNode encodeJSON(User t, MediaType mediaType) {
+    public ObjectNode encodeJSON(User t, AccessRights rights,
+                                 MediaType mediaType) {
         ObjectNode j = getJsonFactory().objectNode();
-        if (t.hasName()) {
+        if (t.hasName() && rights.canSeeNameOf(t)) {
             j.put(JSONConstants.NAME_KEY, t.getName());
         }
-        if (mediaType.equals(MediaTypes.USER_TYPE)) {
-            if (t.hasMail()) {
-                j.put(JSONConstants.MAIL_KEY, t.getMail());
+        if (t.hasMail() && rights.canSeeMailOf(t)) {
+            j.put(JSONConstants.MAIL_KEY, t.getMail());
+        }
+        if (t.hasCreationTime() && rights.canSeeCreationTimeOf(t)) {
+            j.put(JSONConstants.CREATED_KEY,
+                  getDateTimeFormat().print(t.getCreationTime()));
+        }
+        if (t.hasModificationTime() && rights.canSeeModificationTimeOf(t)) {
+            j.put(JSONConstants.MODIFIED_KEY,
+                  getDateTimeFormat().print(t.getModificationTime()));
+        }
+        if (t.hasFirstName() && rights.canSeeFirstNameOf(t)) {
+            j.put(JSONConstants.FIRST_NAME_KEY, t.getFirstName());
+        }
+        if (t.hasLastName() && rights.canSeeLastNameOf(t)) {
+            j.put(JSONConstants.LAST_NAME_KEY, t.getLastName());
+        }
+        if (t.hasGender() && rights.canSeeGenderOf(t)) {
+            switch (t.getGender()) {
+                case MALE:
+                    j.put(JSONConstants.GENDER_KEY, JSONConstants.MALE);
+                    break;
+                case FEMALE:
+                    j.put(JSONConstants.GENDER_KEY, JSONConstants.FEMALE);
+                    break;
             }
-            if (t.hasCreationTime()) {
-                j.put(JSONConstants.CREATED_KEY,
-                      getDateTimeFormat().print(t.getCreationTime()));
-            }
-            if (t.hasModificationTime()) {
-                j.put(JSONConstants.MODIFIED_KEY,
-                      getDateTimeFormat().print(t.getModificationTime()));
-            }
-            if (t.hasFirstName()) {
-                j.put(JSONConstants.FIRST_NAME_KEY, t.getFirstName());
-            }
-            if (t.hasLastName()) {
-                j.put(JSONConstants.LAST_NAME_KEY, t.getLastName());
-            }
-            if (t.hasGender()) {
-                switch (t.getGender()) {
-                    case MALE:
-                        j.put(JSONConstants.GENDER_KEY, JSONConstants.MALE);
-                        break;
-                    case FEMALE:
-                        j.put(JSONConstants.GENDER_KEY, JSONConstants.FEMALE);
-                        break;
-                }
-            }
-            if (t.hasDayOfBirth()) {
-                j.put(JSONConstants.DAY_OF_BIRTH_KEY, t.getDayOfBirth());
-            }
-            if (t.hasAboutMe()) {
-                j.put(JSONConstants.ABOUT_ME_KEY, t.getAboutMe());
-            }
-            if (t.hasCountry()) {
-                j.put(JSONConstants.COUNTRY_KEY, t.getCountry());
-            }
-            if (t.hasLocation()) {
-                j.put(JSONConstants.LOCATION_KEY,
-                      geometryEncoder.encodeJSON(t.getLocation(), mediaType));
-            }
-            if (t.hasLanguage()) {
-                j.put(JSONConstants.LANGUAGE_KEY, t.getLanguage());
-            }
-
-            encodeLinks(j);
-        } else {
-            URI uri = getUriInfo().getBaseUriBuilder()
-                    .path(RootResource.class)
-                    .path(RootResource.USERS)
-                    .path(UsersResource.USER).build(t.getName());
-            return j.put(JSONConstants.HREF_KEY, uri.toString());
+        }
+        if (t.hasDayOfBirth() && rights.canSeeDayOfBirthOf(t)) {
+            j.put(JSONConstants.DAY_OF_BIRTH_KEY, t.getDayOfBirth());
+        }
+        if (t.hasAboutMe() && rights.canSeeAboutMeOf(t)) {
+            j.put(JSONConstants.ABOUT_ME_KEY, t.getAboutMe());
+        }
+        if (t.hasCountry() && rights.canSeeCountryOf(t)) {
+            j.put(JSONConstants.COUNTRY_KEY, t.getCountry());
+        }
+        if (t.hasLocation() && rights.canSeeLocationOf(t)) {
+            j.put(JSONConstants.LOCATION_KEY,
+                  geometryEncoder.encodeJSON(t.getLocation(), rights, mediaType));
+        }
+        if (t.hasLanguage() && rights.canSeeLanguageOf(t)) {
+            j.put(JSONConstants.LANGUAGE_KEY, t.getLanguage());
         }
         return j;
     }
 
-    protected void encodeLinks(ObjectNode j) {
-        j.put(JSONConstants.MEASUREMENTS_KEY,
-              getUriInfo().getAbsolutePathBuilder()
-                .path(UserResource.MEASUREMENTS)
-                .build().toString());
-        j.put(JSONConstants.GROUPS_KEY,
-              getUriInfo().getAbsolutePathBuilder()
-                .path(UserResource.GROUPS)
-                .build().toString());
-        j.put(JSONConstants.FRIENDS_KEY,
-              getUriInfo().getAbsolutePathBuilder()
-                .path(UserResource.FRIENDS)
-                .build().toString());
-        j.put(JSONConstants.TRACKS_KEY,
-              getUriInfo().getAbsolutePathBuilder()
-                .path(UserResource.TRACKS)
-                .build().toString());
-        j.put(JSONConstants.STATISTICS_KEY,
-              getUriInfo().getAbsolutePathBuilder()
-                .path(UserResource.STATISTICS)
-                .build().toString());
-        j.put(JSONConstants.ACTIVITIES_KEY,
-              getUriInfo().getAbsolutePathBuilder()
-                .path(UserResource.ACTIVITIES)
-                .build().toString());
-        j.put(JSONConstants.FRIEND_ACTIVITIES,
-              getUriInfo().getAbsolutePathBuilder()
-                .path(UserResource.FRIEND_ACTIVITIES)
-                .build().toString());
-        j.put(JSONConstants.AVATAR_KEY,
-              getUriInfo().getAbsolutePathBuilder()
-                .path(UserResource.AVATAR)
-                .build().toString());
-    }
-
     @Override
-    public Model encodeRDF(User t, MediaType mt) {
-        Model model = ModelFactory.createDefaultModel();
-        URI uri = getUriInfo().getBaseUriBuilder()
-                .path(RootResource.class)
-                .path(RootResource.USERS)
-                .path(UsersResource.USER).build(t.getName());
-        model.createResource(uri.toASCIIString())
-                .addProperty(VCARD.EMAIL, t.getMail())
-                .addProperty(VCARD.NICKNAME, t.getName());
-        return model;
+    public Model encodeRDF(User t, AccessRights rights, MediaType mt) {
+//        Model model = ModelFactory.createDefaultModel();
+//        URI uri = getUriInfo().getBaseUriBuilder()
+//                .path(RootResource.class)
+//                .path(RootResource.USERS)
+//                .path(UsersResource.USER).build(t.getName());
+//        model.createResource(uri.toASCIIString())
+//                .addProperty(VCARD.EMAIL, t.getMail())
+//                .addProperty(VCARD.NICKNAME, t.getName());
+//        return model;
+        /* TODO implement io.car.server.rest.encoding.UserEncoder.encodeRDF() */
+        throw new UnsupportedOperationException("io.car.server.rest.encoding.UserEncoder.encodeRDF() not yet implemented");
     }
 }

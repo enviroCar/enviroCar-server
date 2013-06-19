@@ -26,12 +26,12 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.Polygon;
 
 import io.car.server.core.entities.Measurement;
 import io.car.server.core.entities.Measurements;
@@ -42,7 +42,9 @@ import io.car.server.core.exception.ResourceAlreadyExistException;
 import io.car.server.core.exception.TrackNotFoundException;
 import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.core.exception.ValidationException;
+import io.car.server.core.filter.MeasurementFilter;
 import io.car.server.core.util.Pagination;
+import io.car.server.rest.BoundingBox;
 import io.car.server.rest.MediaTypes;
 import io.car.server.rest.RESTConstants;
 import io.car.server.rest.Schemas;
@@ -50,18 +52,23 @@ import io.car.server.rest.auth.Authenticated;
 import io.car.server.rest.validation.Schema;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Arne de Wall <a.dewall@52north.org>
  */
 public class MeasurementsResource extends AbstractResource {
     public static final String MEASUREMENT = "{measurement}";
     private final Track track;
     private final User user;
+    private final GeometryFactory geometryFactory;
 
     @Inject
     public MeasurementsResource(@Assisted @Nullable Track track,
-                                @Assisted @Nullable User user) {
+                                @Assisted @Nullable User user,
+                                GeometryFactory geometryFactory) {
         this.track = track;
         this.user = user;
+        this.geometryFactory = geometryFactory;
     }
 
     @GET
@@ -70,18 +77,16 @@ public class MeasurementsResource extends AbstractResource {
                 MediaTypes.TURTLE_ALT })
     public Measurements get(
             @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit,
-            @QueryParam(RESTConstants.PAGE) @DefaultValue("0") int page)
+            @QueryParam(RESTConstants.PAGE) @DefaultValue("0") int page,
+            @QueryParam(RESTConstants.BBOX) BoundingBox bbox)
             throws UserNotFoundException, TrackNotFoundException {
-        Pagination p = new Pagination(limit, page);
-        if (track == null) {
-            if (user == null) {
-                return getService().getMeasurements(p);
-            } else {
-                return getService().getMeasurements(user, p);
-            }
-        } else {
-            return getService().getMeasurementsByTrack(track, p);
+        Polygon poly = null;
+        if (bbox != null) {
+            poly = bbox.asPolygon(geometryFactory);
         }
+        return getDataService()
+                .getMeasurements(new MeasurementFilter(track, user, poly,
+                                                       new Pagination(limit, page)));
     }
 
     @POST
@@ -92,16 +97,13 @@ public class MeasurementsResource extends AbstractResource {
             ResourceAlreadyExistException, ValidationException,
             UserNotFoundException {
         Measurement m;
-        User cur = getService().getUser(getCurrentUser());
         if (track != null) {
-            if (!canModifyUser(track.getUser())) {
-                throw new WebApplicationException(Status.FORBIDDEN);
-            }
-            measurement.setUser(cur);
-            m = getService().createMeasurement(track, measurement);
+            checkRights(getRights().canModify(track));
+            measurement.setUser(getCurrentUser());
+            m = getDataService().createMeasurement(track, measurement);
         } else {
-            measurement.setUser(cur);
-            m = getService().createMeasurement(measurement);
+            measurement.setUser(getCurrentUser());
+            m = getDataService().createMeasurement(measurement);
         }
         return Response.created(
                 getUriInfo()
@@ -112,7 +114,15 @@ public class MeasurementsResource extends AbstractResource {
     @Path(MEASUREMENT)
     public MeasurementResource measurement(@PathParam("measurement") String id)
             throws MeasurementNotFoundException {
-        return getResourceFactory().createMeasurementResource(getService()
-                .getMeasurement(id), user, track);
+        if (user != null) {
+            checkRights(getRights().canSeeMeasurementsOf(user));
+        }
+        if (track != null) {
+            checkRights(getRights().canSeeMeasurementsOf(track));
+        }
+
+        Measurement m = getDataService().getMeasurement(id);
+        checkRights(getRights().canSee(m));
+        return getResourceFactory().createMeasurementResource(m, user, track);
     }
 }

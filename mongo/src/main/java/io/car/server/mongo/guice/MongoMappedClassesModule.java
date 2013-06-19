@@ -38,6 +38,8 @@ import io.car.server.mongo.entity.MongoTrack;
 import io.car.server.mongo.entity.MongoUser;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class MongoMappedClassesModule extends AbstractModule {
@@ -45,7 +47,8 @@ public class MongoMappedClassesModule extends AbstractModule {
     @SuppressWarnings("rawtypes")
     protected void configure() {
         Multibinder<Class<?>> mb = Multibinder.newSetBinder(
-                binder(), new TypeLiteral<Class<?>>() {},
+                binder(), new TypeLiteral<Class<?>>() {
+        },
                 Names.named(MongoDB.MAPPED_CLASSES));
         mb.addBinding().toInstance(MongoUser.class);
         mb.addBinding().toInstance(MongoGroup.class);

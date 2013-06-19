@@ -23,6 +23,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * TODO JavaDoc
+ *
+ * @author Christian Autermann <autermann@uni-muenster.de>
+ */
 @Documented
 @Target({ ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)

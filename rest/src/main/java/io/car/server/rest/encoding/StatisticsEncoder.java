@@ -17,7 +17,9 @@
  */
 package io.car.server.rest.encoding;
 
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.Provider;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -27,30 +29,36 @@ import com.hp.hpl.jena.rdf.model.Model;
 import io.car.server.core.statistics.Statistic;
 import io.car.server.core.statistics.Statistics;
 import io.car.server.rest.JSONConstants;
+import io.car.server.rest.rights.AccessRights;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
+@Provider
+@Produces(MediaType.APPLICATION_JSON)
 public class StatisticsEncoder extends AbstractEntityEncoder<Statistics> {
     private final EntityEncoder<Statistic> statisticEncoder;
 
     @Inject
     public StatisticsEncoder(EntityEncoder<Statistic> statisticEncoder) {
+        super(Statistics.class);
         this.statisticEncoder = statisticEncoder;
     }
 
     @Override
-    public ObjectNode encodeJSON(Statistics t, MediaType mt) {
+    public ObjectNode encodeJSON(Statistics t, AccessRights rights, MediaType mt) {
         ObjectNode root = getJsonFactory().objectNode();
         ArrayNode statistics = root.putArray(JSONConstants.STATISTICS_KEY);
         for (Statistic s : t) {
-            statistics.add(statisticEncoder.encodeJSON(s, mt));
+            statistics.add(statisticEncoder.encodeJSON(s, rights, mt));
         }
         return root;
     }
 
     @Override
-    public Model encodeRDF(Statistics t, MediaType mt) {
+    public Model encodeRDF(Statistics t, AccessRights rights, MediaType mt) {
         /* TODO implement io.car.server.rest.encoding.StatisticsEncoder.encodeRDF() */
         throw new UnsupportedOperationException("io.car.server.rest.encoding.StatisticsEncoder.encodeRDF() not yet implemented");
     }

@@ -21,16 +21,23 @@ import org.joda.time.format.DateTimeFormatter;
 
 import com.google.inject.Inject;
 
-import io.car.server.core.Service;
 import io.car.server.core.entities.EntityFactory;
+import io.car.server.rest.provider.AbstractMessageBodyReader;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public abstract class AbstractEntityDecoder<T> implements EntityDecoder<T> {
+public abstract class AbstractEntityDecoder<T>
+        extends AbstractMessageBodyReader<T>
+        implements EntityDecoder<T> {
     private DateTimeFormatter dateTimeFormat;
-    private Service service;
     private EntityFactory entityFactory;
+
+    public AbstractEntityDecoder(Class<T> type) {
+        super(type);
+    }
 
     public EntityFactory getEntityFactory() {
         return entityFactory;
@@ -48,14 +55,5 @@ public abstract class AbstractEntityDecoder<T> implements EntityDecoder<T> {
     @Inject
     public void setDateTimeFormat(DateTimeFormatter dateTimeFormat) {
         this.dateTimeFormat = dateTimeFormat;
-    }
-
-    public Service getService() {
-        return service;
-    }
-
-    @Inject
-    public void setService(Service service) {
-        this.service = service;
     }
 }

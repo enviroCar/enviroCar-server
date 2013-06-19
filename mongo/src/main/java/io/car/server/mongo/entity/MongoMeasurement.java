@@ -43,6 +43,8 @@ import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  * @author Arne de Wall
  */
@@ -135,7 +137,7 @@ public class MongoMeasurement extends MongoEntityBase implements Measurement {
     @Override
     public MongoUser getUser() {
         if (this._user == null) {
-            this._user = getMongoDB().dereference(MongoUser.class, this.user);
+            this._user = getMongoDB().deref(MongoUser.class, this.user);
         }
         return this._user;
     }
@@ -143,7 +145,7 @@ public class MongoMeasurement extends MongoEntityBase implements Measurement {
     @Override
     public void setUser(User user) {
         this._user = (MongoUser) user;
-        this.user = getMongoDB().reference(this._user);
+        this.user = getMongoDB().key(this._user);
     }
 
     @Override
@@ -169,13 +171,13 @@ public class MongoMeasurement extends MongoEntityBase implements Measurement {
     @Override
     public void setTrack(Track track) {
         this._track = (MongoTrack) track;
-        this.track = getMongoDB().reference(this._track);
+        this.track = getMongoDB().key(this._track);
     }
 
     @Override
     public MongoTrack getTrack() {
         if (this._track == null) {
-            this._track = getMongoDB().dereference(MongoTrack.class, this.track);
+            this._track = getMongoDB().deref(MongoTrack.class, this.track);
         }
         return this._track;
     }

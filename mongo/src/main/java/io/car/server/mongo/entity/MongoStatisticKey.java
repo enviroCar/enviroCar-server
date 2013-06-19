@@ -23,6 +23,8 @@ import com.github.jmkgreen.morphia.annotations.Property;
 import com.google.common.base.Objects;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Embedded
@@ -47,7 +49,6 @@ public class MongoStatisticKey {
     public MongoStatisticKey() {
         this(null, null);
     }
-
 
     public Key<MongoTrack> getTrack() {
         return track;

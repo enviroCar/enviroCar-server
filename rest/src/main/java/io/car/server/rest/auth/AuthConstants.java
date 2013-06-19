@@ -18,6 +18,8 @@
 package io.car.server.rest.auth;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface AuthConstants {

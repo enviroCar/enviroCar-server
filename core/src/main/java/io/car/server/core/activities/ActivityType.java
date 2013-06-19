@@ -18,6 +18,8 @@
 package io.car.server.core.activities;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public enum ActivityType {
