@@ -31,6 +31,7 @@ import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
 import io.car.server.core.statistics.Statistic;
 import io.car.server.rest.encoding.rdf.RDFLinker;
+import io.car.server.rest.encoding.rdf.linker.UserFOAFLinker;
 import io.car.server.rest.encoding.rdf.linker.UserVCardLinker;
 
 public class DefaultRDFLinkerModule extends AbstractModule {
@@ -100,5 +101,6 @@ public class DefaultRDFLinkerModule extends AbstractModule {
                 binder(), new TypeLiteral<RDFLinker<User>>() {
         });
         b.addBinding().to(UserVCardLinker.class);
+        b.addBinding().to(UserFOAFLinker.class);
     }
 }
