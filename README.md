@@ -13,6 +13,14 @@ See the [wiki](https://github.com/car-io/car.io-server/wiki#api-reference).
 * https://giv-car.uni-muenster.de/dev/rest/ (following the dev branch)
 * https://giv-car.uni-muenster.de/stable/rest/ (following the master branch)
 
+## Building & Installation ##
+
+* Install and run [MongoDB](http://www.mongodb.org/downloads) >2.4.
+* Clone the repository and switch to the directory.
+* Configure the connection in `mongo/src/main/resources/mongo.properties` (if needed).
+* Run `mvn clean install`.
+* Deploy the `war` file in `webapp/target` to a application server of your choice (e.g. [Apache Tomcat](http://tomcat.apache.org/)).
+
 ## [License](https://github.com/car-io/car.io-server/blob/master/LICENSE) ##
 
     Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
