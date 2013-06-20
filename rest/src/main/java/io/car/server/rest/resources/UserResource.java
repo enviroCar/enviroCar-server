@@ -109,7 +109,6 @@ public class UserResource extends AbstractResource {
 
     @Path(FRIENDS)
     public FriendsResource friends() {
-        checkRights(getRights().canSeeFriendsOf(user));
         return getResourceFactory().createFriendsResource(this.user);
     }
 
