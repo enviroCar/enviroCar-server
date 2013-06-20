@@ -97,7 +97,6 @@ public class GroupResource extends AbstractResource {
 
     @Path(MEMBERS)
     public GroupMembersResource members() {
-        checkRights(getRights().canSeeMembersOf(group));
         return getResourceFactory().createGroupMembersResource(group);
     }
 
