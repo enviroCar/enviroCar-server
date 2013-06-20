@@ -56,6 +56,7 @@ public class FriendsResource extends AbstractResource {
     @Schema(response = Schemas.USERS)
     @Produces(MediaTypes.USERS)
     public Users get() {
+        checkRights(getRights().canSeeFriendsOf(user));
         return getFriendService().getFriends(user);
     }
 
