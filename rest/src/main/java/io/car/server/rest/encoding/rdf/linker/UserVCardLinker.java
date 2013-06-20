@@ -40,6 +40,7 @@ public class UserVCardLinker implements RDFLinker<User> {
     @Override
     public void link(Model m, User t, AccessRights rights,
                      Provider<UriBuilder> uriBuilder) {
+        m.setNsPrefix("vcard", VCARD.getURI());
         URI uri = uriBuilder.get()
                 .path(RootResource.class)
                 .path(RootResource.USERS)
@@ -47,5 +48,6 @@ public class UserVCardLinker implements RDFLinker<User> {
         m.createResource(uri.toASCIIString())
                 .addProperty(VCARD.EMAIL, t.getMail())
                 .addProperty(VCARD.NICKNAME, t.getName());
+
     }
 }
