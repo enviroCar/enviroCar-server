@@ -26,11 +26,11 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.ext.MessageBodyWriter;
 
-import org.apache.jena.riot.RDFDataMgr;
-import org.apache.jena.riot.RDFFormat;
-
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.hp.hpl.jena.rdf.model.Model;
 
 import io.car.server.rest.MediaTypes;
@@ -45,6 +45,8 @@ import io.car.server.rest.encoding.RDFEntityEncoder;
 public abstract class AbstractRDFMessageBodyWriter<T>
         implements MessageBodyWriter<T>, RDFEntityEncoder<T> {
     private final Class<T> classType;
+    @Inject
+    private Provider<UriInfo> uriInfo;
 
     public AbstractRDFMessageBodyWriter(Class<T> classType) {
         this.classType = classType;
@@ -67,11 +69,16 @@ public abstract class AbstractRDFMessageBodyWriter<T>
                         MultivaluedMap<String, Object> h,
                         OutputStream out) throws IOException,
                                                  WebApplicationException {
+        Model m = encodeRDF(t);
+        m.setNsPrefix("xsd", "http://www.w3.org/2001/XMLSchema#");
+        m.setNsPrefix("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
         if (mt.isCompatible(MediaTypes.XML_RDF_TYPE)) {
-            RDFDataMgr.write(out, encodeRDF(t), RDFFormat.RDFXML);
+            String base = uriInfo.get().getAbsolutePath().toASCIIString();
+            m.write(out, "RDF/XML-ABBREV", base);
         } else if (mt.isCompatible(MediaTypes.TURTLE_TYPE) ||
                    mt.isCompatible(MediaTypes.TURTLE_ALT_TYPE)) {
-            RDFDataMgr.write(out, encodeRDF(t), RDFFormat.TURTLE);
+            String base = uriInfo.get().getBaseUri().toASCIIString();
+            m.write(out, "TTL", base);
         }
         out.flush();
     }

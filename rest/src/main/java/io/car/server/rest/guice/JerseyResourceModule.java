@@ -26,8 +26,6 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 import io.car.server.core.FriendService;
 import io.car.server.core.GroupService;
-import io.car.server.core.entities.User;
-import io.car.server.rest.auth.PrincipalImpl;
 import io.car.server.rest.mapper.IllegalModificationExceptionMapper;
 import io.car.server.rest.mapper.JsonValidationExceptionMapper;
 import io.car.server.rest.mapper.ResourceAlreadyExistExceptionMapper;
@@ -36,7 +34,7 @@ import io.car.server.rest.mapper.ValidationExceptionMapper;
 import io.car.server.rest.resources.ResourceFactory;
 import io.car.server.rest.resources.RootResource;
 import io.car.server.rest.rights.AccessRights;
-import io.car.server.rest.rights.AccessRightsImpl;
+import io.car.server.rest.rights.NonRestrictiveRights;
 
 /**
  * TODO JavaDoc
@@ -59,9 +57,10 @@ public class JerseyResourceModule extends AbstractModule {
     public AccessRights accessRights(SecurityContext ctx,
                                      GroupService groupService,
                                      FriendService friendService) {
-//        return new NonRestrictiveRights();
-        PrincipalImpl p = (PrincipalImpl) ctx.getUserPrincipal();
-        User user = p == null ? null : p.getUser();
-        return new AccessRightsImpl(user, groupService, friendService);
+        // XXX revert this when merging to dev
+        return new NonRestrictiveRights();
+//        PrincipalImpl p = (PrincipalImpl) ctx.getUserPrincipal();
+//        User user = p == null ? null : p.getUser();
+//        return new AccessRightsImpl(user, groupService, friendService);
     }
 }
