@@ -1,4 +1,5 @@
 _site
+_deploy
 _highlight_repos
 *.sublime-project
 *.sublime-workspace
