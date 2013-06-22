@@ -1,6 +1,6 @@
-#safe: true
+safe: false
 lsi: false
 pygments: true
 exclude:
-    - rest
+    - build.sh
 markdown: redcarpet
