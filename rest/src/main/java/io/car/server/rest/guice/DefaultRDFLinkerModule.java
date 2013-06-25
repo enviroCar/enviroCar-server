@@ -17,11 +17,6 @@
  */
 package io.car.server.rest.guice;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.TypeLiteral;
-import com.google.inject.multibindings.Multibinder;
-import com.vividsolutions.jts.geom.Geometry;
-
 import io.car.server.core.activities.Activity;
 import io.car.server.core.entities.Group;
 import io.car.server.core.entities.Measurement;
@@ -31,13 +26,19 @@ import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
 import io.car.server.core.statistics.Statistic;
 import io.car.server.rest.encoding.rdf.RDFLinker;
+import io.car.server.rest.encoding.rdf.linker.GroupFOAFLinker;
 import io.car.server.rest.encoding.rdf.linker.PhenomenonDCTermsLinker;
-import io.car.server.rest.encoding.rdf.linker.SensorVSOLinker;
 import io.car.server.rest.encoding.rdf.linker.SensorDCTermsLinker;
+import io.car.server.rest.encoding.rdf.linker.SensorVSOLinker;
 import io.car.server.rest.encoding.rdf.linker.TrackDCTermsLinker;
 import io.car.server.rest.encoding.rdf.linker.UserDCTermsLinker;
 import io.car.server.rest.encoding.rdf.linker.UserFOAFLinker;
 import io.car.server.rest.encoding.rdf.linker.UserVCardLinker;
+
+import com.google.inject.AbstractModule;
+import com.google.inject.TypeLiteral;
+import com.google.inject.multibindings.Multibinder;
+import com.vividsolutions.jts.geom.Geometry;
 
 public class DefaultRDFLinkerModule extends AbstractModule {
     @Override
@@ -69,6 +70,7 @@ public class DefaultRDFLinkerModule extends AbstractModule {
         Multibinder<RDFLinker<Group>> b = Multibinder.newSetBinder(
                 binder(), new TypeLiteral<RDFLinker<Group>>() {
         });
+        b.addBinding().to(GroupFOAFLinker.class);
     }
 
     protected void bindMeasurementLinker() {
