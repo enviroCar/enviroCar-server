@@ -34,7 +34,6 @@ import io.car.server.rest.resources.SensorsResource;
 import io.car.server.rest.rights.AccessRights;
 
 /**
- *
  * @author jan
  */
 public class SensorVSOLinker implements RDFLinker<Sensor> {
