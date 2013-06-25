@@ -1,7 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package io.car.server.rest.encoding.rdf.linker;
 
 import com.google.inject.Provider;
@@ -13,7 +10,7 @@ import javax.ws.rs.core.UriBuilder;
 
 /**
  *
- * @author jan
+ * @author Jan Wirwahn
  */
 public class StatisticDCTermsLinker implements RDFLinker<Statistic> {
     

@@ -31,7 +31,11 @@ import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
 import io.car.server.core.statistics.Statistic;
 import io.car.server.rest.encoding.rdf.RDFLinker;
+import io.car.server.rest.encoding.rdf.linker.PhenomenonDCTermsLinker;
 import io.car.server.rest.encoding.rdf.linker.SensorVSOLinker;
+import io.car.server.rest.encoding.rdf.linker.SensorDCTermsLinker;
+import io.car.server.rest.encoding.rdf.linker.TrackDCTermsLinker;
+import io.car.server.rest.encoding.rdf.linker.UserDCTermsLinker;
 import io.car.server.rest.encoding.rdf.linker.UserFOAFLinker;
 import io.car.server.rest.encoding.rdf.linker.UserVCardLinker;
 
@@ -77,6 +81,7 @@ public class DefaultRDFLinkerModule extends AbstractModule {
         Multibinder<RDFLinker<Phenomenon>> b = Multibinder.newSetBinder(
                 binder(), new TypeLiteral<RDFLinker<Phenomenon>>() {
         });
+        b.addBinding().to(PhenomenonDCTermsLinker.class);
     }
 
     protected void bindSensorLinker() {
@@ -84,6 +89,7 @@ public class DefaultRDFLinkerModule extends AbstractModule {
                 binder(), new TypeLiteral<RDFLinker<Sensor>>() {
         });
         b.addBinding().to(SensorVSOLinker.class);
+        b.addBinding().to(SensorDCTermsLinker.class);
     }
 
     protected void bindStatisticLinker() {
@@ -96,6 +102,7 @@ public class DefaultRDFLinkerModule extends AbstractModule {
         Multibinder<RDFLinker<Track>> b = Multibinder.newSetBinder(
                 binder(), new TypeLiteral<RDFLinker<Track>>() {
         });
+        b.addBinding().to(TrackDCTermsLinker.class);
     }
 
     protected void bindUserLinker() {
@@ -104,5 +111,6 @@ public class DefaultRDFLinkerModule extends AbstractModule {
         });
         b.addBinding().to(UserVCardLinker.class);
         b.addBinding().to(UserFOAFLinker.class);
+        b.addBinding().to(UserDCTermsLinker.class);
     }
 }
