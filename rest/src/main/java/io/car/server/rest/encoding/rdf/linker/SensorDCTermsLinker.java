@@ -30,7 +30,7 @@ import io.car.server.rest.rights.AccessRights;
 
 /**
  *
- * @author jan
+ * @author Jan Wirwahn
  */
 public class SensorDCTermsLinker implements RDFLinker<Sensor> {
     public static final String ODBL_URL =

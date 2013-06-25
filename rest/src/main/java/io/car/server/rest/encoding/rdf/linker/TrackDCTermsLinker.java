@@ -29,7 +29,7 @@ import io.car.server.rest.resources.TracksResource;
 import io.car.server.rest.rights.AccessRights;
 
 /**
- * @author jan
+ * @author Jan Wirwahn
  */
 public class TrackDCTermsLinker implements RDFLinker<Track> {
     public static final String ODBL_URL =

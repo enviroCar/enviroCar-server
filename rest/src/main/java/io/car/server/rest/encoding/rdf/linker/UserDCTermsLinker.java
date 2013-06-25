@@ -29,7 +29,7 @@ import io.car.server.rest.resources.UsersResource;
 import io.car.server.rest.rights.AccessRights;
 
 /**
- * @author jan
+ * @author Jan Wirwahn
  */
 public class UserDCTermsLinker implements RDFLinker<User> {
     public static final String ODBL_URL =
