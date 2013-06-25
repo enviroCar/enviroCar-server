@@ -57,7 +57,7 @@ import io.car.server.rest.rights.AccessRightsImpl;
 public class HTTPPushListener {
     //TODO make configurable
     private static final String host =
-            "https://localhost:6143/geoevent/rest/receiver/car-io-tracks-in-rest?f=generic-json";
+            "http://geoprocessing.demo.52north.org:8081/simplebroker/";
     private static final Logger logger = LoggerFactory
             .getLogger(HTTPPushListener.class);
     public static final AccessRightsImpl DEFAULT_ACCESS_RIGHTS =
