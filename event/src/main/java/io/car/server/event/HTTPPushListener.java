@@ -50,7 +50,7 @@ import com.google.inject.Singleton;
 import io.car.server.core.entities.Track;
 import io.car.server.core.event.CreatedTrackEvent;
 import io.car.server.rest.MediaTypes;
-import io.car.server.rest.encoding.EntityEncoder;
+import io.car.server.rest.encoding.JSONEntityEncoder;
 import io.car.server.rest.rights.AccessRightsImpl;
 
 @Singleton
@@ -63,11 +63,11 @@ public class HTTPPushListener {
     public static final AccessRightsImpl DEFAULT_ACCESS_RIGHTS =
             new AccessRightsImpl();
     private final HttpClient client;
-    private final EntityEncoder<Track> encoder;
+    private final JSONEntityEncoder<Track> encoder;
     private final ObjectWriter writer;
 
     @Inject
-    public HTTPPushListener(EntityEncoder<Track> encoder,
+    public HTTPPushListener(JSONEntityEncoder<Track> encoder,
                             ObjectWriter writer) throws Exception {
         this.client = createClient();
         this.encoder = encoder;
@@ -82,8 +82,9 @@ public class HTTPPushListener {
     private synchronized void pushNewTrack(Track track) {
         HttpResponse resp = null;
         try {
-            ObjectNode jsonTrack = encoder.encode(track, DEFAULT_ACCESS_RIGHTS,
-                                                  MediaTypes.TRACK_TYPE);
+            ObjectNode jsonTrack = encoder
+                    .encodeJSON(track, DEFAULT_ACCESS_RIGHTS,
+                                MediaTypes.TRACK_TYPE);
             String content = writer.writeValueAsString(jsonTrack);
             logger.debug("Entity: {}", content);
             HttpEntity entity = new StringEntity(

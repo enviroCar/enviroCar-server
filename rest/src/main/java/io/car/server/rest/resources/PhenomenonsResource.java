@@ -48,7 +48,10 @@ public class PhenomenonsResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.PHENOMENONS)
-    @Produces(MediaTypes.PHENOMENONS)
+    @Produces({ MediaTypes.PHENOMENONS,
+                MediaTypes.XML_RDF,
+                MediaTypes.TURTLE,
+                MediaTypes.TURTLE_ALT })
     public Phenomenons get(
             @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit,
             @QueryParam(RESTConstants.PAGE) @DefaultValue("0") int page) {
@@ -58,7 +61,7 @@ public class PhenomenonsResource extends AbstractResource {
     @POST
     @Authenticated
     @Schema(request = Schemas.PHENOMENON_CREATE)
-    @Consumes(MediaTypes.PHENOMENON_CREATE)
+    @Consumes({ MediaTypes.PHENOMENON_CREATE })
     public Response create(Phenomenon phenomenon) {
         return Response.created(getUriInfo().getAbsolutePathBuilder()
                 .path(getDataService().createPhenomenon(phenomenon)

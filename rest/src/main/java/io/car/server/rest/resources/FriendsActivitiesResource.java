@@ -50,7 +50,10 @@ public class FriendsActivitiesResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.ACTIVITIES)
-    @Produces(MediaTypes.ACTIVITIES)
+    @Produces({ MediaTypes.ACTIVITIES,
+                MediaTypes.XML_RDF,
+                MediaTypes.TURTLE,
+                MediaTypes.TURTLE_ALT })
     public Activities statistics(
             @QueryParam(RESTConstants.TYPE) ActivityType type,
             @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit,

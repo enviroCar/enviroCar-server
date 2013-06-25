@@ -28,16 +28,16 @@ import io.car.server.core.entities.Phenomenon;
 import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
-import io.car.server.rest.decoding.EntityDecoder;
-import io.car.server.rest.decoding.GeoJSONDecoder;
-import io.car.server.rest.decoding.GroupDecoder;
-import io.car.server.rest.decoding.MeasurementDecoder;
-import io.car.server.rest.decoding.PhenomenonDecoder;
-import io.car.server.rest.decoding.SensorDecoder;
-import io.car.server.rest.decoding.TrackDecoder;
-import io.car.server.rest.decoding.UserDecoder;
-import io.car.server.rest.provider.JsonNodeMessageBodyReader;
-import io.car.server.rest.provider.UserReferenceProvider;
+import io.car.server.rest.decoding.json.GeoJSONDecoder;
+import io.car.server.rest.decoding.json.GroupDecoder;
+import io.car.server.rest.decoding.json.JSONEntityDecoder;
+import io.car.server.rest.decoding.json.JsonNodeMessageBodyReader;
+import io.car.server.rest.decoding.json.MeasurementDecoder;
+import io.car.server.rest.decoding.json.PhenomenonDecoder;
+import io.car.server.rest.decoding.json.SensorDecoder;
+import io.car.server.rest.decoding.json.TrackDecoder;
+import io.car.server.rest.decoding.json.UserDecoder;
+import io.car.server.rest.encoding.json.UserReferenceProvider;
 
 /**
  * TODO JavaDoc
@@ -49,26 +49,26 @@ public class JerseyDecoderModule extends AbstractModule {
     protected void configure() {
         bind(JsonNodeMessageBodyReader.class).in(Scopes.SINGLETON);
         bind(UserDecoder.class).in(Scopes.SINGLETON);
-        bind(new TypeLiteral<EntityDecoder<User>>() {
+        bind(new TypeLiteral<JSONEntityDecoder<User>>() {
         }).to(UserDecoder.class);
         bind(UserReferenceProvider.class).in(Scopes.SINGLETON);
         bind(PhenomenonDecoder.class).in(Scopes.SINGLETON);
-        bind(new TypeLiteral<EntityDecoder<Phenomenon>>() {
+        bind(new TypeLiteral<JSONEntityDecoder<Phenomenon>>() {
         }).to(PhenomenonDecoder.class);
         bind(GroupDecoder.class).in(Scopes.SINGLETON);
-        bind(new TypeLiteral<EntityDecoder<Group>>() {
+        bind(new TypeLiteral<JSONEntityDecoder<Group>>() {
         }).to(GroupDecoder.class);
         bind(GeoJSONDecoder.class).in(Scopes.SINGLETON);
-        bind(new TypeLiteral<EntityDecoder<Geometry>>() {
+        bind(new TypeLiteral<JSONEntityDecoder<Geometry>>() {
         }).to(GeoJSONDecoder.class);
         bind(MeasurementDecoder.class).in(Scopes.SINGLETON);
-        bind(new TypeLiteral<EntityDecoder<Measurement>>() {
+        bind(new TypeLiteral<JSONEntityDecoder<Measurement>>() {
         }).to(MeasurementDecoder.class);
         bind(TrackDecoder.class).in(Scopes.SINGLETON);
-        bind(new TypeLiteral<EntityDecoder<Track>>() {
+        bind(new TypeLiteral<JSONEntityDecoder<Track>>() {
         }).to(TrackDecoder.class);
         bind(SensorDecoder.class).in(Scopes.SINGLETON);
-        bind(new TypeLiteral<EntityDecoder<Sensor>>() {
+        bind(new TypeLiteral<JSONEntityDecoder<Sensor>>() {
         }).to(SensorDecoder.class);
     }
 }

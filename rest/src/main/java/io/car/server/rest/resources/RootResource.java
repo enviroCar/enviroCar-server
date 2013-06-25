@@ -51,7 +51,7 @@ public class RootResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.ROOT)
-    @Produces(MediaTypes.ROOT)
+    @Produces({ MediaTypes.ROOT })
     public JsonNode get() {
         ObjectNode root = factory.objectNode();
         if (getRights().canSeeUsers()) {
