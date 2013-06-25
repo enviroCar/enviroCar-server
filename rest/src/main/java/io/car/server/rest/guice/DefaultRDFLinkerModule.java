@@ -26,13 +26,10 @@ import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
 import io.car.server.core.statistics.Statistic;
 import io.car.server.rest.encoding.rdf.RDFLinker;
-<<<<<<< HEAD
 import io.car.server.rest.encoding.rdf.linker.GroupDCTermsLinker;
 import io.car.server.rest.encoding.rdf.linker.MeasurementDCTermsLinker;
-=======
 import io.car.server.rest.encoding.rdf.linker.EEAPhenomenonLinker;
 import io.car.server.rest.encoding.rdf.linker.GroupFOAFLinker;
->>>>>>> 3c3a2a543b6716e48f5b8b302a8c3b7edf4ff99b
 import io.car.server.rest.encoding.rdf.linker.PhenomenonDCTermsLinker;
 import io.car.server.rest.encoding.rdf.linker.SensorDCTermsLinker;
 import io.car.server.rest.encoding.rdf.linker.SensorVSOLinker;
