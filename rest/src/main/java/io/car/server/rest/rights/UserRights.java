@@ -77,7 +77,7 @@ public interface UserRights {
 
     boolean canDelete(User user);
 
-    boolean canUnfriend(User user);
+    boolean canUnfriend(User user, User friend);
 
-    boolean canFriend(User f);
+    boolean canFriend(User user, User friend);
 }

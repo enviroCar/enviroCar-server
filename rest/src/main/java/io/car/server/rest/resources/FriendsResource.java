@@ -70,8 +70,7 @@ public class FriendsResource extends AbstractResource {
             throw new WebApplicationException(Status.BAD_REQUEST);
         }
         User f = getUserService().getUser(friend.getName());
-        checkRights(getRights().canModify(user) &&
-                    getRights().canFriend(f));
+        checkRights(getRights().canFriend(user, f));
         getFriendService().addFriend(user, f);
     }
 
