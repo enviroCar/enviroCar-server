@@ -17,57 +17,86 @@
  */
 package io.car.server.rest.resources;
 
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
-import io.car.server.core.Service;
+import io.car.server.core.DataService;
+import io.car.server.core.FriendService;
+import io.car.server.core.GroupService;
+import io.car.server.core.UserService;
 import io.car.server.core.entities.EntityFactory;
 import io.car.server.core.entities.User;
-import io.car.server.core.exception.UserNotFoundException;
-import io.car.server.rest.auth.AuthConstants;
+import io.car.server.rest.auth.PrincipalImpl;
+import io.car.server.rest.rights.AccessRights;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public abstract class AbstractResource {
     private Provider<SecurityContext> securityContext;
-    private Provider<Service> service;
+    private Provider<AccessRights> rights;
+    private Provider<DataService> dataService;
+    private Provider<FriendService> friendService;
+    private Provider<GroupService> groupService;
+    private Provider<UserService> userService;
     private Provider<UriInfo> uriInfo;
     private Provider<ResourceFactory> resourceFactory;
     private Provider<EntityFactory> entityFactory;
 
-    protected boolean canModifyUser(User user) {
-        return canModifyUser(user.getName());
+    protected AccessRights getRights() {
+        return rights.get();
     }
 
-    protected boolean canModifyUser(String user) {
-        return getSecurityContext().isUserInRole(AuthConstants.ADMIN_ROLE) ||
-               (getSecurityContext().getUserPrincipal() != null &&
-                getSecurityContext().getUserPrincipal().getName().equals(user));
-    }
-
-
-    public SecurityContext getSecurityContext() {
-        return securityContext.get();
-    }
-
-    public UriInfo getUriInfo() {
+    protected UriInfo getUriInfo() {
         return uriInfo.get();
     }
 
-    public Service getService() {
-        return service.get();
+    protected DataService getDataService() {
+        return dataService.get();
     }
 
-    public ResourceFactory getResourceFactory() {
+    protected FriendService getFriendService() {
+        return friendService.get();
+    }
+
+    protected GroupService getGroupService() {
+        return groupService.get();
+    }
+
+    protected UserService getUserService() {
+        return userService.get();
+    }
+
+    protected ResourceFactory getResourceFactory() {
         return resourceFactory.get();
     }
 
-    protected String getCurrentUser() throws UserNotFoundException {
-        return getSecurityContext().getUserPrincipal().getName();
+    protected EntityFactory getEntityFactory() {
+        return entityFactory.get();
+    }
+
+    protected void checkRights(boolean right) {
+        if (!right) {
+            throw new WebApplicationException(Status.FORBIDDEN);
+        }
+    }
+
+    protected User getCurrentUser() {
+        PrincipalImpl p = (PrincipalImpl) securityContext.get()
+                .getUserPrincipal();
+        return p == null ? null : p.getUser();
+    }
+
+    @Inject
+    public void setRights(Provider<AccessRights> accessRights) {
+        this.rights = accessRights;
     }
 
     @Inject
@@ -81,21 +110,32 @@ public abstract class AbstractResource {
     }
 
     @Inject
-    public void setUserService(Provider<Service> service) {
-        this.service = service;
-    }
-
-    @Inject
     public void setResourceFactory(Provider<ResourceFactory> resourceFactory) {
         this.resourceFactory = resourceFactory;
-    }
-
-    public EntityFactory getEntityFactory() {
-        return entityFactory.get();
     }
 
     @Inject
     public void setEntityFactory(Provider<EntityFactory> entityFactory) {
         this.entityFactory = entityFactory;
+    }
+
+    @Inject
+    public void setDataService(Provider<DataService> dataService) {
+        this.dataService = dataService;
+    }
+
+    @Inject
+    public void setFriendService(Provider<FriendService> friendService) {
+        this.friendService = friendService;
+    }
+
+    @Inject
+    public void setGroupService(Provider<GroupService> groupService) {
+        this.groupService = groupService;
+    }
+
+    @Inject
+    public void setUserService(Provider<UserService> userService) {
+        this.userService = userService;
     }
 }

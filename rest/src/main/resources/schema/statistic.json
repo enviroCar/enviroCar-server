@@ -6,14 +6,14 @@
         "min",
         "max",
         "avg",
-    "measurements",
-    "users",
-    "tracks",
+        "measurements",
+        "users",
+        "tracks",
         "phenomenon"
     ],
     "properties": {
         "phenomenon": {
-            "$ref": "http://schema.envirocar.org/definitions.json#/phenomenon-ref"
+            "$ref": "http://schema.envirocar.org/phenomenon.json#"
         },
         "measurements": {
             "type": "integer",
@@ -24,6 +24,10 @@
             "minimum": 0
         },
         "tracks": {
+            "type": "integer",
+            "minimum": 0
+        },
+        "sensors": {
             "type": "integer",
             "minimum": 0
         },

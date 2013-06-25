@@ -26,6 +26,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 
+import javax.ws.rs.HttpMethod;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -67,6 +68,8 @@ import io.car.server.rest.JSONConstants;
 import io.car.server.rest.MediaTypes;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
@@ -136,15 +139,16 @@ public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
         }
     }
 
-    protected void validate(JsonNode t, JsonSchema schema) throws
+    protected void validate(JsonNode instance, JsonSchema schema) throws
             ValidationException, ProcessingException {
-        ProcessingReport report = schema.validate(t);
+        ProcessingReport report = schema.validate(instance);
         if (!report.isSuccess()) {
             ObjectNode error = factory.objectNode();
-            ArrayNode errors = error.putArray(JSONConstants.ERRORS);
+            ArrayNode errors = error.putArray(JSONConstants.ERRORS_KEY);
             for (ProcessingMessage message : report) {
                 errors.add(message.asJson());
             }
+            error.put(JSONConstants.INSTANCE_KEY, instance);
             throw new JSONValidationException(error);
         }
     }
@@ -167,7 +171,7 @@ public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
         @Override
         public ContainerResponseFilter getResponseFilter() {
             return response == null || !validateResponses ? null
-                   : new JSONSchemaResponeFilter(response);
+                   : new JSONSchemaResponseFilter(response);
         }
     }
 
@@ -228,10 +232,10 @@ public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
         }
     }
 
-    private class JSONSchemaResponeFilter implements ContainerResponseFilter {
+    private class JSONSchemaResponseFilter implements ContainerResponseFilter {
         private String schema;
 
-        JSONSchemaResponeFilter(String schema) {
+        JSONSchemaResponseFilter(String schema) {
             this.schema = schema;
         }
 
@@ -239,7 +243,8 @@ public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
         public ContainerResponse filter(ContainerRequest request,
                                         ContainerResponse response) {
             MediaType mt = response.getMediaType();
-            if (mt.isCompatible(MediaType.APPLICATION_JSON_TYPE)) {
+            if (mt != null && mt.isCompatible(MediaType.APPLICATION_JSON_TYPE) &&
+                !request.getMethod().equals(HttpMethod.HEAD)) {
                 adjustContentType(response);
                 ContainerResponseWriter crw = response
                         .getContainerResponseWriter();
@@ -251,12 +256,18 @@ public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
         }
 
         protected void adjustContentType(ContainerResponse response) {
-            MediaType newMt = new MediaType("application", "json", ImmutableMap
-                    .<String, String>builder()
-                    .putAll(response.getMediaType().getParameters())
-                    .put(MediaTypes.SCHEMA_ATTRIBUTE, schema)
-                    .build());
-            response.getHttpHeaders().putSingle(HttpHeaders.CONTENT_TYPE, newMt);
+            MediaType mediaType = response.getMediaType();
+            if (!mediaType.getParameters()
+                    .containsKey(MediaTypes.SCHEMA_ATTRIBUTE)) {
+                MediaType newMt =
+                        new MediaType("application", "json", ImmutableMap
+                        .<String, String>builder()
+                        .putAll(mediaType.getParameters())
+                        .put(MediaTypes.SCHEMA_ATTRIBUTE, schema)
+                        .build());
+                response.getHttpHeaders()
+                        .putSingle(HttpHeaders.CONTENT_TYPE, newMt);
+            }
         }
     }
 
@@ -329,8 +340,7 @@ public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
                         .readTree(entity), schema);
             } catch (JSONValidationException v) {
                 log.error("Created invalid response: Error:\n" +
-                          writer.writeValueAsString(v.getError()) +
-                          "\nGenerated Response:\n" + entity + "\n", v);
+                          writer.writeValueAsString(v.getError()), v);
             } catch (ValidationException v) {
                 log.error("Created invalid response: Error:\n" +
                           v.getMessage() + "\nGenerated Response:\n" +

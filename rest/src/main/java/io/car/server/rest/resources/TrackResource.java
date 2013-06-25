@@ -23,9 +23,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
@@ -41,9 +39,9 @@ import io.car.server.rest.auth.Authenticated;
 import io.car.server.rest.validation.Schema;
 
 /**
+ * TODO JavaDoc
  *
  * @author Arne de Wall <a.dewall@52north.org>
- *
  */
 public class TrackResource extends AbstractResource {
     public static final String MEASUREMENTS = "measurements";
@@ -64,10 +62,8 @@ public class TrackResource extends AbstractResource {
                                                  UserNotFoundException,
                                                  IllegalModificationException,
                                                  ValidationException {
-        if (!canModifyUser(getCurrentUser())) {
-            throw new WebApplicationException(Status.FORBIDDEN);
-        }
-        getService().modifyTrack(track, changes);
+        checkRights(getRights().canModify(track));
+        getDataService().modifyTrack(track, changes);
         return Response.ok().build();
     }
 
@@ -81,24 +77,25 @@ public class TrackResource extends AbstractResource {
     @DELETE
     @Authenticated
     public void delete() throws TrackNotFoundException, UserNotFoundException {
-        if (!canModifyUser(getCurrentUser())) {
-            throw new WebApplicationException(Status.FORBIDDEN);
-        }
-        getService().deleteTrack(track);
+        checkRights(getRights().canDelete(track));
+        getDataService().deleteTrack(track);
     }
 
     @Path(MEASUREMENTS)
     public MeasurementsResource measurements() {
+        checkRights(getRights().canSeeMeasurementsOf(track));
         return getResourceFactory().createMeasurementsResource(null, track);
     }
 
     @Path(SENSOR)
     public SensorResource sensor() throws TrackNotFoundException {
+        checkRights(getRights().canSeeSensorOf(track));
         return getResourceFactory().createSensorResource(track.getSensor());
     }
 
     @Path(STATISTICS)
     public StatisticsResource statistics() {
-        return getResourceFactory().createStatisticsResource(track, null);
+        checkRights(getRights().canSeeStatisticsOf(track));
+        return getResourceFactory().createStatisticsResource(track);
     }
 }

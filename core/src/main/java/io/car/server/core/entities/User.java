@@ -22,6 +22,8 @@ import java.net.URL;
 import com.vividsolutions.jts.geom.Geometry;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface User extends BaseEntity {

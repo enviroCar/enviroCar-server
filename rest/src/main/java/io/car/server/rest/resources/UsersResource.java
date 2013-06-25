@@ -40,6 +40,8 @@ import io.car.server.rest.auth.Anonymous;
 import io.car.server.rest.validation.Schema;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class UsersResource extends AbstractResource {
@@ -51,7 +53,8 @@ public class UsersResource extends AbstractResource {
     public Users get(
             @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit,
             @QueryParam(RESTConstants.PAGE) @DefaultValue("0") int page) {
-        return getService().getUsers(new Pagination(limit, page));
+        checkRights(getRights().canSeeUsers());
+        return getUserService().getUsers(new Pagination(limit, page));
     }
 
     @POST
@@ -59,17 +62,18 @@ public class UsersResource extends AbstractResource {
     @Schema(request = Schemas.USER_CREATE)
     @Consumes(MediaTypes.USER_CREATE)
     public Response create(User user) throws ValidationException,
-                                                       ResourceAlreadyExistException {
+                                             ResourceAlreadyExistException {
         return Response.created(
                 getUriInfo().getAbsolutePathBuilder()
-                .path(getService().createUser(user).getName())
+                .path(getUserService().createUser(user).getName())
                 .build()).build();
     }
 
     @Path(USER)
     public UserResource user(@PathParam("username") String username) throws
             UserNotFoundException {
-        return getResourceFactory().createUserResource(getService()
-                .getUser(username));
+        User user = getUserService().getUser(username);
+        checkRights(getRights().canSee(user));
+        return getResourceFactory().createUserResource(user);
     }
 }

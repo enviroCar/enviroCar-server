@@ -25,8 +25,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response.Status;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
@@ -45,6 +43,8 @@ import io.car.server.rest.auth.Authenticated;
 import io.car.server.rest.validation.Schema;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class GroupMembersResource extends AbstractResource {
@@ -62,7 +62,9 @@ public class GroupMembersResource extends AbstractResource {
     public Users get(
             @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit,
             @QueryParam(RESTConstants.PAGE) @DefaultValue("0") int page) {
-        return getService().getGroupMembers(group, new Pagination(limit, page));
+        checkRights(getRights().canSeeMembersOf(group));
+        return getGroupService()
+                .getGroupMembers(group, new Pagination(limit, page));
     }
 
     @POST
@@ -71,17 +73,18 @@ public class GroupMembersResource extends AbstractResource {
     @Consumes(MediaTypes.USER_REF)
     public void add(UserReference user) throws UserNotFoundException,
                                                GroupNotFoundException {
-        User u = getService().getUser(user.getName());
-        if (!canModifyUser(u)) {
-            throw new WebApplicationException(Status.FORBIDDEN);
-        }
-        getService().addGroupMember(group, u);
+        User u = getUserService().getUser(user.getName());
+        checkRights(getRights().isSelf(u) &&
+                    getRights().canJoinGroup(group));
+        getGroupService().addGroupMember(group, u);
     }
 
     @Path(MEMBER)
     public GroupMemberResource member(@PathParam("member") String username)
             throws UserNotFoundException {
-        User user = getService().getGroupMember(group, username);
+        checkRights(getRights().canSeeMembersOf(group));
+        User user = getGroupService().getGroupMember(group, username);
+        checkRights(getRights().canSee(user));
         return getResourceFactory().createGroupMemberResource(group, user);
     }
 }

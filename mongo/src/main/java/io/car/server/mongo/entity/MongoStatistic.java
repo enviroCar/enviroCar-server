@@ -15,10 +15,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package io.car.server.mongo.entity;
 
 import com.github.jmkgreen.morphia.annotations.Embedded;
@@ -28,6 +24,8 @@ import io.car.server.core.entities.Phenomenon;
 import io.car.server.core.statistics.Statistic;
 
 /**
+ * TODO JavaDoc
+ *
  * @author jan
  */
 @Embedded
@@ -39,6 +37,7 @@ public class MongoStatistic implements Statistic {
     public static final String MEASUREMENTS = "measurements";
     public static final String TRACKS = "tracks";
     public static final String PHENOMENON = "phenomenon";
+    public static final String SENSORS = "sensors";
     @Embedded
     private MongoPhenomenon phenomenon;
     @Property(TRACKS)
@@ -47,6 +46,8 @@ public class MongoStatistic implements Statistic {
     private long users;
     @Property(MEASUREMENTS)
     private long measurements;
+    @Property(SENSORS)
+    private long sensors;
     @Property(MEAN)
     private double mean;
     @Property(MIN)
@@ -115,5 +116,14 @@ public class MongoStatistic implements Statistic {
 
     public void setMax(double max) {
         this.max = max;
+    }
+
+    @Override
+    public long getSensors() {
+        return sensors;
+    }
+
+    public void setSensors(long sensors) {
+        this.sensors = sensors;
     }
 }

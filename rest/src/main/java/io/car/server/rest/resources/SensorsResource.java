@@ -33,10 +33,11 @@ import javax.ws.rs.core.Response;
 
 import com.google.common.collect.Sets;
 
-import io.car.server.core.entities.PropertyFilter;
 import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.Sensors;
 import io.car.server.core.exception.SensorNotFoundException;
+import io.car.server.core.filter.PropertyFilter;
+import io.car.server.core.filter.SensorFilter;
 import io.car.server.core.util.Pagination;
 import io.car.server.rest.MediaTypes;
 import io.car.server.rest.RESTConstants;
@@ -45,6 +46,8 @@ import io.car.server.rest.auth.Authenticated;
 import io.car.server.rest.validation.Schema;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  * @author Jan Wirwahn <jan.wirwahn@wwu.de>
  */
@@ -73,11 +76,7 @@ public class SensorsResource extends AbstractResource {
             }
         }
         Pagination p = new Pagination(limit, page);
-        if (type == null) {
-            return getService().getSensors(filters, p);
-        } else {
-            return getService().getSensorsByType(type, filters, p);
-        }
+        return getDataService().getSensors(new SensorFilter(type, filters, p));
     }
 
     @POST
@@ -87,14 +86,15 @@ public class SensorsResource extends AbstractResource {
     public Response create(Sensor sensor) {
         return Response.created(
                 getUriInfo().getAbsolutePathBuilder()
-                .path(getService().createSensor(sensor).getIdentifier())
+                .path(getDataService().createSensor(sensor).getIdentifier())
                 .build()).build();
     }
 
     @Path(SENSOR)
     public SensorResource sensor(@PathParam("sensor") String id)
             throws SensorNotFoundException {
-        return getResourceFactory().createSensorResource(getService()
-                .getSensorByName(id));
+        Sensor sensor = getDataService().getSensorByName(id);
+        checkRights(getRights().canSee(sensor));
+        return getResourceFactory().createSensorResource(sensor);
     }
 }

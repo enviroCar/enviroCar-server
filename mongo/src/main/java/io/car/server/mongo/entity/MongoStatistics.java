@@ -37,6 +37,8 @@ import io.car.server.core.entities.Phenomenon;
 import io.car.server.core.entities.Phenomenons;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Entity("statistics")

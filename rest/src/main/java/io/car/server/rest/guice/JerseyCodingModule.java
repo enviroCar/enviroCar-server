@@ -28,124 +28,21 @@ import com.google.inject.Provides;
 import com.google.inject.Scopes;
 import com.google.inject.Singleton;
 import com.google.inject.TypeLiteral;
-import com.google.inject.assistedinject.FactoryModuleBuilder;
-import com.vividsolutions.jts.geom.Geometry;
 
-import io.car.server.core.activities.Activities;
-import io.car.server.core.activities.Activity;
-import io.car.server.core.entities.Group;
-import io.car.server.core.entities.Groups;
-import io.car.server.core.entities.Measurement;
-import io.car.server.core.entities.Measurements;
-import io.car.server.core.entities.Phenomenon;
-import io.car.server.core.entities.Phenomenons;
-import io.car.server.core.entities.Sensor;
-import io.car.server.core.entities.Sensors;
-import io.car.server.core.entities.Track;
-import io.car.server.core.entities.Tracks;
-import io.car.server.core.entities.User;
-import io.car.server.core.entities.Users;
-import io.car.server.core.statistics.Statistic;
-import io.car.server.core.statistics.Statistics;
 import io.car.server.core.util.GeometryConverter;
-import io.car.server.rest.CodingFactory;
-import io.car.server.rest.decoding.EntityDecoder;
-import io.car.server.rest.decoding.GeoJSONDecoder;
-import io.car.server.rest.decoding.GroupDecoder;
-import io.car.server.rest.decoding.MeasurementDecoder;
-import io.car.server.rest.decoding.PhenomenonDecoder;
-import io.car.server.rest.decoding.SensorDecoder;
-import io.car.server.rest.decoding.TrackDecoder;
-import io.car.server.rest.decoding.UserDecoder;
-import io.car.server.rest.encoding.ActivitiesEncoder;
-import io.car.server.rest.encoding.ActivityEncoder;
-import io.car.server.rest.encoding.EntityEncoder;
-import io.car.server.rest.encoding.GeoJSONEncoder;
-import io.car.server.rest.encoding.GroupEncoder;
-import io.car.server.rest.encoding.GroupsEncoder;
-import io.car.server.rest.encoding.MeasurementEncoder;
-import io.car.server.rest.encoding.MeasurementsEncoder;
-import io.car.server.rest.encoding.PhenomenonEncoder;
-import io.car.server.rest.encoding.PhenomenonsEncoder;
-import io.car.server.rest.encoding.SensorEncoder;
-import io.car.server.rest.encoding.SensorsEncoder;
-import io.car.server.rest.encoding.StatisticEncoder;
-import io.car.server.rest.encoding.StatisticsEncoder;
-import io.car.server.rest.encoding.TrackEncoder;
-import io.car.server.rest.encoding.TracksEncoder;
-import io.car.server.rest.encoding.UserEncoder;
-import io.car.server.rest.encoding.UsersEncoder;
 import io.car.server.rest.util.GeoJSON;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class JerseyCodingModule extends AbstractModule {
     @Override
     protected void configure() {
+        bind(GeoJSON.class).in(Scopes.SINGLETON);
         bind(new TypeLiteral<GeometryConverter<JsonNode>>() {
-        }).to(GeoJSON.class).in(Scopes.SINGLETON);
-        configureCodingFactory();
-    }
-
-    protected void configureCodingFactory() {
-        FactoryModuleBuilder fmb = new FactoryModuleBuilder();
-        bind(fmb, new TypeLiteral<EntityEncoder<User>>() {
-        }, UserEncoder.class);
-        bind(fmb, new TypeLiteral<EntityDecoder<User>>() {
-        }, UserDecoder.class);
-        bind(fmb, new TypeLiteral<EntityEncoder<Users>>() {
-        }, UsersEncoder.class);
-        bind(fmb, new TypeLiteral<EntityEncoder<Sensor>>() {
-        }, SensorEncoder.class);
-        bind(fmb, new TypeLiteral<EntityDecoder<Sensor>>() {
-        }, SensorDecoder.class);
-        bind(fmb, new TypeLiteral<EntityEncoder<Sensors>>() {
-        }, SensorsEncoder.class);
-        bind(fmb, new TypeLiteral<EntityEncoder<Track>>() {
-        }, TrackEncoder.class);
-        bind(fmb, new TypeLiteral<EntityDecoder<Track>>() {
-        }, TrackDecoder.class);
-        bind(fmb, new TypeLiteral<EntityEncoder<Tracks>>() {
-        }, TracksEncoder.class);
-        bind(fmb, new TypeLiteral<EntityEncoder<Measurement>>() {
-        }, MeasurementEncoder.class);
-        bind(fmb, new TypeLiteral<EntityDecoder<Measurement>>() {
-        }, MeasurementDecoder.class);
-        bind(fmb, new TypeLiteral<EntityEncoder<Measurements>>() {
-        }, MeasurementsEncoder.class);
-        bind(fmb, new TypeLiteral<EntityEncoder<Phenomenon>>() {
-        }, PhenomenonEncoder.class);
-        bind(fmb, new TypeLiteral<EntityDecoder<Phenomenon>>() {
-        }, PhenomenonDecoder.class);
-        bind(fmb, new TypeLiteral<EntityEncoder<Phenomenons>>() {
-        }, PhenomenonsEncoder.class);
-        bind(fmb, new TypeLiteral<EntityEncoder<Group>>() {
-        }, GroupEncoder.class);
-        bind(fmb, new TypeLiteral<EntityDecoder<Group>>() {
-        }, GroupDecoder.class);
-        bind(fmb, new TypeLiteral<EntityEncoder<Groups>>() {
-        }, GroupsEncoder.class);
-        bind(fmb, new TypeLiteral<EntityEncoder<Statistic>>() {
-        }, StatisticEncoder.class);
-        bind(fmb, new TypeLiteral<EntityEncoder<Statistics>>() {
-        }, StatisticsEncoder.class);
-        bind(fmb, new TypeLiteral<EntityEncoder<Activity>>() {
-        }, ActivityEncoder.class);
-        bind(fmb, new TypeLiteral<EntityEncoder<Activities>>() {
-        }, ActivitiesEncoder.class);
-        bind(new TypeLiteral<EntityDecoder<Geometry>>() {
-        }).to(GeoJSONDecoder.class);
-        bind(new TypeLiteral<EntityEncoder<Geometry>>() {
-        }).to(GeoJSONEncoder.class);
-        install(fmb.build(CodingFactory.class));
-    }
-
-    protected <T> void bind(FactoryModuleBuilder fmb,
-                                        TypeLiteral<T> source,
-                                        Class<? extends T> target) {
-        fmb.implement(source, target);
-        bind(source).to(target);
+        }).to(GeoJSON.class);
     }
 
     @Provides

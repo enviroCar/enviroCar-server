@@ -33,6 +33,8 @@ import io.car.server.mongo.convert.URLConverter;
 import io.car.server.mongo.util.GeoBSON;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class MongoConverterModule extends AbstractModule {

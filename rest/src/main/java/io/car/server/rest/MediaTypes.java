@@ -15,15 +15,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package io.car.server.rest;
 
 import javax.ws.rs.core.MediaType;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  * @author Arne de Wall
  */
@@ -108,4 +106,6 @@ public interface MediaTypes {
     String ACTIVITIES = "application/json; schema=\"" +
                         Schemas.ACTIVITIES + "\"";
     MediaType ACTIVITIES_TYPE = MediaType.valueOf(ACTIVITIES);
+    String IMAGE_JPEG = "image/jpeg";
+    MediaType IMAGE_JPEG_TYPE = MediaType.valueOf(IMAGE_JPEG);
 }

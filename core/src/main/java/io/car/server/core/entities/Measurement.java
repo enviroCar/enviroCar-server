@@ -22,9 +22,9 @@ import org.joda.time.DateTime;
 import com.vividsolutions.jts.geom.Geometry;
 
 /**
+ * TODO JavaDoc
  *
  * @author Arne de Wall <a.dewall@52north.org>
- *
  */
 public interface Measurement extends BaseEntity, Comparable<Measurement> {
     Geometry getGeometry();

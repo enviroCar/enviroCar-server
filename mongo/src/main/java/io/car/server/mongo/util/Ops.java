@@ -20,6 +20,8 @@ package io.car.server.mongo.util;
 import com.mongodb.QueryOperators;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface Ops {
@@ -33,4 +35,6 @@ public interface Ops {
     String GROUP = "$group";
     String PROJECT = "$project";
     String ADD_TO_SET = "$addToSet";
+    String GEOWITHIN = "$geoWithin";
+    String GEOMETRY = "$geometry";
 }

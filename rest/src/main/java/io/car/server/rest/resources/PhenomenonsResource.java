@@ -38,6 +38,8 @@ import io.car.server.rest.auth.Authenticated;
 import io.car.server.rest.validation.Schema;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  * @author Jan Wirwahn <jan.wirwahn@wwu.de>
  */
@@ -50,7 +52,7 @@ public class PhenomenonsResource extends AbstractResource {
     public Phenomenons get(
             @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit,
             @QueryParam(RESTConstants.PAGE) @DefaultValue("0") int page) {
-        return getService().getPhenomenons(new Pagination(limit, page));
+        return getDataService().getPhenomenons(new Pagination(limit, page));
     }
 
     @POST
@@ -59,14 +61,15 @@ public class PhenomenonsResource extends AbstractResource {
     @Consumes(MediaTypes.PHENOMENON_CREATE)
     public Response create(Phenomenon phenomenon) {
         return Response.created(getUriInfo().getAbsolutePathBuilder()
-                .path(getService().createPhenomenon(phenomenon)
+                .path(getDataService().createPhenomenon(phenomenon)
                 .getName()).build()).build();
     }
 
     @Path(PHENOMENON)
     public PhenomenonResource phenomenon(@PathParam("phenomenon") String id)
             throws PhenomenonNotFoundException {
-        return getResourceFactory().createPhenomenonResource(getService()
-                .getPhenomenonByName(id));
+        Phenomenon p = getDataService().getPhenomenonByName(id);
+        checkRights(getRights().canSee(p));
+        return getResourceFactory().createPhenomenonResource(p);
     }
 }

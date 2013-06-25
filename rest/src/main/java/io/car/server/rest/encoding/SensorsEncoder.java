@@ -17,35 +17,41 @@
  */
 package io.car.server.rest.encoding;
 
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriBuilder;
+import javax.ws.rs.ext.Provider;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.inject.Inject;
 
 import io.car.server.core.entities.Sensor;
 import io.car.server.core.entities.Sensors;
 import io.car.server.rest.JSONConstants;
-import io.car.server.rest.resources.RootResource;
-import io.car.server.rest.resources.SensorsResource;
+import io.car.server.rest.rights.AccessRights;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
+@Provider
+@Produces(MediaType.APPLICATION_JSON)
 public class SensorsEncoder extends AbstractEntityEncoder<Sensors> {
+    private final EntityEncoder<Sensor> sensorEncoder;
+
+    @Inject
+    public SensorsEncoder(EntityEncoder<Sensor> sensorEncoder) {
+        super(Sensors.class);
+        this.sensorEncoder = sensorEncoder;
+    }
+
     @Override
-    public ObjectNode encode(Sensors t, MediaType mediaType) {
+    public ObjectNode encode(Sensors t, AccessRights rights, MediaType mediaType) {
         ObjectNode root = getJsonFactory().objectNode();
         ArrayNode sensors = root.putArray(JSONConstants.SENSORS_KEY);
-        UriBuilder b = getUriInfo().getBaseUriBuilder()
-                .path(RootResource.class)
-                .path(RootResource.SENSORS)
-                .path(SensorsResource.SENSOR);
-
         for (Sensor u : t) {
-            sensors.addObject()
-                    .put(JSONConstants.HREF_KEY, b.build(u.getIdentifier()).toString())
-                    .put(JSONConstants.IDENTIFIER_KEY, u.getIdentifier());
+            sensors.add(sensorEncoder.encode(u, rights, mediaType));
         }
         return root;
     }

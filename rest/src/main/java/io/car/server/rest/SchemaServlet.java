@@ -32,6 +32,8 @@ import com.google.common.io.Closeables;
 import com.google.inject.Singleton;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Singleton

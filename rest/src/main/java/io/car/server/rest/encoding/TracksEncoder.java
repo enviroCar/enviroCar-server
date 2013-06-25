@@ -17,40 +17,41 @@
  */
 package io.car.server.rest.encoding;
 
-import java.net.URI;
-
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriBuilder;
+import javax.ws.rs.ext.Provider;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.inject.Inject;
 
 import io.car.server.core.entities.Track;
 import io.car.server.core.entities.Tracks;
 import io.car.server.rest.JSONConstants;
-import io.car.server.rest.resources.TracksResource;
+import io.car.server.rest.rights.AccessRights;
 
+/**
+ * TODO JavaDoc
+ *
+ * @author Christian Autermann <autermann@uni-muenster.de>
+ */
+@Provider
+@Produces(MediaType.APPLICATION_JSON)
 public class TracksEncoder extends AbstractEntityEncoder<Tracks> {
+    private final EntityEncoder<Track> trackEncoder;
+
+    @Inject
+    public TracksEncoder(EntityEncoder<Track> trackEncoder) {
+        super(Tracks.class);
+        this.trackEncoder = trackEncoder;
+    }
+
     @Override
-    public ObjectNode encode(Tracks t, MediaType mediaType) {
+    public ObjectNode encode(Tracks t, AccessRights rights, MediaType mediaType) {
         ObjectNode root = getJsonFactory().objectNode();
         ArrayNode tracks = root.putArray(JSONConstants.TRACKS_KEY);
-        UriBuilder b = getUriInfo().getAbsolutePathBuilder()
-                .path(TracksResource.TRACK);
         for (Track u : t) {
-            ObjectNode track = tracks.addObject();
-            if (u.hasIdentifier()) {
-                track.put(JSONConstants.IDENTIFIER_KEY, u.getIdentifier());
-            }
-            if (u.hasModificationTime()) {
-                track.put(JSONConstants.MODIFIED_KEY, getDateTimeFormat()
-                        .print(u.getModificationTime()));
-            }
-            if (u.hasName()) {
-                track.put(JSONConstants.NAME_KEY, u.getName());
-            }
-            URI uri = b.build(u.getIdentifier());
-            track.put(JSONConstants.HREF_KEY, uri.toString());
+            tracks.add(trackEncoder.encode(u, rights, mediaType));
         }
         return root;
     }

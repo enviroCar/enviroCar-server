@@ -24,6 +24,8 @@ import com.google.inject.Injector;
 import com.mongodb.DBObject;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class CustomGuiceObjectFactory extends GuiceObjectFactory {

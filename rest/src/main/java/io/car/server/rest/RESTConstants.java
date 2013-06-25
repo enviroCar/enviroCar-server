@@ -18,6 +18,8 @@
 package io.car.server.rest;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface RESTConstants {
@@ -25,4 +27,5 @@ public interface RESTConstants {
     String PAGE = "page";
     String SEARCH = "q";
     String TYPE = "type";
+    String BBOX = "bbox";
 }

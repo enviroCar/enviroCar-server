@@ -20,6 +20,8 @@ package io.car.server.core.util;
 import com.google.common.base.Objects;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public abstract class PaginatedIterable<T> implements Iterable<T> {

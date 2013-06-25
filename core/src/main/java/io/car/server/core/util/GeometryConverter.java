@@ -29,26 +29,28 @@ import com.vividsolutions.jts.geom.Polygon;
 import io.car.server.core.exception.GeometryConverterException;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface GeometryConverter<T> {
-    Geometry decode(T json) throws GeometryConverterException;
+    Geometry decode(T t) throws GeometryConverterException;
 
-    GeometryCollection decodeGeometryCollection(T json) throws
+    GeometryCollection decodeGeometryCollection(T t) throws
             GeometryConverterException;
 
-    Point decodePoint(T json) throws GeometryConverterException;
+    Point decodePoint(T t) throws GeometryConverterException;
 
-    LineString decodeLineString(T json) throws GeometryConverterException;
+    LineString decodeLineString(T t) throws GeometryConverterException;
 
-    Polygon decodePolygon(T json) throws GeometryConverterException;
+    Polygon decodePolygon(T t) throws GeometryConverterException;
 
-    MultiPoint decodeMultiPoint(T json) throws GeometryConverterException;
+    MultiPoint decodeMultiPoint(T t) throws GeometryConverterException;
 
-    MultiLineString decodeMultiLineString(T json) throws
+    MultiLineString decodeMultiLineString(T t) throws
             GeometryConverterException;
 
-    MultiPolygon decodeMultiPolygon(T json) throws GeometryConverterException;
+    MultiPolygon decodeMultiPolygon(T t) throws GeometryConverterException;
 
     T encode(Geometry value) throws GeometryConverterException;
 

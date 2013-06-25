@@ -23,6 +23,8 @@ import javax.ws.rs.ext.Provider;
 import io.car.server.core.exception.ResourceNotFoundException;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider

@@ -17,32 +17,32 @@
  */
 package io.car.server.rest.auth;
 
-import java.security.Principal;
-
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response.Status;
-import javax.ws.rs.core.SecurityContext;
 
 import com.google.inject.Inject;
 import com.sun.jersey.core.util.Base64;
 import com.sun.jersey.spi.container.ContainerRequest;
 import com.sun.jersey.spi.container.ContainerRequestFilter;
 
-import io.car.server.core.Service;
+import io.car.server.core.UserService;
 import io.car.server.core.entities.User;
 import io.car.server.core.exception.UserNotFoundException;
 import io.car.server.core.util.PasswordEncoder;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class AuthenticationFilter implements ContainerRequestFilter {
-    private final Service service;
+    private final UserService service;
     private final PasswordEncoder passwordEncoder;
 
     @Inject
-    public AuthenticationFilter(Service service, PasswordEncoder passwordEncoder) {
+    public AuthenticationFilter(UserService service,
+                                PasswordEncoder passwordEncoder) {
         this.service = service;
         this.passwordEncoder = passwordEncoder;
     }
@@ -76,9 +76,8 @@ public class AuthenticationFilter implements ContainerRequestFilter {
             try {
                 User user = service.getUser(username);
                 if (passwordEncoder.verify(token, user.getToken())) {
-                    request
-                            .setSecurityContext(new CustomSecurityContext(username, request
-                            .isSecure(), user.isAdmin()));
+                    request.setSecurityContext(
+                            new SecurityContextImpl(user, request.isSecure()));
                 } else {
                     throw new WebApplicationException(Status.FORBIDDEN);
                 }
@@ -87,54 +86,5 @@ public class AuthenticationFilter implements ContainerRequestFilter {
             }
         }
         return request;
-    }
-
-    private class CustomSecurityContext implements SecurityContext {
-        private final Principal principal;
-        private final boolean secure;
-        private final boolean isAdmin;
-
-        CustomSecurityContext(final String name, boolean secure, boolean isAdmin) {
-            this.secure = secure;
-            this.isAdmin = isAdmin;
-            this.principal = new CustomPrincipal(name);
-        }
-
-        @Override
-        public Principal getUserPrincipal() {
-            return this.principal;
-        }
-
-        @Override
-        public boolean isUserInRole(String role) {
-            if (role.equals(AuthConstants.ADMIN_ROLE)) {
-                return isAdmin;
-            } else {
-                return role.equals(AuthConstants.USER_ROLE);
-            }
-        }
-
-        @Override
-        public boolean isSecure() {
-            return secure;
-        }
-
-        @Override
-        public String getAuthenticationScheme() {
-            return AuthConstants.AUTH_SCHEME;
-        }
-    }
-
-    private class CustomPrincipal implements Principal {
-        private final String name;
-
-        CustomPrincipal(String name) {
-            this.name = name;
-        }
-
-        @Override
-        public String getName() {
-            return name;
-        }
     }
 }

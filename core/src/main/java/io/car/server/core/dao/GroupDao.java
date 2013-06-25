@@ -15,10 +15,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package io.car.server.core.dao;
 
 import io.car.server.core.entities.Group;
@@ -28,6 +24,7 @@ import io.car.server.core.entities.Users;
 import io.car.server.core.util.Pagination;
 
 /**
+ * TODO JavaDoc
  *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
@@ -57,4 +54,6 @@ public interface GroupDao {
     void addMember(Group group, User user);
 
     Users getMembers(Group group, Pagination pagination);
+
+    boolean shareGroup(User user, User user0);
 }

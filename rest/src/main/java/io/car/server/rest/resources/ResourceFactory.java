@@ -29,6 +29,8 @@ import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  * @author Arne de Wall <a.dewall@52north.org>
  */
@@ -69,8 +71,13 @@ public interface ResourceFactory {
 
     SensorsResource createSensorsResource();
 
-    StatisticsResource createStatisticsResource(@Nullable Track track,
-                                                @Nullable User user);
+    StatisticsResource createStatisticsResource();
+
+    StatisticsResource createStatisticsResource(User user);
+
+    StatisticsResource createStatisticsResource(Track track);
+
+    StatisticsResource createStatisticsResource(Sensor sensor);
 
     ActivitiesResource createActivitiesResource();
 

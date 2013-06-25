@@ -40,6 +40,8 @@ import com.google.inject.ProvisionException;
 import com.google.inject.name.Named;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class JSONSchemaFactoryProvider implements Provider<JsonSchemaFactory> {
@@ -77,7 +79,8 @@ public class JSONSchemaFactoryProvider implements Provider<JsonSchemaFactory> {
         Library modifiedV4 = DraftV4Library.get().thaw()
                 .addFormatAttribute("date", DateAttribute.getInstance())
                 .freeze();
-        ValidationConfigurationBuilder vcb = ValidationConfiguration.newBuilder();
+        ValidationConfigurationBuilder vcb = ValidationConfiguration
+                .newBuilder();
         JsonRef ref = JsonRef.fromURI(SchemaVersion.DRAFTV4.getLocation());
         /*
          * FIXME ugliest hack ever. consider to duplicate the v4 schema under a

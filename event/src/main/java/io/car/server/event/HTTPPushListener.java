@@ -18,9 +18,13 @@
 package io.car.server.event;
 
 import java.io.IOException;
-import java.security.cert.CertificateException;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
 import java.security.cert.X509Certificate;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
@@ -37,78 +41,90 @@ import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
-import io.car.server.core.activities.Activity;
-import io.car.server.core.activities.ActivityType;
-import io.car.server.core.activities.TrackActivity;
-import io.car.server.core.event.EventBusListener;
-import io.car.server.rest.CodingFactory;
+import io.car.server.core.entities.Track;
+import io.car.server.core.event.CreatedTrackEvent;
 import io.car.server.rest.MediaTypes;
+import io.car.server.rest.encoding.EntityEncoder;
+import io.car.server.rest.rights.AccessRightsImpl;
 
-public class HTTPPushListener implements EventBusListener {
+@Singleton
+public class HTTPPushListener {
+    //TODO make configurable
+    private static final String host =
+            "https://localhost:6143/geoevent/rest/receiver/car-io-tracks-in-rest?f=generic-json";
+    private static final Logger logger = LoggerFactory
+            .getLogger(HTTPPushListener.class);
+    public static final AccessRightsImpl DEFAULT_ACCESS_RIGHTS =
+            new AccessRightsImpl();
+    private final HttpClient client;
+    private final EntityEncoder<Track> encoder;
+    private final ObjectWriter writer;
 
-	private HttpClient client;
+    @Inject
+    public HTTPPushListener(EntityEncoder<Track> encoder,
+                            ObjectWriter writer) throws Exception {
+        this.client = createClient();
+        this.encoder = encoder;
+        this.writer = writer;
+    }
 
-	@Inject
-	private CodingFactory coding;
+    @Subscribe
+    public void onCreatedTrackEvent(CreatedTrackEvent e) {
+        pushNewTrack(e.getTrack());
+    }
 
-	//TODO make configurable
-	private String host = "https://localhost:6143/geoevent/rest/receiver/car-io-tracks-in-rest?f=generic-json";
+    private synchronized void pushNewTrack(Track track) {
+        HttpResponse resp = null;
+        try {
+            ObjectNode jsonTrack = encoder.encode(track, DEFAULT_ACCESS_RIGHTS,
+                                                  MediaTypes.TRACK_TYPE);
+            String content = writer.writeValueAsString(jsonTrack);
+            logger.debug("Entity: {}", content);
+            HttpEntity entity = new StringEntity(
+                    content, ContentType.create(MediaTypes.TRACK));
+            HttpPost hp = new HttpPost(host);
+            hp.setEntity(entity);
+            resp = this.client.execute(hp);
+        } catch (ClientProtocolException e) {
+            logger.warn(e.getMessage(), e);
+        } catch (IOException e) {
+            logger.warn(e.getMessage(), e);
+        } finally {
+            if (resp != null) {
+                try {
+                    EntityUtils.consume(resp.getEntity());
+                } catch (IOException e) {
+                    logger.warn(e.getMessage());
+                }
+            }
+        }
+    }
 
-	private static final Logger logger = LoggerFactory.getLogger(HTTPPushListener.class);
+    private HttpClient createClient() throws UnrecoverableKeyException,
+                                             KeyManagementException,
+                                             KeyStoreException,
+                                             NoSuchAlgorithmException {
+        SSLSocketFactory sslsf = new SSLSocketFactory(new TrustStrategy() {
+            @Override
+            public boolean isTrusted(final X509Certificate[] chain,
+                                     String authType) {
+                //FIXME kind of bad practice...
+                return true;
+            }
+        });
+        Scheme httpsScheme2 = new Scheme("https", 443, sslsf);
+        SchemeRegistry schemeRegistry = new SchemeRegistry();
+        schemeRegistry.register(httpsScheme2);
 
-	public HTTPPushListener() throws Exception {
-		SSLSocketFactory sslsf = new SSLSocketFactory(new TrustStrategy() {
+        BasicClientConnectionManager cm =
+                new BasicClientConnectionManager(schemeRegistry);
 
-			public boolean isTrusted(final X509Certificate[] chain,
-					String authType) throws CertificateException {
-				return true;
-			}
-
-		});
-
-		Scheme httpsScheme2 = new Scheme("https", 443, sslsf);
-		SchemeRegistry schemeRegistry = new SchemeRegistry();
-		schemeRegistry.register(httpsScheme2);
-
-		BasicClientConnectionManager cm = new BasicClientConnectionManager(schemeRegistry);
-		
-		this.client = new DefaultHttpClient(cm);
-	}
-	
-	
-	@Override
-	public void onNewActivity(Activity ac) {
-		if (ac.getType() == ActivityType.CREATED_TRACK) {
-			pushNewTrack((TrackActivity) ac);
-		}
-	}
-
-
-	private synchronized void pushNewTrack(TrackActivity ac) {
-		ObjectNode jsonTrack = this.coding.createTrackEncoder().encode(ac.getTrack(), MediaTypes.TRACK_TYPE);
-		String content = jsonTrack.toString();
-		HttpResponse resp = null;
-		try {
-			HttpPost hp = new HttpPost(host);
-			hp.setEntity(new StringEntity(content, ContentType.create(MediaTypes.TRACK)));
-			resp = this.client.execute(hp);
-		} catch (ClientProtocolException e) {
-			logger.warn(e.getMessage(), e);
-		} catch (IOException e) {
-			logger.warn(e.getMessage(), e);
-		} finally {
-			if (resp != null) {
-				try {
-					EntityUtils.consume(resp.getEntity());
-				} catch (IOException e) {
-					logger.warn(e.getMessage());
-				}
-			}
-		}
-		
-	}
-
+        return new DefaultHttpClient(cm);
+    }
 }

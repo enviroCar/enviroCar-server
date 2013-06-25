@@ -18,6 +18,8 @@
 package io.car.server.core.exception;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class ResourceAlreadyExistException extends Exception {

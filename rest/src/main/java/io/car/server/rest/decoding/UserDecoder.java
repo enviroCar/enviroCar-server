@@ -20,9 +20,11 @@ package io.car.server.rest.decoding;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.ext.Provider;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
@@ -33,13 +35,18 @@ import io.car.server.core.entities.User;
 import io.car.server.rest.JSONConstants;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
+@Provider
+@Consumes(MediaType.APPLICATION_JSON)
 public class UserDecoder extends AbstractEntityDecoder<User> {
     private final EntityDecoder<Geometry> geometryDecoder;
 
     @Inject
     public UserDecoder(EntityDecoder<Geometry> geometryDecoder) {
+        super(User.class);
         this.geometryDecoder = geometryDecoder;
     }
 

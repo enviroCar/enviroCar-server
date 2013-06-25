@@ -39,6 +39,8 @@ import io.car.server.rest.auth.Authenticated;
 import io.car.server.rest.validation.Schema;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class FriendsResource extends AbstractResource {
@@ -54,7 +56,8 @@ public class FriendsResource extends AbstractResource {
     @Schema(response = Schemas.USERS)
     @Produces(MediaTypes.USERS)
     public Users get() {
-        return getService().getFriends(user);
+        checkRights(getRights().canSeeFriendsOf(user));
+        return getFriendService().getFriends(user);
     }
 
     @POST
@@ -63,16 +66,20 @@ public class FriendsResource extends AbstractResource {
     @Consumes(MediaTypes.USER_REF)
     public void add(UserReference friend) throws UserNotFoundException {
         if (friend.getName() == null ||
-            friend.getName().equals(getCurrentUser())) {
+            friend.getName().equals(getCurrentUser().getName())) {
             throw new WebApplicationException(Status.BAD_REQUEST);
         }
-        getService().addFriend(user, getService().getUser(friend.getName()));
+        User f = getUserService().getUser(friend.getName());
+        checkRights(getRights().canFriend(user, f));
+        getFriendService().addFriend(user, f);
     }
 
     @Path(FRIEND)
     public UserResource friend(@PathParam("friend") String friendName) throws
             UserNotFoundException {
-        return getResourceFactory().createFriendResource(user, getService()
+        checkRights(getRights().canSeeFriendsOf(user));
+        return getResourceFactory()
+                .createFriendResource(user, getFriendService()
                 .getFriend(user, friendName));
     }
 }

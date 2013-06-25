@@ -24,15 +24,18 @@ import javax.ws.rs.Produces;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
+import io.car.server.core.StatisticsService;
 import io.car.server.core.entities.Phenomenon;
 import io.car.server.core.exception.PhenomenonNotFoundException;
+import io.car.server.core.filter.StatisticsFilter;
 import io.car.server.core.statistics.Statistic;
-import io.car.server.core.statistics.StatisticsService;
 import io.car.server.rest.MediaTypes;
 import io.car.server.rest.Schemas;
 import io.car.server.rest.validation.Schema;
 
 /**
+ * TODO JavaDoc
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class PhenomenonResource extends AbstractResource {
@@ -59,6 +62,8 @@ public class PhenomenonResource extends AbstractResource {
     @Schema(response = Schemas.STATISTIC)
     @Produces(MediaTypes.STATISTIC)
     public Statistic getStatistics() {
-        return this.statisticsService.getStatistics(this.phenomenon);
+        checkRights(getRights().canSeeStatisticsOf(phenomenon));
+        return this.statisticsService
+                .getStatistic(new StatisticsFilter(), this.phenomenon);
     }
 }
