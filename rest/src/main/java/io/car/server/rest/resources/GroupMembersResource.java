@@ -65,6 +65,7 @@ public class GroupMembersResource extends AbstractResource {
     public Users get(
             @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit,
             @QueryParam(RESTConstants.PAGE) @DefaultValue("0") int page) {
+        checkRights(getRights().canSeeMembersOf(group));
         return getGroupService()
                 .getGroupMembers(group, new Pagination(limit, page));
     }

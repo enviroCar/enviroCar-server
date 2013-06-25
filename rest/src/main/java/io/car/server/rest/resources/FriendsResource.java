@@ -59,6 +59,7 @@ public class FriendsResource extends AbstractResource {
                 MediaTypes.TURTLE,
                 MediaTypes.TURTLE_ALT })
     public Users get() {
+        checkRights(getRights().canSeeFriendsOf(user));
         return getFriendService().getFriends(user);
     }
 
@@ -72,8 +73,7 @@ public class FriendsResource extends AbstractResource {
             throw new WebApplicationException(Status.BAD_REQUEST);
         }
         User f = getUserService().getUser(friend.getName());
-        checkRights(getRights().canModify(user) &&
-                    getRights().canFriend(f));
+        checkRights(getRights().canFriend(user, f));
         getFriendService().addFriend(user, f);
     }
 
