@@ -35,6 +35,7 @@ import io.car.server.rest.encoding.rdf.linker.TrackDCTermsLinker;
 import io.car.server.rest.encoding.rdf.linker.UserDCTermsLinker;
 import io.car.server.rest.encoding.rdf.linker.UserFOAFLinker;
 import io.car.server.rest.encoding.rdf.linker.UserVCardLinker;
+import io.car.server.rest.encoding.rdf.linker.W3CGeoMeasurementLinker;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
@@ -78,6 +79,7 @@ public class DefaultRDFLinkerModule extends AbstractModule {
         Multibinder<RDFLinker<Measurement>> b = Multibinder.newSetBinder(
                 binder(), new TypeLiteral<RDFLinker<Measurement>>() {
         });
+        b.addBinding().to(W3CGeoMeasurementLinker.class);
     }
 
     protected void bindPhenomenonLinker() {
