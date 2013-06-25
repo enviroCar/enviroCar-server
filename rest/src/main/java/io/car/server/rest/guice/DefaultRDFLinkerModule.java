@@ -17,11 +17,6 @@
  */
 package io.car.server.rest.guice;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.TypeLiteral;
-import com.google.inject.multibindings.Multibinder;
-import com.vividsolutions.jts.geom.Geometry;
-
 import io.car.server.core.activities.Activity;
 import io.car.server.core.entities.Group;
 import io.car.server.core.entities.Measurement;
@@ -31,15 +26,25 @@ import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
 import io.car.server.core.statistics.Statistic;
 import io.car.server.rest.encoding.rdf.RDFLinker;
+<<<<<<< HEAD
 import io.car.server.rest.encoding.rdf.linker.GroupDCTermsLinker;
 import io.car.server.rest.encoding.rdf.linker.MeasurementDCTermsLinker;
+=======
+import io.car.server.rest.encoding.rdf.linker.EEAPhenomenonLinker;
+import io.car.server.rest.encoding.rdf.linker.GroupFOAFLinker;
+>>>>>>> 3c3a2a543b6716e48f5b8b302a8c3b7edf4ff99b
 import io.car.server.rest.encoding.rdf.linker.PhenomenonDCTermsLinker;
-import io.car.server.rest.encoding.rdf.linker.SensorVSOLinker;
 import io.car.server.rest.encoding.rdf.linker.SensorDCTermsLinker;
+import io.car.server.rest.encoding.rdf.linker.SensorVSOLinker;
 import io.car.server.rest.encoding.rdf.linker.TrackDCTermsLinker;
 import io.car.server.rest.encoding.rdf.linker.UserDCTermsLinker;
 import io.car.server.rest.encoding.rdf.linker.UserFOAFLinker;
 import io.car.server.rest.encoding.rdf.linker.UserVCardLinker;
+
+import com.google.inject.AbstractModule;
+import com.google.inject.TypeLiteral;
+import com.google.inject.multibindings.Multibinder;
+import com.vividsolutions.jts.geom.Geometry;
 
 public class DefaultRDFLinkerModule extends AbstractModule {
     @Override
@@ -72,6 +77,7 @@ public class DefaultRDFLinkerModule extends AbstractModule {
                 binder(), new TypeLiteral<RDFLinker<Group>>() {
         });
         b.addBinding().to(GroupDCTermsLinker.class);
+        b.addBinding().to(GroupFOAFLinker.class);
     }
 
     protected void bindMeasurementLinker() {
@@ -86,6 +92,7 @@ public class DefaultRDFLinkerModule extends AbstractModule {
                 binder(), new TypeLiteral<RDFLinker<Phenomenon>>() {
         });
         b.addBinding().to(PhenomenonDCTermsLinker.class);
+        b.addBinding().to(EEAPhenomenonLinker.class);
     }
 
     protected void bindSensorLinker() {
