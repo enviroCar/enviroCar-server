@@ -2,7 +2,7 @@
     "$schema": "http://json-schema.org/draft-04/schema#",
     "id": "http://schema.envirocar.org/definitions.json#",
     "username": {
-        "pattern": "^[_A-Za-z0-9-]{6,}$",
+        "pattern": "^[_A-Za-z0-9-]{4,}$",
         "type": "string"
     },
     "date-time": {
