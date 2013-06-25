@@ -12,7 +12,7 @@ import javax.ws.rs.core.UriBuilder;
 
 /**
  *
- * @author jan
+ * @author Jan Wirwahn
  */
 public class SensorDCTermsLinker implements RDFLinker<Sensor>{
     

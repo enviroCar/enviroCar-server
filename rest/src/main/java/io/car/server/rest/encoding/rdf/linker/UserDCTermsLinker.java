@@ -11,7 +11,7 @@ import javax.ws.rs.core.UriBuilder;
 
 /**
  *
- * @author jan
+ * @author Jan Wirwahn
  */
 public class UserDCTermsLinker implements RDFLinker<User> {
 

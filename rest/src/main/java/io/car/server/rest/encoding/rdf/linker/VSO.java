@@ -24,7 +24,7 @@ import com.hp.hpl.jena.rdf.model.Resource;
 
 /**
  *
- * @author jan
+ * @author Jan Wirwahn
  */
 public class VSO {
     public static final String URI = "http://purl.org/vso/ns#";

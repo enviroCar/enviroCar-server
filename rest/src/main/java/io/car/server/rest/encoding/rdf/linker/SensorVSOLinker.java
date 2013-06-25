@@ -35,7 +35,7 @@ import io.car.server.rest.rights.AccessRights;
 
 /**
  *
- * @author jan
+ * @author Jan Wirwahn
  */
 public class SensorVSOLinker implements RDFLinker<Sensor> {
     public static final String CONSTRUCTION_YEAR_PROPERTY = "constructionYear";
