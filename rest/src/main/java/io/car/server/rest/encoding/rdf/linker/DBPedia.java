@@ -19,24 +19,26 @@ package io.car.server.rest.encoding.rdf.linker;
 
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;
 
 /**
+ * TODO JavaDoc
  *
- * @author jan
+ * @author Christian Autermann <c.autermann@52north.org>
  */
-public class VSO {
-    public static final String URI = "http://purl.org/vso/ns#";
-    public static final String PREFIX = "vso";
+public class DBPedia {
+    public static final String URI = "http://dbpedia.org/resource/";
+    public static final String PREFIX = "dbpedia";
     private static final Model m = ModelFactory.createDefaultModel();
-    public static final Resource Automobile =
-            m.createResource(URI + "Automobile");
-    public static final Property fuelType =
-            m.createProperty(URI, "fuelType");
-    public static final Property modelDate =
-            m.createProperty(URI, "modelDate");
+    public static final Resource DBPEDIA_GASOLINE =
+            m.createResource(URI + "Gasoline");
+    public static final Resource DBPEDIA_DIESEL =
+            m.createResource(URI + "Diesel");
+    public static final Resource DBPEDIA_BIODIESEL =
+            m.createResource(URI + "Biodiesel");
+    public static final Resource DBPEDIA_KEROSENE =
+            m.createResource(URI + "Kerosene");
 
-    private VSO() {
+    private DBPedia() {
     }
 }

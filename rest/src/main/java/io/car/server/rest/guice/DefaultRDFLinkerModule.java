@@ -31,6 +31,7 @@ import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
 import io.car.server.core.statistics.Statistic;
 import io.car.server.rest.encoding.rdf.RDFLinker;
+import io.car.server.rest.encoding.rdf.linker.SensorVSOLinker;
 import io.car.server.rest.encoding.rdf.linker.UserFOAFLinker;
 import io.car.server.rest.encoding.rdf.linker.UserVCardLinker;
 
@@ -82,6 +83,7 @@ public class DefaultRDFLinkerModule extends AbstractModule {
         Multibinder<RDFLinker<Sensor>> b = Multibinder.newSetBinder(
                 binder(), new TypeLiteral<RDFLinker<Sensor>>() {
         });
+        b.addBinding().to(SensorVSOLinker.class);
     }
 
     protected void bindStatisticLinker() {

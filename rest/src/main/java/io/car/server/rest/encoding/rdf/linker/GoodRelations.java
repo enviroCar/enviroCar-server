@@ -20,23 +20,20 @@ package io.car.server.rest.encoding.rdf.linker;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.Resource;
 
 /**
  *
  * @author jan
  */
-public class VSO {
-    public static final String URI = "http://purl.org/vso/ns#";
-    public static final String PREFIX = "vso";
+public class GoodRelations {
+    public static final String URI = "http://purl.org/goodrelations/v1#";
+    public static final String PREFIX = "gr";
     private static final Model m = ModelFactory.createDefaultModel();
-    public static final Resource Automobile =
-            m.createResource(URI + "Automobile");
-    public static final Property fuelType =
-            m.createProperty(URI, "fuelType");
-    public static final Property modelDate =
-            m.createProperty(URI, "modelDate");
+    public static final Property hasManufacturer = m
+            .createProperty(URI, "hasManufacturer");
+    public static final Property hasMakeAndModel = m
+            .createProperty(URI, "hasMakeAndModel");
 
-    private VSO() {
+    private GoodRelations() {
     }
 }
