@@ -57,7 +57,7 @@ public class TrackResource extends AbstractResource {
     @PUT
     @Authenticated
     @Schema(request = Schemas.TRACK_MODIFY)
-    @Consumes(MediaTypes.TRACK_MODIFY)
+    @Consumes({ MediaTypes.TRACK_MODIFY })
     public Response modify(Track changes) throws TrackNotFoundException,
                                                  UserNotFoundException,
                                                  IllegalModificationException,
@@ -69,7 +69,10 @@ public class TrackResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.TRACK)
-    @Produces(MediaTypes.TRACK)
+    @Produces({ MediaTypes.TRACK,
+                MediaTypes.XML_RDF,
+                MediaTypes.TURTLE,
+                MediaTypes.TURTLE_ALT })
     public Track get() throws TrackNotFoundException {
         return track;
     }

@@ -60,7 +60,10 @@ public class GroupResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.GROUP)
-    @Produces(MediaTypes.GROUP)
+    @Produces({ MediaTypes.GROUP,
+                MediaTypes.XML_RDF,
+                MediaTypes.TURTLE,
+                MediaTypes.TURTLE_ALT })
     public Group get() throws GroupNotFoundException {
         return group;
     }
@@ -68,7 +71,7 @@ public class GroupResource extends AbstractResource {
     @PUT
     @Authenticated
     @Schema(request = Schemas.GROUP_MODIFY)
-    @Consumes(MediaTypes.GROUP_MODIFY)
+    @Consumes({ MediaTypes.GROUP_MODIFY })
     public Response modify(Group changes) throws UserNotFoundException,
                                                  ValidationException,
                                                  IllegalModificationException,

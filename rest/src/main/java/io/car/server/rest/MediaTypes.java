@@ -26,7 +26,7 @@ import javax.ws.rs.core.MediaType;
  * @author Arne de Wall
  */
 public interface MediaTypes {
-    public static final String SCHEMA_ATTRIBUTE = "schema";
+    String SCHEMA_ATTRIBUTE = "schema";
     String ROOT = "application/json; schema=\"" + Schemas.ROOT + "\"";
     MediaType ROOT_TYPE = MediaType.valueOf(ROOT);
     String USERS = "application/json; schema=\"" + Schemas.USERS + "\"";
@@ -106,6 +106,12 @@ public interface MediaTypes {
     String ACTIVITIES = "application/json; schema=\"" +
                         Schemas.ACTIVITIES + "\"";
     MediaType ACTIVITIES_TYPE = MediaType.valueOf(ACTIVITIES);
+    String XML_RDF = "application/rdf+xml";
+    MediaType XML_RDF_TYPE = MediaType.valueOf(XML_RDF);
+    String TURTLE = "text/turtle";
+    MediaType TURTLE_TYPE = MediaType.valueOf(TURTLE);
+    String TURTLE_ALT = "application/x-turtle";
+    MediaType TURTLE_ALT_TYPE = MediaType.valueOf(TURTLE_ALT);
     String IMAGE_JPEG = "image/jpeg";
     MediaType IMAGE_JPEG_TYPE = MediaType.valueOf(IMAGE_JPEG);
 }

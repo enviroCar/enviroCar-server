@@ -59,7 +59,6 @@ public class JerseyResourceModule extends AbstractModule {
     public AccessRights accessRights(SecurityContext ctx,
                                      GroupService groupService,
                                      FriendService friendService) {
-//        return new NonRestrictiveRights();
         PrincipalImpl p = (PrincipalImpl) ctx.getUserPrincipal();
         User user = p == null ? null : p.getUser();
         return new AccessRightsImpl(user, groupService, friendService);

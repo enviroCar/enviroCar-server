@@ -27,8 +27,8 @@ import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 
-import io.car.server.rest.provider.JsonNodeMessageBodyReader;
-import io.car.server.rest.provider.JsonNodeMessageBodyWriter;
+import io.car.server.rest.decoding.json.JsonNodeMessageBodyReader;
+import io.car.server.rest.encoding.json.JsonNodeMessageBodyWriter;
 
 /**
  * TODO JavaDoc
