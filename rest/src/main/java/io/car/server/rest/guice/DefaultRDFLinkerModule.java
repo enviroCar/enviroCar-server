@@ -26,6 +26,7 @@ import io.car.server.core.entities.Track;
 import io.car.server.core.entities.User;
 import io.car.server.core.statistics.Statistic;
 import io.car.server.rest.encoding.rdf.RDFLinker;
+import io.car.server.rest.encoding.rdf.linker.EEAPhenomenonLinker;
 import io.car.server.rest.encoding.rdf.linker.GroupFOAFLinker;
 import io.car.server.rest.encoding.rdf.linker.PhenomenonDCTermsLinker;
 import io.car.server.rest.encoding.rdf.linker.SensorDCTermsLinker;
@@ -84,6 +85,7 @@ public class DefaultRDFLinkerModule extends AbstractModule {
                 binder(), new TypeLiteral<RDFLinker<Phenomenon>>() {
         });
         b.addBinding().to(PhenomenonDCTermsLinker.class);
+        b.addBinding().to(EEAPhenomenonLinker.class);
     }
 
     protected void bindSensorLinker() {
