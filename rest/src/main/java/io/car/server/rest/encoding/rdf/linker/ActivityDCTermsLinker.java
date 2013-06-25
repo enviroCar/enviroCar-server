@@ -15,35 +15,26 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package io.car.server.rest.encoding.rdf.linker;
+
+import javax.ws.rs.core.UriBuilder;
 
 import com.google.inject.Provider;
 import com.hp.hpl.jena.rdf.model.Model;
-import io.car.server.core.entities.Measurement;
+
+import io.car.server.core.activities.Activity;
 import io.car.server.rest.encoding.rdf.RDFLinker;
-import io.car.server.rest.resources.MeasurementsResource;
-import io.car.server.rest.resources.RootResource;
 import io.car.server.rest.rights.AccessRights;
-import javax.ws.rs.core.UriBuilder;
 
 /**
+ * TODO JavaDoc
  *
- * @author Jan Wirwahn
+ * @author Christian Autermann <c.autermann@52north.org>
  */
-public class MeasurementDCTermsLinker implements RDFLinker<Measurement>{
-
-    public static final String ODBL_URL = "http://opendatacommons.org/licenses/odbl/";
-
+public class ActivityDCTermsLinker implements RDFLinker<Activity> {
     @Override
-    public void link(Model m, Measurement t, AccessRights rights, Provider<UriBuilder> uriBuilder) {
-        String uri = uriBuilder.get()
-                .path(RootResource.class)
-                .path(RootResource.MEASUREMENTS)
-                .path(MeasurementsResource.MEASUREMENT)
-                .build(t.getIdentifier()).toASCIIString();
-
-        m.createResource(uri).addProperty(DCTerms.rights, ODBL_URL);
-
+    public void link(Model m, Activity t, AccessRights rights,
+                     Provider<UriBuilder> uriBuilder) {
+        // FIXME add group/user etc. to the Activity entity to allow URI building
     }
 }
