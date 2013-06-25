@@ -317,13 +317,13 @@ public class AccessRightsImpl extends AbstractAccessRights {
     }
 
     @Override
-    public boolean canUnfriend(User user) {
-        return !isSelf(user);
+    public boolean canUnfriend(User user, User friend) {
+        return isSelf(user) && !isSelf(friend);
     }
 
     @Override
-    public boolean canFriend(User user) {
-        return !isSelf(user);
+    public boolean canFriend(User user, User friend) {
+        return isSelf(user) && !isSelf(friend);
     }
 
     @Override

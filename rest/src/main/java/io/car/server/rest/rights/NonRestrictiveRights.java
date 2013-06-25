@@ -171,12 +171,12 @@ public class NonRestrictiveRights implements AccessRights {
     }
 
     @Override
-    public boolean canUnfriend(User user) {
+    public boolean canUnfriend(User user, User friend) {
         return true;
     }
 
     @Override
-    public boolean canFriend(User f) {
+    public boolean canFriend(User user, User friend) {
         return true;
     }
 
