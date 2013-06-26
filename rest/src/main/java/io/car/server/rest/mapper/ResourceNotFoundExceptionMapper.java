@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
- *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
+ * Copyright (C) 2013 The enviroCar project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as

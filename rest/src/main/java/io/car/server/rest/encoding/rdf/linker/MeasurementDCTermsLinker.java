@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
- *                     Arne De Wall, Dustin Demuth, Saqib Rasheed
+ * Copyright (C) 2013 The enviroCar project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -15,7 +14,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package io.car.server.rest.encoding.rdf.linker;
 
 import com.google.inject.Provider;
