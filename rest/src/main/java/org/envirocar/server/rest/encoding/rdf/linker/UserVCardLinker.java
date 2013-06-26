@@ -20,16 +20,15 @@ import java.net.URI;
 
 import javax.ws.rs.core.UriBuilder;
 
-import com.google.inject.Provider;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.vocabulary.VCARD;
-
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.rest.encoding.rdf.RDFLinker;
-
 import org.envirocar.server.rest.resources.RootResource;
 import org.envirocar.server.rest.resources.UsersResource;
 import org.envirocar.server.rest.rights.AccessRights;
+
+import com.google.inject.Provider;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.vocabulary.VCARD;
 
 /**
  * TODO JavaDoc

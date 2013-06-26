@@ -18,13 +18,12 @@ package org.envirocar.server.rest.encoding.rdf.linker;
 
 import javax.ws.rs.core.UriBuilder;
 
-import com.google.inject.Provider;
-import com.hp.hpl.jena.rdf.model.Model;
-
 import org.envirocar.server.core.statistics.Statistic;
 import org.envirocar.server.rest.encoding.rdf.RDFLinker;
-
 import org.envirocar.server.rest.rights.AccessRights;
+
+import com.google.inject.Provider;
+import com.hp.hpl.jena.rdf.model.Model;
 
 /**
  * @author Jan Wirwahn

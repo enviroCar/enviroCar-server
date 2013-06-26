@@ -14,30 +14,24 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.rest.encoding.rdf.linker;
+package org.envirocar.server.rest.encoding.rdf.vocab;
 
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.Property;
 
 /**
- * TODO JavaDoc
  *
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Arne de Wall
+ *
  */
-public class DBPedia {
-    public static final String URI = "http://dbpedia.org/resource/";
-    public static final String PREFIX = "dbpedia";
+public class W3CGeo {
+    public static final String PREFIX = "geo";
+    public static final String URI = "http://www.w3.org/2003/01/geo/wgs84_pos#";
     private static final Model m = ModelFactory.createDefaultModel();
-    public static final Resource DBPEDIA_GASOLINE =
-            m.createResource(URI + "Gasoline");
-    public static final Resource DBPEDIA_DIESEL =
-            m.createResource(URI + "Diesel");
-    public static final Resource DBPEDIA_BIODIESEL =
-            m.createResource(URI + "Biodiesel");
-    public static final Resource DBPEDIA_KEROSENE =
-            m.createResource(URI + "Kerosene");
+    public static final Property lat = m.createProperty(URI, "lat");
+    public static final Property lon = m.createProperty(URI, "lon");
 
-    private DBPedia() {
+    private W3CGeo() {
     }
 }

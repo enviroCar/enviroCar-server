@@ -18,15 +18,15 @@ package org.envirocar.server.rest.encoding.rdf.linker;
 
 import javax.ws.rs.core.UriBuilder;
 
-import com.google.inject.Provider;
-import com.hp.hpl.jena.rdf.model.Model;
-
 import org.envirocar.server.core.entities.Phenomenon;
 import org.envirocar.server.rest.encoding.rdf.RDFLinker;
-
+import org.envirocar.server.rest.encoding.rdf.vocab.DCTerms;
 import org.envirocar.server.rest.resources.PhenomenonsResource;
 import org.envirocar.server.rest.resources.RootResource;
 import org.envirocar.server.rest.rights.AccessRights;
+
+import com.google.inject.Provider;
+import com.hp.hpl.jena.rdf.model.Model;
 
 /**
  *

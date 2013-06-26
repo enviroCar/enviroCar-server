@@ -20,6 +20,7 @@ import javax.ws.rs.core.UriBuilder;
 
 import org.envirocar.server.core.entities.Group;
 import org.envirocar.server.rest.encoding.rdf.RDFLinker;
+import org.envirocar.server.rest.encoding.rdf.vocab.DCTerms;
 import org.envirocar.server.rest.resources.GroupsResource;
 import org.envirocar.server.rest.resources.RootResource;
 import org.envirocar.server.rest.rights.AccessRights;

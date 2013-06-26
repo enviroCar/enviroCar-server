@@ -20,12 +20,6 @@ import java.net.URI;
 
 import javax.ws.rs.core.UriBuilder;
 
-import com.google.inject.Inject;
-import com.google.inject.Provider;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.sparql.vocabulary.FOAF;
-
 import org.envirocar.server.core.FriendService;
 import org.envirocar.server.core.GroupService;
 import org.envirocar.server.core.entities.Group;
@@ -33,12 +27,17 @@ import org.envirocar.server.core.entities.Groups;
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.entities.Users;
 import org.envirocar.server.rest.encoding.rdf.RDFLinker;
-
 import org.envirocar.server.rest.resources.GroupsResource;
 import org.envirocar.server.rest.resources.RootResource;
 import org.envirocar.server.rest.resources.UserResource;
 import org.envirocar.server.rest.resources.UsersResource;
 import org.envirocar.server.rest.rights.AccessRights;
+
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.sparql.vocabulary.FOAF;
 
 /**
  * TODO JavaDoc

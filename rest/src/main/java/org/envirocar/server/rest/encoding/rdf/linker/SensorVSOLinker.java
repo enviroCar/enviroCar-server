@@ -21,17 +21,19 @@ import java.util.Map;
 
 import javax.ws.rs.core.UriBuilder;
 
+import org.envirocar.server.core.entities.Sensor;
+import org.envirocar.server.rest.encoding.rdf.RDFLinker;
+import org.envirocar.server.rest.encoding.rdf.vocab.DBPedia;
+import org.envirocar.server.rest.encoding.rdf.vocab.GoodRelations;
+import org.envirocar.server.rest.encoding.rdf.vocab.VSO;
+import org.envirocar.server.rest.resources.RootResource;
+import org.envirocar.server.rest.resources.SensorsResource;
+import org.envirocar.server.rest.rights.AccessRights;
+
 import com.google.inject.Provider;
 import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
-
-import org.envirocar.server.core.entities.Sensor;
-import org.envirocar.server.rest.encoding.rdf.RDFLinker;
-
-import org.envirocar.server.rest.resources.RootResource;
-import org.envirocar.server.rest.resources.SensorsResource;
-import org.envirocar.server.rest.rights.AccessRights;
 
 /**
  * @author Jan Wirwahn
