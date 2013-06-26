@@ -1,5 +1,5 @@
-io.car.server.mongo.guice.MongoModule
-io.car.server.mongo.guice.MongoDaoModule
-io.car.server.mongo.guice.MongoConverterModule
-io.car.server.mongo.guice.MongoConnectionModule
-io.car.server.mongo.guice.MongoMappedClassesModule
+org.envirocar.server.mongo.guice.MongoModule
+org.envirocar.server.mongo.guice.MongoDaoModule
+org.envirocar.server.mongo.guice.MongoConverterModule
+org.envirocar.server.mongo.guice.MongoConnectionModule
+org.envirocar.server.mongo.guice.MongoMappedClassesModule
