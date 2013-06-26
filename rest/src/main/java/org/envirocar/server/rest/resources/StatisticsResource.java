@@ -22,7 +22,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
-import org.envirocar.server.core.StatisticsService;
 import org.envirocar.server.core.entities.Phenomenon;
 import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.core.entities.Track;
@@ -49,8 +48,12 @@ public class StatisticsResource extends AbstractResource {
     private final Sensor sensor;
 
     @AssistedInject
-    public StatisticsResource(@Assisted User user,
-                              StatisticsService statisticService) {
+    public StatisticsResource() {
+        this(null, null, null);
+    }
+
+    @AssistedInject
+    public StatisticsResource(@Assisted User user) {
         this(null, user, null);
     }
 

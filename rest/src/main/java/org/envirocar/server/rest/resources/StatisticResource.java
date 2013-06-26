@@ -29,6 +29,9 @@ import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.validation.Schema;
 
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
+
 /**
  * TODO JavaDoc
  *
@@ -40,8 +43,11 @@ public class StatisticResource extends AbstractResource {
     private final Sensor sensor;
     private final Phenomenon phenomenon;
 
-    public StatisticResource(Track track, User user, Sensor sensor,
-                             Phenomenon phenomenon) {
+    @Inject
+    public StatisticResource(@Assisted Track track,
+                             @Assisted User user,
+                             @Assisted Sensor sensor,
+                             @Assisted Phenomenon phenomenon) {
         this.track = track;
         this.user = user;
         this.sensor = sensor;
