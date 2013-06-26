@@ -4,12 +4,12 @@
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>io.car.server</groupId>
+		<groupId>org.envirocar.server</groupId>
 		<artifactId>server</artifactId>
 		<version>1.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>event</artifactId>
-	<name>car.io server event module</name>
+	<name>enviroCar server event module</name>
 	<dependencies>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
