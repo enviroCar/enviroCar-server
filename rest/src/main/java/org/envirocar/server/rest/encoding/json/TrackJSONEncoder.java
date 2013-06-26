@@ -19,23 +19,21 @@ package org.envirocar.server.rest.encoding.json;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.inject.Inject;
-
 import org.envirocar.server.core.DataService;
 import org.envirocar.server.core.entities.Measurements;
 import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.entities.User;
-
 import org.envirocar.server.core.filter.MeasurementFilter;
 import org.envirocar.server.core.util.GeoJSONConstants;
 import org.envirocar.server.rest.JSONConstants;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.encoding.JSONEntityEncoder;
-
 import org.envirocar.server.rest.rights.AccessRights;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.inject.Inject;
 
 /**
  * TODO JavaDoc
@@ -51,9 +49,9 @@ public class TrackJSONEncoder extends AbstractJSONEntityEncoder<Track> {
 
     @Inject
     public TrackJSONEncoder(JSONEntityEncoder<Sensor> sensorEncoder,
-                        JSONEntityEncoder<Measurements> measurementsEncoder,
-                        JSONEntityEncoder<User> userEncoder,
-                        DataService dataService) {
+                            JSONEntityEncoder<Measurements> measurementsEncoder,
+                            JSONEntityEncoder<User> userEncoder,
+                            DataService dataService) {
         super(Track.class);
         this.sensorEncoder = sensorEncoder;
         this.userEncoder = userEncoder;

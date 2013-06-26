@@ -16,17 +16,17 @@
  */
 package org.envirocar.server.rest.encoding.json;
 
-import org.envirocar.server.rest.decoding.json.AbstractJSONMessageBodyReader;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.google.inject.Inject;
-
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.rest.UserReference;
+import org.envirocar.server.rest.decoding.json.AbstractJSONMessageBodyReader;
 import org.envirocar.server.rest.decoding.json.JSONEntityDecoder;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.google.inject.Inject;
 
 /**
  * TODO JavaDoc

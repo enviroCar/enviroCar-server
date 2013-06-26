@@ -12,15 +12,15 @@
         {
             "properties": {
                 "created": {
-                "type": "string",
-                "format": "date-time"
+                    "type": "string",
+                    "format": "date-time"
                 },
                 "mail": {
                     "$ref": "http://schema.envirocar.org/definitions.json#/mail"
                 },
                 "modified": {
-                "type": "string",
-                "format": "date-time"
+                    "type": "string",
+                    "format": "date-time"
                 },
                 "name": {
                     "$ref": "http://schema.envirocar.org/definitions.json#/username"

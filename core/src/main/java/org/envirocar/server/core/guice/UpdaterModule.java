@@ -16,19 +16,18 @@
  */
 package org.envirocar.server.core.guice;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.TypeLiteral;
-
 import org.envirocar.server.core.entities.Group;
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.entities.User;
-
 import org.envirocar.server.core.update.EntityUpdater;
 import org.envirocar.server.core.update.GroupUpdater;
 import org.envirocar.server.core.update.MeasurementUpdater;
 import org.envirocar.server.core.update.TrackUpdater;
 import org.envirocar.server.core.update.UserUpdater;
+
+import com.google.inject.AbstractModule;
+import com.google.inject.TypeLiteral;
 
 /**
  * TODO JavaDoc

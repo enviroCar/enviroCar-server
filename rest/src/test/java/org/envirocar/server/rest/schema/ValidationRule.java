@@ -20,6 +20,10 @@ import java.io.IOException;
 
 import javax.ws.rs.core.MediaType;
 
+import org.envirocar.server.rest.JSONConstants;
+import org.envirocar.server.rest.MediaTypes;
+import org.envirocar.server.rest.guice.JerseyCodingModule;
+import org.envirocar.server.rest.guice.JerseyValidationModule;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
@@ -39,11 +43,6 @@ import com.github.fge.jsonschema.main.JsonSchemaFactory;
 import com.github.fge.jsonschema.report.ProcessingMessage;
 import com.github.fge.jsonschema.report.ProcessingReport;
 import com.google.inject.Inject;
-
-import org.envirocar.server.rest.JSONConstants;
-import org.envirocar.server.rest.MediaTypes;
-import org.envirocar.server.rest.guice.JerseyCodingModule;
-import org.envirocar.server.rest.guice.JerseyValidationModule;
 
 /**
  * TODO JavaDoc

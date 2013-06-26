@@ -16,11 +16,7 @@
  */
 package org.envirocar.server.core;
 
-import com.google.common.eventbus.EventBus;
-import com.google.inject.Inject;
-
 import org.envirocar.server.core.activities.Activities;
-
 import org.envirocar.server.core.dao.ActivityDao;
 import org.envirocar.server.core.dao.UserDao;
 import org.envirocar.server.core.entities.User;
@@ -36,6 +32,9 @@ import org.envirocar.server.core.update.EntityUpdater;
 import org.envirocar.server.core.util.Pagination;
 import org.envirocar.server.core.util.PasswordEncoder;
 import org.envirocar.server.core.validation.EntityValidator;
+
+import com.google.common.eventbus.EventBus;
+import com.google.inject.Inject;
 
 /**
  * TODO JavaDoc

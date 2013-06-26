@@ -16,6 +16,8 @@
  */
 package org.envirocar.server.core.util;
 
+import org.envirocar.server.core.exception.GeometryConverterException;
+
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryCollection;
 import com.vividsolutions.jts.geom.LineString;
@@ -24,8 +26,6 @@ import com.vividsolutions.jts.geom.MultiPoint;
 import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
-
-import org.envirocar.server.core.exception.GeometryConverterException;
 
 /**
  * TODO JavaDoc

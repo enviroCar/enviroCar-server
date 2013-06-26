@@ -18,7 +18,6 @@ package org.envirocar.server.core.dao;
 
 import org.envirocar.server.core.activities.Activities;
 import org.envirocar.server.core.activities.Activity;
-
 import org.envirocar.server.core.filter.ActivityFilter;
 
 /**

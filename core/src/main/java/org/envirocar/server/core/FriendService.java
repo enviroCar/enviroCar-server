@@ -18,7 +18,6 @@ package org.envirocar.server.core;
 
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.entities.Users;
-
 import org.envirocar.server.core.exception.UserNotFoundException;
 
 /**

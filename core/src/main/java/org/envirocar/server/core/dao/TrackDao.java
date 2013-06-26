@@ -18,7 +18,6 @@ package org.envirocar.server.core.dao;
 
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.entities.Tracks;
-
 import org.envirocar.server.core.filter.TrackFilter;
 
 /**

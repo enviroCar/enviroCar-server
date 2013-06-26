@@ -16,12 +16,11 @@
  */
 package org.envirocar.server.core.filter;
 
-import com.vividsolutions.jts.geom.Geometry;
-
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.entities.User;
-
 import org.envirocar.server.core.util.Pagination;
+
+import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * TODO JavaDoc

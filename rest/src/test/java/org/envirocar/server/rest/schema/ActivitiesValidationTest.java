@@ -20,11 +20,10 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
 
+import org.envirocar.server.rest.MediaTypes;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import org.envirocar.server.rest.MediaTypes;
 
 /**
  * TODO JavaDoc

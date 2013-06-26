@@ -16,8 +16,6 @@
  */
 package org.envirocar.server.mongo.guice;
 
-import com.google.inject.AbstractModule;
-
 import org.envirocar.server.core.dao.ActivityDao;
 import org.envirocar.server.core.dao.GroupDao;
 import org.envirocar.server.core.dao.MeasurementDao;
@@ -34,6 +32,8 @@ import org.envirocar.server.mongo.dao.MongoSensorDao;
 import org.envirocar.server.mongo.dao.MongoStatisticsDao;
 import org.envirocar.server.mongo.dao.MongoTrackDao;
 import org.envirocar.server.mongo.dao.MongoUserDao;
+
+import com.google.inject.AbstractModule;
 
 /**
  * TODO JavaDoc

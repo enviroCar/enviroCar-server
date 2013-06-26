@@ -16,11 +16,6 @@
  */
 package org.envirocar.server.rest.guice;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.Scopes;
-import com.google.inject.TypeLiteral;
-import com.vividsolutions.jts.geom.Geometry;
-
 import org.envirocar.server.core.entities.Group;
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.Phenomenon;
@@ -36,8 +31,12 @@ import org.envirocar.server.rest.decoding.json.PhenomenonDecoder;
 import org.envirocar.server.rest.decoding.json.SensorDecoder;
 import org.envirocar.server.rest.decoding.json.TrackDecoder;
 import org.envirocar.server.rest.decoding.json.UserDecoder;
-
 import org.envirocar.server.rest.encoding.json.UserReferenceProvider;
+
+import com.google.inject.AbstractModule;
+import com.google.inject.Scopes;
+import com.google.inject.TypeLiteral;
+import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * TODO JavaDoc

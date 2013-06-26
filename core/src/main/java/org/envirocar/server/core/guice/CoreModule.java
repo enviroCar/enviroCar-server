@@ -16,16 +16,6 @@
  */
 package org.envirocar.server.core.guice;
 
-import org.joda.time.DateTimeZone;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.ISODateTimeFormat;
-
-import com.google.inject.AbstractModule;
-import com.google.inject.Provides;
-import com.google.inject.Singleton;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.PrecisionModel;
-
 import org.envirocar.server.core.DataService;
 import org.envirocar.server.core.DataServiceImpl;
 import org.envirocar.server.core.FriendService;
@@ -37,9 +27,17 @@ import org.envirocar.server.core.StatisticsServiceImpl;
 import org.envirocar.server.core.UserService;
 import org.envirocar.server.core.UserServiceImpl;
 import org.envirocar.server.core.activities.ActivityListener;
-
 import org.envirocar.server.core.util.BCryptPasswordEncoder;
 import org.envirocar.server.core.util.PasswordEncoder;
+import org.joda.time.DateTimeZone;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
+
+import com.google.inject.AbstractModule;
+import com.google.inject.Provides;
+import com.google.inject.Singleton;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.PrecisionModel;
 
 /**
  * TODO JavaDoc

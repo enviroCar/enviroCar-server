@@ -22,6 +22,10 @@ import static org.junit.Assert.*;
 import java.io.IOException;
 import java.util.Random;
 
+import org.envirocar.server.core.exception.GeometryConverterException;
+import org.envirocar.server.rest.schema.GuiceRunner;
+import org.envirocar.server.rest.schema.ValidationRule;
+import org.envirocar.server.rest.util.GeoJSON;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
@@ -41,12 +45,6 @@ import com.vividsolutions.jts.geom.MultiPoint;
 import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
-
-import org.envirocar.server.core.exception.GeometryConverterException;
-import org.envirocar.server.rest.schema.GuiceRunner;
-import org.envirocar.server.rest.schema.ValidationRule;
-
-import org.envirocar.server.rest.util.GeoJSON;
 
 /**
  * TODO JavaDoc

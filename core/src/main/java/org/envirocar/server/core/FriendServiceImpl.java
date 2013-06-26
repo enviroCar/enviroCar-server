@@ -16,16 +16,15 @@
  */
 package org.envirocar.server.core;
 
-import com.google.common.eventbus.EventBus;
-import com.google.inject.Inject;
-
 import org.envirocar.server.core.dao.UserDao;
-
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.entities.Users;
 import org.envirocar.server.core.event.FriendedUserEvent;
 import org.envirocar.server.core.event.UnfriendedUserEvent;
 import org.envirocar.server.core.exception.UserNotFoundException;
+
+import com.google.common.eventbus.EventBus;
+import com.google.inject.Inject;
 
 /**
  * TODO JavaDoc

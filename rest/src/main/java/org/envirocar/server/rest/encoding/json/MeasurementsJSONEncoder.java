@@ -19,18 +19,16 @@ package org.envirocar.server.rest.encoding.json;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
+import org.envirocar.server.core.entities.Measurement;
+import org.envirocar.server.core.entities.Measurements;
+import org.envirocar.server.core.util.GeoJSONConstants;
+import org.envirocar.server.rest.encoding.JSONEntityEncoder;
+import org.envirocar.server.rest.rights.AccessRights;
+
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
-
-import org.envirocar.server.core.entities.Measurement;
-import org.envirocar.server.core.entities.Measurements;
-
-import org.envirocar.server.core.util.GeoJSONConstants;
-import org.envirocar.server.rest.encoding.JSONEntityEncoder;
-
-import org.envirocar.server.rest.rights.AccessRights;
 
 /**
  * TODO JavaDoc
@@ -45,7 +43,7 @@ public class MeasurementsJSONEncoder extends AbstractJSONEntityEncoder<Measureme
 
     @Inject
     public MeasurementsJSONEncoder(JsonNodeFactory factory,
-                               JSONEntityEncoder<Measurement> measurementEncoder) {
+                                   JSONEntityEncoder<Measurement> measurementEncoder) {
         super(Measurements.class);
         this.measurementEncoder = measurementEncoder;
         this.factory = factory;

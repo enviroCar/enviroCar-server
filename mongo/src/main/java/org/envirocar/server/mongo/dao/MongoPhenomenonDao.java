@@ -16,16 +16,15 @@
  */
 package org.envirocar.server.mongo.dao;
 
-import com.google.inject.Inject;
-
 import org.envirocar.server.core.dao.PhenomenonDao;
-
 import org.envirocar.server.core.entities.Phenomenon;
 import org.envirocar.server.core.entities.Phenomenons;
 import org.envirocar.server.core.util.Pagination;
 import org.envirocar.server.mongo.MongoDB;
 import org.envirocar.server.mongo.entity.MongoPhenomenon;
 import org.envirocar.server.mongo.entity.MongoSensor;
+
+import com.google.inject.Inject;
 
 /**
  * TODO JavaDoc

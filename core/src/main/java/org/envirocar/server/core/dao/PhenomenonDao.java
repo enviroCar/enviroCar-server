@@ -18,7 +18,6 @@ package org.envirocar.server.core.dao;
 
 import org.envirocar.server.core.entities.Phenomenon;
 import org.envirocar.server.core.entities.Phenomenons;
-
 import org.envirocar.server.core.util.Pagination;
 
 /**

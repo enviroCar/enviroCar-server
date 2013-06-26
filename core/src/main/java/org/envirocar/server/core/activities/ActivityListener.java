@@ -16,12 +16,7 @@
  */
 package org.envirocar.server.core.activities;
 
-import com.google.common.eventbus.AllowConcurrentEvents;
-import com.google.common.eventbus.Subscribe;
-import com.google.inject.Inject;
-
 import org.envirocar.server.core.dao.ActivityDao;
-
 import org.envirocar.server.core.event.ChangedGroupEvent;
 import org.envirocar.server.core.event.ChangedProfileEvent;
 import org.envirocar.server.core.event.CreatedGroupEvent;
@@ -31,6 +26,10 @@ import org.envirocar.server.core.event.FriendedUserEvent;
 import org.envirocar.server.core.event.JoinedGroupEvent;
 import org.envirocar.server.core.event.LeftGroupEvent;
 import org.envirocar.server.core.event.UnfriendedUserEvent;
+
+import com.google.common.eventbus.AllowConcurrentEvents;
+import com.google.common.eventbus.Subscribe;
+import com.google.inject.Inject;
 
 /**
  * TODO JavaDoc

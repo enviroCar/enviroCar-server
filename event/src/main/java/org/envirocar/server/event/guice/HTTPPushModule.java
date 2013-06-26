@@ -16,15 +16,13 @@
  */
 package org.envirocar.server.event.guice;
 
-import com.google.inject.AbstractModule;
-
 import org.envirocar.server.event.HTTPPushListener;
 
-public class HTTPPushModule extends AbstractModule {
+import com.google.inject.AbstractModule;
 
-	@Override
+public class HTTPPushModule extends AbstractModule {
+    @Override
     protected void configure() {
         bind(HTTPPushListener.class).asEagerSingleton();
-	}
-
+    }
 }

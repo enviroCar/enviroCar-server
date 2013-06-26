@@ -16,6 +16,8 @@
  */
 package org.envirocar.server;
 
+import org.envirocar.server.rest.decoding.json.JsonNodeMessageBodyReader;
+import org.envirocar.server.rest.encoding.json.JsonNodeMessageBodyWriter;
 import org.junit.Before;
 import org.junit.BeforeClass;
 
@@ -26,26 +28,23 @@ import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 
-import org.envirocar.server.rest.decoding.json.JsonNodeMessageBodyReader;
-
-import org.envirocar.server.rest.encoding.json.JsonNodeMessageBodyWriter;
-
 /**
  * TODO JavaDoc
  *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class ResourceTestBase {
-    @BeforeClass
-    public static void start() throws Exception {
-        EnviroCarServer.getInstance();
-    }
     @Inject
     private DB db;
     @Inject
     private JsonNodeMessageBodyWriter jsonNodeWriter;
     @Inject
     private JsonNodeMessageBodyReader jsonNodeReader;
+
+    @BeforeClass
+    public static void start() throws Exception {
+        EnviroCarServer.getInstance();
+    }
 
     @Before
     public void inject() throws Exception {

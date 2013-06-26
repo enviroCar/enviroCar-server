@@ -19,6 +19,8 @@ package org.envirocar.server.core.guice;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import org.envirocar.server.core.util.GroupedAndNamedThreadFactory;
+
 import com.google.common.eventbus.AsyncEventBus;
 import com.google.common.eventbus.EventBus;
 import com.google.inject.AbstractModule;
@@ -27,8 +29,6 @@ import com.google.inject.matcher.Matchers;
 import com.google.inject.spi.InjectionListener;
 import com.google.inject.spi.TypeEncounter;
 import com.google.inject.spi.TypeListener;
-
-import org.envirocar.server.core.util.GroupedAndNamedThreadFactory;
 
 /**
  * TODO JavaDoc

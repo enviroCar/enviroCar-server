@@ -16,15 +16,14 @@
  */
 package org.envirocar.server.rest.encoding.json;
 
-import org.envirocar.server.rest.encoding.json.AbstractJSONMessageBodyWriter;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
+import org.envirocar.server.rest.rights.AccessRights;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-
-import org.envirocar.server.rest.rights.AccessRights;
 
 /**
  * TODO JavaDoc

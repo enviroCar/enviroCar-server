@@ -18,27 +18,25 @@ package org.envirocar.server.rest.encoding.rdf.linker;
 
 import javax.ws.rs.core.UriBuilder;
 
-import com.google.inject.Provider;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.vividsolutions.jts.geom.Point;
-
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.rest.encoding.rdf.RDFLinker;
-
 import org.envirocar.server.rest.resources.MeasurementsResource;
 import org.envirocar.server.rest.resources.RootResource;
 import org.envirocar.server.rest.rights.AccessRights;
 
+import com.google.inject.Provider;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.vividsolutions.jts.geom.Point;
+
 /**
- * 
+ *
  * @author Arne de Wall
- * 
+ *
  */
 public class W3CGeoMeasurementLinker implements RDFLinker<Measurement> {
-
     @Override
     public void link(Model m, Measurement t, AccessRights rights,
-            Provider<UriBuilder> uriBuilder) {
+                     Provider<UriBuilder> uriBuilder) {
         UriBuilder measurementBuilder = uriBuilder.get()
                 .path(RootResource.class).path(RootResource.MEASUREMENTS)
                 .path(MeasurementsResource.MEASUREMENT);
@@ -48,7 +46,7 @@ public class W3CGeoMeasurementLinker implements RDFLinker<Measurement> {
             m.createResource(
                     measurementBuilder.build(t.getIdentifier()).toASCIIString())
                     .addLiteral(W3CGeo.lat, p.getY())
-                    .addLiteral(W3CGeo.lon, p.getX()); 
+                    .addLiteral(W3CGeo.lon, p.getX());
         }
     }
 }

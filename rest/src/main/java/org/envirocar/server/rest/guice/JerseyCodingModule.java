@@ -16,6 +16,9 @@
  */
 package org.envirocar.server.rest.guice;
 
+import org.envirocar.server.core.util.GeometryConverter;
+import org.envirocar.server.rest.util.GeoJSON;
+
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,9 +30,6 @@ import com.google.inject.Provides;
 import com.google.inject.Scopes;
 import com.google.inject.Singleton;
 import com.google.inject.TypeLiteral;
-
-import org.envirocar.server.core.util.GeometryConverter;
-import org.envirocar.server.rest.util.GeoJSON;
 
 /**
  * TODO JavaDoc

@@ -16,12 +16,12 @@
  */
 package org.envirocar.server.mongo.entity;
 
+import org.envirocar.server.core.entities.MeasurementValue;
+import org.envirocar.server.core.entities.Phenomenon;
+
 import com.github.jmkgreen.morphia.annotations.Embedded;
 import com.github.jmkgreen.morphia.annotations.Property;
 import com.google.common.base.Objects;
-
-import org.envirocar.server.core.entities.MeasurementValue;
-import org.envirocar.server.core.entities.Phenomenon;
 
 /**
  * TODO JavaDoc

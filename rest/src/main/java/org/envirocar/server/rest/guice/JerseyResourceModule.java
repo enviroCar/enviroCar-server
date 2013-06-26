@@ -18,16 +18,10 @@ package org.envirocar.server.rest.guice;
 
 import javax.ws.rs.core.SecurityContext;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.Provides;
-import com.google.inject.Scopes;
-import com.google.inject.assistedinject.FactoryModuleBuilder;
-
 import org.envirocar.server.core.FriendService;
 import org.envirocar.server.core.GroupService;
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.rest.auth.PrincipalImpl;
-
 import org.envirocar.server.rest.mapper.IllegalModificationExceptionMapper;
 import org.envirocar.server.rest.mapper.JsonValidationExceptionMapper;
 import org.envirocar.server.rest.mapper.ResourceAlreadyExistExceptionMapper;
@@ -37,6 +31,11 @@ import org.envirocar.server.rest.resources.ResourceFactory;
 import org.envirocar.server.rest.resources.RootResource;
 import org.envirocar.server.rest.rights.AccessRights;
 import org.envirocar.server.rest.rights.AccessRightsImpl;
+
+import com.google.inject.AbstractModule;
+import com.google.inject.Provides;
+import com.google.inject.Scopes;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 /**
  * TODO JavaDoc

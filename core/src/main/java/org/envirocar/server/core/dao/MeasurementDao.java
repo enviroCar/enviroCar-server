@@ -18,7 +18,6 @@ package org.envirocar.server.core.dao;
 
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.Measurements;
-
 import org.envirocar.server.core.filter.MeasurementFilter;
 
 /**

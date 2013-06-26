@@ -57,7 +57,7 @@
                         "additionalProperties": false,
                         "allOf": [
                             {
-                            "$ref": "http://schema.envirocar.org/phenomenon.json"
+                                "$ref": "http://schema.envirocar.org/phenomenon.json"
                             },
                             {
                                 "type": "object",

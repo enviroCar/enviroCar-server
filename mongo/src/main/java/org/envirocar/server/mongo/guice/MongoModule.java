@@ -16,22 +16,11 @@
  */
 package org.envirocar.server.mongo.guice;
 
-import com.github.jmkgreen.morphia.Datastore;
-import com.github.jmkgreen.morphia.Morphia;
-import com.github.jmkgreen.morphia.mapping.Mapper;
-import com.google.inject.AbstractModule;
-import com.google.inject.Provides;
-import com.google.inject.assistedinject.FactoryModuleBuilder;
-import com.mongodb.DB;
-import com.mongodb.Mongo;
-import com.mongodb.MongoClient;
-
 import org.envirocar.server.core.activities.Activity;
 import org.envirocar.server.core.activities.ActivityFactory;
 import org.envirocar.server.core.activities.GroupActivity;
 import org.envirocar.server.core.activities.TrackActivity;
 import org.envirocar.server.core.activities.UserActivity;
-
 import org.envirocar.server.core.entities.EntityFactory;
 import org.envirocar.server.core.entities.Group;
 import org.envirocar.server.core.entities.Measurement;
@@ -45,7 +34,6 @@ import org.envirocar.server.mongo.activities.MongoActivity;
 import org.envirocar.server.mongo.activities.MongoGroupActivity;
 import org.envirocar.server.mongo.activities.MongoTrackActivity;
 import org.envirocar.server.mongo.activities.MongoUserActivity;
-
 import org.envirocar.server.mongo.entity.MongoGroup;
 import org.envirocar.server.mongo.entity.MongoMeasurement;
 import org.envirocar.server.mongo.entity.MongoMeasurementValue;
@@ -53,6 +41,16 @@ import org.envirocar.server.mongo.entity.MongoPhenomenon;
 import org.envirocar.server.mongo.entity.MongoSensor;
 import org.envirocar.server.mongo.entity.MongoTrack;
 import org.envirocar.server.mongo.entity.MongoUser;
+
+import com.github.jmkgreen.morphia.Datastore;
+import com.github.jmkgreen.morphia.Morphia;
+import com.github.jmkgreen.morphia.mapping.Mapper;
+import com.google.inject.AbstractModule;
+import com.google.inject.Provides;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
+import com.mongodb.DB;
+import com.mongodb.Mongo;
+import com.mongodb.MongoClient;
 
 /**
  * TODO JavaDoc

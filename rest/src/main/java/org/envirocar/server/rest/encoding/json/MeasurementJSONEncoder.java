@@ -19,21 +19,19 @@ package org.envirocar.server.rest.encoding.json;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.inject.Inject;
-import com.vividsolutions.jts.geom.Geometry;
-
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.MeasurementValue;
 import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.core.entities.User;
-
 import org.envirocar.server.core.util.GeoJSONConstants;
 import org.envirocar.server.rest.JSONConstants;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.encoding.JSONEntityEncoder;
-
 import org.envirocar.server.rest.rights.AccessRights;
+
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.inject.Inject;
+import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * TODO JavaDoc
@@ -49,8 +47,8 @@ public class MeasurementJSONEncoder extends AbstractJSONEntityEncoder<Measuremen
 
     @Inject
     public MeasurementJSONEncoder(JSONEntityEncoder<Geometry> geometryEncoder,
-                              JSONEntityEncoder<User> userProvider,
-                              JSONEntityEncoder<Sensor> sensorProvider) {
+                                  JSONEntityEncoder<User> userProvider,
+                                  JSONEntityEncoder<Sensor> sensorProvider) {
         super(Measurement.class);
         this.geometryEncoder = geometryEncoder;
         this.userProvider = userProvider;

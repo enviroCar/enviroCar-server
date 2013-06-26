@@ -16,11 +16,11 @@
  */
 package org.envirocar.server.core.activities;
 
-import com.google.inject.assistedinject.Assisted;
-
 import org.envirocar.server.core.entities.Group;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.entities.User;
+
+import com.google.inject.assistedinject.Assisted;
 
 /**
  * TODO JavaDoc

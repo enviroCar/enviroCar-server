@@ -16,11 +16,10 @@
  */
 package org.envirocar.server.rest.decoding.json;
 
+import org.envirocar.server.core.entities.EntityFactory;
 import org.joda.time.format.DateTimeFormatter;
 
 import com.google.inject.Inject;
-
-import org.envirocar.server.core.entities.EntityFactory;
 
 /**
  * TODO JavaDoc

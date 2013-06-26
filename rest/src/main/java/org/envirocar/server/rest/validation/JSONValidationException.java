@@ -16,9 +16,9 @@
  */
 package org.envirocar.server.rest.validation;
 
-import com.fasterxml.jackson.databind.JsonNode;
-
 import org.envirocar.server.core.exception.ValidationException;
+
+import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * TODO JavaDoc

@@ -19,21 +19,19 @@ package org.envirocar.server.rest.encoding.json;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.inject.Inject;
-
 import org.envirocar.server.core.activities.Activity;
 import org.envirocar.server.core.activities.GroupActivity;
 import org.envirocar.server.core.activities.TrackActivity;
 import org.envirocar.server.core.activities.UserActivity;
-
 import org.envirocar.server.core.entities.Group;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.rest.JSONConstants;
 import org.envirocar.server.rest.encoding.JSONEntityEncoder;
-
 import org.envirocar.server.rest.rights.AccessRights;
+
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.inject.Inject;
 
 /**
  * TODO JavaDoc
@@ -48,8 +46,8 @@ public class ActivityJSONEncoder extends AbstractJSONEntityEncoder<Activity> {
 
     @Inject
     public ActivityJSONEncoder(JSONEntityEncoder<User> userEncoder,
-                           JSONEntityEncoder<Track> trackEncoder,
-                           JSONEntityEncoder<Group> groupEncoder) {
+                               JSONEntityEncoder<Track> trackEncoder,
+                               JSONEntityEncoder<Group> groupEncoder) {
         super(Activity.class);
         this.userEncoder = userEncoder;
         this.trackEncoder = trackEncoder;

@@ -16,14 +16,8 @@
  */
 package org.envirocar.server.rest.guice;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.Scopes;
-import com.google.inject.TypeLiteral;
-import com.vividsolutions.jts.geom.Geometry;
-
 import org.envirocar.server.core.activities.Activities;
 import org.envirocar.server.core.activities.Activity;
-
 import org.envirocar.server.core.entities.Group;
 import org.envirocar.server.core.entities.Groups;
 import org.envirocar.server.core.entities.Measurement;
@@ -38,13 +32,13 @@ import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.entities.Users;
 import org.envirocar.server.core.statistics.Statistic;
 import org.envirocar.server.core.statistics.Statistics;
+import org.envirocar.server.rest.encoding.JSONEntityEncoder;
 import org.envirocar.server.rest.encoding.json.ActivitiesJSONEncoder;
 import org.envirocar.server.rest.encoding.json.ActivityJSONEncoder;
-import org.envirocar.server.rest.encoding.JSONEntityEncoder;
-
 import org.envirocar.server.rest.encoding.json.GeometryJSONEncoder;
 import org.envirocar.server.rest.encoding.json.GroupJSONEncoder;
 import org.envirocar.server.rest.encoding.json.GroupsJSONEncoder;
+import org.envirocar.server.rest.encoding.json.JsonNodeMessageBodyWriter;
 import org.envirocar.server.rest.encoding.json.MeasurementJSONEncoder;
 import org.envirocar.server.rest.encoding.json.MeasurementsJSONEncoder;
 import org.envirocar.server.rest.encoding.json.PhenomenonJSONEncoder;
@@ -57,7 +51,11 @@ import org.envirocar.server.rest.encoding.json.TrackJSONEncoder;
 import org.envirocar.server.rest.encoding.json.TracksJSONEncoder;
 import org.envirocar.server.rest.encoding.json.UserJSONEncoder;
 import org.envirocar.server.rest.encoding.json.UsersJSONEncoder;
-import org.envirocar.server.rest.encoding.json.JsonNodeMessageBodyWriter;
+
+import com.google.inject.AbstractModule;
+import com.google.inject.Scopes;
+import com.google.inject.TypeLiteral;
+import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * TODO JavaDoc

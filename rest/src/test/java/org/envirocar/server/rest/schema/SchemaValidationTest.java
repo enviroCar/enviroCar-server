@@ -19,6 +19,7 @@ package org.envirocar.server.rest.schema;
 import java.io.IOException;
 import java.util.Set;
 
+import org.envirocar.server.rest.guice.JSONSchemaFactoryProvider;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
@@ -29,8 +30,6 @@ import com.github.fge.jsonschema.SchemaVersion;
 import com.github.fge.jsonschema.util.JsonLoader;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-
-import org.envirocar.server.rest.guice.JSONSchemaFactoryProvider;
 
 /**
  * TODO JavaDoc

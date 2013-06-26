@@ -17,7 +17,6 @@
 package org.envirocar.server.core.dao;
 
 import org.envirocar.server.core.entities.Phenomenon;
-
 import org.envirocar.server.core.filter.StatisticsFilter;
 import org.envirocar.server.core.statistics.Statistic;
 import org.envirocar.server.core.statistics.Statistics;
@@ -25,7 +24,7 @@ import org.envirocar.server.core.statistics.Statistics;
 /**
  * TODO JavaDoc
  *
- * @author jan
+ * @author Jan Wirwahn
  */
 public interface StatisticsDao {
     Statistics getStatistics(StatisticsFilter request);

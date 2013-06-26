@@ -16,7 +16,6 @@
  */
 package org.envirocar.server;
 
-import org.envirocar.server.ServletContextListener;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.ServletContextHandler;
@@ -31,10 +30,6 @@ import com.google.inject.servlet.GuiceFilter;
  */
 public class EnviroCarServer {
     private static EnviroCarServer instance;
-
-    public static EnviroCarServer getInstance() throws Exception {
-        return instance == null ? instance = new EnviroCarServer() : instance;
-    }
     private Server server;
     private Injector injector;
 
@@ -49,6 +44,10 @@ public class EnviroCarServer {
         sch.addEventListener(servletContextListener);
         sch.addServlet(DefaultServlet.class, "/");
         server.start();
+    }
+
+    public static EnviroCarServer getInstance() throws Exception {
+        return instance == null ? instance = new EnviroCarServer() : instance;
     }
 
     public Server getServer() {

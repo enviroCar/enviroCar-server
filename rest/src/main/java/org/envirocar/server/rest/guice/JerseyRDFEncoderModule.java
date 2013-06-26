@@ -16,14 +16,8 @@
  */
 package org.envirocar.server.rest.guice;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.Scopes;
-import com.google.inject.TypeLiteral;
-import com.vividsolutions.jts.geom.Geometry;
-
 import org.envirocar.server.core.activities.Activities;
 import org.envirocar.server.core.activities.Activity;
-
 import org.envirocar.server.core.entities.Group;
 import org.envirocar.server.core.entities.Groups;
 import org.envirocar.server.core.entities.Measurement;
@@ -39,7 +33,6 @@ import org.envirocar.server.core.entities.Users;
 import org.envirocar.server.core.statistics.Statistic;
 import org.envirocar.server.core.statistics.Statistics;
 import org.envirocar.server.rest.encoding.RDFEntityEncoder;
-
 import org.envirocar.server.rest.encoding.rdf.ActivitiesRDFEncoder;
 import org.envirocar.server.rest.encoding.rdf.ActivityRDFEncoder;
 import org.envirocar.server.rest.encoding.rdf.GeometryRDFEncoder;
@@ -57,6 +50,11 @@ import org.envirocar.server.rest.encoding.rdf.TrackRDFEncoder;
 import org.envirocar.server.rest.encoding.rdf.TracksRDFEncoder;
 import org.envirocar.server.rest.encoding.rdf.UserRDFEncoder;
 import org.envirocar.server.rest.encoding.rdf.UsersRDFEncoder;
+
+import com.google.inject.AbstractModule;
+import com.google.inject.Scopes;
+import com.google.inject.TypeLiteral;
+import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * TODO JavaDoc

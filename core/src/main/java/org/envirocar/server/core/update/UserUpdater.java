@@ -16,11 +16,10 @@
  */
 package org.envirocar.server.core.update;
 
-import com.google.inject.Inject;
-
 import org.envirocar.server.core.entities.User;
-
 import org.envirocar.server.core.util.PasswordEncoder;
+
+import com.google.inject.Inject;
 
 /**
  * TODO JavaDoc

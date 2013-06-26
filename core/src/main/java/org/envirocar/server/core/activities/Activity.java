@@ -16,9 +16,8 @@
  */
 package org.envirocar.server.core.activities;
 
-import org.joda.time.DateTime;
-
 import org.envirocar.server.core.entities.User;
+import org.joda.time.DateTime;
 
 /**
  * TODO JavaDoc

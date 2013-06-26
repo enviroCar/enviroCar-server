@@ -16,27 +16,28 @@
  */
 package org.envirocar.server.rest.encoding.rdf.linker;
 
-import com.google.inject.Provider;
-import com.hp.hpl.jena.rdf.model.Model;
+import javax.ws.rs.core.UriBuilder;
 
 import org.envirocar.server.core.entities.Group;
 import org.envirocar.server.rest.encoding.rdf.RDFLinker;
-
 import org.envirocar.server.rest.resources.GroupsResource;
 import org.envirocar.server.rest.resources.RootResource;
 import org.envirocar.server.rest.rights.AccessRights;
-import javax.ws.rs.core.UriBuilder;
+
+import com.google.inject.Provider;
+import com.hp.hpl.jena.rdf.model.Model;
 
 /**
  *
  * @author Jan Wirwahn
  */
 public class GroupDCTermsLinker implements RDFLinker<Group> {
-
-    public static final String ODBL_URL = "http://opendatacommons.org/licenses/odbl/";
+    public static final String ODBL_URL =
+            "http://opendatacommons.org/licenses/odbl/";
 
     @Override
-    public void link(Model m, Group t, AccessRights rights, Provider<UriBuilder> uriBuilder) {
+    public void link(Model m, Group t, AccessRights rights,
+                     Provider<UriBuilder> uriBuilder) {
         String uri = uriBuilder.get()
                 .path(RootResource.class)
                 .path(RootResource.GROUPS)

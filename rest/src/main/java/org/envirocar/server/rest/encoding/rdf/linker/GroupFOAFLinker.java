@@ -16,19 +16,19 @@
  */
 package org.envirocar.server.rest.encoding.rdf.linker;
 
+import java.net.URI;
+
+import javax.ws.rs.core.UriBuilder;
+
 import org.envirocar.server.core.GroupService;
 import org.envirocar.server.core.UserService;
 import org.envirocar.server.core.entities.Group;
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.rest.encoding.rdf.RDFLinker;
-
 import org.envirocar.server.rest.resources.GroupsResource;
 import org.envirocar.server.rest.resources.RootResource;
 import org.envirocar.server.rest.resources.UsersResource;
 import org.envirocar.server.rest.rights.AccessRights;
-import java.net.URI;
-
-import javax.ws.rs.core.UriBuilder;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -37,13 +37,12 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
 
 /**
- * 
+ *
  * @author Arne de Wall
- * 
+ *
  */
 public class GroupFOAFLinker implements RDFLinker<Group> {
     public static final String PREFIX = "foaf";
-
     private final GroupService groupService;
     private final UserService userService;
 
@@ -55,7 +54,7 @@ public class GroupFOAFLinker implements RDFLinker<Group> {
 
     @Override
     public void link(Model m, Group t, AccessRights rights,
-            Provider<UriBuilder> uriBuilder) {
+                     Provider<UriBuilder> uriBuilder) {
         UriBuilder groupURIBuilder = uriBuilder.get().path(RootResource.class)
                 .path(RootResource.GROUPS).path(GroupsResource.GROUP);
         UriBuilder userURIBuilder = uriBuilder.get().path(RootResource.class)

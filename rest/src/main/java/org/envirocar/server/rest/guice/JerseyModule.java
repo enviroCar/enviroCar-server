@@ -18,18 +18,17 @@ package org.envirocar.server.rest.guice;
 
 import java.util.Map;
 
+import org.envirocar.server.rest.PaginationFilter;
+import org.envirocar.server.rest.SchemaServlet;
+import org.envirocar.server.rest.auth.AuthenticationFilter;
+import org.envirocar.server.rest.auth.AuthenticationResourceFilterFactory;
+import org.envirocar.server.rest.validation.JSONSchemaResourceFilterFactory;
+
 import com.google.common.collect.ImmutableMap;
 import com.sun.jersey.api.container.filter.GZIPContentEncodingFilter;
 import com.sun.jersey.api.core.ResourceConfig;
 import com.sun.jersey.guice.JerseyServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
-
-import org.envirocar.server.rest.PaginationFilter;
-import org.envirocar.server.rest.SchemaServlet;
-import org.envirocar.server.rest.auth.AuthenticationFilter;
-import org.envirocar.server.rest.auth.AuthenticationResourceFilterFactory;
-
-import org.envirocar.server.rest.validation.JSONSchemaResourceFilterFactory;
 
 /**
  * TODO JavaDoc

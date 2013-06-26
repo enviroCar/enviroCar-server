@@ -20,6 +20,8 @@ import static org.envirocar.server.core.util.GeoJSONConstants.*;
 
 import org.bson.BSONObject;
 import org.bson.types.BasicBSONList;
+import org.envirocar.server.core.exception.GeometryConverterException;
+import org.envirocar.server.core.util.GeometryConverter;
 
 import com.google.common.base.Preconditions;
 import com.google.inject.Inject;
@@ -37,10 +39,6 @@ import com.vividsolutions.jts.geom.MultiPoint;
 import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
-
-import org.envirocar.server.core.exception.GeometryConverterException;
-
-import org.envirocar.server.core.util.GeometryConverter;
 
 /**
  * TODO JavaDoc
