@@ -24,7 +24,7 @@ package org.envirocar.server.rest.auth;
 public interface AuthConstants {
     String USER_ROLE = "user";
     String ADMIN_ROLE = "admin";
-    String AUTH_SCHEME = "car.io";
+    String AUTH_SCHEME = "enviroCar";
     String USERNAME_HEADER = "X-User";
     String TOKEN_HEADER = "X-Token";
 }

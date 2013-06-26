@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import org.envirocar.server.mongo.MongoDB;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,8 +28,6 @@ import com.google.common.io.Closeables;
 import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;
 import com.google.inject.util.Providers;
-
-import org.envirocar.server.mongo.MongoDB;
 
 /**
  * TODO JavaDoc
@@ -42,7 +41,7 @@ public class MongoConnectionModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        String database = "car-io";
+        String database = "enviroCar";
         String host = "localhost";
         int port = 27017;
         String user = null;
