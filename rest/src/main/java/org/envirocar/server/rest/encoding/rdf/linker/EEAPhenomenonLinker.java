@@ -20,8 +20,6 @@ import javax.ws.rs.core.UriBuilder;
 
 import org.envirocar.server.core.entities.Phenomenon;
 import org.envirocar.server.rest.encoding.rdf.RDFLinker;
-import org.envirocar.server.rest.resources.PhenomenonsResource;
-import org.envirocar.server.rest.resources.RootResource;
 import org.envirocar.server.rest.rights.AccessRights;
 
 import com.google.inject.Provider;
@@ -41,10 +39,6 @@ public class EEAPhenomenonLinker implements RDFLinker<Phenomenon> {
     @Override
     public void link(Model m, Phenomenon t, AccessRights rights,
                      String uri, Provider<UriBuilder> uriBuilder) {
-        UriBuilder phenomenonBuilder = uriBuilder.get()
-                .path(RootResource.class).path(RootResource.PHENOMENONS)
-                .path(PhenomenonsResource.PHENOMENON);
-
         if (t.getName().equals(CO2)) {
             m.createResource(uri)
                     .addProperty(OWL.sameAs, m.createResource(URI_CO2));

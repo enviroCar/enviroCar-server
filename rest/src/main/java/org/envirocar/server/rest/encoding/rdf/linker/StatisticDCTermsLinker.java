@@ -19,8 +19,6 @@ package org.envirocar.server.rest.encoding.rdf.linker;
 import javax.ws.rs.core.UriBuilder;
 
 import org.envirocar.server.core.statistics.Statistic;
-import org.envirocar.server.rest.encoding.rdf.RDFLinker;
-import org.envirocar.server.rest.encoding.rdf.vocab.DCTerms;
 import org.envirocar.server.rest.rights.AccessRights;
 
 import com.google.inject.Provider;
@@ -29,11 +27,9 @@ import com.hp.hpl.jena.rdf.model.Model;
 /**
  * @author Jan Wirwahn
  */
-public class StatisticDCTermsLinker implements RDFLinker<Statistic> {
+public class StatisticDCTermsLinker extends DCTermsLinker<Statistic> {
     @Override
-    public void link(Model m, Statistic t, AccessRights rights,
-                     String uri, Provider<UriBuilder> uriBuilder) {
-        m.setNsPrefix(DCTerms.PREFIX, DCTerms.URI);
-        m.createResource(uri).addProperty(DCTerms.rights, DCTerms.ODBL_URL);
+    public void linkRest(Model m, Statistic t, AccessRights rights, String uri,
+                         Provider<UriBuilder> uriBuilder) {
     }
 }

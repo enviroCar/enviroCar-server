@@ -19,8 +19,6 @@ package org.envirocar.server.rest.encoding.rdf.linker;
 import javax.ws.rs.core.UriBuilder;
 
 import org.envirocar.server.core.entities.User;
-import org.envirocar.server.rest.encoding.rdf.RDFLinker;
-import org.envirocar.server.rest.encoding.rdf.vocab.DCTerms;
 import org.envirocar.server.rest.rights.AccessRights;
 
 import com.google.inject.Provider;
@@ -29,11 +27,9 @@ import com.hp.hpl.jena.rdf.model.Model;
 /**
  * @author Jan Wirwahn
  */
-public class UserDCTermsLinker implements RDFLinker<User> {
+public class UserDCTermsLinker extends DCTermsLinker<User> {
     @Override
-    public void link(Model m, User t, AccessRights rights,
-                     String uri, Provider<UriBuilder> uriBuilder) {
-        m.setNsPrefix(DCTerms.PREFIX, DCTerms.URI);
-        m.createResource(uri).addProperty(DCTerms.rights, DCTerms.ODBL_URL);
+    public void linkRest(Model m, User t, AccessRights rights, String uri,
+                         Provider<UriBuilder> uriBuilder) {
     }
 }
