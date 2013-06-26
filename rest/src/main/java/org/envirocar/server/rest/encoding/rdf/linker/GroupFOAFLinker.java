@@ -55,14 +55,20 @@ public class GroupFOAFLinker implements RDFLinker<Group> {
 
         m.setNsPrefix(PREFIX, FOAF.NS);
         p.addProperty(RDF.type, FOAF.Group);
-        p.addLiteral(FOAF.name, t.getName());
-        p.addProperty(FOAF.maker, m.createResource(
-                b.build(t.getOwner().getName()).toASCIIString(),
-                FOAF.Person));
-        for (User u : groupService.getGroupMembers(t, null)) {
-            p.addProperty(FOAF.member, m.createResource(
-                    b.build(u.getName()).toASCIIString(),
+        if (rights.canSeeNameOf(t)) {
+            p.addLiteral(FOAF.name, t.getName());
+        }
+        if (rights.canSeeOwnerOf(t)) {
+            p.addProperty(FOAF.maker, m.createResource(
+                    b.build(t.getOwner().getName()).toASCIIString(),
                     FOAF.Person));
+        }
+        if (rights.canSeeMembersOf(t)) {
+            for (User u : groupService.getGroupMembers(t, null)) {
+                p.addProperty(FOAF.member, m.createResource(
+                        b.build(u.getName()).toASCIIString(),
+                        FOAF.Person));
+            }
         }
     }
 }
