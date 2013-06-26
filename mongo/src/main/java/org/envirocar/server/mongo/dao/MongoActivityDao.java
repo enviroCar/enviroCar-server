@@ -19,20 +19,17 @@ package org.envirocar.server.mongo.dao;
 import static org.envirocar.server.mongo.util.MongoUtils.reverse;
 
 import org.bson.types.ObjectId;
-
-import com.github.jmkgreen.morphia.query.Query;
-import com.google.inject.Inject;
-
 import org.envirocar.server.core.activities.Activities;
 import org.envirocar.server.core.activities.Activity;
-
 import org.envirocar.server.core.dao.ActivityDao;
 import org.envirocar.server.core.filter.ActivityFilter;
 import org.envirocar.server.core.util.Pagination;
 import org.envirocar.server.mongo.MongoDB;
 import org.envirocar.server.mongo.activities.MongoActivity;
-
 import org.envirocar.server.mongo.entity.MongoUser;
+
+import com.github.jmkgreen.morphia.query.Query;
+import com.google.inject.Inject;
 
 /**
  * TODO JavaDoc
@@ -110,5 +107,34 @@ public class MongoActivityDao extends AbstractMongoDao<ObjectId, MongoActivity, 
     @Override
     protected Activities fetch(Query<MongoActivity> q, Pagination p) {
         return super.fetch(q.order(reverse(MongoActivity.TIME)), p);
+    }
+
+    @Override
+    public Activity get(ActivityFilter request, String id) {
+        Query<MongoActivity> q = q();
+        if (request.hasUser()) {
+            MongoUser u = (MongoUser) request.getUser();
+            if (request.isFriendActivities()) {
+                q.field(MongoActivity.USER)
+                        .in(userDao.getFriendRefs(u));
+            } else {
+                q.field(MongoActivity.USER)
+                        .equal(key(u));
+            }
+        }
+        if (request.hasGroup()) {
+            q.field(MongoActivity.USER)
+                    .in(groupDao.getMemberRefs(request.getGroup()));
+        }
+        if (request.hasType()) {
+            q.field(MongoActivity.TYPE)
+                    .equal(request.getType());
+        }
+        try {
+            q.field(MongoActivity.ID).equal(new ObjectId(id));
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+        return q.get();
     }
 }

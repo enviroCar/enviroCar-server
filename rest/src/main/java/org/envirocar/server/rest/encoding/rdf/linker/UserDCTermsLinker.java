@@ -18,33 +18,19 @@ package org.envirocar.server.rest.encoding.rdf.linker;
 
 import javax.ws.rs.core.UriBuilder;
 
+import org.envirocar.server.core.entities.User;
+import org.envirocar.server.rest.rights.AccessRights;
+
 import com.google.inject.Provider;
 import com.hp.hpl.jena.rdf.model.Model;
-
-import org.envirocar.server.core.entities.User;
-import org.envirocar.server.rest.encoding.rdf.RDFLinker;
-
-import org.envirocar.server.rest.resources.RootResource;
-import org.envirocar.server.rest.resources.UsersResource;
-import org.envirocar.server.rest.rights.AccessRights;
+import com.hp.hpl.jena.rdf.model.Resource;
 
 /**
  * @author Jan Wirwahn
  */
-public class UserDCTermsLinker implements RDFLinker<User> {
-    public static final String ODBL_URL =
-            "http://opendatacommons.org/licenses/odbl/";
-
+public class UserDCTermsLinker extends DCTermsLinker<User> {
     @Override
-    public void link(Model m, User t, AccessRights rights,
-                     Provider<UriBuilder> uriBuilder) {
-        m.setNsPrefix(DCTerms.PREFIX, DCTerms.URI);
-        String uri = uriBuilder.get()
-                .path(RootResource.class)
-                .path(RootResource.USERS)
-                .path(UsersResource.USER)
-                .build(t.getName()).toASCIIString();
-
-        m.createResource(uri).addProperty(DCTerms.rights, ODBL_URL);
+    public void linkRest(Model m, User t, AccessRights rights,
+                         Resource r, Provider<UriBuilder> uriBuilder) {
     }
 }

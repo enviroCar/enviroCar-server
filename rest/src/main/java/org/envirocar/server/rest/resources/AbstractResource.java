@@ -21,18 +21,18 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
-import com.google.inject.Inject;
-import com.google.inject.Provider;
-
 import org.envirocar.server.core.DataService;
 import org.envirocar.server.core.FriendService;
 import org.envirocar.server.core.GroupService;
+import org.envirocar.server.core.StatisticsService;
 import org.envirocar.server.core.UserService;
 import org.envirocar.server.core.entities.EntityFactory;
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.rest.auth.PrincipalImpl;
-
 import org.envirocar.server.rest.rights.AccessRights;
+
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 /**
  * TODO JavaDoc
@@ -46,6 +46,7 @@ public abstract class AbstractResource {
     private Provider<FriendService> friendService;
     private Provider<GroupService> groupService;
     private Provider<UserService> userService;
+    private Provider<StatisticsService> statisticsService;
     private Provider<UriInfo> uriInfo;
     private Provider<ResourceFactory> resourceFactory;
     private Provider<EntityFactory> entityFactory;
@@ -72,6 +73,10 @@ public abstract class AbstractResource {
 
     protected UserService getUserService() {
         return userService.get();
+    }
+
+    protected StatisticsService getStatisticsService() {
+        return statisticsService.get();
     }
 
     protected ResourceFactory getResourceFactory() {
@@ -137,5 +142,11 @@ public abstract class AbstractResource {
     @Inject
     public void setUserService(Provider<UserService> userService) {
         this.userService = userService;
+    }
+
+    @Inject
+    public void setStatisticsService(
+            Provider<StatisticsService> statisticsService) {
+        this.statisticsService = statisticsService;
     }
 }

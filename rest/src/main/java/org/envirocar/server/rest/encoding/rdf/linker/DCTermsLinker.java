@@ -16,8 +16,14 @@
  */
 package org.envirocar.server.rest.encoding.rdf.linker;
 
+import javax.ws.rs.core.UriBuilder;
+
+import org.envirocar.server.rest.encoding.rdf.RDFLinker;
+import org.envirocar.server.rest.encoding.rdf.vocab.DCTerms;
+import org.envirocar.server.rest.rights.AccessRights;
+
+import com.google.inject.Provider;
 import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 
 /**
@@ -25,19 +31,22 @@ import com.hp.hpl.jena.rdf.model.Resource;
  *
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public class DBPedia {
-    public static final String URI = "http://dbpedia.org/resource/";
-    public static final String PREFIX = "dbpedia";
-    private static final Model m = ModelFactory.createDefaultModel();
-    public static final Resource DBPEDIA_GASOLINE =
-            m.createResource(URI + "Gasoline");
-    public static final Resource DBPEDIA_DIESEL =
-            m.createResource(URI + "Diesel");
-    public static final Resource DBPEDIA_BIODIESEL =
-            m.createResource(URI + "Biodiesel");
-    public static final Resource DBPEDIA_KEROSENE =
-            m.createResource(URI + "Kerosene");
+public abstract class DCTermsLinker<T> implements RDFLinker<T> {
+    public static final String ODBL_URL =
+            "http://opendatacommons.org/licenses/odbl/";
 
-    private DBPedia() {
+    @Override
+    public void link(Model m, T t, AccessRights rights,
+                     Resource r, Provider<UriBuilder> uriBuilder) {
+        m.setNsPrefix(DCTerms.PREFIX, DCTerms.URI);
+        linkLicense(m, r);
+        linkRest(m, t, rights, r, uriBuilder);
     }
+
+    public void linkLicense(Model m, Resource r) {
+        r.addProperty(DCTerms.rights, ODBL_URL);
+    }
+
+    public abstract void linkRest(Model m, T t, AccessRights rights,
+                                  Resource r, Provider<UriBuilder> uriBuilder);
 }

@@ -16,22 +16,24 @@
  */
 package org.envirocar.server.rest.encoding.rdf.linker;
 
-import java.net.URI;
 import java.util.Map;
 
 import javax.ws.rs.core.UriBuilder;
+
+import org.envirocar.server.core.entities.Sensor;
+import org.envirocar.server.rest.encoding.rdf.RDFLinker;
+import org.envirocar.server.rest.encoding.rdf.vocab.DBPedia;
+import org.envirocar.server.rest.encoding.rdf.vocab.GoodRelations;
+import org.envirocar.server.rest.encoding.rdf.vocab.VSO;
+import org.envirocar.server.rest.resources.RootResource;
+import org.envirocar.server.rest.resources.SensorsResource;
+import org.envirocar.server.rest.rights.AccessRights;
 
 import com.google.inject.Provider;
 import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
-
-import org.envirocar.server.core.entities.Sensor;
-import org.envirocar.server.rest.encoding.rdf.RDFLinker;
-
-import org.envirocar.server.rest.resources.RootResource;
-import org.envirocar.server.rest.resources.SensorsResource;
-import org.envirocar.server.rest.rights.AccessRights;
+import com.hp.hpl.jena.vocabulary.RDF;
 
 /**
  * @author Jan Wirwahn
@@ -49,7 +51,7 @@ public class SensorVSOLinker implements RDFLinker<Sensor> {
 
     @Override
     public void link(Model m, Sensor t, AccessRights rights,
-                     Provider<UriBuilder> uriBuilder) {
+                     Resource sensor, Provider<UriBuilder> uriBuilder) {
 
         if (t.hasType() && t.getType().equals(CAR_TYPE)) {
             if (t.hasProperties()) {
@@ -62,9 +64,7 @@ public class SensorVSOLinker implements RDFLinker<Sensor> {
                 m.setNsPrefix(VSO.PREFIX, VSO.URI);
                 m.setNsPrefix(GoodRelations.PREFIX, GoodRelations.URI);
                 m.setNsPrefix(DBPedia.PREFIX, DBPedia.URI);
-                URI uri = sensorURIBuilder.build(t.getIdentifier());
-                final Resource sensor = m
-                        .createResource(uri.toASCIIString(), VSO.Automobile);
+                sensor.addProperty(RDF.type, VSO.Automobile);
                 addFuelType(p, m, sensor);
                 addContructionYear(p, sensor);
 

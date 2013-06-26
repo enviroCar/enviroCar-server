@@ -24,12 +24,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
-import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
-
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.Sensor;
-
 import org.envirocar.server.core.exception.IllegalModificationException;
 import org.envirocar.server.core.exception.MeasurementNotFoundException;
 import org.envirocar.server.core.exception.UserNotFoundException;
@@ -37,8 +33,10 @@ import org.envirocar.server.core.exception.ValidationException;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.auth.Authenticated;
-
 import org.envirocar.server.rest.validation.Schema;
+
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 
 /**
  * TODO JavaDoc

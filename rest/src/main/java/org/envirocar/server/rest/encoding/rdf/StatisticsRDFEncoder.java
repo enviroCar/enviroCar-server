@@ -18,22 +18,55 @@ package org.envirocar.server.rest.encoding.rdf;
 
 import java.util.Set;
 
-import javax.ws.rs.ext.Provider;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.UriBuilder;
+import javax.ws.rs.core.UriInfo;
 
-import com.google.inject.Inject;
-
+import org.envirocar.server.core.entities.Sensor;
+import org.envirocar.server.core.entities.Track;
+import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.statistics.Statistic;
 import org.envirocar.server.core.statistics.Statistics;
+import org.envirocar.server.rest.resources.StatisticsResource;
+
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 /**
  * TODO JavaDoc
  *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-@Provider
+@javax.ws.rs.ext.Provider
 public class StatisticsRDFEncoder extends AbstractCollectionRDFEntityEncoder<Statistic, Statistics> {
+    private final Provider<UriInfo> uriInfo;
+
     @Inject
-    public StatisticsRDFEncoder(Set<RDFLinker<Statistic>> linkers) {
+    public StatisticsRDFEncoder(Set<RDFLinker<Statistic>> linkers,
+                                Provider<UriInfo> uriInfo) {
         super(Statistics.class, linkers);
+        this.uriInfo = uriInfo;
+    }
+
+    @Override
+    protected String getURI(Statistic t,
+                            com.google.inject.Provider<UriBuilder> builder) {
+        Object resource = uriInfo.get().getMatchedResources().get(0);
+
+        User user = null;
+        Track track = null;
+        Sensor sensor = null;
+
+        if (resource instanceof StatisticsResource) {
+            StatisticsResource sr = (StatisticsResource) resource;
+            user = sr.getUser();
+            track = sr.getTrack();
+            sensor = sr.getSensor();
+        } else {
+            throw new WebApplicationException(Status.INTERNAL_SERVER_ERROR);
+        }
+        return StatisticRDFEncoder
+                .build(track, user, sensor, t.getPhenomenon(), builder);
     }
 }

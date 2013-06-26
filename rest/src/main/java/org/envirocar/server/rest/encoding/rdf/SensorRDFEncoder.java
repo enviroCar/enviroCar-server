@@ -18,11 +18,14 @@ package org.envirocar.server.rest.encoding.rdf;
 
 import java.util.Set;
 
+import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.ext.Provider;
 
-import com.google.inject.Inject;
-
 import org.envirocar.server.core.entities.Sensor;
+import org.envirocar.server.rest.resources.RootResource;
+import org.envirocar.server.rest.resources.SensorsResource;
+
+import com.google.inject.Inject;
 
 /**
  * TODO JavaDoc
@@ -34,5 +37,16 @@ public class SensorRDFEncoder extends AbstractLinkerRDFEntityEncoder<Sensor> {
     @Inject
     public SensorRDFEncoder(Set<RDFLinker<Sensor>> linkers) {
         super(Sensor.class, linkers);
+    }
+
+    @Override
+    protected String getURI(Sensor t,
+                            com.google.inject.Provider<UriBuilder> uri) {
+        return uri.get()
+                .path(RootResource.class)
+                .path(RootResource.SENSORS)
+                .path(SensorsResource.SENSOR)
+                .build(t.getIdentifier())
+                .toASCIIString();
     }
 }

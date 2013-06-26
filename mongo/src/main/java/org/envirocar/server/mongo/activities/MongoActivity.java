@@ -17,6 +17,11 @@
 package org.envirocar.server.mongo.activities;
 
 import org.bson.types.ObjectId;
+import org.envirocar.server.core.activities.Activity;
+import org.envirocar.server.core.activities.ActivityType;
+import org.envirocar.server.core.entities.User;
+import org.envirocar.server.mongo.MongoDB;
+import org.envirocar.server.mongo.entity.MongoUser;
 import org.joda.time.DateTime;
 
 import com.github.jmkgreen.morphia.Key;
@@ -33,13 +38,6 @@ import com.google.common.base.Objects.ToStringHelper;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
-
-import org.envirocar.server.core.activities.Activity;
-import org.envirocar.server.core.activities.ActivityType;
-
-import org.envirocar.server.core.entities.User;
-import org.envirocar.server.mongo.MongoDB;
-import org.envirocar.server.mongo.entity.MongoUser;
 
 /**
  * TODO JavaDoc
@@ -105,7 +103,6 @@ public class MongoActivity implements Activity {
         return this._user;
     }
 
-    @Override
     public void setUser(User user) {
         this._user = (MongoUser) user;
         this.user = getMongoDB().key(this._user);
@@ -116,7 +113,6 @@ public class MongoActivity implements Activity {
         return this.type;
     }
 
-    @Override
     public void setType(ActivityType type) {
         this.type = type;
     }
@@ -173,5 +169,10 @@ public class MongoActivity implements Activity {
 
     public MongoDB getMongoDB() {
         return mongoDB;
+    }
+
+    @Override
+    public String getIdentifier() {
+        return getId().toString();
     }
 }

@@ -19,32 +19,19 @@ package org.envirocar.server.rest.encoding.rdf.linker;
 import javax.ws.rs.core.UriBuilder;
 
 import org.envirocar.server.core.entities.Measurement;
-import org.envirocar.server.rest.encoding.rdf.RDFLinker;
-import org.envirocar.server.rest.resources.MeasurementsResource;
-import org.envirocar.server.rest.resources.RootResource;
 import org.envirocar.server.rest.rights.AccessRights;
 
 import com.google.inject.Provider;
 import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.Resource;
 
 /**
  *
  * @author Jan Wirwahn
  */
-public class MeasurementDCTermsLinker implements RDFLinker<Measurement> {
-    public static final String ODBL_URL =
-            "http://opendatacommons.org/licenses/odbl/";
-
+public class MeasurementDCTermsLinker extends DCTermsLinker<Measurement> {
     @Override
-    public void link(Model m, Measurement t, AccessRights rights,
-                     Provider<UriBuilder> uriBuilder) {
-        String uri = uriBuilder.get()
-                .path(RootResource.class)
-                .path(RootResource.MEASUREMENTS)
-                .path(MeasurementsResource.MEASUREMENT)
-                .build(t.getIdentifier()).toASCIIString();
-
-        m.createResource(uri).addProperty(DCTerms.rights, ODBL_URL);
-
+    public void linkRest(Model m, Measurement t, AccessRights rights,
+                         Resource r, Provider<UriBuilder> uriBuilder) {
     }
 }

@@ -18,24 +18,19 @@ package org.envirocar.server.rest.encoding.rdf.linker;
 
 import javax.ws.rs.core.UriBuilder;
 
+import org.envirocar.server.core.statistics.Statistic;
+import org.envirocar.server.rest.rights.AccessRights;
+
 import com.google.inject.Provider;
 import com.hp.hpl.jena.rdf.model.Model;
-
-import org.envirocar.server.core.statistics.Statistic;
-import org.envirocar.server.rest.encoding.rdf.RDFLinker;
-
-import org.envirocar.server.rest.rights.AccessRights;
+import com.hp.hpl.jena.rdf.model.Resource;
 
 /**
  * @author Jan Wirwahn
  */
-public class StatisticDCTermsLinker implements RDFLinker<Statistic> {
-    public static final String ODBL_URL =
-            "http://opendatacommons.org/licenses/odbl/";
-
+public class StatisticDCTermsLinker extends DCTermsLinker<Statistic> {
     @Override
-    public void link(Model m, Statistic t, AccessRights rights,
-                     Provider<UriBuilder> uriBuilder) {
-        // FIXME add track/user/sensor etc. to the statistic entity to allow URI building
+    public void linkRest(Model m, Statistic t, AccessRights rights,
+                         Resource r, Provider<UriBuilder> uriBuilder) {
     }
 }

@@ -14,24 +14,24 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.rest.encoding.rdf;
+package org.envirocar.server.rest.encoding.rdf.vocab;
 
-import java.util.Set;
-
-import javax.ws.rs.ext.Provider;
-
-import com.google.inject.Inject;
-import com.vividsolutions.jts.geom.Geometry;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.Property;
 
 /**
- * TODO JavaDoc
  *
- * @author Christian Autermann <autermann@uni-muenster.de>
+ * @author Arne de Wall
+ *
  */
-@Provider
-public class GeometryRDFEncoder extends AbstractLinkerRDFEntityEncoder<Geometry> {
-    @Inject
-    public GeometryRDFEncoder(Set<RDFLinker<Geometry>> linkers) {
-        super(Geometry.class, linkers);
+public class W3CGeo {
+    public static final String PREFIX = "geo";
+    public static final String URI = "http://www.w3.org/2003/01/geo/wgs84_pos#";
+    private static final Model m = ModelFactory.createDefaultModel();
+    public static final Property lat = m.createProperty(URI, "lat");
+    public static final Property lon = m.createProperty(URI, "lon");
+
+    private W3CGeo() {
     }
 }

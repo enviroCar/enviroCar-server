@@ -18,23 +18,21 @@ package org.envirocar.server.rest.encoding.rdf.linker;
 
 import javax.ws.rs.core.UriBuilder;
 
+import org.envirocar.server.core.activities.Activity;
+import org.envirocar.server.rest.rights.AccessRights;
+
 import com.google.inject.Provider;
 import com.hp.hpl.jena.rdf.model.Model;
-
-import org.envirocar.server.core.activities.Activity;
-import org.envirocar.server.rest.encoding.rdf.RDFLinker;
-
-import org.envirocar.server.rest.rights.AccessRights;
+import com.hp.hpl.jena.rdf.model.Resource;
 
 /**
  * TODO JavaDoc
  *
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public class ActivityDCTermsLinker implements RDFLinker<Activity> {
+public class ActivityDCTermsLinker extends DCTermsLinker<Activity> {
     @Override
-    public void link(Model m, Activity t, AccessRights rights,
-                     Provider<UriBuilder> uriBuilder) {
-        // FIXME add group/user etc. to the Activity entity to allow URI building
+    public void linkRest(Model m, Activity t, AccessRights rights, Resource uri,
+                         Provider<UriBuilder> uriBuilder) {
     }
 }

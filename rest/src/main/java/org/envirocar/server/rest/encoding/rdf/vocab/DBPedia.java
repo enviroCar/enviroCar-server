@@ -14,25 +14,30 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.rest.encoding.rdf.linker;
+package org.envirocar.server.rest.encoding.rdf.vocab;
 
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Property;
+import com.hp.hpl.jena.rdf.model.Resource;
 
 /**
+ * TODO JavaDoc
  *
- * @author jan
+ * @author Christian Autermann <c.autermann@52north.org>
  */
-public class GoodRelations {
-    public static final String URI = "http://purl.org/goodrelations/v1#";
-    public static final String PREFIX = "gr";
+public class DBPedia {
+    public static final String URI = "http://dbpedia.org/resource/";
+    public static final String PREFIX = "dbpedia";
     private static final Model m = ModelFactory.createDefaultModel();
-    public static final Property hasManufacturer = m
-            .createProperty(URI, "hasManufacturer");
-    public static final Property hasMakeAndModel = m
-            .createProperty(URI, "hasMakeAndModel");
+    public static final Resource DBPEDIA_GASOLINE =
+            m.createResource(URI + "Gasoline");
+    public static final Resource DBPEDIA_DIESEL =
+            m.createResource(URI + "Diesel");
+    public static final Resource DBPEDIA_BIODIESEL =
+            m.createResource(URI + "Biodiesel");
+    public static final Resource DBPEDIA_KEROSENE =
+            m.createResource(URI + "Kerosene");
 
-    private GoodRelations() {
+    private DBPedia() {
     }
 }

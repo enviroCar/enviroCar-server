@@ -16,20 +16,16 @@
  */
 package org.envirocar.server.rest.encoding.rdf.linker;
 
-import java.net.URI;
-
 import javax.ws.rs.core.UriBuilder;
-
-import com.google.inject.Provider;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.vocabulary.VCARD;
 
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.rest.encoding.rdf.RDFLinker;
-
-import org.envirocar.server.rest.resources.RootResource;
-import org.envirocar.server.rest.resources.UsersResource;
 import org.envirocar.server.rest.rights.AccessRights;
+
+import com.google.inject.Provider;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.vocabulary.VCARD;
 
 /**
  * TODO JavaDoc
@@ -37,16 +33,13 @@ import org.envirocar.server.rest.rights.AccessRights;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class UserVCardLinker implements RDFLinker<User> {
+    public static final String VCARD_PREFIX = "vcard";
+
     @Override
     public void link(Model m, User t, AccessRights rights,
-                     Provider<UriBuilder> uriBuilder) {
-        m.setNsPrefix("vcard", VCARD.getURI());
-        URI uri = uriBuilder.get()
-                .path(RootResource.class)
-                .path(RootResource.USERS)
-                .path(UsersResource.USER).build(t.getName());
-        m.createResource(uri.toASCIIString())
-                .addProperty(VCARD.EMAIL, t.getMail())
+                     Resource r, Provider<UriBuilder> uriBuilder) {
+        m.setNsPrefix(VCARD_PREFIX, VCARD.getURI());
+        r.addProperty(VCARD.EMAIL, t.getMail())
                 .addProperty(VCARD.NICKNAME, t.getName());
 
     }

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.rest.encoding.rdf.linker;
+package org.envirocar.server.rest.encoding.rdf.vocab;
 
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
@@ -24,12 +24,15 @@ import com.hp.hpl.jena.rdf.model.Property;
  *
  * @author Jan Wirwahn
  */
-public class DCTerms {
-    public static final String URI = "http://purl.org/dc/elements/1.1/";
-    public static final String PREFIX = "dcterms";
+public class GoodRelations {
+    public static final String URI = "http://purl.org/goodrelations/v1#";
+    public static final String PREFIX = "gr";
     private static final Model m = ModelFactory.createDefaultModel();
-    public static final Property rights = m.createProperty(URI, "rights");
+    public static final Property hasManufacturer = m
+            .createProperty(URI, "hasManufacturer");
+    public static final Property hasMakeAndModel = m
+            .createProperty(URI, "hasMakeAndModel");
 
-    private DCTerms() {
+    private GoodRelations() {
     }
 }

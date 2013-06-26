@@ -19,15 +19,14 @@ package org.envirocar.server.rest.resources;
 import javax.annotation.Nullable;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
-import com.google.inject.assistedinject.Assisted;
-import com.google.inject.assistedinject.AssistedInject;
-
 import org.envirocar.server.core.activities.Activities;
+import org.envirocar.server.core.activities.Activity;
 import org.envirocar.server.core.activities.ActivityType;
-
 import org.envirocar.server.core.entities.Group;
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.filter.ActivityFilter;
@@ -37,12 +36,16 @@ import org.envirocar.server.rest.RESTConstants;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.validation.Schema;
 
+import com.google.inject.assistedinject.Assisted;
+import com.google.inject.assistedinject.AssistedInject;
+
 /**
  * TODO JavaDoc
  *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class ActivitiesResource extends AbstractResource {
+    public static final String ACTIVITY = "{id}";
     private User user;
     private Group group;
 
@@ -66,11 +69,31 @@ public class ActivitiesResource extends AbstractResource {
                 MediaTypes.XML_RDF,
                 MediaTypes.TURTLE,
                 MediaTypes.TURTLE_ALT })
-    public Activities statistics(
+    public Activities activities(
             @QueryParam(RESTConstants.TYPE) ActivityType type,
             @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit,
             @QueryParam(RESTConstants.PAGE) @DefaultValue("0") int page) {
         return getUserService()
                 .getActivities(new ActivityFilter(group, user, type, new Pagination(limit, page)));
+    }
+
+    @GET
+    @Path(ACTIVITY)
+    @Schema(response = Schemas.ACTIVITY)
+    @Produces({ MediaTypes.ACTIVITIES,
+                MediaTypes.XML_RDF,
+                MediaTypes.TURTLE,
+                MediaTypes.TURTLE_ALT })
+    public Activity activity(@PathParam("id") String id) {
+        return getUserService()
+                .getActivity(new ActivityFilter(group, user, null, null), id);
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public Group getGroup() {
+        return group;
     }
 }

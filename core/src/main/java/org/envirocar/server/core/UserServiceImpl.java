@@ -17,6 +17,7 @@
 package org.envirocar.server.core;
 
 import org.envirocar.server.core.activities.Activities;
+import org.envirocar.server.core.activities.Activity;
 import org.envirocar.server.core.dao.ActivityDao;
 import org.envirocar.server.core.dao.UserDao;
 import org.envirocar.server.core.entities.User;
@@ -118,5 +119,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public Activities getActivities(ActivityFilter request) {
         return this.activityDao.get(request);
+    }
+
+    @Override
+    public Activity getActivity(ActivityFilter request, String id) {
+        return this.activityDao.get(request, id);
     }
 }

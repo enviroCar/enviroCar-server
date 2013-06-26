@@ -35,7 +35,6 @@ import org.envirocar.server.core.statistics.Statistics;
 import org.envirocar.server.rest.encoding.RDFEntityEncoder;
 import org.envirocar.server.rest.encoding.rdf.ActivitiesRDFEncoder;
 import org.envirocar.server.rest.encoding.rdf.ActivityRDFEncoder;
-import org.envirocar.server.rest.encoding.rdf.GeometryRDFEncoder;
 import org.envirocar.server.rest.encoding.rdf.GroupRDFEncoder;
 import org.envirocar.server.rest.encoding.rdf.GroupsRDFEncoder;
 import org.envirocar.server.rest.encoding.rdf.MeasurementRDFEncoder;
@@ -54,7 +53,6 @@ import org.envirocar.server.rest.encoding.rdf.UsersRDFEncoder;
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
 import com.google.inject.TypeLiteral;
-import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * TODO JavaDoc
@@ -70,9 +68,6 @@ public class JerseyRDFEncoderModule extends AbstractModule {
         bind(ActivityRDFEncoder.class).in(Scopes.SINGLETON);
         bind(new TypeLiteral<RDFEntityEncoder<Activity>>() {
         }).to(ActivityRDFEncoder.class);
-        bind(GeometryRDFEncoder.class).in(Scopes.SINGLETON);
-        bind(new TypeLiteral<RDFEntityEncoder<Geometry>>() {
-        }).to(GeometryRDFEncoder.class);
         bind(GroupRDFEncoder.class).in(Scopes.SINGLETON);
         bind(new TypeLiteral<RDFEntityEncoder<Group>>() {
         }).to(GroupRDFEncoder.class);

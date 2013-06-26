@@ -16,15 +16,7 @@
  */
 package org.envirocar.server.rest.encoding.rdf.linker;
 
-import java.net.URI;
-
 import javax.ws.rs.core.UriBuilder;
-
-import com.google.inject.Inject;
-import com.google.inject.Provider;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.sparql.vocabulary.FOAF;
 
 import org.envirocar.server.core.FriendService;
 import org.envirocar.server.core.GroupService;
@@ -33,12 +25,18 @@ import org.envirocar.server.core.entities.Groups;
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.entities.Users;
 import org.envirocar.server.rest.encoding.rdf.RDFLinker;
-
 import org.envirocar.server.rest.resources.GroupsResource;
 import org.envirocar.server.rest.resources.RootResource;
 import org.envirocar.server.rest.resources.UserResource;
 import org.envirocar.server.rest.resources.UsersResource;
 import org.envirocar.server.rest.rights.AccessRights;
+
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.sparql.vocabulary.FOAF;
+import com.hp.hpl.jena.vocabulary.RDF;
 
 /**
  * TODO JavaDoc
@@ -58,14 +56,9 @@ public class UserFOAFLinker implements RDFLinker<User> {
 
     @Override
     public void link(Model m, User t, AccessRights rights,
-                     Provider<UriBuilder> uriBuilder) {
-        UriBuilder userURIBuilder = uriBuilder.get()
-                .path(RootResource.class)
-                .path(RootResource.USERS)
-                .path(UsersResource.USER);
+                     Resource p, Provider<UriBuilder> uriBuilder) {
         m.setNsPrefix(PREFIX, FOAF.NS);
-        URI uri = userURIBuilder.build(t.getName());
-        Resource p = m.createResource(uri.toASCIIString(), FOAF.Person);
+        p.addProperty(RDF.type, FOAF.Person);
         p.addLiteral(FOAF.nick, t.getName());
         if (t.hasFirstName() && rights.canSeeFirstNameOf(t)) {
             p.addLiteral(FOAF.firstName, t.getFirstName());
@@ -86,14 +79,18 @@ public class UserFOAFLinker implements RDFLinker<User> {
             p.addLiteral(FOAF.gender, t.getGender().toString().toLowerCase());
         }
         if (rights.canSeeAvatarOf(t)) {
-            p.addProperty(FOAF.img, m.createResource(UriBuilder.fromUri(uri)
-                    .path(UserResource.AVATAR).build().toASCIIString()));
+            p.addProperty(FOAF.img, m.createResource(UriBuilder.fromUri(p
+                    .getURI()).path(UserResource.AVATAR).build().toASCIIString()));
         }
         if (t.hasMail() && rights.canSeeMailOf(t)) {
             p.addLiteral(FOAF.mbox, "mailto:" + t.getMail());
         }
         if (rights.canSeeFriendsOf(t)) {
             Users friends = friendService.getFriends(t);
+            UriBuilder userURIBuilder = uriBuilder.get()
+                    .path(RootResource.class)
+                    .path(RootResource.USERS)
+                    .path(UsersResource.USER);
             for (User f : friends) {
                 String friendURI = userURIBuilder
                         .build(f.getName()).toASCIIString();

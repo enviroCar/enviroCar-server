@@ -17,6 +17,7 @@
 package org.envirocar.server.core;
 
 import org.envirocar.server.core.activities.Activities;
+import org.envirocar.server.core.activities.Activity;
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.entities.Users;
 import org.envirocar.server.core.exception.IllegalModificationException;
@@ -50,4 +51,6 @@ public interface UserService {
                    ResourceAlreadyExistException;
 
     Activities getActivities(ActivityFilter request);
+
+    Activity getActivity(ActivityFilter request, String id);
 }

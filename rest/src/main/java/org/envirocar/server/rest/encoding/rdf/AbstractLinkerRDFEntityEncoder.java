@@ -25,6 +25,7 @@ import org.envirocar.server.rest.rights.AccessRights;
 import com.google.inject.Provider;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.Resource;
 
 public abstract class AbstractLinkerRDFEntityEncoder<T> extends AbstractRDFEntityEncoder<T> {
     private Set<RDFLinker<T>> linkers;
@@ -37,11 +38,14 @@ public abstract class AbstractLinkerRDFEntityEncoder<T> extends AbstractRDFEntit
 
     @Override
     public Model encodeRDF(T t, AccessRights rights,
-                           Provider<UriBuilder> uri) {
+                           Provider<UriBuilder> uriBuilder) {
         Model m = ModelFactory.createDefaultModel();
+        Resource r = m.createResource(getURI(t, uriBuilder));
         for (RDFLinker<T> linker : linkers) {
-            linker.link(m, t, rights, uri);
+            linker.link(m, t, rights, r, uriBuilder);
         }
         return m;
     }
+
+    protected abstract String getURI(T t, Provider<UriBuilder> uri);
 }

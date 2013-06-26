@@ -18,11 +18,14 @@ package org.envirocar.server.rest.encoding.rdf;
 
 import java.util.Set;
 
+import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.ext.Provider;
 
-import com.google.inject.Inject;
-
 import org.envirocar.server.core.entities.Phenomenon;
+import org.envirocar.server.rest.resources.PhenomenonsResource;
+import org.envirocar.server.rest.resources.RootResource;
+
+import com.google.inject.Inject;
 
 /**
  * TODO JavaDoc
@@ -34,5 +37,16 @@ public class PhenomenonRDFEncoder extends AbstractLinkerRDFEntityEncoder<Phenome
     @Inject
     public PhenomenonRDFEncoder(Set<RDFLinker<Phenomenon>> linkers) {
         super(Phenomenon.class, linkers);
+    }
+
+    @Override
+    protected String getURI(Phenomenon t,
+                            com.google.inject.Provider<UriBuilder> uri) {
+        return uri.get()
+                .path(RootResource.class)
+                .path(RootResource.PHENOMENONS)
+                .path(PhenomenonsResource.PHENOMENON)
+                .build(t.getName())
+                .toASCIIString();
     }
 }
