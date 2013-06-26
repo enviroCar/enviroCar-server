@@ -40,14 +40,13 @@ public class EEAPhenomenonLinker implements RDFLinker<Phenomenon> {
 
     @Override
     public void link(Model m, Phenomenon t, AccessRights rights,
-                     Provider<UriBuilder> uriBuilder) {
+                     String uri, Provider<UriBuilder> uriBuilder) {
         UriBuilder phenomenonBuilder = uriBuilder.get()
                 .path(RootResource.class).path(RootResource.PHENOMENONS)
                 .path(PhenomenonsResource.PHENOMENON);
 
         if (t.getName().equals(CO2)) {
-            m.createResource(
-                    phenomenonBuilder.build(t.getName()).toASCIIString())
+            m.createResource(uri)
                     .addProperty(OWL.sameAs, m.createResource(URI_CO2));
         }
     }

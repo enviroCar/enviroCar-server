@@ -20,6 +20,7 @@ import javax.ws.rs.core.UriBuilder;
 
 import org.envirocar.server.core.statistics.Statistic;
 import org.envirocar.server.rest.encoding.rdf.RDFLinker;
+import org.envirocar.server.rest.encoding.rdf.vocab.DCTerms;
 import org.envirocar.server.rest.rights.AccessRights;
 
 import com.google.inject.Provider;
@@ -29,12 +30,10 @@ import com.hp.hpl.jena.rdf.model.Model;
  * @author Jan Wirwahn
  */
 public class StatisticDCTermsLinker implements RDFLinker<Statistic> {
-    public static final String ODBL_URL =
-            "http://opendatacommons.org/licenses/odbl/";
-
     @Override
     public void link(Model m, Statistic t, AccessRights rights,
-                     Provider<UriBuilder> uriBuilder) {
-        // FIXME add track/user/sensor etc. to the statistic entity to allow URI building
+                     String uri, Provider<UriBuilder> uriBuilder) {
+        m.setNsPrefix(DCTerms.PREFIX, DCTerms.URI);
+        m.createResource(uri).addProperty(DCTerms.rights, DCTerms.ODBL_URL);
     }
 }

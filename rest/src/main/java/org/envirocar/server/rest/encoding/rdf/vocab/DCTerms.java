@@ -25,6 +25,8 @@ import com.hp.hpl.jena.rdf.model.Property;
  * @author Jan Wirwahn
  */
 public class DCTerms {
+    public static final String ODBL_URL =
+            "http://opendatacommons.org/licenses/odbl/";
     public static final String URI = "http://purl.org/dc/elements/1.1/";
     public static final String PREFIX = "dcterms";
     private static final Model m = ModelFactory.createDefaultModel();

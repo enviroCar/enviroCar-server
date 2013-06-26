@@ -37,11 +37,14 @@ public abstract class AbstractLinkerRDFEntityEncoder<T> extends AbstractRDFEntit
 
     @Override
     public Model encodeRDF(T t, AccessRights rights,
-                           Provider<UriBuilder> uri) {
+                           Provider<UriBuilder> uriBuilder) {
         Model m = ModelFactory.createDefaultModel();
+        String uri = getURI(t, uriBuilder);
         for (RDFLinker<T> linker : linkers) {
-            linker.link(m, t, rights, uri);
+            linker.link(m, t, rights, uri, uriBuilder);
         }
         return m;
     }
+
+    protected abstract String getURI(T t, Provider<UriBuilder> uri);
 }

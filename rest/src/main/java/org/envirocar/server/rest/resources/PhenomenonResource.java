@@ -20,18 +20,15 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
-import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
-
 import org.envirocar.server.core.StatisticsService;
 import org.envirocar.server.core.entities.Phenomenon;
-
 import org.envirocar.server.core.exception.PhenomenonNotFoundException;
-import org.envirocar.server.core.filter.StatisticsFilter;
-import org.envirocar.server.core.statistics.Statistic;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.validation.Schema;
+
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 
 /**
  * TODO JavaDoc
@@ -60,16 +57,10 @@ public class PhenomenonResource extends AbstractResource {
         return phenomenon;
     }
 
-    @GET
     @Path(STATISTIC)
-    @Schema(response = Schemas.STATISTIC)
-    @Produces({ MediaTypes.STATISTIC,
-                MediaTypes.XML_RDF,
-                MediaTypes.TURTLE,
-                MediaTypes.TURTLE_ALT })
-    public Statistic getStatistics() {
+    public StatisticResource getStatistic() {
         checkRights(getRights().canSeeStatisticsOf(phenomenon));
-        return this.statisticsService
-                .getStatistic(new StatisticsFilter(), this.phenomenon);
+        return getResourceFactory()
+                .createStatisticResource(phenomenon, null, null, null);
     }
 }

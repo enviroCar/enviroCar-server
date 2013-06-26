@@ -16,7 +16,6 @@
  */
 package org.envirocar.server.rest.encoding.rdf.linker;
 
-import java.net.URI;
 import java.util.Map;
 
 import javax.ws.rs.core.UriBuilder;
@@ -51,7 +50,7 @@ public class SensorVSOLinker implements RDFLinker<Sensor> {
 
     @Override
     public void link(Model m, Sensor t, AccessRights rights,
-                     Provider<UriBuilder> uriBuilder) {
+                     String uri, Provider<UriBuilder> uriBuilder) {
 
         if (t.hasType() && t.getType().equals(CAR_TYPE)) {
             if (t.hasProperties()) {
@@ -64,9 +63,7 @@ public class SensorVSOLinker implements RDFLinker<Sensor> {
                 m.setNsPrefix(VSO.PREFIX, VSO.URI);
                 m.setNsPrefix(GoodRelations.PREFIX, GoodRelations.URI);
                 m.setNsPrefix(DBPedia.PREFIX, DBPedia.URI);
-                URI uri = sensorURIBuilder.build(t.getIdentifier());
-                final Resource sensor = m
-                        .createResource(uri.toASCIIString(), VSO.Automobile);
+                final Resource sensor = m.createResource(uri, VSO.Automobile);
                 addFuelType(p, m, sensor);
                 addContructionYear(p, sensor);
 

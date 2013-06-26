@@ -18,22 +18,34 @@ package org.envirocar.server.rest.encoding.rdf;
 
 import java.util.Set;
 
-import javax.ws.rs.ext.Provider;
-
-import com.google.inject.Inject;
+import javax.ws.rs.core.UriBuilder;
+import javax.ws.rs.core.UriInfo;
 
 import org.envirocar.server.core.activities.Activities;
 import org.envirocar.server.core.activities.Activity;
+
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 /**
  * TODO JavaDoc
  *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-@Provider
+@javax.ws.rs.ext.Provider
 public class ActivitiesRDFEncoder extends AbstractCollectionRDFEntityEncoder<Activity, Activities> {
+    private final Provider<UriInfo> uriInfo;
+
     @Inject
-    public ActivitiesRDFEncoder(Set<RDFLinker<Activity>> linkers) {
+    public ActivitiesRDFEncoder(Set<RDFLinker<Activity>> linkers,
+                                Provider<UriInfo> uriInfo) {
         super(Activities.class, linkers);
+        this.uriInfo = uriInfo;
+    }
+
+    @Override
+    protected String getURI(Activity t, Provider<UriBuilder> uri) {
+        return ActivityRDFEncoder.getURI(t, uriInfo.get().getMatchedResources()
+                .get(0), uri);
     }
 }

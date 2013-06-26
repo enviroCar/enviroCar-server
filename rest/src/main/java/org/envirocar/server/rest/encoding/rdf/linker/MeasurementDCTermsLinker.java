@@ -21,8 +21,6 @@ import javax.ws.rs.core.UriBuilder;
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.rest.encoding.rdf.RDFLinker;
 import org.envirocar.server.rest.encoding.rdf.vocab.DCTerms;
-import org.envirocar.server.rest.resources.MeasurementsResource;
-import org.envirocar.server.rest.resources.RootResource;
 import org.envirocar.server.rest.rights.AccessRights;
 
 import com.google.inject.Provider;
@@ -33,19 +31,10 @@ import com.hp.hpl.jena.rdf.model.Model;
  * @author Jan Wirwahn
  */
 public class MeasurementDCTermsLinker implements RDFLinker<Measurement> {
-    public static final String ODBL_URL =
-            "http://opendatacommons.org/licenses/odbl/";
-
     @Override
     public void link(Model m, Measurement t, AccessRights rights,
-                     Provider<UriBuilder> uriBuilder) {
-        String uri = uriBuilder.get()
-                .path(RootResource.class)
-                .path(RootResource.MEASUREMENTS)
-                .path(MeasurementsResource.MEASUREMENT)
-                .build(t.getIdentifier()).toASCIIString();
-
-        m.createResource(uri).addProperty(DCTerms.rights, ODBL_URL);
-
+                     String uri, Provider<UriBuilder> uriBuilder) {
+        m.setNsPrefix(DCTerms.PREFIX, DCTerms.URI);
+        m.createResource(uri).addProperty(DCTerms.rights, DCTerms.ODBL_URL);
     }
 }

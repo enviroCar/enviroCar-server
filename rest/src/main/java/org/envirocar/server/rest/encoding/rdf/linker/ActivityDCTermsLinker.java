@@ -20,6 +20,7 @@ import javax.ws.rs.core.UriBuilder;
 
 import org.envirocar.server.core.activities.Activity;
 import org.envirocar.server.rest.encoding.rdf.RDFLinker;
+import org.envirocar.server.rest.encoding.rdf.vocab.DCTerms;
 import org.envirocar.server.rest.rights.AccessRights;
 
 import com.google.inject.Provider;
@@ -33,7 +34,8 @@ import com.hp.hpl.jena.rdf.model.Model;
 public class ActivityDCTermsLinker implements RDFLinker<Activity> {
     @Override
     public void link(Model m, Activity t, AccessRights rights,
-                     Provider<UriBuilder> uriBuilder) {
-        // FIXME add group/user etc. to the Activity entity to allow URI building
+                     String uri, Provider<UriBuilder> uriBuilder) {
+        m.setNsPrefix(DCTerms.PREFIX, DCTerms.URI);
+        m.createResource(uri).addProperty(DCTerms.rights, DCTerms.ODBL_URL);
     }
 }

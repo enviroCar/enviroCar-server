@@ -21,8 +21,6 @@ import javax.ws.rs.core.UriBuilder;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.rest.encoding.rdf.RDFLinker;
 import org.envirocar.server.rest.encoding.rdf.vocab.DCTerms;
-import org.envirocar.server.rest.resources.RootResource;
-import org.envirocar.server.rest.resources.TracksResource;
 import org.envirocar.server.rest.rights.AccessRights;
 
 import com.google.inject.Provider;
@@ -32,19 +30,10 @@ import com.hp.hpl.jena.rdf.model.Model;
  * @author Jan Wirwahn
  */
 public class TrackDCTermsLinker implements RDFLinker<Track> {
-    public static final String ODBL_URL =
-            "http://opendatacommons.org/licenses/odbl/";
-
     @Override
     public void link(Model m, Track t, AccessRights rights,
-                     Provider<UriBuilder> uriBuilder) {
+                     String uri, Provider<UriBuilder> uriBuilder) {
         m.setNsPrefix(DCTerms.PREFIX, DCTerms.URI);
-        String uri = uriBuilder.get()
-                .path(RootResource.class)
-                .path(RootResource.TRACKS)
-                .path(TracksResource.TRACK)
-                .build(t.getIdentifier()).toASCIIString();
-
-        m.createResource(uri).addProperty(DCTerms.rights, ODBL_URL);
+        m.createResource(uri).addProperty(DCTerms.rights, DCTerms.ODBL_URL);
     }
 }

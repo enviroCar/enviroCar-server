@@ -21,8 +21,6 @@ import javax.ws.rs.core.UriBuilder;
 import org.envirocar.server.core.entities.Phenomenon;
 import org.envirocar.server.rest.encoding.rdf.RDFLinker;
 import org.envirocar.server.rest.encoding.rdf.vocab.DCTerms;
-import org.envirocar.server.rest.resources.PhenomenonsResource;
-import org.envirocar.server.rest.resources.RootResource;
 import org.envirocar.server.rest.rights.AccessRights;
 
 import com.google.inject.Provider;
@@ -33,19 +31,10 @@ import com.hp.hpl.jena.rdf.model.Model;
  * @author Jan Wirwahn
  */
 public class PhenomenonDCTermsLinker implements RDFLinker<Phenomenon> {
-    public static final String ODBL_URL =
-            "http://opendatacommons.org/licenses/odbl/";
-
     @Override
     public void link(Model m, Phenomenon t, AccessRights rights,
-                     Provider<UriBuilder> uriBuilder) {
-        String uri = uriBuilder.get()
-                .path(RootResource.class)
-                .path(RootResource.PHENOMENONS)
-                .path(PhenomenonsResource.PHENOMENON)
-                .build(t.getName()).toASCIIString();
-
-        m.createResource(uri).addProperty(DCTerms.rights, ODBL_URL);
-
+                     String uri, Provider<UriBuilder> uriBuilder) {
+        m.setNsPrefix(DCTerms.PREFIX, DCTerms.URI);
+        m.createResource(uri).addProperty(DCTerms.rights, DCTerms.ODBL_URL);
     }
 }

@@ -26,9 +26,11 @@ import com.hp.hpl.jena.rdf.model.Model;
 /**
  * TODO JavaDoc
  *
+ * @param <T> the entity type
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface RDFLinker<T> {
     void link(Model m, T t, AccessRights rights,
-              Provider<UriBuilder> uriBuilder);
+              String uri, Provider<UriBuilder> uriBuilder);
 }

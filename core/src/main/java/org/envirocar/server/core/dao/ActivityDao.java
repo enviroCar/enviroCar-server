@@ -29,4 +29,6 @@ public interface ActivityDao {
     void save(Activity activity);
 
     Activities get(ActivityFilter request);
+
+    Activity get(ActivityFilter request, String id);
 }

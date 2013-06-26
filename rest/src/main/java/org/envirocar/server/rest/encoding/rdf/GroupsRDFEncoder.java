@@ -18,12 +18,15 @@ package org.envirocar.server.rest.encoding.rdf;
 
 import java.util.Set;
 
+import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.ext.Provider;
-
-import com.google.inject.Inject;
 
 import org.envirocar.server.core.entities.Group;
 import org.envirocar.server.core.entities.Groups;
+import org.envirocar.server.rest.resources.GroupsResource;
+import org.envirocar.server.rest.resources.RootResource;
+
+import com.google.inject.Inject;
 
 /**
  * TODO JavaDoc
@@ -35,5 +38,14 @@ public class GroupsRDFEncoder extends AbstractCollectionRDFEntityEncoder<Group, 
     @Inject
     public GroupsRDFEncoder(Set<RDFLinker<Group>> linkers) {
         super(Groups.class, linkers);
+    }
+
+    @Override
+    protected String getURI(Group v,
+                            com.google.inject.Provider<UriBuilder> uri) {
+        return uri.get().path(RootResource.class)
+                .path(RootResource.GROUPS)
+                .path(GroupsResource.GROUP)
+                .build(v.getName()).toASCIIString();
     }
 }

@@ -18,14 +18,14 @@ package org.envirocar.server.rest.resources;
 
 import javax.annotation.Nullable;
 
-import com.google.inject.assistedinject.Assisted;
-
 import org.envirocar.server.core.entities.Group;
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.Phenomenon;
 import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.entities.User;
+
+import com.google.inject.assistedinject.Assisted;
 
 /**
  * TODO JavaDoc
@@ -77,6 +77,11 @@ public interface ResourceFactory {
     StatisticsResource createStatisticsResource(Track track);
 
     StatisticsResource createStatisticsResource(Sensor sensor);
+
+    StatisticResource createStatisticResource(Phenomenon phenomenon,
+                                              @Nullable User user,
+                                              @Nullable Track track,
+                                              @Nullable Sensor sensor);
 
     ActivitiesResource createActivitiesResource();
 

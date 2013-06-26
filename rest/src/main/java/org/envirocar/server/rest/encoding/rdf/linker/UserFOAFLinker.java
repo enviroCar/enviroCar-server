@@ -16,8 +16,6 @@
  */
 package org.envirocar.server.rest.encoding.rdf.linker;
 
-import java.net.URI;
-
 import javax.ws.rs.core.UriBuilder;
 
 import org.envirocar.server.core.FriendService;
@@ -57,14 +55,9 @@ public class UserFOAFLinker implements RDFLinker<User> {
 
     @Override
     public void link(Model m, User t, AccessRights rights,
-                     Provider<UriBuilder> uriBuilder) {
-        UriBuilder userURIBuilder = uriBuilder.get()
-                .path(RootResource.class)
-                .path(RootResource.USERS)
-                .path(UsersResource.USER);
+                     String uri, Provider<UriBuilder> uriBuilder) {
         m.setNsPrefix(PREFIX, FOAF.NS);
-        URI uri = userURIBuilder.build(t.getName());
-        Resource p = m.createResource(uri.toASCIIString(), FOAF.Person);
+        Resource p = m.createResource(uri, FOAF.Person);
         p.addLiteral(FOAF.nick, t.getName());
         if (t.hasFirstName() && rights.canSeeFirstNameOf(t)) {
             p.addLiteral(FOAF.firstName, t.getFirstName());
@@ -93,6 +86,10 @@ public class UserFOAFLinker implements RDFLinker<User> {
         }
         if (rights.canSeeFriendsOf(t)) {
             Users friends = friendService.getFriends(t);
+            UriBuilder userURIBuilder = uriBuilder.get()
+                    .path(RootResource.class)
+                    .path(RootResource.USERS)
+                    .path(UsersResource.USER);
             for (User f : friends) {
                 String friendURI = userURIBuilder
                         .build(f.getName()).toASCIIString();

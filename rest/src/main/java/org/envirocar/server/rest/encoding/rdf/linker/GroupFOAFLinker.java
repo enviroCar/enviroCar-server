@@ -16,8 +16,6 @@
  */
 package org.envirocar.server.rest.encoding.rdf.linker;
 
-import java.net.URI;
-
 import javax.ws.rs.core.UriBuilder;
 
 import org.envirocar.server.core.GroupService;
@@ -25,7 +23,6 @@ import org.envirocar.server.core.UserService;
 import org.envirocar.server.core.entities.Group;
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.rest.encoding.rdf.RDFLinker;
-import org.envirocar.server.rest.resources.GroupsResource;
 import org.envirocar.server.rest.resources.RootResource;
 import org.envirocar.server.rest.resources.UsersResource;
 import org.envirocar.server.rest.rights.AccessRights;
@@ -54,15 +51,12 @@ public class GroupFOAFLinker implements RDFLinker<Group> {
 
     @Override
     public void link(Model m, Group t, AccessRights rights,
-                     Provider<UriBuilder> uriBuilder) {
-        UriBuilder groupURIBuilder = uriBuilder.get().path(RootResource.class)
-                .path(RootResource.GROUPS).path(GroupsResource.GROUP);
+                     String uri, Provider<UriBuilder> uriBuilder) {
         UriBuilder userURIBuilder = uriBuilder.get().path(RootResource.class)
                 .path(RootResource.USERS).path(UsersResource.USER);
 
         m.setNsPrefix(PREFIX, FOAF.NS);
-        URI uri = groupURIBuilder.build(t.getName());
-        Resource p = m.createResource(uri.toASCIIString(), FOAF.Group);
+        Resource p = m.createResource(uri, FOAF.Group);
         p.addLiteral(FOAF.name, t.getName());
         p.addProperty(FOAF.maker, m.createResource(
                 userURIBuilder.build(t.getOwner().getName()).toASCIIString(),

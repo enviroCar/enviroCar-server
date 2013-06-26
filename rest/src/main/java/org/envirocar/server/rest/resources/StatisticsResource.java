@@ -22,22 +22,20 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
-import com.google.inject.assistedinject.Assisted;
-import com.google.inject.assistedinject.AssistedInject;
-
 import org.envirocar.server.core.StatisticsService;
 import org.envirocar.server.core.entities.Phenomenon;
 import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.entities.User;
-
 import org.envirocar.server.core.exception.PhenomenonNotFoundException;
 import org.envirocar.server.core.filter.StatisticsFilter;
-import org.envirocar.server.core.statistics.Statistic;
 import org.envirocar.server.core.statistics.Statistics;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.validation.Schema;
+
+import com.google.inject.assistedinject.Assisted;
+import com.google.inject.assistedinject.AssistedInject;
 
 /**
  * TODO JavaDoc
@@ -45,40 +43,30 @@ import org.envirocar.server.rest.validation.Schema;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class StatisticsResource extends AbstractResource {
-    private static final String PHENOMENON = "{phenomenon}";
+    public static final String PHENOMENON = "{phen}";
     private final Track track;
     private final User user;
     private final Sensor sensor;
-    private final StatisticsService statisticService;
 
     @AssistedInject
     public StatisticsResource(@Assisted User user,
                               StatisticsService statisticService) {
-        this(null, user, null, statisticService);
+        this(null, user, null);
     }
 
     @AssistedInject
-    public StatisticsResource(@Assisted @Nullable Track track,
-                              StatisticsService statisticService) {
-        this(track, null, null, statisticService);
+    public StatisticsResource(@Assisted @Nullable Track track) {
+        this(track, null, null);
     }
 
     @AssistedInject
-    public StatisticsResource(@Assisted Sensor sensor,
-                              StatisticsService statisticService) {
-        this(null, null, sensor, statisticService);
+    public StatisticsResource(@Assisted Sensor sensor) {
+        this(null, null, sensor);
     }
 
-    @AssistedInject
-    public StatisticsResource(StatisticsService statisticService) {
-        this(null, null, null, statisticService);
-    }
-
-    public StatisticsResource(Track track, User user, Sensor sensor,
-                              StatisticsService statisticService) {
+    public StatisticsResource(Track track, User user, Sensor sensor) {
         this.track = track;
         this.user = user;
-        this.statisticService = statisticService;
         this.sensor = sensor;
     }
 
@@ -89,21 +77,27 @@ public class StatisticsResource extends AbstractResource {
                 MediaTypes.TURTLE,
                 MediaTypes.TURTLE_ALT })
     public Statistics statistics() {
-        return this.statisticService
+        return getStatisticsService()
                 .getStatistics(new StatisticsFilter(user, track, sensor));
     }
 
-    @GET
     @Path(PHENOMENON)
-    @Schema(response = Schemas.STATISTIC)
-    @Produces({ MediaTypes.STATISTIC,
-                MediaTypes.XML_RDF,
-                MediaTypes.TURTLE,
-                MediaTypes.TURTLE_ALT })
-    public Statistic statistics(@PathParam("phenomenon") String phenomenon)
+    public StatisticResource statistics(@PathParam("phen") String phenomenon)
             throws PhenomenonNotFoundException {
         Phenomenon p = getDataService().getPhenomenonByName(phenomenon);
-        return this.statisticService
-                .getStatistic(new StatisticsFilter(user, track, sensor), p);
+        return getResourceFactory()
+                .createStatisticResource(p, user, track, sensor);
+    }
+
+    public Track getTrack() {
+        return track;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public Sensor getSensor() {
+        return sensor;
     }
 }

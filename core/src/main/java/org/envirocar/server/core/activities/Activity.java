@@ -25,15 +25,13 @@ import org.joda.time.DateTime;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface Activity {
-    User getUser();
+    String getIdentifier();
 
-    void setUser(User user);
+    User getUser();
 
     boolean hasUser();
 
     ActivityType getType();
-
-    void setType(ActivityType type);
 
     boolean hasType();
 
