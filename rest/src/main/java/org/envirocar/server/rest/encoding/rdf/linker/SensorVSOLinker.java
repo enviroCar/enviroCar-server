@@ -33,6 +33,7 @@ import com.google.inject.Provider;
 import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.vocabulary.RDF;
 
 /**
  * @author Jan Wirwahn
@@ -50,7 +51,7 @@ public class SensorVSOLinker implements RDFLinker<Sensor> {
 
     @Override
     public void link(Model m, Sensor t, AccessRights rights,
-                     String uri, Provider<UriBuilder> uriBuilder) {
+                     Resource sensor, Provider<UriBuilder> uriBuilder) {
 
         if (t.hasType() && t.getType().equals(CAR_TYPE)) {
             if (t.hasProperties()) {
@@ -63,7 +64,7 @@ public class SensorVSOLinker implements RDFLinker<Sensor> {
                 m.setNsPrefix(VSO.PREFIX, VSO.URI);
                 m.setNsPrefix(GoodRelations.PREFIX, GoodRelations.URI);
                 m.setNsPrefix(DBPedia.PREFIX, DBPedia.URI);
-                final Resource sensor = m.createResource(uri, VSO.Automobile);
+                sensor.addProperty(RDF.type, VSO.Automobile);
                 addFuelType(p, m, sensor);
                 addContructionYear(p, sensor);
 

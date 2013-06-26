@@ -23,13 +23,14 @@ import org.envirocar.server.rest.rights.AccessRights;
 
 import com.google.inject.Provider;
 import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.Resource;
 
 /**
  * @author Jan Wirwahn
  */
 public class StatisticDCTermsLinker extends DCTermsLinker<Statistic> {
     @Override
-    public void linkRest(Model m, Statistic t, AccessRights rights, String uri,
-                         Provider<UriBuilder> uriBuilder) {
+    public void linkRest(Model m, Statistic t, AccessRights rights,
+                         Resource r, Provider<UriBuilder> uriBuilder) {
     }
 }

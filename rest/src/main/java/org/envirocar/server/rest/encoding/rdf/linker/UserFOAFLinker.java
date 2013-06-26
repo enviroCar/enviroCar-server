@@ -36,6 +36,7 @@ import com.google.inject.Provider;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
+import com.hp.hpl.jena.vocabulary.RDF;
 
 /**
  * TODO JavaDoc
@@ -55,9 +56,9 @@ public class UserFOAFLinker implements RDFLinker<User> {
 
     @Override
     public void link(Model m, User t, AccessRights rights,
-                     String uri, Provider<UriBuilder> uriBuilder) {
+                     Resource p, Provider<UriBuilder> uriBuilder) {
         m.setNsPrefix(PREFIX, FOAF.NS);
-        Resource p = m.createResource(uri, FOAF.Person);
+        p.addProperty(RDF.type, FOAF.Person);
         p.addLiteral(FOAF.nick, t.getName());
         if (t.hasFirstName() && rights.canSeeFirstNameOf(t)) {
             p.addLiteral(FOAF.firstName, t.getFirstName());
@@ -78,8 +79,8 @@ public class UserFOAFLinker implements RDFLinker<User> {
             p.addLiteral(FOAF.gender, t.getGender().toString().toLowerCase());
         }
         if (rights.canSeeAvatarOf(t)) {
-            p.addProperty(FOAF.img, m.createResource(UriBuilder.fromUri(uri)
-                    .path(UserResource.AVATAR).build().toASCIIString()));
+            p.addProperty(FOAF.img, m.createResource(UriBuilder.fromUri(p
+                    .getURI()).path(UserResource.AVATAR).build().toASCIIString()));
         }
         if (t.hasMail() && rights.canSeeMailOf(t)) {
             p.addLiteral(FOAF.mbox, "mailto:" + t.getMail());

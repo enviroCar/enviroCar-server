@@ -25,6 +25,7 @@ import org.envirocar.server.rest.rights.AccessRights;
 
 import com.google.inject.Provider;
 import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.Resource;
 import com.vividsolutions.jts.geom.Point;
 
 /**
@@ -35,12 +36,11 @@ import com.vividsolutions.jts.geom.Point;
 public class W3CGeoMeasurementLinker implements RDFLinker<Measurement> {
     @Override
     public void link(Model m, Measurement t, AccessRights rights,
-                     String uri, Provider<UriBuilder> uriBuilder) {
-        m.setNsPrefix(W3CGeo.PREFIX, W3CGeo.URI);
+                     Resource r, Provider<UriBuilder> uriBuilder) {
         if (t.getGeometry() instanceof Point) {
+            m.setNsPrefix(W3CGeo.PREFIX, W3CGeo.URI);
             Point p = (Point) t.getGeometry();
-            m.createResource(uri)
-                    .addLiteral(W3CGeo.lat, p.getY())
+            r.addLiteral(W3CGeo.lat, p.getY())
                     .addLiteral(W3CGeo.lon, p.getX());
         }
     }

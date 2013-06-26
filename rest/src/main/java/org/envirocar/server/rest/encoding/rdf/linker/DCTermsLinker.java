@@ -24,6 +24,7 @@ import org.envirocar.server.rest.rights.AccessRights;
 
 import com.google.inject.Provider;
 import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.Resource;
 
 /**
  * TODO JavaDoc
@@ -36,16 +37,16 @@ public abstract class DCTermsLinker<T> implements RDFLinker<T> {
 
     @Override
     public void link(Model m, T t, AccessRights rights,
-                     String uri, Provider<UriBuilder> uriBuilder) {
+                     Resource r, Provider<UriBuilder> uriBuilder) {
         m.setNsPrefix(DCTerms.PREFIX, DCTerms.URI);
-        linkLicense(m, uri);
-        linkRest(m, t, rights, uri, uriBuilder);
+        linkLicense(m, r);
+        linkRest(m, t, rights, r, uriBuilder);
     }
 
-    public void linkLicense(Model m, String uri) {
-        m.createResource(uri).addProperty(DCTerms.rights, ODBL_URL);
+    public void linkLicense(Model m, Resource r) {
+        r.addProperty(DCTerms.rights, ODBL_URL);
     }
 
     public abstract void linkRest(Model m, T t, AccessRights rights,
-                                  String uri, Provider<UriBuilder> uriBuilder);
+                                  Resource r, Provider<UriBuilder> uriBuilder);
 }

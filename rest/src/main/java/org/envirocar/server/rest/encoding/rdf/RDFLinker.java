@@ -22,6 +22,7 @@ import org.envirocar.server.rest.rights.AccessRights;
 
 import com.google.inject.Provider;
 import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.Resource;
 
 /**
  * TODO JavaDoc
@@ -32,5 +33,5 @@ import com.hp.hpl.jena.rdf.model.Model;
  */
 public interface RDFLinker<T> {
     void link(Model m, T t, AccessRights rights,
-              String uri, Provider<UriBuilder> uriBuilder);
+              Resource uri, Provider<UriBuilder> uriBuilder);
 }

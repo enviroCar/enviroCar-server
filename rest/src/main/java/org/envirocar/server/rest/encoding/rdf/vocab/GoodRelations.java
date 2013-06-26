@@ -22,7 +22,7 @@ import com.hp.hpl.jena.rdf.model.Property;
 
 /**
  *
- * @author jan
+ * @author Jan Wirwahn
  */
 public class GoodRelations {
     public static final String URI = "http://purl.org/goodrelations/v1#";

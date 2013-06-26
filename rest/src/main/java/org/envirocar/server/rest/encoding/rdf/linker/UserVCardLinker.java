@@ -24,6 +24,7 @@ import org.envirocar.server.rest.rights.AccessRights;
 
 import com.google.inject.Provider;
 import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.vocabulary.VCARD;
 
 /**
@@ -32,12 +33,13 @@ import com.hp.hpl.jena.vocabulary.VCARD;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class UserVCardLinker implements RDFLinker<User> {
+    public static final String VCARD_PREFIX = "vcard";
+
     @Override
     public void link(Model m, User t, AccessRights rights,
-                     String uri, Provider<UriBuilder> uriBuilder) {
-        m.setNsPrefix("vcard", VCARD.getURI());
-        m.createResource(uri)
-                .addProperty(VCARD.EMAIL, t.getMail())
+                     Resource r, Provider<UriBuilder> uriBuilder) {
+        m.setNsPrefix(VCARD_PREFIX, VCARD.getURI());
+        r.addProperty(VCARD.EMAIL, t.getMail())
                 .addProperty(VCARD.NICKNAME, t.getName());
 
     }

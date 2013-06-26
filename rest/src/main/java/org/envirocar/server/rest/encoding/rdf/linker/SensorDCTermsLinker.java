@@ -23,6 +23,7 @@ import org.envirocar.server.rest.rights.AccessRights;
 
 import com.google.inject.Provider;
 import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.Resource;
 
 /**
  *
@@ -30,9 +31,7 @@ import com.hp.hpl.jena.rdf.model.Model;
  */
 public class SensorDCTermsLinker extends DCTermsLinker<Sensor> {
     @Override
-    public void linkRest(Model m, Sensor t, AccessRights rights, String uri,
-                         Provider<UriBuilder> uriBuilder) {
-        /* TODO implement org.envirocar.server.rest.encoding.rdf.linker.SensorDCTermsLinker.linkRest() */
-        throw new UnsupportedOperationException("org.envirocar.server.rest.encoding.rdf.linker.SensorDCTermsLinker.linkRest() not yet implemented");
+    public void linkRest(Model m, Sensor t, AccessRights rights,
+                         Resource r, Provider<UriBuilder> uriBuilder) {
     }
 }

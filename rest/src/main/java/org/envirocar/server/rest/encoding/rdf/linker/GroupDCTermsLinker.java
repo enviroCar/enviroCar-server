@@ -23,13 +23,14 @@ import org.envirocar.server.rest.rights.AccessRights;
 
 import com.google.inject.Provider;
 import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.Resource;
 
 /**
  * @author Jan Wirwahn
  */
 public class GroupDCTermsLinker extends DCTermsLinker<Group> {
     @Override
-    public void linkRest(Model m, Group t, AccessRights rights, String uri,
+    public void linkRest(Model m, Group t, AccessRights rights, Resource r,
                          Provider<UriBuilder> uriBuilder) {
     }
 }

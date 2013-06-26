@@ -31,6 +31,7 @@ import com.google.inject.Provider;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
+import com.hp.hpl.jena.vocabulary.RDF;
 
 /**
  *
@@ -48,12 +49,12 @@ public class GroupFOAFLinker implements RDFLinker<Group> {
 
     @Override
     public void link(Model m, Group t, AccessRights rights,
-                     String uri, Provider<UriBuilder> uriBuilder) {
+                     Resource p, Provider<UriBuilder> uriBuilder) {
         UriBuilder b = uriBuilder.get().path(RootResource.class)
                 .path(RootResource.USERS).path(UsersResource.USER);
 
         m.setNsPrefix(PREFIX, FOAF.NS);
-        Resource p = m.createResource(uri, FOAF.Group);
+        p.addProperty(RDF.type, FOAF.Group);
         p.addLiteral(FOAF.name, t.getName());
         p.addProperty(FOAF.maker, m.createResource(
                 b.build(t.getOwner().getName()).toASCIIString(),

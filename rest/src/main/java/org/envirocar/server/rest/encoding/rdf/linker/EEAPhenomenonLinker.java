@@ -16,14 +16,22 @@
  */
 package org.envirocar.server.rest.encoding.rdf.linker;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
 import javax.ws.rs.core.UriBuilder;
 
 import org.envirocar.server.core.entities.Phenomenon;
 import org.envirocar.server.rest.encoding.rdf.RDFLinker;
 import org.envirocar.server.rest.rights.AccessRights;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import com.google.common.io.Closeables;
 import com.google.inject.Provider;
 import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.vocabulary.OWL;
 
 /**
@@ -32,16 +40,38 @@ import com.hp.hpl.jena.vocabulary.OWL;
  *
  */
 public class EEAPhenomenonLinker implements RDFLinker<Phenomenon> {
+    private static final Logger log = LoggerFactory
+            .getLogger(EEAPhenomenonLinker.class);
     private static final String CO2 = "co2";
     private static final String URI_CO2 =
             "http://dd.eionet.europa.eu/vocabulary/aq/pollutant/71";
+    public static final String PROPERTIES = "/EEAphenomenons.properties";
+    private final Properties properties;
+
+    public EEAPhenomenonLinker() {
+        this.properties = new Properties();
+        InputStream in = null;
+        try {
+            in = EEAPhenomenonLinker.class.getResourceAsStream(PROPERTIES);
+            if (in != null) {
+                properties.load(in);
+            } else {
+                log.warn("No {} found!", PROPERTIES);
+            }
+
+        } catch (IOException ex) {
+            log.error("Error reading " + PROPERTIES, ex);
+        } finally {
+            Closeables.closeQuietly(in);
+        }
+    }
 
     @Override
     public void link(Model m, Phenomenon t, AccessRights rights,
-                     String uri, Provider<UriBuilder> uriBuilder) {
-        if (t.getName().equals(CO2)) {
-            m.createResource(uri)
-                    .addProperty(OWL.sameAs, m.createResource(URI_CO2));
+                     Resource r, Provider<UriBuilder> uriBuilder) {
+        String property = properties.getProperty(t.getName());
+        if (property != null) {
+            r.addProperty(OWL.sameAs, m.createResource(property));
         }
     }
 }
