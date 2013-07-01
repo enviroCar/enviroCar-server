@@ -6,4 +6,5 @@
 **/webapp/META-INF/context.xml
 /target/
 .project
+.settings
 
