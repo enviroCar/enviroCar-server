@@ -21,21 +21,15 @@ import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
-import java.security.cert.X509Certificate;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.conn.scheme.Scheme;
-import org.apache.http.conn.scheme.SchemeRegistry;
-import org.apache.http.conn.ssl.SSLSocketFactory;
-import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.BasicClientConnectionManager;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -112,21 +106,6 @@ public class HTTPPushListener {
                                              KeyManagementException,
                                              KeyStoreException,
                                              NoSuchAlgorithmException {
-        SSLSocketFactory sslsf = new SSLSocketFactory(new TrustStrategy() {
-            @Override
-            public boolean isTrusted(final X509Certificate[] chain,
-                                     String authType) {
-                //FIXME kind of bad practice...
-                return true;
-            }
-        });
-        Scheme httpsScheme2 = new Scheme("https", 443, sslsf);
-        SchemeRegistry schemeRegistry = new SchemeRegistry();
-        schemeRegistry.register(httpsScheme2);
-
-        BasicClientConnectionManager cm =
-                new BasicClientConnectionManager(schemeRegistry);
-
-        return new DefaultHttpClient(cm);
+        return new DefaultHttpClient();
     }
 }
