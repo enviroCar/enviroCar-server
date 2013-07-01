@@ -81,7 +81,9 @@
                             "type": "string",
                             "enum": [
                                 "diesel",
-                            "gasoline",
+                                "gasoline",
+                                "biodiesel",
+                                "kerosene",
                                 "electric"
                             ]
                         },

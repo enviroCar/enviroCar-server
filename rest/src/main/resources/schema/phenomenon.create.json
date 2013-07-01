@@ -4,8 +4,8 @@
     "type": "object",
     "additionalProperties": false,
     "required": [
-    "name",
-    "unit"
+        "name",
+        "unit"
     ],
     "properties": {
         "name": {
