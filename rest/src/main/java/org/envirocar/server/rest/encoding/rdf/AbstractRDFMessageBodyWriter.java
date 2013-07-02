@@ -28,12 +28,12 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.ext.MessageBodyWriter;
 
+import org.envirocar.server.rest.MediaTypes;
+import org.envirocar.server.rest.encoding.RDFEntityEncoder;
+
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.hp.hpl.jena.rdf.model.Model;
-
-import org.envirocar.server.rest.MediaTypes;
-import org.envirocar.server.rest.encoding.RDFEntityEncoder;
 
 /**
  * TODO JavaDoc
@@ -71,6 +71,7 @@ public abstract class AbstractRDFMessageBodyWriter<T>
         Model m = encodeRDF(t);
         m.setNsPrefix("xsd", "http://www.w3.org/2001/XMLSchema#");
         m.setNsPrefix("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
+        m.setNsPrefix("rdfs", "http://www.w3.org/2000/01/rdf-schema#");
         if (mt.isCompatible(MediaTypes.XML_RDF_TYPE)) {
             String base = uriInfo.get().getAbsolutePath().toASCIIString();
             m.write(out, "RDF/XML-ABBREV", base);
