@@ -17,7 +17,6 @@
 package org.envirocar.server.rest.guice;
 
 import org.envirocar.server.core.activities.Activity;
-
 import org.envirocar.server.core.entities.Group;
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.Phenomenon;
@@ -26,21 +25,25 @@ import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.statistics.Statistic;
 import org.envirocar.server.rest.encoding.rdf.RDFLinker;
-
 import org.envirocar.server.rest.encoding.rdf.linker.ActivityDCTermsLinker;
 import org.envirocar.server.rest.encoding.rdf.linker.EEAPhenomenonLinker;
 import org.envirocar.server.rest.encoding.rdf.linker.GroupDCTermsLinker;
 import org.envirocar.server.rest.encoding.rdf.linker.GroupFOAFLinker;
 import org.envirocar.server.rest.encoding.rdf.linker.MeasurementDCTermsLinker;
+import org.envirocar.server.rest.encoding.rdf.linker.MeasurementSSNLinker;
 import org.envirocar.server.rest.encoding.rdf.linker.PhenomenonDCTermsLinker;
+import org.envirocar.server.rest.encoding.rdf.linker.PhenomenonSSNLinker;
 import org.envirocar.server.rest.encoding.rdf.linker.SensorDCTermsLinker;
+import org.envirocar.server.rest.encoding.rdf.linker.SensorSSNLinker;
 import org.envirocar.server.rest.encoding.rdf.linker.SensorVSOLinker;
 import org.envirocar.server.rest.encoding.rdf.linker.StatisticDCTermsLinker;
 import org.envirocar.server.rest.encoding.rdf.linker.TrackDCTermsLinker;
+import org.envirocar.server.rest.encoding.rdf.linker.TrackSSNLinker;
 import org.envirocar.server.rest.encoding.rdf.linker.UserDCTermsLinker;
 import org.envirocar.server.rest.encoding.rdf.linker.UserFOAFLinker;
 import org.envirocar.server.rest.encoding.rdf.linker.UserVCardLinker;
 import org.envirocar.server.rest.encoding.rdf.linker.W3CGeoMeasurementLinker;
+
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
 import com.google.inject.multibindings.Multibinder;
@@ -87,6 +90,7 @@ public class DefaultRDFLinkerModule extends AbstractModule {
         });
         b.addBinding().to(W3CGeoMeasurementLinker.class);
         b.addBinding().to(MeasurementDCTermsLinker.class);
+        b.addBinding().to(MeasurementSSNLinker.class);
     }
 
     protected void bindPhenomenonLinker() {
@@ -95,6 +99,7 @@ public class DefaultRDFLinkerModule extends AbstractModule {
         });
         b.addBinding().to(PhenomenonDCTermsLinker.class);
         b.addBinding().to(EEAPhenomenonLinker.class);
+        b.addBinding().to(PhenomenonSSNLinker.class);
     }
 
     protected void bindSensorLinker() {
@@ -103,6 +108,7 @@ public class DefaultRDFLinkerModule extends AbstractModule {
         });
         b.addBinding().to(SensorVSOLinker.class);
         b.addBinding().to(SensorDCTermsLinker.class);
+        b.addBinding().to(SensorSSNLinker.class);
     }
 
     protected void bindStatisticLinker() {
@@ -117,6 +123,7 @@ public class DefaultRDFLinkerModule extends AbstractModule {
                 binder(), new TypeLiteral<RDFLinker<Track>>() {
         });
         b.addBinding().to(TrackDCTermsLinker.class);
+        b.addBinding().to(TrackSSNLinker.class);
     }
 
     protected void bindUserLinker() {
