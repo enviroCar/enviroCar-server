@@ -26,7 +26,6 @@ import com.hp.hpl.jena.rdf.model.Resource;
  * @author Jan Wirwahn
  */
 public class SSN {
-
     public static final String URI = "http://purl.oclc.org/NET/ssnx/ssn#";
     public static final String PREFIX = "ssn";
     private static final Model m = ModelFactory.createDefaultModel();
@@ -42,7 +41,6 @@ public class SSN {
             m.createResource(URI + "Observation");
     public static final Resource SensorOutput =
             m.createResource(URI + "SensorOutput");
-    
     public static final Property hasInput =
             m.createProperty(URI, "hasInput");
     public static final Property hasOutput =
@@ -53,6 +51,8 @@ public class SSN {
             m.createProperty(URI, "isClassifiedBy");
     public static final Property hasProperty =
             m.createProperty(URI, "hasProperty");
+    public static final Property observedProperty =
+            m.createProperty(URI, "observedProperty");
     public static final Property observationResult =
             m.createProperty(URI, "observationResult");
     public static final Property isProducedBy =
