@@ -108,7 +108,7 @@ public class MongoTrack extends MongoEntityBase implements Track {
 
     @Override
     public boolean hasName() {
-        return getName() != null && !getDescription().isEmpty();
+        return getName() != null && !getName().isEmpty();
     }
 
     @Override
