@@ -154,13 +154,6 @@ public class MeasurementSSNLinker extends AbstractSSNLinker<Measurement> {
         return sensing;
     }
 
-    protected String fragment(Resource resource, String fragment) {
-        return UriBuilder
-                .fromUri(resource.getURI())
-                .fragment(fragment)
-                .build().toASCIIString();
-    }
-
     protected Resource createAmount(Model m, Resource measurement,
                                     MeasurementValue v, Resource unit) {
         Resource amount = m.createResource(
