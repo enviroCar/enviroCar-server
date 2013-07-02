@@ -37,8 +37,7 @@ import org.envirocar.server.rest.encoding.rdf.linker.SensorDCTermsLinker;
 import org.envirocar.server.rest.encoding.rdf.linker.SensorSSNLinker;
 import org.envirocar.server.rest.encoding.rdf.linker.SensorVSOLinker;
 import org.envirocar.server.rest.encoding.rdf.linker.StatisticDCTermsLinker;
-import org.envirocar.server.rest.encoding.rdf.linker.TrackDCTermsLinker;
-import org.envirocar.server.rest.encoding.rdf.linker.TrackSSNLinker;
+import org.envirocar.server.rest.encoding.rdf.linker.TrackMeasurementsLinker;
 import org.envirocar.server.rest.encoding.rdf.linker.UserDCTermsLinker;
 import org.envirocar.server.rest.encoding.rdf.linker.UserFOAFLinker;
 import org.envirocar.server.rest.encoding.rdf.linker.UserVCardLinker;
@@ -122,8 +121,7 @@ public class DefaultRDFLinkerModule extends AbstractModule {
         Multibinder<RDFLinker<Track>> b = Multibinder.newSetBinder(
                 binder(), new TypeLiteral<RDFLinker<Track>>() {
         });
-        b.addBinding().to(TrackDCTermsLinker.class);
-        b.addBinding().to(TrackSSNLinker.class);
+        b.addBinding().to(TrackMeasurementsLinker.class);
     }
 
     protected void bindUserLinker() {

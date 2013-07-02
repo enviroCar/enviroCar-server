@@ -35,7 +35,7 @@ import com.google.inject.assistedinject.Assisted;
 /**
  * TODO JavaDoc
  *
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class StatisticResource extends AbstractResource {
     private final Track track;
