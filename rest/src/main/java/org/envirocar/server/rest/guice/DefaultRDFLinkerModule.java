@@ -26,6 +26,7 @@ import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.statistics.Statistic;
 import org.envirocar.server.rest.encoding.rdf.RDFLinker;
 import org.envirocar.server.rest.encoding.rdf.linker.ActivityDCTermsLinker;
+import org.envirocar.server.rest.encoding.rdf.linker.DBPediaPhenomenonLinker;
 import org.envirocar.server.rest.encoding.rdf.linker.EEAPhenomenonLinker;
 import org.envirocar.server.rest.encoding.rdf.linker.GroupDCTermsLinker;
 import org.envirocar.server.rest.encoding.rdf.linker.GroupFOAFLinker;
@@ -99,6 +100,7 @@ public class DefaultRDFLinkerModule extends AbstractModule {
         b.addBinding().to(PhenomenonDCTermsLinker.class);
         b.addBinding().to(EEAPhenomenonLinker.class);
         b.addBinding().to(PhenomenonSSNLinker.class);
+        b.addBinding().to(DBPediaPhenomenonLinker.class);
     }
 
     protected void bindSensorLinker() {
