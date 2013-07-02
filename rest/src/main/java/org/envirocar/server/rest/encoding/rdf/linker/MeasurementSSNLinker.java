@@ -16,6 +16,8 @@
  */
 package org.envirocar.server.rest.encoding.rdf.linker;
 
+import org.envirocar.server.rest.encoding.rdf.vocab.SSN;
+import org.envirocar.server.rest.encoding.rdf.vocab.DUL;
 import javax.ws.rs.core.UriBuilder;
 
 import org.envirocar.server.core.entities.Measurement;
