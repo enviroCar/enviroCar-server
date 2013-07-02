@@ -18,7 +18,7 @@ package org.envirocar.server.rest.encoding.rdf.linker;
 
 import javax.ws.rs.core.UriBuilder;
 
-import org.envirocar.server.core.entities.Track;
+import org.envirocar.server.rest.encoding.rdf.RDFLinker;
 import org.envirocar.server.rest.rights.AccessRights;
 
 import com.google.inject.Provider;
@@ -26,11 +26,19 @@ import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
 
 /**
- * @author Jan Wirwahn
+ * TODO JavaDoc
+ *
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class TrackDCTermsLinker extends DCTermsLinker<Track> {
+public abstract class AbstractSSNLinker<T> implements RDFLinker<T> {
     @Override
-    public void linkRest(Model m, Track t, AccessRights rights,
-                         Resource r, Provider<UriBuilder> uriBuilder) {
+    public void link(Model m, T t, AccessRights rights, Resource uri,
+                     Provider<UriBuilder> uriBuilder) {
+        //TODO put the namespace in
+        link1(m, t, rights, uri, uriBuilder);
     }
+
+    protected abstract void link1(Model m, T t, AccessRights rights,
+                                  Resource uri,
+                                  Provider<UriBuilder> uriBuilder);
 }

@@ -42,10 +42,7 @@ import com.hp.hpl.jena.vocabulary.OWL;
 public class EEAPhenomenonLinker implements RDFLinker<Phenomenon> {
     private static final Logger log = LoggerFactory
             .getLogger(EEAPhenomenonLinker.class);
-    private static final String CO2 = "co2";
-    private static final String URI_CO2 =
-            "http://dd.eionet.europa.eu/vocabulary/aq/pollutant/71";
-    public static final String PROPERTIES = "/EEAphenomenons.properties";
+    private static final String PROPERTIES = "/EEAphenomenons.properties";
     private final Properties properties;
 
     public EEAPhenomenonLinker() {

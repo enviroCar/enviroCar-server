@@ -18,7 +18,7 @@ package org.envirocar.server.rest.encoding.rdf.linker;
 
 import javax.ws.rs.core.UriBuilder;
 
-import org.envirocar.server.core.activities.Activity;
+import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.rest.rights.AccessRights;
 
 import com.google.inject.Provider;
@@ -30,9 +30,11 @@ import com.hp.hpl.jena.rdf.model.Resource;
  *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class ActivityDCTermsLinker extends DCTermsLinker<Activity> {
+public class SensorSSNLinker extends AbstractSSNLinker<Sensor> {
     @Override
-    public void linkRest(Model m, Activity t, AccessRights rights, Resource uri,
+    protected void link1(Model m, Sensor t, AccessRights rights, Resource uri,
                          Provider<UriBuilder> uriBuilder) {
+        /* TODO implement org.envirocar.server.rest.encoding.rdf.linker.SensorSSNLinker.link1() */
+        throw new UnsupportedOperationException("org.envirocar.server.rest.encoding.rdf.linker.SensorSSNLinker.link1() not yet implemented");
     }
 }
