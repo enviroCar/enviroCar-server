@@ -34,7 +34,8 @@ public abstract class AbstractSSNLinker<T> implements RDFLinker<T> {
     @Override
     public void link(Model m, T t, AccessRights rights, Resource uri,
                      Provider<UriBuilder> uriBuilder) {
-        //TODO put the namespace in
+        m.setNsPrefix(SSN.PREFIX, SSN.URI);
+        m.setNsPrefix(DUL.PREFIX, DUL.URI);
         link1(m, t, rights, uri, uriBuilder);
     }
 
