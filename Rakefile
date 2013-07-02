@@ -27,8 +27,12 @@ end
 
 namespace :deploy do
 
-    task :deploy, [deploy_dir] => %w[ deploy:clone,
-        deploy:clean, jekyll:build, deploy:commit ]
+    task :deploy, [deploy_dir] => %w[ 
+		deploy:clone
+        deploy:clean 
+		jekyll:build 
+		deploy:commit
+	]
 
     task :clone do
         if File.directory? deploy_dir
@@ -52,10 +56,10 @@ namespace :deploy do
     end
 
     task :commit do
-        #Dir.chdir deploy_dir do
-        #    system "git add --ignore-removal ."
-        #    system "git add --update :/"
-        #    system "git ci && git push origin gh-pages"
-        #end
+        Dir.chdir deploy_dir do
+            system "git add --ignore-removal ."
+            system "git add --update :/"
+            system "git ci && git push origin gh-pages"
+        end
     end
 end
