@@ -21,8 +21,6 @@ import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;
-import static org.envirocar.server.rest.encoding.rdf.linker.SSN.URI;
-
 /**
  *
  * @author Jan Wirwahn
