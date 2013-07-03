@@ -2,6 +2,8 @@ safe: false
 lsi: false
 pygments: true
 exclude:
-    - build.sh
+    - Gemfile
+    - Gemfile.lock
+    - Rakefile
 markdown: redcarpet
 url: "http://envirocar.github.io/enviroCar"
