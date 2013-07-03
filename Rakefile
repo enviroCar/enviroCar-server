@@ -45,7 +45,7 @@ task :travis do | t |
         Dir.chdir deploy_dir do
             system "git add --ignore-removal ."
             system "git add --update :/"
-            system "git ci -m \"Updating #{branch} to #{ENV["TRAVIS_COMMIT"]}\" && git push origin #{branch}"
+            system "git commit -m \"Updating #{branch} to #{ENV["TRAVIS_COMMIT"]}\" && git push origin #{branch}"
         end
     else
         puts "No deploy: building pull request"
