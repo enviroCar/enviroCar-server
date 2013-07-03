@@ -1,7 +1,11 @@
 require 'rake'
 
 bundle_path = "_vendor/bundle"
-repo_url = "https://#{ENV["GITHUB_TOKEN"]}@github.com/car-io/car.io-server.git"
+if not ENV["TRAVIS_PULL_REQUEST"].eql? "false"
+    repo_url = "https://#{ENV["GITHUB_TOKEN"]}@github.com/#{ENV["TRAVIS_REPO_SLUG"]}.git"
+else
+    repo_url = "https://github.com/#{ENV["TRAVIS_REPO_SLUG"]}.git"
+end
 branch = "gh-pages"
 deploy_dir =  "_deploy"
 github_name = "Travis CI"
@@ -32,9 +36,11 @@ task :travis do | t |
         FileUtils.rm_rf(item)
     end
     system "bundle exec jekyll build -d #{deploy_dir}"
-    Dir.chdir deploy_dir do
-        system "git add --ignore-removal ."
-        system "git add --update :/"
-        system "git ci -m \"Updating gh-pages to #{ENV["GIT_COMMIT_ID"]}\" && git push origin gh-pages"
+    if not ENV["TRAVIS_PULL_REQUEST"].eql? "false"
+        Dir.chdir deploy_dir do
+            system "git add --ignore-removal ."
+            system "git add --update :/"
+            system "git ci -m \"Updating gh-pages to #{ENV["TRAVIS_COMMIT"]}\" && git push origin gh-pages"
+        end
     end
 end
