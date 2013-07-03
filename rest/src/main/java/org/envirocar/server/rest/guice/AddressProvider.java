@@ -20,11 +20,14 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import org.envirocar.server.core.validation.UserValidator;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Optional;
+import com.google.common.base.Supplier;
+import com.google.common.base.Suppliers;
 import com.google.common.collect.Sets;
 import com.google.common.io.Files;
 import com.google.common.io.LineProcessor;
@@ -37,19 +40,32 @@ import com.google.inject.Provider;
  */
 public class AddressProvider implements Provider<Optional<Set<String>>> {
     private static final String FILE = "/allowed_addresses.txt";
+    private final Supplier<Optional<Set<String>>> addresses;
+
+    public AddressProvider() {
+        this.addresses = Suppliers.memoizeWithExpiration(
+                new AddressSupplier(), 30, TimeUnit.SECONDS);
+    }
 
     @Override
     public Optional<Set<String>> get() {
-        try {
-            File f = new File(FILE);
-            if (!f.exists()) {
-                return Optional.absent();
-            } else {
-                return Optional.of(Files.readLines(f, Charsets.UTF_8,
-                                                   new AddressProcessor()));
+        return this.addresses.get();
+    }
+
+    private class AddressSupplier implements Supplier<Optional<Set<String>>> {
+        @Override
+        public Optional<Set<String>> get() {
+            try {
+                File f = new File(FILE);
+                if (!f.exists()) {
+                    return Optional.absent();
+                } else {
+                    return Optional.of(Files.readLines(
+                            f, Charsets.UTF_8, new AddressProcessor()));
+                }
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
             }
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
         }
     }
 
