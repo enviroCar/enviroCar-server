@@ -6,4 +6,4 @@ exclude:
     - Gemfile.lock
     - Rakefile
 markdown: redcarpet
-url: "http://envirocar.github.io/enviroCar"
+url: "http://envirocar.github.io/enviroCar-server"
