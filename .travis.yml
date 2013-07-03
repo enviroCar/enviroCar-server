@@ -6,7 +6,7 @@ bundler_args: --path _vendor/bundle
 gemfile: Gemfile
 env:
   global:
-    - secure: |-
-        XVza6VyuoUQaNCSHA+5qpCzybPZogK2IBPWkXbPMoT7jlUGTlfHBH6JjuKKO
-        LuFe2Hoait/P8jIVZnI+Xo1ZrTWS87ldkJhgF2r50/sscLLveR3lc2vbhSu4
-        IVBdEtXCMrVmd9f3KpjQaHJmse9ixTrC5au0pWMJA8WLardxc00=
+    secure: |-
+      q17geOV/9E+PEzKK5LtAVvuuH089zNsty83En3dI4FX+0KjGvUpHO8YB18R6
+      5kWFqHH9SVSgl5pLWpasrKDvOIOZcPaLtIcTI+GdC2UaOn5Q16+JztTQpzJm
+      s9KtEgCCpnWXujcW5oo31QDlpS53n1g/2wPCbCQon4iKFY3idgA=

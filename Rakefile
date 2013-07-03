@@ -46,7 +46,7 @@ task :travis do | t |
             system "git add --ignore-removal ."
             system "git add --update :/"
             system "git commit -m \"Updating #{branch} to #{ENV["TRAVIS_COMMIT"]}\""
-            system "git push origin #{branch}" unless $?.exitstatus != 0
+            system "git push --quiet origin #{branch} > /dev/null" unless $?.exitstatus != 0
         end
     else
         puts "No deploy: building pull request"
