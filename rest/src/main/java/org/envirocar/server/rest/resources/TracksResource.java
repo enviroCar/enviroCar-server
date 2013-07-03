@@ -27,16 +27,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
-import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.Polygon;
-
-import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.entities.Tracks;
 import org.envirocar.server.core.entities.User;
-
 import org.envirocar.server.core.exception.ResourceAlreadyExistException;
 import org.envirocar.server.core.exception.TrackNotFoundException;
 import org.envirocar.server.core.exception.UserNotFoundException;
@@ -49,8 +42,12 @@ import org.envirocar.server.rest.RESTConstants;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.TrackWithMeasurments;
 import org.envirocar.server.rest.auth.Authenticated;
-
 import org.envirocar.server.rest.validation.Schema;
+
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * TODO JavaDoc
@@ -102,13 +99,8 @@ public class TracksResource extends AbstractResource {
 
         if (track instanceof TrackWithMeasurments) {
             TrackWithMeasurments twm = (TrackWithMeasurments) track;
-            track = getDataService().createTrack(twm.getTrack());
-
-            for (Measurement m : twm.getMeasurements()) {
-                m.setUser(getCurrentUser());
-                getDataService().createMeasurement(twm.getTrack(), m);
-            }
-
+            track = getDataService().createTrack(twm.getTrack(),
+                                                 twm.getMeasurements());
         } else {
             track = getDataService().createTrack(track);
         }

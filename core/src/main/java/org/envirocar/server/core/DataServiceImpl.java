@@ -16,6 +16,8 @@
  */
 package org.envirocar.server.core;
 
+import java.util.List;
+
 import org.envirocar.server.core.dao.MeasurementDao;
 import org.envirocar.server.core.dao.PhenomenonDao;
 import org.envirocar.server.core.dao.SensorDao;
@@ -112,6 +114,22 @@ public class DataServiceImpl implements DataService {
     public Track createTrack(Track track) throws ValidationException {
         this.trackValidator.validateCreate(track);
         this.trackDao.create(track);
+        this.eventBus.post(new CreatedTrackEvent(track.getUser(), track));
+        return track;
+    }
+
+    @Override
+    public Track createTrack(Track track, List<Measurement> measurements) throws
+            ValidationException {
+        this.trackValidator.validateCreate(track);
+        for (Measurement m : measurements) {
+            m.setUser(track.getUser());
+            this.measurementValidator.validateCreate(m);
+        }
+        this.trackDao.create(track);
+        for (Measurement m : measurements) {
+            this.measurementDao.create(m);
+        }
         this.eventBus.post(new CreatedTrackEvent(track.getUser(), track));
         return track;
     }
