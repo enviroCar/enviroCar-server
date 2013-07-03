@@ -48,26 +48,9 @@ public class StatisticsResource extends AbstractResource {
     private final Sensor sensor;
 
     @AssistedInject
-    public StatisticsResource() {
-        this(null, null, null);
-    }
-
-    @AssistedInject
-    public StatisticsResource(@Assisted User user) {
-        this(null, user, null);
-    }
-
-    @AssistedInject
-    public StatisticsResource(@Assisted @Nullable Track track) {
-        this(track, null, null);
-    }
-
-    @AssistedInject
-    public StatisticsResource(@Assisted Sensor sensor) {
-        this(null, null, sensor);
-    }
-
-    public StatisticsResource(Track track, User user, Sensor sensor) {
+    public StatisticsResource(@Nullable @Assisted Track track,
+                              @Nullable @Assisted User user,
+                              @Nullable @Assisted Sensor sensor) {
         this.track = track;
         this.user = user;
         this.sensor = sensor;
