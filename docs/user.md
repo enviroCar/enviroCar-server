@@ -3,7 +3,7 @@ layout: default
 ---
 
 # User Resource
-{% highlight_git json https://github.com/car-io/car.io-server.git rest/src/main/resources/schema/user.json %}
+{% highlight_git json https://github.com/enviroCar/enviroCar-server.git rest/src/main/resources/schema/user.json %}
 ```python
 def yourfunction():
      print "Hello World!"
@@ -15,7 +15,7 @@ The [JSON Schema](http://json-schema.org/) is maintained in [`rest/src/main/reso
 
 ## API Reference ##
 
-See the [wiki](https://github.com/car-io/car.io-server/wiki#api-reference).
+See the [wiki](https://github.com/enviroCar/enviroCar-server/wiki#api-reference).
 
 ## Deployments ##
 
@@ -30,7 +30,7 @@ See the [wiki](https://github.com/car-io/car.io-server/wiki#api-reference).
 * Run `mvn clean install`.
 * Deploy the `war` file in `webapp/target` to a application server of your choice (e.g. [Apache Tomcat](http://tomcat.apache.org/)).
 
-## [License](https://github.com/car-io/car.io-server/blob/master/LICENSE) ##
+## [License](https://github.com/enviroCar/enviroCar-server/blob/master/LICENSE) ##
 
     Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
                         Arne De Wall, Dustin Demuth, Saqib Rasheed
