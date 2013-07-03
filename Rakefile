@@ -40,7 +40,7 @@ task :travis do | t |
     puts "Executing Jekyll"
     system "bundle exec jekyll build -d #{deploy_dir}"
 
-    if not ENV["TRAVIS_PULL_REQUEST"].eql? "false"
+    if ENV["TRAVIS_PULL_REQUEST"].eql? "false"
         puts "Deploying #{branch}"
         Dir.chdir deploy_dir do
             system "git add --ignore-removal ."
@@ -48,6 +48,6 @@ task :travis do | t |
             system "git ci -m \"Updating #{branch} to #{ENV["TRAVIS_COMMIT"]}\" && git push origin #{branch}"
         end
     else
-        puts "No deply: building pull request"
+        puts "No deploy: building pull request"
     end
 end
