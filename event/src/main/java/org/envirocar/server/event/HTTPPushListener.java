@@ -17,10 +17,6 @@
 package org.envirocar.server.event;
 
 import java.io.IOException;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableKeyException;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -31,6 +27,11 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
+import org.envirocar.server.core.entities.Track;
+import org.envirocar.server.core.event.CreatedTrackEvent;
+import org.envirocar.server.rest.MediaTypes;
+import org.envirocar.server.rest.encoding.JSONEntityEncoder;
+import org.envirocar.server.rest.rights.AccessRightsImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,14 +40,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import org.envirocar.server.core.entities.Track;
-
-import org.envirocar.server.core.event.CreatedTrackEvent;
-import org.envirocar.server.rest.MediaTypes;
-import org.envirocar.server.rest.encoding.JSONEntityEncoder;
-
-import org.envirocar.server.rest.rights.AccessRightsImpl;
 
 @Singleton
 public class HTTPPushListener {
@@ -102,10 +95,7 @@ public class HTTPPushListener {
         }
     }
 
-    private HttpClient createClient() throws UnrecoverableKeyException,
-                                             KeyManagementException,
-                                             KeyStoreException,
-                                             NoSuchAlgorithmException {
+    private HttpClient createClient() {
         return new DefaultHttpClient();
     }
 }
