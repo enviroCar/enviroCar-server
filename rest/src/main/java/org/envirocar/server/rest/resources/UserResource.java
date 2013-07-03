@@ -29,12 +29,7 @@ import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 
-import com.google.common.base.Preconditions;
-import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
-
 import org.envirocar.server.core.entities.User;
-
 import org.envirocar.server.core.exception.IllegalModificationException;
 import org.envirocar.server.core.exception.ResourceAlreadyExistException;
 import org.envirocar.server.core.exception.ResourceNotFoundException;
@@ -43,8 +38,11 @@ import org.envirocar.server.core.exception.ValidationException;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.auth.Authenticated;
-
 import org.envirocar.server.rest.validation.Schema;
+
+import com.google.common.base.Preconditions;
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 
 /**
  * TODO JavaDoc
@@ -80,6 +78,7 @@ public class UserResource extends AbstractResource {
             UserNotFoundException, IllegalModificationException,
             ValidationException, ResourceAlreadyExistException {
         checkRights(getRights().canModify(user));
+        checkMail(user);
         User modified = getUserService().modifyUser(user, changes);
         if (modified.getName().equals(user.getName())) {
             return Response.noContent().build();
