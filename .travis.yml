@@ -1,7 +1,7 @@
 language: ruby
 rvm:
   - 2.0.0
-script: rake bundle:install travis
+script: rake travis
 bundler_args: --path _vendor/bundle
 gemfile: Gemfile
 env:
