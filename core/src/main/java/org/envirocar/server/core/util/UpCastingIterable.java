@@ -17,6 +17,8 @@
 package org.envirocar.server.core.util;
 
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
@@ -28,6 +30,7 @@ import com.google.common.base.Preconditions;
  */
 public class UpCastingIterable<T> extends PaginatedIterable<T> {
     private final Iterable<? extends T> delegate;
+    private List<T> items = null;
 
     public UpCastingIterable(Iterable<? extends T> delegate,
                              Pagination pagination, long elements) {
@@ -39,7 +42,31 @@ public class UpCastingIterable<T> extends PaginatedIterable<T> {
     @Override
     @SuppressWarnings("unchecked")
     public Iterator<T> iterator() {
-        return (Iterator<T>) delegate.iterator();
+        if (items == null) {
+            items = new LinkedList<T>();
+            return new Iterator<T>() {
+                private final Iterator<? extends T> it = delegate.iterator();
+
+                @Override
+                public boolean hasNext() {
+                    return it.hasNext();
+                }
+
+                @Override
+                public T next() {
+                    T t = it.next();
+                    items.add(t);
+                    return t;
+                }
+
+                @Override
+                public void remove() {
+                    throw new UnsupportedOperationException();
+                }
+            };
+        } else {
+            return items.iterator();
+        }
     }
 
     @Override
