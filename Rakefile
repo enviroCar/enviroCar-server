@@ -1,7 +1,7 @@
 require 'rake'
 
 bundle_path = "_vendor/bundle"
-if not ENV["TRAVIS_PULL_REQUEST"].eql? "false"
+if ENV["TRAVIS_PULL_REQUEST"].eql? "false"
     repo_url = "https://#{ENV["GITHUB_TOKEN"]}@github.com/#{ENV["TRAVIS_REPO_SLUG"]}.git"
 else
     repo_url = "https://github.com/#{ENV["TRAVIS_REPO_SLUG"]}.git"
@@ -45,7 +45,8 @@ task :travis do | t |
         Dir.chdir deploy_dir do
             system "git add --ignore-removal ."
             system "git add --update :/"
-            system "git commit -m \"Updating #{branch} to #{ENV["TRAVIS_COMMIT"]}\" && git push origin #{branch}"
+            system "git commit -m \"Updating #{branch} to #{ENV["TRAVIS_COMMIT"]}\""
+            system "git push origin #{branch}" unless $?.exitstatus == 0
         end
     else
         puts "No deploy: building pull request"
