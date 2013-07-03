@@ -19,7 +19,6 @@ package org.envirocar.server.core.validation;
 import java.util.regex.Pattern;
 
 import org.envirocar.server.core.entities.User;
-
 import org.envirocar.server.core.exception.ValidationException;
 
 /**
@@ -28,10 +27,11 @@ import org.envirocar.server.core.exception.ValidationException;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class UserValidator extends AbstractValidator<User> {
-    private final Pattern EMAIL_PATTERN = Pattern
+    public static final Pattern EMAIL_PATTERN = Pattern
             .compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" +
                      "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
-    private final Pattern NAME_PATTERN = Pattern.compile("^[_A-Za-z0-9-]{4,}$");
+    private static final Pattern NAME_PATTERN = Pattern
+            .compile("^[_A-Za-z0-9-]{4,}$");
 
     @Override
     public void validateCreate(User user) throws ValidationException {
