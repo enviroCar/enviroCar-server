@@ -1,12 +1,12 @@
 language: ruby
 rvm:
   - 2.0.0
-script: rake bundle:install jekyll:build
+script: rake bundle:install travis
 bundler_args: --path _vendor/bundle
 gemfile: Gemfile
 env:
   global:
-    - export GIT_COMMIT_ID=`git rev-parse HEAD`
+    - "export GIT_COMMIT_ID=`git rev-parse HEAD`"
     - secure: |-
         XVza6VyuoUQaNCSHA+5qpCzybPZogK2IBPWkXbPMoT7jlUGTlfHBH6JjuKKO
         LuFe2Hoait/P8jIVZnI+Xo1ZrTWS87ldkJhgF2r50/sscLLveR3lc2vbhSu4
