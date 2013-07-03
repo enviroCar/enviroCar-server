@@ -29,18 +29,25 @@ task :serve do
 end
 
 task :travis do | t |
+    puts "Configuring GIT"
     system "git config --global user.name \"#{github_name}\""
     system "git config --global user.email \"#{github_mail}\""
     system "git clone --quiet --branch=#{branch} #{repo_url} #{deploy_dir} > /dev/null"
+    puts "Removing old deploy folder"
     Dir.glob("#{deploy_dir}/*") do | item |
         FileUtils.rm_rf(item)
     end
+    puts "Executing Jekyll"
     system "bundle exec jekyll build -d #{deploy_dir}"
+
     if not ENV["TRAVIS_PULL_REQUEST"].eql? "false"
+        puts "Deploying #{branch}"
         Dir.chdir deploy_dir do
             system "git add --ignore-removal ."
             system "git add --update :/"
-            system "git ci -m \"Updating gh-pages to #{ENV["TRAVIS_COMMIT"]}\" && git push origin gh-pages"
+            system "git ci -m \"Updating #{branch} to #{ENV["TRAVIS_COMMIT"]}\" && git push origin #{branch}"
         end
+    else
+        puts "No deply: building pull request"
     end
 end
