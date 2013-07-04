@@ -23,6 +23,8 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import org.envirocar.server.core.validation.UserValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Optional;
@@ -32,13 +34,17 @@ import com.google.common.collect.Sets;
 import com.google.common.io.Files;
 import com.google.common.io.LineProcessor;
 import com.google.inject.Provider;
+import com.google.inject.Singleton;
 
 /**
  * TODO JavaDoc
  *
  * @author Christian Autermann <c.autermann@52north.org>
  */
+@Singleton
 public class AddressProvider implements Provider<Optional<Set<String>>> {
+    private static final Logger log = LoggerFactory
+            .getLogger(AddressProvider.class);
     private static final String FILE = "/allowed_addresses.txt";
     private final Supplier<Optional<Set<String>>> addresses;
 
@@ -55,11 +61,14 @@ public class AddressProvider implements Provider<Optional<Set<String>>> {
     private class AddressSupplier implements Supplier<Optional<Set<String>>> {
         @Override
         public Optional<Set<String>> get() {
+            log.debug("Checking {} for addresses.", FILE);
             try {
                 File f = new File(FILE);
                 if (!f.exists()) {
+                    log.debug("{} does not exist. All addresses allowed.", FILE);
                     return Optional.absent();
                 } else {
+                    log.debug("{} exists. Loading mail addresses.", FILE);
                     return Optional.of(Files.readLines(
                             f, Charsets.UTF_8, new AddressProcessor()));
                 }
@@ -76,7 +85,9 @@ public class AddressProvider implements Provider<Optional<Set<String>>> {
         public boolean processLine(String line) {
             String address = line.trim();
             if (UserValidator.EMAIL_PATTERN.matcher(address).matches()) {
+                log.debug("Allowed address: {}", address);
                 addresses.add(address);
+            } else {
             }
             return true;
         }
