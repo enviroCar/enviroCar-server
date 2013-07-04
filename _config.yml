@@ -1,6 +1,6 @@
 safe: false
 lsi: false
-pygments: false
+pygments: true
 exclude:
     - Gemfile
     - Gemfile.lock

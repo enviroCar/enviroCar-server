@@ -1,9 +1,6 @@
 ---
 layout: default
 ---
-
-### Welcome to the enviroCar server wiki!
-
 ## API Reference
 For Login/logout see [Authentification](authentification).
 
