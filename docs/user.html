@@ -31,43 +31,43 @@
                 <h1 id="toc_0">User Resource</h1>
 
 <div class="highlight-file">
-  <div>
-    <pre><code class='json'>{
-    &quot;$schema&quot;: &quot;http://json-schema.org/draft-04/schema#&quot;,
-    &quot;id&quot;: &quot;http://schema.envirocar.org/user.json#&quot;,
-    &quot;type&quot;: &quot;object&quot;,
-    &quot;required&quot;: [
-        &quot;name&quot;
-    ],
-    &quot;allOf&quot;: [
-        {
-            &quot;$ref&quot;: &quot;http://schema.envirocar.org/definitions.json#/optional-user-properties&quot;
-        },
-        {
-            &quot;properties&quot;: {
-                &quot;created&quot;: {
-                    &quot;type&quot;: &quot;string&quot;,
-                    &quot;format&quot;: &quot;date-time&quot;
-                },
-                &quot;mail&quot;: {
-                    &quot;$ref&quot;: &quot;http://schema.envirocar.org/definitions.json#/mail&quot;
-                },
-                &quot;modified&quot;: {
-                    &quot;type&quot;: &quot;string&quot;,
-                    &quot;format&quot;: &quot;date-time&quot;
-                },
-                &quot;name&quot;: {
-                    &quot;$ref&quot;: &quot;http://schema.envirocar.org/definitions.json#/username&quot;
-                }
-            }
-        }
-    ]
-}</code></pre>
-  </div>
+
+<div class="highlight"><pre><code class="json"><span class="p">{</span>
+    <span class="nt">&quot;$schema&quot;</span><span class="p">:</span> <span class="s2">&quot;http://json-schema.org/draft-04/schema#&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;http://schema.envirocar.org/user.json#&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;object&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;required&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;name&quot;</span>
+    <span class="p">],</span>
+    <span class="nt">&quot;allOf&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;$ref&quot;</span><span class="p">:</span> <span class="s2">&quot;http://schema.envirocar.org/definitions.json#/optional-user-properties&quot;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;created&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+                    <span class="nt">&quot;format&quot;</span><span class="p">:</span> <span class="s2">&quot;date-time&quot;</span>
+                <span class="p">},</span>
+                <span class="nt">&quot;mail&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="nt">&quot;$ref&quot;</span><span class="p">:</span> <span class="s2">&quot;http://schema.envirocar.org/definitions.json#/mail&quot;</span>
+                <span class="p">},</span>
+                <span class="nt">&quot;modified&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+                    <span class="nt">&quot;format&quot;</span><span class="p">:</span> <span class="s2">&quot;date-time&quot;</span>
+                <span class="p">},</span>
+                <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="nt">&quot;$ref&quot;</span><span class="p">:</span> <span class="s2">&quot;http://schema.envirocar.org/definitions.json#/username&quot;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
 
 </div>
-<div class="highlight"><pre><code class="python language-python" data-lang="python">def yourfunction():
-     print &quot;Hello World!&quot;
+<div class="highlight"><pre><code class="python language-python" data-lang="python"><span class="k">def</span> <span class="nf">yourfunction</span><span class="p">():</span>
+     <span class="k">print</span> <span class="s">&quot;Hello World!&quot;</span>
 </code></pre></div>
 <h2 id="toc_1">Schema</h2>
 
