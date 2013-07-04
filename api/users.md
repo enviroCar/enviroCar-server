@@ -1,3 +1,7 @@
+--
+layout: default
+--
+
 # /rest/users
 
 This is the users resource.

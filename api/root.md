@@ -1,3 +1,7 @@
+--
+layout: default
+--
+
 # /rest
 
 This is the root resource.

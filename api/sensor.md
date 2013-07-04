@@ -1,3 +1,7 @@
+--
+layout: default
+--
+
 * `GET /rest/sensors/:sensor`
 
     Get a sensor. Responses:

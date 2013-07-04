@@ -1,3 +1,7 @@
+--
+layout: default
+--
+
 # /rest/groups
 
 This is the groups resource.

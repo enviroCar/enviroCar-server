@@ -1,3 +1,7 @@
+--
+layout: default
+--
+
 # /rest/groups/:groupname
 
 *   `GET /rest/groups/:groupname`

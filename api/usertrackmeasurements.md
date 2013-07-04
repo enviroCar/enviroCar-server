@@ -1,3 +1,7 @@
+--
+layout: default
+--
+
 This is the Measurements of a Track resource.
 
 *   `GET /rest/users/:username/tracks/:track/measurements`

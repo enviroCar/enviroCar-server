@@ -1,3 +1,7 @@
+--
+layout: default
+--
+
 # /rest/measurements/:measurementid
 
 *   `GET /rest/measurements/:measurementid`

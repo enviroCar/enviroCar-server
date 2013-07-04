@@ -1,3 +1,7 @@
+--
+layout: default
+--
+
 # /rest/groups/:groupname/members/:username
 
 *   `GET /rest/groups/:groupname/members/:username`

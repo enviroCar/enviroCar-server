@@ -1,3 +1,7 @@
+--
+layout: default
+--
+
 This is the Phenomenons resource.
 
 *   `GET /rest/phenomenons`

@@ -1,3 +1,7 @@
+--
+layout: default
+--
+
 This is the Sensors resource.
 
 *   `GET /rest/sensors`

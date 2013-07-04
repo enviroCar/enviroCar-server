@@ -1,3 +1,7 @@
+--
+layout: default
+--
+
 # /rest/users/:username
 
 *   `GET /rest/users/:username`

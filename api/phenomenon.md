@@ -1,3 +1,7 @@
+--
+layout: default
+--
+
 * `GET /rest/phenomenons/:phenomenon`
 
     Gets a phenomenon. Responses:

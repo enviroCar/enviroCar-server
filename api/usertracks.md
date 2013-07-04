@@ -1,3 +1,7 @@
+--
+layout: default
+--
+
 This is the Tracks of a User resource.
 
 *   `GET /rest/users/:username/tracks`

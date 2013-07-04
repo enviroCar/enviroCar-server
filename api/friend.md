@@ -1,3 +1,7 @@
+--
+layout: default
+--
+
 # /rest/users/:username/friends/:friend
 
 *   `GET /rest/users/:username/friends/:friend`

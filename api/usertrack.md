@@ -1,3 +1,7 @@
+--
+layout: default
+--
+
 # /rest/users/:username/tracks/:trackid
 
 *   `GET /rest/users/:username/tracks/:trackid`

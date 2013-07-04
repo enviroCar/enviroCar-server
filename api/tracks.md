@@ -1,3 +1,7 @@
+--
+layout: default
+--
+
 This is the Tracks resource.
 
 *   `GET /rest/tracks`

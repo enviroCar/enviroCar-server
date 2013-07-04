@@ -1,3 +1,7 @@
+--
+layout: default
+--
+
 # /rest/measurements
 
 This is the measurements resource.

@@ -1,3 +1,7 @@
+--
+layout: default
+--
+
 # /rest/users/:username/groups
 
 This is the groups of a user resource.
