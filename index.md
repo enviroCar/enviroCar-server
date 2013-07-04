@@ -6,11 +6,11 @@ layout: default
 
 ## Schema ##
 
-The [JSON Schema](http://json-schema.org/) is maintained in [`rest/src/main/resources/schema`](rest/src/main/resources/schema).
+The [JSON Schema](http://json-schema.org/) is maintained [here](https://github.com/enviroCar/enviroCar-server/tree/master/rest/src/main/resources/schema).
 
 ## API Reference ##
 
-See the [wiki](https://github.com/enviroCar/enviroCar-server/wiki#api-reference).
+See the [here](api)
 
 ## Deployments ##
 
