@@ -1,6 +1,6 @@
---
+---
 layout: default
---
+---
 
 * `GET /rest/phenomenons/:phenomenon`
 

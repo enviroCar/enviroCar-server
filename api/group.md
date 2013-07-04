@@ -1,6 +1,6 @@
---
+---
 layout: default
---
+---
 
 # /rest/groups/:groupname
 

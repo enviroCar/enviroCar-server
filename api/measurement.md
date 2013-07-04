@@ -1,6 +1,6 @@
---
+---
 layout: default
---
+---
 
 # /rest/measurements/:measurementid
 

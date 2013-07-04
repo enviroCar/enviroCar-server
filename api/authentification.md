@@ -1,6 +1,6 @@
---
+---
 layout: default
---
+---
 
 ## Registration
 See [`POST /rest/users`](Users)

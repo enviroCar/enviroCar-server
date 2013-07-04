@@ -1,6 +1,6 @@
---
+---
 layout: default
---
+---
 
 This is the Tracks resource.
 

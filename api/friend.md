@@ -1,6 +1,6 @@
---
+---
 layout: default
---
+---
 
 # /rest/users/:username/friends/:friend
 

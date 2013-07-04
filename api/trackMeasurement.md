@@ -1,6 +1,6 @@
---
+---
 layout: default
---
+---
 
 # /rest/tracks/:trackid/measurements/:measurementid
 

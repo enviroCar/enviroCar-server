@@ -1,6 +1,6 @@
---
+---
 layout: default
---
+---
 
 * `GET /rest/sensors/:sensor`
 
