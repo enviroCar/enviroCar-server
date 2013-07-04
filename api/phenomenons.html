@@ -1,0 +1,76 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="chrome=1">
+        <title>EnviroCar Service by enviroCar</title>
+
+        <link rel="stylesheet" href="http://envirocar.github.io/enviroCar-server/stylesheets/styles.css">
+        <link rel="stylesheet" href="http://envirocar.github.io/enviroCar-server/stylesheets/pygment_trac.css">
+        <script src="http://envirocar.github.io/enviroCar-server/javascripts/scale.fix.js"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+        <!--[if lt IE 9]>
+        <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+    </head>
+    <body>
+        <div class="wrapper">
+            <header>
+                <h1 class="header">EnviroCar Service</h1>
+                <p class="header">EnviroCar Service</p>
+                <ul>
+                    <li class="download"><a class="buttons" href="https://github.com/enviroCar/enviroCar-server/zipball/master">Download ZIP</a></li>
+                    <li class="download"><a class="buttons" href="https://github.com/enviroCar/enviroCar-server/tarball/master">Download TAR</a></li>
+                    <li><a class="buttons github" href="https://github.com/enviroCar/enviroCar-server">View On GitHub</a></li>
+                </ul>
+                <p class="header">
+                    This project is maintained by <a class="header name" href="https://github.com/enviroCar">enviroCar</a>
+                </p>
+                </header>
+            <section>
+                <p>This is the Phenomenons resource.</p>
+
+<ul>
+<li><p><code>GET /rest/phenomenons</code></p>
+
+<p>Get a list of all phenomenons. Responses:</p>
+
+<table><thead>
+<tr>
+<th>Status</th>
+<th>Details</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>200 OK</code></td>
+<td>Returns the phenomenons as specified in <a href="https://github.com/enviroCar/enviroCar-server/blob/master/rest/src/main/resources/schema/phenomenons.json" title="phenomenons.json">phenomenons.json</a>.</td>
+</tr>
+</tbody></table>
+
+<p>Query parameters:</p>
+
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Default</th>
+<th>Details</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>limit</code></td>
+<td><code>int</code></td>
+<td><code>0</code></td>
+<td>Limit the response to the <code>limit</code> newest phenomenons. A limit &le; 0 results in no limit.</td>
+</tr>
+</tbody></table></li>
+</ul>
+
+            </section>
+            <footer>
+                <p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
+            </footer>
+        </div>
+        <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    </body>
+</html>
