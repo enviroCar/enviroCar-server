@@ -4,6 +4,11 @@ layout: default
 
 # /rest/users/:username
 
+## Schema
+{% include_schema user %}
+## Example
+{% include_example user %}
+
 *   `GET /rest/users/:username`
 
     Get the user `username`.
