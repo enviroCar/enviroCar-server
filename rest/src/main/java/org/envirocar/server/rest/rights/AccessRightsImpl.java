@@ -177,7 +177,7 @@ public class AccessRightsImpl extends AbstractAccessRights {
 
     @Override
     public boolean canSeeFirstNameOf(User user) {
-        return isSelfFriendOfOrShareGroup(user);
+        return true;
     }
 
     @Override
@@ -192,12 +192,12 @@ public class AccessRightsImpl extends AbstractAccessRights {
 
     @Override
     public boolean canSeeLastNameOf(User user) {
-        return isSelfFriendOfOrShareGroup(user);
+        return true;
     }
 
     @Override
     public boolean canSeeLocationOf(User user) {
-        return isSelfFriendOfOrShareGroup(user);
+        return true;
     }
 
     @Override
