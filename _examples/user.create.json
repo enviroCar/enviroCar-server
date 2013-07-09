@@ -1,3 +1,5 @@
 {
-
+    "name": "NewUserName",
+    "mail": "test@testmail.com",
+    "token": "testtoken"
 }
