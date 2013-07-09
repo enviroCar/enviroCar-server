@@ -4,33 +4,37 @@ layout: default
 
 This is the Sensors resource.
 
-# /rest/sensors/:sensorid
+# /rest/sensors #
 
-## Schema
+### GET
+
+Get a list of all sensors.
+
+{% include pagination %}
+
+#### Response Schema
 {% include_schema sensor %}
-## Example
+
+#### Response Example
+{% include_example groups %}
+
+# /rest/sensors/:sensorid #
+
+### GET
+Get the sensor `sensorid`.
+
+#### Response Schema
+{% include_schema sensor %}
+
+#### Response Example
 {% include_example sensor %}
 
-* `GET /rest/sensors/:sensor`
+### POST
+Creates a new sensor.
 
-    Get a sensor by its id.
+#### Request Schema
+{% include_schema sensor.create %}
 
-	
-# /rest/sensors	
+#### Response Example
+none
 
-## Schema
-{% include_schema sensors %}
-	
-*   `GET /rest/sensors`
-
-    Get a list of all sensors. 
-
-    Query parameters:
-
-    | Name    | Type  | Default | Details
-    |---------|-------|---------|--------
-    | `limit` | `int` | `0`     | Limit the response to the `limit` newest sensors. A limit &le; 0 results in no limit.
-
-*   `POST /rest/sensors`
-
-    Creates a new sensor.
