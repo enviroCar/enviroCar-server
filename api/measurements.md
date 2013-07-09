@@ -1,14 +1,14 @@
 ---
 layout: default
 ---
-	
+
 # /rest/measurements #
 
 This is the measurements resource.
 
 ### GET
 
-Get a list of all measurements. 
+Get a list of all measurements.
 
 Query parameters:
 
@@ -17,7 +17,7 @@ Query parameters:
 | `limit` | `int` | `0`     | Limit the response to the `limit` newest measurements. A limit &le; 0 results in no limit.
 
 #### Response Schema
-{% include_schema measurememts %}
+{% include_schema measurements %}
 
 #### Response Example
 {% include_example measurements %}
@@ -27,8 +27,8 @@ Query parameters:
 Creates new measurements.
 
 #### Response Example
-{% include_example measurement.create %}	
-	
+{% include_example measurement.create %}
+
 # /rest/measurements/:measurementid #
 
 ### GET
