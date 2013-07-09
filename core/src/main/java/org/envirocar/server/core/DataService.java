@@ -54,10 +54,6 @@ public interface DataService {
 
     Measurements getMeasurements(MeasurementFilter request);
 
-    Measurement modifyMeasurement(Measurement measurement, Measurement changes)
-            throws ValidationException,
-                   IllegalModificationException;
-
     Track createTrack(Track track) throws
             ValidationException;
 
