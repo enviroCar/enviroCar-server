@@ -8,7 +8,7 @@ layout: default
 ## Build & Installation ##
 
 * Install and run [MongoDB][mongo] >2.4.
-* Clone the repository and switch to the directory.
+* Clone the [repository][repo] and switch to the directory.
 * Configure the connection in `mongo/src/main/resources/mongo.properties` (if needed).
 * Run `mvn clean install`.
 * Deploy the `war` file in `webapp/target` to a application server of your choice (e.g. [Apache Tomcat][tomcat]).
@@ -141,3 +141,4 @@ b.addBinding().to(W3CGeoMeasurementLinker.class);
 [tomcat]: http://tomcat.apache.org/ "Apache Tomcat"
 [mongo]: http://www.mongodb.org/ "MongoDB"
 [w3cgeo]: http://www.w3.org/2003/01/geo/ "W3C Basic Geo"
+[repo]: https://github.com/enviroCar/enviroCar-server.git "GitHub Repository"

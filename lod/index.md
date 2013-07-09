@@ -44,12 +44,11 @@ curl -u jakob1:*****  -H "Accept: text/turtle" https://giv-car.uni-muenster.de/d
         foaf:nick       "jakob1"^^xsd:string .
 ```
 
+For [RDF/XML][rdf]:
+
 ```
 curl -u jakob1:*****  -H "Accept: application/rdf+xml" https://giv-car.uni-muenster.de/dev/rest/users/jakob1
 ```
-
-For [RDF/XML][rdf]:
-
 ```xml
 <rdf:RDF
     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"

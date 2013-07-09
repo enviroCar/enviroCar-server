@@ -2,43 +2,56 @@
 layout: default
 ---
 
+# /rest/users #
+
 This is the Users resource.
 
-# /rest/users/:username
+### GET
 
-## Schema
-{% include_schema user %}
-## Example
-{% include_example user %}
+Get a list of all users.
 
-*   `GET /rest/users/:username`
+Query parameters:
 
-    Get the user `username`.
-	
-*   `PUT /rest/users/:username`
+| Name    | Type  | Default | Details
+|---------|-------|---------|--------
+| `limit` | `int` | `0`     | Limit the response to the `limit` newest users. A limit &le; 0 results in no limit.
 
-    Updates the user `username`. Request schema: [user.modify.json].
-	
-*	`DELETE /rest/users/:username`
-
-    Deletes the user `username`.
-
-	
-# /rest/users
-
-## Schema
+#### Response Schema
 {% include_schema users %}
 
-*   `GET /rest/users`
+#### Response Example
 
-    Get a list of all users.
+# /rest/users/:username #
 
-    Query parameters:
+### GET
+Get the user `username`.
 
-    | Name    | Type  | Default | Details
-    |---------|-------|---------|--------
-    | `limit` | `int` | `0`     | Limit the response to the `limit` newest users. A limit &le; 0 results in no limit.
+#### Response Schema
+{% include_schema user %}
 
-*   `POST /rest/users`
+#### Response Example
+{% include_example user %}
 
-    Creates a new user.
+### POST
+Creates a new user.
+
+#### Request Schema
+{% include_schema user.create %}
+
+#### Response Example
+none
+
+
+### PUT
+Updates the user `username`.
+
+#### Request Schema
+{% include_schema user.modify %}
+
+#### Request Example
+
+
+### DELETE ##
+Deletes the user `username`.
+
+
