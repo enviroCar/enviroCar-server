@@ -27,11 +27,67 @@
                 </ul>
             </header>
             <section>
-                <p>This is the Users resource.</p>
+                <h1 id="toc_0">/rest/users</h1>
 
-<h1 id="toc_0">/rest/users/:username</h1>
+<p>This is the Users resource.</p>
 
-<h2 id="toc_1">Schema</h2>
+<h3 id="toc_1">GET</h3>
+
+<p>Get a list of all users.</p>
+
+<p>Query parameters:</p>
+
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Default</th>
+<th>Details</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>limit</code></td>
+<td><code>int</code></td>
+<td><code>0</code></td>
+<td>Limit the response to the <code>limit</code> newest users. A limit &le; 0 results in no limit.</td>
+</tr>
+</tbody></table>
+
+<h4 id="toc_2">Response Schema</h4>
+
+<div class="highlight-file">
+
+<div class="highlight"><pre><code class="json"><span class="p">{</span>
+    <span class="nt">&quot;$schema&quot;</span><span class="p">:</span> <span class="s2">&quot;http://json-schema.org/draft-04/schema#&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;http://schema.envirocar.org/users.json#&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;object&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;additionalProperties&quot;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nt">&quot;required&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;users&quot;</span>
+    <span class="p">],</span>
+    <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;users&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;array&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;minItems&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="nt">&quot;items&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;$ref&quot;</span><span class="p">:</span> <span class="s2">&quot;http://schema.envirocar.org/user.json#&quot;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+</div>
+
+<h4 id="toc_3">Response Example</h4>
+
+<h1 id="toc_4">/rest/users/:username</h1>
+
+<h3 id="toc_5">GET</h3>
+
+<p>Get the user <code>username</code>.</p>
+
+<h4 id="toc_6">Response Schema</h4>
 
 <div class="highlight-file">
 
@@ -70,7 +126,7 @@
 
 </div>
 
-<h2 id="toc_2">Example</h2>
+<h4 id="toc_7">Response Example</h4>
 
 <div class="highlight-file">
 
@@ -84,72 +140,87 @@
 
 </div>
 
-<ul>
-<li><p><code>GET /rest/users/:username</code></p>
+<h3 id="toc_8">POST</h3>
 
-<p>Get the user <code>username</code>.</p></li>
-<li><p><code>PUT /rest/users/:username</code></p>
+<p>Creates a new user.</p>
 
-<p>Updates the user <code>username</code>. Request schema: [user.modify.json].</p></li>
-<li><p><code>DELETE /rest/users/:username</code></p>
-
-<p>Deletes the user <code>username</code>.</p></li>
-</ul>
-
-<h1 id="toc_3">/rest/users</h1>
-
-<h2 id="toc_4">Schema</h2>
+<h4 id="toc_9">Request Schema</h4>
 
 <div class="highlight-file">
 
 <div class="highlight"><pre><code class="json"><span class="p">{</span>
     <span class="nt">&quot;$schema&quot;</span><span class="p">:</span> <span class="s2">&quot;http://json-schema.org/draft-04/schema#&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;http://schema.envirocar.org/users.json#&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;http://schema.envirocar.org/user.create.json#&quot;</span><span class="p">,</span>
     <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;object&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;additionalProperties&quot;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
     <span class="nt">&quot;required&quot;</span><span class="p">:</span> <span class="p">[</span>
-        <span class="s2">&quot;users&quot;</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;mail&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;token&quot;</span>
     <span class="p">],</span>
-    <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="nt">&quot;users&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;array&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;minItems&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-            <span class="nt">&quot;items&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="nt">&quot;$ref&quot;</span><span class="p">:</span> <span class="s2">&quot;http://schema.envirocar.org/user.json#&quot;</span>
+    <span class="nt">&quot;allOf&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;$ref&quot;</span><span class="p">:</span> <span class="s2">&quot;http://schema.envirocar.org/definitions.json#/optional-user-properties&quot;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="nt">&quot;$ref&quot;</span><span class="p">:</span> <span class="s2">&quot;http://schema.envirocar.org/definitions.json#/username&quot;</span>
+                <span class="p">},</span>
+                <span class="nt">&quot;mail&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="nt">&quot;$ref&quot;</span><span class="p">:</span> <span class="s2">&quot;http://schema.envirocar.org/definitions.json#/mail&quot;</span>
+                <span class="p">},</span>
+                <span class="nt">&quot;token&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+                <span class="p">}</span>
             <span class="p">}</span>
         <span class="p">}</span>
-    <span class="p">}</span>
+    <span class="p">]</span>
 <span class="p">}</span>
 </code></pre></div>
 
 </div>
 
-<ul>
-<li><p><code>GET /rest/users</code></p>
+<h4 id="toc_10">Response Example</h4>
 
-<p>Get a list of all users.</p>
+<p>none</p>
 
-<p>Query parameters:</p>
+<h3 id="toc_11">PUT</h3>
 
-<table><thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Default</th>
-<th>Details</th>
-</tr>
-</thead><tbody>
-<tr>
-<td><code>limit</code></td>
-<td><code>int</code></td>
-<td><code>0</code></td>
-<td>Limit the response to the <code>limit</code> newest users. A limit &le; 0 results in no limit.</td>
-</tr>
-</tbody></table></li>
-<li><p><code>POST /rest/users</code></p>
+<p>Updates the user <code>username</code>.</p>
 
-<p>Creates a new user.</p></li>
-</ul>
+<h4 id="toc_12">Request Schema</h4>
+
+<div class="highlight-file">
+
+<div class="highlight"><pre><code class="json"><span class="p">{</span>
+    <span class="nt">&quot;$schema&quot;</span><span class="p">:</span> <span class="s2">&quot;http://json-schema.org/draft-04/schema#&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;http://schema.envirocar.org/user.modify.json#&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;object&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;allOf&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;$ref&quot;</span><span class="p">:</span> <span class="s2">&quot;http://schema.envirocar.org/definitions.json#/optional-user-properties&quot;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;mail&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="nt">&quot;$ref&quot;</span><span class="p">:</span> <span class="s2">&quot;http://schema.envirocar.org/definitions.json#/mail&quot;</span>
+                <span class="p">},</span>
+                <span class="nt">&quot;token&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+
+</div>
+
+<h4 id="toc_13">Request Example</h4>
+
+<h3 id="toc_14">DELETE</h3>
+
+<p>Deletes the user <code>username</code>.</p>
 
             </section>
             <footer>
