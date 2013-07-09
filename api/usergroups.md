@@ -28,8 +28,7 @@ This is the Groups of a User resource.
 
 ## Schema
 {% include_schema groups %}
-## Example
-{% include_example groups %}
+
 
 *   `GET /rest/users/:username/groups`
 
