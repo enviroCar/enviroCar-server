@@ -27,45 +27,88 @@
                 </ul>
             </header>
             <section>
-                <h2 id="toc_0">API Reference</h2>
+                <h1 id="toc_0">API Reference</h1>
 
 <p>For Login/logout see <a href="authentification">Authentification</a>.</p>
 
 <ul>
-<li><a href="usermanagement.html">User Management</a></li>
-<li><a href="root.html"><code>/rest</code></a></li>
-<li><a href="users.html"><code>/rest/users</code></a></li>
-<li><a href="user.html"><code>/rest/users/:username</code></a></li>
-<li><a href="usergroups.html"><code>/rest/users/:username/groups</code></a></li>
-<li><a href="usergroup.html"><code>/rest/users/:username/groups/:groupname</code></a></li>
-<li><a href="friends.html"><code>/rest/users/:username/friends</code></a></li>
-<li><a href="friend.html"><code>/rest/users/:username/friends/:friend</code></a></li>
-<li><a href="usermeasurements.html"><code>/rest/users/:username/measurements</code></a></li>
-<li><a href="usermeasurement.html"><code>/rest/users/:username/measurements/:measurementid</code></a></li>
-<li><a href="usertracks.html"><code>/rest/users/:username/tracks</code></a></li>
-<li><a href="usertrack.html"><code>/rest/users/:username/tracks/:trackid</code></a></li>
-<li><a href="usertrackmeasurements.html"><code>/rest/users/:username/tracks/:trackid/measurements</code></a></li>
-<li><a href="usermeasurement.html"><code>/rest/users/:username/tracks/:trackid/measurements/:measurementid</code></a></li>
-<li><a href="userstatistics.html"><code>/rest/users/:username/statistics</code></a></li>
-<li><a href="userstatistics.html"><code>/rest/users/:username/statistics/:phenomenon</code></a></li>
-<li><a href="measurements.html"><code>/rest/measurements</code></a></li>
-<li><a href="measurement.html"><code>/rest/measurements/:measurementid</code></a></li>
-<li><a href="tracks.html"><code>/rest/tracks</code></a></li>
-<li><a href="track.html"><code>/rest/tracks/:trackid</code></a></li>
-<li><a href="trackmeasurements.html"><code>/rest/tracks/:trackid/measurements</code></a></li>
-<li><a href="trackmeasurement.html"><code>/rest/tracks/:trackid/measurements/:measurementid</code></a></li>
-<li><a href="trackstatistics.html"><code>/rest/tracks/:trackid/statistics</code></a></li>
-<li><a href="trackstatistics.html"><code>/rest/tracks/:trackid/statistics/:phenomenon</code></a></li>
-<li><a href="sensors.html"><code>/rest/sensors</code></a></li>
-<li><a href="sensor.html"><code>/rest/sensors/:sensor</code></a></li>
-<li><a href="phenomenons.html"><code>/rest/phenmenons</code></a></li>
-<li><a href="phenomenon.html"><code>/rest/phenmenons/:phenomenon</code></a></li>
-<li><a href="groups.html"><code>/rest/groups</code></a></li>
-<li><a href="group.html"><code>/rest/groups/:groupname</code></a></li>
-<li><a href="groupmembers.html"><code>/rest/groups/:groupname/members</code></a></li>
-<li><a href="groupmember.html"><code>/rest/groups/:groupname/members/:username</code></a></li>
-<li><a href="statistics.html"><code>/rest/statistics</code></a></li>
-<li><a href="statistics.html"><code>/rest/statistics/:phenomenon</code></a></li>
+<li><a href="root">Root</a></li>
+<li><a href="friends">Friends</a>
+
+<ul>
+<li><code>/rest/users/:username/friends</code></li>
+<li><code>/rest/users/:username/friends/:friend</code></li>
+</ul></li>
+<li><a href="tracks">Tracks</a>
+
+<ul>
+<li><code>/rest/tracks</code></li>
+<li><code>/rest/tracks/:trackid</code></li>
+<li><code>/rest/users/:username/tracks</code></li>
+<li><code>/rest/users/:username/tracks/:trackid</code></li>
+</ul></li>
+<li><a href="phenomenons">Phenomenons</a>
+
+<ul>
+<li><code>/rest/phenmenons</code></li>
+<li><code>/rest/phenmenons/:phenomenon</code></li>
+</ul></li>
+<li><a href="sensors">Sensors</a>
+
+<ul>
+<li><code>/rest/sensors</code></li>
+<li><code>/rest/sensors/:sensor</code></li>
+</ul></li>
+<li><a href="groups">Groups</a>
+
+<ul>
+<li><code>/rest/groups</code></li>
+<li><code>/rest/groups/:groupname</code></li>
+<li><code>/rest/users/:username/groups</code></li>
+<li><code>/rest/users/:username/groups/:groupname</code></li>
+<li><code>/rest/groups/:groupname/members</code></li>
+<li><code>/rest/groups/:groupname/members/:username</code></li>
+</ul></li>
+<li><a href="users">Users</a>
+
+<ul>
+<li><code>/rest/users</code></li>
+<li><code>/rest/users/:username</code></li>
+</ul></li>
+<li><a href="measurements">Measurements</a>
+
+<ul>
+<li><code>/rest/measurements</code></li>
+<li><code>/rest/measurements/:measurementid</code></li>
+<li><code>/rest/tracks/:trackid/measurements</code></li>
+<li><code>/rest/tracks/:trackid/measurements/:measurementid</code></li>
+<li><code>/rest/users/:username/measurements</code></li>
+<li><code>/rest/users/:username/measurements/:measurementid</code></li>
+<li><code>/rest/users/:username/tracks/:trackid/measurements</code></li>
+<li><code>/rest/users/:username/tracks/:trackid/measurements/:measurementid</code></li>
+</ul></li>
+<li><a href="statistics">Statistics</a>
+
+<ul>
+<li><code>/rest/statistics</code></li>
+<li><code>/rest/statistics/:phenomenon</code></li>
+<li><code>/rest/sensors/:sensor/statistics</code></li>
+<li><code>/rest/sensors/:sensor/statistics/:phenomenon</code></li>
+<li><code>/rest/tracks/:trackid/statistics</code></li>
+<li><code>/rest/tracks/:trackid/statistics/:phenomenon</code></li>
+<li><code>/rest/users/:username/statistics</code></li>
+<li><code>/rest/users/:username/statistics/:phenomenon</code></li>
+</ul></li>
+<li><a href="activities">Activities</a>
+
+<ul>
+<li><code>/rest/users/:username/activities</code></li>
+<li><code>/rest/users/:username/activities/:activity</code></li>
+<li><code>/rest/users/:username/friendActivities</code></li>
+<li><code>/rest/users/:username/friendActivities/:activity</code></li>
+<li><code>/rest/groups/:groupname/activities</code></li>
+<li><code>/rest/groups/:groupname/activities/:activity</code></li>
+</ul></li>
 </ul>
 
             </section>
