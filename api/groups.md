@@ -2,17 +2,38 @@
 layout: default
 ---
 
+This is the groups resource.
+
+# /rest/groups/:groupname
+
+## Schema
+{% include_schema group %}
+## Example
+{% include_example group %}
+
+*   `GET /rest/groups/:groupname`
+
+    Get the group `groupname`.
+
+*   `PUT /rest/groups/:groupname`
+
+    Updates the group `groupname`.
+
+* `DELETE /rest/groups/:groupname`
+
+    Deletes the group `groupname`. 
+	
+	
 # /rest/groups
 
-This is the groups resource.
+## Schema
+{% include_schema groups %}
+## Example
+{% include_example groups %}
 
 *   `GET /rest/groups`
 
-    Get a list of all groups. Responses:
-
-    | Status             | Details
-    |--------------------|--------
-    | `200 OK`           | Returns the groups as specified in [groups.json].
+    Get a list of all groups. 
 
     Query parameters:
 
@@ -22,15 +43,4 @@ This is the groups resource.
 
 *   `POST /rest/groups`
 
-    Creates a new group. Request schema: [group.create.json]. Responses:
-
-    | Status             | Details
-    |--------------------|--------
-    | `201 Created`      | If the creation was successfull. The URI of the group can be found in the `Location` header field.
-    | `400 Bad Request`  | If the request entity did not comply with [group.create.json].
-    | `401 Unauthorized` | If the user did not send credentials or the credentials are invalid.
-
-[group.json]:        https://github.com/enviroCar/enviroCar-server/blob/master/rest/src/main/resources/schema/group.json "group.json"
-[group.modify.json]: https://github.com/enviroCar/enviroCar-server/blob/master/rest/src/main/resources/schema/group.modify.json "group.modify.json"
-[group.create.json]: https://github.com/enviroCar/enviroCar-server/blob/master/rest/src/main/resources/schema/group.create.json "group.create.json"
-[groups.json]:       https://github.com/enviroCar/enviroCar-server/blob/master/rest/src/main/resources/schema/groups.json "groups.json"
+    Creates a new group.

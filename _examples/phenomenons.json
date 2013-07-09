@@ -1,0 +1,12 @@
+{
+	"phenomenons": [
+		{
+			"name": "TestPhenomenon1",
+			"unit": "TestUnit1"	
+		},
+		{
+			"name": "TestPhenomenon2",
+			"unit": "TestUnit2"
+		}
+	]
+}

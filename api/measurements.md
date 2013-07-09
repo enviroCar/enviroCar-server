@@ -2,17 +2,37 @@
 layout: default
 ---
 
+This is the measurements resource.
+
+# /rest/measurements/:measurementid
+
+## Schema
+{% include_schema measurement %}
+## Example
+{% include_example measurement %}
+
+*   `GET /rest/measurements/:measurementid`
+
+    Get the measurement `measurementid`.
+
+*   `PUT /rest/measurements/:measurementid`
+
+    Updates the measurement `measurementid`. Request schema: [measurement.modify.json].
+
+*	`DELETE /rest/measurements/:measurementid`
+
+    Deletes the measurement `measurementid`.
+	
 # /rest/measurements
 
-This is the measurements resource.
+## Schema
+{% include_schema measurements %}
+## Example
+{% include_example measurements %}
 
 *   `GET /rest/measurements`
 
-    Get a list of all measurements. Responses:
-
-    | Status             | Details
-    |--------------------|--------
-    | `200 OK`           | Returns the measurements as specified in [measurements.json].
+    Get a list of all measurements. 
 
     Query parameters:
 
@@ -22,16 +42,4 @@ This is the measurements resource.
 
 *   `POST /rest/measurements`
 
-    Creates a new user. Request schema: [measurement.create.json]. Responses:
-
-    | Status             | Details
-    |--------------------|--------
-    | `201 Created`      | If the creation was successfull. The uri of the measurement can be found in the `Location` header field.
-    | `400 Bad Request`  | If the request entity did not comply with [measurement.create.json].
-    | `403 Forbidden`    | If the request contained credentials.
-
-[root.json]:        https://github.com/enviroCar/enviroCar-server/blob/master/rest/src/main/resources/schema/root.json "root.json"
-[measurement.json]:        https://github.com/enviroCar/enviroCar-server/blob/master/rest/src/main/resources/schema/measurement.json "measurement.json"
-[measurement.modify.json]: https://github.com/enviroCar/enviroCar-server/blob/master/rest/src/main/resources/schema/measurement.modify.json "measurement.modify.json"
-[measurement.create.json]: https://github.com/enviroCar/enviroCar-server/blob/master/rest/src/main/resources/schema/measurement.create.json "measurement.create.json"
-[measurements.json]:       https://github.com/enviroCar/enviroCar-server/blob/master/rest/src/main/resources/schema/measurements.json "measurements.json"
+    Creates a new user. Request schema: [measurement.create.json]. 
