@@ -2,32 +2,41 @@
 layout: default
 ---
 
-This is the Friends resource.
-
-# /rest/users/:username/friends/:friend
-
-## Schema
-{% include_schema user %}
-## Example
-{% include_example user %}
-
-*   `GET /rest/users/:username/friends/:friend`
-
-    Get a specific friend `friend` of the user `username`. 
-	
-*   `DELETE /rest/users/:username/friends/:friend`
-
-    Removes a specific friend `friend` of the user `username`.
-	
 # /rest/users/:username/friends
 
-## Schema
+This is the Friends resource.
+
+### GET
+
+Get a list of friends of the user `username`.
+
+### Response Schema
 {% include_schema users %}
 
-*   `GET /rest/users/:username/friends`
+### Response Example
+{% include_example users %}
 
-    Get a list of friends of the user `username`.
+### Response Example
 
-*   `POST /rest/users/:username/friends`
+### POST
 
-    Adds a user as a friend to user `username`. 
+Adds a user as a friend to user `username`.
+
+### Request Schema
+{% include_example user.create %}
+
+# /rest/users/:username/friends/:friend #
+
+### GET 
+
+Get a specific friend `friend` of the user `username`. 
+
+### Response Schema
+{% include_schema user %}
+### Response Example
+{% include_example user %}
+	
+### DELETE
+
+Removes a specific friend `friend` of the user `username`.
+	
