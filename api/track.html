@@ -28,7 +28,28 @@
                 </p>
                 </header>
             <section>
-                
+                <ul>
+<li><p><code>GET /rest/tracks/:track</code></p>
+
+<p>Get a track. Responses:</p>
+
+<table><thead>
+<tr>
+<th>Status</th>
+<th>Details</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>200 OK</code></td>
+<td>Gets the track <code>track</code> with a schema described by <a href="https://github.com/enviroCar/enviroCar-server/blob/master/rest/src/main/resources/schema/track.json" title="track.json">track.json</a>.</td>
+</tr>
+<tr>
+<td><code>404 Not Found</code></td>
+<td>If the <code>track</code> of <code>tracks</code> does not exist.</td>
+</tr>
+</tbody></table></li>
+</ul>
+
             </section>
             <footer>
                 <p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
