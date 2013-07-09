@@ -4,72 +4,83 @@ layout: default
 
 This is the groups resource.
 
-# /rest/groups/:groupname
+# /rest/groups #
 
-## Schema
-{% include_schema group %}
-## Example
-{% include_example group %}
+### GET
 
-*   `GET /rest/groups/:groupname`
+Get a list of all groups.
 
-    Get the group `groupname`.
+{% include pagination %}
 
-*   `PUT /rest/groups/:groupname`
-
-    Updates the group `groupname`.
-
-* `DELETE /rest/groups/:groupname`
-
-    Deletes the group `groupname`.
-
-
-# /rest/groups
-
-## Schema
+#### Response Schema
 {% include_schema groups %}
 
-*   `GET /rest/groups`
-
-    Get a list of all groups.
-
-    Query parameters:
-
-    | Name    | Type  | Default | Details
-    |---------|-------|---------|--------
-    | `limit` | `int` | `0`     | Limit the response to the `limit` newest users. A limit &le; 0 results in no limit.
-
-*   `POST /rest/groups`
-
-    Creates a new group.
+#### Response Example
+{% include_example groups %}
 
 
 
-# /rest/groups/:groupname/members/:username
+# /rest/groups/:groupname
 
-## Schema
+### GET
+Get the group `groupname`.
+
+#### Response Schema
 {% include_schema group %}
-## Example
-{% include_example group %}
 
-*   `GET /rest/groups/:groupname/members/:username`
+#### Response Example
+{% include_example groups %}
 
-    Get the member `username` of the group `groupname`.
 
-*   `DELETE /rest/groups/:groupname/members/:username`
+### PUT
+Updates the group `groupname`.
 
-    Removes the user `username` from the group `groupname`.
+#### Request Schema
+{% include_schema group.modify %}
+
+#### Response Example
+none
+
+
+### DELETE
+Deletes the group `groupname`. Just the owner of the group is able to delete the group.
 
 
 # /rest/groups/:groupname/members
 
-## Schema
+### GET
+Get a list of members of the group `groupname`.
+
+#### Response Schema
 {% include_schema users %}
 
-*   `GET /rest/groups/:groupname/members`
+#### Response Example
+...
 
-    Get a list of members of the group `groupname`.
 
-*   `POST /rest/groups/:groupname/members`
+### POST
+Adds a user to the group `groupname`.
 
-    Adds a user to the group `groupname`.
+#### Request Schema
+{% include_schema user.ref %}
+
+#### Request Example
+{% include_example user.ref %}
+
+
+# /rest/groups/:groupname/members/:username
+Get the member `username` of the group `groupname`.
+
+### GET
+Get the member `username` of the group `groupname`.
+
+#### Response Schema
+{% include_schema user %}
+
+#### Response Example
+{% include_example user %}
+
+
+### DELETE
+Removes the user `username` from the group `groupname`.
+
