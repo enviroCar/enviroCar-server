@@ -2,16 +2,16 @@
 layout: default
 ---
 
-## Registration
+# Registration
 See [`POST /rest/users`](Users)
 
-## Login
+### Login
 
 Just send the following HTTP headers with every request to authenticate.
 
     X-User: username
     X-Token: token
 
-## Logout
+### Logout
 
 As the service is stateless (and a Facebook/Google integration is planned) there is no logout.
