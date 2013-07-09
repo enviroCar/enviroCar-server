@@ -41,7 +41,6 @@ Creates a new user.
 #### Response Example
 none
 
-
 ### PUT
 Updates the user `username`.
 
@@ -49,7 +48,7 @@ Updates the user `username`.
 {% include_schema user.modify %}
 
 #### Request Example
-
+none
 
 ### DELETE ##
 Deletes the user `username`.

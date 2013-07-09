@@ -1,45 +1,46 @@
 ---
 layout: default
 ---
+	
+# /rest/measurements #
 
 This is the measurements resource.
 
-# /rest/measurements/:measurementid
+### GET
 
-## Schema
-{% include_schema measurement %}
-## Example
-{% include_example measurement %}
+Get a list of all measurements. 
 
-*   `GET /rest/measurements/:measurementid`
+Query parameters:
 
-    Get the measurement `measurementid`.
+| Name    | Type  | Default | Details
+|---------|-------|---------|--------
+| `limit` | `int` | `0`     | Limit the response to the `limit` newest measurements. A limit &le; 0 results in no limit.
 
-*   `PUT /rest/measurements/:measurementid`
+#### Response Schema
+{% include_schema measurememts %}
 
-    Updates the measurement `measurementid`. Request schema: [measurement.modify.json].
-
-*	`DELETE /rest/measurements/:measurementid`
-
-    Deletes the measurement `measurementid`.
-	
-# /rest/measurements
-
-## Schema
-{% include_schema measurements %}
-## Example
+#### Response Example
 {% include_example measurements %}
 
-*   `GET /rest/measurements`
+### POST
 
-    Get a list of all measurements. 
+Creates new measurements.
 
-    Query parameters:
+#### Response Example
+{% include_example measurement.create %}	
+	
+# /rest/measurements/:measurementid #
 
-    | Name    | Type  | Default | Details
-    |---------|-------|---------|--------
-    | `limit` | `int` | `0`     | Limit the response to the `limit` newest measurements. A limit &le; 0 results in no limit.
+### GET
 
-*   `POST /rest/measurements`
+Get the measurement `measurementid`.
 
-    Creates a new user. Request schema: [measurement.create.json]. 
+### Response Schema
+{% include_schema measurement %}
+
+### Response Example
+{% include_example measurement %}
+
+### DELETE /rest/measurements/:measurementid`
+
+Deletes the measurement `measurementid`.

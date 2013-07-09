@@ -1,0 +1,16 @@
+{
+	"users": [
+		{
+			"name": "test1",
+			"mail": "test1@example.de",
+			"created": "2013-06-25T09:56:13Z",
+			"modified": "2013-07-01T14:19:19Z"
+		},
+		{
+			"name": "test2",
+			"mail": "test2@example.de",
+			"created": "2013-06-25T07:56:10Z",
+			"modified": "2013-07-01T18:19:36Z"
+		}
+	]
+}

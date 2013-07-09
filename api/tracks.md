@@ -2,35 +2,50 @@
 layout: default
 ---
 
+# /rest/tracks #
+
 This is the Tracks resource.
 
-# /rest/tracks/:trackid
+### GET
 
-## Schema
-{% include_schema track %}
-## Example
-{% include_example track %}
+Get a list of all tracks.
 
-*   `GET /rest/tracks/:track`
+Query parameters:
 
-    Get a track.
+| Name    | Type  | Default | Details
+|---------|-------|---------|--------
+| `limit` | `int` | `0`     | Limit the response to the `limit` newest tracks. A limit &le; 0 results in no limit.
 
-	
-# /rest/tracks
 
-## Schema
+### Response Schema
 {% include_schema tracks %}
 
-*   `GET /rest/tracks`
+### Response Example
 
-    Get a list of all tracks.
+### POST
 
-    Query parameters:
+Creates a new tracks and adds current user as the owner.
 
-    | Name    | Type  | Default | Details
-    |---------|-------|---------|--------
-    | `limit` | `int` | `0`     | Limit the response to the `limit` newest tracks. A limit &le; 0 results in no limit.
+### Request Schema
+{% include_schema track.create %}
 
-*   `POST /rest/tracks`
+# /rest/tracks/:trackid #
 
-    Creates a new tracks and adds current user as the owner.
+### GET
+
+Get a track.
+
+### Response Schema
+{% include_schema track %}
+
+### Response Example
+{% include_example track %}
+
+### PUT
+
+Modify a track.
+
+### Request Schema
+{% include_schema track.create %}
+	
+
