@@ -2,15 +2,36 @@
 layout: default
 ---
 
-This is the Measurements of a Track resource.
+# /rest/tracks/:trackid/measurements/:measurementid
+
+## Schema
+{% include_schema measurement %}
+## Example
+{% include_example measurement %}
+
+*   `GET /rest/tracks/:trackid/measurements/:measurementid`
+
+    Get the measurement `measurementid` of a track `trackid`.
+
+*   `PUT /rest/tracks/:trackid/measurements/:measurementid`
+
+    Updates the measurement `measurementid` of track `trackid`.
+
+* `DELETE /rest/tracks/:trackid/measurements/:measurementid`
+
+    Deletes the measurement `measurementid` of track `trackid`.
+	
+	
+# /rest/tracks/:trackid/measurements/:measurementid
+
+## Schema
+{% include_schema measurements %}
+## Example
+{% include_example measurements %}
 
 *   `GET /rest/tracks/:track/measurements`
 
-    Get a list of all Measurements of the track `trackid`. Responses:
-
-    | Status             | Details
-    |--------------------|--------
-    | `200 OK`           | Returns the measurements as specified in [measurements.json].
+    Get a list of all Measurements of the track `trackid`.
 
     Query parameters:
 
@@ -20,14 +41,4 @@ This is the Measurements of a Track resource.
 
 *   `POST /rest/tracks/:trackid/measurements`
 
-    Creates a new measurements and adds it to the track `trackid`. Request schema: [measurement.create.json]. Responses:
-
-    | Status             | Details
-    |--------------------|--------
-    | `201 Created`      | If the creation was successfull. The URI of the measurement can be found in the `Location` header field.
-    | `400 Bad Request`  | If the request entity did not comply with [measurement.create.json].
-    | `401 Unauthorized` | If the user did not send credentials or the credentials are invalid.
-
-[measurement.json]:        https://github.com/enviroCar/enviroCar-server/blob/master/rest/src/main/resources/schema/measurement.json "measurement.json"
-[measurements.json]:        https://github.com/enviroCar/enviroCar-server/blob/master/rest/src/main/resources/schema/measurements.json "measurements.json"
-[measurement.create.json]:        https://github.com/enviroCar/enviroCar-server/blob/master/rest/src/main/resources/schema/measurement.create.json "measurement.create.json"
+    Creates a new measurements and adds it to the track `trackid`.

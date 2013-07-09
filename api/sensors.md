@@ -4,13 +4,28 @@ layout: default
 
 This is the Sensors resource.
 
+# /rest/sensors/:sensorid
+
+## Schema
+{% include_schema sensor %}
+## Example
+{% include_example sensor %}
+
+* `GET /rest/sensors/:sensor`
+
+    Get a sensor by its id.
+
+	
+# /rest/sensors	
+
+## Schema
+{% include_schema sensors %}
+## Example
+{% include_example sensors %}
+	
 *   `GET /rest/sensors`
 
-    Get a list of all sensors. Responses:
-
-    | Status             | Details
-    |--------------------|--------
-    | `200 OK`           | Returns the sensors as specified in [sensors.json].
+    Get a list of all sensors. 
 
     Query parameters:
 
@@ -20,14 +35,4 @@ This is the Sensors resource.
 
 *   `POST /rest/sensors`
 
-    Creates a new sensor. Request schema: [sensors.create.json]. Responses:
-
-    | Status             | Details
-    |--------------------|--------
-    | `201 Created`      | If the creation was successfull. The URI of the sensor can be found in the `Location` header field.
-    | `400 Bad Request`  | If the request entity did not comply with [sensor.create.json].
-    | `401 Unauthorized` | If the user did not send credentials or the credentials are invalid.
-
-[sensor.json]:        https://github.com/enviroCar/enviroCar-server/blob/master/rest/src/main/resources/schema/sensor.json "sensor.json"
-[sensors.json]:        https://github.com/enviroCar/enviroCar-server/blob/master/rest/src/main/resources/schema/sensors.json "sensors.json"
-[sensor.create.json]:        https://github.com/enviroCar/enviroCar-server/blob/master/rest/src/main/resources/schema/sensors.json "sensor.create.json"
+    Creates a new sensor.
