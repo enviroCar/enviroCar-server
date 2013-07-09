@@ -1,0 +1,11 @@
+{
+    "groups": [
+        {
+		  	"name": "TestGroup1",
+		  	"description": "Groupdescription"
+		},
+		{
+		  	"name": "TestGroup2",
+		  	"description": "Groupdescription"
+		}
+}
