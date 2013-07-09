@@ -8,8 +8,6 @@ This is the Statistics resource.
 
 ## Schema
 {% include_schema statistics %}
-## Example
-{% include_example statistics %}
 
 *   `GET /rest/statistics`
 

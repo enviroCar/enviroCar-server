@@ -28,8 +28,6 @@ This is the Tracks of a User resource.
 
 ## Schema
 {% include_schema tracks %}
-## Example
-{% include_example tracks %}
 
 *   `GET /rest/users/:username/tracks`
 

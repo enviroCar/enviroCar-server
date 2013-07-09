@@ -28,8 +28,6 @@ This is the Users resource.
 
 ## Schema
 {% include_schema users %}
-## Example
-{% include_example users %}
 
 *   `GET /rest/users`
 

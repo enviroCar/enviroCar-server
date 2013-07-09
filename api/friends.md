@@ -7,9 +7,9 @@ This is the Friends resource.
 # /rest/users/:username/friends/:friend
 
 ## Schema
-{% include_schema friend %}
+{% include_schema user %}
 ## Example
-{% include_example friend %}
+{% include_example user %}
 
 *   `GET /rest/users/:username/friends/:friend`
 
@@ -23,8 +23,6 @@ This is the Friends resource.
 
 ## Schema
 {% include_schema users %}
-## Example
-{% include_example users %}
 
 *   `GET /rest/users/:username/friends`
 

@@ -20,8 +20,6 @@ This is the Tracks resource.
 
 ## Schema
 {% include_schema tracks %}
-## Example
-{% include_example tracks %}
 
 *   `GET /rest/tracks`
 

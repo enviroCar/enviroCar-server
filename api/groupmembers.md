@@ -22,8 +22,6 @@ layout: default
 
 ## Schema
 {% include_schema users %}
-## Example
-{% include_example users %}
 
 *   `GET /rest/groups/:groupname/members`
 

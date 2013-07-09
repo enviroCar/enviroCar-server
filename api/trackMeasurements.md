@@ -2,6 +2,8 @@
 layout: default
 ---
 
+This is the Measurements of a Track resource.
+
 # /rest/tracks/:trackid/measurements/:measurementid
 
 ## Schema

@@ -28,8 +28,6 @@ This is the groups resource.
 
 ## Schema
 {% include_schema groups %}
-## Example
-{% include_example groups %}
 
 *   `GET /rest/groups`
 

@@ -20,8 +20,6 @@ This is the Sensors resource.
 
 ## Schema
 {% include_schema sensors %}
-## Example
-{% include_example sensors %}
 	
 *   `GET /rest/sensors`
 
