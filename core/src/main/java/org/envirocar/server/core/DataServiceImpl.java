@@ -30,7 +30,6 @@ import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.core.entities.Sensors;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.entities.Tracks;
-import org.envirocar.server.core.event.ChangedMeasurementEvent;
 import org.envirocar.server.core.event.ChangedTrackEvent;
 import org.envirocar.server.core.event.CreatedMeasurementEvent;
 import org.envirocar.server.core.event.CreatedPhenomenonEvent;
@@ -165,17 +164,6 @@ public class DataServiceImpl implements DataService {
         if (m == null) {
             throw new MeasurementNotFoundException(id);
         }
-        return m;
-    }
-
-    @Override
-    public Measurement modifyMeasurement(Measurement m,
-                                         Measurement changes)
-            throws ValidationException, IllegalModificationException {
-        this.measurementValidator.validateCreate(m);
-        this.measurementUpdater.update(changes, m);
-        this.measurementDao.save(m);
-        this.eventBus.post(new ChangedMeasurementEvent(m, m.getUser()));
         return m;
     }
 

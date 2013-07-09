@@ -16,20 +16,15 @@
  */
 package org.envirocar.server.rest.resources;
 
-import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Response;
 
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.Sensor;
-import org.envirocar.server.core.exception.IllegalModificationException;
 import org.envirocar.server.core.exception.MeasurementNotFoundException;
 import org.envirocar.server.core.exception.UserNotFoundException;
-import org.envirocar.server.core.exception.ValidationException;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.auth.Authenticated;
@@ -50,18 +45,6 @@ public class MeasurementResource extends AbstractResource {
     @Inject
     public MeasurementResource(@Assisted Measurement measurement) {
         this.measurement = measurement;
-    }
-
-    @PUT
-    @Schema(request = Schemas.MEASUREMENT_MODIFY)
-    @Consumes({ MediaTypes.MEASUREMENT_MODIFY })
-    @Authenticated
-    public Response modify(Measurement changes)
-            throws MeasurementNotFoundException, UserNotFoundException,
-                   ValidationException, IllegalModificationException {
-        checkRights(getRights().canModify(measurement));
-        getDataService().modifyMeasurement(measurement, changes);
-        return Response.ok().build();
     }
 
     @GET

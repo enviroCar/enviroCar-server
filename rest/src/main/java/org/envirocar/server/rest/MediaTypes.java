@@ -71,9 +71,6 @@ public interface MediaTypes {
     String MEASUREMENT_CREATE = "application/json; schema=\"" +
                                 Schemas.MEASUREMENT_CREATE + "\"";
     MediaType MEASUREMENT_CREATE_TYPE = MediaType.valueOf(MEASUREMENT_CREATE);
-    String MEASUREMENT_MODIFY = "application/json; schema=\"" +
-                                Schemas.MEASUREMENT_MODIFY + "\"";
-    MediaType MEASUREMENT_MODIFY_TYPE = MediaType.valueOf(MEASUREMENT_MODIFY);
     String SENSOR = "application/json; schema=\"" + Schemas.SENSOR + "\"";
     MediaType SENSOR_TYPE = MediaType.valueOf(SENSOR);
     String SENSORS = "application/json; schema=\"" + Schemas.SENSORS + "\"";
