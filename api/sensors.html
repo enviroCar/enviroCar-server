@@ -29,9 +29,15 @@
             <section>
                 <p>This is the Sensors resource.</p>
 
-<h1 id="toc_0">/rest/sensors/:sensorid</h1>
+<h1 id="toc_0">/rest/sensors</h1>
 
-<h2 id="toc_1">Schema</h2>
+<h3 id="toc_1">GET</h3>
+
+<p>Get a list of all sensors.</p>
+
+<p>Included file &#39;pagination&#39; not found in _includes directory</p>
+
+<h4 id="toc_2">Response Schema</h4>
 
 <div class="highlight-file">
 
@@ -141,7 +147,142 @@
 
 </div>
 
-<h2 id="toc_2">Example</h2>
+<h4 id="toc_3">Response Example</h4>
+
+<div class="highlight-file">
+
+<div class="highlight"><pre><code class="json"><span class="p">{</span>
+    <span class="nt">&quot;groups&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;TestGroup1&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Groupdescription&quot;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;TestGroup2&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Groupdescription&quot;</span>
+        <span class="p">}</span>
+<span class="err">}</span>
+</code></pre></div>
+
+</div>
+
+<h1 id="toc_4">/rest/sensors/:sensorid</h1>
+
+<h3 id="toc_5">GET</h3>
+
+<p>Get the sensor <code>sensorid</code>.</p>
+
+<h4 id="toc_6">Response Schema</h4>
+
+<div class="highlight-file">
+
+<div class="highlight"><pre><code class="json"><span class="p">{</span>
+    <span class="nt">&quot;$schema&quot;</span><span class="p">:</span> <span class="s2">&quot;http://json-schema.org/draft-04/schema#&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;http://schema.envirocar.org/sensor.json#&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;allOf&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;$ref&quot;</span><span class="p">:</span> <span class="s2">&quot;#/definitions/base&quot;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;$ref&quot;</span><span class="p">:</span> <span class="s2">&quot;#/definitions/with-id&quot;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;oneOf&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="p">{</span>
+                    <span class="nt">&quot;not&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="nt">&quot;$ref&quot;</span><span class="p">:</span> <span class="s2">&quot;#/definitions/car-type&quot;</span>
+                    <span class="p">}</span>
+                <span class="p">},</span>
+                <span class="p">{</span>
+                    <span class="nt">&quot;allOf&quot;</span><span class="p">:</span> <span class="p">[</span>
+                        <span class="p">{</span>
+                            <span class="nt">&quot;$ref&quot;</span><span class="p">:</span> <span class="s2">&quot;#/definitions/car-type&quot;</span>
+                        <span class="p">},</span>
+                        <span class="p">{</span>
+                            <span class="nt">&quot;$ref&quot;</span><span class="p">:</span> <span class="s2">&quot;#/definitions/car-properties&quot;</span>
+                        <span class="p">}</span>
+                    <span class="p">]</span>
+                <span class="p">}</span>
+            <span class="p">]</span>
+        <span class="p">}</span>
+    <span class="p">],</span>
+    <span class="nt">&quot;definitions&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;base&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;object&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;required&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;properties&quot;</span>
+            <span class="p">],</span>
+            <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+                <span class="p">},</span>
+                <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;object&quot;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;with-id&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="nt">&quot;required&quot;</span><span class="p">:</span> <span class="p">[</span>
+                        <span class="s2">&quot;id&quot;</span>
+                    <span class="p">],</span>
+                    <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+                        <span class="p">}</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;car-type&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="nt">&quot;enum&quot;</span><span class="p">:</span> <span class="p">[</span>
+                        <span class="s2">&quot;car&quot;</span>
+                    <span class="p">]</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;car-properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="nt">&quot;manufacturer&quot;</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+                        <span class="p">},</span>
+                        <span class="nt">&quot;model&quot;</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+                        <span class="p">},</span>
+                        <span class="nt">&quot;fuelType&quot;</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+                            <span class="nt">&quot;enum&quot;</span><span class="p">:</span> <span class="p">[</span>
+                                <span class="s2">&quot;diesel&quot;</span><span class="p">,</span>
+                                <span class="s2">&quot;gasoline&quot;</span><span class="p">,</span>
+                                <span class="s2">&quot;biodiesel&quot;</span><span class="p">,</span>
+                                <span class="s2">&quot;kerosene&quot;</span><span class="p">,</span>
+                                <span class="s2">&quot;electric&quot;</span>
+                            <span class="p">]</span>
+                        <span class="p">},</span>
+                        <span class="nt">&quot;constructionYear&quot;</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;integer&quot;</span><span class="p">,</span>
+                            <span class="nt">&quot;minimum&quot;</span><span class="p">:</span> <span class="mi">0</span>
+                        <span class="p">},</span>
+                        <span class="nt">&quot;VIN&quot;</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+                        <span class="p">}</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+</div>
+
+<h4 id="toc_7">Response Example</h4>
 
 <div class="highlight-file">
 
@@ -158,33 +299,60 @@
 
 </div>
 
-<ul>
-<li><p><code>GET /rest/sensors/:sensor</code></p>
+<h3 id="toc_8">POST</h3>
 
-<p>Get a sensor by its id.</p></li>
-</ul>
+<p>Creates a new sensor.</p>
 
-<h1 id="toc_3">/rest/sensors</h1>
-
-<h2 id="toc_4">Schema</h2>
+<h4 id="toc_9">Request Schema</h4>
 
 <div class="highlight-file">
 
 <div class="highlight"><pre><code class="json"><span class="p">{</span>
     <span class="nt">&quot;$schema&quot;</span><span class="p">:</span> <span class="s2">&quot;http://json-schema.org/draft-04/schema#&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;http://schema.envirocar.org/sensors.json#&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;object&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;additionalProperties&quot;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
-    <span class="nt">&quot;required&quot;</span><span class="p">:</span> <span class="p">[</span>
-        <span class="s2">&quot;sensors&quot;</span>
+    <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;http://schema.envirocar.org/sensor.create.json#&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;allOf&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;$ref&quot;</span><span class="p">:</span> <span class="s2">&quot;http://schema.envirocar.org/sensor.json#/definitions/base&quot;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;oneOf&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="p">{</span>
+                    <span class="nt">&quot;not&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="nt">&quot;$ref&quot;</span><span class="p">:</span> <span class="s2">&quot;http://schema.envirocar.org/sensor.json#/definitions/car-type&quot;</span>
+                    <span class="p">}</span>
+                <span class="p">},</span>
+                <span class="p">{</span>
+                    <span class="nt">&quot;allOf&quot;</span><span class="p">:</span> <span class="p">[</span>
+                        <span class="p">{</span>
+                            <span class="nt">&quot;$ref&quot;</span><span class="p">:</span> <span class="s2">&quot;http://schema.envirocar.org/sensor.json#/definitions/car-type&quot;</span>
+                        <span class="p">},</span>
+                        <span class="p">{</span>
+                            <span class="nt">&quot;$ref&quot;</span><span class="p">:</span> <span class="s2">&quot;#/definitions/car-properties&quot;</span>
+                        <span class="p">}</span>
+                    <span class="p">]</span>
+                <span class="p">}</span>
+            <span class="p">]</span>
+        <span class="p">}</span>
     <span class="p">],</span>
-    <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="nt">&quot;sensors&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;array&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;minItems&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-            <span class="nt">&quot;items&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="nt">&quot;$ref&quot;</span><span class="p">:</span> <span class="s2">&quot;http://schema.envirocar.org/sensor.json#&quot;</span>
-            <span class="p">}</span>
+    <span class="nt">&quot;definitions&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;car-properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;allOf&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="p">{</span>
+                    <span class="nt">&quot;$ref&quot;</span><span class="p">:</span> <span class="s2">&quot;http://schema.envirocar.org/sensor.json#/definitions/car-properties&quot;</span>
+                <span class="p">},</span>
+                <span class="p">{</span>
+                    <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="nt">&quot;required&quot;</span><span class="p">:</span> <span class="p">[</span>
+                                <span class="s2">&quot;manufacturer&quot;</span><span class="p">,</span>
+                                <span class="s2">&quot;model&quot;</span><span class="p">,</span>
+                                <span class="s2">&quot;fuelType&quot;</span><span class="p">,</span>
+                                <span class="s2">&quot;constructionYear&quot;</span>
+                            <span class="p">]</span>
+                        <span class="p">}</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">]</span>
         <span class="p">}</span>
     <span class="p">}</span>
 <span class="p">}</span>
@@ -192,32 +360,9 @@
 
 </div>
 
-<ul>
-<li><p><code>GET /rest/sensors</code></p>
+<h4 id="toc_10">Response Example</h4>
 
-<p>Get a list of all sensors. </p>
-
-<p>Query parameters:</p>
-
-<table><thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Default</th>
-<th>Details</th>
-</tr>
-</thead><tbody>
-<tr>
-<td><code>limit</code></td>
-<td><code>int</code></td>
-<td><code>0</code></td>
-<td>Limit the response to the <code>limit</code> newest sensors. A limit &le; 0 results in no limit.</td>
-</tr>
-</tbody></table></li>
-<li><p><code>POST /rest/sensors</code></p>
-
-<p>Creates a new sensor.</p></li>
-</ul>
+<p>none</p>
 
             </section>
             <footer>
