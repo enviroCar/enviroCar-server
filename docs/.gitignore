@@ -1,0 +1,7 @@
+_site
+_deploy
+.bundle
+_vendor
+_highlight_repos
+*.sublime-project
+*.sublime-workspace

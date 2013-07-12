@@ -1,0 +1,9 @@
+{
+  "type": "car",
+  "properties": {
+    "model": "TestCar",
+    "fuelType": "gasolene",
+    "manufacturer": "TestManufacturer",
+    "constructionYear": 2001
+  }
+}
