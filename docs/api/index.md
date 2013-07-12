@@ -4,6 +4,10 @@ layout: default
 # API Reference
 For Login/logout see [Authentification](authentification).
 
+## Data Model
+![datamodel][datamodel]
+
+## Endpoints
 * [Root](root)
 * [Friends](friends)
     * `/rest/users/:username/friends`
@@ -54,3 +58,5 @@ For Login/logout see [Authentification](authentification).
     * `/rest/users/:username/friendActivities/:activity`
     * `/rest/groups/:groupname/activities`
     * `/rest/groups/:groupname/activities/:activity`
+
+[datamodel]: {{site.url}}/images/datamodel.png "Data model"
