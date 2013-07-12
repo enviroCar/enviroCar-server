@@ -29,6 +29,9 @@ task :serve do
 end
 
 task :travis do | t |
+    # only build one matrix execution
+    return unless ENV["TRAVIS_JOB_NUMBER"] == "#{ENV["TRAVIS_BUILD_NUMBER"]}.1"
+
     puts "Configuring GIT"
     system "git config --global user.name \"#{github_name}\""
     system "git config --global user.email \"#{github_mail}\""
@@ -46,7 +49,10 @@ task :travis do | t |
             system "git add --ignore-removal ."
             system "git add --update :/"
             system "git commit -m \"Updating #{branch} to #{ENV["TRAVIS_COMMIT"]}\""
-            system "git push --quiet origin #{branch} > /dev/null" unless $?.exitstatus != 0
+            # only push changes of the master branch
+            if $?.exitstatus == 0 and ENV["TRAVIS_BRANCH"] == "master"
+                system "git push --quiet origin #{branch} > /dev/null"
+            end
         end
     else
         puts "No deploy: building pull request"
