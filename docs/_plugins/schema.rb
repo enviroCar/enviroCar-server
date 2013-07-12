@@ -2,22 +2,15 @@ module Jekyll
     class IncludeSchema < Liquid::Tag
         REPO_URL = "https://github.com/enviroCar/enviroCar-server.git"
         LANG = "json"
-        SCHEMA_PATH = "rest/src/main/resources/schema"
+        SCHEMA_PATH = "../rest/src/main/resources/schema"
         EXAMPLES_PATH = "_examples"
-        @@pulled = false
         def initialize(tag_name, text, token)
-            if @@pulled then
-                pull = false
-            else
-                pull = true
-                @@pulled = true
-            end
             super
             case tag_name
             when "include_schema"
                 @delegate = Jekyll::HighlightFileBlock.new(
-                    "highlight_git",
-                    "#{LANG} #{REPO_URL} #{SCHEMA_PATH}/#{text.strip!}.json pull=#{pull}",
+                    "highlight_file",
+                    "#{LANG} #{SCHEMA_PATH}/#{text.strip!}.json",
                     token)
             when "include_example"
                 @delegate = Jekyll::HighlightFileBlock.new(
