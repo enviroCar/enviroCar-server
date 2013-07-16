@@ -1,4 +1,1095 @@
 {
-  "name": "TestGroup",
-  "description": "Group Description"
+    "activities": [
+        {
+            "time": "2013-07-12T12:10:33Z",
+            "type": "CREATED_TRACK",
+            "user": {
+                "name": "jakob1",
+                "mail": "jakob@jakob.de",
+                "created": "2013-06-25T09:56:13Z",
+                "modified": "2013-07-10T08:30:04Z",
+                "firstName": "Jakob",
+                "lastName": "M",
+                "gender": "m",
+                "dayOfBirth": "1989-01-01",
+                "country": "Germany",
+                "language": "de-DE"
+            },
+            "track": {
+                "id": "51dff239e4b0feb05dbee0d7",
+                "modified": "2013-07-12T12:10:33Z",
+                "name": "Track 2013-7-12"
+            }
+        },
+        {
+            "time": "2013-07-12T12:03:45Z",
+            "type": "CREATED_TRACK",
+            "user": {
+                "name": "jakob1",
+                "mail": "jakob@jakob.de",
+                "created": "2013-06-25T09:56:13Z",
+                "modified": "2013-07-10T08:30:04Z",
+                "firstName": "Jakob",
+                "lastName": "M",
+                "gender": "m",
+                "dayOfBirth": "1989-01-01",
+                "country": "Germany",
+                "language": "de-DE"
+            },
+            "track": {
+                "id": "51dff0a1e4b0feb05dbee00e",
+                "modified": "2013-07-12T12:03:45Z",
+                "name": "Track 2013-7-12"
+            }
+        },
+        {
+            "time": "2013-07-12T11:59:29Z",
+            "type": "CREATED_TRACK",
+            "user": {
+                "name": "jakob1",
+                "mail": "jakob@jakob.de",
+                "created": "2013-06-25T09:56:13Z",
+                "modified": "2013-07-10T08:30:04Z",
+                "firstName": "Jakob",
+                "lastName": "M",
+                "gender": "m",
+                "dayOfBirth": "1989-01-01",
+                "country": "Germany",
+                "language": "de-DE"
+            },
+            "track": {
+                "id": "51dfefa1e4b0feb05dbedfbf",
+                "modified": "2013-07-12T11:59:29Z",
+                "name": "Track 2013-7-12"
+            }
+        },
+        {
+            "time": "2013-07-12T11:56:09Z",
+            "type": "CREATED_TRACK",
+            "user": {
+                "name": "jakob1",
+                "mail": "jakob@jakob.de",
+                "created": "2013-06-25T09:56:13Z",
+                "modified": "2013-07-10T08:30:04Z",
+                "firstName": "Jakob",
+                "lastName": "M",
+                "gender": "m",
+                "dayOfBirth": "1989-01-01",
+                "country": "Germany",
+                "language": "de-DE"
+            },
+            "track": {
+                "id": "51dfeed9e4b0feb05dbedf68",
+                "modified": "2013-07-12T11:56:09Z",
+                "name": "Track 2013-7-12"
+            }
+        },
+        {
+            "time": "2013-07-12T11:52:39Z",
+            "type": "CREATED_TRACK",
+            "user": {
+                "name": "jakob1",
+                "mail": "jakob@jakob.de",
+                "created": "2013-06-25T09:56:13Z",
+                "modified": "2013-07-10T08:30:04Z",
+                "firstName": "Jakob",
+                "lastName": "M",
+                "gender": "m",
+                "dayOfBirth": "1989-01-01",
+                "country": "Germany",
+                "language": "de-DE"
+            },
+            "track": {
+                "id": "51dfee07e4b0feb05dbedf0b",
+                "modified": "2013-07-12T11:52:39Z",
+                "name": "Track 2013-7-12"
+            }
+        },
+        {
+            "time": "2013-07-12T11:49:16Z",
+            "type": "CREATED_TRACK",
+            "user": {
+                "name": "jakob1",
+                "mail": "jakob@jakob.de",
+                "created": "2013-06-25T09:56:13Z",
+                "modified": "2013-07-10T08:30:04Z",
+                "firstName": "Jakob",
+                "lastName": "M",
+                "gender": "m",
+                "dayOfBirth": "1989-01-01",
+                "country": "Germany",
+                "language": "de-DE"
+            },
+            "track": {
+                "id": "51dfed3ce4b0feb05dbede76",
+                "modified": "2013-07-12T11:49:16Z",
+                "name": "Track 2013-7-12"
+            }
+        },
+        {
+            "time": "2013-07-12T11:45:54Z",
+            "type": "CREATED_TRACK",
+            "user": {
+                "name": "jakob1",
+                "mail": "jakob@jakob.de",
+                "created": "2013-06-25T09:56:13Z",
+                "modified": "2013-07-10T08:30:04Z",
+                "firstName": "Jakob",
+                "lastName": "M",
+                "gender": "m",
+                "dayOfBirth": "1989-01-01",
+                "country": "Germany",
+                "language": "de-DE"
+            },
+            "track": {
+                "id": "51dfec72e4b0feb05dbede3d",
+                "modified": "2013-07-12T11:45:54Z",
+                "name": "Track 2013-7-12"
+            }
+        },
+        {
+            "time": "2013-07-10T08:30:04Z",
+            "type": "CHANGED_PROFILE",
+            "user": {
+                "name": "jakob1",
+                "mail": "jakob@jakob.de",
+                "created": "2013-06-25T09:56:13Z",
+                "modified": "2013-07-10T08:30:04Z",
+                "firstName": "Jakob",
+                "lastName": "M",
+                "gender": "m",
+                "dayOfBirth": "1989-01-01",
+                "country": "Germany",
+                "language": "de-DE"
+            }
+        },
+        {
+            "time": "2013-07-09T12:00:29Z",
+            "type": "CREATED_TRACK",
+            "user": {
+                "name": "jakob1",
+                "mail": "jakob@jakob.de",
+                "created": "2013-06-25T09:56:13Z",
+                "modified": "2013-07-10T08:30:04Z",
+                "firstName": "Jakob",
+                "lastName": "M",
+                "gender": "m",
+                "dayOfBirth": "1989-01-01",
+                "country": "Germany",
+                "language": "de-DE"
+            },
+            "track": {
+                "id": "51dbfb5de4b0743c0890ee89",
+                "modified": "2013-07-09T12:00:29Z",
+                "name": "Track 2013-7-9"
+            }
+        },
+        {
+            "time": "2013-07-09T07:13:25Z",
+            "type": "CREATED_TRACK",
+            "user": {
+                "name": "jakob1",
+                "mail": "jakob@jakob.de",
+                "created": "2013-06-25T09:56:13Z",
+                "modified": "2013-07-10T08:30:04Z",
+                "firstName": "Jakob",
+                "lastName": "M",
+                "gender": "m",
+                "dayOfBirth": "1989-01-01",
+                "country": "Germany",
+                "language": "de-DE"
+            },
+            "track": {
+                "id": "51dbb815e4b0743c08908916",
+                "modified": "2013-07-09T07:13:25Z",
+                "name": "Track 2013-7-9"
+            }
+        },
+        {
+            "time": "2013-07-07T12:13:34Z",
+            "type": "CREATED_TRACK",
+            "user": {
+                "name": "jakob1",
+                "mail": "jakob@jakob.de",
+                "created": "2013-06-25T09:56:13Z",
+                "modified": "2013-07-10T08:30:04Z",
+                "firstName": "Jakob",
+                "lastName": "M",
+                "gender": "m",
+                "dayOfBirth": "1989-01-01",
+                "country": "Germany",
+                "language": "de-DE"
+            },
+            "track": {
+                "id": "51d95b6ee4b0798b041ef699",
+                "modified": "2013-07-07T12:13:34Z",
+                "name": "Track 2013-6-7"
+            }
+        },
+        {
+            "time": "2013-07-07T12:13:31Z",
+            "type": "CREATED_TRACK",
+            "user": {
+                "name": "jakob1",
+                "mail": "jakob@jakob.de",
+                "created": "2013-06-25T09:56:13Z",
+                "modified": "2013-07-10T08:30:04Z",
+                "firstName": "Jakob",
+                "lastName": "M",
+                "gender": "m",
+                "dayOfBirth": "1989-01-01",
+                "country": "Germany",
+                "language": "de-DE"
+            },
+            "track": {
+                "id": "51d95b6be4b0798b041ef676",
+                "modified": "2013-07-07T12:13:31Z",
+                "name": "Track 2013-6-6"
+            }
+        },
+        {
+            "time": "2013-07-07T12:13:30Z",
+            "type": "CREATED_TRACK",
+            "user": {
+                "name": "jakob1",
+                "mail": "jakob@jakob.de",
+                "created": "2013-06-25T09:56:13Z",
+                "modified": "2013-07-10T08:30:04Z",
+                "firstName": "Jakob",
+                "lastName": "M",
+                "gender": "m",
+                "dayOfBirth": "1989-01-01",
+                "country": "Germany",
+                "language": "de-DE"
+            },
+            "track": {
+                "id": "51d95b6ae4b0798b041ef66b",
+                "modified": "2013-07-07T12:13:30Z",
+                "name": "Track 2013-6-6"
+            }
+        },
+        {
+            "time": "2013-07-06T13:26:44Z",
+            "type": "CREATED_TRACK",
+            "user": {
+                "name": "jakob1",
+                "mail": "jakob@jakob.de",
+                "created": "2013-06-25T09:56:13Z",
+                "modified": "2013-07-10T08:30:04Z",
+                "firstName": "Jakob",
+                "lastName": "M",
+                "gender": "m",
+                "dayOfBirth": "1989-01-01",
+                "country": "Germany",
+                "language": "de-DE"
+            },
+            "track": {
+                "id": "51d81b13e4b0798b041e5f7d",
+                "modified": "2013-07-06T13:26:44Z",
+                "name": "Track 2013-6-6"
+            }
+        },
+        {
+            "time": "2013-07-05T14:20:28Z",
+            "type": "CREATED_TRACK",
+            "user": {
+                "name": "jakob1",
+                "mail": "jakob@jakob.de",
+                "created": "2013-06-25T09:56:13Z",
+                "modified": "2013-07-10T08:30:04Z",
+                "firstName": "Jakob",
+                "lastName": "M",
+                "gender": "m",
+                "dayOfBirth": "1989-01-01",
+                "country": "Germany",
+                "language": "de-DE"
+            }
+        },
+        {
+            "time": "2013-07-03T18:22:43Z",
+            "type": "CREATED_TRACK",
+            "user": {
+                "name": "jakob1",
+                "mail": "jakob@jakob.de",
+                "created": "2013-06-25T09:56:13Z",
+                "modified": "2013-07-10T08:30:04Z",
+                "firstName": "Jakob",
+                "lastName": "M",
+                "gender": "m",
+                "dayOfBirth": "1989-01-01",
+                "country": "Germany",
+                "language": "de-DE"
+            },
+            "track": {
+                "id": "51d46bf3e4b04fe4d76516a6",
+                "modified": "2013-07-03T18:22:43Z",
+                "name": "Track 2013-6-3"
+            }
+        },
+        {
+            "time": "2013-07-03T18:22:41Z",
+            "type": "CREATED_TRACK",
+            "user": {
+                "name": "jakob1",
+                "mail": "jakob@jakob.de",
+                "created": "2013-06-25T09:56:13Z",
+                "modified": "2013-07-10T08:30:04Z",
+                "firstName": "Jakob",
+                "lastName": "M",
+                "gender": "m",
+                "dayOfBirth": "1989-01-01",
+                "country": "Germany",
+                "language": "de-DE"
+            },
+            "track": {
+                "id": "51d46bf0e4b04fe4d76512cf",
+                "modified": "2013-07-03T18:22:41Z",
+                "name": "Track 2013-6-3"
+            }
+        },
+        {
+            "time": "2013-07-01T14:19:19Z",
+            "type": "FRIENDED_USER",
+            "user": {
+                "name": "jakob1",
+                "mail": "jakob@jakob.de",
+                "created": "2013-06-25T09:56:13Z",
+                "modified": "2013-07-10T08:30:04Z",
+                "firstName": "Jakob",
+                "lastName": "M",
+                "gender": "m",
+                "dayOfBirth": "1989-01-01",
+                "country": "Germany",
+                "language": "de-DE"
+            },
+            "other": {
+                "name": "AlbertRemke",
+                "created": "2013-06-28T15:47:04Z",
+                "modified": "2013-07-03T16:13:46Z"
+            }
+        },
+        {
+            "time": "2013-06-30T22:04:46Z",
+            "type": "CREATED_TRACK",
+            "user": {
+                "name": "jakob1",
+                "mail": "jakob@jakob.de",
+                "created": "2013-06-25T09:56:13Z",
+                "modified": "2013-07-10T08:30:04Z",
+                "firstName": "Jakob",
+                "lastName": "M",
+                "gender": "m",
+                "dayOfBirth": "1989-01-01",
+                "country": "Germany",
+                "language": "de-DE"
+            },
+            "track": {
+                "id": "51d0ab7de4b0f763081a2ea9",
+                "modified": "2013-06-30T22:04:46Z",
+                "name": "Some Name"
+            }
+        },
+        {
+            "time": "2013-06-30T22:04:45Z",
+            "type": "CREATED_TRACK",
+            "user": {
+                "name": "jakob1",
+                "mail": "jakob@jakob.de",
+                "created": "2013-06-25T09:56:13Z",
+                "modified": "2013-07-10T08:30:04Z",
+                "firstName": "Jakob",
+                "lastName": "M",
+                "gender": "m",
+                "dayOfBirth": "1989-01-01",
+                "country": "Germany",
+                "language": "de-DE"
+            },
+            "track": {
+                "id": "51d0ab7de4b0f763081a2ea4",
+                "modified": "2013-06-30T22:04:45Z",
+                "name": "Some Name"
+            }
+        },
+        {
+            "time": "2013-06-30T22:04:45Z",
+            "type": "CREATED_TRACK",
+            "user": {
+                "name": "jakob1",
+                "mail": "jakob@jakob.de",
+                "created": "2013-06-25T09:56:13Z",
+                "modified": "2013-07-10T08:30:04Z",
+                "firstName": "Jakob",
+                "lastName": "M",
+                "gender": "m",
+                "dayOfBirth": "1989-01-01",
+                "country": "Germany",
+                "language": "de-DE"
+            },
+            "track": {
+                "id": "51d0ab7de4b0f763081a2e97",
+                "modified": "2013-06-30T22:04:45Z",
+                "name": "Some Name"
+            }
+        },
+        {
+            "time": "2013-06-30T22:04:44Z",
+            "type": "CREATED_TRACK",
+            "user": {
+                "name": "jakob1",
+                "mail": "jakob@jakob.de",
+                "created": "2013-06-25T09:56:13Z",
+                "modified": "2013-07-10T08:30:04Z",
+                "firstName": "Jakob",
+                "lastName": "M",
+                "gender": "m",
+                "dayOfBirth": "1989-01-01",
+                "country": "Germany",
+                "language": "de-DE"
+            },
+            "track": {
+                "id": "51d0ab7ce4b0f763081a2e92",
+                "modified": "2013-06-30T22:04:44Z",
+                "name": "Some Name"
+            }
+        },
+        {
+            "time": "2013-06-30T22:04:44Z",
+            "type": "CREATED_TRACK",
+            "user": {
+                "name": "jakob1",
+                "mail": "jakob@jakob.de",
+                "created": "2013-06-25T09:56:13Z",
+                "modified": "2013-07-10T08:30:04Z",
+                "firstName": "Jakob",
+                "lastName": "M",
+                "gender": "m",
+                "dayOfBirth": "1989-01-01",
+                "country": "Germany",
+                "language": "de-DE"
+            }
+        },
+        {
+            "time": "2013-06-30T20:46:25Z",
+            "type": "CREATED_TRACK",
+            "user": {
+                "name": "jakob1",
+                "mail": "jakob@jakob.de",
+                "created": "2013-06-25T09:56:13Z",
+                "modified": "2013-07-10T08:30:04Z",
+                "firstName": "Jakob",
+                "lastName": "M",
+                "gender": "m",
+                "dayOfBirth": "1989-01-01",
+                "country": "Germany",
+                "language": "de-DE"
+            }
+        },
+        {
+            "time": "2013-06-30T20:46:24Z",
+            "type": "CREATED_TRACK",
+            "user": {
+                "name": "jakob1",
+                "mail": "jakob@jakob.de",
+                "created": "2013-06-25T09:56:13Z",
+                "modified": "2013-07-10T08:30:04Z",
+                "firstName": "Jakob",
+                "lastName": "M",
+                "gender": "m",
+                "dayOfBirth": "1989-01-01",
+                "country": "Germany",
+                "language": "de-DE"
+            }
+        },
+        {
+            "time": "2013-06-30T20:46:24Z",
+            "type": "CREATED_TRACK",
+            "user": {
+                "name": "jakob1",
+                "mail": "jakob@jakob.de",
+                "created": "2013-06-25T09:56:13Z",
+                "modified": "2013-07-10T08:30:04Z",
+                "firstName": "Jakob",
+                "lastName": "M",
+                "gender": "m",
+                "dayOfBirth": "1989-01-01",
+                "country": "Germany",
+                "language": "de-DE"
+            }
+        },
+        {
+            "time": "2013-06-30T20:46:24Z",
+            "type": "CREATED_TRACK",
+            "user": {
+                "name": "jakob1",
+                "mail": "jakob@jakob.de",
+                "created": "2013-06-25T09:56:13Z",
+                "modified": "2013-07-10T08:30:04Z",
+                "firstName": "Jakob",
+                "lastName": "M",
+                "gender": "m",
+                "dayOfBirth": "1989-01-01",
+                "country": "Germany",
+                "language": "de-DE"
+            }
+        },
+        {
+            "time": "2013-06-30T20:46:23Z",
+            "type": "CREATED_TRACK",
+            "user": {
+                "name": "jakob1",
+                "mail": "jakob@jakob.de",
+                "created": "2013-06-25T09:56:13Z",
+                "modified": "2013-07-10T08:30:04Z",
+                "firstName": "Jakob",
+                "lastName": "M",
+                "gender": "m",
+                "dayOfBirth": "1989-01-01",
+                "country": "Germany",
+                "language": "de-DE"
+            }
+        },
+        {
+            "time": "2013-06-30T20:46:10Z",
+            "type": "CREATED_TRACK",
+            "user": {
+                "name": "jakob1",
+                "mail": "jakob@jakob.de",
+                "created": "2013-06-25T09:56:13Z",
+                "modified": "2013-07-10T08:30:04Z",
+                "firstName": "Jakob",
+                "lastName": "M",
+                "gender": "m",
+                "dayOfBirth": "1989-01-01",
+                "country": "Germany",
+                "language": "de-DE"
+            }
+        },
+        {
+            "time": "2013-06-30T20:46:10Z",
+            "type": "CREATED_TRACK",
+            "user": {
+                "name": "jakob1",
+                "mail": "jakob@jakob.de",
+                "created": "2013-06-25T09:56:13Z",
+                "modified": "2013-07-10T08:30:04Z",
+                "firstName": "Jakob",
+                "lastName": "M",
+                "gender": "m",
+                "dayOfBirth": "1989-01-01",
+                "country": "Germany",
+                "language": "de-DE"
+            }
+        },
+        {
+            "time": "2013-06-30T20:46:10Z",
+            "type": "CREATED_TRACK",
+            "user": {
+                "name": "jakob1",
+                "mail": "jakob@jakob.de",
+                "created": "2013-06-25T09:56:13Z",
+                "modified": "2013-07-10T08:30:04Z",
+                "firstName": "Jakob",
+                "lastName": "M",
+                "gender": "m",
+                "dayOfBirth": "1989-01-01",
+                "country": "Germany",
+                "language": "de-DE"
+            }
+        },
+        {
+            "time": "2013-06-30T20:46:09Z",
+            "type": "CREATED_TRACK",
+            "user": {
+                "name": "jakob1",
+                "mail": "jakob@jakob.de",
+                "created": "2013-06-25T09:56:13Z",
+                "modified": "2013-07-10T08:30:04Z",
+                "firstName": "Jakob",
+                "lastName": "M",
+                "gender": "m",
+                "dayOfBirth": "1989-01-01",
+                "country": "Germany",
+                "language": "de-DE"
+            }
+        },
+        {
+            "time": "2013-06-30T20:46:09Z",
+            "type": "CREATED_TRACK",
+            "user": {
+                "name": "jakob1",
+                "mail": "jakob@jakob.de",
+                "created": "2013-06-25T09:56:13Z",
+                "modified": "2013-07-10T08:30:04Z",
+                "firstName": "Jakob",
+                "lastName": "M",
+                "gender": "m",
+                "dayOfBirth": "1989-01-01",
+                "country": "Germany",
+                "language": "de-DE"
+            }
+        },
+        {
+            "time": "2013-06-30T20:45:22Z",
+            "type": "CREATED_TRACK",
+            "user": {
+                "name": "jakob1",
+                "mail": "jakob@jakob.de",
+                "created": "2013-06-25T09:56:13Z",
+                "modified": "2013-07-10T08:30:04Z",
+                "firstName": "Jakob",
+                "lastName": "M",
+                "gender": "m",
+                "dayOfBirth": "1989-01-01",
+                "country": "Germany",
+                "language": "de-DE"
+            }
+        },
+        {
+            "time": "2013-06-30T20:45:22Z",
+            "type": "CREATED_TRACK",
+            "user": {
+                "name": "jakob1",
+                "mail": "jakob@jakob.de",
+                "created": "2013-06-25T09:56:13Z",
+                "modified": "2013-07-10T08:30:04Z",
+                "firstName": "Jakob",
+                "lastName": "M",
+                "gender": "m",
+                "dayOfBirth": "1989-01-01",
+                "country": "Germany",
+                "language": "de-DE"
+            }
+        },
+        {
+            "time": "2013-06-30T20:45:22Z",
+            "type": "CREATED_TRACK",
+            "user": {
+                "name": "jakob1",
+                "mail": "jakob@jakob.de",
+                "created": "2013-06-25T09:56:13Z",
+                "modified": "2013-07-10T08:30:04Z",
+                "firstName": "Jakob",
+                "lastName": "M",
+                "gender": "m",
+                "dayOfBirth": "1989-01-01",
+                "country": "Germany",
+                "language": "de-DE"
+            }
+        },
+        {
+            "time": "2013-06-30T20:45:21Z",
+            "type": "CREATED_TRACK",
+            "user": {
+                "name": "jakob1",
+                "mail": "jakob@jakob.de",
+                "created": "2013-06-25T09:56:13Z",
+                "modified": "2013-07-10T08:30:04Z",
+                "firstName": "Jakob",
+                "lastName": "M",
+                "gender": "m",
+                "dayOfBirth": "1989-01-01",
+                "country": "Germany",
+                "language": "de-DE"
+            }
+        },
+        {
+            "time": "2013-06-30T20:45:21Z",
+            "type": "CREATED_TRACK",
+            "user": {
+                "name": "jakob1",
+                "mail": "jakob@jakob.de",
+                "created": "2013-06-25T09:56:13Z",
+                "modified": "2013-07-10T08:30:04Z",
+                "firstName": "Jakob",
+                "lastName": "M",
+                "gender": "m",
+                "dayOfBirth": "1989-01-01",
+                "country": "Germany",
+                "language": "de-DE"
+            }
+        },
+        {
+            "time": "2013-06-30T20:44:33Z",
+            "type": "CREATED_TRACK",
+            "user": {
+                "name": "jakob1",
+                "mail": "jakob@jakob.de",
+                "created": "2013-06-25T09:56:13Z",
+                "modified": "2013-07-10T08:30:04Z",
+                "firstName": "Jakob",
+                "lastName": "M",
+                "gender": "m",
+                "dayOfBirth": "1989-01-01",
+                "country": "Germany",
+                "language": "de-DE"
+            }
+        },
+        {
+            "time": "2013-06-30T20:44:33Z",
+            "type": "CREATED_TRACK",
+            "user": {
+                "name": "jakob1",
+                "mail": "jakob@jakob.de",
+                "created": "2013-06-25T09:56:13Z",
+                "modified": "2013-07-10T08:30:04Z",
+                "firstName": "Jakob",
+                "lastName": "M",
+                "gender": "m",
+                "dayOfBirth": "1989-01-01",
+                "country": "Germany",
+                "language": "de-DE"
+            }
+        },
+        {
+            "time": "2013-06-30T20:44:33Z",
+            "type": "CREATED_TRACK",
+            "user": {
+                "name": "jakob1",
+                "mail": "jakob@jakob.de",
+                "created": "2013-06-25T09:56:13Z",
+                "modified": "2013-07-10T08:30:04Z",
+                "firstName": "Jakob",
+                "lastName": "M",
+                "gender": "m",
+                "dayOfBirth": "1989-01-01",
+                "country": "Germany",
+                "language": "de-DE"
+            }
+        },
+        {
+            "time": "2013-06-30T20:44:32Z",
+            "type": "CREATED_TRACK",
+            "user": {
+                "name": "jakob1",
+                "mail": "jakob@jakob.de",
+                "created": "2013-06-25T09:56:13Z",
+                "modified": "2013-07-10T08:30:04Z",
+                "firstName": "Jakob",
+                "lastName": "M",
+                "gender": "m",
+                "dayOfBirth": "1989-01-01",
+                "country": "Germany",
+                "language": "de-DE"
+            }
+        },
+        {
+            "time": "2013-06-30T20:44:32Z",
+            "type": "CREATED_TRACK",
+            "user": {
+                "name": "jakob1",
+                "mail": "jakob@jakob.de",
+                "created": "2013-06-25T09:56:13Z",
+                "modified": "2013-07-10T08:30:04Z",
+                "firstName": "Jakob",
+                "lastName": "M",
+                "gender": "m",
+                "dayOfBirth": "1989-01-01",
+                "country": "Germany",
+                "language": "de-DE"
+            }
+        },
+        {
+            "time": "2013-06-30T14:57:45Z",
+            "type": "FRIENDED_USER",
+            "user": {
+                "name": "jakob1",
+                "mail": "jakob@jakob.de",
+                "created": "2013-06-25T09:56:13Z",
+                "modified": "2013-07-10T08:30:04Z",
+                "firstName": "Jakob",
+                "lastName": "M",
+                "gender": "m",
+                "dayOfBirth": "1989-01-01",
+                "country": "Germany",
+                "language": "de-DE"
+            },
+            "other": {
+                "name": "Turbomartin",
+                "created": "2013-06-25T15:21:17Z",
+                "modified": "2013-07-01T17:18:03Z"
+            }
+        },
+        {
+            "time": "2013-06-26T17:33:12Z",
+            "type": "CREATED_TRACK",
+            "user": {
+                "name": "jakob1",
+                "mail": "jakob@jakob.de",
+                "created": "2013-06-25T09:56:13Z",
+                "modified": "2013-07-10T08:30:04Z",
+                "firstName": "Jakob",
+                "lastName": "M",
+                "gender": "m",
+                "dayOfBirth": "1989-01-01",
+                "country": "Germany",
+                "language": "de-DE"
+            }
+        },
+        {
+            "time": "2013-06-26T17:33:12Z",
+            "type": "CREATED_TRACK",
+            "user": {
+                "name": "jakob1",
+                "mail": "jakob@jakob.de",
+                "created": "2013-06-25T09:56:13Z",
+                "modified": "2013-07-10T08:30:04Z",
+                "firstName": "Jakob",
+                "lastName": "M",
+                "gender": "m",
+                "dayOfBirth": "1989-01-01",
+                "country": "Germany",
+                "language": "de-DE"
+            }
+        },
+        {
+            "time": "2013-06-26T17:33:11Z",
+            "type": "CREATED_TRACK",
+            "user": {
+                "name": "jakob1",
+                "mail": "jakob@jakob.de",
+                "created": "2013-06-25T09:56:13Z",
+                "modified": "2013-07-10T08:30:04Z",
+                "firstName": "Jakob",
+                "lastName": "M",
+                "gender": "m",
+                "dayOfBirth": "1989-01-01",
+                "country": "Germany",
+                "language": "de-DE"
+            }
+        },
+        {
+            "time": "2013-06-26T17:33:11Z",
+            "type": "CREATED_TRACK",
+            "user": {
+                "name": "jakob1",
+                "mail": "jakob@jakob.de",
+                "created": "2013-06-25T09:56:13Z",
+                "modified": "2013-07-10T08:30:04Z",
+                "firstName": "Jakob",
+                "lastName": "M",
+                "gender": "m",
+                "dayOfBirth": "1989-01-01",
+                "country": "Germany",
+                "language": "de-DE"
+            }
+        },
+        {
+            "time": "2013-06-26T17:33:10Z",
+            "type": "CREATED_TRACK",
+            "user": {
+                "name": "jakob1",
+                "mail": "jakob@jakob.de",
+                "created": "2013-06-25T09:56:13Z",
+                "modified": "2013-07-10T08:30:04Z",
+                "firstName": "Jakob",
+                "lastName": "M",
+                "gender": "m",
+                "dayOfBirth": "1989-01-01",
+                "country": "Germany",
+                "language": "de-DE"
+            }
+        },
+        {
+            "time": "2013-06-26T11:07:43Z",
+            "type": "CREATED_TRACK",
+            "user": {
+                "name": "jakob1",
+                "mail": "jakob@jakob.de",
+                "created": "2013-06-25T09:56:13Z",
+                "modified": "2013-07-10T08:30:04Z",
+                "firstName": "Jakob",
+                "lastName": "M",
+                "gender": "m",
+                "dayOfBirth": "1989-01-01",
+                "country": "Germany",
+                "language": "de-DE"
+            }
+        },
+        {
+            "time": "2013-06-25T15:50:58Z",
+            "type": "FRIENDED_USER",
+            "user": {
+                "name": "jakob1",
+                "mail": "jakob@jakob.de",
+                "created": "2013-06-25T09:56:13Z",
+                "modified": "2013-07-10T08:30:04Z",
+                "firstName": "Jakob",
+                "lastName": "M",
+                "gender": "m",
+                "dayOfBirth": "1989-01-01",
+                "country": "Germany",
+                "language": "de-DE"
+            },
+            "other": {
+                "name": "jakob2",
+                "created": "2013-06-25T13:42:51Z",
+                "modified": "2013-07-04T12:37:09Z",
+                "firstName": "Jakob",
+                "lastName": "M",
+                "gender": "m",
+                "dayOfBirth": "2000-12-12",
+                "country": "Germany",
+                "language": "de-DE"
+            }
+        },
+        {
+            "time": "2013-06-25T15:25:19Z",
+            "type": "FRIENDED_USER",
+            "user": {
+                "name": "jakob1",
+                "mail": "jakob@jakob.de",
+                "created": "2013-06-25T09:56:13Z",
+                "modified": "2013-07-10T08:30:04Z",
+                "firstName": "Jakob",
+                "lastName": "M",
+                "gender": "m",
+                "dayOfBirth": "1989-01-01",
+                "country": "Germany",
+                "language": "de-DE"
+            },
+            "other": {
+                "name": "OraibMiq",
+                "created": "2013-06-25T15:05:24Z",
+                "modified": "2013-06-25T15:25:54Z"
+            }
+        },
+        {
+            "time": "2013-06-25T11:36:41Z",
+            "type": "CREATED_TRACK",
+            "user": {
+                "name": "jakob1",
+                "mail": "jakob@jakob.de",
+                "created": "2013-06-25T09:56:13Z",
+                "modified": "2013-07-10T08:30:04Z",
+                "firstName": "Jakob",
+                "lastName": "M",
+                "gender": "m",
+                "dayOfBirth": "1989-01-01",
+                "country": "Germany",
+                "language": "de-DE"
+            },
+            "track": {
+                "id": "51c980c8e4b05956bbffcefd",
+                "modified": "2013-06-25T11:36:43Z",
+                "name": "Way to work"
+            }
+        },
+        {
+            "time": "2013-06-25T10:00:30Z",
+            "type": "CREATED_GROUP",
+            "user": {
+                "name": "jakob1",
+                "mail": "jakob@jakob.de",
+                "created": "2013-06-25T09:56:13Z",
+                "modified": "2013-07-10T08:30:04Z",
+                "firstName": "Jakob",
+                "lastName": "M",
+                "gender": "m",
+                "dayOfBirth": "1989-01-01",
+                "country": "Germany",
+                "language": "de-DE"
+            },
+            "group": {
+                "name": "Product Owner",
+                "description": "Product Owner Description",
+                "owner": {
+                    "name": "jakob1",
+                    "mail": "jakob@jakob.de",
+                    "created": "2013-06-25T09:56:13Z",
+                    "modified": "2013-07-10T08:30:04Z",
+                    "firstName": "Jakob",
+                    "lastName": "M",
+                    "gender": "m",
+                    "dayOfBirth": "1989-01-01",
+                    "country": "Germany",
+                    "language": "de-DE"
+                },
+                "created": "2013-06-25T10:00:30Z",
+                "modified": "2013-06-28T08:47:16Z"
+            }
+        },
+        {
+            "time": "2013-06-25T10:00:30Z",
+            "type": "JOINED_GROUP",
+            "user": {
+                "name": "jakob1",
+                "mail": "jakob@jakob.de",
+                "created": "2013-06-25T09:56:13Z",
+                "modified": "2013-07-10T08:30:04Z",
+                "firstName": "Jakob",
+                "lastName": "M",
+                "gender": "m",
+                "dayOfBirth": "1989-01-01",
+                "country": "Germany",
+                "language": "de-DE"
+            },
+            "group": {
+                "name": "Product Owner",
+                "description": "Product Owner Description",
+                "owner": {
+                    "name": "jakob1",
+                    "mail": "jakob@jakob.de",
+                    "created": "2013-06-25T09:56:13Z",
+                    "modified": "2013-07-10T08:30:04Z",
+                    "firstName": "Jakob",
+                    "lastName": "M",
+                    "gender": "m",
+                    "dayOfBirth": "1989-01-01",
+                    "country": "Germany",
+                    "language": "de-DE"
+                },
+                "created": "2013-06-25T10:00:30Z",
+                "modified": "2013-06-28T08:47:16Z"
+            }
+        },
+        {
+            "time": "2013-06-25T10:00:03Z",
+            "type": "FRIENDED_USER",
+            "user": {
+                "name": "jakob1",
+                "mail": "jakob@jakob.de",
+                "created": "2013-06-25T09:56:13Z",
+                "modified": "2013-07-10T08:30:04Z",
+                "firstName": "Jakob",
+                "lastName": "M",
+                "gender": "m",
+                "dayOfBirth": "1989-01-01",
+                "country": "Germany",
+                "language": "de-DE"
+            },
+            "other": {
+                "name": "ChristianK",
+                "created": "2013-06-25T09:56:49Z",
+                "modified": "2013-06-25T10:10:00Z"
+            }
+        },
+        {
+            "time": "2013-06-25T09:59:27Z",
+            "type": "FRIENDED_USER",
+            "user": {
+                "name": "jakob1",
+                "mail": "jakob@jakob.de",
+                "created": "2013-06-25T09:56:13Z",
+                "modified": "2013-07-10T08:30:04Z",
+                "firstName": "Jakob",
+                "lastName": "M",
+                "gender": "m",
+                "dayOfBirth": "1989-01-01",
+                "country": "Germany",
+                "language": "de-DE"
+            },
+            "other": {
+                "name": "dnnsdnns",
+                "created": "2013-06-25T09:55:28Z",
+                "modified": "2013-07-05T11:00:26Z",
+                "firstName": "Dennis",
+                "lastName": "Wi",
+                "gender": "m",
+                "dayOfBirth": "1989-12-21",
+                "aboutMe": "enviroCar developer",
+                "country": "Germany",
+                "language": "de-DE"
+            }
+        }
+    ]
 }
