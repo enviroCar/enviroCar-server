@@ -1,0 +1,9 @@
+{
+    "groups": "https://giv-car.uni-muenster.de/dev/rest/groups",
+    "measurements": "https://giv-car.uni-muenster.de/dev/rest/measurements",
+    "phenomenons": "https://giv-car.uni-muenster.de/dev/rest/phenomenons",
+    "sensors": "https://giv-car.uni-muenster.de/dev/rest/sensors",
+    "statistics": "https://giv-car.uni-muenster.de/dev/rest/statistics",
+    "tracks": "https://giv-car.uni-muenster.de/dev/rest/tracks",
+    "users": "https://giv-car.uni-muenster.de/dev/rest/users"
+}
