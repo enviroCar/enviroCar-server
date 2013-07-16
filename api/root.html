@@ -33,32 +33,76 @@
 
 <p>This is the root resource.</p>
 
-<ul>
-<li><p><code>GET /rest</code>
-Get the root resource.</p>
+<h3 id="toc_1">GET</h3>
 
-<table><thead>
-<tr>
-<th>Status</th>
-<th>Details</th>
-</tr>
-</thead><tbody>
-<tr>
-<td><code>200 OK</code></td>
-<td>Returns the root resource as specified in <a href="https://github.com/enviroCar/enviroCar-server/blob/master/rest/src/main/resources/schema/root.json" title="root.json">root.json</a>.</td>
-</tr>
-</tbody></table></li>
-<li><p>Example <a href="https://github.com/enviroCar/enviroCar-server/blob/master/rest/src/main/resources/schema/root.json" title="root.json">root.json</a> file:</p>
-<div class="highlight"><pre><code class="json language-json" data-lang="json"><span class="p">{</span>
-    <span class="nt">&quot;groups&quot;</span><span class="p">:</span> <span class="s2">&quot;http://giv-car.uni-muenster.de:8080/stable/rest/groups&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;measurements&quot;</span><span class="p">:</span> <span class="s2">&quot;http://giv-car.uni-muenster.de:8080/stable/rest/measurements&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;phenomenons&quot;</span><span class="p">:</span> <span class="s2">&quot;http://giv-car.uni-muenster.de:8080/stable/rest/phenomenons&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;sensors&quot;</span><span class="p">:</span> <span class="s2">&quot;http://giv-car.uni-muenster.de:8080/stable/rest/sensors&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;statistics&quot;</span><span class="p">:</span> <span class="s2">&quot;http://giv-car.uni-muenster.de:8080/stable/rest/statistics&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;tracks&quot;</span><span class="p">:</span> <span class="s2">&quot;http://giv-car.uni-muenster.de:8080/stable/rest/tracks&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;users&quot;</span><span class="p">:</span> <span class="s2">&quot;http://giv-car.uni-muenster.de:8080/stable/rest/users&quot;</span>
+<p>Get the root resource.</p>
+
+<h4 id="toc_2">Response Schema</h4>
+
+<div class="highlight-file">
+
+<div class="highlight"><pre><code class="json"><span class="p">{</span>
+    <span class="nt">&quot;$schema&quot;</span><span class="p">:</span> <span class="s2">&quot;http://json-schema.org/draft-04/schema#&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;http://schema.envirocar.org/root.json#&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;object&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;users&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;format&quot;</span><span class="p">:</span> <span class="s2">&quot;uri&quot;</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;tracks&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;format&quot;</span><span class="p">:</span> <span class="s2">&quot;uri&quot;</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;groups&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;format&quot;</span><span class="p">:</span> <span class="s2">&quot;uri&quot;</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;sensors&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;format&quot;</span><span class="p">:</span> <span class="s2">&quot;uri&quot;</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;phenomenons&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;format&quot;</span><span class="p">:</span> <span class="s2">&quot;uri&quot;</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;measurements&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;format&quot;</span><span class="p">:</span> <span class="s2">&quot;uri&quot;</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;statistics&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;format&quot;</span><span class="p">:</span> <span class="s2">&quot;uri&quot;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
 <span class="p">}</span>
-</code></pre></div></li>
+</code></pre></div>
+
+</div>
+
+<h4 id="toc_3">Response Example</h4>
+
+<div class="highlight-file">
+
+<div class="highlight"><pre><code class="json"><span class="p">{</span>
+    <span class="nt">&quot;groups&quot;</span><span class="p">:</span> <span class="s2">&quot;https://giv-car.uni-muenster.de/dev/rest/groups&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;measurements&quot;</span><span class="p">:</span> <span class="s2">&quot;https://giv-car.uni-muenster.de/dev/rest/measurements&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;phenomenons&quot;</span><span class="p">:</span> <span class="s2">&quot;https://giv-car.uni-muenster.de/dev/rest/phenomenons&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;sensors&quot;</span><span class="p">:</span> <span class="s2">&quot;https://giv-car.uni-muenster.de/dev/rest/sensors&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;statistics&quot;</span><span class="p">:</span> <span class="s2">&quot;https://giv-car.uni-muenster.de/dev/rest/statistics&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;tracks&quot;</span><span class="p">:</span> <span class="s2">&quot;https://giv-car.uni-muenster.de/dev/rest/tracks&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;users&quot;</span><span class="p">:</span> <span class="s2">&quot;https://giv-car.uni-muenster.de/dev/rest/users&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+</div>
+
+<h3 id="toc_4"><code>/rest</code></h3>
+
+<p>Get the root resource.</p>
+
+<ul>
+<li>Example <a href="https://github.com/enviroCar/enviroCar-server/blob/master/rest/src/main/resources/schema/root.json" title="root.json">root.json</a> file:</li>
 </ul>
 
             </section>

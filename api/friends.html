@@ -37,7 +37,7 @@
 
 <p>Get a list of friends of the user <code>username</code>.</p>
 
-<h3 id="toc_2">Response Schema</h3>
+<h4 id="toc_2">Response Schema</h4>
 
 <div class="highlight-file">
 
@@ -63,7 +63,7 @@
 
 </div>
 
-<h3 id="toc_3">Response Example</h3>
+<h4 id="toc_3">Response Example</h4>
 
 <div class="highlight-file">
 
@@ -87,13 +87,11 @@
 
 </div>
 
-<h3 id="toc_4">Response Example</h3>
-
-<h3 id="toc_5">POST</h3>
+<h3 id="toc_4">POST</h3>
 
 <p>Adds a user as a friend to user <code>username</code>.</p>
 
-<h3 id="toc_6">Request Schema</h3>
+<h4 id="toc_5">Request Schema</h4>
 
 <div class="highlight-file">
 
@@ -106,13 +104,13 @@
 
 </div>
 
-<h1 id="toc_7">/rest/users/:username/friends/:friend</h1>
+<h1 id="toc_6">/rest/users/:username/friends/:friend</h1>
 
-<h3 id="toc_8">GET</h3>
+<h3 id="toc_7">GET</h3>
 
 <p>Get a specific friend <code>friend</code> of the user <code>username</code>. </p>
 
-<h3 id="toc_9">Response Schema</h3>
+<h3 id="toc_8">Response Schema</h3>
 
 <div class="highlight-file">
 
@@ -151,21 +149,27 @@
 
 </div>
 
-<h3 id="toc_10">Response Example</h3>
+<h3 id="toc_9">Response Example</h3>
 
 <div class="highlight-file">
 
 <div class="highlight"><pre><code class="json"><span class="p">{</span>
-  <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;test&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;mail&quot;</span><span class="p">:</span> <span class="s2">&quot;test@example.de&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;created&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-06-25T09:56:13Z&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;modified&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-07-01T14:19:19Z&quot;</span>
+    <span class="nt">&quot;country&quot;</span><span class="p">:</span> <span class="s2">&quot;Germany&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;created&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-06-25T09:56:13Z&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;dayOfBirth&quot;</span><span class="p">:</span> <span class="s2">&quot;1989-01-01&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;firstName&quot;</span><span class="p">:</span> <span class="s2">&quot;Jakob&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;gender&quot;</span><span class="p">:</span> <span class="s2">&quot;m&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;language&quot;</span><span class="p">:</span> <span class="s2">&quot;de-DE&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;lastName&quot;</span><span class="p">:</span> <span class="s2">&quot;M&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;mail&quot;</span><span class="p">:</span> <span class="s2">&quot;jakob@jakob.de&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;modified&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-07-10T08:30:04Z&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;jakob1&quot;</span>
 <span class="p">}</span>
 </code></pre></div>
 
 </div>
 
-<h3 id="toc_11">DELETE</h3>
+<h3 id="toc_10">DELETE</h3>
 
 <p>Removes a specific friend <code>friend</code> of the user <code>username</code>.</p>
 

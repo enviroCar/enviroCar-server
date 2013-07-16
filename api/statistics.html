@@ -29,11 +29,13 @@
                 </ul>
             </header>
             <section>
-                <p>This is the Statistics resource.</p>
+                <h1 id="toc_0">/rest/statistics</h1>
 
-<h1 id="toc_0">/rest/statistics</h1>
+<h3 id="toc_1">GET</h3>
 
-<h2 id="toc_1">Schema</h2>
+<p>Get a list of statistics for all phenomenons.</p>
+
+<h4 id="toc_2">Response Schema</h4>
 
 <div class="highlight-file">
 
@@ -59,11 +61,200 @@
 
 </div>
 
-<ul>
-<li><p><code>GET /rest/statistics</code></p>
+<h4 id="toc_3">Response Schema</h4>
 
-<p>Get a list of all statistics.</p></li>
-</ul>
+<div class="highlight-file">
+
+<div class="highlight"><pre><code class="json"><span class="p">{</span>
+    <span class="nt">&quot;statistics&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;avg&quot;</span><span class="p">:</span> <span class="mf">30.647307924984876</span><span class="p">,</span>
+            <span class="nt">&quot;max&quot;</span><span class="p">:</span> <span class="mf">72.0</span><span class="p">,</span>
+            <span class="nt">&quot;measurements&quot;</span><span class="p">:</span> <span class="mi">4959</span><span class="p">,</span>
+            <span class="nt">&quot;min&quot;</span><span class="p">:</span> <span class="mf">-40.0</span><span class="p">,</span>
+            <span class="nt">&quot;phenomenon&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Intake Temperature&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;unit&quot;</span><span class="p">:</span> <span class="s2">&quot;c&quot;</span>
+            <span class="p">},</span>
+            <span class="nt">&quot;sensors&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+            <span class="nt">&quot;tracks&quot;</span><span class="p">:</span> <span class="mi">52</span><span class="p">,</span>
+            <span class="nt">&quot;users&quot;</span><span class="p">:</span> <span class="mi">6</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;avg&quot;</span><span class="p">:</span> <span class="mf">11.610504291758042</span><span class="p">,</span>
+            <span class="nt">&quot;max&quot;</span><span class="p">:</span> <span class="mf">156.13</span><span class="p">,</span>
+            <span class="nt">&quot;measurements&quot;</span><span class="p">:</span> <span class="mi">6532</span><span class="p">,</span>
+            <span class="nt">&quot;min&quot;</span><span class="p">:</span> <span class="mf">-1.0</span><span class="p">,</span>
+            <span class="nt">&quot;phenomenon&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;MAF&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;unit&quot;</span><span class="p">:</span> <span class="s2">&quot;l/s&quot;</span>
+            <span class="p">},</span>
+            <span class="nt">&quot;sensors&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+            <span class="nt">&quot;tracks&quot;</span><span class="p">:</span> <span class="mi">62</span><span class="p">,</span>
+            <span class="nt">&quot;users&quot;</span><span class="p">:</span> <span class="mi">9</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;avg&quot;</span><span class="p">:</span> <span class="mf">17.94905935727109</span><span class="p">,</span>
+            <span class="nt">&quot;max&quot;</span><span class="p">:</span> <span class="mf">121.087</span><span class="p">,</span>
+            <span class="nt">&quot;measurements&quot;</span><span class="p">:</span> <span class="mi">2785</span><span class="p">,</span>
+            <span class="nt">&quot;min&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+            <span class="nt">&quot;phenomenon&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Calculated MAF&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;unit&quot;</span><span class="p">:</span> <span class="s2">&quot;g/s&quot;</span>
+            <span class="p">},</span>
+            <span class="nt">&quot;sensors&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+            <span class="nt">&quot;tracks&quot;</span><span class="p">:</span> <span class="mi">47</span><span class="p">,</span>
+            <span class="nt">&quot;users&quot;</span><span class="p">:</span> <span class="mi">6</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;avg&quot;</span><span class="p">:</span> <span class="mf">36.47006476373232</span><span class="p">,</span>
+            <span class="nt">&quot;max&quot;</span><span class="p">:</span> <span class="mf">188.0</span><span class="p">,</span>
+            <span class="nt">&quot;measurements&quot;</span><span class="p">:</span> <span class="mi">8338</span><span class="p">,</span>
+            <span class="nt">&quot;min&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+            <span class="nt">&quot;phenomenon&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Speed&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;unit&quot;</span><span class="p">:</span> <span class="s2">&quot;km/h&quot;</span>
+            <span class="p">},</span>
+            <span class="nt">&quot;sensors&quot;</span><span class="p">:</span> <span class="mi">11</span><span class="p">,</span>
+            <span class="nt">&quot;tracks&quot;</span><span class="p">:</span> <span class="mi">92</span><span class="p">,</span>
+            <span class="nt">&quot;users&quot;</span><span class="p">:</span> <span class="mi">10</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;avg&quot;</span><span class="p">:</span> <span class="mf">96.36156483161928</span><span class="p">,</span>
+            <span class="nt">&quot;max&quot;</span><span class="p">:</span> <span class="mf">255.0</span><span class="p">,</span>
+            <span class="nt">&quot;measurements&quot;</span><span class="p">:</span> <span class="mi">4959</span><span class="p">,</span>
+            <span class="nt">&quot;min&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+            <span class="nt">&quot;phenomenon&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Intake Pressure&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;unit&quot;</span><span class="p">:</span> <span class="s2">&quot;kPa&quot;</span>
+            <span class="p">},</span>
+            <span class="nt">&quot;sensors&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+            <span class="nt">&quot;tracks&quot;</span><span class="p">:</span> <span class="mi">52</span><span class="p">,</span>
+            <span class="nt">&quot;users&quot;</span><span class="p">:</span> <span class="mi">6</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;avg&quot;</span><span class="p">:</span> <span class="mf">0.8812045709387641</span><span class="p">,</span>
+            <span class="nt">&quot;max&quot;</span><span class="p">:</span> <span class="mf">130.04</span><span class="p">,</span>
+            <span class="nt">&quot;measurements&quot;</span><span class="p">:</span> <span class="mi">7624</span><span class="p">,</span>
+            <span class="nt">&quot;min&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+            <span class="nt">&quot;phenomenon&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;CO2&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;unit&quot;</span><span class="p">:</span> <span class="s2">&quot;kg/h&quot;</span>
+            <span class="p">},</span>
+            <span class="nt">&quot;sensors&quot;</span><span class="p">:</span> <span class="mi">11</span><span class="p">,</span>
+            <span class="nt">&quot;tracks&quot;</span><span class="p">:</span> <span class="mi">82</span><span class="p">,</span>
+            <span class="nt">&quot;users&quot;</span><span class="p">:</span> <span class="mi">10</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;avg&quot;</span><span class="p">:</span> <span class="mf">1225.3004638031862</span><span class="p">,</span>
+            <span class="nt">&quot;max&quot;</span><span class="p">:</span> <span class="mf">4301.0</span><span class="p">,</span>
+            <span class="nt">&quot;measurements&quot;</span><span class="p">:</span> <span class="mi">4959</span><span class="p">,</span>
+            <span class="nt">&quot;min&quot;</span><span class="p">:</span> <span class="mf">-1.0</span><span class="p">,</span>
+            <span class="nt">&quot;phenomenon&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Rpm&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;unit&quot;</span><span class="p">:</span> <span class="s2">&quot;u/min&quot;</span>
+            <span class="p">},</span>
+            <span class="nt">&quot;sensors&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+            <span class="nt">&quot;tracks&quot;</span><span class="p">:</span> <span class="mi">52</span><span class="p">,</span>
+            <span class="nt">&quot;users&quot;</span><span class="p">:</span> <span class="mi">6</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;avg&quot;</span><span class="p">:</span> <span class="mf">0.0009855831295400366</span><span class="p">,</span>
+            <span class="nt">&quot;max&quot;</span><span class="p">:</span> <span class="mf">0.11</span><span class="p">,</span>
+            <span class="nt">&quot;measurements&quot;</span><span class="p">:</span> <span class="mi">7624</span><span class="p">,</span>
+            <span class="nt">&quot;min&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+            <span class="nt">&quot;phenomenon&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Consumption&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;unit&quot;</span><span class="p">:</span> <span class="s2">&quot;l/h&quot;</span>
+            <span class="p">},</span>
+            <span class="nt">&quot;sensors&quot;</span><span class="p">:</span> <span class="mi">11</span><span class="p">,</span>
+            <span class="nt">&quot;tracks&quot;</span><span class="p">:</span> <span class="mi">82</span><span class="p">,</span>
+            <span class="nt">&quot;users&quot;</span><span class="p">:</span> <span class="mi">10</span>
+        <span class="p">}</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+
+</div>
+
+<h1 id="toc_4">/rest/statistics/:phenomenon</h1>
+
+<h3 id="toc_5">GET</h3>
+
+<p>Get the statistics for the specified <code>phenomenon</code>.</p>
+
+<h4 id="toc_6">Response Schema</h4>
+
+<div class="highlight-file">
+
+<div class="highlight"><pre><code class="json"><span class="p">{</span>
+    <span class="nt">&quot;$schema&quot;</span><span class="p">:</span> <span class="s2">&quot;http://json-schema.org/draft-04/schema#&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;http://schema.envirocar.org/statistic.json#&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;object&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;required&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;min&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;max&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;avg&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;measurements&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;users&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;tracks&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;phenomenon&quot;</span>
+    <span class="p">],</span>
+    <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;phenomenon&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;$ref&quot;</span><span class="p">:</span> <span class="s2">&quot;http://schema.envirocar.org/phenomenon.json#&quot;</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;measurements&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;integer&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;minimum&quot;</span><span class="p">:</span> <span class="mi">0</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;users&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;integer&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;minimum&quot;</span><span class="p">:</span> <span class="mi">0</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;tracks&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;integer&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;minimum&quot;</span><span class="p">:</span> <span class="mi">0</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;sensors&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;integer&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;minimum&quot;</span><span class="p">:</span> <span class="mi">0</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;min&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;number&quot;</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;max&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;number&quot;</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;avg&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;number&quot;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+</div>
+
+<h4 id="toc_7">Response Schema</h4>
+
+<div class="highlight-file">
+
+<div class="highlight"><pre><code class="json"><span class="p">{</span>
+    <span class="nt">&quot;avg&quot;</span><span class="p">:</span> <span class="mf">0.0009855831295400366</span><span class="p">,</span>
+    <span class="nt">&quot;max&quot;</span><span class="p">:</span> <span class="mf">0.11</span><span class="p">,</span>
+    <span class="nt">&quot;measurements&quot;</span><span class="p">:</span> <span class="mi">7624</span><span class="p">,</span>
+    <span class="nt">&quot;min&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="nt">&quot;phenomenon&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Consumption&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;unit&quot;</span><span class="p">:</span> <span class="s2">&quot;l/h&quot;</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;sensors&quot;</span><span class="p">:</span> <span class="mi">11</span><span class="p">,</span>
+    <span class="nt">&quot;tracks&quot;</span><span class="p">:</span> <span class="mi">82</span><span class="p">,</span>
+    <span class="nt">&quot;users&quot;</span><span class="p">:</span> <span class="mi">10</span>
+<span class="p">}</span>
+</code></pre></div>
+
+</div>
 
             </section>
             <footer>

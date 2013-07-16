@@ -37,8 +37,6 @@
 
 <p>Get a list of all groups.</p>
 
-<p>Included file &#39;pagination&#39; not found in _includes directory</p>
-
 <h4 id="toc_2">Response Schema</h4>
 
 <div class="highlight-file">
@@ -72,23 +70,73 @@
 <div class="highlight"><pre><code class="json"><span class="p">{</span>
     <span class="nt">&quot;groups&quot;</span><span class="p">:</span> <span class="p">[</span>
         <span class="p">{</span>
-            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;TestGroup1&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Groupdescription&quot;</span>
+            <span class="nt">&quot;created&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-06-25T10:00:30Z&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Product Owner Description&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;modified&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-06-28T08:47:16Z&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Product Owner&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;owner&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;country&quot;</span><span class="p">:</span> <span class="s2">&quot;Germany&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;created&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-06-25T09:56:13Z&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;dayOfBirth&quot;</span><span class="p">:</span> <span class="s2">&quot;1989-01-01&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;firstName&quot;</span><span class="p">:</span> <span class="s2">&quot;Jakob&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;gender&quot;</span><span class="p">:</span> <span class="s2">&quot;m&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;language&quot;</span><span class="p">:</span> <span class="s2">&quot;de-DE&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;lastName&quot;</span><span class="p">:</span> <span class="s2">&quot;M&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;mail&quot;</span><span class="p">:</span> <span class="s2">&quot;jakob@jakob.de&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;modified&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-07-10T08:30:04Z&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;jakob1&quot;</span>
+            <span class="p">}</span>
         <span class="p">},</span>
         <span class="p">{</span>
-            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;TestGroup2&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Groupdescription&quot;</span>
+            <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;enviroCar Developer Group&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;enviroCar developer&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;owner&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;dustin&quot;</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;FirstTestGroup_ARE_secondInputField&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;FirstTestGroup_ARE&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;owner&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;created&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-06-28T15:47:04Z&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;modified&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-07-03T16:13:46Z&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;AlbertRemke&quot;</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;enviroCar Scrum Master Group&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;scrum master&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;owner&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;dustin&quot;</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;52\u00b0North staff members&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;52\u00b0North&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;owner&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;daniel&quot;</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Wer sp\u00e4ter bremst bleibt l\u00e4nger schnell.&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Raser-Club M\u00fcnster&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;owner&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;created&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-06-25T15:21:17Z&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;modified&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-07-01T17:18:03Z&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Turbomartin&quot;</span>
+            <span class="p">}</span>
         <span class="p">}</span>
-<span class="err">}</span>
+    <span class="p">]</span>
+<span class="p">}</span>
 </code></pre></div>
 
 </div>
 
-<h1 id="toc_4">/rest/groups/:groupname</h1>
+<h1 id="toc_4">/rest/groups/:group</h1>
 
 <h3 id="toc_5">GET</h3>
 
-<p>Get the group <code>groupname</code>.</p>
+<p>Get the group with the name <code>group</code>.</p>
 
 <h4 id="toc_6">Response Schema</h4>
 
@@ -135,21 +183,71 @@
 <div class="highlight"><pre><code class="json"><span class="p">{</span>
     <span class="nt">&quot;groups&quot;</span><span class="p">:</span> <span class="p">[</span>
         <span class="p">{</span>
-            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;TestGroup1&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Groupdescription&quot;</span>
+            <span class="nt">&quot;created&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-06-25T10:00:30Z&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Product Owner Description&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;modified&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-06-28T08:47:16Z&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Product Owner&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;owner&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;country&quot;</span><span class="p">:</span> <span class="s2">&quot;Germany&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;created&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-06-25T09:56:13Z&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;dayOfBirth&quot;</span><span class="p">:</span> <span class="s2">&quot;1989-01-01&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;firstName&quot;</span><span class="p">:</span> <span class="s2">&quot;Jakob&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;gender&quot;</span><span class="p">:</span> <span class="s2">&quot;m&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;language&quot;</span><span class="p">:</span> <span class="s2">&quot;de-DE&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;lastName&quot;</span><span class="p">:</span> <span class="s2">&quot;M&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;mail&quot;</span><span class="p">:</span> <span class="s2">&quot;jakob@jakob.de&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;modified&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-07-10T08:30:04Z&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;jakob1&quot;</span>
+            <span class="p">}</span>
         <span class="p">},</span>
         <span class="p">{</span>
-            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;TestGroup2&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Groupdescription&quot;</span>
+            <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;enviroCar Developer Group&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;enviroCar developer&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;owner&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;dustin&quot;</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;FirstTestGroup_ARE_secondInputField&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;FirstTestGroup_ARE&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;owner&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;created&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-06-28T15:47:04Z&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;modified&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-07-03T16:13:46Z&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;AlbertRemke&quot;</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;enviroCar Scrum Master Group&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;scrum master&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;owner&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;dustin&quot;</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;52\u00b0North staff members&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;52\u00b0North&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;owner&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;daniel&quot;</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Wer sp\u00e4ter bremst bleibt l\u00e4nger schnell.&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Raser-Club M\u00fcnster&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;owner&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;created&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-06-25T15:21:17Z&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;modified&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-07-01T17:18:03Z&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Turbomartin&quot;</span>
+            <span class="p">}</span>
         <span class="p">}</span>
-<span class="err">}</span>
+    <span class="p">]</span>
+<span class="p">}</span>
 </code></pre></div>
 
 </div>
 
 <h3 id="toc_8">PUT</h3>
 
-<p>Updates the group <code>groupname</code>.</p>
+<p>Updates the group <code>group</code>.</p>
 
 <h4 id="toc_9">Request Schema</h4>
 
@@ -170,19 +268,26 @@
 
 </div>
 
-<h4 id="toc_10">Response Example</h4>
+<h4 id="toc_10">Request Example</h4>
 
-<p>none</p>
+<div class="highlight-file">
+
+<div class="highlight"><pre><code class="json"><span class="p">{</span>
+  <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;new groupdescription&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+</div>
 
 <h3 id="toc_11">DELETE</h3>
 
-<p>Deletes the group <code>groupname</code>. Just the owner of the group is able to delete the group.</p>
+<p>Deletes the group <code>group</code>. Just the owner of the group is able to delete the group.</p>
 
-<h1 id="toc_12">/rest/groups/:groupname/members</h1>
+<h1 id="toc_12">/rest/groups/:group/members</h1>
 
 <h3 id="toc_13">GET</h3>
 
-<p>Get a list of members of the group <code>groupname</code>.</p>
+<p>Get a list of members of the group <code>group</code>.</p>
 
 <h4 id="toc_14">Response Schema</h4>
 
@@ -212,11 +317,31 @@
 
 <h4 id="toc_15">Response Example</h4>
 
-<p>...</p>
+<div class="highlight-file">
+
+<div class="highlight"><pre><code class="json"><span class="p">{</span>
+    <span class="nt">&quot;users&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;test1&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;mail&quot;</span><span class="p">:</span> <span class="s2">&quot;test1@example.de&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;created&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-06-25T09:56:13Z&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;modified&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-07-01T14:19:19Z&quot;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;test2&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;mail&quot;</span><span class="p">:</span> <span class="s2">&quot;test2@example.de&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;created&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-06-25T07:56:10Z&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;modified&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-07-01T18:19:36Z&quot;</span>
+        <span class="p">}</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+
+</div>
 
 <h3 id="toc_16">POST</h3>
 
-<p>Adds a user to the group <code>groupname</code>.</p>
+<p>Adds a user to the group <code>group</code>.</p>
 
 <h4 id="toc_17">Request Schema</h4>
 
@@ -251,13 +376,13 @@
 
 </div>
 
-<h1 id="toc_19">/rest/groups/:groupname/members/:username</h1>
+<h1 id="toc_19">/rest/groups/:group/members/:member</h1>
 
-<p>Get the member <code>username</code> of the group <code>groupname</code>.</p>
+<p>Get the member <code>member</code> of the group <code>group</code>.</p>
 
 <h3 id="toc_20">GET</h3>
 
-<p>Get the member <code>username</code> of the group <code>groupname</code>.</p>
+<p>Get the member <code>member</code> of the group <code>group</code>.</p>
 
 <h4 id="toc_21">Response Schema</h4>
 
@@ -303,10 +428,16 @@
 <div class="highlight-file">
 
 <div class="highlight"><pre><code class="json"><span class="p">{</span>
-  <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;test&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;mail&quot;</span><span class="p">:</span> <span class="s2">&quot;test@example.de&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;created&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-06-25T09:56:13Z&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;modified&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-07-01T14:19:19Z&quot;</span>
+    <span class="nt">&quot;country&quot;</span><span class="p">:</span> <span class="s2">&quot;Germany&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;created&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-06-25T09:56:13Z&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;dayOfBirth&quot;</span><span class="p">:</span> <span class="s2">&quot;1989-01-01&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;firstName&quot;</span><span class="p">:</span> <span class="s2">&quot;Jakob&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;gender&quot;</span><span class="p">:</span> <span class="s2">&quot;m&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;language&quot;</span><span class="p">:</span> <span class="s2">&quot;de-DE&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;lastName&quot;</span><span class="p">:</span> <span class="s2">&quot;M&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;mail&quot;</span><span class="p">:</span> <span class="s2">&quot;jakob@jakob.de&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;modified&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-07-10T08:30:04Z&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;jakob1&quot;</span>
 <span class="p">}</span>
 </code></pre></div>
 
@@ -314,7 +445,7 @@
 
 <h3 id="toc_23">DELETE</h3>
 
-<p>Removes the user <code>username</code> from the group <code>groupname</code>.</p>
+<p>Removes the user <code>member</code> from the group <code>group</code>.</p>
 
             </section>
             <footer>

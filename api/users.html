@@ -31,29 +31,9 @@
             <section>
                 <h1 id="toc_0">/rest/users</h1>
 
-<p>This is the Users resource.</p>
-
 <h3 id="toc_1">GET</h3>
 
 <p>Get a list of all users.</p>
-
-<p>Query parameters:</p>
-
-<table><thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Default</th>
-<th>Details</th>
-</tr>
-</thead><tbody>
-<tr>
-<td><code>limit</code></td>
-<td><code>int</code></td>
-<td><code>0</code></td>
-<td>Limit the response to the <code>limit</code> newest users. A limit &le; 0 results in no limit.</td>
-</tr>
-</tbody></table>
 
 <h4 id="toc_2">Response Schema</h4>
 
@@ -83,11 +63,33 @@
 
 <h4 id="toc_3">Response Example</h4>
 
-<h1 id="toc_4">/rest/users/:username</h1>
+<div class="highlight-file">
+
+<div class="highlight"><pre><code class="json"><span class="p">{</span>
+    <span class="nt">&quot;users&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;test1&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;mail&quot;</span><span class="p">:</span> <span class="s2">&quot;test1@example.de&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;created&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-06-25T09:56:13Z&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;modified&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-07-01T14:19:19Z&quot;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;test2&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;mail&quot;</span><span class="p">:</span> <span class="s2">&quot;test2@example.de&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;created&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-06-25T07:56:10Z&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;modified&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-07-01T18:19:36Z&quot;</span>
+        <span class="p">}</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+
+</div>
+
+<h1 id="toc_4">/rest/users/:user</h1>
 
 <h3 id="toc_5">GET</h3>
 
-<p>Get the user <code>username</code>.</p>
+<p>Get the user <code>user</code>.</p>
 
 <h4 id="toc_6">Response Schema</h4>
 
@@ -133,10 +135,16 @@
 <div class="highlight-file">
 
 <div class="highlight"><pre><code class="json"><span class="p">{</span>
-  <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;test&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;mail&quot;</span><span class="p">:</span> <span class="s2">&quot;test@example.de&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;created&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-06-25T09:56:13Z&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;modified&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-07-01T14:19:19Z&quot;</span>
+    <span class="nt">&quot;country&quot;</span><span class="p">:</span> <span class="s2">&quot;Germany&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;created&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-06-25T09:56:13Z&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;dayOfBirth&quot;</span><span class="p">:</span> <span class="s2">&quot;1989-01-01&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;firstName&quot;</span><span class="p">:</span> <span class="s2">&quot;Jakob&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;gender&quot;</span><span class="p">:</span> <span class="s2">&quot;m&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;language&quot;</span><span class="p">:</span> <span class="s2">&quot;de-DE&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;lastName&quot;</span><span class="p">:</span> <span class="s2">&quot;M&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;mail&quot;</span><span class="p">:</span> <span class="s2">&quot;jakob@jakob.de&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;modified&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-07-10T08:30:04Z&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;jakob1&quot;</span>
 <span class="p">}</span>
 </code></pre></div>
 
@@ -182,13 +190,22 @@
 
 </div>
 
-<h4 id="toc_10">Response Example</h4>
+<h4 id="toc_10">Request Example</h4>
 
-<p>none</p>
+<div class="highlight-file">
+
+<div class="highlight"><pre><code class="json"><span class="p">{</span>
+    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;NewUserName&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;mail&quot;</span><span class="p">:</span> <span class="s2">&quot;test@testmail.com&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;token&quot;</span><span class="p">:</span> <span class="s2">&quot;testtoken&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+</div>
 
 <h3 id="toc_11">PUT</h3>
 
-<p>Updates the user <code>username</code>.</p>
+<p>Updates the user <code>user</code>.</p>
 
 <h4 id="toc_12">Request Schema</h4>
 
@@ -220,11 +237,21 @@
 
 <h4 id="toc_13">Request Example</h4>
 
-<p>none</p>
+<div class="highlight-file">
+
+<div class="highlight"><pre><code class="json"><span class="p">{</span>
+  <span class="nt">&quot;mail&quot;</span><span class="p">:</span> <span class="s2">&quot;test@example.de&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;token&quot;</span><span class="p">:</span> <span class="s2">&quot;NewToken&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;firstname&quot;</span><span class="p">:</span> <span class="s2">&quot;NewFirstName&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;lastname&quot;</span><span class="p">:</span> <span class="s2">&quot;NewLastName&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+</div>
 
 <h3 id="toc_14">DELETE</h3>
 
-<p>Deletes the user <code>username</code>.</p>
+<p>Deletes the user <code>user</code>.</p>
 
             </section>
             <footer>

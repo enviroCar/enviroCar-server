@@ -37,7 +37,37 @@
 
 <p><img src="http://envirocar.github.io/enviroCar-server/images/datamodel.png" alt="datamodel" title="Data model"></p>
 
-<h2 id="toc_2">Endpoints</h2>
+<h2 id="toc_2">Pagination</h2>
+
+<p>Every collection resource (e.g. <code>/rest/measurements</code>) offers two query parameters: <code>limit</code> and <code>page</code>. <code>limit</code> specifies the amount of retrieved entities while <code>page</code> indicates the position in the set of all entities. Per default <code>page</code> is 0 and <code>limit</code> will restrict the result to 100 entities. It is not possible to retrieve more than 100 entities at once. To allow navigation through the result set the service supports <a href="http://tools.ietf.org/html/rfc5988" title="RFC 5988: Web Linking">RFC5988</a> conformant <code>Link</code> headers. The link relations used are quite self explanatory: <code>first</code>, <code>last</code>, <code>prev</code> and <code>next</code>.</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">&gt; GET /rest/measurements?limit=2&amp;page=20 HTTP/1.1
+&gt; Host: giv-car
+&gt; Accept: application/json
+&gt; 
+&lt; HTTP/1.1 200 OK
+&lt; [...]
+&lt; Link: &lt;https://giv-car/rest/measurements?limit=2&amp;page=1&gt;;rel=first;type=application/json
+&lt; Link: &lt;https://giv-car/rest/measurements?limit=2&amp;page=19&gt;;rel=prev;type=application/json
+&lt; Link: &lt;https://giv-car/rest/measurements?limit=2&amp;page=21&gt;;rel=next;type=application/json
+&lt; Link: &lt;https://giv-car/rest/measurements?limit=2&amp;page=4169&gt;;rel=last;type=application/json
+&lt; Content-Type: application/json; schema=&quot;http://schema.envirocar.org/measurements.json#&quot;
+[...]
+</code></pre></div>
+<p>Note that <code>next</code> and <code>prev</code> will not be present if they are equal to <code>first</code>/<code>last</code> or if they do not exist. <code>first</code> or <code>last</code> will not show up if you are already on the first or last page.</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">&gt; GET /rest/measurements?limit=100&amp;page=1 HTTP/1.1
+&gt; Host: giv-car
+&gt; Accept: application/json
+&gt; 
+&lt; HTTP/1.1 200 OK
+&lt; [...]
+&lt; Link: &lt;https://giv-car/rest/measurements?limit=100&amp;page=84&gt;;rel=last;type=application/json
+&lt; Link: &lt;https://giv-car/rest/measurements?limit=100&amp;page=2&gt;;rel=next;type=application/json
+&lt; Content-Type: application/json; schema=&quot;http://schema.envirocar.org/measurements.json#&quot;
+[...]
+</code></pre></div>
+<p>Please also note that the content of the pages will change over time and the insertions, deletion or other changes in the sort order can result in duplicate or missing received entities.</p>
+
+<h2 id="toc_3">Endpoints</h2>
 
 <ul>
 <li><a href="root">Root</a></li>

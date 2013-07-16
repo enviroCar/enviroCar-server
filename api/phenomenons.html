@@ -33,7 +33,11 @@
 
 <h1 id="toc_0">/rest/phenomenons/:name</h1>
 
-<h2 id="toc_1">Schema</h2>
+<h3 id="toc_1">GET</h3>
+
+<p>Get the phenomenon with the name <code>name</code>.</p>
+
+<h4 id="toc_2">Response Schema</h4>
 
 <div class="highlight-file">
 
@@ -69,27 +73,27 @@
 
 </div>
 
-<h2 id="toc_2">Example</h2>
+<h4 id="toc_3">Response Example</h4>
 
 <div class="highlight-file">
 
 <div class="highlight"><pre><code class="json"><span class="p">{</span>
-    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;TestPhenomenon&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;unit&quot;</span><span class="p">:</span> <span class="s2">&quot;Co2&quot;</span>
+    <span class="nt">&quot;created&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-07-09T07:59:47Z&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;modified&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-07-09T07:59:47Z&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Consumption&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;unit&quot;</span><span class="p">:</span> <span class="s2">&quot;l/h&quot;</span>
 <span class="p">}</span>
 </code></pre></div>
 
 </div>
 
-<ul>
-<li><p><code>GET /rest/phenomenons/:phenomenon</code></p>
+<h1 id="toc_4">/rest/phenomenons</h1>
 
-<p>Gets a phenomenon.</p></li>
-</ul>
+<h3 id="toc_5">GET</h3>
 
-<h1 id="toc_3">/rest/phenomenons</h1>
+<p>Get a list of all phenomenons.</p>
 
-<h2 id="toc_4">Schema</h2>
+<h4 id="toc_6">Schema</h4>
 
 <div class="highlight-file">
 
@@ -115,19 +119,43 @@
 
 </div>
 
-<h2 id="toc_5">Example</h2>
+<h4 id="toc_7">Example</h4>
 
 <div class="highlight-file">
 
 <div class="highlight"><pre><code class="json"><span class="p">{</span>
     <span class="nt">&quot;phenomenons&quot;</span><span class="p">:</span> <span class="p">[</span>
         <span class="p">{</span>
-            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;TestPhenomenon1&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;unit&quot;</span><span class="p">:</span> <span class="s2">&quot;TestUnit1&quot;</span>  
+            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Calculated MAF&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;unit&quot;</span><span class="p">:</span> <span class="s2">&quot;g/s&quot;</span>
         <span class="p">},</span>
         <span class="p">{</span>
-            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;TestPhenomenon2&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;unit&quot;</span><span class="p">:</span> <span class="s2">&quot;TestUnit2&quot;</span>
+            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Consumption&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;unit&quot;</span><span class="p">:</span> <span class="s2">&quot;l/h&quot;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Intake Pressure&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;unit&quot;</span><span class="p">:</span> <span class="s2">&quot;kPa&quot;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;CO2&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;unit&quot;</span><span class="p">:</span> <span class="s2">&quot;kg/h&quot;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Intake Temperature&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;unit&quot;</span><span class="p">:</span> <span class="s2">&quot;c&quot;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;MAF&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;unit&quot;</span><span class="p">:</span> <span class="s2">&quot;l/s&quot;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Rpm&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;unit&quot;</span><span class="p">:</span> <span class="s2">&quot;u/min&quot;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Speed&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;unit&quot;</span><span class="p">:</span> <span class="s2">&quot;km/h&quot;</span>
         <span class="p">}</span>
     <span class="p">]</span>
 <span class="p">}</span>
@@ -135,29 +163,47 @@
 
 </div>
 
-<ul>
-<li><p><code>GET /rest/phenomenons</code></p>
+<h3 id="toc_8">POST</h3>
 
-<p>Get a list of all phenomenons.</p>
+<p>Create a new phenomenon</p>
 
-<p>Query parameters:</p>
+<h4 id="toc_9">Schema</h4>
 
-<table><thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Default</th>
-<th>Details</th>
-</tr>
-</thead><tbody>
-<tr>
-<td><code>limit</code></td>
-<td><code>int</code></td>
-<td><code>0</code></td>
-<td>Limit the response to the <code>limit</code> newest phenomenons. A limit &le; 0 results in no limit.</td>
-</tr>
-</tbody></table></li>
-</ul>
+<div class="highlight-file">
+
+<div class="highlight"><pre><code class="json"><span class="p">{</span>
+    <span class="nt">&quot;$schema&quot;</span><span class="p">:</span> <span class="s2">&quot;http://json-schema.org/draft-04/schema#&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;http://schema.envirocar.org/phenomenon.create.json#&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;object&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;additionalProperties&quot;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nt">&quot;required&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;unit&quot;</span>
+    <span class="p">],</span>
+    <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;unit&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+</div>
+
+<h4 id="toc_10">Example</h4>
+
+<div class="highlight-file">
+
+<div class="highlight"><pre><code class="json"><span class="p">{</span>
+    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;TestPhenomenon&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;unit&quot;</span><span class="p">:</span> <span class="s2">&quot;unit&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+</div>
 
             </section>
             <footer>

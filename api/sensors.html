@@ -29,15 +29,11 @@
                 </ul>
             </header>
             <section>
-                <p>This is the Sensors resource.</p>
-
-<h1 id="toc_0">/rest/sensors</h1>
+                <h1 id="toc_0">/rest/sensors</h1>
 
 <h3 id="toc_1">GET</h3>
 
 <p>Get a list of all sensors.</p>
-
-<p>Included file &#39;pagination&#39; not found in _includes directory</p>
 
 <h4 id="toc_2">Response Schema</h4>
 
@@ -156,23 +152,73 @@
 <div class="highlight"><pre><code class="json"><span class="p">{</span>
     <span class="nt">&quot;groups&quot;</span><span class="p">:</span> <span class="p">[</span>
         <span class="p">{</span>
-            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;TestGroup1&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Groupdescription&quot;</span>
+            <span class="nt">&quot;created&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-06-25T10:00:30Z&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Product Owner Description&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;modified&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-06-28T08:47:16Z&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Product Owner&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;owner&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;country&quot;</span><span class="p">:</span> <span class="s2">&quot;Germany&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;created&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-06-25T09:56:13Z&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;dayOfBirth&quot;</span><span class="p">:</span> <span class="s2">&quot;1989-01-01&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;firstName&quot;</span><span class="p">:</span> <span class="s2">&quot;Jakob&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;gender&quot;</span><span class="p">:</span> <span class="s2">&quot;m&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;language&quot;</span><span class="p">:</span> <span class="s2">&quot;de-DE&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;lastName&quot;</span><span class="p">:</span> <span class="s2">&quot;M&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;mail&quot;</span><span class="p">:</span> <span class="s2">&quot;jakob@jakob.de&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;modified&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-07-10T08:30:04Z&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;jakob1&quot;</span>
+            <span class="p">}</span>
         <span class="p">},</span>
         <span class="p">{</span>
-            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;TestGroup2&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Groupdescription&quot;</span>
+            <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;enviroCar Developer Group&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;enviroCar developer&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;owner&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;dustin&quot;</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;FirstTestGroup_ARE_secondInputField&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;FirstTestGroup_ARE&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;owner&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;created&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-06-28T15:47:04Z&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;modified&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-07-03T16:13:46Z&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;AlbertRemke&quot;</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;enviroCar Scrum Master Group&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;scrum master&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;owner&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;dustin&quot;</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;52\u00b0North staff members&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;52\u00b0North&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;owner&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;daniel&quot;</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Wer sp\u00e4ter bremst bleibt l\u00e4nger schnell.&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Raser-Club M\u00fcnster&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;owner&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;created&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-06-25T15:21:17Z&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;modified&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-07-01T17:18:03Z&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Turbomartin&quot;</span>
+            <span class="p">}</span>
         <span class="p">}</span>
-<span class="err">}</span>
+    <span class="p">]</span>
+<span class="p">}</span>
 </code></pre></div>
 
 </div>
 
-<h1 id="toc_4">/rest/sensors/:sensorid</h1>
+<h1 id="toc_4">/rest/sensors/:sensor</h1>
 
 <h3 id="toc_5">GET</h3>
 
-<p>Get the sensor <code>sensorid</code>.</p>
+<p>Get the sensor <code>sensor</code>.</p>
 
 <h4 id="toc_6">Response Schema</h4>
 
@@ -289,13 +335,16 @@
 <div class="highlight-file">
 
 <div class="highlight"><pre><code class="json"><span class="p">{</span>
-  <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;car&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
-    <span class="nt">&quot;model&quot;</span><span class="p">:</span> <span class="s2">&quot;TestCar&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;fuelType&quot;</span><span class="p">:</span> <span class="s2">&quot;gasolene&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;manufacturer&quot;</span><span class="p">:</span> <span class="s2">&quot;TestManufacturer&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;constructionYear&quot;</span><span class="p">:</span> <span class="mi">2001</span>
-  <span class="p">}</span>
+    <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;constructionYear&quot;</span><span class="p">:</span> <span class="mi">2012</span><span class="p">,</span>
+        <span class="nt">&quot;created&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-07-15T13:34:18Z&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;fuelType&quot;</span><span class="p">:</span> <span class="s2">&quot;gasoline&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;51e3fa5ae4b0feb05dbf4168&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;manufacturer&quot;</span><span class="p">:</span> <span class="s2">&quot;Toyota&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;model&quot;</span><span class="p">:</span> <span class="s2">&quot;Prius III&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;modified&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-07-15T13:34:18Z&quot;</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;car&quot;</span>
 <span class="p">}</span>
 </code></pre></div>
 
@@ -362,9 +411,22 @@
 
 </div>
 
-<h4 id="toc_10">Response Example</h4>
+<h4 id="toc_10">Request Example</h4>
 
-<p>none</p>
+<div class="highlight-file">
+
+<div class="highlight"><pre><code class="json"><span class="p">{</span>
+  <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;car&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;model&quot;</span><span class="p">:</span> <span class="s2">&quot;TestCar&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;fuelType&quot;</span><span class="p">:</span> <span class="s2">&quot;gasolene&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;manufacturer&quot;</span><span class="p">:</span> <span class="s2">&quot;TestManufacturer&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;constructionYear&quot;</span><span class="p">:</span> <span class="mi">2001</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+</div>
 
             </section>
             <footer>
