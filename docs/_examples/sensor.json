@@ -1,9 +1,12 @@
 {
-  "type": "car",
-  "properties": {
-    "model": "TestCar",
-    "fuelType": "gasolene",
-    "manufacturer": "TestManufacturer",
-    "constructionYear": 2001
-  }
+    "properties": {
+        "constructionYear": 2012,
+        "created": "2013-07-15T13:34:18Z",
+        "fuelType": "gasoline",
+        "id": "51e3fa5ae4b0feb05dbf4168",
+        "manufacturer": "Toyota",
+        "model": "Prius III",
+        "modified": "2013-07-15T13:34:18Z"
+    },
+    "type": "car"
 }

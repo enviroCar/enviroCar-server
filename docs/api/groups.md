@@ -5,82 +5,56 @@ layout: default
 This is the groups resource.
 
 # /rest/groups #
-
 ### GET
-
 Get a list of all groups.
-
-{% include pagination %}
-
 #### Response Schema
 {% include_schema groups %}
-
 #### Response Example
 {% include_example groups %}
 
-
-
-# /rest/groups/:groupname
-
+# /rest/groups/:group
 ### GET
-Get the group `groupname`.
-
+Get the group with the name `group`.
 #### Response Schema
 {% include_schema group %}
-
 #### Response Example
 {% include_example groups %}
 
-
 ### PUT
-Updates the group `groupname`.
-
+Updates the group `group`.
 #### Request Schema
 {% include_schema group.modify %}
-
-#### Response Example
-none
-
+#### Request Example
+{% include_example group.modify %}
 
 ### DELETE
-Deletes the group `groupname`. Just the owner of the group is able to delete the group.
+Deletes the group `group`. Just the owner of the group is able to delete the group.
 
-
-# /rest/groups/:groupname/members
-
+# /rest/groups/:group/members
 ### GET
-Get a list of members of the group `groupname`.
-
+Get a list of members of the group `group`.
 #### Response Schema
 {% include_schema users %}
-
 #### Response Example
-...
-
+{% include_example users %}
 
 ### POST
-Adds a user to the group `groupname`.
-
+Adds a user to the group `group`.
 #### Request Schema
 {% include_schema user.ref %}
-
 #### Request Example
 {% include_example user.ref %}
 
 
-# /rest/groups/:groupname/members/:username
-Get the member `username` of the group `groupname`.
-
+# /rest/groups/:group/members/:member
+Get the member `member` of the group `group`.
 ### GET
-Get the member `username` of the group `groupname`.
-
+Get the member `member` of the group `group`.
 #### Response Schema
 {% include_schema user %}
-
 #### Response Example
 {% include_example user %}
 
-
 ### DELETE
-Removes the user `username` from the group `groupname`.
+Removes the user `member` from the group `group`.
 

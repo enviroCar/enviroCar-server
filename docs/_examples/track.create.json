@@ -1,8 +1,8 @@
 {
     "properties": {
         "sensor": "51bc53ab5064ba7f336ef920",
-        "name": "TestTrack",
-        "description": "TestTrackDescription"
+        "name": "test track",
+        "description": "description of track"
     },
     "features": [
         {
@@ -18,7 +18,7 @@
                 "time": "2013-05-16T02:13:27Z",
                 "sensor": "51bc53ab5064ba7f336ef920",
                 "phenomenons": {
-                    "TestPhenomenon": {
+                    "testphenomenon3": {
                         "value": 3.457
                     }
                 }
