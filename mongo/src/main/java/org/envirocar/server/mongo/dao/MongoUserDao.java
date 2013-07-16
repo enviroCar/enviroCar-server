@@ -19,6 +19,12 @@ package org.envirocar.server.mongo.dao;
 import java.util.Collections;
 import java.util.Set;
 
+import org.envirocar.server.core.dao.UserDao;
+import org.envirocar.server.core.entities.User;
+import org.envirocar.server.core.entities.Users;
+import org.envirocar.server.core.util.Pagination;
+import org.envirocar.server.mongo.MongoDB;
+import org.envirocar.server.mongo.entity.MongoUser;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,15 +32,8 @@ import org.slf4j.LoggerFactory;
 import com.github.jmkgreen.morphia.Key;
 import com.github.jmkgreen.morphia.query.Query;
 import com.github.jmkgreen.morphia.query.UpdateResults;
+import com.google.common.collect.Sets;
 import com.google.inject.Inject;
-
-import org.envirocar.server.core.dao.UserDao;
-
-import org.envirocar.server.core.entities.User;
-import org.envirocar.server.core.entities.Users;
-import org.envirocar.server.core.util.Pagination;
-import org.envirocar.server.mongo.MongoDB;
-import org.envirocar.server.mongo.entity.MongoUser;
 
 /**
  * TODO JavaDoc
@@ -185,5 +184,16 @@ public class MongoUserDao extends AbstractMongoDao<String, MongoUser, Users>
             friendRefs = Collections.emptySet();
         }
         return friendRefs;
+    }
+
+    public Set<Key<MongoUser>> getBidirectionalFriendRefs(User user) {
+        final Set<Key<MongoUser>> friendRefs = getFriendRefs(user);
+        final Set<String> ids = Sets.newHashSetWithExpectedSize(friendRefs.size());
+        for (Key<MongoUser> key  : friendRefs) { ids.add((String) key.getId()); }
+        final Iterable<Key<MongoUser>> filtered =q()
+                .field(MongoUser.NAME).in(ids)
+                .field(MongoUser.FRIENDS).hasThisElement(key(user))
+                .fetchKeys();
+        return Sets.newHashSet(filtered);
     }
 }
