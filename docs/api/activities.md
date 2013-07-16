@@ -77,4 +77,17 @@ Get a list of group-acitvities of a group `groupname`.
 {% include_example activities %}
 
 
-/rest/groups/:groupname/activities/:activity
+# /rest/groups/:groupname/activities/:activity
+
+This is the activity `activity` of group-acitvities of a group `groupname`.
+
+### GET
+
+Get the activity `activity` of the activities of a user `username`.
+
+### Response Schema
+{% include_schema activity %}
+
+### Response Example
+{% include_example activity %}
+ 
