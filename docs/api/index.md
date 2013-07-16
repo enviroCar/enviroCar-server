@@ -7,7 +7,45 @@ For Login/logout see [Authentification](authentification).
 ## Data Model
 ![datamodel][datamodel]
 
+## Pagination
+
+Every collection resource (e.g. `/rest/measurements`) offers two query parameters: `limit` and `page`. `limit` specifies the amount of retrieved entities while `page` indicates the position in the set of all entities. Per default `page` is 0 and `limit` will restrict the result to 100 entities. It is not possible to retrieve more than 100 entities at once. To allow navigation through the result set the service supports [RFC5988][rfc5988] conformant `Link` headers. The link relations used are quite self explanatory: `first`, `last`, `prev` and `next`.
+
+```
+> GET /rest/measurements?limit=2&page=20 HTTP/1.1
+> Host: giv-car
+> Accept: application/json
+> 
+< HTTP/1.1 200 OK
+< [...]
+< Link: <https://giv-car/rest/measurements?limit=2&page=1>;rel=first;type=application/json
+< Link: <https://giv-car/rest/measurements?limit=2&page=19>;rel=prev;type=application/json
+< Link: <https://giv-car/rest/measurements?limit=2&page=21>;rel=next;type=application/json
+< Link: <https://giv-car/rest/measurements?limit=2&page=4169>;rel=last;type=application/json
+< Content-Type: application/json; schema="http://schema.envirocar.org/measurements.json#"
+[...]
+
+```
+
+Note that `next` and `prev` will not be present if they are equal to `first`/`last` or if they do not exist. `first` or `last` will not show up if you are already on the first or last page.
+
+```
+> GET /rest/measurements?limit=100&page=1 HTTP/1.1
+> Host: giv-car
+> Accept: application/json
+> 
+< HTTP/1.1 200 OK
+< [...]
+< Link: <https://giv-car/rest/measurements?limit=100&page=84>;rel=last;type=application/json
+< Link: <https://giv-car/rest/measurements?limit=100&page=2>;rel=next;type=application/json
+< Content-Type: application/json; schema="http://schema.envirocar.org/measurements.json#"
+[...]
+```
+
+Please also note that the content of the pages will change over time and the insertions, deletion or other changes in the sort order can result in duplicate or missing received entities.
+
 ## Endpoints
+
 * [Root](root)
 * [Friends](friends)
     * `/rest/users/:username/friends`
@@ -60,3 +98,4 @@ For Login/logout see [Authentification](authentification).
     * `/rest/groups/:groupname/activities/:activity`
 
 [datamodel]: {{site.url}}/images/datamodel.png "Data model"
+[rfc5988]: http://tools.ietf.org/html/rfc5988 "RFC 5988: Web Linking"
