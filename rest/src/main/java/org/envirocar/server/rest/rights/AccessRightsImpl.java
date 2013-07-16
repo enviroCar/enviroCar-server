@@ -414,4 +414,9 @@ public class AccessRightsImpl extends AbstractAccessRights {
     public boolean canSeeStatisticsOf(Sensor sensor) {
         return true;
     }
+
+    @Override
+    public boolean canSeeBadgesOf(User user) {
+        return isAuthenticated();
+    }
 }

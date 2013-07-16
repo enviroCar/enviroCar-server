@@ -79,4 +79,6 @@ public interface UserRights {
     boolean canUnfriend(User user, User friend);
 
     boolean canFriend(User user, User friend);
+
+    boolean canSeeBadgesOf(User user);
 }

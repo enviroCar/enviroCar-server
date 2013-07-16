@@ -17,6 +17,7 @@
 package org.envirocar.server.core.entities;
 
 import java.net.URL;
+import java.util.Set;
 
 import com.vividsolutions.jts.geom.Geometry;
 
@@ -26,6 +27,10 @@ import com.vividsolutions.jts.geom.Geometry;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface User extends BaseEntity {
+    Set<String> getBadges();
+
+    boolean hasBadges();
+
     String getName();
 
     void setName(String name);
