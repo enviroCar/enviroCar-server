@@ -22,15 +22,15 @@ import static org.envirocar.server.core.entities.Gender.MALE;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.inject.Inject;
-import com.vividsolutions.jts.geom.Geometry;
-
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.rest.JSONConstants;
 import org.envirocar.server.rest.encoding.JSONEntityEncoder;
-
 import org.envirocar.server.rest.rights.AccessRights;
+
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.inject.Inject;
+import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * TODO JavaDoc
@@ -96,6 +96,12 @@ public class UserJSONEncoder extends AbstractJSONEntityEncoder<User> {
         }
         if (t.hasLanguage() && rights.canSeeLanguageOf(t)) {
             j.put(JSONConstants.LANGUAGE_KEY, t.getLanguage());
+        }
+        if (t.hasBadges() && rights.canSeeBadgesOf(t)) {
+            final ArrayNode badges = j.putArray(JSONConstants.BADGES);
+            for (String badge : t.getBadges()) {
+                badges.add(badge);
+            }
         }
         return j;
     }

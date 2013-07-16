@@ -82,7 +82,7 @@ public class MongoActivityDao extends AbstractMongoDao<ObjectId, MongoActivity, 
             MongoUser u = (MongoUser) request.getUser();
             if (request.isFriendActivities()) {
                 q.field(MongoActivity.USER)
-                        .in(userDao.getFriendRefs(u));
+                        .in(userDao.getBidirectionalFriendRefs(u));
             } else {
                 q.field(MongoActivity.USER)
                         .equal(key(u));
