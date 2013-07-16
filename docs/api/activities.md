@@ -23,11 +23,13 @@ This is the activity of acitvities of a user `username`.
 
 ### GET
 
+Get a activity of the activities of a user `username`.
+
 ### Response Schema
-{% include_schema activities %}
+{% include_schema activity %}
 
 ### Response Example
-{% include_example activities %}
+{% include_example activity %}
 
 /rest/users/:username/activities/:activity
 /rest/users/:username/friendActivities
