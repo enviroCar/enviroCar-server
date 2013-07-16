@@ -1,5 +1,5 @@
 {
-	sensors": [
+	"sensors": [
 	    {
 	        "type": "car",
 	        "properties": {
