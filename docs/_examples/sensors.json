@@ -13,16 +13,6 @@
 	    {
 	        "type": "car",
 	        "properties": {
-	            "id": "51c9a6dfe4b0fe5a04ea676e",
-	            "model": "Golf",
-	            "fuelType": "gasoline",
-	            "manufacturer": "Volkswagen",
-	            "constructionYear": 2005
-	        }
-	    },
-	    {
-	        "type": "car",
-	        "properties": {
 	            "id": "51c9b583e4b0fe5a04eab3d0",
 	            "model": "Leon",
 	            "fuelType": "gasoline",
