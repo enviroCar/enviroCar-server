@@ -1,0 +1,108 @@
+{
+    "statistics": [
+        {
+            "avg": 30.647307924984876,
+            "max": 72.0,
+            "measurements": 4959,
+            "min": -40.0,
+            "phenomenon": {
+                "name": "Intake Temperature",
+                "unit": "c"
+            },
+            "sensors": 5,
+            "tracks": 52,
+            "users": 6
+        },
+        {
+            "avg": 11.610504291758042,
+            "max": 156.13,
+            "measurements": 6532,
+            "min": -1.0,
+            "phenomenon": {
+                "name": "MAF",
+                "unit": "l/s"
+            },
+            "sensors": 10,
+            "tracks": 62,
+            "users": 9
+        },
+        {
+            "avg": 17.94905935727109,
+            "max": 121.087,
+            "measurements": 2785,
+            "min": 0.0,
+            "phenomenon": {
+                "name": "Calculated MAF",
+                "unit": "g/s"
+            },
+            "sensors": 5,
+            "tracks": 47,
+            "users": 6
+        },
+        {
+            "avg": 36.47006476373232,
+            "max": 188.0,
+            "measurements": 8338,
+            "min": 0.0,
+            "phenomenon": {
+                "name": "Speed",
+                "unit": "km/h"
+            },
+            "sensors": 11,
+            "tracks": 92,
+            "users": 10
+        },
+        {
+            "avg": 96.36156483161928,
+            "max": 255.0,
+            "measurements": 4959,
+            "min": 0.0,
+            "phenomenon": {
+                "name": "Intake Pressure",
+                "unit": "kPa"
+            },
+            "sensors": 5,
+            "tracks": 52,
+            "users": 6
+        },
+        {
+            "avg": 0.8812045709387641,
+            "max": 130.04,
+            "measurements": 7624,
+            "min": 0.0,
+            "phenomenon": {
+                "name": "CO2",
+                "unit": "kg/h"
+            },
+            "sensors": 11,
+            "tracks": 82,
+            "users": 10
+        },
+        {
+            "avg": 1225.3004638031862,
+            "max": 4301.0,
+            "measurements": 4959,
+            "min": -1.0,
+            "phenomenon": {
+                "name": "Rpm",
+                "unit": "u/min"
+            },
+            "sensors": 5,
+            "tracks": 52,
+            "users": 6
+        },
+        {
+            "avg": 0.0009855831295400366,
+            "max": 0.11,
+            "measurements": 7624,
+            "min": 0.0,
+            "phenomenon": {
+                "name": "Consumption",
+                "unit": "l/h"
+            },
+            "sensors": 11,
+            "tracks": 82,
+            "users": 10
+        }
+    ]
+}
