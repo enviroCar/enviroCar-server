@@ -5,29 +5,24 @@ layout: default
 This is the Phenomenons resource.
 
 # /rest/phenomenons/:name
-
-## Schema
+### GET
+Get the phenomenon with the name `name`.
+#### Response Schema
 {% include_schema phenomenon %}
-## Example
+#### Response Example
 {% include_example phenomenon %}
 
-* `GET /rest/phenomenons/:phenomenon`
-
-    Gets a phenomenon.
-
 # /rest/phenomenons
-
-## Schema
+### GET
+Get a list of all phenomenons.
+#### Schema
 {% include_schema phenomenons %}
-## Example
+#### Example
 {% include_example phenomenons %}
 
-*   `GET /rest/phenomenons`
-
-    Get a list of all phenomenons.
-
-    Query parameters:
-
-    | Name    | Type  | Default | Details
-    |---------|-------|---------|--------
-    | `limit` | `int` | `0`     | Limit the response to the `limit` newest phenomenons. A limit &le; 0 results in no limit.
+### POST
+Create a new phenomenon
+#### Schema
+{% include_schema phenomenon.create %}
+#### Example
+{% include_example phenomenon.create %}
