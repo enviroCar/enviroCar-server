@@ -20,7 +20,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
-import org.envirocar.server.core.StatisticsService;
 import org.envirocar.server.core.entities.Phenomenon;
 import org.envirocar.server.core.exception.PhenomenonNotFoundException;
 import org.envirocar.server.rest.MediaTypes;
@@ -38,13 +37,10 @@ import com.google.inject.assistedinject.Assisted;
 public class PhenomenonResource extends AbstractResource {
     public static final String STATISTIC = "statistic";
     private final Phenomenon phenomenon;
-    private final StatisticsService statisticsService;
 
     @Inject
-    public PhenomenonResource(@Assisted Phenomenon phenomenon,
-                              StatisticsService statisticsService) {
+    public PhenomenonResource(@Assisted Phenomenon phenomenon) {
         this.phenomenon = phenomenon;
-        this.statisticsService = statisticsService;
     }
 
     @GET

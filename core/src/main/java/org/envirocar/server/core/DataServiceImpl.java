@@ -49,6 +49,7 @@ import org.envirocar.server.core.filter.TrackFilter;
 import org.envirocar.server.core.update.EntityUpdater;
 import org.envirocar.server.core.util.Pagination;
 import org.envirocar.server.core.validation.EntityValidator;
+import org.joda.time.DateTime;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
@@ -121,10 +122,19 @@ public class DataServiceImpl implements DataService {
     public Track createTrack(Track track, List<Measurement> measurements) throws
             ValidationException {
         this.trackValidator.validateCreate(track);
+        DateTime begin = null, end = null;
         for (Measurement m : measurements) {
             m.setUser(track.getUser());
             this.measurementValidator.validateCreate(m);
+            if (begin == null || m.getTime().isBefore(begin)) {
+                begin = m.getTime();
+            }
+            if (end == null || m.getTime().isAfter(end)) {
+                end = m.getTime();
+            }
         }
+        track.setBegin(begin);
+        track.setEnd(end);
         this.trackDao.create(track);
         for (Measurement m : measurements) {
             this.measurementDao.create(m);
@@ -152,7 +162,13 @@ public class DataServiceImpl implements DataService {
         this.measurementValidator.validateCreate(m);
         m.setTrack(track);
         this.measurementDao.create(m);
-        this.trackDao.update(track);
+        if (!track.hasBegin() || m.getTime().isBefore(track.getBegin())) {
+            track.setBegin(m.getTime());
+        }
+        if (!track.hasEnd() || m.getTime().isAfter(track.getEnd())) {
+            track.setEnd(m.getTime());
+        }
+        this.trackDao.save(track);
         this.eventBus.post(new CreatedMeasurementEvent(m.getUser(), m));
         return m;
     }

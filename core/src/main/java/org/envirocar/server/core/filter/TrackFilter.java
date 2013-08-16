@@ -16,6 +16,7 @@
  */
 package org.envirocar.server.core.filter;
 
+import org.envirocar.server.core.TemporalFilter;
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.util.Pagination;
 
@@ -29,28 +30,34 @@ import com.vividsolutions.jts.geom.Geometry;
 public class TrackFilter {
     private final User user;
     private final Geometry geometry;
+    private final TemporalFilter temporalFilter;
     private final Pagination pagination;
 
-    public TrackFilter(User u, Geometry g, Pagination p) {
+    public TrackFilter(User u, Geometry g, TemporalFilter tf, Pagination p) {
         this.user = u;
         this.geometry = g;
         this.pagination = p;
+        this.temporalFilter = tf;
+    }
+
+    public TrackFilter(User u, Geometry g, Pagination p) {
+        this(u, g, null, p);
     }
 
     public TrackFilter(Geometry g, Pagination p) {
-        this(null, g, p);
+        this(null, g, null, p);
     }
 
     public TrackFilter(User u, Pagination p) {
-        this(u, null, p);
+        this(u, null, null, p);
     }
 
     public TrackFilter(Pagination p) {
-        this(null, null, p);
+        this(null, null, null, p);
     }
 
     public TrackFilter() {
-        this(null, null, null);
+        this(null, null, null, null);
     }
 
     public User getUser() {
@@ -75,5 +82,13 @@ public class TrackFilter {
 
     public boolean hasPagination() {
         return pagination != null;
+    }
+
+    public TemporalFilter getTemporalFilter() {
+        return temporalFilter;
+    }
+
+    public boolean hasTemporalFilter() {
+        return temporalFilter != null;
     }
 }
