@@ -19,6 +19,10 @@ package org.envirocar.server.mongo.entity;
 import static org.envirocar.server.mongo.entity.MongoMeasurement.IDENTIFIER;
 
 import org.bson.types.ObjectId;
+import org.envirocar.server.core.entities.Sensor;
+import org.envirocar.server.core.entities.Track;
+import org.envirocar.server.core.entities.User;
+import org.joda.time.DateTime;
 
 import com.github.jmkgreen.morphia.Key;
 import com.github.jmkgreen.morphia.annotations.Embedded;
@@ -29,10 +33,6 @@ import com.github.jmkgreen.morphia.annotations.Transient;
 import com.github.jmkgreen.morphia.mapping.Mapper;
 import com.google.common.base.Objects;
 import com.vividsolutions.jts.geom.Geometry;
-
-import org.envirocar.server.core.entities.Sensor;
-import org.envirocar.server.core.entities.Track;
-import org.envirocar.server.core.entities.User;
 
 /**
  * TODO JavaDoc
@@ -47,6 +47,8 @@ public class MongoTrack extends MongoEntityBase implements Track {
     public static final String NAME = "name";
     public static final String DESCRIPTION = "description";
     public static final String BBOX = "bbox";
+    public static final String BEGIN = "begin";
+    public static final String END = "end";
     @Id
     private ObjectId id = new ObjectId();
     @Property(USER)
@@ -61,6 +63,10 @@ public class MongoTrack extends MongoEntityBase implements Track {
     private String description;
     @Property(BBOX)
     private Geometry bbox;
+    @Property(BEGIN)
+    private DateTime begin;
+    @Property(END)
+    private DateTime end;
 
     @Override
     public MongoUser getUser() {
@@ -173,6 +179,8 @@ public class MongoTrack extends MongoEntityBase implements Track {
                 .add(USER, user)
                 .add(SENSOR, sensor)
                 .add(BBOX, bbox)
+                .add(BEGIN, begin)
+                .add(END, end)
                 .toString();
     }
 
@@ -191,5 +199,35 @@ public class MongoTrack extends MongoEntityBase implements Track {
         }
         final MongoTrack other = (MongoTrack) obj;
         return Objects.equal(this.id, other.id);
+    }
+
+    @Override
+    public DateTime getBegin() {
+        return begin;
+    }
+
+    @Override
+    public void setBegin(DateTime begin) {
+        this.begin = begin;
+    }
+
+    @Override
+    public boolean hasBegin() {
+        return getBegin() != null;
+    }
+
+    @Override
+    public DateTime getEnd() {
+        return end;
+    }
+
+    @Override
+    public void setEnd(DateTime end) {
+        this.end = end;
+    }
+
+    @Override
+    public boolean hasEnd() {
+        return getEnd() != null;
     }
 }

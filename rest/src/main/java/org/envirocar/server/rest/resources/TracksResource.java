@@ -82,7 +82,9 @@ public class TracksResource extends AbstractResource {
             poly = bbox.asPolygon(factory);
         }
         return getDataService()
-                .getTracks(new TrackFilter(user, poly, new Pagination(limit, page)));
+                .getTracks(new TrackFilter(user, poly,
+                                           parseTemporalFilterForInterval(),
+                                           new Pagination(limit, page)));
     }
 
     @POST

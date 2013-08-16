@@ -16,6 +16,7 @@
  */
 package org.envirocar.server.core.filter;
 
+import org.envirocar.server.core.TemporalFilter;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.util.Pagination;
@@ -32,36 +33,43 @@ public class MeasurementFilter {
     private final User user;
     private final Geometry geometry;
     private final Pagination pagination;
+    private final TemporalFilter temporalFilter;
 
-    public MeasurementFilter(Track t, User u, Geometry g, Pagination p) {
+    public MeasurementFilter(Track t, User u, Geometry g,
+                             TemporalFilter tf, Pagination p) {
         this.track = t;
         this.user = u;
         this.geometry = g;
         this.pagination = p;
+        this.temporalFilter = tf;
+    }
+
+    public MeasurementFilter(Track t, User u, Geometry g, Pagination p) {
+        this(t, u, g, null, p);
     }
 
     public MeasurementFilter(Geometry g, Pagination p) {
-        this(null, null, g, p);
+        this(null, null, g, null, p);
     }
 
     public MeasurementFilter(Track t, Geometry g, Pagination p) {
-        this(t, null, g, p);
+        this(t, null, g, null, p);
     }
 
     public MeasurementFilter(User u, Geometry g, Pagination p) {
-        this(null, u, g, p);
+        this(null, u, g, null, p);
     }
 
     public MeasurementFilter(Track t, Pagination p) {
-        this(t, null, null, p);
+        this(t, null, null, null, p);
     }
 
     public MeasurementFilter(User u, Pagination p) {
-        this(null, u, null, p);
+        this(null, u, null, null, p);
     }
 
     public MeasurementFilter(Track t) {
-        this(t, null, null, null);
+        this(t, null, null, null, null);
     }
 
     public Track getTrack() {
@@ -94,5 +102,13 @@ public class MeasurementFilter {
 
     public boolean hasPagination() {
         return pagination != null;
+    }
+
+    public TemporalFilter getTemporalFilter() {
+        return temporalFilter;
+    }
+
+    public boolean hasTemporalFilter() {
+        return temporalFilter != null;
     }
 }

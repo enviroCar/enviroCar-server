@@ -36,4 +36,7 @@ public interface Ops {
     String ADD_TO_SET = "$addToSet";
     String GEOWITHIN = "$geoWithin";
     String GEOMETRY = "$geometry";
+    String GREATER_THAN = "$gt";
+    String LESS_THAN = "$lt";
+    String EQUALS = "$eq";
 }

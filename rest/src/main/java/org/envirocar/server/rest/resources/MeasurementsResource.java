@@ -27,16 +27,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
-import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.Polygon;
-
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.Measurements;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.entities.User;
-
 import org.envirocar.server.core.exception.MeasurementNotFoundException;
 import org.envirocar.server.core.exception.ResourceAlreadyExistException;
 import org.envirocar.server.core.exception.TrackNotFoundException;
@@ -49,8 +43,12 @@ import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.RESTConstants;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.auth.Authenticated;
-
 import org.envirocar.server.rest.validation.Schema;
+
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * TODO JavaDoc
@@ -89,6 +87,7 @@ public class MeasurementsResource extends AbstractResource {
         }
         return getDataService()
                 .getMeasurements(new MeasurementFilter(track, user, poly,
+                                                       parseTemporalFilterForInstant(),
                                                        new Pagination(limit, page)));
     }
 

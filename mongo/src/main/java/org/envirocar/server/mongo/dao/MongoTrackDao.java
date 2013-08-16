@@ -19,6 +19,16 @@ package org.envirocar.server.mongo.dao;
 import java.util.List;
 
 import org.bson.types.ObjectId;
+import org.envirocar.server.core.dao.TrackDao;
+import org.envirocar.server.core.entities.Track;
+import org.envirocar.server.core.entities.Tracks;
+import org.envirocar.server.core.filter.MeasurementFilter;
+import org.envirocar.server.core.filter.TrackFilter;
+import org.envirocar.server.core.util.Pagination;
+import org.envirocar.server.mongo.MongoDB;
+import org.envirocar.server.mongo.entity.MongoTrack;
+import org.envirocar.server.mongo.entity.MongoUser;
+import org.envirocar.server.mongo.util.MorphiaUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,16 +37,6 @@ import com.github.jmkgreen.morphia.query.Query;
 import com.github.jmkgreen.morphia.query.UpdateResults;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
-
-import org.envirocar.server.core.dao.TrackDao;
-
-import org.envirocar.server.core.entities.Track;
-import org.envirocar.server.core.entities.Tracks;
-import org.envirocar.server.core.filter.TrackFilter;
-import org.envirocar.server.core.util.Pagination;
-import org.envirocar.server.mongo.MongoDB;
-import org.envirocar.server.mongo.entity.MongoTrack;
-import org.envirocar.server.mongo.entity.MongoUser;
 
 /**
  * TODO JavaDoc
@@ -97,21 +97,20 @@ public class MongoTrackDao extends AbstractMongoDao<ObjectId, MongoTrack, Tracks
     public Tracks get(TrackFilter request) {
         Query<MongoTrack> q = q();
         if (request.hasGeometry()) {
-            List<Key<MongoTrack>> keys;
-            if (request.hasUser()) {
-                keys = measurementDao
-                        .getTrackKeysByBbox(request.getGeometry(),
-                                            request.getUser());
-            } else {
-                keys = measurementDao
-                        .getTrackKeysByBbox(request.getGeometry());
-            }
+            List<Key<MongoTrack>> keys = measurementDao
+                    .getTrackKeysByBbox(new MeasurementFilter(
+                    null, request.getUser(), request.getGeometry(), null, null));
             if (keys.isEmpty()) {
                 return Tracks.none();
             }
             q.field(MongoTrack.ID).in(toIdList(keys));
         } else if (request.hasUser()) {
             q.field(MongoTrack.USER).equal(key(request.getUser()));
+        }
+        if (request.hasTemporalFilter()) {
+            MorphiaUtils.temporalFilter(q.field(MongoTrack.BEGIN),
+                                           q.field(MongoTrack.END),
+                                           request.getTemporalFilter());
         }
         return fetch(q, request.getPagination());
     }
