@@ -31,6 +31,8 @@ import org.envirocar.server.core.DataService;
 import org.envirocar.server.core.FriendService;
 import org.envirocar.server.core.GroupService;
 import org.envirocar.server.core.StatisticsService;
+import org.envirocar.server.core.TemporalFilter;
+import org.envirocar.server.core.TemporalFilterOperator;
 import org.envirocar.server.core.UserService;
 import org.envirocar.server.core.entities.EntityFactory;
 import org.envirocar.server.core.entities.User;
@@ -179,5 +181,33 @@ public abstract class AbstractResource {
     public void setAllowedMailAddresses(
             @Named(ALLOWED_MAIL_ADDRESSES) Provider<Optional<Set<String>>> allowedMailAddresses) {
         this.allowedMailAddresses = allowedMailAddresses;
+    }
+
+    protected TemporalFilter parseTemporalFilterForInstant() {
+        for (TemporalFilterOperator op : TemporalFilterOperator.values()) {
+            String param = getUriInfo().getQueryParameters().getFirst(op.name());
+            if (param != null) {
+                try {
+                    return op.parseFilterForInstant(param);
+                } catch (IllegalArgumentException e) {
+                    throw new WebApplicationException(e, Status.BAD_REQUEST);
+                }
+            }
+        }
+        return null;
+    }
+
+    protected TemporalFilter parseTemporalFilterForInterval() {
+        for (TemporalFilterOperator op : TemporalFilterOperator.values()) {
+            String param = getUriInfo().getQueryParameters().getFirst(op.name());
+            if (param != null) {
+                try {
+                    return op.parseFilterForInterval(param);
+                } catch (IllegalArgumentException e) {
+                    throw new WebApplicationException(e, Status.BAD_REQUEST);
+                }
+            }
+        }
+        return null;
     }
 }
