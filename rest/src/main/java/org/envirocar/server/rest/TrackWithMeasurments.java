@@ -20,15 +20,14 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import org.joda.time.DateTime;
-
-import com.google.common.collect.Lists;
-import com.vividsolutions.jts.geom.Geometry;
-
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.entities.User;
+import org.joda.time.DateTime;
+
+import com.google.common.collect.Lists;
+import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * TODO JavaDoc
@@ -177,5 +176,35 @@ public class TrackWithMeasurments implements Track, Iterable<Measurement> {
     @Override
     public boolean hasModificationTime() {
         return track.hasModificationTime();
+    }
+
+    @Override
+    public DateTime getBegin() {
+        return track.getBegin();
+    }
+
+    @Override
+    public void setBegin(DateTime begin) {
+        setBegin(begin);
+    }
+
+    @Override
+    public boolean hasBegin() {
+        return track.hasBegin();
+    }
+
+    @Override
+    public DateTime getEnd() {
+        return track.getEnd();
+    }
+
+    @Override
+    public void setEnd(DateTime end) {
+        track.setEnd(end);
+    }
+
+    @Override
+    public boolean hasEnd() {
+        return track.hasEnd();
     }
 }
