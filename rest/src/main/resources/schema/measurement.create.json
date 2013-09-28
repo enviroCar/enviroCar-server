@@ -22,8 +22,7 @@
             "type": "object",
             "additionalProperties": false,
             "required": [
-                "time",
-                "phenomenons"
+                "time"
             ],
             "properties": {
                 "sensor": {
