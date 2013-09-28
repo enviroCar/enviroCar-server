@@ -23,8 +23,9 @@ See [envirocar.github.io/enviroCar-server](http://envirocar.github.io/enviroCar-
 
 ## [License](https://github.com/enviroCar/enviroCar-server/blob/master/LICENSE) ##
 
-    Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
-                        Arne De Wall, Dustin Demuth, Saqib Rasheed
+    Copyright (C) 2013  Christian Autermann,
+                        Jan Alexander Wirwahn,
+                        Arne De Wall
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as
