@@ -16,21 +16,8 @@
  */
 package org.envirocar.server.rest.rights;
 
-import org.envirocar.server.core.entities.User;
+public interface TermsOfUseRights {
 
-/**
- * TODO JavaDoc
- *
- * @author Christian Autermann <autermann@uni-muenster.de>
- */
-public interface AccessRights extends UserRights,
-                                      TrackRights,
-                                      MeasurementRights,
-                                      GroupRights,
-                                      SensorRights,
-                                      PhenomenonRights,
-                                      TermsOfUseRights {
-    boolean isSelf(User user);
-
-    boolean canSeeStatistics();
+	boolean canSeeTermsOfUse();
+	
 }

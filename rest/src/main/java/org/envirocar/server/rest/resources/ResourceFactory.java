@@ -92,4 +92,6 @@ public interface ResourceFactory {
     AvatarResource createAvatarResource(User user);
 
     FriendsActivitiesResource createFriendActivitiesResource(User user);
+
+	TermsOfUseResource createTermsOfUseResource();
 }

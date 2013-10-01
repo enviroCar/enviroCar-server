@@ -24,6 +24,7 @@ import org.envirocar.server.core.entities.Phenomenon;
 import org.envirocar.server.core.entities.Phenomenons;
 import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.core.entities.Sensors;
+import org.envirocar.server.core.entities.TermsOfUseCollection;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.entities.Tracks;
 import org.envirocar.server.core.exception.IllegalModificationException;
@@ -84,4 +85,6 @@ public interface DataService {
             SensorNotFoundException;
 
     Sensors getSensors(SensorFilter request);
+
+	TermsOfUseCollection getTermsOfUse(Pagination pagination);
 }

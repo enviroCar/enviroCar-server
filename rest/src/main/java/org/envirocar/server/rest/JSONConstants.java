@@ -77,4 +77,5 @@ public interface JSONConstants {
     String LANGUAGE_KEY = "language";
     String MALE = "m";
     String FEMALE = "f";
+    String TERMS_OF_USE_KEY = "termsOfUse";
 }

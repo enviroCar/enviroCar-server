@@ -45,6 +45,7 @@ public class RootResource extends AbstractResource {
     public static final String SENSORS = "sensors";
     public static final String MEASUREMENTS = "measurements";
     public static final String STATISTICS = "statistics";
+	public static final String TERMS_OF_USE = "termsOfUse";
     @Inject
     private JsonNodeFactory factory;
 
@@ -88,6 +89,11 @@ public class RootResource extends AbstractResource {
                     .getAbsolutePathBuilder()
                     .path(STATISTICS).build().toString());
         }
+        if (getRights().canSeeTermsOfUse()) {
+            root.put(JSONConstants.TERMS_OF_USE_KEY, getUriInfo()
+                    .getAbsolutePathBuilder()
+                    .path(TERMS_OF_USE).build().toString());
+        }
         return root;
     }
 
@@ -130,5 +136,11 @@ public class RootResource extends AbstractResource {
     public StatisticsResource statistics() {
         checkRights(getRights().canSeeStatistics());
         return getResourceFactory().createStatisticsResource();
+    }
+    
+    @Path(TERMS_OF_USE)
+    public TermsOfUseResource termsOfUse() {
+        checkRights(getRights().canSeeTermsOfUse());
+        return getResourceFactory().createTermsOfUseResource();
     }
 }

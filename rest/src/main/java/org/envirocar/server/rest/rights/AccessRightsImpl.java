@@ -419,4 +419,9 @@ public class AccessRightsImpl extends AbstractAccessRights {
     public boolean canSeeBadgesOf(User user) {
         return isAuthenticated();
     }
+
+	@Override
+	public boolean canSeeTermsOfUse() {
+		return true;
+	}
 }

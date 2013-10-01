@@ -413,4 +413,9 @@ public class NonRestrictiveRights implements AccessRights {
     public boolean canSeeBadgesOf(User user) {
         return true;
     }
+
+	@Override
+	public boolean canSeeTermsOfUse() {
+		return true;
+	}
 }
