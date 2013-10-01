@@ -48,6 +48,12 @@
             "language": {
                 "type": "string",
                 "pattern": "^[a-z]{2}[-_][A-Z]{2}$"
+            },
+            "badges": {
+                "type": "array",
+                "items": {
+                    "type": "string"
+                }
             }
         }
     },

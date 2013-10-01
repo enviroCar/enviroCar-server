@@ -16,6 +16,7 @@
  */
 package org.envirocar.server.rest.resources;
 
+import javax.annotation.Nullable;
 import javax.ws.rs.GET;
 import javax.ws.rs.Produces;
 
@@ -35,7 +36,7 @@ import com.google.inject.assistedinject.Assisted;
 /**
  * TODO JavaDoc
  *
- * @author Christian Autermann <c.autermann@52north.org>
+ * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class StatisticResource extends AbstractResource {
     private final Track track;
@@ -44,9 +45,9 @@ public class StatisticResource extends AbstractResource {
     private final Phenomenon phenomenon;
 
     @Inject
-    public StatisticResource(@Assisted Track track,
-                             @Assisted User user,
-                             @Assisted Sensor sensor,
+    public StatisticResource(@Nullable @Assisted Track track,
+                             @Nullable @Assisted User user,
+                             @Nullable @Assisted Sensor sensor,
                              @Assisted Phenomenon phenomenon) {
         this.track = track;
         this.user = user;

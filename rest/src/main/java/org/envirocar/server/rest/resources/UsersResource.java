@@ -28,7 +28,6 @@ import javax.ws.rs.core.Response;
 
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.entities.Users;
-
 import org.envirocar.server.core.exception.ResourceAlreadyExistException;
 import org.envirocar.server.core.exception.UserNotFoundException;
 import org.envirocar.server.core.exception.ValidationException;
@@ -37,7 +36,6 @@ import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.RESTConstants;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.auth.Anonymous;
-
 import org.envirocar.server.rest.validation.Schema;
 
 /**
@@ -67,6 +65,7 @@ public class UsersResource extends AbstractResource {
     @Consumes({ MediaTypes.USER_CREATE })
     public Response create(User user) throws ValidationException,
                                              ResourceAlreadyExistException {
+        checkMail(user);
         return Response.created(
                 getUriInfo().getAbsolutePathBuilder()
                 .path(getUserService().createUser(user).getName())

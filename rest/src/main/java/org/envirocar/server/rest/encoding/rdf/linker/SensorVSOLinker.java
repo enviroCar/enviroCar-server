@@ -25,8 +25,6 @@ import org.envirocar.server.rest.encoding.rdf.RDFLinker;
 import org.envirocar.server.rest.encoding.rdf.vocab.DBPedia;
 import org.envirocar.server.rest.encoding.rdf.vocab.GoodRelations;
 import org.envirocar.server.rest.encoding.rdf.vocab.VSO;
-import org.envirocar.server.rest.resources.RootResource;
-import org.envirocar.server.rest.resources.SensorsResource;
 import org.envirocar.server.rest.rights.AccessRights;
 
 import com.google.inject.Provider;
@@ -56,10 +54,6 @@ public class SensorVSOLinker implements RDFLinker<Sensor> {
         if (t.hasType() && t.getType().equals(CAR_TYPE)) {
             if (t.hasProperties()) {
                 final Map<String, Object> p = t.getProperties();
-                UriBuilder sensorURIBuilder = uriBuilder.get()
-                        .path(RootResource.class)
-                        .path(RootResource.SENSORS)
-                        .path(SensorsResource.SENSOR);
                 //Subclass of  http://purl.org/goodrelations/v1#ProductOrService
                 m.setNsPrefix(VSO.PREFIX, VSO.URI);
                 m.setNsPrefix(GoodRelations.PREFIX, GoodRelations.URI);

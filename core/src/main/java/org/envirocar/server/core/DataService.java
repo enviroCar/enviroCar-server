@@ -16,6 +16,8 @@
  */
 package org.envirocar.server.core;
 
+import java.util.List;
+
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.Measurements;
 import org.envirocar.server.core.entities.Phenomenon;
@@ -52,11 +54,10 @@ public interface DataService {
 
     Measurements getMeasurements(MeasurementFilter request);
 
-    Measurement modifyMeasurement(Measurement measurement, Measurement changes)
-            throws ValidationException,
-                   IllegalModificationException;
-
     Track createTrack(Track track) throws
+            ValidationException;
+
+    Track createTrack(Track track, List<Measurement> measurements) throws
             ValidationException;
 
     void deleteTrack(Track track);

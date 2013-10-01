@@ -16,6 +16,8 @@
  */
 package org.envirocar.server.core;
 
+import java.util.List;
+
 import org.envirocar.server.core.dao.MeasurementDao;
 import org.envirocar.server.core.dao.PhenomenonDao;
 import org.envirocar.server.core.dao.SensorDao;
@@ -28,7 +30,6 @@ import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.core.entities.Sensors;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.entities.Tracks;
-import org.envirocar.server.core.event.ChangedMeasurementEvent;
 import org.envirocar.server.core.event.ChangedTrackEvent;
 import org.envirocar.server.core.event.CreatedMeasurementEvent;
 import org.envirocar.server.core.event.CreatedPhenomenonEvent;
@@ -48,6 +49,7 @@ import org.envirocar.server.core.filter.TrackFilter;
 import org.envirocar.server.core.update.EntityUpdater;
 import org.envirocar.server.core.util.Pagination;
 import org.envirocar.server.core.validation.EntityValidator;
+import org.joda.time.DateTime;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
@@ -117,6 +119,31 @@ public class DataServiceImpl implements DataService {
     }
 
     @Override
+    public Track createTrack(Track track, List<Measurement> measurements) throws
+            ValidationException {
+        this.trackValidator.validateCreate(track);
+        DateTime begin = null, end = null;
+        for (Measurement m : measurements) {
+            m.setUser(track.getUser());
+            this.measurementValidator.validateCreate(m);
+            if (begin == null || m.getTime().isBefore(begin)) {
+                begin = m.getTime();
+            }
+            if (end == null || m.getTime().isAfter(end)) {
+                end = m.getTime();
+            }
+        }
+        track.setBegin(begin);
+        track.setEnd(end);
+        this.trackDao.create(track);
+        for (Measurement m : measurements) {
+            this.measurementDao.create(m);
+        }
+        this.eventBus.post(new CreatedTrackEvent(track.getUser(), track));
+        return track;
+    }
+
+    @Override
     public void deleteTrack(Track track) {
         this.trackDao.delete(track);
         this.eventBus.post(new DeletedTrackEvent(track, track.getUser()));
@@ -135,7 +162,13 @@ public class DataServiceImpl implements DataService {
         this.measurementValidator.validateCreate(m);
         m.setTrack(track);
         this.measurementDao.create(m);
-        this.trackDao.update(track);
+        if (!track.hasBegin() || m.getTime().isBefore(track.getBegin())) {
+            track.setBegin(m.getTime());
+        }
+        if (!track.hasEnd() || m.getTime().isAfter(track.getEnd())) {
+            track.setEnd(m.getTime());
+        }
+        this.trackDao.save(track);
         this.eventBus.post(new CreatedMeasurementEvent(m.getUser(), m));
         return m;
     }
@@ -147,17 +180,6 @@ public class DataServiceImpl implements DataService {
         if (m == null) {
             throw new MeasurementNotFoundException(id);
         }
-        return m;
-    }
-
-    @Override
-    public Measurement modifyMeasurement(Measurement m,
-                                         Measurement changes)
-            throws ValidationException, IllegalModificationException {
-        this.measurementValidator.validateCreate(m);
-        this.measurementUpdater.update(changes, m);
-        this.measurementDao.save(m);
-        this.eventBus.post(new ChangedMeasurementEvent(m, m.getUser()));
         return m;
     }
 

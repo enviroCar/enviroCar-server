@@ -16,6 +16,8 @@
  */
 package org.envirocar.server.core.entities;
 
+import org.joda.time.DateTime;
+
 import com.vividsolutions.jts.geom.Geometry;
 
 /**
@@ -59,4 +61,16 @@ public interface Track extends BaseEntity {
     void setSensor(Sensor track);
 
     boolean hasSensor();
+
+    DateTime getBegin();
+
+    void setBegin(DateTime begin);
+
+    boolean hasBegin();
+
+    DateTime getEnd();
+
+    void setEnd(DateTime end);
+
+    boolean hasEnd();
 }

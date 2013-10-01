@@ -1,0 +1,36 @@
+{
+    "phenomenons": [
+        {
+            "name": "Calculated MAF",
+            "unit": "g/s"
+        },
+        {
+            "name": "Consumption",
+            "unit": "l/h"
+        },
+        {
+            "name": "Intake Pressure",
+            "unit": "kPa"
+        },
+        {
+            "name": "CO2",
+            "unit": "kg/h"
+        },
+        {
+            "name": "Intake Temperature",
+            "unit": "c"
+        },
+        {
+            "name": "MAF",
+            "unit": "l/s"
+        },
+        {
+            "name": "Rpm",
+            "unit": "u/min"
+        },
+        {
+            "name": "Speed",
+            "unit": "km/h"
+        }
+    ]
+}

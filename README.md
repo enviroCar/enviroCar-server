@@ -6,7 +6,7 @@ The [JSON Schema](http://json-schema.org/) is maintained in [`rest/src/main/reso
 
 ## API Reference ##
 
-See the [wiki](https://github.com/enviroCar/enviroCar-server/wiki#api-reference).
+See [envirocar.github.io/enviroCar-server](http://envirocar.github.io/enviroCar-server/api/).
 
 ## Deployments ##
 

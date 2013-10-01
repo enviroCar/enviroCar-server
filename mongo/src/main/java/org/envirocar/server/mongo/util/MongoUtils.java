@@ -16,9 +16,17 @@
  */
 package org.envirocar.server.mongo.util;
 
+import static org.envirocar.server.core.TemporalFilterOperator.after;
+import static org.envirocar.server.core.TemporalFilterOperator.before;
+import static org.envirocar.server.core.TemporalFilterOperator.begins;
+import static org.envirocar.server.core.TemporalFilterOperator.during;
+import static org.envirocar.server.core.TemporalFilterOperator.ends;
+import static org.envirocar.server.core.TemporalFilterOperator.equals;
+
 import java.util.List;
 
 import org.bson.BSONObject;
+import org.envirocar.server.core.TemporalFilter;
 
 import com.google.common.base.Joiner;
 import com.mongodb.BasicDBObject;
@@ -123,5 +131,43 @@ public class MongoUtils {
 
     protected static BasicDBObject geometry(BSONObject geometry) {
         return new BasicDBObject(Ops.GEOMETRY, geometry);
+    }
+
+    public static DBObject temporalFilter(TemporalFilter tf) {
+        BasicDBObject time = new BasicDBObject();
+        switch (tf.getOperator()) {
+            case after:
+                if (tf.isInstant()) {
+                    time.put(Ops.GREATER_THAN, tf.getInstant().toDate());
+                } else {
+                    time.put(Ops.GREATER_THAN, tf.getEnd().toDate());
+                }
+                break;
+            case before:
+                if (tf.isInstant()) {
+                    time.put(Ops.LESS_THAN, tf.getInstant().toDate());
+                } else {
+                    time.put(Ops.LESS_THAN, tf.getBegin().toDate());
+                }
+                break;
+            case begins:
+                time.put(Ops.EQUALS, tf.getBegin().toDate());
+                break;
+            case ends:
+                time.put(Ops.EQUALS, tf.getEnd().toDate());
+                break;
+            case during:
+                time.put(Ops.LESS_THAN, tf.getEnd().toDate());
+                time.put(Ops.GREATER_THAN, tf.getBegin().toDate());
+                break;
+            case equals:
+                time.put(Ops.EQUALS, tf.getInstant().toDate());
+                break;
+            default:
+                throw new IllegalArgumentException(
+                        "unsupported temporal operator: " +
+                        tf.getOperator());
+        }
+        return time;
     }
 }

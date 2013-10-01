@@ -18,6 +18,9 @@ package org.envirocar.server.rest.util;
 
 import static org.envirocar.server.core.util.GeoJSONConstants.*;
 
+import org.envirocar.server.core.exception.GeometryConverterException;
+import org.envirocar.server.core.util.GeometryConverter;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
@@ -36,10 +39,6 @@ import com.vividsolutions.jts.geom.MultiPoint;
 import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
-
-import org.envirocar.server.core.exception.GeometryConverterException;
-
-import org.envirocar.server.core.util.GeometryConverter;
 
 /**
  * TODO JavaDoc

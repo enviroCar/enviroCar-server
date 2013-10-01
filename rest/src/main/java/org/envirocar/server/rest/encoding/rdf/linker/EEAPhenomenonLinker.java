@@ -40,12 +40,10 @@ import com.hp.hpl.jena.vocabulary.OWL;
  *
  */
 public class EEAPhenomenonLinker implements RDFLinker<Phenomenon> {
+    private static final String PREFIX = "eea.phenomenon.";
     private static final Logger log = LoggerFactory
             .getLogger(EEAPhenomenonLinker.class);
-    private static final String CO2 = "co2";
-    private static final String URI_CO2 =
-            "http://dd.eionet.europa.eu/vocabulary/aq/pollutant/71";
-    public static final String PROPERTIES = "/EEAphenomenons.properties";
+    private static final String PROPERTIES = "/EEAphenomenons.properties";
     private final Properties properties;
 
     public EEAPhenomenonLinker() {
@@ -69,7 +67,7 @@ public class EEAPhenomenonLinker implements RDFLinker<Phenomenon> {
     @Override
     public void link(Model m, Phenomenon t, AccessRights rights,
                      Resource r, Provider<UriBuilder> uriBuilder) {
-        String property = properties.getProperty(t.getName());
+        String property = properties.getProperty(PREFIX + t.getName());
         if (property != null) {
             r.addProperty(OWL.sameAs, m.createResource(property));
         }

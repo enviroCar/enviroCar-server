@@ -35,7 +35,7 @@ import org.envirocar.server.rest.validation.Schema;
  */
 public class SensorResource extends AbstractResource {
     public static final String STATISTICS = "statistics";
-    private Sensor sensor;
+    private final Sensor sensor;
 
     @Inject
     public SensorResource(@Assisted Sensor sensor) {

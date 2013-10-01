@@ -408,4 +408,9 @@ public class NonRestrictiveRights implements AccessRights {
     public boolean canSeeStatisticsOf(Sensor sensor) {
         return true;
     }
+
+    @Override
+    public boolean canSeeBadgesOf(User user) {
+        return true;
+    }
 }

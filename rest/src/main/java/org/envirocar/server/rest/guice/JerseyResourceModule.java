@@ -16,6 +16,8 @@
  */
 package org.envirocar.server.rest.guice;
 
+import java.util.Set;
+
 import javax.ws.rs.core.SecurityContext;
 
 import org.envirocar.server.core.FriendService;
@@ -27,15 +29,19 @@ import org.envirocar.server.rest.mapper.JsonValidationExceptionMapper;
 import org.envirocar.server.rest.mapper.ResourceAlreadyExistExceptionMapper;
 import org.envirocar.server.rest.mapper.ResourceNotFoundExceptionMapper;
 import org.envirocar.server.rest.mapper.ValidationExceptionMapper;
+import org.envirocar.server.rest.resources.AbstractResource;
 import org.envirocar.server.rest.resources.ResourceFactory;
 import org.envirocar.server.rest.resources.RootResource;
 import org.envirocar.server.rest.rights.AccessRights;
 import org.envirocar.server.rest.rights.AccessRightsImpl;
 
+import com.google.common.base.Optional;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Scopes;
+import com.google.inject.TypeLiteral;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
+import com.google.inject.name.Names;
 
 /**
  * TODO JavaDoc
@@ -45,6 +51,9 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
 public class JerseyResourceModule extends AbstractModule {
     @Override
     protected void configure() {
+        bind(new TypeLiteral<Optional<Set<String>>>() {
+        }).annotatedWith(Names.named(AbstractResource.ALLOWED_MAIL_ADDRESSES))
+                .toProvider(AddressProvider.class);
         bind(IllegalModificationExceptionMapper.class).in(Scopes.SINGLETON);
         bind(ResourceNotFoundExceptionMapper.class).in(Scopes.SINGLETON);
         bind(ValidationExceptionMapper.class).in(Scopes.SINGLETON);

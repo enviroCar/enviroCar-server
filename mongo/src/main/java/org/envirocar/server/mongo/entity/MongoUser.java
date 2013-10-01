@@ -20,6 +20,9 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.Set;
 
+import org.envirocar.server.core.entities.Gender;
+import org.envirocar.server.core.entities.User;
+
 import com.github.jmkgreen.morphia.Key;
 import com.github.jmkgreen.morphia.annotations.Entity;
 import com.github.jmkgreen.morphia.annotations.Id;
@@ -28,9 +31,6 @@ import com.github.jmkgreen.morphia.annotations.Property;
 import com.github.jmkgreen.morphia.mapping.Mapper;
 import com.google.common.base.Objects;
 import com.vividsolutions.jts.geom.Geometry;
-
-import org.envirocar.server.core.entities.Gender;
-import org.envirocar.server.core.entities.User;
 
 /**
  * TODO JavaDoc
@@ -53,6 +53,8 @@ public class MongoUser extends MongoEntityBase implements User {
     public static final String DAY_OF_BIRTH = "dayOfBirth";
     public static final String GENDER = "gender";
     public static final String LANGUAGE = "lang";
+    public static final String BADGES = "badges";
+
     @Property(TOKEN)
     private String token;
     @Property(IS_ADMIN)
@@ -82,6 +84,8 @@ public class MongoUser extends MongoEntityBase implements User {
     private Gender gender;
     @Property(LANGUAGE)
     private String language;
+    @Property(BADGES)
+    private Set<String> badges;
 
     public MongoUser(String name) {
         this.name = name;
@@ -308,5 +312,15 @@ public class MongoUser extends MongoEntityBase implements User {
     @Override
     public boolean hasAboutMe() {
         return getAboutMe() != null && !getAboutMe().isEmpty();
+    }
+
+    @Override
+    public Set<String> getBadges() {
+        return this.badges == null ? null : Collections.unmodifiableSet(this.badges);
+    }
+
+    @Override
+    public boolean hasBadges() {
+        return this.badges != null && !this.badges.isEmpty();
     }
 }
