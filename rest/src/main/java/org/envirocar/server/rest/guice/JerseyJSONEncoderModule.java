@@ -26,6 +26,8 @@ import org.envirocar.server.core.entities.Phenomenon;
 import org.envirocar.server.core.entities.Phenomenons;
 import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.core.entities.Sensors;
+import org.envirocar.server.core.entities.TermsOfUseInstance;
+import org.envirocar.server.core.entities.TermsOfUse;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.entities.Tracks;
 import org.envirocar.server.core.entities.User;
@@ -47,6 +49,8 @@ import org.envirocar.server.rest.encoding.json.SensorJSONEncoder;
 import org.envirocar.server.rest.encoding.json.SensorsJSONEncoder;
 import org.envirocar.server.rest.encoding.json.StatisticJSONEncoder;
 import org.envirocar.server.rest.encoding.json.StatisticsJSONEncoder;
+import org.envirocar.server.rest.encoding.json.TermsOfUseJSONEncoder;
+import org.envirocar.server.rest.encoding.json.TermsOfUseInstanceJSONEncoder;
 import org.envirocar.server.rest.encoding.json.TrackJSONEncoder;
 import org.envirocar.server.rest.encoding.json.TracksJSONEncoder;
 import org.envirocar.server.rest.encoding.json.UserJSONEncoder;
@@ -117,5 +121,12 @@ public class JerseyJSONEncoderModule extends AbstractModule {
         bind(GeometryJSONEncoder.class).in(Scopes.SINGLETON);
         bind(new TypeLiteral<JSONEntityEncoder<Geometry>>() {
         }).to(GeometryJSONEncoder.class);
+        
+        bind(TermsOfUseInstanceJSONEncoder.class).in(Scopes.SINGLETON);
+        bind(new TypeLiteral<JSONEntityEncoder<TermsOfUseInstance>>() {
+        }).to(TermsOfUseInstanceJSONEncoder.class);
+        bind(TermsOfUseJSONEncoder.class).in(Scopes.SINGLETON);
+        bind(new TypeLiteral<JSONEntityEncoder<TermsOfUse>>() {
+        }).to(TermsOfUseJSONEncoder.class);
     }
 }

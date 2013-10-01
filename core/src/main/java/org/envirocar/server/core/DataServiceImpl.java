@@ -29,7 +29,7 @@ import org.envirocar.server.core.entities.Phenomenon;
 import org.envirocar.server.core.entities.Phenomenons;
 import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.core.entities.Sensors;
-import org.envirocar.server.core.entities.TermsOfUseCollection;
+import org.envirocar.server.core.entities.TermsOfUse;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.entities.Tracks;
 import org.envirocar.server.core.event.ChangedTrackEvent;
@@ -248,7 +248,7 @@ public class DataServiceImpl implements DataService {
     }
 
 	@Override
-	public TermsOfUseCollection getTermsOfUse(Pagination p) {
+	public TermsOfUse getTermsOfUse(Pagination p) {
 		return this.termsOfUseDao.get(p);
 	}
 }

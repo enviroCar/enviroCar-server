@@ -21,7 +21,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
-import org.envirocar.server.core.entities.TermsOfUseCollection;
+import org.envirocar.server.core.entities.TermsOfUse;
 import org.envirocar.server.core.util.Pagination;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.RESTConstants;
@@ -33,7 +33,7 @@ public class TermsOfUseResource extends AbstractResource {
     @GET
     @Schema(response = Schemas.TERMS_OF_USE)
     @Produces({ MediaTypes.TERMS_OF_USE })
-    public TermsOfUseCollection get(
+    public TermsOfUse get(
             @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit,
             @QueryParam(RESTConstants.PAGE) @DefaultValue("0") int page) {
         return getDataService().getTermsOfUse(new Pagination(limit, page));

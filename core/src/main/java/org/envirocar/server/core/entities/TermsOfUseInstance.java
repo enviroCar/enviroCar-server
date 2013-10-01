@@ -14,13 +14,17 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.core.dao;
+package org.envirocar.server.core.entities;
 
-import org.envirocar.server.core.entities.TermsOfUse;
-import org.envirocar.server.core.util.Pagination;
 
-public interface TermsOfUseDao {
+public interface TermsOfUseInstance extends BaseEntity {
 
-	TermsOfUse get(Pagination p);
-
+	String getIssuedDate();
+	
+	void setIssuedDate(String ds);
+	
+	String getContents();
+	
+	void setContents(String c);
+	
 }

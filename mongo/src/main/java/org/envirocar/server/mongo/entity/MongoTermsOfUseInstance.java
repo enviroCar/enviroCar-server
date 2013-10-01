@@ -16,7 +16,7 @@
  */
 package org.envirocar.server.mongo.entity;
 
-import org.envirocar.server.core.entities.TermsOfUse;
+import org.envirocar.server.core.entities.TermsOfUseInstance;
 
 import com.github.jmkgreen.morphia.annotations.Entity;
 import com.github.jmkgreen.morphia.annotations.Id;
@@ -25,7 +25,7 @@ import com.github.jmkgreen.morphia.mapping.Mapper;
 import com.google.common.base.Objects;
 
 @Entity("termsOfUse")
-public class MongoTermsOfUse extends MongoEntityBase implements TermsOfUse {
+public class MongoTermsOfUseInstance extends MongoEntityBase implements TermsOfUseInstance {
 
 	public static final String NAME = Mapper.ID_KEY;
 	public static final String CONTENTS = "contents";
@@ -37,12 +37,12 @@ public class MongoTermsOfUse extends MongoEntityBase implements TermsOfUse {
 	private String contents;
 
 	@Override
-	public String getDateString() {
+	public String getIssuedDate() {
 		return this.dateString;
 	}
 
 	@Override
-	public void setDateString(String ds) {
+	public void setIssuedDate(String ds) {
 		this.dateString = ds;
 	}
 
@@ -69,7 +69,7 @@ public class MongoTermsOfUse extends MongoEntityBase implements TermsOfUse {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		final MongoTermsOfUse other = (MongoTermsOfUse) obj;
+		final MongoTermsOfUseInstance other = (MongoTermsOfUseInstance) obj;
 		return Objects.equal(this.dateString, other.dateString);
 	}
 }

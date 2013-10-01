@@ -16,15 +16,45 @@
  */
 package org.envirocar.server.core.entities;
 
+import org.envirocar.server.core.util.Pagination;
+import org.envirocar.server.core.util.UpCastingIterable;
 
-public interface TermsOfUse extends BaseEntity {
+public class TermsOfUse extends UpCastingIterable<TermsOfUseInstance> {
 
-	String getDateString();
 	
-	void setDateString(String ds);
+	protected TermsOfUse(Iterable<? extends TermsOfUseInstance> delegate,
+			Pagination pagination, long elements) {
+		super(delegate, pagination, elements);
+	}
 	
-	String getContents();
-	
-	void setContents(String c);
-	
+	public static TermsOfUseCollectionBuilder from(
+            Iterable<? extends TermsOfUseInstance> delegate) {
+        return new TermsOfUseCollectionBuilder(delegate);
+    }
+
+
+    public static class TermsOfUseCollectionBuilder {
+        private Iterable<? extends TermsOfUseInstance> delegate;
+        private Pagination pagination;
+        private long elements;
+
+        public TermsOfUseCollectionBuilder(Iterable<? extends TermsOfUseInstance> delegate) {
+            this.delegate = delegate;
+        }
+
+        public TermsOfUseCollectionBuilder withPagination(Pagination pagination) {
+            this.pagination = pagination;
+            return this;
+        }
+
+        public TermsOfUseCollectionBuilder withElements(long elements) {
+            this.elements = elements;
+            return this;
+        }
+
+        public TermsOfUse build() {
+            return new TermsOfUse(delegate, pagination, elements);
+        }
+    }
+
 }

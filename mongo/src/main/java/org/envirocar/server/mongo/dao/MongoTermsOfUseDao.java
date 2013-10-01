@@ -17,30 +17,30 @@
 package org.envirocar.server.mongo.dao;
 
 import org.envirocar.server.core.dao.TermsOfUseDao;
-import org.envirocar.server.core.entities.TermsOfUseCollection;
+import org.envirocar.server.core.entities.TermsOfUse;
 import org.envirocar.server.core.util.Pagination;
 import org.envirocar.server.mongo.MongoDB;
-import org.envirocar.server.mongo.entity.MongoTermsOfUse;
+import org.envirocar.server.mongo.entity.MongoTermsOfUseInstance;
 
 import com.google.inject.Inject;
 
-public class MongoTermsOfUseDao extends AbstractMongoDao<String, MongoTermsOfUse, TermsOfUseCollection> 
+public class MongoTermsOfUseDao extends AbstractMongoDao<String, MongoTermsOfUseInstance, TermsOfUse> 
 	implements TermsOfUseDao {
 
 	@Inject
 	public MongoTermsOfUseDao(MongoDB mongoDB) {
-		super(MongoTermsOfUse.class, mongoDB);
+		super(MongoTermsOfUseInstance.class, mongoDB);
 	}
 
 	@Override
-	public TermsOfUseCollection get(Pagination p) {
+	public TermsOfUse get(Pagination p) {
 		return fetch(q(), p);
 	}
 
 	@Override
-	protected TermsOfUseCollection createPaginatedIterable(
-			Iterable<MongoTermsOfUse> i, Pagination p, long count) {
-		return TermsOfUseCollection.from(i).withPagination(p).withElements(count).build();
+	protected TermsOfUse createPaginatedIterable(
+			Iterable<MongoTermsOfUseInstance> i, Pagination p, long count) {
+		return TermsOfUse.from(i).withPagination(p).withElements(count).build();
 	}
 
 }
