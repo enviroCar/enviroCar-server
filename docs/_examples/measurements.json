@@ -1,0 +1,117 @@
+{
+    "features": [
+        {
+            "geometry": {
+                "coordinates": [
+                    7.61083,
+                    51.9414
+                ],
+                "type": "Point"
+            },
+            "properties": {
+                "created": "2013-06-25T11:36:41Z",
+                "id": "51c980c8e4b05956bbffceff",
+                "modified": "2013-06-25T11:36:41Z",
+                "phenomenons": {
+                    "CO2": {
+                        "unit": "g/s",
+                        "value": 0.0
+                    },
+                    "Consumption": {
+                        "unit": "l/s",
+                        "value": 0.0
+                    },
+                    "MAF": {
+                        "unit": "l/s",
+                        "value": 0.0
+                    },
+                    "Speed": {
+                        "unit": "km/h",
+                        "value": 0.0
+                    }
+                },
+                "sensor": {
+                    "properties": {
+                        "constructionYear": 2001,
+                        "fuelType": "gasoline",
+                        "id": "51c97f0ee4b05956bbffcef8",
+                        "manufacturer": "BMW",
+                        "model": "Z4"
+                    },
+                    "type": "car"
+                },
+                "time": "2013-06-08T11:28:20Z",
+                "user": {
+                    "country": "Germany",
+                    "created": "2013-06-25T09:56:13Z",
+                    "dayOfBirth": "1989-01-01",
+                    "firstName": "Jakob",
+                    "gender": "m",
+                    "language": "de-DE",
+                    "lastName": "M",
+                    "mail": "jakob@jakob.de",
+                    "modified": "2013-07-10T08:30:04Z",
+                    "name": "jakob1"
+                }
+            },
+            "type": "Feature"
+        },
+        {
+            "geometry": {
+                "coordinates": [
+                    7.61083,
+                    51.9414
+                ],
+                "type": "Point"
+            },
+            "properties": {
+                "created": "2013-06-25T11:36:41Z",
+                "id": "51c980c8e4b05956bbffcf01",
+                "modified": "2013-06-25T11:36:41Z",
+                "phenomenons": {
+                    "CO2": {
+                        "unit": "g/s",
+                        "value": 4.11
+                    },
+                    "Consumption": {
+                        "unit": "l/s",
+                        "value": 0.0008795727126191843
+                    },
+                    "MAF": {
+                        "unit": "l/s",
+                        "value": 0.0003742862606890146
+                    },
+                    "Speed": {
+                        "unit": "km/h",
+                        "value": 0.0
+                    }
+                },
+                "sensor": {
+                    "properties": {
+                        "constructionYear": 2001,
+                        "fuelType": "gasoline",
+                        "id": "51c97f0ee4b05956bbffcef8",
+                        "manufacturer": "BMW",
+                        "model": "Z4"
+                    },
+                    "type": "car"
+                },
+                "time": "2013-06-08T11:28:26Z",
+                "user": {
+                    "country": "Germany",
+                    "created": "2013-06-25T09:56:13Z",
+                    "dayOfBirth": "1989-01-01",
+                    "firstName": "Jakob",
+                    "gender": "m",
+                    "language": "de-DE",
+                    "lastName": "M",
+                    "mail": "jakob@jakob.de",
+                    "modified": "2013-07-10T08:30:04Z",
+                    "name": "jakob1"
+                }
+            },
+            "type": "Feature"
+        }
+    ],
+    "type": "FeatureCollection"
+}

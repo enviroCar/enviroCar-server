@@ -4,7 +4,7 @@
             <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{0} - %msg%n</pattern>
         </encoder>
     </appender>
-    <logger name="io.car" level="DEBUG" />
+    <logger name="org.envirocar" level="DEBUG" />
     <root level="INFO">
         <appender-ref ref="STDOUT" />
     </root>

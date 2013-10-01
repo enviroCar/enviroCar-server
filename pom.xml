@@ -2,29 +2,29 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>io.car.server</groupId>
+    <groupId>org.envirocar.server</groupId>
     <artifactId>server</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>car.io server</name>
+    <name>enviroCar server</name>
     <inceptionYear>2013</inceptionYear>
     <ciManagement>
         <system>hudson</system>
-        <url>giv-car.uni-muenster.de:8080/jenkins/job/car.io-server-master</url>
+        <url>http://giv-car.uni-muenster.de:8080/jenkins/job/enviroCar-server-master</url>
     </ciManagement>
     <scm>
-        <url>http://github.com/car.io/car.io-server</url>
-        <connection>scm:git:ssh://github.com/car.io/car.io-server.git</connection>
-        <developerConnection>scm:git:git+ssh://git@github.com/car-io/car.io-server.git</developerConnection>
+        <url>http://github.com/enviroCar/enviroCar-server</url>
+        <connection>scm:git:ssh://github.com/enviroCar/enviroCar-server.git</connection>
+        <developerConnection>scm:git:git+ssh://git@github.com/enviroCar/enviroCar-server.git</developerConnection>
     </scm>
     <issueManagement>
         <system>GitHub Issue Management</system>
-        <url>https://github.com/car-io/car.io-server/issues</url>
+        <url>https://github.com/enviroCar/enviroCar-server/issues</url>
     </issueManagement>
     <distributionManagement>
         <site>
             <id>github</id>
-            <url>gitsite:git@github.com/car-io/car.io-server.git</url>
+            <url>gitsite:git@github.com/enviroCar/enviroCar-server.git</url>
         </site>
     </distributionManagement>
     <licenses>
@@ -35,6 +35,7 @@
     </licenses>
     <modules>
         <module>core</module>
+        <module>event</module>
         <module>mongo</module>
         <module>rest</module>
         <module>webapp</module>
@@ -68,6 +69,11 @@
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>mongo</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>event</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -238,9 +244,20 @@
                 <version>1.0.2</version>
             </dependency>
             <dependency>
+                <groupId>org.apache.jena</groupId>
+                <artifactId>apache-jena-libs</artifactId>
+                <version>2.10.1</version>
+                <type>pom</type>
+            </dependency>
+            <dependency>
                 <groupId>commons-codec</groupId>
                 <artifactId>commons-codec</artifactId>
                 <version>1.8</version>
+            </dependency>
+            <dependency>
+                <groupId>org.n52.sensorweb</groupId>
+                <artifactId>oxf-common</artifactId>
+                <version>2.0.0-alpha.3-SNAPSHOT</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -258,6 +275,7 @@
                     </includes>
                     <strictCheck>true</strictCheck>
                     <properties>
+                        <author>The enviroCar project</author>
                         <year>${project.inceptionYear}</year>
                     </properties>
                     <mapping>

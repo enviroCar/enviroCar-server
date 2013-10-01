@@ -1,0 +1,34 @@
+{
+	"sensors": [
+	    {
+	        "type": "car",
+	        "properties": {
+	            "id": "51c96d7ae4b0fd0634320bbd",
+	            "model": "Picanto",
+	            "fuelType": "gasoline",
+	            "manufacturer": "KIA ",
+	            "constructionYear": 2005
+	        }
+	    },
+	    {
+	        "type": "car",
+	        "properties": {
+	            "id": "51c9b583e4b0fe5a04eab3d0",
+	            "model": "Leon",
+	            "fuelType": "gasoline",
+	            "manufacturer": "Seat",
+	            "constructionYear": 2011
+	        }
+	    },
+	    {
+	        "type": "car",
+	        "properties": {
+	            "id": "51ca83e5e4b0a34fb6c5ab34",
+	            "model": "Astra",
+	            "fuelType": "gasoline",
+	            "manufacturer": "Opel",
+	            "constructionYear": 1996
+	        }
+	    }
+	]
+}

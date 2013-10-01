@@ -1,0 +1,46 @@
+{
+    "activities": [
+        {
+            "time": "2013-07-12T12:10:33Z",
+            "track": {
+                "id": "51dff239e4b0feb05dbee0d7",
+                "modified": "2013-07-12T12:10:33Z",
+                "name": "Track 2013-7-12"
+            },
+            "type": "CREATED_TRACK",
+            "user": {
+                "country": "Germany",
+                "created": "2013-06-25T09:56:13Z",
+                "dayOfBirth": "1989-01-01",
+                "firstName": "Jakob",
+                "gender": "m",
+                "language": "de-DE",
+                "lastName": "M",
+                "mail": "jakob@jakob.de",
+                "modified": "2013-07-10T08:30:04Z",
+                "name": "jakob1"
+            }
+        },
+        {
+            "time": "2013-07-12T12:03:45Z",
+            "track": {
+                "id": "51dff0a1e4b0feb05dbee00e",
+                "modified": "2013-07-12T12:03:45Z",
+                "name": "Track 2013-7-12"
+            },
+            "type": "CREATED_TRACK",
+            "user": {
+                "country": "Germany",
+                "created": "2013-06-25T09:56:13Z",
+                "dayOfBirth": "1989-01-01",
+                "firstName": "Jakob",
+                "gender": "m",
+                "language": "de-DE",
+                "lastName": "M",
+                "mail": "jakob@jakob.de",
+                "modified": "2013-07-10T08:30:04Z",
+                "name": "jakob1"
+            }
+        }
+    ]
+}

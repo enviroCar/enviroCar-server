@@ -1,8 +1,8 @@
 <configuration>
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${catalina.base}/logs/car-io-server.log</file>
+        <file>${catalina.base}/logs/enviroCar-server.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${catalina.base}/logs/car-io-server-%d{yyyy-MM-dd}-%i.log</fileNamePattern>
+            <fileNamePattern>${catalina.base}/logs/enviroCar-server-%d{yyyy-MM-dd}-%i.log</fileNamePattern>
             <maxHistory>7</maxHistory>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>10MB</maxFileSize>
@@ -18,7 +18,7 @@
             <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{0} - %msg%n</pattern>
         </encoder>
     </appender>
-    <logger name="io.car" level="DEBUG" />
+    <logger name="org.envirocar" level="DEBUG" />
     <root level="INFO">
         <appender-ref ref="FILE" />
         <appender-ref ref="STDOUT" />

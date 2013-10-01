@@ -31,22 +31,24 @@
                     "type": "string"
                 },
                 "created": {
-                    "$ref": "http://schema.envirocar.org/definitions.json#/date-time"
+                    "type": "string",
+                    "format": "date-time"
+
                 },
                 "modified": {
-                    "$ref": "http://schema.envirocar.org/definitions.json#/date-time"
+                    "type": "string",
+                    "format": "date-time"
+
                 },
                 "sensor": {
-                    "$ref": "http://schema.envirocar.org/definitions.json#/sensor-ref"
+                    "$ref": "http://schema.envirocar.org/sensor.json#"
                 },
                 "time": {
-                    "$ref": "http://schema.envirocar.org/definitions.json#/date-time"
+                    "type": "string",
+                    "format": "date-time"
                 },
                 "user": {
-                    "$ref": "http://schema.envirocar.org/definitions.json#/user-ref"
-                },
-                "href": {
-                    "$ref": "http://schema.envirocar.org/definitions.json#/href"
+                    "$ref": "http://schema.envirocar.org/user.json#"
                 },
                 "phenomenons": {
                     "type": "object",
@@ -55,7 +57,7 @@
                         "additionalProperties": false,
                         "allOf": [
                             {
-                                "$ref": "http://schema.envirocar.org/definitions.json#/phenomenon-ref"
+                                "$ref": "http://schema.envirocar.org/phenomenon.json"
                             },
                             {
                                 "type": "object",

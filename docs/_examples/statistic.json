@@ -1,0 +1,13 @@
+{
+    "avg": 0.0009855831295400366,
+    "max": 0.11,
+    "measurements": 7624,
+    "min": 0.0,
+    "phenomenon": {
+        "name": "Consumption",
+        "unit": "l/h"
+    },
+    "sensors": 11,
+    "tracks": 82,
+    "users": 10
+}

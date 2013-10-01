@@ -1,6 +1,8 @@
-io.car.server.rest.guice.JerseyProviderModule
-io.car.server.rest.guice.JSONSchemaModule
-io.car.server.rest.guice.JerseyModule
-io.car.server.rest.guice.JerseyResourceModule
-io.car.server.rest.guice.JerseyCodingModule
-io.car.server.rest.guice.JerseyValidationModule
+org.envirocar.server.rest.guice.JerseyResourceModule
+org.envirocar.server.rest.guice.JerseyCodingModule
+org.envirocar.server.rest.guice.JerseyDecoderModule
+org.envirocar.server.rest.guice.JerseyJSONEncoderModule
+org.envirocar.server.rest.guice.JerseyRDFEncoderModule
+org.envirocar.server.rest.guice.JerseyValidationModule
+org.envirocar.server.rest.guice.JerseyModule
+org.envirocar.server.rest.guice.DefaultRDFLinkerModule

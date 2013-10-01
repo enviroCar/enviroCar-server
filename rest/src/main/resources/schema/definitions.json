@@ -2,105 +2,16 @@
     "$schema": "http://json-schema.org/draft-04/schema#",
     "id": "http://schema.envirocar.org/definitions.json#",
     "username": {
-        "pattern": "^[_A-Za-z0-9-]{6,}$",
+        "pattern": "^[_A-Za-z0-9-]{4,}$",
         "type": "string"
     },
     "date-time": {
         "format": "date-time",
         "type": "string"
     },
-    "href": {
-        "type": "string",
-        "format": "uri"
-    },
     "mail": {
         "pattern": "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$",
         "type": "string"
-    },
-    "group-ref": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": [
-        "name",
-        "href"
-        ],
-        "properties": {
-            "href": {
-                "$ref": "#/href"
-            },
-            "name": {
-                "type": "string"
-            }
-        }
-    },
-    "user-ref": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": [
-        "name",
-        "href"
-        ],
-        "properties": {
-            "href": {
-                "$ref": "#/href"
-            },
-            "name": {
-                "$ref": "#/username"
-            }
-        }
-    },
-    "phenomenon-ref": {
-        "type": "object",
-        "required": [
-        "name",
-        "href"
-        ],
-        "properties": {
-            "name": {
-                "type": "string"
-            },
-            "href": {
-                "$ref": "#/href"
-            }
-        }
-    },
-    "sensor-ref": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": [
-            "name",
-            "href"
-        ],
-        "properties": {
-            "name": {
-                "type": "string"
-            },
-            "href": {
-                "$ref": "#/href"
-            }
-        }
-    },
-    "track-ref": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": [
-            "id",
-            "href"
-        ],
-        "properties": {
-            "id": {
-                "type": "string"
-            },
-            "name": {
-                "type": "string"
-            },
-            "modified": {
-                "$ref": "#/date-time"
-            },
-            "href": {
-                "$ref": "#/href"
-            }
-        }
     },
     "optional-user-properties": {
         "properties": {
@@ -137,6 +48,30 @@
             "language": {
                 "type": "string",
                 "pattern": "^[a-z]{2}[-_][A-Z]{2}$"
+            },
+            "badges": {
+                "type": "array",
+                "items": {
+                    "type": "string"
+                }
+            }
+        }
+    },
+    "track-ref": {
+        "type": "object",
+        "required": [
+            "id"
+        ],
+        "properties": {
+            "id": {
+                "type": "string"
+            },
+            "modified": {
+                "type": "string",
+                "format": "date-time"
+            },
+            "name": {
+                "type": "string"
             }
         }
     }

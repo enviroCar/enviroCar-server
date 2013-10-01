@@ -4,32 +4,27 @@
     "id": "http://schema.envirocar.org/group.json#",
     "properties": {
         "created": {
-            "$ref": "http://schema.envirocar.org/definitions.json#/date-time"
+            "type": "string",
+            "format": "date-time"
         },
         "description": {
             "type": "string"
         },
-        "members": {
-            "format": "uri",
-            "type": "string"
-        },
         "modified": {
-            "$ref": "http://schema.envirocar.org/definitions.json#/date-time"
+            "type": "string",
+            "format": "date-time"
         },
         "name": {
             "type": "string"
         },
         "owner": {
-            "$ref": "http://schema.envirocar.org/definitions.json#/user-ref"
+            "$ref": "http://schema.envirocar.org/user.json#"
         }
     },
     "required": [
         "name",
         "description",
-        "created",
-        "modified",
-        "owner",
-        "members"
+        "owner"
     ],
     "type": "object"
 }

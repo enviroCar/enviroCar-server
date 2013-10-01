@@ -1,4 +1,4 @@
-# car.io Server [![Build Status](https://travis-ci.org/car-io/car.io-server.png)](https://travis-ci.org/car-io/car.io-server) #
+# enviroCar Server [![Build Status](https://travis-ci.org/enviroCar/enviroCar-server.png)](https://travis-ci.org/enviroCar/enviroCar-server) #
 
 ## Schema ##
 
@@ -6,17 +6,26 @@ The [JSON Schema](http://json-schema.org/) is maintained in [`rest/src/main/reso
 
 ## API Reference ##
 
-See the [wiki](https://github.com/car-io/car.io-server/wiki#api-reference).
+See [envirocar.github.io/enviroCar-server](http://envirocar.github.io/enviroCar-server/api/).
 
 ## Deployments ##
 
 * https://giv-car.uni-muenster.de/dev/rest/ (following the dev branch)
 * https://giv-car.uni-muenster.de/stable/rest/ (following the master branch)
 
-## [License](https://github.com/car-io/car.io-server/blob/master/LICENSE) ##
+## Building & Installation ##
 
-    Copyright (C) 2013  Christian Autermann, Jan Alexander Wirwahn,
-                        Arne De Wall, Dustin Demuth, Saqib Rasheed
+* Install and run [MongoDB](http://www.mongodb.org/downloads) >2.4.
+* Clone the repository and switch to the directory.
+* Configure the connection in `mongo/src/main/resources/mongo.properties` (if needed).
+* Run `mvn clean install`.
+* Deploy the `war` file in `webapp/target` to a application server of your choice (e.g. [Apache Tomcat](http://tomcat.apache.org/)).
+
+## [License](https://github.com/enviroCar/enviroCar-server/blob/master/LICENSE) ##
+
+    Copyright (C) 2013  Christian Autermann,
+                        Jan Alexander Wirwahn,
+                        Arne De Wall
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as

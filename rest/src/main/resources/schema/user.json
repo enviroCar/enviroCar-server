@@ -3,9 +3,7 @@
     "id": "http://schema.envirocar.org/user.json#",
     "type": "object",
     "required": [
-        "name",
-        "created",
-        "modified"
+        "name"
     ],
     "allOf": [
         {
@@ -14,31 +12,18 @@
         {
             "properties": {
                 "created": {
-                    "$ref": "http://schema.envirocar.org/definitions.json#/date-time"
+                    "type": "string",
+                    "format": "date-time"
                 },
                 "mail": {
                     "$ref": "http://schema.envirocar.org/definitions.json#/mail"
                 },
                 "modified": {
-                    "$ref": "http://schema.envirocar.org/definitions.json#/date-time"
+                    "type": "string",
+                    "format": "date-time"
                 },
                 "name": {
                     "$ref": "http://schema.envirocar.org/definitions.json#/username"
-                },
-                "measurements": {
-                    "$ref": "http://schema.envirocar.org/definitions.json#/href"
-                },
-                "friends": {
-                    "$ref": "http://schema.envirocar.org/definitions.json#/href"
-                },
-                "groups": {
-                    "$ref": "http://schema.envirocar.org/definitions.json#/href"
-                },
-                "tracks": {
-                    "$ref": "http://schema.envirocar.org/definitions.json#/href"
-                },
-                "statistics": {
-                    "$ref": "http://schema.envirocar.org/definitions.json#/href"
                 }
             }
         }

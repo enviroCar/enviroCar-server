@@ -6,3 +6,15 @@ jdk:
     - oraclejdk7
     - openjdk6
 services: mongodb
+after_script:
+    - "gem query --local | grep bundler >/dev/null || gem install bundler"
+    - "export BUNDLE_GEMFILE=$PWD/docs/Gemfile"
+    - "bundle install --path docs/_vendor/bundle"
+    - "cd docs"
+    - "rake travis"
+env:
+  global:
+    secure: |-
+      q17geOV/9E+PEzKK5LtAVvuuH089zNsty83En3dI4FX+0KjGvUpHO8YB18R6
+      5kWFqHH9SVSgl5pLWpasrKDvOIOZcPaLtIcTI+GdC2UaOn5Q16+JztTQpzJm
+      s9KtEgCCpnWXujcW5oo31QDlpS53n1g/2wPCbCQon4iKFY3idgA=
