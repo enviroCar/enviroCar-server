@@ -93,5 +93,8 @@ public class UserUpdater implements EntityUpdater<User> {
         if (changes.getUrl() != null) {
             original.setUrl(changes.getUrl());
         }
+        if (changes.getAcceptedTermsOfUseVersion() != null) {
+        	original.setAcceptedTermsOfUseVersion(changes.getAcceptedTermsOfUseVersion());
+        }
     }
 }
