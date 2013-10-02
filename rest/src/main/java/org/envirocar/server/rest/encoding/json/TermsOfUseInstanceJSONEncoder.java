@@ -29,11 +29,11 @@ import org.envirocar.server.rest.rights.AccessRights;
 /**
  * TODO JavaDoc
  *
- * @author Christian Autermann <autermann@uni-muenster.de>
+ * @author Matthes Rieke
  */
 @Provider
 public class TermsOfUseInstanceJSONEncoder extends AbstractJSONEntityEncoder<TermsOfUseInstance> {
-    private static final String DATE = "issued-date";
+    private static final String DATE = "issuedDate";
 	private static final String CONTENTS = "contents";
 
 	public TermsOfUseInstanceJSONEncoder() {
@@ -44,7 +44,7 @@ public class TermsOfUseInstanceJSONEncoder extends AbstractJSONEntityEncoder<Ter
     public ObjectNode encodeJSON(TermsOfUseInstance t, AccessRights rights,
                                  MediaType mediaType) {
         ObjectNode termsOfUse = getJsonFactory().objectNode();
-        if (mediaType.equals(MediaTypes.TERMS_OF_USE_TYPE)) {
+        if (mediaType.equals(MediaTypes.TERMS_OF_USE_INSTANCE_TYPE)) {
             if (t.hasCreationTime()) {
                 termsOfUse.put(JSONConstants.CREATED_KEY, getDateTimeFormat()
                         .print(t.getCreationTime()));
@@ -59,6 +59,13 @@ public class TermsOfUseInstanceJSONEncoder extends AbstractJSONEntityEncoder<Ter
             if (t.getContents() != null) {
             	termsOfUse.put(CONTENTS, t.getContents());
             }
+        } else {
+        	if (t.getIdentifier() != null) {
+        		termsOfUse.put(JSONConstants.IDENTIFIER_KEY, t.getIdentifier());
+        	}
+        	if (t.getIssuedDate() != null) {
+        		termsOfUse.put(DATE, t.getIssuedDate());
+        	}
         }
         return termsOfUse;
     }

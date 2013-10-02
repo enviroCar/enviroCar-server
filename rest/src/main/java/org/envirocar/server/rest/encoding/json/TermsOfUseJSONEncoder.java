@@ -37,7 +37,7 @@ import com.google.inject.Inject;
 /**
  * TODO JavaDoc
  *
- * @author Christian Autermann <autermann@uni-muenster.de>
+ * @author Matthes Rieke
  */
 @Provider
 public class TermsOfUseJSONEncoder extends AbstractJSONEntityEncoder<TermsOfUse> {
@@ -60,7 +60,8 @@ public class TermsOfUseJSONEncoder extends AbstractJSONEntityEncoder<TermsOfUse>
         for (TermsOfUseInstance u : t) {
             sorted.add(u);
         }
-        Collections.sort(sorted, new BaseEntityComparator<TermsOfUseInstance>());
+        Collections.sort(sorted, Collections.reverseOrder(
+        		new BaseEntityComparator<TermsOfUseInstance>()));
         
         for (TermsOfUseInstance u : sorted) {
             termsOfUse.add(termsOfUseEncoder.encodeJSON(u, rights, mediaType));

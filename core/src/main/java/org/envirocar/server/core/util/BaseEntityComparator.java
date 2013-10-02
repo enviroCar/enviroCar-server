@@ -20,6 +20,10 @@ import java.util.Comparator;
 
 import org.envirocar.server.core.entities.BaseEntity;
 
+/**
+ * @author Matthes Rieke
+ *
+ */
 public class BaseEntityComparator<T extends BaseEntity> implements Comparator<BaseEntity> {
 
 	@Override

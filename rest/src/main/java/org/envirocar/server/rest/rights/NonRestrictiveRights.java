@@ -20,6 +20,7 @@ import org.envirocar.server.core.entities.Group;
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.Phenomenon;
 import org.envirocar.server.core.entities.Sensor;
+import org.envirocar.server.core.entities.TermsOfUseInstance;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.entities.User;
 
@@ -416,6 +417,11 @@ public class NonRestrictiveRights implements AccessRights {
 
 	@Override
 	public boolean canSeeTermsOfUse() {
+		return true;
+	}
+
+	@Override
+	public boolean canSee(TermsOfUseInstance t) {
 		return true;
 	}
 }

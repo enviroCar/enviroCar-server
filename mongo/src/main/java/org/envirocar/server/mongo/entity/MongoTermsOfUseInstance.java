@@ -16,6 +16,7 @@
  */
 package org.envirocar.server.mongo.entity;
 
+import org.bson.types.ObjectId;
 import org.envirocar.server.core.entities.TermsOfUseInstance;
 
 import com.github.jmkgreen.morphia.annotations.Entity;
@@ -29,21 +30,35 @@ public class MongoTermsOfUseInstance extends MongoEntityBase implements TermsOfU
 
 	public static final String NAME = Mapper.ID_KEY;
 	public static final String CONTENTS = "contents";
+	public static final String DATE_STRING = "issuedDate";
 
 	@Id
-	private String dateString;
+	 private ObjectId id = new ObjectId();
+	
+	@Property(DATE_STRING)
+	private String issuedDate;
 
 	@Property(CONTENTS)
 	private String contents;
 
+    @Override
+    public String getIdentifier() {
+        return this.id == null ? null : this.id.toString();
+    }
+
+    @Override
+    public void setIdentifier(String id) {
+        this.id = id == null ? null : new ObjectId(id);
+    }
+
 	@Override
 	public String getIssuedDate() {
-		return this.dateString;
+		return this.issuedDate;
 	}
 
 	@Override
 	public void setIssuedDate(String ds) {
-		this.dateString = ds;
+		this.issuedDate = ds;
 	}
 
 	@Override
@@ -58,7 +73,7 @@ public class MongoTermsOfUseInstance extends MongoEntityBase implements TermsOfU
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(this.dateString);
+		return Objects.hashCode(this.issuedDate);
 	}
 
 	@Override
@@ -70,7 +85,7 @@ public class MongoTermsOfUseInstance extends MongoEntityBase implements TermsOfU
 			return false;
 		}
 		final MongoTermsOfUseInstance other = (MongoTermsOfUseInstance) obj;
-		return Objects.equal(this.dateString, other.dateString);
+		return Objects.equal(this.issuedDate, other.issuedDate);
 	}
 
 }

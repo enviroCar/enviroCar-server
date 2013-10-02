@@ -16,8 +16,12 @@
  */
 package org.envirocar.server.rest.rights;
 
+import org.envirocar.server.core.entities.TermsOfUseInstance;
+
 public interface TermsOfUseRights {
 
 	boolean canSeeTermsOfUse();
+	
+	boolean canSee(TermsOfUseInstance t);
 	
 }

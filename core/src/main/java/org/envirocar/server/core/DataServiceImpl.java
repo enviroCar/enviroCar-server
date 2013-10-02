@@ -30,6 +30,7 @@ import org.envirocar.server.core.entities.Phenomenons;
 import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.core.entities.Sensors;
 import org.envirocar.server.core.entities.TermsOfUse;
+import org.envirocar.server.core.entities.TermsOfUseInstance;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.entities.Tracks;
 import org.envirocar.server.core.event.ChangedTrackEvent;
@@ -42,6 +43,7 @@ import org.envirocar.server.core.event.DeletedTrackEvent;
 import org.envirocar.server.core.exception.IllegalModificationException;
 import org.envirocar.server.core.exception.MeasurementNotFoundException;
 import org.envirocar.server.core.exception.PhenomenonNotFoundException;
+import org.envirocar.server.core.exception.ResourceNotFoundException;
 import org.envirocar.server.core.exception.SensorNotFoundException;
 import org.envirocar.server.core.exception.TrackNotFoundException;
 import org.envirocar.server.core.exception.ValidationException;
@@ -250,5 +252,15 @@ public class DataServiceImpl implements DataService {
 	@Override
 	public TermsOfUse getTermsOfUse(Pagination p) {
 		return this.termsOfUseDao.get(p);
+	}
+
+	@Override
+	public TermsOfUseInstance getTermsOfUseInstance(String id)
+			throws ResourceNotFoundException {
+		TermsOfUseInstance result = this.termsOfUseDao.getById(id);
+		if (result == null) {
+			throw new ResourceNotFoundException(String.format("TermsOfUse with id '%s' not found.", id));
+		}
+		return result;
 	}
 }

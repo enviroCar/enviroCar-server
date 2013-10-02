@@ -26,5 +26,9 @@ public interface TermsOfUseInstance extends BaseEntity {
 	String getContents();
 	
 	void setContents(String c);
+
+	String getIdentifier();
+	
+	void setIdentifier(String id);
 	
 }

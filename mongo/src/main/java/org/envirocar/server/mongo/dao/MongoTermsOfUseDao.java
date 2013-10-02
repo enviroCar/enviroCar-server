@@ -16,15 +16,21 @@
  */
 package org.envirocar.server.mongo.dao;
 
+import org.bson.types.ObjectId;
 import org.envirocar.server.core.dao.TermsOfUseDao;
 import org.envirocar.server.core.entities.TermsOfUse;
+import org.envirocar.server.core.entities.TermsOfUseInstance;
 import org.envirocar.server.core.util.Pagination;
 import org.envirocar.server.mongo.MongoDB;
 import org.envirocar.server.mongo.entity.MongoTermsOfUseInstance;
 
 import com.google.inject.Inject;
 
-public class MongoTermsOfUseDao extends AbstractMongoDao<String, MongoTermsOfUseInstance, TermsOfUse> 
+/**
+ * @author matthes rieke
+ *
+ */
+public class MongoTermsOfUseDao extends AbstractMongoDao<ObjectId, MongoTermsOfUseInstance, TermsOfUse> 
 	implements TermsOfUseDao {
 
 	@Inject
@@ -41,6 +47,17 @@ public class MongoTermsOfUseDao extends AbstractMongoDao<String, MongoTermsOfUse
 	protected TermsOfUse createPaginatedIterable(
 			Iterable<MongoTermsOfUseInstance> i, Pagination p, long count) {
 		return TermsOfUse.from(i).withPagination(p).withElements(count).build();
+	}
+
+	@Override
+	public TermsOfUseInstance getById(String id) {
+        ObjectId oid;
+        try {
+            oid = new ObjectId(id);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+        return super.get(oid);
 	}
 
 }

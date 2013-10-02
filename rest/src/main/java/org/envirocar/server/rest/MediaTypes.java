@@ -113,4 +113,7 @@ public interface MediaTypes {
     String TERMS_OF_USE = "application/json; schema=\"" +
             Schemas.TERMS_OF_USE + "\"";
     MediaType TERMS_OF_USE_TYPE = MediaType.valueOf(TERMS_OF_USE);
+	String TERMS_OF_USE_INSTANCE = "application/json; schema=\"" +
+            Schemas.TERMS_OF_USE_INSTANCE + "\"";
+	MediaType TERMS_OF_USE_INSTANCE_TYPE = MediaType.valueOf(TERMS_OF_USE_INSTANCE);
 }
