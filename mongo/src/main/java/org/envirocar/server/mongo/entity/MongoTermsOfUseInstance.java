@@ -72,4 +72,5 @@ public class MongoTermsOfUseInstance extends MongoEntityBase implements TermsOfU
 		final MongoTermsOfUseInstance other = (MongoTermsOfUseInstance) obj;
 		return Objects.equal(this.dateString, other.dateString);
 	}
+
 }
