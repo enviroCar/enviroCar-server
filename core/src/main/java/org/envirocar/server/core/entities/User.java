@@ -106,4 +106,8 @@ public interface User extends BaseEntity {
     void setAboutMe(String aboutMe);
 
     boolean hasAboutMe();
+
+	void setAcceptedTermsOfUseVersion(String tou);
+
+	String getAcceptedTermsOfUseVersion();
 }

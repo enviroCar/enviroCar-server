@@ -54,6 +54,7 @@ public class MongoUser extends MongoEntityBase implements User {
     public static final String GENDER = "gender";
     public static final String LANGUAGE = "lang";
     public static final String BADGES = "badges";
+    public static final String ACCEPTED_TERMS_OF_USE = "acceptedTermsOfUseVersion";
 
     @Property(TOKEN)
     private String token;
@@ -86,6 +87,8 @@ public class MongoUser extends MongoEntityBase implements User {
     private String language;
     @Property(BADGES)
     private Set<String> badges;
+    @Property(ACCEPTED_TERMS_OF_USE)
+    private String acceptedTermsOfUseVersion;
 
     public MongoUser(String name) {
         this.name = name;
@@ -323,4 +326,15 @@ public class MongoUser extends MongoEntityBase implements User {
     public boolean hasBadges() {
         return this.badges != null && !this.badges.isEmpty();
     }
+
+    @Override
+	public String getAcceptedTermsOfUseVersion() {
+		return acceptedTermsOfUseVersion;
+	}
+
+    @Override
+	public void setAcceptedTermsOfUseVersion(String tou) {
+		this.acceptedTermsOfUseVersion = tou;
+	}
+    
 }

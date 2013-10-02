@@ -103,6 +103,9 @@ public class UserJSONEncoder extends AbstractJSONEntityEncoder<User> {
                 badges.add(badge);
             }
         }
+        if (t.getAcceptedTermsOfUseVersion() != null) {
+        	j.put(JSONConstants.ACCEPTED_TERMS_OF_USE_VERSION_KEY, t.getAcceptedTermsOfUseVersion());
+        }
         return j;
     }
 }
