@@ -110,4 +110,10 @@ public interface MediaTypes {
     MediaType TURTLE_ALT_TYPE = MediaType.valueOf(TURTLE_ALT);
     String IMAGE_JPEG = "image/jpeg";
     MediaType IMAGE_JPEG_TYPE = MediaType.valueOf(IMAGE_JPEG);
+    String TERMS_OF_USE = "application/json; schema=\"" +
+            Schemas.TERMS_OF_USE + "\"";
+    MediaType TERMS_OF_USE_TYPE = MediaType.valueOf(TERMS_OF_USE);
+	String TERMS_OF_USE_INSTANCE = "application/json; schema=\"" +
+            Schemas.TERMS_OF_USE_INSTANCE + "\"";
+	MediaType TERMS_OF_USE_INSTANCE_TYPE = MediaType.valueOf(TERMS_OF_USE_INSTANCE);
 }

@@ -22,6 +22,7 @@ import org.envirocar.server.core.entities.Group;
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.Phenomenon;
 import org.envirocar.server.core.entities.Sensor;
+import org.envirocar.server.core.entities.TermsOfUseInstance;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.entities.User;
 
@@ -92,4 +93,8 @@ public interface ResourceFactory {
     AvatarResource createAvatarResource(User user);
 
     FriendsActivitiesResource createFriendActivitiesResource(User user);
+
+	TermsOfUseResource createTermsOfUseResource();
+
+	TermsOfUseInstanceResource createTermsOfUseInstanceResource(TermsOfUseInstance t);
 }

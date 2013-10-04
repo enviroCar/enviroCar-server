@@ -14,23 +14,16 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.rest.rights;
+package org.envirocar.server.core.dao;
 
-import org.envirocar.server.core.entities.User;
+import org.envirocar.server.core.entities.TermsOfUse;
+import org.envirocar.server.core.entities.TermsOfUseInstance;
+import org.envirocar.server.core.util.Pagination;
 
-/**
- * TODO JavaDoc
- *
- * @author Christian Autermann <autermann@uni-muenster.de>
- */
-public interface AccessRights extends UserRights,
-                                      TrackRights,
-                                      MeasurementRights,
-                                      GroupRights,
-                                      SensorRights,
-                                      PhenomenonRights,
-                                      TermsOfUseRights {
-    boolean isSelf(User user);
+public interface TermsOfUseDao {
 
-    boolean canSeeStatistics();
+	TermsOfUse get(Pagination p);
+
+	TermsOfUseInstance getById(String id);
+
 }
