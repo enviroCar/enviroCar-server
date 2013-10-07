@@ -78,7 +78,7 @@ public class UserResource extends AbstractResource {
             UserNotFoundException, IllegalModificationException,
             ValidationException, ResourceAlreadyExistException {
         checkRights(getRights().canModify(user));
-        checkMail(user);
+//        checkMail(user);
         User modified = getUserService().modifyUser(user, changes);
         if (modified.getName().equals(user.getName())) {
             return Response.noContent().build();
