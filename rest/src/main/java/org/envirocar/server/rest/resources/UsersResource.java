@@ -65,7 +65,7 @@ public class UsersResource extends AbstractResource {
     @Consumes({ MediaTypes.USER_CREATE })
     public Response create(User user) throws ValidationException,
                                              ResourceAlreadyExistException {
-        checkMail(user);
+//        checkMail(user);
         return Response.created(
                 getUriInfo().getAbsolutePathBuilder()
                 .path(getUserService().createUser(user).getName())
