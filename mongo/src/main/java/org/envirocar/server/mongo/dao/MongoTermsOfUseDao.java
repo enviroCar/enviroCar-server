@@ -23,6 +23,7 @@ import org.envirocar.server.core.entities.TermsOfUseInstance;
 import org.envirocar.server.core.util.Pagination;
 import org.envirocar.server.mongo.MongoDB;
 import org.envirocar.server.mongo.entity.MongoTermsOfUseInstance;
+import org.envirocar.server.mongo.util.MongoUtils;
 
 import com.google.inject.Inject;
 
@@ -40,7 +41,7 @@ public class MongoTermsOfUseDao extends AbstractMongoDao<ObjectId, MongoTermsOfU
 
 	@Override
 	public TermsOfUse get(Pagination p) {
-		return fetch(q(), p);
+		return fetch(q().order(MongoUtils.reverse(MongoTermsOfUseInstance.CREATION_DATE)), p);
 	}
 
 	@Override

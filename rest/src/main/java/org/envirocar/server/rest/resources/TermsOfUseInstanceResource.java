@@ -20,7 +20,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Produces;
 
 import org.envirocar.server.core.entities.TermsOfUseInstance;
-import org.envirocar.server.core.exception.TrackNotFoundException;
+import org.envirocar.server.core.exception.ResourceNotFoundException;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.validation.Schema;
@@ -45,7 +45,7 @@ public class TermsOfUseInstanceResource extends AbstractResource {
     @GET
     @Schema(response = Schemas.TERMS_OF_USE_INSTANCE)
     @Produces({ MediaTypes.TERMS_OF_USE_INSTANCE })
-    public TermsOfUseInstance get() throws TrackNotFoundException {
+    public TermsOfUseInstance get() throws ResourceNotFoundException {
         return termsOfUseInstance;
     }
     
