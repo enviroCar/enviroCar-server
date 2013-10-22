@@ -20,15 +20,15 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.inject.Inject;
-
 import org.envirocar.server.rest.JSONConstants;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.validation.Schema;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.inject.Inject;
 
 /**
  * TODO JavaDoc
@@ -46,6 +46,7 @@ public class RootResource extends AbstractResource {
     public static final String MEASUREMENTS = "measurements";
     public static final String STATISTICS = "statistics";
 	public static final String TERMS_OF_USE = "termsOfUse";
+    public static final String SCHEMA = "schema";
     @Inject
     private JsonNodeFactory factory;
 
@@ -93,6 +94,11 @@ public class RootResource extends AbstractResource {
             root.put(JSONConstants.TERMS_OF_USE_KEY, getUriInfo()
                     .getAbsolutePathBuilder()
                     .path(TERMS_OF_USE).build().toString());
+        }
+        if (getRights().canSeeSchema()) {
+            root.put(JSONConstants.SCHEMA, getUriInfo()
+                    .getAbsolutePathBuilder()
+                    .path(SCHEMA).build().toString());
         }
         return root;
     }
@@ -142,5 +148,11 @@ public class RootResource extends AbstractResource {
     public TermsOfUseResource termsOfUse() {
         checkRights(getRights().canSeeTermsOfUse());
         return getResourceFactory().createTermsOfUseResource();
+    }
+
+    @Path(SCHEMA)
+    public JSONSchemaResource schemas() {
+        checkRights(getRights().canSeeSchema());
+        return getResourceFactory().createSchemaResource();
     }
 }

@@ -430,4 +430,9 @@ public class AccessRightsImpl extends AbstractAccessRights {
 	public boolean canSee(TermsOfUseInstance t) {
 		return true;
 	}
+
+    @Override
+    public boolean canSeeSchema() {
+        return true;
+    }
 }

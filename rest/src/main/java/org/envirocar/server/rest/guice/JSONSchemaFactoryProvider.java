@@ -16,11 +16,12 @@
  */
 package org.envirocar.server.rest.guice;
 
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.github.fge.jsonschema.SchemaVersion;
 import com.github.fge.jsonschema.cfg.LoadingConfiguration;
 import com.github.fge.jsonschema.cfg.LoadingConfigurationBuilder;
@@ -32,7 +33,7 @@ import com.github.fge.jsonschema.library.DraftV4Library;
 import com.github.fge.jsonschema.library.Library;
 import com.github.fge.jsonschema.main.JsonSchemaFactory;
 import com.github.fge.jsonschema.ref.JsonRef;
-import com.github.fge.jsonschema.util.JsonLoader;
+import com.google.common.cache.LoadingCache;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.ProvisionException;
@@ -45,11 +46,14 @@ import com.google.inject.name.Named;
  */
 public class JSONSchemaFactoryProvider implements Provider<JsonSchemaFactory> {
     public static final String SCHEMAS = "schemas";
-    private Set<String> schemas;
+    private final LoadingCache<String, JsonNode> cache;
+    private final Set<String> schemas;
 
     @Inject
-    public JSONSchemaFactoryProvider(@Named(SCHEMAS) Set<String> schemaResources) {
+    public JSONSchemaFactoryProvider(@Named(SCHEMAS) Set<String> schemaResources,
+                                     LoadingCache<String, JsonNode> cache) {
         this.schemas = schemaResources;
+        this.cache = cache;
     }
 
     @Override
@@ -64,10 +68,10 @@ public class JSONSchemaFactoryProvider implements Provider<JsonSchemaFactory> {
         LoadingConfigurationBuilder cfgb = LoadingConfiguration.newBuilder();
         for (String schema : schemas) {
             try {
-                cfgb.preloadSchema(JsonLoader.fromResource(schema));
-            } catch (IOException ex) {
-                throw new ProvisionException("Error loading " + schema, ex);
+                cfgb.preloadSchema(cache.get(schema));
             } catch (ProcessingError ex) {
+                throw new ProvisionException("Error loading " + schema, ex);
+            } catch (ExecutionException ex) {
                 throw new ProvisionException("Error loading " + schema, ex);
             }
         }
