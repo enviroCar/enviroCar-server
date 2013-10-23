@@ -155,4 +155,9 @@ public class RootResource extends AbstractResource {
         checkRights(getRights().canSeeSchema());
         return getResourceFactory().createSchemaResource();
     }
+
+    @Path("rest")
+    public RootResource redirect() {
+        return this;
+    }
 }
