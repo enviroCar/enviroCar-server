@@ -94,7 +94,10 @@ public interface ResourceFactory {
 
     FriendsActivitiesResource createFriendActivitiesResource(User user);
 
-	TermsOfUseResource createTermsOfUseResource();
+    TermsOfUseResource createTermsOfUseResource();
 
-	TermsOfUseInstanceResource createTermsOfUseInstanceResource(TermsOfUseInstance t);
+    TermsOfUseInstanceResource createTermsOfUseInstanceResource(
+            TermsOfUseInstance t);
+
+    JSONSchemaResource createSchemaResource();
 }

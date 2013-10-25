@@ -424,4 +424,9 @@ public class NonRestrictiveRights implements AccessRights {
 	public boolean canSee(TermsOfUseInstance t) {
 		return true;
 	}
+
+    @Override
+    public boolean canSeeSchema() {
+        return true;
+    }
 }
