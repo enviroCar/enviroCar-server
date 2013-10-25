@@ -54,7 +54,12 @@ public class MongoUser extends MongoEntityBase implements User {
     public static final String GENDER = "gender";
     public static final String LANGUAGE = "lang";
     public static final String BADGES = "badges";
+    /**
+     * @deprecated use {@link #TERMS_OF_USE_VERSION} instead. kept for backwards compatibility
+     */
+    @Deprecated
     public static final String ACCEPTED_TERMS_OF_USE = "acceptedTermsOfUseVersion";
+    public static final String TERMS_OF_USE_VERSION = "touVersion";
 
     @Property(TOKEN)
     private String token;
@@ -87,9 +92,15 @@ public class MongoUser extends MongoEntityBase implements User {
     private String language;
     @Property(BADGES)
     private Set<String> badges;
+    /**
+     * @deprecated use {@link #termsOfUseVersion} instead. kept for backwards compatibility
+     */
+    @Deprecated
     @Property(ACCEPTED_TERMS_OF_USE)
     private String acceptedTermsOfUseVersion;
-
+    @Property(TERMS_OF_USE_VERSION)
+    private String termsOfUseVersion;
+    
     public MongoUser(String name) {
         this.name = name;
     }
@@ -328,13 +339,19 @@ public class MongoUser extends MongoEntityBase implements User {
     }
 
     @Override
-	public String getAcceptedTermsOfUseVersion() {
-		return acceptedTermsOfUseVersion;
+	public String getTermsOfUseVersion() {
+    	//acceptedTermsOfUseVersion kept for backwards compatibility with older users
+		return termsOfUseVersion != null ? termsOfUseVersion : acceptedTermsOfUseVersion;
 	}
 
     @Override
-	public void setAcceptedTermsOfUseVersion(String tou) {
-		this.acceptedTermsOfUseVersion = tou;
+	public void setTermsOfUseVersion(String tou) {
+		this.termsOfUseVersion = tou;
+	}
+
+	@Override
+	public boolean hasAcceptedTermsOfUseVersion() {
+		return getTermsOfUseVersion() != null && !getTermsOfUseVersion().isEmpty();
 	}
     
 }

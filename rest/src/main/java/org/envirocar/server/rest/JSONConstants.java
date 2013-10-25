@@ -78,7 +78,13 @@ public interface JSONConstants {
     String MALE = "m";
     String FEMALE = "f";
     String TERMS_OF_USE_KEY = "termsOfUse";
+    
+    /**
+     * @deprecated use {@link #TOU_VERSION_KEY} instead. kept for backwards compatibility
+     */
+    @Deprecated
     String ACCEPTED_TERMS_OF_USE_VERSION_KEY = "acceptedTermsOfUseVersion";
+    
 	String APP_VERSION_KEY = "appVersion";
 	String OBD_DEVICE_KEY = "obdDevice";
 	String TOU_VERSION_KEY = "touVersion";
