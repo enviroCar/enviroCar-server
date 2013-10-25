@@ -33,4 +33,6 @@ public interface AccessRights extends UserRights,
     boolean isSelf(User user);
 
     boolean canSeeStatistics();
+
+    boolean canSeeSchema();
 }

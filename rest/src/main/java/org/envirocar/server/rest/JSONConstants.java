@@ -78,5 +78,6 @@ public interface JSONConstants {
     String MALE = "m";
     String FEMALE = "f";
     String TERMS_OF_USE_KEY = "termsOfUse";
-	String ACCEPTED_TERMS_OF_USE_VERSION_KEY = "acceptedTermsOfUseVersion";
+    String ACCEPTED_TERMS_OF_USE_VERSION_KEY = "acceptedTermsOfUseVersion";
+    String SCHEMA = "schema";
 }
