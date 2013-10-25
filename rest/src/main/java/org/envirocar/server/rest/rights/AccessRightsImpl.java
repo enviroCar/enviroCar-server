@@ -430,4 +430,21 @@ public class AccessRightsImpl extends AbstractAccessRights {
 	public boolean canSee(TermsOfUseInstance t) {
 		return true;
 	}
+
+	@Override
+	public boolean canSeeAppVersionOf(Track track) {
+		return true;
+	}
+
+	@Override
+	public boolean canSeeObdDeviceOf(Track track) {
+		//TODO re-visit regarding privacy
+		return true;
+	}
+
+	@Override
+	public boolean canSeeTouVersionOf(Track track) {
+		//TODO re-visit regarding privacy
+		return true;
+	}
 }
