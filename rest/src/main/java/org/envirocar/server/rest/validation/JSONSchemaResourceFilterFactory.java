@@ -32,6 +32,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response.Status;
 
+import org.envirocar.server.core.exception.ValidationException;
+import org.envirocar.server.rest.JSONConstants;
+import org.envirocar.server.rest.MediaTypes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,10 +64,6 @@ import com.sun.jersey.spi.container.ContainerResponseFilter;
 import com.sun.jersey.spi.container.ContainerResponseWriter;
 import com.sun.jersey.spi.container.ResourceFilter;
 import com.sun.jersey.spi.container.ResourceFilterFactory;
-
-import org.envirocar.server.core.exception.ValidationException;
-import org.envirocar.server.rest.JSONConstants;
-import org.envirocar.server.rest.MediaTypes;
 
 /**
  * TODO JavaDoc
@@ -232,7 +231,7 @@ public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
     }
 
     private class JSONSchemaResponseFilter implements ContainerResponseFilter {
-        private String schema;
+        private final String schema;
 
         JSONSchemaResponseFilter(String schema) {
             this.schema = schema;
@@ -244,7 +243,7 @@ public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
             MediaType mt = response.getMediaType();
             if (mt != null && mt.isCompatible(MediaType.APPLICATION_JSON_TYPE)) {
                 adjustContentType(response);
-                if (request.getMethod().equals(HttpMethod.HEAD)) {
+                if (!request.getMethod().equals(HttpMethod.HEAD)) {
                     ContainerResponseWriter crw = response
                             .getContainerResponseWriter();
                     ContainerResponseWriter vcrw =
@@ -276,7 +275,7 @@ public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
         private ByteArrayOutputStream baos;
         private OutputStream crwout;
         private MediaType mediaType;
-        private String schema;
+        private final String schema;
         private MultivaluedMap<String, Object> httpHeaders;
 
         ValidatingWriter(ContainerResponseWriter crw, String schema) {
