@@ -16,7 +16,7 @@
  */
 package org.envirocar.server;
 
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
@@ -31,7 +31,7 @@ import com.sun.jersey.api.client.ClientResponse;
 public class UsersResourceTest extends ResourceTestBase {
     @Test
     public void testGetUsers() {
-        assertThat(resource().path("/rest/users")
+        assertThat(resource().path("/users")
                 .get(ClientResponse.class).getStatus(), is(403));
 //        ClientResponse response = resource()
 //                .path("/rest/users")
@@ -54,13 +54,13 @@ public class UsersResourceTest extends ResourceTestBase {
 
     @Test
     public void testPutUsers() {
-        assertThat(resource().path("/rest/users")
+        assertThat(resource().path("/users")
                 .put(ClientResponse.class).getStatus(), is(405));
     }
 
     @Test
     public void testDeleteUsers() {
-        assertThat(resource().path("/rest/users")
+        assertThat(resource().path("/users")
                 .delete(ClientResponse.class).getStatus(), is(405));
     }
 }

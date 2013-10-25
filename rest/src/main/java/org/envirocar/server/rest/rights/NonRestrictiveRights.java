@@ -425,6 +425,11 @@ public class NonRestrictiveRights implements AccessRights {
 		return true;
 	}
 
+    @Override
+    public boolean canSeeSchema() {
+        return true;
+    }
+    
 	@Override
 	public boolean canSeeAppVersionOf(Track track) {
 		return true;

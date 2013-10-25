@@ -431,6 +431,11 @@ public class AccessRightsImpl extends AbstractAccessRights {
 		return true;
 	}
 
+    @Override
+    public boolean canSeeSchema() {
+        return true;
+    }
+
 	@Override
 	public boolean canSeeAppVersionOf(Track track) {
 		return true;
