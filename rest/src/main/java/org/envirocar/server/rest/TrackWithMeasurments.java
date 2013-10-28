@@ -207,4 +207,49 @@ public class TrackWithMeasurments implements Track, Iterable<Measurement> {
     public boolean hasEnd() {
         return track.hasEnd();
     }
+
+	@Override
+	public void setTouVersion(String touVersion) {
+		track.setTouVersion(touVersion);
+	}
+
+	@Override
+	public String getTouVersion() {
+		return track.getTouVersion();
+	}
+
+	@Override
+	public void setObdDevice(String obdDevice) {
+		track.setObdDevice(obdDevice);
+	}
+
+	@Override
+	public String getObdDevice() {
+		return track.getObdDevice();
+	}
+
+	@Override
+	public void setAppVersion(String appVersion) {
+		track.setAppVersion(appVersion);
+	}
+
+	@Override
+	public String getAppVersion() {
+		return track.getAppVersion();
+	}
+
+	@Override
+	public boolean hasAppVersion() {
+		return track.hasAppVersion();
+	}
+
+	@Override
+	public boolean hasObdDevice() {
+		return track.hasObdDevice();
+	}
+
+	@Override
+	public boolean hasTouVersion() {
+		return track.hasTouVersion();
+	}
 }

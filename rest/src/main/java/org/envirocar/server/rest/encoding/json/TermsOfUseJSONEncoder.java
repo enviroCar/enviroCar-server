@@ -16,16 +16,12 @@
  */
 package org.envirocar.server.rest.encoding.json;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
 import org.envirocar.server.core.entities.TermsOfUseInstance;
 import org.envirocar.server.core.entities.TermsOfUse;
-import org.envirocar.server.core.util.BaseEntityComparator;
 import org.envirocar.server.rest.JSONConstants;
 import org.envirocar.server.rest.encoding.JSONEntityEncoder;
 import org.envirocar.server.rest.rights.AccessRights;
@@ -56,14 +52,7 @@ public class TermsOfUseJSONEncoder extends AbstractJSONEntityEncoder<TermsOfUse>
         ObjectNode root = getJsonFactory().objectNode();
         ArrayNode termsOfUse = root.putArray(JSONConstants.TERMS_OF_USE_KEY);
         
-        List<TermsOfUseInstance> sorted = new ArrayList<TermsOfUseInstance>();
         for (TermsOfUseInstance u : t) {
-            sorted.add(u);
-        }
-        Collections.sort(sorted, Collections.reverseOrder(
-        		new BaseEntityComparator<TermsOfUseInstance>()));
-        
-        for (TermsOfUseInstance u : sorted) {
             termsOfUse.add(termsOfUseEncoder.encodeJSON(u, rights, mediaType));
         }
         return root;

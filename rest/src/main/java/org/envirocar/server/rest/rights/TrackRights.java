@@ -47,4 +47,10 @@ public interface TrackRights {
     boolean canDelete(Track track);
 
     boolean canSeeStatisticsOf(Track track);
+    
+    boolean canSeeAppVersionOf(Track track);
+    
+    boolean canSeeObdDeviceOf(Track track);
+    
+    boolean canSeeTouVersionOf(Track track);
 }

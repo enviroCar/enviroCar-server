@@ -65,6 +65,12 @@ public class TrackDecoder extends AbstractJSONEntityDecoder<Track> {
             track.setName(p.path(JSONConstants.NAME_KEY).textValue());
             track.setDescription(p.path(JSONConstants.DESCRIPTION_KEY)
                     .textValue());
+            track.setAppVersion(p.path(JSONConstants.APP_VERSION_KEY)
+                    .textValue());
+            track.setObdDevice(p.path(JSONConstants.OBD_DEVICE_KEY)
+                    .textValue());
+            track.setTouVersion(p.path(JSONConstants.TOU_VERSION_KEY)
+                    .textValue());
         }
 
         if (!j.path(GeoJSONConstants.FEATURES_KEY).isMissingNode()) {
