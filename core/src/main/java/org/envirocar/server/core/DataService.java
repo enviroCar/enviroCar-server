@@ -18,6 +18,8 @@ package org.envirocar.server.core;
 
 import java.util.List;
 
+import org.envirocar.server.core.entities.Announcement;
+import org.envirocar.server.core.entities.Announcements;
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.Measurements;
 import org.envirocar.server.core.entities.Phenomenon;
@@ -91,4 +93,8 @@ public interface DataService {
 	TermsOfUse getTermsOfUse(Pagination pagination);
 
 	TermsOfUseInstance getTermsOfUseInstance(String id) throws ResourceNotFoundException;
+	
+	Announcements getAnnouncements(Pagination pagination);
+
+	Announcement getAnnouncement(String id) throws ResourceNotFoundException;
 }

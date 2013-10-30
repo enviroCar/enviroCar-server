@@ -18,11 +18,14 @@ package org.envirocar.server.core;
 
 import java.util.List;
 
+import org.envirocar.server.core.dao.AnnouncementsDao;
 import org.envirocar.server.core.dao.MeasurementDao;
 import org.envirocar.server.core.dao.PhenomenonDao;
 import org.envirocar.server.core.dao.SensorDao;
 import org.envirocar.server.core.dao.TermsOfUseDao;
 import org.envirocar.server.core.dao.TrackDao;
+import org.envirocar.server.core.entities.Announcement;
+import org.envirocar.server.core.entities.Announcements;
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.Measurements;
 import org.envirocar.server.core.entities.Phenomenon;
@@ -76,11 +79,13 @@ public class DataServiceImpl implements DataService {
     private final EntityUpdater<Measurement> measurementUpdater;
     private final EntityValidator<Measurement> measurementValidator;
     private final EventBus eventBus;
+	private final AnnouncementsDao announcementsDao;
 
     @Inject
     public DataServiceImpl(TrackDao trackDao, MeasurementDao measurementDao,
                            SensorDao sensorDao, PhenomenonDao phenomenonDao,
                            TermsOfUseDao termsOfUseDao,
+                           AnnouncementsDao announcementsDao,
                            EntityValidator<Track> trackValidator,
                            EntityUpdater<Track> trackUpdater,
                            EntityUpdater<Measurement> measurementUpdater,
@@ -96,6 +101,7 @@ public class DataServiceImpl implements DataService {
         this.measurementValidator = measurementValidator;
         this.eventBus = eventBus;
         this.termsOfUseDao = termsOfUseDao;
+        this.announcementsDao = announcementsDao;
     }
 
     @Override
@@ -260,6 +266,21 @@ public class DataServiceImpl implements DataService {
 		TermsOfUseInstance result = this.termsOfUseDao.getById(id);
 		if (result == null) {
 			throw new ResourceNotFoundException(String.format("TermsOfUse with id '%s' not found.", id));
+		}
+		return result;
+	}
+
+	@Override
+	public Announcements getAnnouncements(Pagination pagination) {
+		return this.announcementsDao.get(pagination);
+	}
+
+	@Override
+	public Announcement getAnnouncement(String id)
+			throws ResourceNotFoundException {
+		Announcement result = this.announcementsDao.getById(id);
+		if (result == null) {
+			throw new ResourceNotFoundException(String.format("Announcement with id '%s' not found.", id));
 		}
 		return result;
 	}
