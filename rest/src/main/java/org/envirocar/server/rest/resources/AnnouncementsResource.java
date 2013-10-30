@@ -25,12 +25,13 @@ import org.envirocar.server.core.entities.Announcements;
 import org.envirocar.server.core.util.Pagination;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.RESTConstants;
+import org.envirocar.server.rest.Schemas;
+import org.envirocar.server.rest.validation.Schema;
 
 public class AnnouncementsResource extends AbstractResource {
 
 	@GET
-    //FIXME create a schema for Announcements
-    //@Schema(response = Schemas.ANNOUNCEMENTS)
+    @Schema(response = Schemas.ANNOUNCEMENTS)
     @Produces({ MediaTypes.ANNOUNCEMENTS })
     public Announcements get(
             @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit,

@@ -119,4 +119,7 @@ public interface MediaTypes {
 	String ANNOUNCEMENTS = "application/json; schema=\"" +
             Schemas.ANNOUNCEMENTS + "\"";
     MediaType ANNOUNCEMENTS_TYPE = MediaType.valueOf(ANNOUNCEMENTS);
+    String ANNOUNCEMENT = "application/json; schema=\"" +
+            Schemas.ANNOUNCEMENT + "\"";
+    MediaType ANNOUNCEMENT_TYPE = MediaType.valueOf(ANNOUNCEMENT);
 }
