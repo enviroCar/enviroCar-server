@@ -19,12 +19,12 @@ package org.envirocar.server.rest.encoding.json;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
 import org.envirocar.server.core.entities.TermsOfUseInstance;
 import org.envirocar.server.rest.JSONConstants;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.rights.AccessRights;
+
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
  * TODO JavaDoc
@@ -33,10 +33,8 @@ import org.envirocar.server.rest.rights.AccessRights;
  */
 @Provider
 public class TermsOfUseInstanceJSONEncoder extends AbstractJSONEntityEncoder<TermsOfUseInstance> {
-    private static final String DATE = "issuedDate";
-	private static final String CONTENTS = "contents";
 
-	public TermsOfUseInstanceJSONEncoder() {
+    public TermsOfUseInstanceJSONEncoder() {
         super(TermsOfUseInstance.class);
     }
 
@@ -44,6 +42,12 @@ public class TermsOfUseInstanceJSONEncoder extends AbstractJSONEntityEncoder<Ter
     public ObjectNode encodeJSON(TermsOfUseInstance t, AccessRights rights,
                                  MediaType mediaType) {
         ObjectNode termsOfUse = getJsonFactory().objectNode();
+        if (t.getIdentifier() != null) {
+            termsOfUse.put(JSONConstants.IDENTIFIER_KEY, t.getIdentifier());
+        }
+        if (t.getIssuedDate() != null) {
+            termsOfUse.put(JSONConstants.ISSUED_DATE, t.getIssuedDate());
+        }
         if (mediaType.equals(MediaTypes.TERMS_OF_USE_INSTANCE_TYPE)) {
             if (t.hasCreationTime()) {
                 termsOfUse.put(JSONConstants.CREATED_KEY, getDateTimeFormat()
@@ -53,19 +57,10 @@ public class TermsOfUseInstanceJSONEncoder extends AbstractJSONEntityEncoder<Ter
                 termsOfUse.put(JSONConstants.MODIFIED_KEY, getDateTimeFormat()
                         .print(t.getModificationTime()));
             }
-            if (t.getIssuedDate() != null) {
-            	termsOfUse.put(DATE, t.getIssuedDate());
-            }
+
             if (t.getContents() != null) {
-            	termsOfUse.put(CONTENTS, t.getContents());
+                termsOfUse.put(JSONConstants.CONTENTS, t.getContents());
             }
-        } else {
-        	if (t.getIdentifier() != null) {
-        		termsOfUse.put(JSONConstants.IDENTIFIER_KEY, t.getIdentifier());
-        	}
-        	if (t.getIssuedDate() != null) {
-        		termsOfUse.put(DATE, t.getIssuedDate());
-        	}
         }
         return termsOfUse;
     }

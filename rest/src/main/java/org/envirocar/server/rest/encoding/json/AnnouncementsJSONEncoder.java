@@ -45,7 +45,7 @@ public class AnnouncementsJSONEncoder extends AbstractJSONEntityEncoder<Announce
                                  MediaType mediaType) {
         ObjectNode root = getJsonFactory().objectNode();
         ArrayNode annos = root.putArray(JSONConstants.ANNOUNCEMENTS_KEY);
-        
+
         for (Announcement u : t) {
             annos.add(announcementEncoder.encodeJSON(u, rights, mediaType));
         }

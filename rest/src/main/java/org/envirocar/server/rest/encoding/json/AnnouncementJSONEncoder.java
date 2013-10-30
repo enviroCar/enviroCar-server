@@ -16,7 +16,7 @@
  */
 package org.envirocar.server.rest.encoding.json;
 
-import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
@@ -29,12 +29,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 @Provider
 public class AnnouncementJSONEncoder extends AbstractJSONEntityEncoder<Announcement> {
-    private static final String VERSIONS = "versions";
-	private static final String CONTENT = "content";
-	private static final String PRIORITY = "priority";
-	private static final String CATEGORY = "category";
 
-	public AnnouncementJSONEncoder() {
+    public AnnouncementJSONEncoder() {
         super(Announcement.class);
     }
 
@@ -54,20 +50,18 @@ public class AnnouncementJSONEncoder extends AbstractJSONEntityEncoder<Announcem
             anno.put(JSONConstants.IDENTIFIER_KEY, a.getIdentifier());
         }
         if (a.getVersions() != null) {
-        	anno.put(VERSIONS, a.getVersions());
+            anno.put(JSONConstants.VERSIONS, a.getVersions());
         }
         if (a.getCategory() != null) {
-        	anno.put(CATEGORY, a.getCategory());
+            anno.put(JSONConstants.CATEGORY, a.getCategory());
         }
         if (a.getPriority() != null) {
-        	anno.put(PRIORITY, a.getPriority());
+            anno.put(JSONConstants.PRIORITY, a.getPriority());
         }
         if (a.getContents() != null) {
-        	ObjectNode values = anno.putObject(CONTENT);
-
-        	Map<String, String> content = a.getContents();
-        	for (String locale : content.keySet()) {
-                    values.putPOJO(locale, content.get(locale));
+            ObjectNode values = anno.putObject(JSONConstants.CONTENT);
+            for (Entry<String, String> e : a.getContents().entrySet()) {
+                values.put(e.getKey(), e.getValue());
             }
         }
         return anno;
