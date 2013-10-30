@@ -47,6 +47,8 @@ public class RootResource extends AbstractResource {
     public static final String STATISTICS = "statistics";
 	public static final String TERMS_OF_USE = "termsOfUse";
     public static final String SCHEMA = "schema";
+    public static final String ANNOUNCEMENTS = "announcements";
+    
     @Inject
     private JsonNodeFactory factory;
 
@@ -99,6 +101,11 @@ public class RootResource extends AbstractResource {
             root.put(JSONConstants.SCHEMA, getUriInfo()
                     .getAbsolutePathBuilder()
                     .path(SCHEMA).build().toString());
+        }
+        if (getRights().canSeeAnnouncements()) {
+            root.put(JSONConstants.ANNOUNCEMENTS_KEY, getUriInfo()
+                    .getAbsolutePathBuilder()
+                    .path(ANNOUNCEMENTS).build().toString());
         }
         return root;
     }
@@ -154,6 +161,12 @@ public class RootResource extends AbstractResource {
     public JSONSchemaResource schemas() {
         checkRights(getRights().canSeeSchema());
         return getResourceFactory().createSchemaResource();
+    }
+    
+    @Path(ANNOUNCEMENTS)
+    public AnnouncementsResource announcements() {
+    	checkRights(getRights().canSeeAnnouncements());
+    	return getResourceFactory().createAnnouncementsResource();
     }
 
     @Path("rest")
