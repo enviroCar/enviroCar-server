@@ -29,14 +29,15 @@ import org.envirocar.server.core.exception.ResourceNotFoundException;
 import org.envirocar.server.core.util.Pagination;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.RESTConstants;
+import org.envirocar.server.rest.Schemas;
+import org.envirocar.server.rest.validation.Schema;
 
 public class TermsOfUseResource extends AbstractResource {
 
     public static final String TERMS_OF_USE_INSTANCE = "{termsOfUse}";
 
 	@GET
-    //FIXME create a schema for terms of use
-    //@Schema(response = Schemas.TERMS_OF_USE)
+    @Schema(response = Schemas.TERMS_OF_USE)
     @Produces({ MediaTypes.TERMS_OF_USE })
     public TermsOfUse get(
             @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit,
