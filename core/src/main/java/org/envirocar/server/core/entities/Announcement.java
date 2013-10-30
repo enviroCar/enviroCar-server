@@ -14,27 +14,30 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.rest.rights;
+package org.envirocar.server.core.entities;
 
-import org.envirocar.server.core.entities.User;
+import java.util.Map;
 
-/**
- * TODO JavaDoc
- *
- * @author Christian Autermann <autermann@uni-muenster.de>
- */
-public interface AccessRights extends UserRights,
-                                      TrackRights,
-                                      MeasurementRights,
-                                      GroupRights,
-                                      SensorRights,
-                                      PhenomenonRights,
-                                      TermsOfUseRights {
-    boolean isSelf(User user);
+public interface Announcement extends BaseEntity {
 
-    boolean canSeeStatistics();
+	String getVersions();
 
-    boolean canSeeSchema();
+	void setVersions(String versions);
 
-	boolean canSeeAnnouncements();
+	Map<String, String> getContents();
+
+	void setContents(Map<String, String> contents);
+
+	String getPriority();
+
+	void setPriority(String priority);
+
+	String getCategory();
+
+	void setCategory(String category);
+
+	String getIdentifier();
+
+	void setIdentifier(String id);
+
 }

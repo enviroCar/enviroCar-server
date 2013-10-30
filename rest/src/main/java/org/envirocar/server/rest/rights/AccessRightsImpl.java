@@ -452,4 +452,9 @@ public class AccessRightsImpl extends AbstractAccessRights {
 		//TODO re-visit regarding privacy
 		return true;
 	}
+
+	@Override
+	public boolean canSeeAnnouncements() {
+		return true;
+	}
 }

@@ -116,4 +116,7 @@ public interface MediaTypes {
 	String TERMS_OF_USE_INSTANCE = "application/json; schema=\"" +
             Schemas.TERMS_OF_USE_INSTANCE + "\"";
 	MediaType TERMS_OF_USE_INSTANCE_TYPE = MediaType.valueOf(TERMS_OF_USE_INSTANCE);
+	String ANNOUNCEMENTS = "application/json; schema=\"" +
+            Schemas.ANNOUNCEMENTS + "\"";
+    MediaType ANNOUNCEMENTS_TYPE = MediaType.valueOf(ANNOUNCEMENTS);
 }

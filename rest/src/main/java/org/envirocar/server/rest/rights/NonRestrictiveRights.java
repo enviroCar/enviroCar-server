@@ -444,4 +444,9 @@ public class NonRestrictiveRights implements AccessRights {
 	public boolean canSeeTouVersionOf(Track track) {
 		return true;
 	}
+
+	@Override
+	public boolean canSeeAnnouncements() {
+		return true;
+	}
 }

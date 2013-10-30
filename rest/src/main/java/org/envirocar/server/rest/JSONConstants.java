@@ -89,4 +89,5 @@ public interface JSONConstants {
 	String OBD_DEVICE_KEY = "obdDevice";
 	String TOU_VERSION_KEY = "touVersion";
 	String SCHEMA = "schema";
+	String ANNOUNCEMENTS_KEY = "announcements";
 }

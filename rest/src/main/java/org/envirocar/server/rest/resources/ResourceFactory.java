@@ -100,4 +100,6 @@ public interface ResourceFactory {
             TermsOfUseInstance t);
 
     JSONSchemaResource createSchemaResource();
+    
+    AnnouncementsResource createAnnouncementsResource();
 }
