@@ -17,19 +17,23 @@
 package org.envirocar.server.mongo.guice;
 
 import org.envirocar.server.core.dao.ActivityDao;
+import org.envirocar.server.core.dao.AnnouncementsDao;
 import org.envirocar.server.core.dao.GroupDao;
 import org.envirocar.server.core.dao.MeasurementDao;
 import org.envirocar.server.core.dao.PhenomenonDao;
 import org.envirocar.server.core.dao.SensorDao;
 import org.envirocar.server.core.dao.StatisticsDao;
+import org.envirocar.server.core.dao.TermsOfUseDao;
 import org.envirocar.server.core.dao.TrackDao;
 import org.envirocar.server.core.dao.UserDao;
 import org.envirocar.server.mongo.dao.MongoActivityDao;
+import org.envirocar.server.mongo.dao.MongoAnnouncementsDao;
 import org.envirocar.server.mongo.dao.MongoGroupDao;
 import org.envirocar.server.mongo.dao.MongoMeasurementDao;
 import org.envirocar.server.mongo.dao.MongoPhenomenonDao;
 import org.envirocar.server.mongo.dao.MongoSensorDao;
 import org.envirocar.server.mongo.dao.MongoStatisticsDao;
+import org.envirocar.server.mongo.dao.MongoTermsOfUseDao;
 import org.envirocar.server.mongo.dao.MongoTrackDao;
 import org.envirocar.server.mongo.dao.MongoUserDao;
 
@@ -51,5 +55,7 @@ public class MongoDaoModule extends AbstractModule {
         bind(StatisticsDao.class).to(MongoStatisticsDao.class);
         bind(PhenomenonDao.class).to(MongoPhenomenonDao.class);
         bind(ActivityDao.class).to(MongoActivityDao.class);
+        bind(TermsOfUseDao.class).to(MongoTermsOfUseDao.class);
+        bind(AnnouncementsDao.class).to(MongoAnnouncementsDao.class);
     }
 }

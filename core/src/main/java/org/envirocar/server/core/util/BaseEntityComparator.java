@@ -14,27 +14,27 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.rest.rights;
+package org.envirocar.server.core.util;
 
-import org.envirocar.server.core.entities.User;
+import java.util.Comparator;
+
+import org.envirocar.server.core.entities.BaseEntity;
 
 /**
- * TODO JavaDoc
+ * @author Matthes Rieke
  *
- * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public interface AccessRights extends UserRights,
-                                      TrackRights,
-                                      MeasurementRights,
-                                      GroupRights,
-                                      SensorRights,
-                                      PhenomenonRights,
-                                      TermsOfUseRights {
-    boolean isSelf(User user);
+public class BaseEntityComparator<T extends BaseEntity> implements Comparator<BaseEntity> {
 
-    boolean canSeeStatistics();
+	@Override
+	public int compare(BaseEntity o1, BaseEntity o2) {
+		if (o1.getCreationTime() == null && o2.getCreationTime() == null) return 0;
+		
+		if (o1.getCreationTime() == null) return -1;
+		
+		if (o2.getCreationTime() == null) return 1;
+		
+		return o1.getCreationTime().compareTo(o2.getCreationTime());
+	}
 
-    boolean canSeeSchema();
-
-	boolean canSeeAnnouncements();
 }

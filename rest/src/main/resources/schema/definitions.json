@@ -54,6 +54,14 @@
                 "items": {
                     "type": "string"
                 }
+            },
+            "acceptedTermsOfUseVersion": {
+            	"type": "string",
+            	"format": "date"
+            },
+            "touVersion": {
+            	"type": "string",
+            	"format": "date"
             }
         }
     },

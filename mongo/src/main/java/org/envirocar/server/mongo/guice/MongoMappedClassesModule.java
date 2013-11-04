@@ -21,6 +21,7 @@ import org.envirocar.server.mongo.activities.MongoActivity;
 import org.envirocar.server.mongo.activities.MongoGroupActivity;
 import org.envirocar.server.mongo.activities.MongoTrackActivity;
 import org.envirocar.server.mongo.activities.MongoUserActivity;
+import org.envirocar.server.mongo.entity.MongoAnnouncement;
 import org.envirocar.server.mongo.entity.MongoGroup;
 import org.envirocar.server.mongo.entity.MongoMeasurement;
 import org.envirocar.server.mongo.entity.MongoPhenomenon;
@@ -28,6 +29,7 @@ import org.envirocar.server.mongo.entity.MongoSensor;
 import org.envirocar.server.mongo.entity.MongoStatistic;
 import org.envirocar.server.mongo.entity.MongoStatisticKey;
 import org.envirocar.server.mongo.entity.MongoStatistics;
+import org.envirocar.server.mongo.entity.MongoTermsOfUseInstance;
 import org.envirocar.server.mongo.entity.MongoTrack;
 import org.envirocar.server.mongo.entity.MongoUser;
 
@@ -62,5 +64,7 @@ public class MongoMappedClassesModule extends AbstractModule {
         mb.addBinding().toInstance(MongoStatistics.class);
         mb.addBinding().toInstance(MongoStatistic.class);
         mb.addBinding().toInstance(MongoStatisticKey.class);
+        mb.addBinding().toInstance(MongoTermsOfUseInstance.class);
+        mb.addBinding().toInstance(MongoAnnouncement.class);
     }
 }

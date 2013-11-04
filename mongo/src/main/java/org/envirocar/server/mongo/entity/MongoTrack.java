@@ -49,6 +49,9 @@ public class MongoTrack extends MongoEntityBase implements Track {
     public static final String BBOX = "bbox";
     public static final String BEGIN = "begin";
     public static final String END = "end";
+	public static final String APP_VERSION = "appVersion";
+	public static final String OBD_DEVICE = "obdDevice";
+	public static final String TERMS_OF_USE_VERSION = "touVersion";
     @Id
     private ObjectId id = new ObjectId();
     @Property(USER)
@@ -67,6 +70,12 @@ public class MongoTrack extends MongoEntityBase implements Track {
     private DateTime begin;
     @Property(END)
     private DateTime end;
+    @Property(APP_VERSION)
+    private String appVersion;
+    @Property(OBD_DEVICE)
+    private String obdDevice;
+    @Property(TERMS_OF_USE_VERSION)
+    private String touVersion;
 
     @Override
     public MongoUser getUser() {
@@ -230,4 +239,50 @@ public class MongoTrack extends MongoEntityBase implements Track {
     public boolean hasEnd() {
         return getEnd() != null;
     }
+
+    @Override
+	public String getAppVersion() {
+		return appVersion;
+	}
+
+    @Override
+	public void setAppVersion(String appVersion) {
+		this.appVersion = appVersion;
+	}
+
+    @Override
+	public String getObdDevice() {
+		return obdDevice;
+	}
+
+    @Override
+	public void setObdDevice(String obdDevice) {
+		this.obdDevice = obdDevice;
+	}
+
+    @Override
+	public String getTouVersion() {
+		return touVersion;
+	}
+
+    @Override
+	public void setTouVersion(String touVersion) {
+		this.touVersion = touVersion;
+	}
+
+	@Override
+	public boolean hasAppVersion() {
+		return appVersion != null && !appVersion.isEmpty();
+	}
+
+	@Override
+	public boolean hasObdDevice() {
+		return obdDevice != null && !obdDevice.isEmpty();
+	}
+
+	@Override
+	public boolean hasTouVersion() {
+		return touVersion != null && !touVersion.isEmpty();
+	}
+    
 }

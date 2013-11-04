@@ -29,6 +29,15 @@
                 },
                 "description": {
                     "type": "string"
+                },
+                "appVersion": {
+                	"type": "string"
+                },
+                "obdDevice": {
+                	"type": "string"
+                },
+                "touVersion": {
+                	"type": "string"
                 }
             }
         },
