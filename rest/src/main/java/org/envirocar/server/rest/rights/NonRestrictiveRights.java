@@ -449,4 +449,9 @@ public class NonRestrictiveRights implements AccessRights {
 	public boolean canSeeAnnouncements() {
 		return true;
 	}
+
+	@Override
+	public boolean canSeeBadges() {
+		return true;
+	}
 }

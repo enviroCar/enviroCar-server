@@ -19,6 +19,7 @@ package org.envirocar.server.core;
 import java.util.List;
 
 import org.envirocar.server.core.dao.AnnouncementsDao;
+import org.envirocar.server.core.dao.BadgesDao;
 import org.envirocar.server.core.dao.MeasurementDao;
 import org.envirocar.server.core.dao.PhenomenonDao;
 import org.envirocar.server.core.dao.SensorDao;
@@ -26,6 +27,7 @@ import org.envirocar.server.core.dao.TermsOfUseDao;
 import org.envirocar.server.core.dao.TrackDao;
 import org.envirocar.server.core.entities.Announcement;
 import org.envirocar.server.core.entities.Announcements;
+import org.envirocar.server.core.entities.Badges;
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.Measurements;
 import org.envirocar.server.core.entities.Phenomenon;
@@ -80,12 +82,14 @@ public class DataServiceImpl implements DataService {
     private final EntityValidator<Measurement> measurementValidator;
     private final EventBus eventBus;
 	private final AnnouncementsDao announcementsDao;
+	private final BadgesDao badgesDao;
 
     @Inject
     public DataServiceImpl(TrackDao trackDao, MeasurementDao measurementDao,
                            SensorDao sensorDao, PhenomenonDao phenomenonDao,
                            TermsOfUseDao termsOfUseDao,
                            AnnouncementsDao announcementsDao,
+                           BadgesDao badgesDao,
                            EntityValidator<Track> trackValidator,
                            EntityUpdater<Track> trackUpdater,
                            EntityUpdater<Measurement> measurementUpdater,
@@ -102,6 +106,7 @@ public class DataServiceImpl implements DataService {
         this.eventBus = eventBus;
         this.termsOfUseDao = termsOfUseDao;
         this.announcementsDao = announcementsDao;
+        this.badgesDao = badgesDao;
     }
 
     @Override
@@ -283,5 +288,10 @@ public class DataServiceImpl implements DataService {
 			throw new ResourceNotFoundException(String.format("Announcement with id '%s' not found.", id));
 		}
 		return result;
+	}
+
+	@Override
+	public Badges getBadges(Pagination pagination) {
+		return this.badgesDao.get(pagination);
 	}
 }
