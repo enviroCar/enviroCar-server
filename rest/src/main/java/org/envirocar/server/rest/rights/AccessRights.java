@@ -35,6 +35,8 @@ public interface AccessRights extends UserRights,
     boolean canSeeStatistics();
 
     boolean canSeeSchema();
+    
+    boolean canSeeBadges();
 
 	boolean canSeeAnnouncements();
 }

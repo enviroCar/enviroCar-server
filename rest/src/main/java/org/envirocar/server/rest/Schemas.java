@@ -62,6 +62,8 @@ public class Schemas {
     public static final String TERMS_OF_USE_INSTANCE = PREFIX + "terms-of-use-instance.json#";
     public static final String ANNOUNCEMENTS = PREFIX + "announcements.json#";
     public static final String ANNOUNCEMENT = PREFIX + "announcement.json#";
+    public static final String BADGE = PREFIX + "badge.json#";
+    public static final String BADGES = PREFIX + "badges.json#";
 
     private Schemas() {
     }
