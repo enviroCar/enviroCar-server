@@ -18,39 +18,25 @@ package org.envirocar.server.rest.resources;
 
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
-import org.envirocar.server.core.entities.TermsOfUse;
-import org.envirocar.server.core.entities.TermsOfUseInstance;
-import org.envirocar.server.core.exception.ResourceNotFoundException;
+import org.envirocar.server.core.entities.Announcements;
 import org.envirocar.server.core.util.Pagination;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.RESTConstants;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.validation.Schema;
 
-public class TermsOfUseResource extends AbstractResource {
-
-    public static final String TERMS_OF_USE_INSTANCE = "{termsOfUse}";
+public class AnnouncementsResource extends AbstractResource {
 
 	@GET
-    @Schema(response = Schemas.TERMS_OF_USE)
-    @Produces({ MediaTypes.TERMS_OF_USE })
-    public TermsOfUse get(
+    @Schema(response = Schemas.ANNOUNCEMENTS)
+    @Produces({ MediaTypes.ANNOUNCEMENTS })
+    public Announcements get(
             @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit,
             @QueryParam(RESTConstants.PAGE) @DefaultValue("0") int page) {
-        return getDataService().getTermsOfUse(new Pagination(limit, page));
+        return getDataService().getAnnouncements(new Pagination(limit, page));
     }
     
-    @Path(TERMS_OF_USE_INSTANCE)
-    public TermsOfUseInstanceResource track(@PathParam("termsOfUse") String id)
-            throws ResourceNotFoundException {
-        TermsOfUseInstance t = getDataService().getTermsOfUseInstance(id);
-        checkRights(getRights().canSee(t));
-        return getResourceFactory().createTermsOfUseInstanceResource(t);
-    }
-	
 }

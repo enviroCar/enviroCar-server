@@ -60,6 +60,8 @@ public class Schemas {
     public static final String ACTIVITIES = PREFIX + "activities.json#";
     public static final String TERMS_OF_USE = PREFIX + "terms-of-use.json#";
     public static final String TERMS_OF_USE_INSTANCE = PREFIX + "terms-of-use-instance.json#";
+    public static final String ANNOUNCEMENTS = PREFIX + "announcements.json#";
+    public static final String ANNOUNCEMENT = PREFIX + "announcement.json#";
 
     private Schemas() {
     }
