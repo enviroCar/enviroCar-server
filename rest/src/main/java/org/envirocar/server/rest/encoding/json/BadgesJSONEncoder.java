@@ -17,6 +17,7 @@
 package org.envirocar.server.rest.encoding.json;
 
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.Provider;
 
 import org.envirocar.server.core.entities.Badge;
 import org.envirocar.server.core.entities.Badges;
@@ -28,6 +29,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 
+@Provider
 public class BadgesJSONEncoder extends AbstractJSONEntityEncoder<Badges> {
     private final JSONEntityEncoder<Badge> badgeEncoder;
 

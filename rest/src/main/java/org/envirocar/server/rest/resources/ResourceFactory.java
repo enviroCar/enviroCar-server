@@ -102,4 +102,6 @@ public interface ResourceFactory {
     JSONSchemaResource createSchemaResource();
     
     AnnouncementsResource createAnnouncementsResource();
+
+	BadgesResource createBadgesResource();
 }

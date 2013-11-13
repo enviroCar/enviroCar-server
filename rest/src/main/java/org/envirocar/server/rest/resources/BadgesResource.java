@@ -28,9 +28,7 @@ import org.envirocar.server.rest.RESTConstants;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.validation.Schema;
 
-public class BadgeResource extends AbstractResource {
-
-    public static final String BADGES = "{badges}";
+public class BadgesResource extends AbstractResource {
 
 	@GET
     @Schema(response = Schemas.BADGES)
