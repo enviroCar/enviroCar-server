@@ -457,4 +457,9 @@ public class AccessRightsImpl extends AbstractAccessRights {
 	public boolean canSeeAnnouncements() {
 		return true;
 	}
+
+	@Override
+	public boolean canSeeBadges() {
+		return true;
+	}
 }

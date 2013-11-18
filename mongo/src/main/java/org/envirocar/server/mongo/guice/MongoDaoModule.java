@@ -18,6 +18,7 @@ package org.envirocar.server.mongo.guice;
 
 import org.envirocar.server.core.dao.ActivityDao;
 import org.envirocar.server.core.dao.AnnouncementsDao;
+import org.envirocar.server.core.dao.BadgesDao;
 import org.envirocar.server.core.dao.GroupDao;
 import org.envirocar.server.core.dao.MeasurementDao;
 import org.envirocar.server.core.dao.PhenomenonDao;
@@ -28,6 +29,7 @@ import org.envirocar.server.core.dao.TrackDao;
 import org.envirocar.server.core.dao.UserDao;
 import org.envirocar.server.mongo.dao.MongoActivityDao;
 import org.envirocar.server.mongo.dao.MongoAnnouncementsDao;
+import org.envirocar.server.mongo.dao.MongoBadgesDao;
 import org.envirocar.server.mongo.dao.MongoGroupDao;
 import org.envirocar.server.mongo.dao.MongoMeasurementDao;
 import org.envirocar.server.mongo.dao.MongoPhenomenonDao;
@@ -57,5 +59,6 @@ public class MongoDaoModule extends AbstractModule {
         bind(ActivityDao.class).to(MongoActivityDao.class);
         bind(TermsOfUseDao.class).to(MongoTermsOfUseDao.class);
         bind(AnnouncementsDao.class).to(MongoAnnouncementsDao.class);
+        bind(BadgesDao.class).to(MongoBadgesDao.class);
     }
 }

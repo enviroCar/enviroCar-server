@@ -1,0 +1,18 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "id": "http://schema.envirocar.org/badges.json#",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "badges"
+    ],
+    "properties": {
+        "badges": {
+            "type": "array",
+            "minItems": 0,
+            "items": {
+                "$ref": "http://schema.envirocar.org/badge.json#"
+            }
+        }
+    }
+}

@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.envirocar.server.core.entities.Announcement;
 import org.envirocar.server.core.entities.Announcements;
+import org.envirocar.server.core.entities.Badges;
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.Measurements;
 import org.envirocar.server.core.entities.Phenomenon;
@@ -97,4 +98,6 @@ public interface DataService {
 	Announcements getAnnouncements(Pagination pagination);
 
 	Announcement getAnnouncement(String id) throws ResourceNotFoundException;
+
+	Badges getBadges(Pagination pagination);
 }

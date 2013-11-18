@@ -20,6 +20,8 @@ import org.envirocar.server.core.activities.Activities;
 import org.envirocar.server.core.activities.Activity;
 import org.envirocar.server.core.entities.Announcement;
 import org.envirocar.server.core.entities.Announcements;
+import org.envirocar.server.core.entities.Badge;
+import org.envirocar.server.core.entities.Badges;
 import org.envirocar.server.core.entities.Group;
 import org.envirocar.server.core.entities.Groups;
 import org.envirocar.server.core.entities.Measurement;
@@ -41,6 +43,8 @@ import org.envirocar.server.rest.encoding.json.ActivitiesJSONEncoder;
 import org.envirocar.server.rest.encoding.json.ActivityJSONEncoder;
 import org.envirocar.server.rest.encoding.json.AnnouncementJSONEncoder;
 import org.envirocar.server.rest.encoding.json.AnnouncementsJSONEncoder;
+import org.envirocar.server.rest.encoding.json.BadgeJSONEncoder;
+import org.envirocar.server.rest.encoding.json.BadgesJSONEncoder;
 import org.envirocar.server.rest.encoding.json.GeometryJSONEncoder;
 import org.envirocar.server.rest.encoding.json.GroupJSONEncoder;
 import org.envirocar.server.rest.encoding.json.GroupsJSONEncoder;
@@ -139,5 +143,12 @@ public class JerseyJSONEncoderModule extends AbstractModule {
         bind(AnnouncementsJSONEncoder.class).in(Scopes.SINGLETON);
         bind(new TypeLiteral<JSONEntityEncoder<Announcements>>() {
         }).to(AnnouncementsJSONEncoder.class);
+        
+        bind(BadgeJSONEncoder.class).in(Scopes.SINGLETON);
+        bind(new TypeLiteral<JSONEntityEncoder<Badge>>() {
+        }).to(BadgeJSONEncoder.class);
+        bind(BadgesJSONEncoder.class).in(Scopes.SINGLETON);
+        bind(new TypeLiteral<JSONEntityEncoder<Badges>>() {
+        }).to(BadgesJSONEncoder.class);
     }
 }
