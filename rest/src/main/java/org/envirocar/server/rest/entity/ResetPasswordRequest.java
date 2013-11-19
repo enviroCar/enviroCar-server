@@ -14,33 +14,31 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.rest.rights;
-
-import javax.servlet.http.HttpServletRequest;
+package org.envirocar.server.rest.entity;
 
 import org.envirocar.server.core.entities.User;
 
-/**
- * TODO JavaDoc
- *
- * @author Christian Autermann <autermann@uni-muenster.de>
- */
-public interface AccessRights extends UserRights,
-                                      TrackRights,
-                                      MeasurementRights,
-                                      GroupRights,
-                                      SensorRights,
-                                      PhenomenonRights,
-                                      TermsOfUseRights {
-    boolean isSelf(User user);
+public class ResetPasswordRequest {
 
-    boolean canSeeStatistics();
+	private User user;
+	private String code;
+	
+	
+	public User getUser() {
+		return user;
+	}
 
-    boolean canSeeSchema();
-    
-    boolean canSeeBadges();
+	public void setUser(User user) {
+		this.user = user;
+	}
 
-	boolean canSeeAnnouncements();
-
-	boolean canAccessPasswordReset(HttpServletRequest request);
+	public String getCode() {
+		return code;
+	}
+	
+	public void setCode(String code) {
+		this.code = code;
+	}
+	
+	
 }

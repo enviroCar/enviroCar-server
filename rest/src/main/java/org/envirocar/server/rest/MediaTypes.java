@@ -128,4 +128,12 @@ public interface MediaTypes {
 	String BADGE = "application/json; schema=\"" +
             Schemas.BADGE + "\"";
     MediaType BADGE_TYPE = MediaType.valueOf(BADGE);
+    
+    String PASSWORD_RESET_REQUEST = "application/json; schema=\"" +
+            Schemas.PASSWORD_RESET_REQUEST + "\"";
+    MediaType PASSWORD_RESET_REQUEST_TYPE = MediaType.valueOf(PASSWORD_RESET_REQUEST);
+
+    String PASSWORD_RESET_VERIFICATION = "application/json; schema=\"" +
+            Schemas.PASSWORD_RESET_VERIFICATION + "\"";
+    MediaType PASSWORD_RESET_VERIFICATION_TYPE = MediaType.valueOf(PASSWORD_RESET_VERIFICATION);
 }
