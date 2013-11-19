@@ -20,10 +20,15 @@ import java.util.Collections;
 import java.util.Set;
 
 import org.envirocar.server.core.dao.UserDao;
+import org.envirocar.server.core.entities.PasswordReset;
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.entities.Users;
+import org.envirocar.server.core.exception.BadRequestException;
+import org.envirocar.server.core.exception.InvalidUserMailCombinationException;
 import org.envirocar.server.core.util.Pagination;
 import org.envirocar.server.mongo.MongoDB;
+import org.envirocar.server.mongo.dao.privates.PasswordResetDAO;
+import org.envirocar.server.mongo.entity.MongoPasswordReset;
 import org.envirocar.server.mongo.entity.MongoUser;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
@@ -48,10 +53,12 @@ public class MongoUserDao extends AbstractMongoDao<String, MongoUser, Users>
     private MongoTrackDao trackDao;
     private MongoMeasurementDao measurementDao;
     private MongoGroupDao groupDao;
+	private PasswordResetDAO passwordResetDao;
 
     @Inject
-    public MongoUserDao(MongoDB mongoDB) {
+    public MongoUserDao(MongoDB mongoDB, PasswordResetDAO dao) {
         super(MongoUser.class, mongoDB);
+        this.passwordResetDao = dao;
     }
 
     @Inject
@@ -196,4 +203,33 @@ public class MongoUserDao extends AbstractMongoDao<String, MongoUser, Users>
                 .fetchKeys();
         return Sets.newHashSet(filtered);
     }
+
+	@Override
+	public PasswordReset requestPasswordReset(User user) throws BadRequestException {
+		if (user == null || user.getName() == null) {
+			throw new InvalidUserMailCombinationException();
+		}
+		
+		return this.passwordResetDao.requestPasswordReset(user);
+	}
+
+	@Override
+	public void resetPassword(User user, String verificationCode) throws BadRequestException {
+		MongoPasswordReset status = this.passwordResetDao.getPasswordResetStatus(user);
+		
+		if (status != null && !status.isExpired()) {
+			if (status.getCode().equals(verificationCode)) {
+				save(user);
+			}
+			else {
+				throw new BadRequestException("Wrong verification code.");
+			}
+		}
+		else {
+			throw new BadRequestException("Verification code already expired.");
+		}
+		
+		this.passwordResetDao.remove(status);
+	}
+	
 }
