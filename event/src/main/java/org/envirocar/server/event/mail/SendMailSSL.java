@@ -18,6 +18,7 @@ package org.envirocar.server.event.mail;
 
 import java.util.Properties;
 
+import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
@@ -45,16 +46,16 @@ public class SendMailSSL implements SendMail {
 		props.put("mail.smtp.auth", "true");
 		props.put("mail.smtp.port", Integer.toString(port));
 
-		Session session = Session.getDefaultInstance(props,
-				new javax.mail.Authenticator() {
-					protected PasswordAuthentication getPasswordAuthentication() {
-						return new PasswordAuthentication(user, password);
-					}
-				});
+		Session session = Session.getInstance(props, new Authenticator() {
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication(user, password);
+			}
+		});
 
 		Message message = new MimeMessage(session);
 		message.setFrom(new InternetAddress(from));
-		message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
+		message.setRecipients(Message.RecipientType.TO,
+				InternetAddress.parse(email));
 		message.setSubject(subject);
 		message.setText(content);
 
