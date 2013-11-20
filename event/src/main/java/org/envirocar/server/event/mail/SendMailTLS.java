@@ -18,13 +18,11 @@ package org.envirocar.server.event.mail;
 
 import java.util.Properties;
 
-public class SendMailSSL extends AbstractSendMail {
+public class SendMailTLS extends AbstractSendMail {
 
 	@Override
 	protected void injectProperties(Properties props) {
-		props.put("mail.smtp.socketFactory.port", props.getProperty("mail.smtp.port"));
-		props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");		
+		props.put("mail.smtp.starttls.enable", "true");		
 	}
-
 
 }
