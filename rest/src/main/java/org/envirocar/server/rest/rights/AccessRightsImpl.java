@@ -16,6 +16,8 @@
  */
 package org.envirocar.server.rest.rights;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.envirocar.server.core.FriendService;
 import org.envirocar.server.core.GroupService;
 import org.envirocar.server.core.entities.Group;
@@ -456,5 +458,19 @@ public class AccessRightsImpl extends AbstractAccessRights {
 	@Override
 	public boolean canSeeAnnouncements() {
 		return true;
+	}
+
+	@Override
+	public boolean canSeeBadges() {
+		return true;
+	}
+
+	@Override
+	public boolean canAccessPasswordReset(HttpServletRequest request) {
+		/*
+		 * TODO: password reset requests should only be valid from enviroCar-www,
+		 * could be implemented via a shared secret (could scale on a cascaded setup)
+		 */
+		return !isAuthenticated();
 	}
 }

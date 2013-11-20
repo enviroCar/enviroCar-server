@@ -62,6 +62,10 @@ public class Schemas {
     public static final String TERMS_OF_USE_INSTANCE = PREFIX + "terms-of-use-instance.json#";
     public static final String ANNOUNCEMENTS = PREFIX + "announcements.json#";
     public static final String ANNOUNCEMENT = PREFIX + "announcement.json#";
+    public static final String BADGE = PREFIX + "badge.json#";
+    public static final String BADGES = PREFIX + "badges.json#";
+    public static final String PASSWORD_RESET_REQUEST = PREFIX + "passwordResetRequest.json#";
+    public static final String PASSWORD_RESET_VERIFICATION = PREFIX + "passwordResetVerification.json#";
 
     private Schemas() {
     }

@@ -14,21 +14,15 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.rest.mapper;
+package org.envirocar.server.event.guice;
 
-import javax.ws.rs.core.Response.Status;
-import javax.ws.rs.ext.Provider;
+import org.envirocar.server.event.SendVerificationCodeViaMailListener;
 
-import org.envirocar.server.core.exception.IllegalModificationException;
+import com.google.inject.AbstractModule;
 
-/**
- * TODO JavaDoc
- *
- * @author Christian Autermann <autermann@uni-muenster.de>
- */
-@Provider
-public class IllegalModificationExceptionMapper extends AbstractExceptionMapper<IllegalModificationException> {
-    public IllegalModificationExceptionMapper() {
-        super(Status.BAD_REQUEST);
+public class SendVerificationCodeViaMailModule extends AbstractModule {
+    @Override
+    protected void configure() {
+        bind(SendVerificationCodeViaMailListener.class).asEagerSingleton();
     }
 }

@@ -14,21 +14,45 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.rest.mapper;
+package org.envirocar.server.core.event;
 
-import javax.ws.rs.core.Response.Status;
-import javax.ws.rs.ext.Provider;
+import org.envirocar.server.core.entities.User;
+import org.joda.time.DateTime;
 
-import org.envirocar.server.core.exception.IllegalModificationException;
+public class PasswordResetEvent {
 
-/**
- * TODO JavaDoc
- *
- * @author Christian Autermann <autermann@uni-muenster.de>
- */
-@Provider
-public class IllegalModificationExceptionMapper extends AbstractExceptionMapper<IllegalModificationException> {
-    public IllegalModificationExceptionMapper() {
-        super(Status.BAD_REQUEST);
-    }
+	private String code;
+	private User user;
+	private DateTime expiration;
+
+	public PasswordResetEvent(String code, User user, DateTime exp) {
+		this.code = code;
+		this.user = user;
+		this.expiration = exp;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public DateTime getExpiration() {
+		return expiration;
+	}
+
+	public void setExpiration(DateTime expiration) {
+		this.expiration = expiration;
+	}
+
 }

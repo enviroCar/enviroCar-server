@@ -48,6 +48,8 @@ public class RootResource extends AbstractResource {
 	public static final String TERMS_OF_USE = "termsOfUse";
     public static final String SCHEMA = "schema";
     public static final String ANNOUNCEMENTS = "announcements";
+    public static final String BADGES = "badges";
+    public static final String RESET_PASSWORD = "resetPassword";
     
     @Inject
     private JsonNodeFactory factory;
@@ -106,6 +108,11 @@ public class RootResource extends AbstractResource {
             root.put(JSONConstants.ANNOUNCEMENTS_KEY, getUriInfo()
                     .getAbsolutePathBuilder()
                     .path(ANNOUNCEMENTS).build().toString());
+        }
+        if (getRights().canSeeBadges()) {
+            root.put(JSONConstants.BADGES_KEY, getUriInfo()
+                    .getAbsolutePathBuilder()
+                    .path(BADGES).build().toString());
         }
         return root;
     }
@@ -167,6 +174,17 @@ public class RootResource extends AbstractResource {
     public AnnouncementsResource announcements() {
     	checkRights(getRights().canSeeAnnouncements());
     	return getResourceFactory().createAnnouncementsResource();
+    }
+    
+    @Path(BADGES)
+    public BadgesResource badges() {
+    	checkRights(getRights().canSeeBadges());
+    	return getResourceFactory().createBadgesResource();
+    }
+    
+    @Path(RESET_PASSWORD)
+    public ResetPasswordResource resetPassword() {
+    	return getResourceFactory().createResetPasswordResource();
     }
 
     @Path("rest")

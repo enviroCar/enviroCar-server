@@ -1,0 +1,7 @@
+USER = your-user
+PASSWORD = your-password
+FROM_MAIL = your@email.org
+SMTP_HOST = smtp.gmail.com
+SMTP_PORT = 465
+
+VERIFICATION_CODE_SUBJECT = enviroCar Password Reset requested

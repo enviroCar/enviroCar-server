@@ -14,41 +14,19 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.core.dao;
+package org.envirocar.server.mongo.dao.privates;
 
 import org.envirocar.server.core.entities.PasswordReset;
 import org.envirocar.server.core.entities.User;
-import org.envirocar.server.core.entities.Users;
 import org.envirocar.server.core.exception.BadRequestException;
-import org.envirocar.server.core.util.Pagination;
+import org.envirocar.server.mongo.entity.MongoPasswordReset;
 
-/**
- * TODO JavaDoc
- *
- * @author Christian Autermann <autermann@uni-muenster.de>
- */
-public interface UserDao {
-    User getByName(String name);
-
-    User getByMail(String mail);
-
-    Users get(Pagination p);
-
-    User create(User user);
-
-    User save(User user);
-
-    void delete(User user);
-
-    Users getFriends(User user);
-
-    User getFriend(User user, String friendName);
-
-    void addFriend(User user, User friend);
-
-    void removeFriend(User user, User friend);
+public interface PasswordResetDAO {
 
 	PasswordReset requestPasswordReset(User user) throws BadRequestException;
 
-	void resetPassword(User user, String verificationCode) throws BadRequestException;
+	MongoPasswordReset getPasswordResetStatus(User user);
+
+	void remove(MongoPasswordReset status);
+
 }
