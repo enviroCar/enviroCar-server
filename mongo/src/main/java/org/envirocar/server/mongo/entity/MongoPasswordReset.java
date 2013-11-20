@@ -16,15 +16,15 @@
  */
 package org.envirocar.server.mongo.entity;
 
-import java.util.Date;
-
 import org.bson.types.ObjectId;
 import org.envirocar.server.core.entities.PasswordReset;
 import org.envirocar.server.core.entities.User;
+import org.joda.time.DateTime;
 
 import com.github.jmkgreen.morphia.Key;
 import com.github.jmkgreen.morphia.annotations.Entity;
 import com.github.jmkgreen.morphia.annotations.Id;
+import com.github.jmkgreen.morphia.annotations.Indexed;
 import com.github.jmkgreen.morphia.annotations.Property;
 import com.github.jmkgreen.morphia.annotations.Transient;
 import com.github.jmkgreen.morphia.mapping.Mapper;
@@ -36,12 +36,15 @@ public class MongoPasswordReset extends MongoEntityBase implements PasswordReset
 	public static final String EXPIRES = "expires";
 	public static final String VERIFICATION_CODE = "code";
 	public static final String USER = "user";
+	
+	public static final int EXPIRATION_PERIOD_HOURS = 24;
 
 	@Id
 	private ObjectId id = new ObjectId();
 	
 	@Property(EXPIRES)
-	private Date expires;
+	@Indexed(expireAfterSeconds = EXPIRATION_PERIOD_HOURS * 60 * 60)
+	private DateTime expires;
 	
 	@Property(USER)
 	private Key<MongoUser> user;
@@ -53,14 +56,15 @@ public class MongoPasswordReset extends MongoEntityBase implements PasswordReset
 	private MongoUser _user;
 
 	public MongoPasswordReset() {
+		setExpires(new DateTime().plusHours(EXPIRATION_PERIOD_HOURS));
 	}
 	
 	@Override
-	public Date getExpires() {
+	public DateTime getExpires() {
 		return expires;
 	}
 
-	public void setExpires(Date expires) {
+	public void setExpires(DateTime expires) {
 		this.expires = expires;
 	}
 
@@ -88,7 +92,7 @@ public class MongoPasswordReset extends MongoEntityBase implements PasswordReset
 
 	@Override
 	public boolean isExpired() {
-		return getExpires().before(new Date());
+		return getExpires().isBefore(new DateTime());
 	}
 
 	public ObjectId getId() {

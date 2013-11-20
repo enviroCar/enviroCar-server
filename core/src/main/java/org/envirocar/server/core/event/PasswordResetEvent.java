@@ -16,17 +16,16 @@
  */
 package org.envirocar.server.core.event;
 
-import java.util.Date;
-
 import org.envirocar.server.core.entities.User;
+import org.joda.time.DateTime;
 
 public class PasswordResetEvent {
 
 	private String code;
 	private User user;
-	private Date expiration;
+	private DateTime expiration;
 
-	public PasswordResetEvent(String code, User user, Date exp) {
+	public PasswordResetEvent(String code, User user, DateTime exp) {
 		this.code = code;
 		this.user = user;
 		this.expiration = exp;
@@ -48,15 +47,11 @@ public class PasswordResetEvent {
 		this.user = user;
 	}
 
-	public Date getExpirationDate() {
-		return this.expiration;
-	}
-
-	public Date getExpiration() {
+	public DateTime getExpiration() {
 		return expiration;
 	}
 
-	public void setExpiration(Date expiration) {
+	public void setExpiration(DateTime expiration) {
 		this.expiration = expiration;
 	}
 

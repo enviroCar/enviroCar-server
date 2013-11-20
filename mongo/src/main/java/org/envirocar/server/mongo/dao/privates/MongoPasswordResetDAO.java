@@ -75,7 +75,6 @@ public class MongoPasswordResetDAO extends AbstractMongoDao<ObjectId, MongoPassw
 		
 		MongoPasswordReset entity = createMongoPasswordResetStatus();
 		entity.setCode(uuid);
-		entity.setExpires(expires.getTime());
 		entity.setUser(user);
 		
 		save((MongoPasswordReset) entity);

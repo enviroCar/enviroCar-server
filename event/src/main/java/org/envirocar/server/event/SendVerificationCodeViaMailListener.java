@@ -20,8 +20,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URLConnection;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Properties;
 import java.util.Scanner;
 
@@ -30,6 +28,8 @@ import javax.mail.MessagingException;
 import org.envirocar.server.core.event.PasswordResetEvent;
 import org.envirocar.server.event.mail.SendMail;
 import org.envirocar.server.event.mail.SendMailSSL;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,8 +44,7 @@ public class SendVerificationCodeViaMailListener {
 	private static final String EXPIRATION_TIME = "{expirationTime}";
 	private static final Logger logger = LoggerFactory
 			.getLogger(SendVerificationCodeViaMailListener.class);
-	private static final DateFormat dateFormat = SimpleDateFormat
-			.getDateTimeInstance();
+	private static final DateTimeFormatter dateFormat = ISODateTimeFormat.dateTimeNoMillis();
 	private static final String VERIFICATION_CODE_SUBJECT = "VERIFICATION_CODE_SUBJECT";
 
 	public SendVerificationCodeViaMailListener() {
@@ -84,7 +83,7 @@ public class SendVerificationCodeViaMailListener {
 				.replace(USERNAME, e.getUser().getName())
 				.replace(CODE, e.getCode())
 				.replace(EXPIRATION_TIME,
-						dateFormat.format(e.getExpirationDate()));
+						e.getExpiration().toString(dateFormat));
 	}
 
 	private CharSequence readFile(String string) {
