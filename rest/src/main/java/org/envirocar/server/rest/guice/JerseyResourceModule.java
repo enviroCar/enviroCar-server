@@ -24,6 +24,7 @@ import org.envirocar.server.core.FriendService;
 import org.envirocar.server.core.GroupService;
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.rest.auth.PrincipalImpl;
+import org.envirocar.server.rest.mapper.BadRequestExceptionMapper;
 import org.envirocar.server.rest.mapper.IllegalModificationExceptionMapper;
 import org.envirocar.server.rest.mapper.JsonValidationExceptionMapper;
 import org.envirocar.server.rest.mapper.ResourceAlreadyExistExceptionMapper;
@@ -59,6 +60,7 @@ public class JerseyResourceModule extends AbstractModule {
         bind(ValidationExceptionMapper.class).in(Scopes.SINGLETON);
         bind(ResourceAlreadyExistExceptionMapper.class).in(Scopes.SINGLETON);
         bind(JsonValidationExceptionMapper.class).in(Scopes.SINGLETON);
+        bind(BadRequestExceptionMapper.class).in(Scopes.SINGLETON);
         install(new FactoryModuleBuilder().build(ResourceFactory.class));
         bind(RootResource.class);
     }

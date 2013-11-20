@@ -14,21 +14,18 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.rest.mapper;
+package org.envirocar.server.event.mail;
 
-import javax.ws.rs.core.Response.Status;
-import javax.ws.rs.ext.Provider;
+import java.util.Properties;
 
-import org.envirocar.server.core.exception.IllegalModificationException;
+import javax.mail.MessagingException;
 
-/**
- * TODO JavaDoc
- *
- * @author Christian Autermann <autermann@uni-muenster.de>
- */
-@Provider
-public class IllegalModificationExceptionMapper extends AbstractExceptionMapper<IllegalModificationException> {
-    public IllegalModificationExceptionMapper() {
-        super(Status.BAD_REQUEST);
-    }
+public interface SendMail {
+	
+	public void setup(String user, String password, String fromEmail, String smtpHost, int smtpPort);
+
+	public void send(String email, String subject, String content) throws MessagingException;
+
+	public void setup(Properties mailConfiguration);
+	
 }

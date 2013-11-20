@@ -1,1 +1,2 @@
 org.envirocar.server.event.guice.HTTPPushModule
+org.envirocar.server.event.guice.SendVerificationCodeViaMailModule

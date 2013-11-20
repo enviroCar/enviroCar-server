@@ -14,21 +14,31 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.rest.mapper;
+package org.envirocar.server.rest.entity;
 
-import javax.ws.rs.core.Response.Status;
-import javax.ws.rs.ext.Provider;
+import org.envirocar.server.core.entities.User;
 
-import org.envirocar.server.core.exception.IllegalModificationException;
+public class ResetPasswordRequest {
 
-/**
- * TODO JavaDoc
- *
- * @author Christian Autermann <autermann@uni-muenster.de>
- */
-@Provider
-public class IllegalModificationExceptionMapper extends AbstractExceptionMapper<IllegalModificationException> {
-    public IllegalModificationExceptionMapper() {
-        super(Status.BAD_REQUEST);
-    }
+	private User user;
+	private String code;
+	
+	
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public String getCode() {
+		return code;
+	}
+	
+	public void setCode(String code) {
+		this.code = code;
+	}
+	
+	
 }

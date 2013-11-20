@@ -28,10 +28,12 @@ import org.envirocar.server.rest.decoding.json.JSONEntityDecoder;
 import org.envirocar.server.rest.decoding.json.JsonNodeMessageBodyReader;
 import org.envirocar.server.rest.decoding.json.MeasurementDecoder;
 import org.envirocar.server.rest.decoding.json.PhenomenonDecoder;
+import org.envirocar.server.rest.decoding.json.ResetPasswordDecoder;
 import org.envirocar.server.rest.decoding.json.SensorDecoder;
 import org.envirocar.server.rest.decoding.json.TrackDecoder;
 import org.envirocar.server.rest.decoding.json.UserDecoder;
 import org.envirocar.server.rest.encoding.json.UserReferenceProvider;
+import org.envirocar.server.rest.entity.ResetPasswordRequest;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
@@ -69,5 +71,8 @@ public class JerseyDecoderModule extends AbstractModule {
         bind(SensorDecoder.class).in(Scopes.SINGLETON);
         bind(new TypeLiteral<JSONEntityDecoder<Sensor>>() {
         }).to(SensorDecoder.class);
+        bind(ResetPasswordDecoder.class).in(Scopes.SINGLETON);
+        bind(new TypeLiteral<JSONEntityDecoder<ResetPasswordRequest>>() {
+        }).to(ResetPasswordDecoder.class);
     }
 }
