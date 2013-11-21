@@ -29,7 +29,8 @@ import org.envirocar.server.core.util.UpCastingIterable;
 import org.envirocar.server.mongo.MongoDB;
 import org.envirocar.server.mongo.dao.AbstractMongoDao;
 import org.envirocar.server.mongo.entity.MongoPasswordReset;
-import org.envirocar.server.mongo.entity.MongoTrack;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.github.jmkgreen.morphia.query.Query;
 import com.google.inject.Inject;
@@ -37,7 +38,8 @@ import com.google.inject.Inject;
 public class MongoPasswordResetDAO extends AbstractMongoDao<ObjectId, MongoPasswordReset, MongoPasswordResetDAO.MongoPasswordResetStatusCollection> 
 	implements PasswordResetDAO {
 
-    private MongoDB mongo;
+    private static final Logger logger = LoggerFactory.getLogger(MongoPasswordResetDAO.class);
+	private MongoDB mongo;
 
 	@Inject
     public MongoPasswordResetDAO(MongoDB mongoDB) {
@@ -90,11 +92,14 @@ public class MongoPasswordResetDAO extends AbstractMongoDao<ObjectId, MongoPassw
 
 
 	public MongoPasswordReset getPasswordResetStatus(User user) {
-		Query<MongoPasswordReset> result = q().field(MongoTrack.USER).equal(key(user));
+		logger.debug("Querying password reset status for user {} (key={})", user, key(user));
+		Query<MongoPasswordReset> result = q().field(MongoPasswordReset.USER).equal(key(user));
 		
-		if (result.countAll() > 0) {
+		if (result.fetch().iterator().hasNext()) {
 			return result.fetch().iterator().next();
 		}
+		
+		logger.debug("No result for query.");
 		return null;
 	}
 
