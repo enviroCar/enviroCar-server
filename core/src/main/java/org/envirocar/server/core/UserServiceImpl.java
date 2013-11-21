@@ -20,11 +20,15 @@ import org.envirocar.server.core.activities.Activities;
 import org.envirocar.server.core.activities.Activity;
 import org.envirocar.server.core.dao.ActivityDao;
 import org.envirocar.server.core.dao.UserDao;
+import org.envirocar.server.core.entities.PasswordReset;
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.entities.Users;
 import org.envirocar.server.core.event.ChangedProfileEvent;
 import org.envirocar.server.core.event.DeletedUserEvent;
+import org.envirocar.server.core.event.PasswordResetEvent;
+import org.envirocar.server.core.exception.BadRequestException;
 import org.envirocar.server.core.exception.IllegalModificationException;
+import org.envirocar.server.core.exception.InvalidUserMailCombinationException;
 import org.envirocar.server.core.exception.ResourceAlreadyExistException;
 import org.envirocar.server.core.exception.UserNotFoundException;
 import org.envirocar.server.core.exception.ValidationException;
@@ -125,4 +129,37 @@ public class UserServiceImpl implements UserService {
     public Activity getActivity(ActivityFilter request, String id) {
         return this.activityDao.get(request, id);
     }
+
+	@Override
+	public void requestPasswordReset(User user) throws BadRequestException {
+		User dbUser = this.userDao.getByName(user.getName());
+		
+		if (!user.equals(dbUser) || !user.getMail().equals(dbUser.getMail())) {
+			throw new InvalidUserMailCombinationException();
+		}
+		
+		PasswordReset code = this.userDao.requestPasswordReset(dbUser);
+		
+		/*
+		 * we got here without exception, fire an event
+		 */
+		eventBus.post(new PasswordResetEvent(code.getCode(), user, code.getExpires()));
+	}
+
+	@Override
+	public void resetPassword(User changes, String verificationCode) throws BadRequestException {
+		User dbUser = this.userDao.getByName(changes.getName());
+		
+		if (!changes.equals(dbUser)) {
+			throw new BadRequestException("Invalid username.");
+		}
+		
+		try {
+			this.userUpdater.update(changes, dbUser);
+		} catch (IllegalModificationException e) {
+			throw new InvalidUserMailCombinationException();
+		}
+		this.userDao.resetPassword(dbUser, verificationCode);		
+	}
+
 }

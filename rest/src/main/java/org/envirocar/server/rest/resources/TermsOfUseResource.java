@@ -34,7 +34,7 @@ import org.envirocar.server.rest.validation.Schema;
 
 public class TermsOfUseResource extends AbstractResource {
 
-    public static final String TERMS_OF_USE_INSTANCE = "{termsOfUse}";
+    public static final String TERMS_OF_USE_INSTANCE = "{id}";
 
 	@GET
     @Schema(response = Schemas.TERMS_OF_USE)
@@ -46,7 +46,7 @@ public class TermsOfUseResource extends AbstractResource {
     }
     
     @Path(TERMS_OF_USE_INSTANCE)
-    public TermsOfUseInstanceResource track(@PathParam("termsOfUse") String id)
+    public TermsOfUseInstanceResource track(@PathParam("id") String id)
             throws ResourceNotFoundException {
         TermsOfUseInstance t = getDataService().getTermsOfUseInstance(id);
         checkRights(getRights().canSee(t));

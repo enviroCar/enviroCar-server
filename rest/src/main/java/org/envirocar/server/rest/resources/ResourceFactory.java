@@ -104,4 +104,6 @@ public interface ResourceFactory {
     AnnouncementsResource createAnnouncementsResource();
 
 	BadgesResource createBadgesResource();
+
+	ResetPasswordResource createResetPasswordResource();
 }

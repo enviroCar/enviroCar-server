@@ -19,6 +19,7 @@ package org.envirocar.server.rest.guice;
 import java.util.Map;
 
 import org.envirocar.server.rest.PaginationFilter;
+import org.envirocar.server.rest.URIContentNegotiationFilter;
 import org.envirocar.server.rest.auth.AuthenticationFilter;
 import org.envirocar.server.rest.auth.AuthenticationResourceFilterFactory;
 import org.envirocar.server.rest.validation.JSONSchemaResourceFilterFactory;
@@ -42,9 +43,6 @@ import com.sun.jersey.spi.container.ResourceFilterFactory;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class JerseyModule extends JerseyServletModule {
-    private static final String TRUE = String.valueOf(true);
-    private static final String FALSE = String.valueOf(false);
-
     @Override
     protected void configureServlets() {
         serve("/*").with(GuiceContainer.class, getContainerFilterConfig());
@@ -66,14 +64,18 @@ public class JerseyModule extends JerseyServletModule {
     }
 
     protected ImmutableList<Class<? extends ContainerResponseFilter>> responseFilters() {
-        return ImmutableList.of(PaginationFilter.class, GZIPContentEncodingFilter.class);
+        return ImmutableList.of(PaginationFilter.class,
+                                GZIPContentEncodingFilter.class);
     }
 
     protected ImmutableList<Class<? extends ContainerRequestFilter>> requestFilters() {
-        return ImmutableList.of(GZIPContentEncodingFilter.class, AuthenticationFilter.class);
+        return ImmutableList.of(GZIPContentEncodingFilter.class,
+                                URIContentNegotiationFilter.class,
+                                AuthenticationFilter.class);
     }
 
     protected ImmutableList<Class<? extends ResourceFilterFactory>> filterFactories() {
-        return ImmutableList.of(AuthenticationResourceFilterFactory.class, JSONSchemaResourceFilterFactory.class);
+        return ImmutableList.of(AuthenticationResourceFilterFactory.class,
+                                JSONSchemaResourceFilterFactory.class);
     }
 }

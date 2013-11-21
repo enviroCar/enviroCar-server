@@ -38,6 +38,8 @@ import org.envirocar.server.mongo.dao.MongoStatisticsDao;
 import org.envirocar.server.mongo.dao.MongoTermsOfUseDao;
 import org.envirocar.server.mongo.dao.MongoTrackDao;
 import org.envirocar.server.mongo.dao.MongoUserDao;
+import org.envirocar.server.mongo.dao.privates.MongoPasswordResetDAO;
+import org.envirocar.server.mongo.dao.privates.PasswordResetDAO;
 
 import com.google.inject.AbstractModule;
 
@@ -60,5 +62,6 @@ public class MongoDaoModule extends AbstractModule {
         bind(TermsOfUseDao.class).to(MongoTermsOfUseDao.class);
         bind(AnnouncementsDao.class).to(MongoAnnouncementsDao.class);
         bind(BadgesDao.class).to(MongoBadgesDao.class);
+        bind(PasswordResetDAO.class).to(MongoPasswordResetDAO.class);
     }
 }

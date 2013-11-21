@@ -14,21 +14,21 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.rest.mapper;
+package org.envirocar.server.rest;
 
-import javax.ws.rs.core.Response.Status;
-import javax.ws.rs.ext.Provider;
+import javax.ws.rs.core.MediaType;
 
-import org.envirocar.server.core.exception.IllegalModificationException;
+import com.google.common.collect.ImmutableMap;
+import com.sun.jersey.api.container.filter.UriConnegFilter;
 
-/**
- * TODO JavaDoc
- *
- * @author Christian Autermann <autermann@uni-muenster.de>
- */
-@Provider
-public class IllegalModificationExceptionMapper extends AbstractExceptionMapper<IllegalModificationException> {
-    public IllegalModificationExceptionMapper() {
-        super(Status.BAD_REQUEST);
+public class URIContentNegotiationFilter extends UriConnegFilter {
+
+    public URIContentNegotiationFilter() {
+        super(ImmutableMap.<String, MediaType>builder()
+                .put("json", MediaType.APPLICATION_JSON_TYPE)
+                .put("ttl", MediaTypes.TURTLE_TYPE)
+                .put("rdf", MediaTypes.XML_RDF_TYPE)
+                .build());
     }
+
 }

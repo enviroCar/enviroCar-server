@@ -16,6 +16,8 @@
  */
 package org.envirocar.server.rest.rights;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.envirocar.server.core.entities.Group;
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.Phenomenon;
@@ -452,6 +454,11 @@ public class NonRestrictiveRights implements AccessRights {
 
 	@Override
 	public boolean canSeeBadges() {
+		return true;
+	}
+
+	@Override
+	public boolean canAccessPasswordReset(HttpServletRequest request) {
 		return true;
 	}
 }
