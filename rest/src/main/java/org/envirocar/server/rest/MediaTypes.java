@@ -110,4 +110,30 @@ public interface MediaTypes {
     MediaType TURTLE_ALT_TYPE = MediaType.valueOf(TURTLE_ALT);
     String IMAGE_JPEG = "image/jpeg";
     MediaType IMAGE_JPEG_TYPE = MediaType.valueOf(IMAGE_JPEG);
+    String TERMS_OF_USE = "application/json; schema=\"" +
+            Schemas.TERMS_OF_USE + "\"";
+    MediaType TERMS_OF_USE_TYPE = MediaType.valueOf(TERMS_OF_USE);
+	String TERMS_OF_USE_INSTANCE = "application/json; schema=\"" +
+            Schemas.TERMS_OF_USE_INSTANCE + "\"";
+	MediaType TERMS_OF_USE_INSTANCE_TYPE = MediaType.valueOf(TERMS_OF_USE_INSTANCE);
+	String ANNOUNCEMENTS = "application/json; schema=\"" +
+            Schemas.ANNOUNCEMENTS + "\"";
+    MediaType ANNOUNCEMENTS_TYPE = MediaType.valueOf(ANNOUNCEMENTS);
+    String ANNOUNCEMENT = "application/json; schema=\"" +
+            Schemas.ANNOUNCEMENT + "\"";
+    MediaType ANNOUNCEMENT_TYPE = MediaType.valueOf(ANNOUNCEMENT);
+	String BADGES = "application/json; schema=\"" +
+            Schemas.BADGES + "\"";
+    MediaType BADGES_TYPE = MediaType.valueOf(BADGES);
+	String BADGE = "application/json; schema=\"" +
+            Schemas.BADGE + "\"";
+    MediaType BADGE_TYPE = MediaType.valueOf(BADGE);
+    
+    String PASSWORD_RESET_REQUEST = "application/json; schema=\"" +
+            Schemas.PASSWORD_RESET_REQUEST + "\"";
+    MediaType PASSWORD_RESET_REQUEST_TYPE = MediaType.valueOf(PASSWORD_RESET_REQUEST);
+
+    String PASSWORD_RESET_VERIFICATION = "application/json; schema=\"" +
+            Schemas.PASSWORD_RESET_VERIFICATION + "\"";
+    MediaType PASSWORD_RESET_VERIFICATION_TYPE = MediaType.valueOf(PASSWORD_RESET_VERIFICATION);
 }

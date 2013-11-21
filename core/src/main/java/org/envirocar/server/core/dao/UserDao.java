@@ -16,8 +16,10 @@
  */
 package org.envirocar.server.core.dao;
 
+import org.envirocar.server.core.entities.PasswordReset;
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.entities.Users;
+import org.envirocar.server.core.exception.BadRequestException;
 import org.envirocar.server.core.util.Pagination;
 
 /**
@@ -45,4 +47,8 @@ public interface UserDao {
     void addFriend(User user, User friend);
 
     void removeFriend(User user, User friend);
+
+	PasswordReset requestPasswordReset(User user) throws BadRequestException;
+
+	void resetPassword(User user, String verificationCode) throws BadRequestException;
 }

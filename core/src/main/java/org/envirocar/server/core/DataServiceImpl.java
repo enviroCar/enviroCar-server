@@ -18,16 +18,24 @@ package org.envirocar.server.core;
 
 import java.util.List;
 
+import org.envirocar.server.core.dao.AnnouncementsDao;
+import org.envirocar.server.core.dao.BadgesDao;
 import org.envirocar.server.core.dao.MeasurementDao;
 import org.envirocar.server.core.dao.PhenomenonDao;
 import org.envirocar.server.core.dao.SensorDao;
+import org.envirocar.server.core.dao.TermsOfUseDao;
 import org.envirocar.server.core.dao.TrackDao;
+import org.envirocar.server.core.entities.Announcement;
+import org.envirocar.server.core.entities.Announcements;
+import org.envirocar.server.core.entities.Badges;
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.Measurements;
 import org.envirocar.server.core.entities.Phenomenon;
 import org.envirocar.server.core.entities.Phenomenons;
 import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.core.entities.Sensors;
+import org.envirocar.server.core.entities.TermsOfUse;
+import org.envirocar.server.core.entities.TermsOfUseInstance;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.entities.Tracks;
 import org.envirocar.server.core.event.ChangedTrackEvent;
@@ -40,6 +48,7 @@ import org.envirocar.server.core.event.DeletedTrackEvent;
 import org.envirocar.server.core.exception.IllegalModificationException;
 import org.envirocar.server.core.exception.MeasurementNotFoundException;
 import org.envirocar.server.core.exception.PhenomenonNotFoundException;
+import org.envirocar.server.core.exception.ResourceNotFoundException;
 import org.envirocar.server.core.exception.SensorNotFoundException;
 import org.envirocar.server.core.exception.TrackNotFoundException;
 import org.envirocar.server.core.exception.ValidationException;
@@ -66,15 +75,21 @@ public class DataServiceImpl implements DataService {
     private final MeasurementDao measurementDao;
     private final SensorDao sensorDao;
     private final PhenomenonDao phenomenonDao;
+    private final TermsOfUseDao termsOfUseDao;
     private final EntityValidator<Track> trackValidator;
     private final EntityUpdater<Track> trackUpdater;
     private final EntityUpdater<Measurement> measurementUpdater;
     private final EntityValidator<Measurement> measurementValidator;
     private final EventBus eventBus;
+	private final AnnouncementsDao announcementsDao;
+	private final BadgesDao badgesDao;
 
     @Inject
     public DataServiceImpl(TrackDao trackDao, MeasurementDao measurementDao,
                            SensorDao sensorDao, PhenomenonDao phenomenonDao,
+                           TermsOfUseDao termsOfUseDao,
+                           AnnouncementsDao announcementsDao,
+                           BadgesDao badgesDao,
                            EntityValidator<Track> trackValidator,
                            EntityUpdater<Track> trackUpdater,
                            EntityUpdater<Measurement> measurementUpdater,
@@ -89,6 +104,9 @@ public class DataServiceImpl implements DataService {
         this.measurementUpdater = measurementUpdater;
         this.measurementValidator = measurementValidator;
         this.eventBus = eventBus;
+        this.termsOfUseDao = termsOfUseDao;
+        this.announcementsDao = announcementsDao;
+        this.badgesDao = badgesDao;
     }
 
     @Override
@@ -241,4 +259,39 @@ public class DataServiceImpl implements DataService {
     public Sensors getSensors(SensorFilter request) {
         return this.sensorDao.get(request);
     }
+
+	@Override
+	public TermsOfUse getTermsOfUse(Pagination p) {
+		return this.termsOfUseDao.get(p);
+	}
+
+	@Override
+	public TermsOfUseInstance getTermsOfUseInstance(String id)
+			throws ResourceNotFoundException {
+		TermsOfUseInstance result = this.termsOfUseDao.getById(id);
+		if (result == null) {
+			throw new ResourceNotFoundException(String.format("TermsOfUse with id '%s' not found.", id));
+		}
+		return result;
+	}
+
+	@Override
+	public Announcements getAnnouncements(Pagination pagination) {
+		return this.announcementsDao.get(pagination);
+	}
+
+	@Override
+	public Announcement getAnnouncement(String id)
+			throws ResourceNotFoundException {
+		Announcement result = this.announcementsDao.getById(id);
+		if (result == null) {
+			throw new ResourceNotFoundException(String.format("Announcement with id '%s' not found.", id));
+		}
+		return result;
+	}
+
+	@Override
+	public Badges getBadges(Pagination pagination) {
+		return this.badgesDao.get(pagination);
+	}
 }

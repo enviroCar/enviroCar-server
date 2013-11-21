@@ -60,6 +60,15 @@ public class UserDecoder extends AbstractJSONEntityDecoder<User> {
         user.setFirstName(j.path(JSONConstants.FIRST_NAME_KEY).textValue());
         user.setLastName(j.path(JSONConstants.LAST_NAME_KEY).textValue());
         user.setLanguage(j.path(JSONConstants.LANGUAGE_KEY).textValue());
+
+        user.setTermsOfUseVersion(j.path(JSONConstants.TOU_VERSION_KEY).textValue());
+
+        if (!user.hasAcceptedTermsOfUseVersion()) {
+            // kept for backwards compatibility
+        	user.setTermsOfUseVersion(j.path(JSONConstants.ACCEPTED_TERMS_OF_USE_VERSION_KEY).textValue());
+        }
+
+        
         JsonNode l = j.path(JSONConstants.LOCATION_KEY);
         if (!l.isMissingNode() && !l.isNull()) {
             user.setLocation(geometryDecoder.decode(l, mediaType));

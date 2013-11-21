@@ -19,16 +19,22 @@ package org.envirocar.server.rest.guice;
 import java.util.Map;
 
 import org.envirocar.server.rest.PaginationFilter;
-import org.envirocar.server.rest.SchemaServlet;
 import org.envirocar.server.rest.auth.AuthenticationFilter;
 import org.envirocar.server.rest.auth.AuthenticationResourceFilterFactory;
 import org.envirocar.server.rest.validation.JSONSchemaResourceFilterFactory;
 
+import com.google.common.base.Function;
+import com.google.common.base.Joiner;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Iterables;
 import com.sun.jersey.api.container.filter.GZIPContentEncodingFilter;
 import com.sun.jersey.api.core.ResourceConfig;
 import com.sun.jersey.guice.JerseyServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
+import com.sun.jersey.spi.container.ContainerRequestFilter;
+import com.sun.jersey.spi.container.ContainerResponseFilter;
+import com.sun.jersey.spi.container.ResourceFilterFactory;
 
 /**
  * TODO JavaDoc
@@ -36,35 +42,38 @@ import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class JerseyModule extends JerseyServletModule {
-    public static final String FALSE = String.valueOf(false);
-    public static final String TRUE = String.valueOf(true);
-
-    private static String classList(Class<?> clazz, Class<?>... classes) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(clazz.getName());
-        for (Class<?> c : classes) {
-            sb.append(",").append(c.getName());
-        }
-        return sb.toString();
-    }
-
-    public static Map<String, String> getContainerFilterConfig() {
-        return ImmutableMap.of(
-                ResourceConfig.FEATURE_DISABLE_WADL, TRUE,
-                ResourceConfig.PROPERTY_CONTAINER_REQUEST_FILTERS,
-                classList(GZIPContentEncodingFilter.class,
-                          AuthenticationFilter.class),
-                ResourceConfig.PROPERTY_CONTAINER_RESPONSE_FILTERS,
-                classList(PaginationFilter.class,
-                          GZIPContentEncodingFilter.class),
-                ResourceConfig.PROPERTY_RESOURCE_FILTER_FACTORIES,
-                classList(AuthenticationResourceFilterFactory.class,
-                          JSONSchemaResourceFilterFactory.class));
-    }
+    private static final String TRUE = String.valueOf(true);
+    private static final String FALSE = String.valueOf(false);
 
     @Override
     protected void configureServlets() {
-        serve("/rest*").with(GuiceContainer.class, getContainerFilterConfig());
-        serve("/schema/*").with(SchemaServlet.class);
+        serve("/*").with(GuiceContainer.class, getContainerFilterConfig());
+    }
+
+    protected Map<String, String> getContainerFilterConfig() {
+        return ImmutableMap.<String, String>builder()
+                .put(ResourceConfig.FEATURE_DISABLE_WADL, "false")
+                .put(ResourceConfig.PROPERTY_CONTAINER_REQUEST_FILTERS, classList(requestFilters()))
+                .put(ResourceConfig.PROPERTY_CONTAINER_RESPONSE_FILTERS, classList(responseFilters()))
+                .put(ResourceConfig.PROPERTY_RESOURCE_FILTER_FACTORIES, classList(filterFactories()))
+                .build();
+    }
+
+    private String classList(Iterable<? extends Class<?>> classes) {
+        return Joiner.on(",").join(Iterables.transform(classes, new Function<Class<?>, String>() {
+            @Override public String apply(Class<?> type) { return type.getName(); }
+        }));
+    }
+
+    protected ImmutableList<Class<? extends ContainerResponseFilter>> responseFilters() {
+        return ImmutableList.of(PaginationFilter.class, GZIPContentEncodingFilter.class);
+    }
+
+    protected ImmutableList<Class<? extends ContainerRequestFilter>> requestFilters() {
+        return ImmutableList.of(GZIPContentEncodingFilter.class, AuthenticationFilter.class);
+    }
+
+    protected ImmutableList<Class<? extends ResourceFilterFactory>> filterFactories() {
+        return ImmutableList.of(AuthenticationResourceFilterFactory.class, JSONSchemaResourceFilterFactory.class);
     }
 }

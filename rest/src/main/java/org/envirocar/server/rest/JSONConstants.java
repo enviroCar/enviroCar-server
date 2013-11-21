@@ -77,4 +77,26 @@ public interface JSONConstants {
     String LANGUAGE_KEY = "language";
     String MALE = "m";
     String FEMALE = "f";
+    String TERMS_OF_USE_KEY = "termsOfUse";
+
+    /**
+     * @deprecated use {@link #TOU_VERSION_KEY} instead. kept for backwards
+     * compatibility
+     */
+    @Deprecated
+    String ACCEPTED_TERMS_OF_USE_VERSION_KEY = "acceptedTermsOfUseVersion";
+
+    String APP_VERSION_KEY = "appVersion";
+    String OBD_DEVICE_KEY = "obdDevice";
+    String TOU_VERSION_KEY = "touVersion";
+    String SCHEMA = "schema";
+    String ANNOUNCEMENTS_KEY = "announcements";
+    String ISSUED_DATE = "issuedDate";
+    String CONTENTS = "contents";
+    String VERSIONS = "versions";
+    String CONTENT = "content";
+    String PRIORITY  = "priority";
+    String CATEGORY = "category";
+    String BADGES_KEY = "badges";
+	String DISPLAY_NAME_KEY = "displayName";
 }

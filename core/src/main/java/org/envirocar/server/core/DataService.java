@@ -18,17 +18,23 @@ package org.envirocar.server.core;
 
 import java.util.List;
 
+import org.envirocar.server.core.entities.Announcement;
+import org.envirocar.server.core.entities.Announcements;
+import org.envirocar.server.core.entities.Badges;
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.Measurements;
 import org.envirocar.server.core.entities.Phenomenon;
 import org.envirocar.server.core.entities.Phenomenons;
 import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.core.entities.Sensors;
+import org.envirocar.server.core.entities.TermsOfUse;
+import org.envirocar.server.core.entities.TermsOfUseInstance;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.entities.Tracks;
 import org.envirocar.server.core.exception.IllegalModificationException;
 import org.envirocar.server.core.exception.MeasurementNotFoundException;
 import org.envirocar.server.core.exception.PhenomenonNotFoundException;
+import org.envirocar.server.core.exception.ResourceNotFoundException;
 import org.envirocar.server.core.exception.SensorNotFoundException;
 import org.envirocar.server.core.exception.TrackNotFoundException;
 import org.envirocar.server.core.exception.ValidationException;
@@ -84,4 +90,14 @@ public interface DataService {
             SensorNotFoundException;
 
     Sensors getSensors(SensorFilter request);
+
+	TermsOfUse getTermsOfUse(Pagination pagination);
+
+	TermsOfUseInstance getTermsOfUseInstance(String id) throws ResourceNotFoundException;
+	
+	Announcements getAnnouncements(Pagination pagination);
+
+	Announcement getAnnouncement(String id) throws ResourceNotFoundException;
+
+	Badges getBadges(Pagination pagination);
 }

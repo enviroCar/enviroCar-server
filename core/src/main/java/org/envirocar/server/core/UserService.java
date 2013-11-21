@@ -20,6 +20,7 @@ import org.envirocar.server.core.activities.Activities;
 import org.envirocar.server.core.activities.Activity;
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.entities.Users;
+import org.envirocar.server.core.exception.BadRequestException;
 import org.envirocar.server.core.exception.IllegalModificationException;
 import org.envirocar.server.core.exception.ResourceAlreadyExistException;
 import org.envirocar.server.core.exception.UserNotFoundException;
@@ -53,4 +54,8 @@ public interface UserService {
     Activities getActivities(ActivityFilter request);
 
     Activity getActivity(ActivityFilter request, String id);
+
+	void requestPasswordReset(User user) throws BadRequestException;
+
+	void resetPassword(User changes, String verificationCode) throws BadRequestException;
 }
