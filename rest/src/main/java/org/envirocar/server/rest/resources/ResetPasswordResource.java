@@ -37,7 +37,7 @@ public class ResetPasswordResource extends AbstractResource {
 	private static final Logger logger = LoggerFactory.getLogger(ResetPasswordResource.class);
 	
 	@POST
-    @Schema(response = Schemas.PASSWORD_RESET_REQUEST)
+    @Schema(request = Schemas.PASSWORD_RESET_REQUEST)
 	@Consumes({ MediaTypes.PASSWORD_RESET_REQUEST })
     public Response get(@Context HttpServletRequest request, ResetPasswordRequest resetPassword) throws BadRequestException {
 		checkRights(getRights().canAccessPasswordReset(request));
