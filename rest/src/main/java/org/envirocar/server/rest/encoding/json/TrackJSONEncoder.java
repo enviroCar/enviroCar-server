@@ -100,9 +100,12 @@ public class TrackJSONEncoder extends AbstractJSONEntityEncoder<Track> {
             if (t.hasAppVersion() && rights.canSeeAppVersionOf(t)) {
             	properties.put(JSONConstants.APP_VERSION_KEY, t.getAppVersion());
             }
-            if (t.hasObdDevice() && rights.canSeeObdDeviceOf(t)) {
-            	properties.put(JSONConstants.OBD_DEVICE_KEY, t.getObdDevice());
-            }
+            /*
+             * do not serialize the OBD device for privacy's sake
+             */
+//            if (t.hasObdDevice() && rights.canSeeObdDeviceOf(t)) {
+//            	properties.put(JSONConstants.OBD_DEVICE_KEY, t.getObdDevice());
+//            }
             if (t.hasTouVersion() && rights.canSeeTouVersionOf(t)) {
             	properties.put(JSONConstants.TOU_VERSION_KEY, t.getTouVersion());
             }
