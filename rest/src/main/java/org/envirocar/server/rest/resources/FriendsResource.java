@@ -30,13 +30,11 @@ import com.google.inject.assistedinject.Assisted;
 
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.entities.Users;
-
 import org.envirocar.server.core.exception.UserNotFoundException;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.UserReference;
 import org.envirocar.server.rest.auth.Authenticated;
-
 import org.envirocar.server.rest.validation.Schema;
 
 /**
@@ -46,6 +44,8 @@ import org.envirocar.server.rest.validation.Schema;
  */
 public class FriendsResource extends AbstractResource {
     public static final String FRIEND = "{friend}";
+    public static final String INCOMING_FRIEND_REQUESTS = "incomingRequests";
+	public static final String OUTGOING_FRIEND_REQUESTS = "outgoingRequests";
     private final User user;
 
     @Inject
@@ -85,5 +85,27 @@ public class FriendsResource extends AbstractResource {
         return getResourceFactory()
                 .createFriendResource(user, getFriendService()
                 .getFriend(user, friendName));
+    }
+    
+    @GET
+    @Path(INCOMING_FRIEND_REQUESTS)
+    @Produces({ MediaTypes.USERS,
+        MediaTypes.XML_RDF,
+        MediaTypes.TURTLE,
+        MediaTypes.TURTLE_ALT })
+    public Users pendingIncomingFriendRequests() {
+    	checkRights(getRights().canSeeFriendsOf(user));
+    	return getFriendService().pendingIncomingRequests(user);
+    }
+    
+    @GET
+    @Path(OUTGOING_FRIEND_REQUESTS)
+    @Produces({ MediaTypes.USERS,
+        MediaTypes.XML_RDF,
+        MediaTypes.TURTLE,
+        MediaTypes.TURTLE_ALT })
+    public Users pendingOutgoingFriendRequests() {
+    	checkRights(getRights().canSeeFriendsOf(user));
+    	return getFriendService().pendingOutgoingRequests(user);
     }
 }
