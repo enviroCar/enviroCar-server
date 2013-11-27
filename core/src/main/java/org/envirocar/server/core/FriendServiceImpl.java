@@ -47,6 +47,13 @@ public class FriendServiceImpl implements FriendService {
     public void removeFriend(User user, User friend) {
         this.userDao.removeFriend(user, friend);
         this.eventBus.post(new UnfriendedUserEvent(user, friend));
+        
+        /*
+         * also remove it vice versa as this was explicitly called
+         * by one of the former chummies
+         */
+        this.userDao.removeFriend(friend, user);
+        this.eventBus.post(new UnfriendedUserEvent(friend, user));
     }
 
     @Override
