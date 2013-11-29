@@ -38,4 +38,8 @@ public interface FriendService {
 
     void removeFriend(User user, User friend)
             throws UserNotFoundException;
+    
+    Users pendingIncomingRequests(User user);
+    
+    Users pendingOutgoingRequests(User user);
 }
