@@ -8,10 +8,12 @@ The [JSON Schema](http://json-schema.org/) is maintained in [`rest/src/main/reso
 
 See [envirocar.github.io/enviroCar-server](http://envirocar.github.io/enviroCar-server/api/).
 
+The documentation is a GitHub page and managed in the branch ``gh-pages``, see https://github.com/enviroCar/enviroCar-server/tree/gh-pages.
+
 ## Deployments ##
 
-* https://giv-car.uni-muenster.de/dev/rest/ (following the dev branch)
-* https://giv-car.uni-muenster.de/stable/rest/ (following the master branch)
+* **Stable API**: https://envirocar.org/api/stable/ (the master branch)
+* **Development API**: https://envirocar.org/api/dev/ (the dev branch)
 
 ## Building & Installation ##
 
