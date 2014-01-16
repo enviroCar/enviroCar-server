@@ -2,7 +2,7 @@
 layout: default
 ---
 
-# /rest/tracks #
+# /tracks #
 
 ### GET
 Get a list of all tracks.
@@ -12,7 +12,7 @@ Get a list of all tracks.
 {% include_example tracks %}
 
 In addition to the standard query parameters, tracks can be queried by a given boundingbox. Therefore you have to add the following get parameter: `bbox=minx,miny,maxx,maxy`.
-(example: `/rest/tracks?bbox=7.0,51.1,7.3,52.0`)
+(example: `/tracks?bbox=7.0,51.1,7.3,52.0`)
 
 ### POST
 Creates a new tracks and adds current user as the owner.
@@ -21,7 +21,7 @@ Creates a new tracks and adds current user as the owner.
 #### Request Example
 {% include_example track.create %}
 
-# /rest/tracks/:trackid #
+# /tracks/:trackid #
 ### GET
 Get a track.
 ### Response Schema

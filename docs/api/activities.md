@@ -2,7 +2,7 @@
 layout: default
 ---
 
-# /rest/users/:username/activities
+# /users/:username/activities
 
 This is the activities of a user resource.
 
@@ -17,7 +17,7 @@ Get a list of activities of the user `username`.
 {% include_example activities %}
 
 
-# /rest/users/:username/activities/:activity
+# /users/:username/activities/:activity
 
 This is the activity of acitvities of a user `username`.
 
@@ -32,7 +32,7 @@ Get the activity `activity` of the activities of a user `username`.
 {% include_example activity %}
 
 
-# /rest/users/:username/friendActivities
+# /users/:username/friendActivities
 
 This is the fiend-activities of a user resource.
 
@@ -47,7 +47,7 @@ Get a list of acitvities of the friends of a user `username`.
 {% include_example activities %}
 
 
-# /rest/users/:username/friendActivities/:activity
+# /users/:username/friendActivities/:activity
 
 This is the activity of friend-acitvities of a user `username`.
 
@@ -62,7 +62,7 @@ Get the activity `activity` of the activities of a user `username`.
 {% include_example activity %}
 
 
-# /rest/groups/:groupname/activities
+# /groups/:groupname/activities
 
 This is the group-activities of a group resource.
 
@@ -77,7 +77,7 @@ Get a list of group-acitvities of a group `groupname`.
 {% include_example activities %}
 
 
-# /rest/groups/:groupname/activities/:activity
+# /groups/:groupname/activities/:activity
 
 This is the activity `activity` of group-acitvities of a group `groupname`.
 
