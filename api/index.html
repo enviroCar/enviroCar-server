@@ -39,29 +39,29 @@
 
 <h2 id="toc_2">Pagination</h2>
 
-<p>Every collection resource (e.g. <code>/rest/measurements</code>) offers two query parameters: <code>limit</code> and <code>page</code>. <code>limit</code> specifies the amount of retrieved entities while <code>page</code> indicates the position in the set of all entities. Per default <code>page</code> is 0 and <code>limit</code> will restrict the result to 100 entities. It is not possible to retrieve more than 100 entities at once. To allow navigation through the result set the service supports <a href="http://tools.ietf.org/html/rfc5988" title="RFC 5988: Web Linking">RFC5988</a> conformant <code>Link</code> headers. The link relations used are quite self explanatory: <code>first</code>, <code>last</code>, <code>prev</code> and <code>next</code>.</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">&gt; GET /rest/measurements?limit=2&amp;page=20 HTTP/1.1
+<p>Every collection resource (e.g. <code>/measurements</code>) offers two query parameters: <code>limit</code> and <code>page</code>. <code>limit</code> specifies the amount of retrieved entities while <code>page</code> indicates the position in the set of all entities. Per default <code>page</code> is 0 and <code>limit</code> will restrict the result to 100 entities. It is not possible to retrieve more than 100 entities at once. To allow navigation through the result set the service supports <a href="http://tools.ietf.org/html/rfc5988" title="RFC 5988: Web Linking">RFC5988</a> conformant <code>Link</code> headers. The link relations used are quite self explanatory: <code>first</code>, <code>last</code>, <code>prev</code> and <code>next</code>.</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">&gt; GET /api/stable/measurements?limit=2&amp;page=20 HTTP/1.1
 &gt; Host: giv-car
 &gt; Accept: application/json
 &gt; 
 &lt; HTTP/1.1 200 OK
 &lt; [...]
-&lt; Link: &lt;https://giv-car/rest/measurements?limit=2&amp;page=1&gt;;rel=first;type=application/json
-&lt; Link: &lt;https://giv-car/rest/measurements?limit=2&amp;page=19&gt;;rel=prev;type=application/json
-&lt; Link: &lt;https://giv-car/rest/measurements?limit=2&amp;page=21&gt;;rel=next;type=application/json
-&lt; Link: &lt;https://giv-car/rest/measurements?limit=2&amp;page=4169&gt;;rel=last;type=application/json
+&lt; Link: &lt;https://envirocar.org/api/stable/measurements?limit=2&amp;page=1&gt;;rel=first;type=application/json
+&lt; Link: &lt;https://envirocar.org/api/stable/measurements?limit=2&amp;page=19&gt;;rel=prev;type=application/json
+&lt; Link: &lt;https://envirocar.org/api/stable/measurements?limit=2&amp;page=21&gt;;rel=next;type=application/json
+&lt; Link: &lt;https://envirocar.org/api/stable/measurements?limit=2&amp;page=4169&gt;;rel=last;type=application/json
 &lt; Content-Type: application/json; schema=&quot;http://schema.envirocar.org/measurements.json#&quot;
 [...]
 </code></pre></div>
 <p>Note that <code>next</code> and <code>prev</code> will not be present if they are equal to <code>first</code>/<code>last</code> or if they do not exist. <code>first</code> or <code>last</code> will not show up if you are already on the first or last page.</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">&gt; GET /rest/measurements?limit=100&amp;page=1 HTTP/1.1
+<div class="highlight"><pre><code class="text language-text" data-lang="text">&gt; GET /api/stable/measurements?limit=100&amp;page=1 HTTP/1.1
 &gt; Host: giv-car
 &gt; Accept: application/json
 &gt; 
 &lt; HTTP/1.1 200 OK
 &lt; [...]
-&lt; Link: &lt;https://giv-car/rest/measurements?limit=100&amp;page=84&gt;;rel=last;type=application/json
-&lt; Link: &lt;https://giv-car/rest/measurements?limit=100&amp;page=2&gt;;rel=next;type=application/json
+&lt; Link: &lt;https://envirocar.org/api/stable/measurements?limit=100&amp;page=84&gt;;rel=last;type=application/json
+&lt; Link: &lt;https://envirocar.org/api/stable/measurements?limit=100&amp;page=2&gt;;rel=next;type=application/json
 &lt; Content-Type: application/json; schema=&quot;http://schema.envirocar.org/measurements.json#&quot;
 [...]
 </code></pre></div>
@@ -69,83 +69,87 @@
 
 <h2 id="toc_3">Endpoints</h2>
 
+<p>The current API endpoint is: <a href="https://envirocar.org/api/stable">https://envirocar.org/api/stable</a>.</p>
+
+<p>The following resources are located relatively to the API endpoint:</p>
+
 <ul>
 <li><a href="root">Root</a></li>
 <li><a href="friends">Friends</a>
 
 <ul>
-<li><code>/rest/users/:username/friends</code></li>
-<li><code>/rest/users/:username/friends/:friend</code></li>
+<li><code>/users/:username/friends</code></li>
+<li><code>/users/:username/friends/:friend</code></li>
 </ul></li>
 <li><a href="tracks">Tracks</a>
 
 <ul>
-<li><code>/rest/tracks</code></li>
-<li><code>/rest/tracks/:trackid</code></li>
-<li><code>/rest/users/:username/tracks</code></li>
-<li><code>/rest/users/:username/tracks/:trackid</code></li>
+<li><code>/tracks</code></li>
+<li><code>/tracks/:trackid</code></li>
+<li><code>/users/:username/tracks</code></li>
+<li><code>/users/:username/tracks/:trackid</code></li>
 </ul></li>
 <li><a href="phenomenons">Phenomenons</a>
 
 <ul>
-<li><code>/rest/phenmenons</code></li>
-<li><code>/rest/phenmenons/:phenomenon</code></li>
+<li><code>/phenmenons</code></li>
+<li><code>/phenmenons/:phenomenon</code></li>
 </ul></li>
 <li><a href="sensors">Sensors</a>
 
 <ul>
-<li><code>/rest/sensors</code></li>
-<li><code>/rest/sensors/:sensor</code></li>
+<li><code>/sensors</code></li>
+<li><code>/sensors/:sensor</code></li>
 </ul></li>
 <li><a href="groups">Groups</a>
 
 <ul>
-<li><code>/rest/groups</code></li>
-<li><code>/rest/groups/:groupname</code></li>
-<li><code>/rest/users/:username/groups</code></li>
-<li><code>/rest/users/:username/groups/:groupname</code></li>
-<li><code>/rest/groups/:groupname/members</code></li>
-<li><code>/rest/groups/:groupname/members/:username</code></li>
+<li><code>/groups</code></li>
+<li><code>/groups/:groupname</code></li>
+<li><code>/users/:username/groups</code></li>
+<li><code>/users/:username/groups/:groupname</code></li>
+<li><code>/groups/:groupname/members</code></li>
+<li><code>/groups/:groupname/members/:username</code></li>
 </ul></li>
 <li><a href="users">Users</a>
 
 <ul>
-<li><code>/rest/users</code></li>
-<li><code>/rest/users/:username</code></li>
+<li><code>/users</code></li>
+<li><code>/users/:username</code></li>
 </ul></li>
 <li><a href="measurements">Measurements</a>
 
 <ul>
-<li><code>/rest/measurements</code></li>
-<li><code>/rest/measurements/:measurementid</code></li>
-<li><code>/rest/tracks/:trackid/measurements</code></li>
-<li><code>/rest/tracks/:trackid/measurements/:measurementid</code></li>
-<li><code>/rest/users/:username/measurements</code></li>
-<li><code>/rest/users/:username/measurements/:measurementid</code></li>
-<li><code>/rest/users/:username/tracks/:trackid/measurements</code></li>
-<li><code>/rest/users/:username/tracks/:trackid/measurements/:measurementid</code></li>
+<li><code>/measurements</code></li>
+<li><code>/measurements/:measurementid</code></li>
+<li><code>/tracks/:trackid/measurements</code></li>
+<li><code>/tracks/:trackid/measurements/:measurementid</code></li>
+<li><code>/users/:username/measurements</code></li>
+<li><code>/users/:username/measurements/:measurementid</code></li>
+<li><code>/users/:username/tracks/:trackid/measurements</code></li>
+<li><code>/users/:username/tracks/:trackid/measurements/:measurementid</code></li>
 </ul></li>
 <li><a href="statistics">Statistics</a>
 
 <ul>
-<li><code>/rest/statistics</code></li>
-<li><code>/rest/statistics/:phenomenon</code></li>
-<li><code>/rest/sensors/:sensor/statistics</code></li>
-<li><code>/rest/sensors/:sensor/statistics/:phenomenon</code></li>
-<li><code>/rest/tracks/:trackid/statistics</code></li>
-<li><code>/rest/tracks/:trackid/statistics/:phenomenon</code></li>
-<li><code>/rest/users/:username/statistics</code></li>
-<li><code>/rest/users/:username/statistics/:phenomenon</code></li>
+<li><code>/statistics</code></li>
+<li><code>/statistics/:phenomenon</code></li>
+<li><code>/sensors/:sensor/statistics</code></li>
+<li><code>/sensors/:sensor/statistics/:phenomenon</code></li>
+<li><code>/tracks/:trackid/statistics</code></li>
+<li><code>/tracks/:trackid/statistics/:phenomenon</code></li>
+<li><code>/users/:username/statistics</code></li>
+<li><code>/users/:username/statistics/:phenomenon</code></li>
 </ul></li>
 <li><a href="activities">Activities</a>
 
 <ul>
-<li><code>/rest/users/:username/activities</code></li>
-<li><code>/rest/users/:username/activities/:activity</code></li>
-<li><code>/rest/users/:username/friendActivities</code></li>
-<li><code>/rest/users/:username/friendActivities/:activity</code></li>
-<li><code>/rest/groups/:groupname/activities</code></li>
-<li><code>/rest/groups/:groupname/activities/:activity</code></li>
+<li><code>/users/:username/activities</code></li>
+<li><code>/users/:username/activities/:activity</code></li>
+<li><code>/users/:username/friendActivities</code></li>
+<li><code>/users/:username/friendActivities/:activity</code></li>
+<li><code>/groups/:groupname/activities</code></li>
+<li><code>/groups/:groupname/activities/:activity</code></li>
 </ul></li>
 </ul>
 
