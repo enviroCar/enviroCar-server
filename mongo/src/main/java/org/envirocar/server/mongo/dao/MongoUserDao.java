@@ -53,7 +53,7 @@ public class MongoUserDao extends AbstractMongoDao<String, MongoUser, Users>
     private MongoTrackDao trackDao;
     private MongoMeasurementDao measurementDao;
     private MongoGroupDao groupDao;
-	private PasswordResetDAO passwordResetDao;
+	private final PasswordResetDAO passwordResetDao;
 
     @Inject
     public MongoUserDao(MongoDB mongoDB, PasswordResetDAO dao) {

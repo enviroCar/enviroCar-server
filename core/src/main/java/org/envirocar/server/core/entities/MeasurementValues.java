@@ -16,7 +16,6 @@
  */
 package org.envirocar.server.core.entities;
 
-import org.envirocar.server.core.util.Pagination;
 import org.envirocar.server.core.util.UpCastingIterable;
 
 /**
@@ -25,38 +24,22 @@ import org.envirocar.server.core.util.UpCastingIterable;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class MeasurementValues extends UpCastingIterable<MeasurementValue> {
-    public static MeasurementValuesBuilder from(
-            Iterable<? extends MeasurementValue> delegate) {
-        return new MeasurementValuesBuilder(delegate);
+    protected MeasurementValues(Builder builder) {
+        super(builder);
     }
 
-    protected MeasurementValues(Iterable<? extends MeasurementValue> delegate,
-                                Pagination pagination, long elements) {
-        super(delegate, pagination, elements);
+    public static Builder from(Iterable<? extends MeasurementValue> delegate) {
+        return new Builder(delegate);
     }
 
-    public static class MeasurementValuesBuilder {
-        private Iterable<? extends MeasurementValue> delegate;
-        private Pagination pagination;
-        private long elements;
-
-        public MeasurementValuesBuilder(
-                Iterable<? extends MeasurementValue> delegate) {
-            this.delegate = delegate;
+    public static class Builder extends UpCastingIterable.Builder<Builder, MeasurementValues, MeasurementValue> {
+        protected Builder(Iterable<? extends MeasurementValue> delegate) {
+            super(delegate);
         }
 
-        public MeasurementValuesBuilder withPagination(Pagination pagination) {
-            this.pagination = pagination;
-            return this;
-        }
-
-        public MeasurementValuesBuilder withElements(long elements) {
-            this.elements = elements;
-            return this;
-        }
-
+        @Override
         public MeasurementValues build() {
-            return new MeasurementValues(delegate, pagination, elements);
+            return new MeasurementValues(this);
         }
     }
 }

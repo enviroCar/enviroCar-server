@@ -16,45 +16,27 @@
  */
 package org.envirocar.server.core.entities;
 
-import org.envirocar.server.core.util.Pagination;
 import org.envirocar.server.core.util.UpCastingIterable;
 
 public class Announcements extends UpCastingIterable<Announcement> {
-	
-	protected Announcements(Iterable<? extends Announcement> delegate,
-			Pagination pagination, long elements) {
-		super(delegate, pagination, elements);
-	}
-	
-	public static AnnouncementCollectionBuilder from(
-            Iterable<? extends Announcement> delegate) {
-        return new AnnouncementCollectionBuilder(delegate);
+
+    protected Announcements(Builder builder) {
+        super(builder);
     }
 
+    public static Builder from(Iterable<? extends Announcement> delegate) {
+        return new Builder(delegate);
+    }
 
-    public static class AnnouncementCollectionBuilder {
-        private Iterable<? extends Announcement> delegate;
-        private Pagination pagination;
-        private long elements;
-
-        public AnnouncementCollectionBuilder(Iterable<? extends Announcement> delegate) {
-            this.delegate = delegate;
+    public static class Builder extends UpCastingIterable.Builder<Builder, Announcements, Announcement> {
+        protected Builder(Iterable<? extends Announcement> delegate) {
+            super(delegate);
         }
 
-        public AnnouncementCollectionBuilder withPagination(Pagination pagination) {
-            this.pagination = pagination;
-            return this;
-        }
-
-        public AnnouncementCollectionBuilder withElements(long elements) {
-            this.elements = elements;
-            return this;
-        }
-
+        @Override
         public Announcements build() {
-            return new Announcements(delegate, pagination, elements);
+            return new Announcements(this);
         }
     }
 
 }
-

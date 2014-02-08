@@ -16,7 +16,7 @@
  */
 package org.envirocar.server.mongo.dao;
 
-import org.envirocar.server.core.util.PaginatedIterable;
+import org.envirocar.server.core.util.Paginated;
 import org.envirocar.server.core.util.Pagination;
 import org.envirocar.server.mongo.MongoDB;
 import org.envirocar.server.mongo.entity.MongoEntityBase;
@@ -41,7 +41,7 @@ import com.mongodb.WriteResult;
  *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public abstract class AbstractMongoDao<K, E, C extends PaginatedIterable<? super E>> {
+public abstract class AbstractMongoDao<K, E, C extends Paginated<? super E>> {
     private final BasicDAO<E, K> dao;
     private MongoDB mongoDB;
 

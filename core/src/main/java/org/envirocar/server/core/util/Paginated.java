@@ -23,14 +23,14 @@ import com.google.common.base.Objects;
  *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public abstract class PaginatedIterable<T> implements Iterable<T> {
+public abstract class Paginated<T> {
     private final Pagination current;
     private final Pagination next;
     private final Pagination last;
     private final Pagination previous;
     private final Pagination first;
 
-    public PaginatedIterable(Pagination current, long elements) {
+    public Paginated(Pagination current, long elements) {
         this.first = current == null ? null : current.first(elements);
         this.previous = current == null ? null : current.previous(elements);
         this.current = current;
