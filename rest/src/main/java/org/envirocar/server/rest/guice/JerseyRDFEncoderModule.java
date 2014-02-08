@@ -18,6 +18,8 @@ package org.envirocar.server.rest.guice;
 
 import org.envirocar.server.core.activities.Activities;
 import org.envirocar.server.core.activities.Activity;
+import org.envirocar.server.core.entities.Fueling;
+import org.envirocar.server.core.entities.Fuelings;
 import org.envirocar.server.core.entities.Group;
 import org.envirocar.server.core.entities.Groups;
 import org.envirocar.server.core.entities.Measurement;
@@ -35,6 +37,8 @@ import org.envirocar.server.core.statistics.Statistics;
 import org.envirocar.server.rest.encoding.RDFEntityEncoder;
 import org.envirocar.server.rest.encoding.rdf.ActivitiesRDFEncoder;
 import org.envirocar.server.rest.encoding.rdf.ActivityRDFEncoder;
+import org.envirocar.server.rest.encoding.rdf.FuelingRDFEncoder;
+import org.envirocar.server.rest.encoding.rdf.FuelingsRDFEncoder;
 import org.envirocar.server.rest.encoding.rdf.GroupRDFEncoder;
 import org.envirocar.server.rest.encoding.rdf.GroupsRDFEncoder;
 import org.envirocar.server.rest.encoding.rdf.MeasurementRDFEncoder;
@@ -110,5 +114,12 @@ public class JerseyRDFEncoderModule extends AbstractModule {
         bind(UsersRDFEncoder.class).in(Scopes.SINGLETON);
         bind(new TypeLiteral<RDFEntityEncoder<Users>>() {
         }).to(UsersRDFEncoder.class);
+        bind(FuelingRDFEncoder.class).in(Scopes.SINGLETON);
+        bind(new TypeLiteral<RDFEntityEncoder<Fueling>>() {
+        }).to(FuelingRDFEncoder.class);
+        bind(FuelingsRDFEncoder.class).in(Scopes.SINGLETON);
+        bind(new TypeLiteral<RDFEntityEncoder<Fuelings>>() {
+        }).to(FuelingsRDFEncoder.class);
+
     }
 }
