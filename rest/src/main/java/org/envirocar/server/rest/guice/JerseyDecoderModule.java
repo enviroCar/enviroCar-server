@@ -76,6 +76,7 @@ public class JerseyDecoderModule extends AbstractModule {
         bind(ResetPasswordDecoder.class).in(Scopes.SINGLETON);
         bind(new TypeLiteral<JSONEntityDecoder<ResetPasswordRequest>>() {
         }).to(ResetPasswordDecoder.class);
+        bind(FuelingDecoder.class).in(Scopes.SINGLETON);
         bind(new TypeLiteral<JSONEntityDecoder<Fueling>>() {
         }).to(FuelingDecoder.class);
     }
