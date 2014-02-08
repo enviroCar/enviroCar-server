@@ -30,6 +30,7 @@ import org.joda.time.DateTime;
 
 import com.github.jmkgreen.morphia.Key;
 import com.github.jmkgreen.morphia.annotations.Embedded;
+import com.github.jmkgreen.morphia.annotations.Entity;
 import com.github.jmkgreen.morphia.annotations.Id;
 import com.github.jmkgreen.morphia.annotations.Indexed;
 import com.github.jmkgreen.morphia.annotations.Property;
@@ -42,6 +43,7 @@ import com.google.common.base.Strings;
  *
  * @author Christian Autermann
  */
+@Entity("fuelings")
 public class MongoFueling extends MongoEntityBase implements Fueling {
     public static final String FUEL_TYPE = "fuelType";
     public static final String COST = "cost";
@@ -57,11 +59,11 @@ public class MongoFueling extends MongoEntityBase implements Fueling {
     private ObjectId id = new ObjectId();
     @Property(FUEL_TYPE)
     private String fuelType;
-    @Property(COST)
+    @Embedded(COST)
     private DimensionedNumber cost;
-    @Property(VOLUME)
+    @Embedded(VOLUME)
     private DimensionedNumber volume;
-    @Property(MILEAGE)
+    @Embedded(MILEAGE)
     private DimensionedNumber mileage;
     @Property(COMMENT)
     private String comment;
