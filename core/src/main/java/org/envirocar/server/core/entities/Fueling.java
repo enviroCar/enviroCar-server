@@ -124,7 +124,7 @@ public interface Fueling extends BaseEntity {
      *
      * @param missedFuelStop if {@code Fueling} is is a missed fuel stop
      */
-    void setMissedFuelStop(Boolean missedFuelStop);
+    void setMissedFuelStop(boolean missedFuelStop);
 
     /**
      * Gets the comment of this {@code Fueling}.
