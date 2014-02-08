@@ -74,7 +74,7 @@ public class MongoFuelingDao extends AbstractMongoDao<ObjectId, MongoFueling, Fu
                                         request.getTemporalFilter());
         }
         if (request.hasUser()) {
-            q.field(MongoFueling.TIME).equal(key(request.getUser()));
+            q.field(MongoFueling.USER).equal(key(request.getUser()));
         }
         return fetch(q, request.getPagination());
     }
