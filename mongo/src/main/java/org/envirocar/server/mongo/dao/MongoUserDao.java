@@ -53,6 +53,7 @@ public class MongoUserDao extends AbstractMongoDao<String, MongoUser, Users>
     private MongoTrackDao trackDao;
     private MongoMeasurementDao measurementDao;
     private MongoGroupDao groupDao;
+    private MongoFuelingDao fuelingDao;
 	private final PasswordResetDAO passwordResetDao;
 
     @Inject
@@ -69,6 +70,11 @@ public class MongoUserDao extends AbstractMongoDao<String, MongoUser, Users>
     @Inject
     public void setMeasurementDao(MongoMeasurementDao measurementDao) {
         this.measurementDao = measurementDao;
+    }
+
+    @Inject
+    public void setFuelingDao(MongoFuelingDao fuelingDao) {
+        this.fuelingDao = fuelingDao;
     }
 
     @Inject
@@ -110,6 +116,7 @@ public class MongoUserDao extends AbstractMongoDao<String, MongoUser, Users>
         trackDao.removeUser(user);
         measurementDao.removeUser(user);
         groupDao.removeUser(user);
+        fuelingDao.removeUser(user);
         Key<MongoUser> userRef = key(user);
         UpdateResults<MongoUser> result = update(
                 q().field(MongoUser.FRIENDS).hasThisElement(userRef),

@@ -24,6 +24,7 @@ import org.envirocar.server.core.filter.FuelingFilter;
 import org.envirocar.server.core.util.Pagination;
 import org.envirocar.server.mongo.MongoDB;
 import org.envirocar.server.mongo.entity.MongoFueling;
+import org.envirocar.server.mongo.entity.MongoUser;
 import org.envirocar.server.mongo.util.MorphiaUtils;
 
 import com.github.jmkgreen.morphia.query.Query;
@@ -77,6 +78,10 @@ public class MongoFuelingDao extends AbstractMongoDao<ObjectId, MongoFueling, Fu
             q.field(MongoFueling.USER).equal(key(request.getUser()));
         }
         return fetch(q, request.getPagination());
+    }
+
+    void removeUser(MongoUser user) {
+        delete(q().field(MongoFueling.USER).equal(key(user)));
     }
 
 }

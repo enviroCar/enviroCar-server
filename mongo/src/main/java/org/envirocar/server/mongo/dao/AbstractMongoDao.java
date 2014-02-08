@@ -102,6 +102,10 @@ public abstract class AbstractMongoDao<K, E, C extends Paginated<? super E>> {
         return dao.deleteById(id);
     }
 
+    protected WriteResult delete(Query<E> q) {
+        return dao.deleteByQuery(q);
+    }
+
     @SuppressWarnings("unchecked")
     protected void updateTimestamp(E e) {
         update((K) this.mongoDB.getMapper().getId(e), up()
