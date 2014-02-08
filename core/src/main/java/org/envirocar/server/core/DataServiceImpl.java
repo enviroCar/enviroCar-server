@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.envirocar.server.core.dao.AnnouncementsDao;
 import org.envirocar.server.core.dao.BadgesDao;
+import org.envirocar.server.core.dao.FuelingDao;
 import org.envirocar.server.core.dao.MeasurementDao;
 import org.envirocar.server.core.dao.PhenomenonDao;
 import org.envirocar.server.core.dao.SensorDao;
@@ -28,6 +29,8 @@ import org.envirocar.server.core.dao.TrackDao;
 import org.envirocar.server.core.entities.Announcement;
 import org.envirocar.server.core.entities.Announcements;
 import org.envirocar.server.core.entities.Badges;
+import org.envirocar.server.core.entities.Fueling;
+import org.envirocar.server.core.entities.Fuelings;
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.Measurements;
 import org.envirocar.server.core.entities.Phenomenon;
@@ -38,13 +41,16 @@ import org.envirocar.server.core.entities.TermsOfUse;
 import org.envirocar.server.core.entities.TermsOfUseInstance;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.entities.Tracks;
+import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.event.ChangedTrackEvent;
+import org.envirocar.server.core.event.CreatedFuelingEvent;
 import org.envirocar.server.core.event.CreatedMeasurementEvent;
 import org.envirocar.server.core.event.CreatedPhenomenonEvent;
 import org.envirocar.server.core.event.CreatedSensorEvent;
 import org.envirocar.server.core.event.CreatedTrackEvent;
 import org.envirocar.server.core.event.DeletedMeasurementEvent;
 import org.envirocar.server.core.event.DeletedTrackEvent;
+import org.envirocar.server.core.exception.FuelingNotFoundException;
 import org.envirocar.server.core.exception.IllegalModificationException;
 import org.envirocar.server.core.exception.MeasurementNotFoundException;
 import org.envirocar.server.core.exception.PhenomenonNotFoundException;
@@ -52,6 +58,7 @@ import org.envirocar.server.core.exception.ResourceNotFoundException;
 import org.envirocar.server.core.exception.SensorNotFoundException;
 import org.envirocar.server.core.exception.TrackNotFoundException;
 import org.envirocar.server.core.exception.ValidationException;
+import org.envirocar.server.core.filter.FuelingFilter;
 import org.envirocar.server.core.filter.MeasurementFilter;
 import org.envirocar.server.core.filter.SensorFilter;
 import org.envirocar.server.core.filter.TrackFilter;
@@ -76,10 +83,12 @@ public class DataServiceImpl implements DataService {
     private final SensorDao sensorDao;
     private final PhenomenonDao phenomenonDao;
     private final TermsOfUseDao termsOfUseDao;
+    private final FuelingDao fuelingDao;
     private final EntityValidator<Track> trackValidator;
     private final EntityUpdater<Track> trackUpdater;
     private final EntityUpdater<Measurement> measurementUpdater;
     private final EntityValidator<Measurement> measurementValidator;
+    private final EntityValidator<Fueling> fuelingValidator;
     private final EventBus eventBus;
 	private final AnnouncementsDao announcementsDao;
 	private final BadgesDao badgesDao;
@@ -89,11 +98,12 @@ public class DataServiceImpl implements DataService {
                            SensorDao sensorDao, PhenomenonDao phenomenonDao,
                            TermsOfUseDao termsOfUseDao,
                            AnnouncementsDao announcementsDao,
-                           BadgesDao badgesDao,
+                           BadgesDao badgesDao, FuelingDao fuelingDao,
                            EntityValidator<Track> trackValidator,
                            EntityUpdater<Track> trackUpdater,
                            EntityUpdater<Measurement> measurementUpdater,
                            EntityValidator<Measurement> measurementValidator,
+                           EntityValidator<Fueling> fuelingValidator,
                            EventBus eventBus) {
         this.trackDao = trackDao;
         this.measurementDao = measurementDao;
@@ -107,6 +117,8 @@ public class DataServiceImpl implements DataService {
         this.termsOfUseDao = termsOfUseDao;
         this.announcementsDao = announcementsDao;
         this.badgesDao = badgesDao;
+        this.fuelingValidator = fuelingValidator;
+        this.fuelingDao = fuelingDao;
     }
 
     @Override
@@ -176,10 +188,10 @@ public class DataServiceImpl implements DataService {
     }
 
     @Override
-    public Measurement createMeasurement(Track track, Measurement m) {
-        this.measurementValidator.validateCreate(m);
-        m.setTrack(track);
-        this.measurementDao.create(m);
+    public Measurement createMeasurement(Track track, Measurement measurement) {
+        this.measurementValidator.validateCreate(measurement);
+        measurement.setTrack(track);
+        Measurement m = this.measurementDao.create(measurement);
         if (!track.hasBegin() || m.getTime().isBefore(track.getBegin())) {
             track.setBegin(m.getTime());
         }
@@ -219,9 +231,9 @@ public class DataServiceImpl implements DataService {
 
     @Override
     public Phenomenon createPhenomenon(Phenomenon phenomenon) {
-        this.phenomenonDao.create(phenomenon);
-        this.eventBus.post(new CreatedPhenomenonEvent(phenomenon));
-        return phenomenon;
+        Phenomenon p = this.phenomenonDao.create(phenomenon);
+        this.eventBus.post(new CreatedPhenomenonEvent(p));
+        return p;
     }
 
     @Override
@@ -240,9 +252,9 @@ public class DataServiceImpl implements DataService {
 
     @Override
     public Sensor createSensor(Sensor sensor) {
-        this.sensorDao.create(sensor);
-        this.eventBus.post(new CreatedSensorEvent(sensor));
-        return sensor;
+        Sensor s = this.sensorDao.create(sensor);
+        this.eventBus.post(new CreatedSensorEvent(s));
+        return s;
     }
 
     @Override
@@ -294,4 +306,27 @@ public class DataServiceImpl implements DataService {
 	public Badges getBadges(Pagination pagination) {
 		return this.badgesDao.get(pagination);
 	}
+
+    @Override
+    public Fueling createFueling(Fueling fueling) {
+        this.fuelingValidator.validateCreate(fueling);
+        Fueling f = this.fuelingDao.create(fueling);
+        this.eventBus.post(new CreatedFuelingEvent(f.getUser(), f));
+        return f;
+    }
+
+    @Override
+    public Fuelings getFuelings(FuelingFilter filter) {
+        return this.fuelingDao.get(filter);
+    }
+
+    @Override
+    public Fueling getFueling(User user, String id)
+            throws FuelingNotFoundException {
+        Fueling m = this.fuelingDao.getById(id);
+        if (m == null || !m.getUser().getName().equals(user.getName())) {
+            throw new FuelingNotFoundException(id);
+        }
+        return m;
+    }
 }
