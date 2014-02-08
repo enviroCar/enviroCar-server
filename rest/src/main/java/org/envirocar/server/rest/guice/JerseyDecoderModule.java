@@ -16,12 +16,14 @@
  */
 package org.envirocar.server.rest.guice;
 
+import org.envirocar.server.core.entities.Fueling;
 import org.envirocar.server.core.entities.Group;
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.Phenomenon;
 import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.entities.User;
+import org.envirocar.server.rest.decoding.json.FuelingDecoder;
 import org.envirocar.server.rest.decoding.json.GeoJSONDecoder;
 import org.envirocar.server.rest.decoding.json.GroupDecoder;
 import org.envirocar.server.rest.decoding.json.JSONEntityDecoder;
@@ -74,5 +76,7 @@ public class JerseyDecoderModule extends AbstractModule {
         bind(ResetPasswordDecoder.class).in(Scopes.SINGLETON);
         bind(new TypeLiteral<JSONEntityDecoder<ResetPasswordRequest>>() {
         }).to(ResetPasswordDecoder.class);
+        bind(new TypeLiteral<JSONEntityDecoder<Fueling>>() {
+        }).to(FuelingDecoder.class);
     }
 }

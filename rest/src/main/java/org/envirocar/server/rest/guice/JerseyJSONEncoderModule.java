@@ -22,6 +22,8 @@ import org.envirocar.server.core.entities.Announcement;
 import org.envirocar.server.core.entities.Announcements;
 import org.envirocar.server.core.entities.Badge;
 import org.envirocar.server.core.entities.Badges;
+import org.envirocar.server.core.entities.Fueling;
+import org.envirocar.server.core.entities.Fuelings;
 import org.envirocar.server.core.entities.Group;
 import org.envirocar.server.core.entities.Groups;
 import org.envirocar.server.core.entities.Measurement;
@@ -30,8 +32,8 @@ import org.envirocar.server.core.entities.Phenomenon;
 import org.envirocar.server.core.entities.Phenomenons;
 import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.core.entities.Sensors;
-import org.envirocar.server.core.entities.TermsOfUseInstance;
 import org.envirocar.server.core.entities.TermsOfUse;
+import org.envirocar.server.core.entities.TermsOfUseInstance;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.entities.Tracks;
 import org.envirocar.server.core.entities.User;
@@ -45,6 +47,8 @@ import org.envirocar.server.rest.encoding.json.AnnouncementJSONEncoder;
 import org.envirocar.server.rest.encoding.json.AnnouncementsJSONEncoder;
 import org.envirocar.server.rest.encoding.json.BadgeJSONEncoder;
 import org.envirocar.server.rest.encoding.json.BadgesJSONEncoder;
+import org.envirocar.server.rest.encoding.json.FuelingJSONEncoder;
+import org.envirocar.server.rest.encoding.json.FuelingsJSONEncoder;
 import org.envirocar.server.rest.encoding.json.GeometryJSONEncoder;
 import org.envirocar.server.rest.encoding.json.GroupJSONEncoder;
 import org.envirocar.server.rest.encoding.json.GroupsJSONEncoder;
@@ -57,8 +61,8 @@ import org.envirocar.server.rest.encoding.json.SensorJSONEncoder;
 import org.envirocar.server.rest.encoding.json.SensorsJSONEncoder;
 import org.envirocar.server.rest.encoding.json.StatisticJSONEncoder;
 import org.envirocar.server.rest.encoding.json.StatisticsJSONEncoder;
-import org.envirocar.server.rest.encoding.json.TermsOfUseJSONEncoder;
 import org.envirocar.server.rest.encoding.json.TermsOfUseInstanceJSONEncoder;
+import org.envirocar.server.rest.encoding.json.TermsOfUseJSONEncoder;
 import org.envirocar.server.rest.encoding.json.TrackJSONEncoder;
 import org.envirocar.server.rest.encoding.json.TracksJSONEncoder;
 import org.envirocar.server.rest.encoding.json.UserJSONEncoder;
@@ -150,5 +154,12 @@ public class JerseyJSONEncoderModule extends AbstractModule {
         bind(BadgesJSONEncoder.class).in(Scopes.SINGLETON);
         bind(new TypeLiteral<JSONEntityEncoder<Badges>>() {
         }).to(BadgesJSONEncoder.class);
+
+        bind(FuelingJSONEncoder.class).in(Scopes.SINGLETON);
+        bind(new TypeLiteral<JSONEntityEncoder<Fueling>>() {
+        }).to(FuelingJSONEncoder.class);
+        bind(FuelingsJSONEncoder.class).in(Scopes.SINGLETON);
+        bind(new TypeLiteral<JSONEntityEncoder<Fuelings>>() {
+        }).to(FuelingsJSONEncoder.class);
     }
 }
