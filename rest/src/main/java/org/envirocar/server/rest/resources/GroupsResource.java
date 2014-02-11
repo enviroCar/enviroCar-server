@@ -27,13 +27,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
-import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
-
 import org.envirocar.server.core.entities.Group;
 import org.envirocar.server.core.entities.Groups;
 import org.envirocar.server.core.entities.User;
-
 import org.envirocar.server.core.exception.GroupNotFoundException;
 import org.envirocar.server.core.exception.ResourceAlreadyExistException;
 import org.envirocar.server.core.exception.UserNotFoundException;
@@ -43,8 +39,10 @@ import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.RESTConstants;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.auth.Authenticated;
-
 import org.envirocar.server.rest.validation.Schema;
+
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 
 /**
  * TODO JavaDoc
@@ -53,7 +51,7 @@ import org.envirocar.server.rest.validation.Schema;
  */
 public class GroupsResource extends AbstractResource {
     public static final String GROUP = "{group}";
-    private User user;
+    private final User user;
 
     @Inject
     public GroupsResource(@Assisted @Nullable User user) {

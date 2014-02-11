@@ -16,11 +16,13 @@
  */
 package org.envirocar.server.core.guice;
 
+import org.envirocar.server.core.entities.Fueling;
 import org.envirocar.server.core.entities.Group;
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.validation.EntityValidator;
+import org.envirocar.server.core.validation.FuelingValidator;
 import org.envirocar.server.core.validation.GroupValidator;
 import org.envirocar.server.core.validation.MeasurementValidator;
 import org.envirocar.server.core.validation.TrackValidator;
@@ -45,5 +47,7 @@ public class ValidatorModule extends AbstractModule {
         }).to(TrackValidator.class);
         bind(new TypeLiteral<EntityValidator<Measurement>>() {
         }).to(MeasurementValidator.class);
+        bind(new TypeLiteral<EntityValidator<Fueling>>() {
+        }).to(FuelingValidator.class);
     }
 }

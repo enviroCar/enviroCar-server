@@ -81,4 +81,6 @@ public interface UserRights {
     boolean canFriend(User user, User friend);
 
     boolean canSeeBadgesOf(User user);
+
+    boolean canSeeFuelingsOf(User user);
 }

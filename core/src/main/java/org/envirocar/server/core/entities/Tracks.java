@@ -18,7 +18,6 @@ package org.envirocar.server.core.entities;
 
 import java.util.Collections;
 
-import org.envirocar.server.core.util.Pagination;
 import org.envirocar.server.core.util.UpCastingIterable;
 
 /**
@@ -27,41 +26,26 @@ import org.envirocar.server.core.util.UpCastingIterable;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class Tracks extends UpCastingIterable<Track> {
-    public static TracksBuilder from(
-            Iterable<? extends Track> delegate) {
-        return new TracksBuilder(delegate);
+    protected Tracks(Builder builder) {
+        super(builder);
     }
 
-    protected Tracks(Iterable<? extends Track> delegate,
-                     Pagination pagination, long elements) {
-        super(delegate, pagination, elements);
+    public static Builder from(Iterable<? extends Track> delegate) {
+        return new Builder(delegate);
     }
 
     public static Tracks none() {
-        return new Tracks(Collections.<Track>emptyList(), null, 0);
+        return from(Collections.<Track>emptyList()).build();
     }
 
-    public static class TracksBuilder {
-        private Iterable<? extends Track> delegate;
-        private Pagination pagination;
-        private long elements;
-
-        public TracksBuilder(Iterable<? extends Track> delegate) {
-            this.delegate = delegate;
+    public static class Builder extends UpCastingIterable.Builder<Builder, Tracks, Track> {
+        protected Builder(Iterable<? extends Track> delegate) {
+            super(delegate);
         }
 
-        public TracksBuilder withPagination(Pagination pagination) {
-            this.pagination = pagination;
-            return this;
-        }
-
-        public TracksBuilder withElements(long elements) {
-            this.elements = elements;
-            return this;
-        }
-
+        @Override
         public Tracks build() {
-            return new Tracks(delegate, pagination, elements);
+            return new Tracks(this);
         }
     }
 }

@@ -22,6 +22,7 @@ import org.envirocar.server.core.activities.GroupActivity;
 import org.envirocar.server.core.activities.TrackActivity;
 import org.envirocar.server.core.activities.UserActivity;
 import org.envirocar.server.core.entities.EntityFactory;
+import org.envirocar.server.core.entities.Fueling;
 import org.envirocar.server.core.entities.Group;
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.MeasurementValue;
@@ -34,6 +35,7 @@ import org.envirocar.server.mongo.activities.MongoActivity;
 import org.envirocar.server.mongo.activities.MongoGroupActivity;
 import org.envirocar.server.mongo.activities.MongoTrackActivity;
 import org.envirocar.server.mongo.activities.MongoUserActivity;
+import org.envirocar.server.mongo.entity.MongoFueling;
 import org.envirocar.server.mongo.entity.MongoGroup;
 import org.envirocar.server.mongo.entity.MongoMeasurement;
 import org.envirocar.server.mongo.entity.MongoMeasurementValue;
@@ -68,6 +70,7 @@ public class MongoModule extends AbstractModule {
                 .implement(MeasurementValue.class, MongoMeasurementValue.class)
                 .implement(Phenomenon.class, MongoPhenomenon.class)
                 .implement(Sensor.class, MongoSensor.class)
+                .implement(Fueling.class, MongoFueling.class)
                 .build(EntityFactory.class));
         install(new FactoryModuleBuilder()
                 .implement(Activity.class, MongoActivity.class)

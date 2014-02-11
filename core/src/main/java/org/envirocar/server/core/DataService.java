@@ -21,6 +21,8 @@ import java.util.List;
 import org.envirocar.server.core.entities.Announcement;
 import org.envirocar.server.core.entities.Announcements;
 import org.envirocar.server.core.entities.Badges;
+import org.envirocar.server.core.entities.Fueling;
+import org.envirocar.server.core.entities.Fuelings;
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.Measurements;
 import org.envirocar.server.core.entities.Phenomenon;
@@ -31,6 +33,8 @@ import org.envirocar.server.core.entities.TermsOfUse;
 import org.envirocar.server.core.entities.TermsOfUseInstance;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.entities.Tracks;
+import org.envirocar.server.core.entities.User;
+import org.envirocar.server.core.exception.FuelingNotFoundException;
 import org.envirocar.server.core.exception.IllegalModificationException;
 import org.envirocar.server.core.exception.MeasurementNotFoundException;
 import org.envirocar.server.core.exception.PhenomenonNotFoundException;
@@ -38,6 +42,7 @@ import org.envirocar.server.core.exception.ResourceNotFoundException;
 import org.envirocar.server.core.exception.SensorNotFoundException;
 import org.envirocar.server.core.exception.TrackNotFoundException;
 import org.envirocar.server.core.exception.ValidationException;
+import org.envirocar.server.core.filter.FuelingFilter;
 import org.envirocar.server.core.filter.MeasurementFilter;
 import org.envirocar.server.core.filter.SensorFilter;
 import org.envirocar.server.core.filter.TrackFilter;
@@ -91,13 +96,44 @@ public interface DataService {
 
     Sensors getSensors(SensorFilter request);
 
-	TermsOfUse getTermsOfUse(Pagination pagination);
+    TermsOfUse getTermsOfUse(Pagination pagination);
 
 	TermsOfUseInstance getTermsOfUseInstance(String id) throws ResourceNotFoundException;
-	
-	Announcements getAnnouncements(Pagination pagination);
 
-	Announcement getAnnouncement(String id) throws ResourceNotFoundException;
+    Announcements getAnnouncements(Pagination pagination);
 
-	Badges getBadges(Pagination pagination);
+    Announcement getAnnouncement(String id) throws ResourceNotFoundException;
+
+    Badges getBadges(Pagination pagination);
+
+    /**
+     * Create the specified {@code Fueling} by validating and persisting it.
+     *
+     * @param fueling the fueling
+     *
+     * @return the persisted fueling
+     */
+    Fueling createFueling(Fueling fueling);
+
+    /**
+     * Get all {@code Fueling}s matching the specified filter.
+     *
+     * @param filter the filter
+     *
+     * @return the found {@code Fueling}s
+     */
+    Fuelings getFuelings(FuelingFilter filter);
+
+    /**
+     * Gets a {@code Fueling} by it's identifier.
+     *
+     * @param user the user owning the {@code Fueling}
+     * @param id   the id of the {@code Fueling}
+     *
+     * @return the {@code Fueling}
+     *
+     * @throws FuelingNotFoundException if the {@code Fueling} is not found or
+     *                                  is not owned by the specified user
+     */
+    Fueling getFueling(User user, String id) throws FuelingNotFoundException;
 }
