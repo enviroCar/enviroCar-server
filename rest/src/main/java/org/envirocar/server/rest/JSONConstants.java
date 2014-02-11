@@ -99,4 +99,11 @@ public interface JSONConstants {
     String CATEGORY = "category";
     String BADGES_KEY = "badges";
 	String DISPLAY_NAME_KEY = "displayName";
+    String FUELINGS = "fuelings";
+    String MILEAGE = "mileage";
+    String COST = "cost";
+    String COMMENT = "comment";
+    String MISSED_FUEL_STOP = "missedFuelStop";
+    String FUEL_TYPE = "fuelType";
+    String VOLUME = "volume";
 }

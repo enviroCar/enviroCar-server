@@ -16,7 +16,6 @@
  */
 package org.envirocar.server.core.statistics;
 
-import org.envirocar.server.core.util.Pagination;
 import org.envirocar.server.core.util.UpCastingIterable;
 
 /**
@@ -25,41 +24,22 @@ import org.envirocar.server.core.util.UpCastingIterable;
  * @author jan
  */
 public class Statistics extends UpCastingIterable<Statistic> {
-    public static StatisticsBuilder from(
-            Iterable<? extends Statistic> delegate) {
-        return new StatisticsBuilder(delegate);
+    protected Statistics(Builder builder) {
+        super(builder);
     }
 
-    protected Statistics(
-            Iterable<? extends Statistic> delegate,
-            Pagination pagination, long elements) {
-        super(delegate, pagination, elements);
+    public static Builder from(Iterable<? extends Statistic> delegate) {
+        return new Builder(delegate);
     }
 
-    public static class StatisticsBuilder {
-        private Iterable<? extends Statistic> delegate;
-        private Pagination pagination;
-        private long elements;
-
-        public StatisticsBuilder(
-                Iterable<? extends Statistic> delegate) {
-            this.delegate = delegate;
+    public static class Builder extends UpCastingIterable.Builder<Builder, Statistics, Statistic> {
+        protected Builder(Iterable<? extends Statistic> delegate) {
+            super(delegate);
         }
 
-        public StatisticsBuilder withPagination(
-                Pagination pagination) {
-            this.pagination = pagination;
-            return this;
-        }
-
-        public StatisticsBuilder withElements(
-                long elements) {
-            this.elements = elements;
-            return this;
-        }
-
+        @Override
         public Statistics build() {
-            return new Statistics(delegate, pagination, elements);
+            return new Statistics(this);
         }
     }
 }

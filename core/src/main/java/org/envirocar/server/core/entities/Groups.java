@@ -16,7 +16,6 @@
  */
 package org.envirocar.server.core.entities;
 
-import org.envirocar.server.core.util.Pagination;
 import org.envirocar.server.core.util.UpCastingIterable;
 
 /**
@@ -25,36 +24,22 @@ import org.envirocar.server.core.util.UpCastingIterable;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class Groups extends UpCastingIterable<Group> {
-    public static GroupsBuilder from(Iterable<? extends Group> delegate) {
-        return new GroupsBuilder(delegate);
+    protected Groups(Builder builder) {
+        super(builder);
     }
 
-    protected Groups(Iterable<? extends Group> delegate, Pagination pagination,
-                     long elements) {
-        super(delegate, pagination, elements);
+    public static Builder from(Iterable<? extends Group> delegate) {
+        return new Builder(delegate);
     }
 
-    public static class GroupsBuilder {
-        private Iterable<? extends Group> delegate;
-        private Pagination pagination;
-        private long elements;
-
-        public GroupsBuilder(Iterable<? extends Group> delegate) {
-            this.delegate = delegate;
+    public static class Builder extends UpCastingIterable.Builder<Builder, Groups, Group> {
+        protected Builder(Iterable<? extends Group> delegate) {
+            super(delegate);
         }
 
-        public GroupsBuilder withPagination(Pagination pagination) {
-            this.pagination = pagination;
-            return this;
-        }
-
-        public GroupsBuilder withElements(long elements) {
-            this.elements = elements;
-            return this;
-        }
-
+        @Override
         public Groups build() {
-            return new Groups(delegate, pagination, elements);
+            return new Groups(this);
         }
     }
 }

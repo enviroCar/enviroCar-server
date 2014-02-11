@@ -19,18 +19,17 @@ package org.envirocar.server.rest.decoding.json;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.google.inject.Inject;
-
 import org.envirocar.server.core.dao.MeasurementDao;
 import org.envirocar.server.core.dao.SensorDao;
-
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.util.GeoJSONConstants;
 import org.envirocar.server.rest.JSONConstants;
 import org.envirocar.server.rest.TrackWithMeasurments;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.google.inject.Inject;
 
 /**
  * TODO JavaDoc
@@ -39,8 +38,8 @@ import org.envirocar.server.rest.TrackWithMeasurments;
  */
 @Provider
 public class TrackDecoder extends AbstractJSONEntityDecoder<Track> {
-    private JSONEntityDecoder<Measurement> measurementDecoder;
-    private SensorDao sensorDao;
+    private final JSONEntityDecoder<Measurement> measurementDecoder;
+    private final SensorDao sensorDao;
 
     @Inject
     public TrackDecoder(JSONEntityDecoder<Measurement> measurementDecoder,

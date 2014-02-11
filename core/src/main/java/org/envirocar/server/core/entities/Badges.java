@@ -16,43 +16,26 @@
  */
 package org.envirocar.server.core.entities;
 
-import org.envirocar.server.core.util.Pagination;
 import org.envirocar.server.core.util.UpCastingIterable;
 
 public class Badges extends UpCastingIterable<Badge> {
-	
-	protected Badges(Iterable<? extends Badge> delegate,
-			Pagination pagination, long elements) {
-		super(delegate, pagination, elements);
-	}
-	
-	public static BadgeCollectionBuilder from(
-            Iterable<? extends Badge> delegate) {
-        return new BadgeCollectionBuilder(delegate);
+
+    protected Badges(Builder builder) {
+        super(builder);
     }
 
+    public static Builder from(Iterable<? extends Badge> delegate) {
+        return new Builder(delegate);
+    }
 
-    public static class BadgeCollectionBuilder {
-        private Iterable<? extends Badge> delegate;
-        private Pagination pagination;
-        private long elements;
-
-        public BadgeCollectionBuilder(Iterable<? extends Badge> delegate) {
-            this.delegate = delegate;
+    public static class Builder extends UpCastingIterable.Builder<Builder, Badges, Badge> {
+        protected Builder(Iterable<? extends Badge> delegate) {
+            super(delegate);
         }
 
-        public BadgeCollectionBuilder withPagination(Pagination pagination) {
-            this.pagination = pagination;
-            return this;
-        }
-
-        public BadgeCollectionBuilder withElements(long elements) {
-            this.elements = elements;
-            return this;
-        }
-
+        @Override
         public Badges build() {
-            return new Badges(delegate, pagination, elements);
+            return new Badges(this);
         }
     }
 

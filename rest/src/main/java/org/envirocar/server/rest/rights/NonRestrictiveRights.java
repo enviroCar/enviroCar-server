@@ -461,4 +461,9 @@ public class NonRestrictiveRights implements AccessRights {
 	public boolean canAccessPasswordReset(HttpServletRequest request) {
 		return true;
 	}
+
+    @Override
+    public boolean canSeeFuelingsOf(User user) {
+        return true;
+    }
 }

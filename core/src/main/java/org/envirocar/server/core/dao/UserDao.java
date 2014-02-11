@@ -51,4 +51,8 @@ public interface UserDao {
 	PasswordReset requestPasswordReset(User user) throws BadRequestException;
 
 	void resetPassword(User user, String verificationCode) throws BadRequestException;
+
+	Users getPendingIncomingFriendRequests(User user);
+
+	Users getPendingOutgoingFriendRequests(User user);
 }

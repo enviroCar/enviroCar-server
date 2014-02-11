@@ -36,4 +36,6 @@ public interface EntityFactory {
     Sensor createSensor();
 
     Phenomenon createPhenomenon();
+
+    Fueling createFueling();
 }

@@ -106,4 +106,6 @@ public interface ResourceFactory {
 	BadgesResource createBadgesResource();
 
 	ResetPasswordResource createResetPasswordResource();
+
+    FuelingsResource createFuelingsResource(User user);
 }

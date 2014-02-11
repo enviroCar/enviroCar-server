@@ -17,6 +17,7 @@
 package org.envirocar.server.rest.guice;
 
 import org.envirocar.server.core.activities.Activity;
+import org.envirocar.server.core.entities.Fueling;
 import org.envirocar.server.core.entities.Group;
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.Phenomenon;
@@ -28,6 +29,7 @@ import org.envirocar.server.rest.encoding.rdf.RDFLinker;
 import org.envirocar.server.rest.encoding.rdf.linker.ActivityDCTermsLinker;
 import org.envirocar.server.rest.encoding.rdf.linker.DBPediaPhenomenonLinker;
 import org.envirocar.server.rest.encoding.rdf.linker.EEAPhenomenonLinker;
+import org.envirocar.server.rest.encoding.rdf.linker.FuelingDCTermsLinker;
 import org.envirocar.server.rest.encoding.rdf.linker.GroupDCTermsLinker;
 import org.envirocar.server.rest.encoding.rdf.linker.GroupFOAFLinker;
 import org.envirocar.server.rest.encoding.rdf.linker.MeasurementDCTermsLinker;
@@ -61,6 +63,7 @@ public class DefaultRDFLinkerModule extends AbstractModule {
         bindStatisticLinker();
         bindTrackLinker();
         bindUserLinker();
+        bindFuelingLinker();
     }
 
     protected void bindActivityLinker() {
@@ -134,4 +137,12 @@ public class DefaultRDFLinkerModule extends AbstractModule {
         b.addBinding().to(UserFOAFLinker.class);
         b.addBinding().to(UserDCTermsLinker.class);
     }
+
+    protected void bindFuelingLinker() {
+        Multibinder<RDFLinker<Fueling>> b = Multibinder.newSetBinder(
+                binder(), new TypeLiteral<RDFLinker<Fueling>>() {
+        });
+        b.addBinding().to(FuelingDCTermsLinker.class);
+    }
+
 }

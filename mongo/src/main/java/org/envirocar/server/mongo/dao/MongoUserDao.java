@@ -53,7 +53,8 @@ public class MongoUserDao extends AbstractMongoDao<String, MongoUser, Users>
     private MongoTrackDao trackDao;
     private MongoMeasurementDao measurementDao;
     private MongoGroupDao groupDao;
-	private PasswordResetDAO passwordResetDao;
+    private MongoFuelingDao fuelingDao;
+	private final PasswordResetDAO passwordResetDao;
 
     @Inject
     public MongoUserDao(MongoDB mongoDB, PasswordResetDAO dao) {
@@ -69,6 +70,11 @@ public class MongoUserDao extends AbstractMongoDao<String, MongoUser, Users>
     @Inject
     public void setMeasurementDao(MongoMeasurementDao measurementDao) {
         this.measurementDao = measurementDao;
+    }
+
+    @Inject
+    public void setFuelingDao(MongoFuelingDao fuelingDao) {
+        this.fuelingDao = fuelingDao;
     }
 
     @Inject
@@ -110,6 +116,7 @@ public class MongoUserDao extends AbstractMongoDao<String, MongoUser, Users>
         trackDao.removeUser(user);
         measurementDao.removeUser(user);
         groupDao.removeUser(user);
+        fuelingDao.removeUser(user);
         Key<MongoUser> userRef = key(user);
         UpdateResults<MongoUser> result = update(
                 q().field(MongoUser.FRIENDS).hasThisElement(userRef),
@@ -197,6 +204,9 @@ public class MongoUserDao extends AbstractMongoDao<String, MongoUser, Users>
         final Set<Key<MongoUser>> friendRefs = getFriendRefs(user);
         final Set<String> ids = Sets.newHashSetWithExpectedSize(friendRefs.size());
         for (Key<MongoUser> key  : friendRefs) { ids.add((String) key.getId()); }
+        
+        if (ids.isEmpty()) return Sets.newHashSet();
+        
         final Iterable<Key<MongoUser>> filtered =q()
                 .field(MongoUser.NAME).in(ids)
                 .field(MongoUser.FRIENDS).hasThisElement(key(user))
@@ -230,6 +240,42 @@ public class MongoUserDao extends AbstractMongoDao<String, MongoUser, Users>
 		}
 		
 		this.passwordResetDao.remove(status);
+	}
+
+	@Override
+	public Users getPendingIncomingFriendRequests(User user) {
+		final Set<Key<MongoUser>> friendRefs = getFriendRefs(user);
+        final Set<String> ids = Sets.newHashSetWithExpectedSize(friendRefs.size());
+        
+        for (Key<MongoUser> key  : friendRefs) {
+        	ids.add((String) key.getId());
+        }
+        final Iterable<Key<MongoUser>> filtered;
+        
+        if (ids.isEmpty()) {
+        	filtered = q()
+                    .field(MongoUser.FRIENDS).hasThisElement(key(user))
+                    .fetchKeys();	
+        } 
+        else {
+        	filtered = q()
+                    .field(MongoUser.NAME).notIn(ids)
+                    .field(MongoUser.FRIENDS).hasThisElement(key(user))
+                    .fetchKeys();	
+        }
+
+        return Users.from(deref(MongoUser.class, filtered)).build();
+	}
+
+	@Override
+	public Users getPendingOutgoingFriendRequests(User user) {
+		Set<Key<MongoUser>> candidates = getFriendRefs(user);
+		
+		Set<Key<MongoUser>> biDis = getBidirectionalFriendRefs(user);
+		
+		Set<Key<MongoUser>> result = Sets.difference(candidates, biDis).immutableCopy();
+		
+		return Users.from(deref(MongoUser.class, result)).build();
 	}
 	
 }
