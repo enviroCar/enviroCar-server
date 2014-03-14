@@ -473,4 +473,9 @@ public class AccessRightsImpl extends AbstractAccessRights {
 		 */
 		return !isAuthenticated();
 	}
+
+    @Override
+    public boolean canSeeFuelingsOf(User user) {
+        return isSelf(user);
+    }
 }

@@ -14,28 +14,24 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.core.entities;
+package org.envirocar.server.core.exception;
 
 /**
- * TODO JavaDoc
+ * Exception that can be thrown if a requested fueling does not exist.
  *
- * @author Christian Autermann <autermann@uni-muenster.de>
- * @author Arne de Wall <a.dewall@52north.org>
+ * @author Christian Autermann
  */
-public interface EntityFactory {
-    User createUser();
+public class FuelingNotFoundException extends ResourceNotFoundException {
+    private static final long serialVersionUID = 1L;
 
-    Group createGroup();
+    /**
+     * Creates a new {@code FuelingNotFoundException} using the specified id for
+     * the exception message.
+     *
+     * @param id the id
+     */
+    public FuelingNotFoundException(String id) {
+        super(String.format("The fueling '%s' was not found", id));
+    }
 
-    Track createTrack();
-
-    Measurement createMeasurement();
-
-    MeasurementValue createMeasurementValue();
-
-    Sensor createSensor();
-
-    Phenomenon createPhenomenon();
-
-    Fueling createFueling();
 }

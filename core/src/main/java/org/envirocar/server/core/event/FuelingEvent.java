@@ -14,28 +14,20 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.core.entities;
+package org.envirocar.server.core.event;
+
+import org.envirocar.server.core.entities.Fueling;
 
 /**
- * TODO JavaDoc
+ * Interface for {@code Event}s involving {@link Fueling}s.
  *
- * @author Christian Autermann <autermann@uni-muenster.de>
- * @author Arne de Wall <a.dewall@52north.org>
+ * @author Christian Autermann
  */
-public interface EntityFactory {
-    User createUser();
-
-    Group createGroup();
-
-    Track createTrack();
-
-    Measurement createMeasurement();
-
-    MeasurementValue createMeasurementValue();
-
-    Sensor createSensor();
-
-    Phenomenon createPhenomenon();
-
-    Fueling createFueling();
+public interface FuelingEvent extends UserCausedEvent {
+    /**
+     * Get the involved {@code Fueling}.
+     *
+     * @return the {@code Fueling}
+     */
+    Fueling getFueling();
 }

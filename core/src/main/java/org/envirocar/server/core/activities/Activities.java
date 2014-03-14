@@ -16,7 +16,6 @@
  */
 package org.envirocar.server.core.activities;
 
-import org.envirocar.server.core.util.Pagination;
 import org.envirocar.server.core.util.UpCastingIterable;
 
 /**
@@ -25,37 +24,21 @@ import org.envirocar.server.core.util.UpCastingIterable;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class Activities extends UpCastingIterable<Activity> {
-    public static Activities.ActivitiesBuilder from(
-            Iterable<? extends Activity> delegate) {
-        return new ActivitiesBuilder(delegate);
+    protected Activities(Builder builder) {
+        super(builder);
     }
 
-    protected Activities(Iterable<? extends Activity> delegate,
-                         Pagination pagination, long elements) {
-        super(delegate, pagination, elements);
+    public static Builder from(Iterable<? extends Activity> delegate) {
+        return new Builder(delegate);
     }
 
-    public static class ActivitiesBuilder {
-        private Iterable<? extends Activity> delegate;
-        private Pagination pagination;
-        private long elements;
-
-        public ActivitiesBuilder(Iterable<? extends Activity> delegate) {
-            this.delegate = delegate;
-        }
-
-        public ActivitiesBuilder withPagination(Pagination pagination) {
-            this.pagination = pagination;
-            return this;
-        }
-
-        public ActivitiesBuilder withElements(long elements) {
-            this.elements = elements;
-            return this;
+    public static class Builder extends UpCastingIterable.Builder<Builder, Activities, Activity> {
+        public Builder(Iterable<? extends Activity> delegate) {
+            super(delegate);
         }
 
         public Activities build() {
-            return new Activities(delegate, pagination, elements);
+            return new Activities(this);
         }
     }
 }

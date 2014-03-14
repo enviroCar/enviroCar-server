@@ -80,6 +80,9 @@ public class JerseyValidationModule extends AbstractModule {
         mb.addBinding().toInstance("/schema/announcements.json");
         mb.addBinding().toInstance("/schema/badge.json");
         mb.addBinding().toInstance("/schema/badges.json");
+        mb.addBinding().toInstance("/schema/fueling.json");
+        mb.addBinding().toInstance("/schema/fueling.create.json");
+        mb.addBinding().toInstance("/schema/fuelings.json");
         mb.addBinding().toInstance("/schema/passwordResetRequest.json");
         mb.addBinding().toInstance("/schema/passwordResetVerification.json");
         bindConstant().annotatedWith(Names.named(VALIDATE_REQUESTS)).to(true);

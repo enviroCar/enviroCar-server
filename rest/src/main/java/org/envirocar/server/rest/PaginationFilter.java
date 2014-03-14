@@ -25,7 +25,7 @@ import com.sun.jersey.spi.container.ContainerRequest;
 import com.sun.jersey.spi.container.ContainerResponse;
 import com.sun.jersey.spi.container.ContainerResponseFilter;
 
-import org.envirocar.server.core.util.PaginatedIterable;
+import org.envirocar.server.core.util.Paginated;
 import org.envirocar.server.core.util.Pagination;
 
 /**
@@ -44,8 +44,8 @@ public class PaginationFilter implements ContainerResponseFilter {
     public ContainerResponse filter(ContainerRequest req,
                                     ContainerResponse res) {
         Object entity = res.getEntity();
-        if (entity instanceof PaginatedIterable) {
-            PaginatedIterable<?> p = (PaginatedIterable) entity;
+        if (entity instanceof Paginated) {
+            Paginated<?> p = (Paginated) entity;
             if (p.isPaginated()) {
                 insertLinks(p, req, res);
             }
@@ -53,7 +53,7 @@ public class PaginationFilter implements ContainerResponseFilter {
         return res;
     }
 
-    private void insertLinks(PaginatedIterable<?> p,
+    private void insertLinks(Paginated<?> p,
                              ContainerRequest req,
                              ContainerResponse res) {
         if (p.hasFirst()) {

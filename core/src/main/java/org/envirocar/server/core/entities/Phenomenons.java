@@ -16,7 +16,6 @@
  */
 package org.envirocar.server.core.entities;
 
-import org.envirocar.server.core.util.Pagination;
 import org.envirocar.server.core.util.UpCastingIterable;
 
 /**
@@ -25,37 +24,24 @@ import org.envirocar.server.core.util.UpCastingIterable;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class Phenomenons extends UpCastingIterable<Phenomenon> {
-    public static PhenomenonsBuilder from(
+    protected Phenomenons(Builder builder) {
+        super(builder);
+    }
+
+    public static Builder from(
             Iterable<? extends Phenomenon> delegate) {
-        return new PhenomenonsBuilder(delegate);
+        return new Builder(delegate);
     }
 
-    protected Phenomenons(Iterable<? extends Phenomenon> delegate,
-                          Pagination pagination, long elements) {
-        super(delegate, pagination, elements);
-    }
+    public static class Builder extends UpCastingIterable.Builder<Builder, Phenomenons, Phenomenon> {
 
-    public static class PhenomenonsBuilder {
-        private Iterable<? extends Phenomenon> delegate;
-        private Pagination pagination;
-        private long elements;
-
-        public PhenomenonsBuilder(Iterable<? extends Phenomenon> delegate) {
-            this.delegate = delegate;
+        protected Builder(Iterable<? extends Phenomenon> delegate) {
+            super(delegate);
         }
 
-        public PhenomenonsBuilder withPagination(Pagination pagination) {
-            this.pagination = pagination;
-            return this;
-        }
-
-        public PhenomenonsBuilder withElements(long elements) {
-            this.elements = elements;
-            return this;
-        }
-
+        @Override
         public Phenomenons build() {
-            return new Phenomenons(delegate, pagination, elements);
+            return new Phenomenons(this);
         }
     }
 }

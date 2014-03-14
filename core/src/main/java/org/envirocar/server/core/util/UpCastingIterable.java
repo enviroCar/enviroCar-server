@@ -28,15 +28,13 @@ import com.google.common.base.Preconditions;
  *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class UpCastingIterable<T> extends PaginatedIterable<T> {
+public class UpCastingIterable<T> extends Paginated<T> implements Iterable<T> {
     private final Iterable<? extends T> delegate;
     private List<T> items = null;
 
-    public UpCastingIterable(Iterable<? extends T> delegate,
-                             Pagination pagination, long elements) {
-        super(pagination, elements);
-        Preconditions.checkNotNull(delegate);
-        this.delegate = delegate;
+    public UpCastingIterable(Builder<?, ?, T> builder) {
+        super(builder.getPagination(), builder.getElements());
+        this.delegate = Preconditions.checkNotNull(builder.getDelegate());
     }
 
     @Override
@@ -67,6 +65,42 @@ public class UpCastingIterable<T> extends PaginatedIterable<T> {
         } else {
             return items.iterator();
         }
+    }
+
+    public abstract static class Builder<B extends Builder<B, I, T>, I extends UpCastingIterable<T>, T> {
+        private Iterable<? extends T> delegate;
+        private Pagination pagination;
+        private long elements;
+
+        public Builder(Iterable<? extends T> delegate) {
+            this.delegate = delegate;
+        }
+
+        @SuppressWarnings("unchecked")
+        public B withPagination(Pagination pagination) {
+            this.pagination = pagination;
+            return (B) this;
+        }
+
+        @SuppressWarnings("unchecked")
+        public B withElements(long elements) {
+            this.elements = elements;
+            return (B) this;
+        }
+
+        protected Iterable<? extends T> getDelegate() {
+            return delegate;
+        }
+
+        protected Pagination getPagination() {
+            return pagination;
+        }
+
+        protected long getElements() {
+            return elements;
+        }
+
+        public abstract I build();
     }
 
     @Override

@@ -16,44 +16,27 @@
  */
 package org.envirocar.server.core.entities;
 
-import org.envirocar.server.core.util.Pagination;
 import org.envirocar.server.core.util.UpCastingIterable;
 
 public class TermsOfUse extends UpCastingIterable<TermsOfUseInstance> {
 
-	
-	protected TermsOfUse(Iterable<? extends TermsOfUseInstance> delegate,
-			Pagination pagination, long elements) {
-		super(delegate, pagination, elements);
-	}
-	
-	public static TermsOfUseCollectionBuilder from(
-            Iterable<? extends TermsOfUseInstance> delegate) {
-        return new TermsOfUseCollectionBuilder(delegate);
+    protected TermsOfUse(Builder builder) {
+        super(builder);
     }
 
+    public static Builder from(Iterable<? extends TermsOfUseInstance> delegate) {
+        return new Builder(delegate);
+    }
 
-    public static class TermsOfUseCollectionBuilder {
-        private Iterable<? extends TermsOfUseInstance> delegate;
-        private Pagination pagination;
-        private long elements;
+    public static class Builder extends UpCastingIterable.Builder<Builder, TermsOfUse, TermsOfUseInstance> {
 
-        public TermsOfUseCollectionBuilder(Iterable<? extends TermsOfUseInstance> delegate) {
-            this.delegate = delegate;
+        protected Builder(Iterable<? extends TermsOfUseInstance> delegate) {
+            super(delegate);
         }
 
-        public TermsOfUseCollectionBuilder withPagination(Pagination pagination) {
-            this.pagination = pagination;
-            return this;
-        }
-
-        public TermsOfUseCollectionBuilder withElements(long elements) {
-            this.elements = elements;
-            return this;
-        }
-
+        @Override
         public TermsOfUse build() {
-            return new TermsOfUse(delegate, pagination, elements);
+            return new TermsOfUse(this);
         }
     }
 

@@ -39,7 +39,7 @@ public class MongoPasswordResetDAO extends AbstractMongoDao<ObjectId, MongoPassw
 	implements PasswordResetDAO {
 
     private static final Logger logger = LoggerFactory.getLogger(MongoPasswordResetDAO.class);
-	private MongoDB mongo;
+	private final MongoDB mongo;
 
 	@Inject
     public MongoPasswordResetDAO(MongoDB mongoDB) {
@@ -106,17 +106,15 @@ public class MongoPasswordResetDAO extends AbstractMongoDao<ObjectId, MongoPassw
 	@Override
 	public void remove(MongoPasswordReset status) {
 		delete(status.getId());
-	}
-	
-	public static class MongoPasswordResetStatusCollection extends UpCastingIterable<MongoPasswordReset> {
+    }
 
-		public MongoPasswordResetStatusCollection(
-				Iterable<? extends MongoPasswordReset> delegate,
-				Pagination pagination, long elements) {
-			super(delegate, pagination, elements);
-		}
-		
-	}
+    public static class MongoPasswordResetStatusCollection extends UpCastingIterable<MongoPasswordReset> {
+
+        public MongoPasswordResetStatusCollection(Builder<?, ?, MongoPasswordReset> builder) {
+            super(builder);
+        }
+
+    }
 
 
 }
