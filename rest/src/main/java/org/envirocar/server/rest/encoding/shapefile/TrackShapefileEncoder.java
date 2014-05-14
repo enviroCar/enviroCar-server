@@ -112,6 +112,10 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder<Track> 
 
 		String namespace = "http://enviroCar.org/" + uuid;
 
+		String idAttributeName = "id";
+		String geometryAttributeName = "geometry";
+		String timeAttributeName = "time";
+		
 		SimpleFeatureType sft = null;
 
 		SimpleFeatureBuilder sfb = null;
@@ -124,9 +128,9 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder<Track> 
 		Name nameType = new NameImpl(namespace, "Feature-" + uuid);
 		typeBuilder.setName(nameType);
 
-		typeBuilder.add("geometry", Point.class);
-		typeBuilder.add("id", String.class);
-		typeBuilder.add("time", String.class);		
+		typeBuilder.add(geometryAttributeName, Point.class);
+		typeBuilder.add(idAttributeName, String.class);
+		typeBuilder.add(timeAttributeName, String.class);		
 		
         for (Measurement measurement : measurements) {
         	
@@ -139,9 +143,9 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder<Track> 
 
 			String id = measurement.getIdentifier();
 			
-			sfb.set("id", id);
-			sfb.set("time", measurement.getCreationTime().toString());
-			sfb.set("geometry", measurement.getGeometry());
+			sfb.set(idAttributeName, id);
+			sfb.set(timeAttributeName, measurement.getCreationTime().toString());
+			sfb.set(geometryAttributeName, measurement.getGeometry());
 			
         	for (MeasurementValue measurementValue : values) {
 				
@@ -153,8 +157,8 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder<Track> 
 				/*
 				 * create property name
 				 */
-				String propertyName = phenomenon.getName()
-						+ " (" + unit + ")";
+				String propertyName = getPropertyName(phenomenon.getName(), unit);;
+				
 				if (sfb != null) {
 					sfb.set(propertyName, value);
 				}
@@ -173,13 +177,15 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder<Track> 
 			Phenomenon phenomenon = measurementValue.getPhenomenon();
 			
 			String unit = phenomenon.getUnit();
-			typeBuilder.add(phenomenon.getName() + " (" + unit + ")",
+			typeBuilder.add(getPropertyName(phenomenon.getName(), unit),
 					String.class);
 		}
 		return typeBuilder.buildFeatureType();
 	}
 
 	private File createShapeFile(FeatureCollection<SimpleFeatureType, SimpleFeature> collection) throws Exception{
+		
+		String shapeFileSuffix = ".shp";
 		
 		File tempBaseFile = File.createTempFile("resolveDir", ".tmp");
 		tempBaseFile.deleteOnExit();
@@ -191,7 +197,7 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder<Track> 
 			throw new IllegalStateException("Could not create temporary shp directory.");
 		}
 		
-		File tempSHPfile = File.createTempFile("shp", ".shp", shpBaseDirectory);
+		File tempSHPfile = File.createTempFile("shp", shapeFileSuffix, shpBaseDirectory);
 		tempSHPfile.deleteOnExit();
 		DataStoreFactorySpi dataStoreFactory = new ShapefileDataStoreFactory();
 		Map<String, Serializable> params = new HashMap<String, Serializable>();
@@ -227,7 +233,7 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder<Track> 
 
 		// Get names of additional files
 		String path = tempSHPfile.getAbsolutePath();
-		String baseName = path.substring(0, path.length() - ".shp".length());
+		String baseName = path.substring(0, path.length() - shapeFileSuffix.length());
 		File shx = new File(baseName + ".shx");
 		File dbf = new File(baseName + ".dbf");
 		File prj = new File(baseName + ".prj");
@@ -249,6 +255,11 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder<Track> 
 		}
 
 		return null;
+	}
+	
+	private String getPropertyName(String propertyName, String unit){
+		
+		return propertyName + "(" + unit + ")";		
 	}
 	
 	private CoordinateReferenceSystem getCRS_WGS84() {
