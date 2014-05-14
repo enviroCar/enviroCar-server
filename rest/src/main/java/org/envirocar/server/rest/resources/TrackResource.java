@@ -73,7 +73,8 @@ public class TrackResource extends AbstractResource {
     @Produces({ MediaTypes.TRACK,
                 MediaTypes.XML_RDF,
                 MediaTypes.TURTLE,
-                MediaTypes.TURTLE_ALT })
+                MediaTypes.TURTLE_ALT, 
+                MediaTypes.APPLICATION_ZIPPED_SHP})
     public Track get() throws TrackNotFoundException {
         return track;
     }
