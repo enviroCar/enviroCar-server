@@ -74,6 +74,7 @@ public class TrackResource extends AbstractResource {
                 MediaTypes.XML_RDF,
                 MediaTypes.TURTLE,
                 MediaTypes.TURTLE_ALT, 
+                MediaTypes.TEXT_CSV, 
                 MediaTypes.APPLICATION_ZIPPED_SHP})
     public Track get() throws TrackNotFoundException {
         return track;
