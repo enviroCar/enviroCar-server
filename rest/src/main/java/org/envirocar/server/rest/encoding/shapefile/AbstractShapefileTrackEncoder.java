@@ -30,7 +30,6 @@ import com.google.inject.Provider;
 /**
  * TODO JavaDoc
  *
- * @author Christian Autermann <autermann@uni-muenster.de>
  * @author Benjamin Pross
  */
 public abstract class AbstractShapefileTrackEncoder<T>

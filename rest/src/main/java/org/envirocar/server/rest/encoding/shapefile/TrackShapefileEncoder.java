@@ -55,22 +55,27 @@ import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.Name;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.NoSuchAuthorityCodeException;
+import org.opengis.referencing.crs.CoordinateReferenceSystem;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
 import com.vividsolutions.jts.geom.Point;
 
 /**
- * 
  * TODO: Javadoc
  * 
  * @author Benjamin Pross
- *
  */
 @Provider
 public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder<Track> {
 
+	private static final Logger log = LoggerFactory
+            .getLogger(TrackShapefileEncoder.class);
+	
 	private SimpleFeatureTypeBuilder typeBuilder;
     private final DataService dataService;
+    private CoordinateReferenceSystem crs_wgs84;
     
     @Inject
 	public TrackShapefileEncoder(DataService dataService){
@@ -86,18 +91,14 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder<Track> 
 		try {
 			if (rights.canSeeMeasurementsOf(t)) {
 				Measurements measurements = dataService
-						.getMeasurements(new MeasurementFilter(t));
-					
+						.getMeasurements(new MeasurementFilter(t));					
 				zippedShapeFile = createZippedShapefile(createShapeFile(createFeatureCollection(measurements)));
-
 			}
 			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.debug(e.getMessage());
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.debug(e.getMessage());
 		}
 		
 		return zippedShapeFile;
@@ -109,22 +110,15 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder<Track> 
 
 		String uuid = UUID.randomUUID().toString().substring(0, 5);
 
-		String namespace = "http://www.52north.org/" + uuid;
+		String namespace = "http://enviroCar.org/" + uuid;
 
 		SimpleFeatureType sft = null;
 
 		SimpleFeatureBuilder sfb = null;
 
 		typeBuilder = new SimpleFeatureTypeBuilder();
-		try {
-			typeBuilder.setCRS(CRS.decode("EPSG:4326"));
-		} catch (NoSuchAuthorityCodeException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (FactoryException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
+		typeBuilder.setCRS(getCRS_WGS84());
 
 		typeBuilder.setNamespaceURI(namespace);
 		Name nameType = new NameImpl(namespace, "Feature-" + uuid);
@@ -132,8 +126,7 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder<Track> 
 
 		typeBuilder.add("geometry", Point.class);
 		typeBuilder.add("id", String.class);
-		typeBuilder.add("time", String.class);
-		
+		typeBuilder.add("time", String.class);		
 		
         for (Measurement measurement : measurements) {
         	
@@ -210,15 +203,7 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder<Track> 
 
 		newDataStore.createSchema((SimpleFeatureType) collection.getSchema());
 		if(collection.getSchema().getCoordinateReferenceSystem()==null){
-			try {
-				newDataStore.forceSchemaCRS(CRS.decode("4326"));
-			} catch (NoSuchAuthorityCodeException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (FactoryException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			newDataStore.forceSchemaCRS(getCRS_WGS84());
 		}else{
 			newDataStore.forceSchemaCRS(collection.getSchema()
 				.getCoordinateReferenceSystem());
@@ -240,7 +225,7 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder<Track> 
 			transaction.close();
 		}
 
-		// Zip the shapefile
+		// Get names of additional files
 		String path = tempSHPfile.getAbsolutePath();
 		String baseName = path.substring(0, path.length() - ".shp".length());
 		File shx = new File(baseName + ".shx");
@@ -264,6 +249,21 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder<Track> 
 		}
 
 		return null;
+	}
+	
+	private CoordinateReferenceSystem getCRS_WGS84() {
+
+		if (crs_wgs84 == null) {
+
+			try {
+				crs_wgs84 = CRS.decode("EPSG:4326");
+			} catch (NoSuchAuthorityCodeException e) {
+				log.debug(e.getMessage());
+			} catch (FactoryException e) {
+				log.debug(e.getMessage());
+			}
+		}
+		return crs_wgs84;
 	}
 	
 }

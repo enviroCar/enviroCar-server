@@ -33,6 +33,11 @@ import org.apache.commons.io.IOUtils;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.encoding.ShapefileTrackEncoder;
 
+/**
+ * TODO: Javadoc
+ * 
+ * @author Benjamin Pross
+ */
 @Produces(MediaTypes.APPLICATION_ZIPPED_SHP)
 public abstract class AbstractShapefileMessageBodyWriter<T> implements
 		MessageBodyWriter<T>, ShapefileTrackEncoder<T> {

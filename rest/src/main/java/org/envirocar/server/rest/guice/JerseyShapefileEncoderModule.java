@@ -27,7 +27,7 @@ import com.google.inject.TypeLiteral;
 /**
  * TODO JavaDoc
  *
- * @author Christian Autermann <autermann@uni-muenster.de>
+ * @author Benjamin Pross
  */
 public class JerseyShapefileEncoderModule extends AbstractModule {
     @Override
