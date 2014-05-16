@@ -147,7 +147,7 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder<Track> 
 			String id = measurement.getIdentifier();
 			
 			sfb.set(idAttributeName, id);
-			sfb.set(timeAttributeName, measurement.getCreationTime().toString());
+			sfb.set(timeAttributeName, measurement.getTime().toString());
 			sfb.set(geometryAttributeName, measurement.getGeometry());
 			
         	for (MeasurementValue measurementValue : values) {
