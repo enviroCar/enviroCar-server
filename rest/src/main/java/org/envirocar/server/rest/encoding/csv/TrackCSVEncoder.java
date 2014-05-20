@@ -23,7 +23,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
@@ -90,24 +92,14 @@ public class TrackCSVEncoder extends AbstractCSVTrackEncoder<Track> {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(out));
 
+		Set<String> properties = gatherPropertiesForHeader(measurements);
+
 		for (Measurement measurement : measurements) {
 
 			MeasurementValues values = measurement.getValues();
 
 			if (header == null) {
-
-				List<String> properties = new ArrayList<String>();
-
-				properties.add("id");
 				
-				for (MeasurementValue measurementValue : values) {
-
-					Phenomenon phenomenon = measurementValue.getPhenomenon();
-
-					properties.add(getPropertyName(phenomenon.getName(),
-							phenomenon.getUnit()));
-				}
-
 				List<String> spaceTimeProperties = new ArrayList<String>();				
 				spaceTimeProperties.add("longitude");
 				spaceTimeProperties.add("latitude");
@@ -123,9 +115,9 @@ public class TrackCSVEncoder extends AbstractCSVTrackEncoder<Track> {
 			bw.append(measurement.getIdentifier());
 			bw.append(delimiter);
 			
-			for (MeasurementValue measurementValue : values) {
-
-				Object value = measurementValue.getValue();
+			for (String key : properties) {
+				
+				Object value = getValue(key, measurement.getValues());
 
 				bw.append(value != null ? value.toString() : Double
 						.toString(Double.NaN));
@@ -148,15 +140,23 @@ public class TrackCSVEncoder extends AbstractCSVTrackEncoder<Track> {
 		return new ByteArrayInputStream(out.toByteArray());
 	}
 
-	private String getPropertyName(String propertyName, String unit) {
+	private String createCompundPropertyName(String propertyName, String unit) {
 
 		return propertyName + "(" + unit + ")";
 	}
 
-	private CharSequence createCSVHeader(List<String> properties,
+	private String[] dissolvePropertyName(String propertyName) {
+
+		return propertyName.replace(")", "").split("\\(");
+	}
+
+	private CharSequence createCSVHeader(Set<String> properties,
 			List<String> spaceTimeproperties) {
 		StringBuilder sb = new StringBuilder();
 
+		sb.append("id");
+		sb.append(delimiter);
+		
 		for (String key : properties) {
 			sb.append(key);
 			sb.append(delimiter);
@@ -169,5 +169,50 @@ public class TrackCSVEncoder extends AbstractCSVTrackEncoder<Track> {
 
 		return sb.delete(sb.length() - delimiter.length(), sb.length());
 	}
+	
+	private String getValue(String phenomenonName, MeasurementValues values){
+		
+		String[] nameAndUnit = dissolvePropertyName(phenomenonName);
+			
+		for (MeasurementValue measurementValue : values) {
 
+			Phenomenon phenomenon = measurementValue.getPhenomenon();
+			
+			if(phenomenon.getName().equals(nameAndUnit[0])){
+				return String.valueOf(measurementValue.getValue());
+			}
+		}
+		
+		return "";
+	}
+	
+
+	private Set<String> gatherPropertiesForHeader(Measurements measurements){
+		
+		Set<String> distinctPhenomenonNames = new HashSet<String>();
+		
+		for (Measurement measurement : measurements) {
+
+			MeasurementValues values = measurement.getValues();
+
+			for (MeasurementValue measurementValue : values) {
+
+				Phenomenon phenomenon = measurementValue.getPhenomenon();
+
+				String unit = phenomenon.getUnit();
+
+				/*
+				 * create property name
+				 */
+				String propertyName = createCompundPropertyName(phenomenon.getName(),
+						unit);
+
+				distinctPhenomenonNames.add(propertyName);
+			}
+
+		}
+		
+		return distinctPhenomenonNames;
+	}	
+	
 }
