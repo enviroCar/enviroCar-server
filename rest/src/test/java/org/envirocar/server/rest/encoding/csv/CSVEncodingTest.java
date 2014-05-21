@@ -22,10 +22,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-import org.bson.types.ObjectId;
 import org.envirocar.server.core.DataService;
 import org.envirocar.server.core.UserService;
 import org.envirocar.server.core.entities.EntityFactory;
@@ -39,7 +37,6 @@ import org.envirocar.server.core.exception.ResourceAlreadyExistException;
 import org.envirocar.server.core.exception.TrackNotFoundException;
 import org.envirocar.server.core.exception.UserNotFoundException;
 import org.envirocar.server.core.exception.ValidationException;
-import org.envirocar.server.core.guice.CoreModule;
 import org.envirocar.server.core.guice.UpdaterModule;
 import org.envirocar.server.core.guice.ValidatorModule;
 import org.envirocar.server.mongo.entity.MongoSensor;
@@ -55,7 +52,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.inject.Inject;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
@@ -66,8 +62,7 @@ import com.vividsolutions.jts.geom.GeometryFactory;
  * @author Benjamin Pross
  */
 @RunWith(GuiceRunner.class)
-@Modules({ MongoConverterModule.class, CoreModule.class,
-		JerseyCodingModule.class, MongoMappedClassesModule.class,
+@Modules({MongoConverterModule.class, JerseyCodingModule.class, MongoMappedClassesModule.class,
 		MongoConnectionModule.class, CSVEncodingTestModule.class,
 		UpdaterModule.class, ValidatorModule.class })
 public class CSVEncodingTest {
