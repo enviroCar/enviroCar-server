@@ -96,8 +96,6 @@ public class TrackCSVEncoder extends AbstractCSVTrackEncoder<Track> {
 
 		for (Measurement measurement : measurements) {
 
-			MeasurementValues values = measurement.getValues();
-
 			if (header == null) {
 				
 				List<String> spaceTimeProperties = new ArrayList<String>();				
