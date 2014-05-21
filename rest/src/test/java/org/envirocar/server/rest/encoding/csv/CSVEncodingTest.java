@@ -339,6 +339,8 @@ public class CSVEncodingTest {
 			value++;
 		}
 
+		measurement.setTime(DateTime.now());
+		
 		measurement.setTrack(testTrack);
 
 		dataService.createMeasurement(measurement);
@@ -365,6 +367,8 @@ public class CSVEncodingTest {
 
 		s.setIdentifier("51bc53ab5064ba7f336ef920");
 
+		s.setType("Car");
+		
 		MongoSensor ms = (MongoSensor) s;
 
 		ms.setCreationTime(DateTime.parse(dateTime));
