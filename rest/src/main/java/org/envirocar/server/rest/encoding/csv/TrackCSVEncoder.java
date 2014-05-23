@@ -127,7 +127,7 @@ public class TrackCSVEncoder extends AbstractCSVTrackEncoder<Track> {
 			bw.append(delimiter);
 			bw.append(Double.toString(coord.getCoordinate().y));
 			bw.append(delimiter);
-			bw.append(getDateTimeFormat().print(measurement.getCreationTime()));
+			bw.append(getDateTimeFormat().print(measurement.getTime()));
 
 			bw.newLine();
 		}
