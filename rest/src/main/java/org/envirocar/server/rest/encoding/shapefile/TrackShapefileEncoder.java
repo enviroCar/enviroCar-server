@@ -21,8 +21,11 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.ws.rs.core.MediaType;
@@ -132,19 +135,19 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder<Track> 
 		typeBuilder.add(idAttributeName, String.class);
 		typeBuilder.add(timeAttributeName, String.class);		
 		
+		if (sft == null) {
+			sft = buildFeatureType(measurements);
+			sfb = new SimpleFeatureBuilder(sft);
+		}	
+		
         for (Measurement measurement : measurements) {
         	
-        	MeasurementValues values = measurement.getValues();	
-			
-			if (sft == null) {
-				sft = buildFeatureType(values);
-				sfb = new SimpleFeatureBuilder(sft);
-			}
+        	MeasurementValues values = measurement.getValues();
 
 			String id = measurement.getIdentifier();
 			
 			sfb.set(idAttributeName, id);
-			sfb.set(timeAttributeName, measurement.getCreationTime().toString());
+			sfb.set(timeAttributeName, measurement.getTime().toString());
 			sfb.set(geometryAttributeName, measurement.getGeometry());
 			
         	for (MeasurementValue measurementValue : values) {
@@ -157,7 +160,7 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder<Track> 
 				/*
 				 * create property name
 				 */
-				String propertyName = getPropertyName(phenomenon.getName(), unit);;
+				String propertyName = getPropertyName(phenomenon.getName(), unit);
 				
 				if (sfb != null) {
 					sfb.set(propertyName, value);
@@ -170,16 +173,40 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder<Track> 
         return  new ListFeatureCollection(sft, simpleFeatureList);		
 	}
 	
-	private SimpleFeatureType buildFeatureType(MeasurementValues values) {
+	private SimpleFeatureType buildFeatureType(Measurements measurements) {
 
-		for (MeasurementValue measurementValue : values) {
+		Set<String> distinctPhenomenonNames = new HashSet<String>();
+		
+		for (Measurement measurement : measurements) {
 
-			Phenomenon phenomenon = measurementValue.getPhenomenon();
-			
-			String unit = phenomenon.getUnit();
-			typeBuilder.add(getPropertyName(phenomenon.getName(), unit),
+			MeasurementValues values = measurement.getValues();
+
+			for (MeasurementValue measurementValue : values) {
+
+				Phenomenon phenomenon = measurementValue.getPhenomenon();
+
+				String unit = phenomenon.getUnit();
+
+				/*
+				 * create property name
+				 */
+				String propertyName = getPropertyName(phenomenon.getName(), unit);
+				
+				distinctPhenomenonNames.add(propertyName);
+			}
+
+		}
+
+		Iterator<String> distinctPhenomenonNamesIterator = distinctPhenomenonNames
+				.iterator();
+
+		while (distinctPhenomenonNamesIterator.hasNext()) {
+			String phenomenonNameAndUnit = (String) distinctPhenomenonNamesIterator
+					.next();
+			typeBuilder.add(phenomenonNameAndUnit,
 					String.class);
 		}
+
 		return typeBuilder.buildFeatureType();
 	}
 
