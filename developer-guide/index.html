@@ -22,6 +22,7 @@
                 </p>
                 <p class="header"><a href="http://envirocar.github.io/enviroCar-server/api/">API Reference</a></p>
                 <p class="header"><a href="http://envirocar.github.io/enviroCar-server/lod/">Linked Open Data</a></p>
+                <p class="header"><a href="http://envirocar.github.io/enviroCar-server/additional-encodings/">Additional encodings for tracks</a></p>
                 <ul>
                     <li class="but download"><a class="buttons" href="https://github.com/enviroCar/enviroCar-server/zipball/master">Download ZIP</a></li>
                     <li class="but download"><a class="buttons" href="https://github.com/enviroCar/enviroCar-server/tarball/master">Download TAR</a></li>
@@ -38,7 +39,7 @@
 <li>Clone the <a href="https://github.com/enviroCar/enviroCar-server.git" title="GitHub Repository">repository</a> and switch to the directory.</li>
 <li>Configure the connection in <code>mongo/src/main/resources/mongo.properties</code> (if needed).</li>
 <li>Run <code>mvn clean install</code>.</li>
-<li>Deploy the <code>war</code> file in <code>webapp/target</code> to a application server of your choice (e.g. <a href="http://tomcat.apache.org/" title="Apache Tomcat">Apache Tomcat</a>).</li>
+<li>Deploy the <code>war</code> file in <code>webapp/target</code> to an application server of your choice (e.g. <a href="http://tomcat.apache.org/" title="Apache Tomcat">Apache Tomcat</a>).</li>
 </ul>
 
 <h2 id="toc_2">Guice</h2>
@@ -144,6 +145,11 @@
 <div class="highlight"><pre><code class="java language-java" data-lang="java"><span class="n">Multibinder</span><span class="o">&lt;</span><span class="n">RDFLinker</span><span class="o">&lt;</span><span class="n">Measurement</span><span class="o">&gt;&gt;</span> <span class="n">b</span> <span class="o">=</span> <span class="n">Multibinder</span><span class="o">.</span><span class="na">newSetBinder</span><span class="o">(</span>
         <span class="n">binder</span><span class="o">(),</span> <span class="k">new</span> <span class="n">TypeLiteral</span><span class="o">&lt;</span><span class="n">RDFLinker</span><span class="o">&lt;</span><span class="n">Measurement</span><span class="o">&gt;&gt;()</span> <span class="o">{});</span>
 <span class="n">b</span><span class="o">.</span><span class="na">addBinding</span><span class="o">().</span><span class="na">to</span><span class="o">(</span><span class="n">W3CGeoMeasurementLinker</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+</code></pre></div>
+<h2 id="toc_4">Shapefile encoding of tracks</h2>
+
+<p>Additional resources can be linked by implementing the interface <code>RDFLinker&lt;T&gt;</code> for the entity type <code>T</code>:</p>
+<div class="highlight"><pre><code class="java language-java" data-lang="java"><span class="kn">import</span> <span class="nn">javax.ws.rs.core.UriBuilder</span><span class="o">;</span>
 </code></pre></div>
             </section>
             <footer>
