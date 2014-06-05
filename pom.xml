@@ -9,8 +9,8 @@
     <name>enviroCar server</name>
     <inceptionYear>2013</inceptionYear>
     <ciManagement>
-        <system>hudson</system>
-        <url>http://giv-car.uni-muenster.de:8080/jenkins/job/enviroCar-server-master</url>
+        <system>jenkins</system>
+        <url>http://build.dev.52north.org/jenkins/view/enviroCar/job/envirocar-server-stable/</url>
     </ciManagement>
     <scm>
         <url>http://github.com/enviroCar/enviroCar-server</url>
@@ -47,6 +47,8 @@
         <jersey-version>1.17.1</jersey-version>
         <guice-version>3.0</guice-version>
         <slf4j-version>1.7.5</slf4j-version>
+		<geotools.version>8.7</geotools.version>
+		<wps.version>3.2.0</wps.version>
     </properties>
     <repositories>
         <repository>
@@ -57,6 +59,22 @@
                 <enabled>false</enabled>
             </snapshots>
         </repository>
+		<repository>
+			<id>geotools</id>
+			<name>Geotools Repo</name>
+			<url>http://download.osgeo.org/webdav/geotools</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>n52-releases</id>
+			<name>52n Releases</name>
+			<url>http://52north.org/maven/repo/releases</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
     </repositories>
     <dependencyManagement>
         <dependencies>
@@ -83,10 +101,51 @@
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
+                <artifactId>rest</artifactId>
+                <version>${project.version}</version>
+                <classifier>tests</classifier>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>webapp</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <!-- externals -->
+            <dependency>
+				<groupId>org.n52.wps</groupId>
+				<artifactId>52n-wps-io</artifactId>
+				<version>${wps.version}</version>
+            </dependency>
+            <!-- START import geotools dependencies -->
+			<dependency>
+				<groupId>org.geotools</groupId>
+				<artifactId>geotools</artifactId>
+				<version>${geotools.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.geotools</groupId>
+				<artifactId>gt-main</artifactId>
+				<version>${geotools.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.geotools</groupId>
+				<artifactId>gt-referencing</artifactId>
+				<version>${geotools.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.geotools</groupId>
+				<artifactId>gt-epsg-wkt</artifactId>
+				<version>${geotools.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.geotools</groupId>
+				<artifactId>gt-shapefile</artifactId>
+				<version>${geotools.version}</version>
+			</dependency>
+			<!-- END import geotools dependencies -->
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>

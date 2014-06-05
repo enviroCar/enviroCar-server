@@ -14,8 +14,8 @@ See the [here](api)
 
 ## Deployments ##
 
-* https://giv-car.uni-muenster.de/dev/rest/ (following the dev branch)
-* https://giv-car.uni-muenster.de/stable/rest/ (following the master branch)
+* https://envirocar.org/api/dev/ (following the dev branch)
+* https://envirocar.org/api/stable/ (following the master branch)
 
 ## Building & Installation ##
 

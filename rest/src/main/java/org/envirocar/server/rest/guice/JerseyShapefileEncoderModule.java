@@ -14,23 +14,26 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.rest;
+package org.envirocar.server.rest.guice;
 
-import javax.ws.rs.core.MediaType;
+import org.envirocar.server.core.entities.Track;
+import org.envirocar.server.rest.encoding.ShapefileTrackEncoder;
+import org.envirocar.server.rest.encoding.shapefile.TrackShapefileEncoder;
 
-import com.google.common.collect.ImmutableMap;
-import com.sun.jersey.api.container.filter.UriConnegFilter;
+import com.google.inject.AbstractModule;
+import com.google.inject.Scopes;
+import com.google.inject.TypeLiteral;
 
-public class URIContentNegotiationFilter extends UriConnegFilter {
-
-    public URIContentNegotiationFilter() {
-        super(ImmutableMap.<String, MediaType>builder()
-                .put("json", MediaType.APPLICATION_JSON_TYPE)
-                .put("ttl", MediaTypes.TURTLE_TYPE)
-                .put("rdf", MediaTypes.XML_RDF_TYPE)
-                .put("shp", MediaTypes.APPLICATION_ZIPPED_SHP_TYPE)
-                .put("csv", MediaTypes.TEXT_CSV_TYPE)
-                .build());
+/**
+ * TODO JavaDoc
+ *
+ * @author Benjamin Pross
+ */
+public class JerseyShapefileEncoderModule extends AbstractModule {
+    @Override
+    protected void configure() {
+        bind(TrackShapefileEncoder.class).in(Scopes.SINGLETON);
+        bind(new TypeLiteral<ShapefileTrackEncoder<Track>>() {
+        }).to(TrackShapefileEncoder.class);
     }
-
 }
