@@ -51,8 +51,7 @@ or
 ```
 curl https://envirocar.org/api/stable/tracks/537ed45be4b008867f814d48.csv > /tmp/track.txt
 ```
-
-
+Excerpt from the CSV file:
 
 ```
 id; Intake Temperature(c); O2 Lambda Voltage ER(ratio); Throttle Position(%); GPS VDOP(precision); Long-Term Fuel Trim 1(%); CO2(kg/h); O2 Lambda Voltage(V); MAF(l/s); GPS HDOP(precision); Rpm(u/min); GPS Accuracy(%); GPS PDOP(precision); Short-Term Fuel Trim 1(%); GPS Altitude(m); GPS Speed(km/h); Engine Load(%); Consumption(l/h); GPS Bearing(deg); Speed(km/h); longitude; latitude; time
@@ -75,21 +74,21 @@ Click Layer -> Add Delimited Text Layers...:
 
 In the dialog select Custom delimiters and check Semicolon:
 
-![qgis-add-csv-2][qgis-add-csv-2]
+![qgis-add-csv2][qgis-add-csv2]
 
 Browse to the CSV file and open it:
 
-![qgis-add-csv-3][qgis-add-csv-3]
+![qgis-add-csv3][qgis-add-csv3]
 
 The columns, including the ones holding the coordinates (longitude, latitude), should be automatically resolved. If not, please use the setting shown above.
 
 Click ok, you will be prompted to chose a CRS:
 
-![qgis-add-csv-4][qgis-add-csv-4]
+![qgis-add-csv4][qgis-add-csv4]
 
 Choose WGS84 and click ok, the layer will be added:
 
-![qgis-add-csv-5][qgis-add-csv-5]
+![qgis-add-csv5][qgis-add-csv5]
 
 [shapefile]: https://en.wikipedia.org/wiki/Shapefile "Shapefile"
 [arcmap-add-shp]: {{site.url}}/images/arcmap-add-shp.png "ArcMap add shapefile step 1"
