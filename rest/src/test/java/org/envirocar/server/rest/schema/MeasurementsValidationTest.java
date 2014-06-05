@@ -37,18 +37,18 @@ public class MeasurementsValidationTest {
 	public final ValidationRule validate = new ValidationRule();
 
 	@Test
-	public void validateValidTrackInstance() {
-		assertThat(validate.parse(loadTrackInstance("measurements-instance.json")),
+	public void validateValidMeasurementsInstance() {
+		assertThat(validate.parse(loadMeasurementsInstance("measurements-instance.json")),
 				is(validate.validInstanceOf(MediaTypes.MEASUREMENTS_TYPE)));
 	}
 	
 	@Test
-	public void validateValidTrackInstanceWithoutTrackReference() {
-		assertThat(validate.parse(loadTrackInstance("measurements-instance-wo-trackref.json")),
+	public void validateValidMeasurementsInstanceWithoutTrackReference() {
+		assertThat(validate.parse(loadMeasurementsInstance("measurements-instance-wo-trackref.json")),
 				is(validate.validInstanceOf(MediaTypes.MEASUREMENTS_TYPE)));
 	}
 
-	private String loadTrackInstance(String res) {
+	private String loadMeasurementsInstance(String res) {
 		StringBuilder sb = new StringBuilder();
 		
 		Scanner sc = null;
