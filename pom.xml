@@ -9,8 +9,8 @@
     <name>enviroCar server</name>
     <inceptionYear>2013</inceptionYear>
     <ciManagement>
-        <system>hudson</system>
-        <url>http://giv-car.uni-muenster.de:8080/jenkins/job/enviroCar-server-master</url>
+        <system>jenkins</system>
+        <url>http://build.dev.52north.org/jenkins/view/enviroCar/job/envirocar-server-stable/</url>
     </ciManagement>
     <scm>
         <url>http://github.com/enviroCar/enviroCar-server</url>
