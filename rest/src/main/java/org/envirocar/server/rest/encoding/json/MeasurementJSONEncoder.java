@@ -95,6 +95,9 @@ public class MeasurementJSONEncoder extends AbstractJSONEntityEncoder<Measuremen
                 properties.put(JSONConstants.CREATED_KEY,
                                getDateTimeFormat().print(t.getCreationTime()));
             }
+            if (t.hasTrack() && rights.canSeeTracks()) {
+            	properties.put(JSONConstants.TRACK_KEY, t.getTrack().getIdentifier());
+            }
         }
         if (mediaType.equals(MediaTypes.MEASUREMENT_TYPE) ||
             mediaType.equals(MediaTypes.MEASUREMENTS_TYPE) ||

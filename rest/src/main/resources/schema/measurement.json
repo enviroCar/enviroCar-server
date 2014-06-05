@@ -50,6 +50,9 @@
                 "user": {
                     "$ref": "http://schema.envirocar.org/user.json#"
                 },
+                "track": {
+                    "type": "string"
+                },
                 "phenomenons": {
                     "type": "object",
                     "additionalItems": {
