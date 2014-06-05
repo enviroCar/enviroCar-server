@@ -18,6 +18,8 @@ package org.envirocar.server.mongo.entity;
 
 import static org.envirocar.server.mongo.util.MongoUtils.reverse;
 
+import org.envirocar.server.core.entities.BaseEntity;
+import org.envirocar.server.mongo.MongoDB;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
@@ -29,9 +31,6 @@ import com.github.jmkgreen.morphia.utils.IndexDirection;
 import com.google.common.base.Objects;
 import com.google.common.base.Objects.ToStringHelper;
 import com.google.inject.Inject;
-
-import org.envirocar.server.core.entities.BaseEntity;
-import org.envirocar.server.mongo.MongoDB;
 
 /**
  * TODO JavaDoc
@@ -57,7 +56,6 @@ public abstract class MongoEntityBase implements BaseEntity {
         return creationTime;
     }
 
-    @SuppressWarnings("unchecked")
     public void setCreationTime(DateTime creationDate) {
         this.creationTime = creationDate;
     }
@@ -67,7 +65,6 @@ public abstract class MongoEntityBase implements BaseEntity {
         return modificationTime;
     }
 
-    @SuppressWarnings("unchecked")
     public void setModificationTime(DateTime lastModificationDate) {
         this.modificationTime = lastModificationDate;
     }

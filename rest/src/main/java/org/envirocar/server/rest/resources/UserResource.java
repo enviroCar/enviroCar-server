@@ -59,6 +59,7 @@ public class UserResource extends AbstractResource {
     public static final String ACTIVITIES = "activities";
     public static final String FRIEND_ACTIVITIES = "friendActivities";
     public static final String AVATAR = "avatar";
+    public static final String FUELINGS = "fuelings";
     private final User user;
 
     @Inject
@@ -155,5 +156,11 @@ public class UserResource extends AbstractResource {
     public AvatarResource avatar() {
         checkRights(getRights().canSeeAvatarOf(user));
         return getResourceFactory().createAvatarResource(this.user);
+    }
+
+    @Path(FUELINGS)
+    public FuelingsResource fuelings() {
+        checkRights(getRights().canSeeFuelingsOf(user));
+        return getResourceFactory().createFuelingsResource(this.user);
     }
 }

@@ -1,0 +1,62 @@
+{
+   "type":"FeatureCollection",
+   "properties":{
+      "id":"52600faee4b000fe058019bb",
+      "sensor":{
+         "type":"car",
+         "properties":{
+            "id":"525eab3ce4b000fe057f084d",
+            "model":"Cee'd",
+            "fuelType":"diesel",
+            "manufacturer":"Kia",
+            "constructionYear":2010,
+            "engineDisplacement":1600
+         }
+      },
+	"appVersion": "Version 0.9.0-SNAPSHOT (21), 11.11.13 14:48",
+	"obdDevice": "DRIVEDECK BT OBD W4",
+	"touVersion": "2013-10-01"
+   },
+   "features":[
+      {
+         "type":"Feature",
+         "geometry":{
+            "type":"Point",
+            "coordinates":[
+               11.11605461,
+               49.42544685
+            ]
+         },
+         "properties":{
+            "id":"52600faee4b000fe058019bd",
+            "time":"2013-10-17T16:22:10Z",
+            "phenomenons":{
+               "Rpm":{
+                  "value":1318.0,
+                  "unit":"u/min"
+               },
+               "Intake Temperature":{
+                  "value":25.0,
+                  "unit":"c"
+               },
+               "Speed":{
+                  "value":0.0,
+                  "unit":"km/h"
+               },
+               "MAF":{
+                  "value":20.520000457763672,
+                  "unit":"l/s"
+               },
+               "Engine Load":{
+                  "value":37.64706039428711,
+                  "unit":"%"
+               },
+               "Throttle Position":{
+                  "value":12.0,
+                  "unit":"%"
+               }
+            }
+         }
+      }
+   ]
+}

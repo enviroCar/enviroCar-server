@@ -24,8 +24,8 @@ import org.envirocar.server.core.entities.User;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class FriendedUserEvent implements UserEvent {
-    private User user;
-    private User other;
+    private final User user;
+    private final User other;
 
     public FriendedUserEvent(User user, User other) {
         this.user = user;

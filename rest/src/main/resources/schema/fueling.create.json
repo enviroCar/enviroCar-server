@@ -1,0 +1,57 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "id": "http://schema.envirocar.org/fueling.create.json#",
+    "type": "object",
+    "required": [
+        "fuelType",
+        "car",
+        "cost",
+        "mileage",
+        "volume",
+        "time"
+    ],
+    "properties": {
+        "fuelType": {
+            "type": "string"
+        },
+        "comment": {
+            "type": "string"
+        },
+        "car": {
+            "type": "string"
+        },
+        "cost": {
+            "$ref": "#/definitions/numberWithUnit"
+        },
+        "mileage": {
+            "$ref": "#/definitions/numberWithUnit"
+        },
+        "volume": {
+            "$ref": "#/definitions/numberWithUnit"
+        },
+        "time": {
+            "type": "string",
+            "format": "date-time"
+        },
+        "missedFuelStop": {
+            "type": "boolean"
+        }
+    },
+    "definitions": {
+        "numberWithUnit": {
+            "type": "object",
+            "required": [
+                "value",
+                "unit"
+            ],
+            "properties": {
+                "value": {
+                    "type": "number"
+                },
+                "unit": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
