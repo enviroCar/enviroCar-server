@@ -47,7 +47,7 @@ curl -u jakob1:*****  -H "Accept: text/turtle" https://envirocar.org/api/stable/
 For [RDF/XML][rdf]:
 
 ```
-curl -u jakob1:*****  -H "Accept: application/rdf+xml" https://giv-car.uni-muenster.de/dev/rest/users/jakob1
+curl -u jakob1:*****  -H "Accept: application/rdf+xml" https://envirocar.org/api/stable/users/jakob1
 ```
 ```xml
 <rdf:RDF
