@@ -9,10 +9,10 @@ Every resource is available as RDF. To request the content as Linked Data you ha
 For [Turtle][turtle]:
 
 ```
-curl -u jakob1:*****  -H "Accept: text/turtle" https://giv-car.uni-muenster.de/dev/rest/users/jakob1
+curl -u jakob1:*****  -H "Accept: text/turtle" https://envirocar.org/api/stable/users/jakob1
 ```
 ```
-@base          <https://giv-car.uni-muenster.de/dev/rest/> .
+@base          <https://envirocar.org/api/stable/> .
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix foaf:  <http://xmlns.com/foaf/0.1/> .
 @prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
