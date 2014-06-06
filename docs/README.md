@@ -5,7 +5,7 @@ directory are automatically build and deployed to the
 [GitHub Pages][gh-pages] once the commits hit master.
 
 ## How to build the documentation locally
-First you have to install [Ruby][ruby]. After that 
+First you have to install [Ruby][ruby] (including the dev package). After that 
 switch to this directoy and run the following commands:
 ```
 gem install bundler
