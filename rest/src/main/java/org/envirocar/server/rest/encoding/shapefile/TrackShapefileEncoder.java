@@ -42,7 +42,6 @@ import org.envirocar.server.core.entities.Phenomenon;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.exception.TrackTooLongException;
 import org.envirocar.server.core.filter.MeasurementFilter;
-import org.envirocar.server.rest.encoding.rdf.linker.EEAPhenomenonLinker;
 import org.envirocar.server.rest.rights.AccessRights;
 import org.geotools.data.DataStoreFactorySpi;
 import org.geotools.data.DefaultTransaction;
@@ -97,7 +96,7 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder<Track> 
         this.properties = new Properties();
         InputStream in = null;
         try {
-            in = EEAPhenomenonLinker.class.getResourceAsStream(PROPERTIES);
+            in = TrackShapefileEncoder.class.getResourceAsStream(PROPERTIES);
             if (in != null) {
                 properties.load(in);
             } else {
