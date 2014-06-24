@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.rest.encoding.csv;
+package org.envirocar.server.rest.encoding;
 
 import org.bson.BSONObject;
 import org.envirocar.server.core.DataService;
@@ -101,7 +101,7 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.multibindings.Multibinder;
 import com.vividsolutions.jts.geom.Geometry;
 
-public class CSVEncodingTestModule extends AbstractModule {
+public class EncodingTestModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
