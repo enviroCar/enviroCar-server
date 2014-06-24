@@ -29,7 +29,6 @@ import org.envirocar.server.core.UserService;
 import org.envirocar.server.core.UserServiceImpl;
 import org.envirocar.server.core.activities.Activity;
 import org.envirocar.server.core.activities.ActivityFactory;
-import org.envirocar.server.core.activities.ActivityListener;
 import org.envirocar.server.core.activities.GroupActivity;
 import org.envirocar.server.core.activities.TrackActivity;
 import org.envirocar.server.core.activities.UserActivity;
@@ -112,7 +111,6 @@ public class EncodingTestModule extends AbstractModule {
         bind(FriendService.class).to(FriendServiceImpl.class);
         bind(GroupService.class).to(GroupServiceImpl.class);
         bind(StatisticsService.class).to(StatisticsServiceImpl.class);
-        bind(ActivityListener.class).asEagerSingleton();
         bind(PasswordEncoder.class).to(BCryptPasswordEncoder.class);
         Multibinder.newSetBinder(binder(), TypeConverter.class);
         bind(new TypeLiteral<GeometryConverter<BSONObject>>() {
