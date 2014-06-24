@@ -20,6 +20,7 @@ import java.io.File;
 
 import javax.ws.rs.core.MediaType;
 
+import org.envirocar.server.core.exception.TrackTooLongException;
 import org.envirocar.server.rest.rights.AccessRights;
 
 /**
@@ -28,5 +29,5 @@ import org.envirocar.server.rest.rights.AccessRights;
  * @author Benjamin Pross
  */
 public interface ShapefileTrackEncoder<T> {
-    File encodeShapefile(T t, AccessRights rights, MediaType mt);
+    File encodeShapefile(T t, AccessRights rights, MediaType mt) throws TrackTooLongException;
 }
