@@ -88,6 +88,7 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder<Track> 
     private Track track;
 	private Properties properties;
     private static final String PROPERTIES = "/export.properties";
+    private static final String DEFAULT_PROPERTIES = "/export.default.properties";
     
     @Inject
 	public TrackShapefileEncoder(DataService dataService){
@@ -100,7 +101,13 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder<Track> 
             if (in != null) {
                 properties.load(in);
             } else {
-                log.warn("No {} found!", PROPERTIES);
+                log.info("No {} found, loading {}.", PROPERTIES, DEFAULT_PROPERTIES);
+                in = TrackShapefileEncoder.class.getResourceAsStream(DEFAULT_PROPERTIES);
+                if (in != null) {
+                    properties.load(in);
+                }else{
+                	log.warn("No {} found!", PROPERTIES);
+                }
             }
 
         } catch (IOException ex) {
@@ -109,10 +116,13 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder<Track> 
             Closeables.closeQuietly(in);
         }
         
-        String property = properties.getProperty(shapefileExportThresholdPropertyName);
-        if (property != null) {
-            shapeFileExportThreshold = Integer.parseInt(property);
-        }
+		if (properties != null) {
+			String property = properties
+					.getProperty(shapefileExportThresholdPropertyName);
+			if (property != null) {
+				shapeFileExportThreshold = Integer.parseInt(property);
+			}
+		}
 	}
 	
 	@Override
