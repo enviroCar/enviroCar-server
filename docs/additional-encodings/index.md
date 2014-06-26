@@ -5,6 +5,7 @@ layout: default
 # Additional encodings for tracks #
 
 Track resources are available encoded as zipped shapefile and as comma-separated-values (CSV). To request the content in either of the formats you have to set the appropriate `Accept` header.
+Note that the shapefile export currently is limited to tracks consisting of less than 500 measurements. If you want to export larger tracks, please [contact][contact] us or visit the [enviroCar forum][forum].
 
 To get a track as zipped [shapefile][shapefile]:
 
@@ -91,6 +92,8 @@ Choose WGS84 and click ok, the layer will be added:
 ![qgis-add-csv5][qgis-add-csv5]
 
 [shapefile]: https://en.wikipedia.org/wiki/Shapefile "Shapefile"
+[contact]: mailto:enviroCar@52north.org "enviroCar team at 52°North"
+[forum]: http://envirocar-discuss.forum.52north.org/ "enviroCar forum"
 [arcmap-add-shp]: {{site.url}}/images/arcmap-add-shp.png "ArcMap add shapefile step 1"
 [arcmap-add-shp2]: {{site.url}}/images/arcmap-add-shp-2.png "ArcMap add shapefile step 2"
 
