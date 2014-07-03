@@ -14,23 +14,22 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.rest;
+package org.envirocar.server.core.exception;
 
-import javax.ws.rs.core.MediaType;
+/**
+ * TODO: Javadoc
+ * 
+ * @author Benjamin Pross
+ *
+ */
+public class TrackTooLongException  extends RuntimeException {
+    private static final long serialVersionUID = -6183358575669855777L;
 
-import com.google.common.collect.ImmutableMap;
-import com.sun.jersey.api.container.filter.UriConnegFilter;
+    public TrackTooLongException() {
+    }
 
-public class URIContentNegotiationFilter extends UriConnegFilter {
-
-    public URIContentNegotiationFilter() {
-        super(ImmutableMap.<String, MediaType>builder()
-                .put("json", MediaType.APPLICATION_JSON_TYPE)
-                .put("ttl", MediaTypes.TURTLE_TYPE)
-                .put("rdf", MediaTypes.XML_RDF_TYPE)
-                .put("shp", MediaTypes.APPLICATION_ZIPPED_SHP_TYPE)
-                .put("csv", MediaTypes.TEXT_CSV_TYPE)
-                .build());
+    public TrackTooLongException(String trackID, int currentThreshold){
+        super(String.format("The track '%s' is too long to export as shapefile. The limit of measurements currently is: %s. For further advice, please contact the enviroCar team: envirocar at 52north.org or visit the forum: http://envirocar-discuss.forum.52north.org/", trackID, currentThreshold));
     }
 
 }

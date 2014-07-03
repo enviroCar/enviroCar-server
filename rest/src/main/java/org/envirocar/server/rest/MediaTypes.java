@@ -86,6 +86,10 @@ public interface MediaTypes {
     MediaType ACTIVITIES_TYPE = MediaType.valueOf(ACTIVITIES);
     String XML_RDF = "application/rdf+xml";
     MediaType XML_RDF_TYPE = MediaType.valueOf(XML_RDF);
+    String APPLICATION_ZIPPED_SHP = "application/x-zipped-shp";
+    MediaType APPLICATION_ZIPPED_SHP_TYPE = MediaType.valueOf(APPLICATION_ZIPPED_SHP);
+    String TEXT_CSV = "text/csv";
+    MediaType TEXT_CSV_TYPE = MediaType.valueOf(TEXT_CSV);
     String TURTLE = "text/turtle";
     MediaType TURTLE_TYPE = MediaType.valueOf(TURTLE);
     String TURTLE_ALT = "application/x-turtle";
