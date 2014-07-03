@@ -18,6 +18,7 @@ package org.envirocar.server.rest.encoding.shapefile;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,6 +26,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.UUID;
 
@@ -38,6 +40,7 @@ import org.envirocar.server.core.entities.MeasurementValues;
 import org.envirocar.server.core.entities.Measurements;
 import org.envirocar.server.core.entities.Phenomenon;
 import org.envirocar.server.core.entities.Track;
+import org.envirocar.server.core.exception.TrackTooLongException;
 import org.envirocar.server.core.filter.MeasurementFilter;
 import org.envirocar.server.rest.rights.AccessRights;
 import org.geotools.data.DataStoreFactorySpi;
@@ -62,6 +65,7 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.io.Closeables;
 import com.google.inject.Inject;
 import com.vividsolutions.jts.geom.Point;
 
@@ -79,35 +83,67 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder<Track> 
 	private SimpleFeatureTypeBuilder typeBuilder;
     private final DataService dataService;
     private CoordinateReferenceSystem crs_wgs84;
+    public static int shapeFileExportThreshold = 2;
+    private final String shapefileExportThresholdPropertyName = "shapefile.export.measurement.threshold";
+    private Track track;
+	private Properties properties;
+    private static final String PROPERTIES = "/export.properties";
+    private static final String DEFAULT_PROPERTIES = "/export.default.properties";
     
     @Inject
 	public TrackShapefileEncoder(DataService dataService){
     	super(Track.class);
         this.dataService = dataService;
+        this.properties = new Properties();
+        InputStream in = null;
+        try {
+            in = TrackShapefileEncoder.class.getResourceAsStream(PROPERTIES);
+            if (in != null) {
+                properties.load(in);
+            } else {
+                log.info("No {} found, loading {}.", PROPERTIES, DEFAULT_PROPERTIES);
+                in = TrackShapefileEncoder.class.getResourceAsStream(DEFAULT_PROPERTIES);
+                if (in != null) {
+                    properties.load(in);
+                }else{
+                	log.warn("No {} found!", PROPERTIES);
+                }
+            }
+
+        } catch (IOException ex) {
+            log.error("Error reading " + PROPERTIES, ex);
+        } finally {
+            Closeables.closeQuietly(in);
+        }
+        
+		if (properties != null) {
+			String property = properties
+					.getProperty(shapefileExportThresholdPropertyName);
+			if (property != null) {
+				shapeFileExportThreshold = Integer.parseInt(property);
+			}
+		}
 	}
 	
 	@Override
 	public File encodeShapefile(Track t, AccessRights rights,
-			MediaType mediaType) {
-		
+			MediaType mediaType) throws TrackTooLongException {
+		this.track = t;
 		File zippedShapeFile = null;
 		try {
 			if (rights.canSeeMeasurementsOf(t)) {
 				Measurements measurements = dataService
-						.getMeasurements(new MeasurementFilter(t));					
+						.getMeasurements(new MeasurementFilter(t));
 				zippedShapeFile = createZippedShapefile(createShapeFile(createFeatureCollection(measurements)));
-			}
-			
+			}			
 		} catch (IOException e) {
 			log.debug(e.getMessage());
-		} catch (Exception e) {
-			log.debug(e.getMessage());
-		}
+		} 
 		
 		return zippedShapeFile;
 	}
 
-	private FeatureCollection<SimpleFeatureType, SimpleFeature> createFeatureCollection(Measurements measurements){
+	private FeatureCollection<SimpleFeatureType, SimpleFeature> createFeatureCollection(Measurements measurements) throws TrackTooLongException{
 
 		List<SimpleFeature> simpleFeatureList = new ArrayList<SimpleFeature>();
 
@@ -173,12 +209,16 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder<Track> 
         return  new ListFeatureCollection(sft, simpleFeatureList);		
 	}
 	
-	private SimpleFeatureType buildFeatureType(Measurements measurements) {
+	private SimpleFeatureType buildFeatureType(Measurements measurements) throws TrackTooLongException {
 
 		Set<String> distinctPhenomenonNames = new HashSet<String>();
 		
+		int count = 0;
+		
 		for (Measurement measurement : measurements) {
 
+			count++;
+			
 			MeasurementValues values = measurement.getValues();
 
 			for (MeasurementValue measurementValue : values) {
@@ -196,6 +236,10 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder<Track> 
 			}
 
 		}
+		
+		if(count >= shapeFileExportThreshold){
+			throw new TrackTooLongException(track.getIdentifier(), shapeFileExportThreshold);
+		}
 
 		Iterator<String> distinctPhenomenonNamesIterator = distinctPhenomenonNames
 				.iterator();
@@ -210,7 +254,7 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder<Track> 
 		return typeBuilder.buildFeatureType();
 	}
 
-	private File createShapeFile(FeatureCollection<SimpleFeatureType, SimpleFeature> collection) throws Exception{
+	private File createShapeFile(FeatureCollection<SimpleFeatureType, SimpleFeature> collection) throws IOException {
 		
 		String shapeFileSuffix = ".shp";
 		

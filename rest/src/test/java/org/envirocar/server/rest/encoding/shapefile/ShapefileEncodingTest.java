@@ -14,16 +14,17 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.rest.encoding.csv;
+package org.envirocar.server.rest.encoding.shapefile;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
-import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bson.types.ObjectId;
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.MeasurementValue;
 import org.envirocar.server.core.entities.Phenomenon;
@@ -32,6 +33,7 @@ import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.exception.ResourceAlreadyExistException;
 import org.envirocar.server.core.exception.TrackNotFoundException;
+import org.envirocar.server.core.exception.TrackTooLongException;
 import org.envirocar.server.core.exception.UserNotFoundException;
 import org.envirocar.server.core.exception.ValidationException;
 import org.envirocar.server.mongo.entity.MongoSensor;
@@ -39,7 +41,9 @@ import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.encoding.AbstractEncodingTest;
 import org.joda.time.DateTime;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import com.vividsolutions.jts.geom.Coordinate;
 
@@ -48,57 +52,42 @@ import com.vividsolutions.jts.geom.Coordinate;
  *
  * @author Benjamin Pross
  */
-public class CSVEncodingTest extends AbstractEncodingTest{
-	
-	private String csvEncodedTrackAllMeasurementsHaveAllPhenomenonsHeader = "id; RPM(u/min); Speed(km/h); Intake Temperature(C); MAF(l/s); longitude; latitude; time";
-	private String csvEncodedTrackAllMeasurementsHaveAllPhenomenonsLine1 = "537b0ef874c965606f093b0f; 1; 3; 2; 4; 1.1; 1.2;";
-	private String csvEncodedTrackAllMeasurementsHaveAllPhenomenonsLine2 = "537b0ef874c965606f093b10; 2; 4; 3; 5; 2.1; 2.2;";
-	
-	private String csvEncodedTrackFirstMeasurementHasLessPhenomenonsHeader = "id; RPM(u/min); Speed(km/h); Intake Temperature(C); MAF(l/s); longitude; latitude; time";
-	private String csvEncodedTrackFirstMeasurementHasLessPhenomenonsLine1 = "537b0ef874c965606f093b11; 1; 3; 2; ; 1.1; 1.2;";
-	private String csvEncodedTrackFirstMeasurementHasLessPhenomenonsLine2 = "537b0ef874c965606f093b12; 2; 4; 3; 5; 2.1; 2.2;";
-	
-	private String csvEncodedTrackFirstMeasurementHasMorePhenomenonsHeader = "id; RPM(u/min); Speed(km/h); Intake Temperature(C); longitude; latitude; time";
-	private String csvEncodedTrackFirstMeasurementHasMorePhenomenonsLine1 = "537b0ef874c965606f093b13; 1; 3; 2; 1.1; 1.2;";
-	private String csvEncodedTrackFirstMeasurementHasMorePhenomenonsLine2 = "537b0ef874c965606f093b14; 2; ; 3; 2.1; 2.2;";
+public class ShapefileEncodingTest extends AbstractEncodingTest{
+
+	@Rule
+	public ExpectedException exception = ExpectedException.none();
 
 	private String dateTime = "2014-05-20T08:42:06Z";
 
-	String trackObjectId1 = "537a0d68b7c39b56ef230942";
-	String trackObjectId2 = "537b0ef874c965606f093b0d";
-	String trackObjectId3 = "537b0ef874c965606f093b0e";
-
-	private String measurementObjectId1 = "537b0ef874c965606f093b0f";
-	private String measurementObjectId2 = "537b0ef874c965606f093b10";
-	private String measurementObjectId3 = "537b0ef874c965606f093b11";
-	private String measurementObjectId4 = "537b0ef874c965606f093b12";
-	private String measurementObjectId5 = "537b0ef874c965606f093b13";
-	private String measurementObjectId6 = "537b0ef874c965606f093b14";
+	String trackObjectId1 = "53a967af6a3a479fd054b6f6";
+	String trackObjectId2 = "53a968866a3a1e7842a26761";
 
 	private Track testTrack1;
 	private Track testTrack2;
-	private Track testTrack3;
 
 	private User user;
 	private Sensor sensor;
 	private List<Phenomenon> phenomenons;
 
-	String testUserName = "TestUser";
+	private String testUserName = "TestUser";
+	
+	private int measurementThreshold = 500;//temp value
 	
 	@Before
 	public void setup() {
-
+		
 		try {
 
+			measurementThreshold = TrackShapefileEncoder.shapeFileExportThreshold;
+			
 			testTrack1 = getTestTrack(trackObjectId1);
 			testTrack2 = getTestTrack(trackObjectId2);
-			testTrack3 = getTestTrack(trackObjectId3);
 
 			if (testTrack1 == null) {
 
 				testTrack1 = createTrack(trackObjectId1, getUser(), getSensor());
 
-				createTrackWithMeasurements_AllMeasurementsHaveAllPhenomenons(
+				createTrackWithMeasurementsLessThanThreshold(
 						testTrack1, getPhenomenons(), getUser(), getSensor());
 
 			}
@@ -106,15 +95,8 @@ public class CSVEncodingTest extends AbstractEncodingTest{
 
 				testTrack2 = createTrack(trackObjectId2, getUser(), getSensor());
 				
-				createTrackWithMeasurements_FirstMeasurementHasLessPhenomenons(
-						testTrack2, getPhenomenons(), getUser(), getSensor());				
-			}			
-			if(testTrack3 == null){
-
-				testTrack3 = createTrack(trackObjectId3, getUser(), getSensor());
-				
-				createTrackWithMeasurements_FirstMeasurementHasMorePhenomenons(
-						testTrack3, getPhenomenons(), getUser(), getSensor());				
+				createTrackWithMeasurementsMoreThanThreshold(
+						testTrack2, getPhenomenons(), getUser(), getSensor());
 			}
 
 		} catch (ValidationException e) {
@@ -124,75 +106,27 @@ public class CSVEncodingTest extends AbstractEncodingTest{
 	}
 
 	@Test
-	public void testCSVEncodingAllMeasurementsHaveAllPhenomenons()
+	public void testShapefileEncoding()
 			throws IOException {
 
-		BufferedReader bufferedReader = new BufferedReader(
-				new InputStreamReader(trackCSVEncoder.encodeCSV(testTrack1,
-						MediaTypes.TEXT_CSV_TYPE)));
-
-		String line = "";
-
-		String content = "";
-
-		while ((line = bufferedReader.readLine()) != null) {
-
-			content = content.concat(line + "\n");
-
-		}
-
-		assertTrue(content.contains(csvEncodedTrackAllMeasurementsHaveAllPhenomenonsHeader));
-		assertTrue(content.contains(csvEncodedTrackAllMeasurementsHaveAllPhenomenonsLine1));
-		assertTrue(content.contains(csvEncodedTrackAllMeasurementsHaveAllPhenomenonsLine2));
+		File shapeFile;
+		try {
+			shapeFile = trackShapefileEncoder.encodeShapefile(testTrack1,
+							MediaTypes.APPLICATION_ZIPPED_SHP_TYPE);
+			assertTrue(shapeFile.exists());
+		} catch (TrackTooLongException e) {
+			e.printStackTrace();
+			fail();
+		} 
 
 	}
 	
 	@Test
-	public void testCSVEncodingFirstMeasurementHasLessPhenomenons()
+	public void testShapefileEncodingMoreMeasurementsThanAllowed()
 			throws IOException {
-		
-		BufferedReader bufferedReader = new BufferedReader(
-				new InputStreamReader(trackCSVEncoder.encodeCSV(testTrack2,
-						MediaTypes.TEXT_CSV_TYPE)));
-		
-		String line = "";
-		
-		String content = "";
-		
-		while ((line = bufferedReader.readLine()) != null) {
-			
-			content = content.concat(line + "\n");
-			
-		}
-		
-		assertTrue(content.contains(csvEncodedTrackFirstMeasurementHasLessPhenomenonsHeader));
-		assertTrue(content.contains(csvEncodedTrackFirstMeasurementHasLessPhenomenonsLine1));
-		assertTrue(content.contains(csvEncodedTrackFirstMeasurementHasLessPhenomenonsLine2));
-		
-	}
-	
-	@Test
-	public void testCSVEncodingFirstMeasurementHasMorePhenomenons()
-			throws IOException {
-		
-		BufferedReader bufferedReader = new BufferedReader(
-				new InputStreamReader(trackCSVEncoder.encodeCSV(testTrack3,
-						MediaTypes.TEXT_CSV_TYPE)));
-		
-		String line = "";
-		
-		String content = "";
-		
-		while ((line = bufferedReader.readLine()) != null) {
-			
-			content = content.concat(line + "\n");
-			
-		}
-		
-		assertTrue(content.contains(csvEncodedTrackFirstMeasurementHasMorePhenomenonsHeader));
-		assertTrue(content.contains(csvEncodedTrackFirstMeasurementHasMorePhenomenonsLine1));
-		assertTrue(content.contains(csvEncodedTrackFirstMeasurementHasMorePhenomenonsLine2));
-		
+		exception.expect(TrackTooLongException.class);
+		trackShapefileEncoder.encodeShapefile(testTrack2,
+							MediaTypes.APPLICATION_ZIPPED_SHP_TYPE);	
 	}
 	
 	private User getUser(){
@@ -230,48 +164,25 @@ public class CSVEncodingTest extends AbstractEncodingTest{
 		return testTrack;
 	}
 
-	private void createTrackWithMeasurements_AllMeasurementsHaveAllPhenomenons(
+	private void createTrackWithMeasurementsLessThanThreshold(
 			Track track, List<Phenomenon> phenomenons, User user, Sensor sensor) {
 
-		createMeasurement(track, measurementObjectId1, phenomenons, user,
-				sensor, 1);
-		createMeasurement(track, measurementObjectId2, phenomenons, user,
-				sensor, 2);
-
-		dataService.createTrack(track);
-
-	}
-
-	private void createTrackWithMeasurements_FirstMeasurementHasLessPhenomenons(			
-			Track track, List<Phenomenon> phenomenons, User user, Sensor sensor) {
-
-		List<Phenomenon> originalPhenomenons = new ArrayList<Phenomenon>(phenomenons.size()); 
-		
-		for (Phenomenon phenomenon : phenomenons) {
-			originalPhenomenons.add(phenomenon);
+		for (int i = 0; i < measurementThreshold - 1; i++) {			
+			createMeasurement(track, new ObjectId().toString(), phenomenons, user,
+					sensor, i);
 		}
-		
-		phenomenons.remove(phenomenons.size()-1);
-		
-		createMeasurement(track, measurementObjectId3, phenomenons, user,
-				sensor, 1);
-		
-		createMeasurement(track, measurementObjectId4, originalPhenomenons, user,
-				sensor, 2);
 
 		dataService.createTrack(track);
+
 	}
 
-	private void createTrackWithMeasurements_FirstMeasurementHasMorePhenomenons(			
+	private void createTrackWithMeasurementsMoreThanThreshold(			
 			Track track, List<Phenomenon> phenomenons, User user, Sensor sensor) {
 
-		createMeasurement(track, measurementObjectId5, phenomenons, user,
-				sensor, 1);
-		
-		phenomenons.remove(phenomenons.size()-1);
-		
-		createMeasurement(track, measurementObjectId6, phenomenons, user,
-				sensor, 2);
+		for (int i = 0; i <= measurementThreshold + 1; i++) {			
+			createMeasurement(track, new ObjectId().toString(), phenomenons, user,
+					sensor, i);
+		}
 
 		dataService.createTrack(track);
 	}
@@ -283,7 +194,7 @@ public class CSVEncodingTest extends AbstractEncodingTest{
 		Measurement measurement = entityFactory.createMeasurement();
 
 		measurement.setGeometry(geometryFactory.createPoint(new Coordinate(
-				basenumber + 0.1, basenumber + 0.2)));
+				51.9, 7)));
 
 		measurement.setSensor(sensor);
 
