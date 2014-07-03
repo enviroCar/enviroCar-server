@@ -12,7 +12,7 @@ Note that the shapefile export currently is limited to tracks consisting of less
 
 To get a track as zipped [shapefile][shapefile]:
 
-```g
+```
 curl -H "Accept: application/x-zipped-shp" https://envirocar.org/api/stable/tracks/53433169e4b09d7b34fa824a > /tmp/track.zip
 ```
 
@@ -50,8 +50,6 @@ Select the downloaded shapefile and add it to the map:
 Note that the phenomenon names are truncated as the shapefile specification only allows ten characters for field names.
 
 #### Other GIS
-[an example](http://example.com/ "Title")
-
 * **Quantum GIS**: See the QGSI tutorial [Working with vector data: ESRI Shapefiles](http://docs.qgis.org/2.2/en/docs/user_manual/working_with_vector/supported_data.html#esri-shapefiles)
 * **GRASS GIS**: See GRASS Wiki on [Importing data](http://grasswiki.osgeo.org/wiki/Importing_data)
 * **gvSIG**: See first part of the video [Vector reprojection on gvSIG](href="https://www.youtube.com/watch?v=C0-sm_Fdqnk)
@@ -115,7 +113,7 @@ Choose WGS84 and click ok, the layer will be added:
 
 #### R
 
-In the R environment for statistics computing and graphics ([http://www.r-project.org/](http://www.r-project.org/ "R Project Homepage"), the following two lines suffice to download and import enviroCar CSV data and display a plot which contrasts selected measurement variables.
+In the R environment for statistics computing and graphics, see ([http://www.r-project.org/](http://www.r-project.org/ "R Project Homepage")), the following two lines suffice to download and import enviroCar CSV data and display a plot which contrasts selected measurement variables.
 				
 ```
 track = read.csv2("https://envirocar.org/api/stable/tracks/53433169e4b09d7b34fa824a.csv")
@@ -139,4 +137,4 @@ The created plot:
 [qgis-add-csv3]: {{site.url}}/images/qgis-add-csv-3.png "QGIS add csv step 3"
 [qgis-add-csv4]: {{site.url}}/images/qgis-add-csv-4.png "QGIS add csv step 4"
 [qgis-add-csv5]: {{site.url}}/images/qgis-add-csv-5.png "QGIS add csv step 5"
-[qgis-add-csv5]: {{site.url}}/images/envirocar-measurements-plot-R.jpeg "R plot of imported csv data"
+[r-plot]: {{site.url}}/images/envirocar-measurements-plot-R.jpeg "R plot of imported csv data"
