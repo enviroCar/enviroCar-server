@@ -238,7 +238,7 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder<Track> 
 		}
 		
 		if(count >= shapeFileExportThreshold){
-			throw new TrackTooLongException(track.getIdentifier(), shapeFileExportThreshold);
+			throw new TrackTooLongException(track.getIdentifier(), shapeFileExportThreshold, count);
 		}
 
 		Iterator<String> distinctPhenomenonNamesIterator = distinctPhenomenonNames

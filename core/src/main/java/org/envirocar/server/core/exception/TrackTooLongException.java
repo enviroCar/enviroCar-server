@@ -28,8 +28,8 @@ public class TrackTooLongException  extends RuntimeException {
     public TrackTooLongException() {
     }
 
-    public TrackTooLongException(String trackID, int currentThreshold){
-        super(String.format("The track '%s' is too long to export as shapefile. The limit of measurements currently is: %s. For further advice, please contact the enviroCar team: envirocar at 52north.org or visit the forum: http://envirocar-discuss.forum.52north.org/", trackID, currentThreshold));
+    public TrackTooLongException(String trackID, int currentThreshold, int trackFeatureCount){
+        super(String.format("The track '%s' is too long to export as shapefile. The limit of measurements currently is: %s. The requested track contained %s measurements. For further advice, please contact the enviroCar team: envirocar at 52north.org or visit the forum: http://envirocar-discuss.forum.52north.org/", trackID, currentThreshold, trackFeatureCount));
     }
 
 }
