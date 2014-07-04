@@ -24,9 +24,6 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.envirocar.server.core.DataService;
-import org.envirocar.server.core.UserService;
-import org.envirocar.server.core.entities.EntityFactory;
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.MeasurementValue;
 import org.envirocar.server.core.entities.Phenomenon;
@@ -37,51 +34,22 @@ import org.envirocar.server.core.exception.ResourceAlreadyExistException;
 import org.envirocar.server.core.exception.TrackNotFoundException;
 import org.envirocar.server.core.exception.UserNotFoundException;
 import org.envirocar.server.core.exception.ValidationException;
-import org.envirocar.server.core.guice.UpdaterModule;
-import org.envirocar.server.core.guice.ValidatorModule;
 import org.envirocar.server.mongo.entity.MongoSensor;
-import org.envirocar.server.mongo.guice.MongoConnectionModule;
-import org.envirocar.server.mongo.guice.MongoConverterModule;
-import org.envirocar.server.mongo.guice.MongoMappedClassesModule;
 import org.envirocar.server.rest.MediaTypes;
-import org.envirocar.server.rest.guice.JerseyCodingModule;
-import org.envirocar.server.rest.schema.GuiceRunner;
-import org.envirocar.server.rest.schema.Modules;
+import org.envirocar.server.rest.encoding.AbstractEncodingTest;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
-import com.google.inject.Inject;
 import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.GeometryFactory;
 
 /**
  * TODO JavaDoc
  *
  * @author Benjamin Pross
  */
-@RunWith(GuiceRunner.class)
-@Modules({MongoConverterModule.class, JerseyCodingModule.class, MongoMappedClassesModule.class,
-		MongoConnectionModule.class, CSVEncodingTestModule.class,
-		UpdaterModule.class, ValidatorModule.class })
-public class CSVEncodingTest {
-
-	@Inject
-	private DataService dataService;
-
-	@Inject
-	private UserService userService;
-
-	@Inject
-	private TrackCSVEncoder trackCSVEncoder;
-
-	@Inject
-	private EntityFactory entityFactory;
-
-	@Inject
-	private GeometryFactory geometryFacotry;
-
+public class CSVEncodingTest extends AbstractEncodingTest{
+	
 	private String csvEncodedTrackAllMeasurementsHaveAllPhenomenonsHeader = "id; RPM(u/min); Speed(km/h); Intake Temperature(C); MAF(l/s); longitude; latitude; time";
 	private String csvEncodedTrackAllMeasurementsHaveAllPhenomenonsLine1 = "537b0ef874c965606f093b0f; 1; 3; 2; 4; 1.1; 1.2;";
 	private String csvEncodedTrackAllMeasurementsHaveAllPhenomenonsLine2 = "537b0ef874c965606f093b10; 2; 4; 3; 5; 2.1; 2.2;";
@@ -314,7 +282,7 @@ public class CSVEncodingTest {
 
 		Measurement measurement = entityFactory.createMeasurement();
 
-		measurement.setGeometry(geometryFacotry.createPoint(new Coordinate(
+		measurement.setGeometry(geometryFactory.createPoint(new Coordinate(
 				basenumber + 0.1, basenumber + 0.2)));
 
 		measurement.setSensor(sensor);

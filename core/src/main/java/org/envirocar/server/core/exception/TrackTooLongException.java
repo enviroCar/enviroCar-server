@@ -14,20 +14,22 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.rest.encoding;
-
-import java.io.File;
-
-import javax.ws.rs.core.MediaType;
-
-import org.envirocar.server.core.exception.TrackTooLongException;
-import org.envirocar.server.rest.rights.AccessRights;
+package org.envirocar.server.core.exception;
 
 /**
- * TODO JavaDoc
- *
+ * TODO: Javadoc
+ * 
  * @author Benjamin Pross
+ *
  */
-public interface ShapefileTrackEncoder<T> {
-    File encodeShapefile(T t, AccessRights rights, MediaType mt) throws TrackTooLongException;
+public class TrackTooLongException  extends RuntimeException {
+    private static final long serialVersionUID = -6183358575669855777L;
+
+    public TrackTooLongException() {
+    }
+
+    public TrackTooLongException(String trackID, int currentThreshold, int trackFeatureCount){
+        super(String.format("The track '%s' is too long to export as shapefile. The limit of measurements currently is: %s. The requested track contained %s measurements. For further advice, please contact the enviroCar team: envirocar at 52north.org or visit the forum: http://envirocar-discuss.forum.52north.org/", trackID, currentThreshold, trackFeatureCount));
+    }
+
 }
