@@ -32,7 +32,6 @@ import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.exception.ResourceAlreadyExistException;
-import org.envirocar.server.core.exception.TrackNotFoundException;
 import org.envirocar.server.core.exception.TrackTooLongException;
 import org.envirocar.server.core.exception.UserNotFoundException;
 import org.envirocar.server.core.exception.ValidationException;
@@ -40,6 +39,7 @@ import org.envirocar.server.mongo.entity.MongoSensor;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.encoding.AbstractEncodingTest;
 import org.joda.time.DateTime;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -59,9 +59,6 @@ public class ShapefileEncodingTest extends AbstractEncodingTest{
 
 	private String dateTime = "2014-05-20T08:42:06Z";
 
-	String trackObjectId1 = "53a967af6a3a479fd054b6f6";
-	String trackObjectId2 = "53a968866a3a1e7842a26761";
-
 	private Track testTrack1;
 	private Track testTrack2;
 
@@ -80,12 +77,12 @@ public class ShapefileEncodingTest extends AbstractEncodingTest{
 
 			measurementThreshold = TrackShapefileEncoder.shapeFileExportThreshold;
 			
-			testTrack1 = getTestTrack(trackObjectId1);
-			testTrack2 = getTestTrack(trackObjectId2);
+//			testTrack1 = getTestTrack(trackObjectId1);
+//			testTrack2 = getTestTrack(trackObjectId2);
 
 			if (testTrack1 == null) {
 
-				testTrack1 = createTrack(trackObjectId1, getUser(), getSensor());
+				testTrack1 = createTrack(getUser(), getSensor());
 
 				createTrackWithMeasurementsLessThanThreshold(
 						testTrack1, getPhenomenons(), getUser(), getSensor());
@@ -93,7 +90,7 @@ public class ShapefileEncodingTest extends AbstractEncodingTest{
 			}
 			if(testTrack2 == null){
 
-				testTrack2 = createTrack(trackObjectId2, getUser(), getSensor());
+				testTrack2 = createTrack(getUser(), getSensor());
 				
 				createTrackWithMeasurementsMoreThanThreshold(
 						testTrack2, getPhenomenons(), getUser(), getSensor());
@@ -103,6 +100,17 @@ public class ShapefileEncodingTest extends AbstractEncodingTest{
 			e.printStackTrace();
 		}
 
+	}
+	
+	@After
+	public void removeTracks() {
+		if (testTrack1 != null) {
+			dataService.deleteTrack(testTrack1);
+		}
+		
+		if (testTrack2 != null) {
+			dataService.deleteTrack(testTrack2);
+		}
 	}
 
 	@Test
@@ -152,17 +160,6 @@ public class ShapefileEncodingTest extends AbstractEncodingTest{
 		return phenomenons;		
 	}
 
-	private Track getTestTrack(String trackId) {
-		Track testTrack = null;
-		try {
-			testTrack = dataService.getTrack(trackId);
-		} catch (TrackNotFoundException e) {
-			/*
-			 * ignore
-			 */
-		}
-		return testTrack;
-	}
 
 	private void createTrackWithMeasurementsLessThanThreshold(
 			Track track, List<Phenomenon> phenomenons, User user, Sensor sensor) {
@@ -228,11 +225,11 @@ public class ShapefileEncodingTest extends AbstractEncodingTest{
 
 	}
 
-	private Track createTrack(String objectId, User user, Sensor sensor) {
+	private Track createTrack(User user, Sensor sensor) {
 
 		Track result = entityFactory.createTrack();
 
-		result.setIdentifier(objectId);
+//		result.setIdentifier(objectId);
 
 		result.setUser(user);
 
