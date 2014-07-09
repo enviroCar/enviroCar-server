@@ -30,6 +30,7 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.MessageBodyWriter;
 
 import org.apache.commons.io.IOUtils;
+import org.envirocar.server.core.exception.TrackTooLongException;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.encoding.ShapefileTrackEncoder;
 
@@ -48,7 +49,7 @@ public abstract class AbstractShapefileMessageBodyWriter<T> implements
         this.classType = classType;
     }
     
-	public abstract File encodeShapefile(T t, MediaType mt);
+	public abstract File encodeShapefile(T t, MediaType mt) throws TrackTooLongException;
 
 	@Override
 	public long getSize(T t, Class<?> type, Type genericType, Annotation[] annotations,
@@ -68,7 +69,12 @@ public abstract class AbstractShapefileMessageBodyWriter<T> implements
 			MediaType mediaType, MultivaluedMap<String, Object> h,
 			OutputStream out) throws IOException, WebApplicationException {
 		
-		File shapeFile = encodeShapefile(t, mediaType);
+		File shapeFile;
+		try {
+			shapeFile = encodeShapefile(t, mediaType);
+		} catch (Exception e) {
+			throw new IOException(e.getMessage());
+		} 
 		
 		FileInputStream fileInputStream = new FileInputStream(shapeFile);
 		

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.rest.encoding.csv;
+package org.envirocar.server.rest.encoding;
 
 import org.bson.BSONObject;
 import org.envirocar.server.core.DataService;
@@ -29,7 +29,6 @@ import org.envirocar.server.core.UserService;
 import org.envirocar.server.core.UserServiceImpl;
 import org.envirocar.server.core.activities.Activity;
 import org.envirocar.server.core.activities.ActivityFactory;
-import org.envirocar.server.core.activities.ActivityListener;
 import org.envirocar.server.core.activities.GroupActivity;
 import org.envirocar.server.core.activities.TrackActivity;
 import org.envirocar.server.core.activities.UserActivity;
@@ -101,7 +100,7 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.multibindings.Multibinder;
 import com.vividsolutions.jts.geom.Geometry;
 
-public class CSVEncodingTestModule extends AbstractModule {
+public class EncodingTestModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
@@ -112,7 +111,6 @@ public class CSVEncodingTestModule extends AbstractModule {
         bind(FriendService.class).to(FriendServiceImpl.class);
         bind(GroupService.class).to(GroupServiceImpl.class);
         bind(StatisticsService.class).to(StatisticsServiceImpl.class);
-        bind(ActivityListener.class).asEagerSingleton();
         bind(PasswordEncoder.class).to(BCryptPasswordEncoder.class);
         Multibinder.newSetBinder(binder(), TypeConverter.class);
         bind(new TypeLiteral<GeometryConverter<BSONObject>>() {

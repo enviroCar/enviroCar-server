@@ -4,7 +4,11 @@ layout: default
 
 # Additional encodings for tracks #
 
-Track resources are available encoded as zipped shapefile and as comma-separated-values (CSV). To request the content in either of the formats you have to set the appropriate `Accept` header.
+Track resources are available encoded as zipped shapefile and as comma-separated-values (CSV). To request the content in either of the formats you have to (a) set the appropriate `Accept` header, or (b) use the "file extension" in the URL.
+
+## Shapefile
+
+Note that the shapefile export currently is limited to tracks consisting of less than 500 measurements. If you want to export larger tracks, please [contact][contact] us or visit the [enviroCar forum][forum].
 
 To get a track as zipped [shapefile][shapefile]:
 
@@ -28,7 +32,12 @@ shp3639973723505543106.qix
 shp3639973723505543106.shp
 shp3639973723505543106.shx
 ```
+
+### Adding enviroCar shapefiles to GIS
+
 You can now add the shapefile to your favorite GIS, e.g. ArcMap:
+
+#### ArcMap
 
 Click on the "Add data" button:
 
@@ -39,6 +48,13 @@ Select the downloaded shapefile and add it to the map:
 ![arcmap-add-shp2][arcmap-add-shp2]
 
 Note that the phenomenon names are truncated as the shapefile specification only allows ten characters for field names.
+
+#### Other GIS
+* **Quantum GIS**: See the QGSI tutorial [Working with vector data: ESRI Shapefiles](http://docs.qgis.org/2.2/en/docs/user_manual/working_with_vector/supported_data.html#esri-shapefiles)
+* **GRASS GIS**: See GRASS Wiki on [Importing data](http://grasswiki.osgeo.org/wiki/Importing_data)
+* **gvSIG**: See first part of the video [Vector reprojection on gvSIG](href="https://www.youtube.com/watch?v=C0-sm_Fdqnk)
+
+## CSV
 
 To get a track as [CSV][csv]:
 
@@ -51,6 +67,7 @@ or
 ```
 curl https://envirocar.org/api/stable/tracks/537ed45be4b008867f814d48.csv > /tmp/track.txt
 ```
+
 Excerpt from the CSV file:
 
 ```
@@ -66,7 +83,11 @@ id; Intake Temperature(c); O2 Lambda Voltage ER(ratio); Throttle Position(%); GP
 ...
 ```
 
-The features encoded as CSV can also be added to most GIS, e.g. Quantum GIS:
+The features encoded as CSV can also be added to most GIS or used in scripting languages.
+
+### Importing enviroCar CSV files
+
+#### Quantum GIS
 
 Click Layer -> Add Delimited Text Layers...:
 
@@ -90,7 +111,23 @@ Choose WGS84 and click ok, the layer will be added:
 
 ![qgis-add-csv5][qgis-add-csv5]
 
+#### R
+
+In the R environment for statistics computing and graphics, see ([http://www.r-project.org/](http://www.r-project.org/ "R Project Homepage")), the following two lines suffice to download and import enviroCar CSV data and display a plot which contrasts selected measurement variables.
+				
+```
+track = read.csv2("https://envirocar.org/api/stable/tracks/53433169e4b09d7b34fa824a.csv")
+plot(subset(track, select = c("Consumption.l.h.", "Speed.km.h.", "Rpm.u.min.")))
+```
+
+The created plot:
+
+![r-plot][r-plot]
+
+
 [shapefile]: https://en.wikipedia.org/wiki/Shapefile "Shapefile"
+[contact]: mailto:enviroCar@52north.org "enviroCar team at 52°North"
+[forum]: http://envirocar-discuss.forum.52north.org/ "enviroCar forum"
 [arcmap-add-shp]: {{site.url}}/images/arcmap-add-shp.png "ArcMap add shapefile step 1"
 [arcmap-add-shp2]: {{site.url}}/images/arcmap-add-shp-2.png "ArcMap add shapefile step 2"
 
@@ -100,3 +137,4 @@ Choose WGS84 and click ok, the layer will be added:
 [qgis-add-csv3]: {{site.url}}/images/qgis-add-csv-3.png "QGIS add csv step 3"
 [qgis-add-csv4]: {{site.url}}/images/qgis-add-csv-4.png "QGIS add csv step 4"
 [qgis-add-csv5]: {{site.url}}/images/qgis-add-csv-5.png "QGIS add csv step 5"
+[r-plot]: {{site.url}}/images/envirocar-measurements-plot-R.jpeg "R plot of imported csv data"

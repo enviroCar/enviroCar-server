@@ -20,6 +20,7 @@ import java.io.File;
 
 import javax.ws.rs.core.MediaType;
 
+import org.envirocar.server.core.exception.TrackTooLongException;
 import org.envirocar.server.rest.encoding.ShapefileTrackEncoder;
 import org.envirocar.server.rest.rights.AccessRights;
 import org.joda.time.format.DateTimeFormatter;
@@ -57,7 +58,7 @@ public abstract class AbstractShapefileTrackEncoder<T>
     }
 
     @Override
-    public File encodeShapefile(T t, MediaType mt) {
+    public File encodeShapefile(T t, MediaType mt) throws TrackTooLongException{
         return encodeShapefile(t, rights.get(), mt);
     }
 }
