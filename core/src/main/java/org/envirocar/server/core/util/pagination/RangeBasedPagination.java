@@ -102,7 +102,7 @@ public class RangeBasedPagination implements Pagination {
         }
         long start = elements % this.size == 0L
                              ? elements - this.size
-                             : Math.floorDiv(elements, this.size) * this.size;
+                             : (long) Math.floor(elements/this.size) * this.size;
         return optionalRange(start, elements - 1);
     }
 
