@@ -17,13 +17,11 @@
 package org.envirocar.server.rest.resources;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
@@ -31,12 +29,11 @@ import com.google.inject.assistedinject.Assisted;
 import org.envirocar.server.core.entities.Group;
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.entities.Users;
+import org.envirocar.server.core.exception.BadRequestException;
 
 import org.envirocar.server.core.exception.GroupNotFoundException;
 import org.envirocar.server.core.exception.UserNotFoundException;
-import org.envirocar.server.core.util.Pagination;
 import org.envirocar.server.rest.MediaTypes;
-import org.envirocar.server.rest.RESTConstants;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.UserReference;
 import org.envirocar.server.rest.auth.Authenticated;
@@ -63,12 +60,10 @@ public class GroupMembersResource extends AbstractResource {
                 MediaTypes.XML_RDF,
                 MediaTypes.TURTLE,
                 MediaTypes.TURTLE_ALT })
-    public Users get(
-            @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit,
-            @QueryParam(RESTConstants.PAGE) @DefaultValue("0") int page) {
+    public Users get() throws BadRequestException {
         checkRights(getRights().canSeeMembersOf(group));
         return getGroupService()
-                .getGroupMembers(group, new Pagination(limit, page));
+                .getGroupMembers(group, getPagination());
     }
 
     @POST

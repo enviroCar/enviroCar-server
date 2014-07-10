@@ -36,7 +36,10 @@ import org.envirocar.server.core.TemporalFilterOperator;
 import org.envirocar.server.core.UserService;
 import org.envirocar.server.core.entities.EntityFactory;
 import org.envirocar.server.core.entities.User;
+import org.envirocar.server.core.exception.BadRequestException;
+import org.envirocar.server.core.util.pagination.Pagination;
 import org.envirocar.server.rest.auth.PrincipalImpl;
+import org.envirocar.server.rest.pagination.PaginationProvider;
 import org.envirocar.server.rest.rights.AccessRights;
 
 import com.google.common.base.Optional;
@@ -66,9 +69,14 @@ public abstract class AbstractResource {
     private Provider<ResourceFactory> resourceFactory;
     private Provider<EntityFactory> entityFactory;
     private Provider<Optional<Set<String>>> allowedMailAddresses;
+    private PaginationProvider pagination;
 
     protected AccessRights getRights() {
         return rights.get();
+    }
+
+    protected Pagination getPagination() throws BadRequestException {
+        return pagination.get();
     }
 
     protected UriInfo getUriInfo() {
@@ -164,6 +172,11 @@ public abstract class AbstractResource {
     public void setStatisticsService(
             Provider<StatisticsService> statisticsService) {
         this.statisticsService = statisticsService;
+    }
+
+    @Inject
+    public void setPagination(PaginationProvider pagination) {
+        this.pagination = pagination;
     }
 
     protected void checkMail(User user) {

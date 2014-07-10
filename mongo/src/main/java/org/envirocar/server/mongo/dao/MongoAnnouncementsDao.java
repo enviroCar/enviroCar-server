@@ -20,7 +20,7 @@ import org.bson.types.ObjectId;
 import org.envirocar.server.core.dao.AnnouncementsDao;
 import org.envirocar.server.core.entities.Announcement;
 import org.envirocar.server.core.entities.Announcements;
-import org.envirocar.server.core.util.Pagination;
+import org.envirocar.server.core.util.pagination.Pagination;
 import org.envirocar.server.mongo.MongoDB;
 import org.envirocar.server.mongo.entity.MongoAnnouncement;
 

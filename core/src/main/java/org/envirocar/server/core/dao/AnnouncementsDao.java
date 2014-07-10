@@ -18,7 +18,7 @@ package org.envirocar.server.core.dao;
 
 import org.envirocar.server.core.entities.Announcement;
 import org.envirocar.server.core.entities.Announcements;
-import org.envirocar.server.core.util.Pagination;
+import org.envirocar.server.core.util.pagination.Pagination;
 
 public interface AnnouncementsDao {
 	

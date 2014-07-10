@@ -31,7 +31,7 @@ import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.exception.GeometryConverterException;
 import org.envirocar.server.core.filter.MeasurementFilter;
 import org.envirocar.server.core.util.GeometryConverter;
-import org.envirocar.server.core.util.Pagination;
+import org.envirocar.server.core.util.pagination.Pagination;
 import org.envirocar.server.mongo.MongoDB;
 import org.envirocar.server.mongo.entity.MongoMeasurement;
 import org.envirocar.server.mongo.entity.MongoTrack;
@@ -259,7 +259,7 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
         }
         return toKeyList(out.results());
     }
-    
+
     private AggregationOutput aggregate(DBObject firstOp,
                                         DBObject... additionalOps) {
         AggregationOutput result = mongoDB.getDatastore()
@@ -331,11 +331,11 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
         cursor.setDecoderFactory(ds.getDecoderFact());
         if (p != null) {
             count = coll.count(query);
-            if (p.getOffset() > 0) {
-                cursor.skip(p.getOffset());
+            if (p.getBegin()> 0) {
+                cursor.skip((int) p.getBegin());
             }
             if (p.getLimit() > 0) {
-                cursor.limit(p.getLimit());
+                cursor.limit((int) p.getLimit());
             }
         }
         cursor.sort(QueryImpl.parseFieldsString(MongoMeasurement.TIME,

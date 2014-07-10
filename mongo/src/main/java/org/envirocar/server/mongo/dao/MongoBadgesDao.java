@@ -19,7 +19,7 @@ package org.envirocar.server.mongo.dao;
 import org.bson.types.ObjectId;
 import org.envirocar.server.core.dao.BadgesDao;
 import org.envirocar.server.core.entities.Badges;
-import org.envirocar.server.core.util.Pagination;
+import org.envirocar.server.core.util.pagination.Pagination;
 import org.envirocar.server.mongo.MongoDB;
 import org.envirocar.server.mongo.entity.MongoBadge;
 

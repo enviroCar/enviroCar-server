@@ -18,7 +18,6 @@ package org.envirocar.server.rest.resources;
 
 import javax.annotation.Nullable;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -30,12 +29,12 @@ import javax.ws.rs.core.Response;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.entities.Tracks;
 import org.envirocar.server.core.entities.User;
+import org.envirocar.server.core.exception.BadRequestException;
 import org.envirocar.server.core.exception.ResourceAlreadyExistException;
 import org.envirocar.server.core.exception.TrackNotFoundException;
 import org.envirocar.server.core.exception.UserNotFoundException;
 import org.envirocar.server.core.exception.ValidationException;
 import org.envirocar.server.core.filter.TrackFilter;
-import org.envirocar.server.core.util.Pagination;
 import org.envirocar.server.rest.BoundingBox;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.RESTConstants;
@@ -72,11 +71,7 @@ public class TracksResource extends AbstractResource {
                 MediaTypes.XML_RDF,
                 MediaTypes.TURTLE,
                 MediaTypes.TURTLE_ALT })
-    public Tracks get(
-            @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit,
-            @QueryParam(RESTConstants.PAGE) @DefaultValue("0") int page,
-            @QueryParam(RESTConstants.BBOX) BoundingBox bbox)
-            throws UserNotFoundException {
+    public Tracks get(@QueryParam(RESTConstants.BBOX) BoundingBox bbox) throws UserNotFoundException, BadRequestException {
         Polygon poly = null;
         if (bbox != null) {
             poly = bbox.asPolygon(factory);
@@ -84,7 +79,7 @@ public class TracksResource extends AbstractResource {
         return getDataService()
                 .getTracks(new TrackFilter(user, poly,
                                            parseTemporalFilterForInterval(),
-                                           new Pagination(limit, page)));
+                                           getPagination()));
     }
 
     @POST

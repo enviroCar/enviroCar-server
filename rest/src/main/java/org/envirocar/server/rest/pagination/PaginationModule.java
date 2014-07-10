@@ -14,13 +14,20 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.core.dao;
+package org.envirocar.server.rest.pagination;
 
-import org.envirocar.server.core.entities.Badges;
 import org.envirocar.server.core.util.pagination.Pagination;
 
-public interface BadgesDao {
+import com.google.inject.AbstractModule;
+import com.google.inject.servlet.RequestScoped;
+import com.google.inject.throwingproviders.ThrowingProviderBinder;
 
-	Badges get(Pagination pagination);
-
+public class PaginationModule extends AbstractModule {
+    @Override
+    protected void configure() {
+        ThrowingProviderBinder.create(binder())
+                .bind(PaginationProvider.class, Pagination.class)
+                .to(PaginationProviderImpl.class)
+                .in(RequestScoped.class);
+    }
 }

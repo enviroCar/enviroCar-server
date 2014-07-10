@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.rest;
+package org.envirocar.server.rest.pagination;
 
 import java.net.URI;
 
@@ -25,20 +25,20 @@ import com.sun.jersey.spi.container.ContainerRequest;
 import com.sun.jersey.spi.container.ContainerResponse;
 import com.sun.jersey.spi.container.ContainerResponseFilter;
 
-import org.envirocar.server.core.util.Paginated;
-import org.envirocar.server.core.util.Pagination;
+import org.envirocar.server.core.util.pagination.Paginated;
+import org.envirocar.server.core.util.pagination.Pagination;
 
-/**
- * TODO JavaDoc
- *
- * @author Christian Autermann <autermann@uni-muenster.de>
- */
+import com.google.common.base.Optional;
+
+import org.envirocar.server.rest.RESTConstants;
+
 public class PaginationFilter implements ContainerResponseFilter {
     public static final String REL_FIRST = "first";
     public static final String REL_LAST = "last";
     public static final String REL_PREV = "prev";
     public static final String REL_NEXT = "next";
     public static final String LINK_HEADER = "Link";
+    public static final String CONTENT_RANGE_HEADER = "Content-Rage";
 
     @Override
     public ContainerResponse filter(ContainerRequest req,
@@ -48,36 +48,56 @@ public class PaginationFilter implements ContainerResponseFilter {
             Paginated<?> p = (Paginated) entity;
             if (p.isPaginated()) {
                 insertLinks(p, req, res);
+                insertRangeHeader(p, res);
             }
         }
         return res;
     }
 
+    private void insertRangeHeader(Paginated<?> p,
+                                   ContainerResponse res) {
+        StringBuilder sb = new StringBuilder("items ");
+        sb.append(p.getCurrent().get().getBegin());
+        sb.append("-");
+        sb.append(p.getCurrent().get().getEnd());
+        if (p.getTotalCount()>=0) {
+            sb.append("/").append(p.getTotalCount());
+        }
+        res.getHttpHeaders().add(CONTENT_RANGE_HEADER, sb.toString());
+    }
+
+
     private void insertLinks(Paginated<?> p,
                              ContainerRequest req,
                              ContainerResponse res) {
-        if (p.hasFirst()) {
-            addLink(REL_FIRST, p.getFirst(), req, res);
+        Optional<Pagination> first = p.getFirst();
+        if (first.isPresent()) {
+            addLink(REL_FIRST, first.get(), req, res);
         }
-        if (p.hasLast()) {
-            addLink(REL_LAST, p.getLast(), req, res);
+        Optional<Pagination> last = p.getLast();
+        if (last.isPresent()) {
+            addLink(REL_LAST, last.get(), req, res);
         }
-        if (p.hasPrevious()) {
-            addLink(REL_PREV, p.getPrevious(), req, res);
+        Optional<Pagination> previous = p.getPrevious();
+        if (previous.isPresent()) {
+            addLink(REL_PREV, previous.get(), req, res);
         }
-        if (p.hasNext()) {
-            addLink(REL_NEXT, p.getNext(), req, res);
+        Optional<Pagination> next = p.getNext();
+        if (next.isPresent()) {
+            addLink(REL_NEXT, next.get(), req, res);
         }
     }
 
     protected void addLink(String rel, Pagination p, ContainerRequest req,
                            ContainerResponse res) {
-        URI uri = req.getRequestUriBuilder()
-                .replaceQueryParam(RESTConstants.LIMIT, p.getLimit())
-                .replaceQueryParam(RESTConstants.PAGE, p.getPage())
-                .build();
-        MediaType type = res.getMediaType();
-        LinkHeader header = LinkHeader.uri(uri).type(type).rel(rel).build();
-        res.getHttpHeaders().add(LINK_HEADER, header.toString());
+        if (p.getPage()>= 0 && p.getLimit() >= 0) {
+            URI uri = req.getRequestUriBuilder()
+                    .replaceQueryParam(RESTConstants.LIMIT, p.getLimit())
+                    .replaceQueryParam(RESTConstants.PAGE, p.getPage())
+                    .build();
+            MediaType type = res.getMediaType();
+            LinkHeader header = LinkHeader.uri(uri).type(type).rel(rel).build();
+            res.getHttpHeaders().add(LINK_HEADER, header.toString());
+        }
     }
 }

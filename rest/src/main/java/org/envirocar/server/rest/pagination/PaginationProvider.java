@@ -14,13 +14,22 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.core.dao;
+package org.envirocar.server.rest.pagination;
 
-import org.envirocar.server.core.entities.Badges;
+import org.envirocar.server.core.exception.BadRequestException;
 import org.envirocar.server.core.util.pagination.Pagination;
 
-public interface BadgesDao {
+import com.google.inject.throwingproviders.CheckedProvider;
 
-	Badges get(Pagination pagination);
+/**
+ * TODO JavaDoc
+ *
+ * @author Christian Autermann
+ */
+public interface PaginationProvider extends CheckedProvider<Pagination> {
+
+    @Override
+    public Pagination get()
+            throws BadRequestException;
 
 }
