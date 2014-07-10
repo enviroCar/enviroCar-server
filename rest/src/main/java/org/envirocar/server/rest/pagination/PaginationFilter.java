@@ -38,7 +38,7 @@ public class PaginationFilter implements ContainerResponseFilter {
     public static final String REL_PREV = "prev";
     public static final String REL_NEXT = "next";
     public static final String LINK_HEADER = "Link";
-    public static final String CONTENT_RANGE_HEADER = "Content-Rage";
+    public static final String CONTENT_RANGE_HEADER = "Content-Range";
 
     @Override
     public ContainerResponse filter(ContainerRequest req,
