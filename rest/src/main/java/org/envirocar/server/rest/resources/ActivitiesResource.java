@@ -29,8 +29,9 @@ import org.envirocar.server.core.activities.Activity;
 import org.envirocar.server.core.activities.ActivityType;
 import org.envirocar.server.core.entities.Group;
 import org.envirocar.server.core.entities.User;
+import org.envirocar.server.core.exception.BadRequestException;
 import org.envirocar.server.core.filter.ActivityFilter;
-import org.envirocar.server.core.util.Pagination;
+import org.envirocar.server.core.util.pagination.Pagination;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.RESTConstants;
 import org.envirocar.server.rest.Schemas;
@@ -70,11 +71,9 @@ public class ActivitiesResource extends AbstractResource {
                 MediaTypes.TURTLE,
                 MediaTypes.TURTLE_ALT })
     public Activities activities(
-            @QueryParam(RESTConstants.TYPE) ActivityType type,
-            @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit,
-            @QueryParam(RESTConstants.PAGE) @DefaultValue("0") int page) {
+            @QueryParam(RESTConstants.TYPE) ActivityType type) throws BadRequestException {
         return getUserService()
-                .getActivities(new ActivityFilter(group, user, type, new Pagination(limit, page)));
+                .getActivities(new ActivityFilter(group, user, type, getPagination()));
     }
 
     @GET

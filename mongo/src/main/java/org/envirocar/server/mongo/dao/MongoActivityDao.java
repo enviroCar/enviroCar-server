@@ -23,7 +23,7 @@ import org.envirocar.server.core.activities.Activities;
 import org.envirocar.server.core.activities.Activity;
 import org.envirocar.server.core.dao.ActivityDao;
 import org.envirocar.server.core.filter.ActivityFilter;
-import org.envirocar.server.core.util.Pagination;
+import org.envirocar.server.core.util.pagination.Pagination;
 import org.envirocar.server.mongo.MongoDB;
 import org.envirocar.server.mongo.activities.MongoActivity;
 import org.envirocar.server.mongo.entity.MongoUser;

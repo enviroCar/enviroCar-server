@@ -24,7 +24,7 @@ import org.bson.types.ObjectId;
 import org.envirocar.server.core.entities.PasswordReset;
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.exception.BadRequestException;
-import org.envirocar.server.core.util.Pagination;
+import org.envirocar.server.core.util.pagination.Pagination;
 import org.envirocar.server.core.util.UpCastingIterable;
 import org.envirocar.server.mongo.MongoDB;
 import org.envirocar.server.mongo.dao.AbstractMongoDao;

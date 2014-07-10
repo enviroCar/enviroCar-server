@@ -63,7 +63,7 @@ import org.envirocar.server.core.filter.MeasurementFilter;
 import org.envirocar.server.core.filter.SensorFilter;
 import org.envirocar.server.core.filter.TrackFilter;
 import org.envirocar.server.core.update.EntityUpdater;
-import org.envirocar.server.core.util.Pagination;
+import org.envirocar.server.core.util.pagination.Pagination;
 import org.envirocar.server.core.validation.EntityValidator;
 import org.joda.time.DateTime;
 

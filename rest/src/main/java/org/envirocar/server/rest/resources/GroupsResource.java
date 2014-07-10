@@ -18,7 +18,6 @@ package org.envirocar.server.rest.resources;
 
 import javax.annotation.Nullable;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -30,11 +29,11 @@ import javax.ws.rs.core.Response;
 import org.envirocar.server.core.entities.Group;
 import org.envirocar.server.core.entities.Groups;
 import org.envirocar.server.core.entities.User;
+import org.envirocar.server.core.exception.BadRequestException;
 import org.envirocar.server.core.exception.GroupNotFoundException;
 import org.envirocar.server.core.exception.ResourceAlreadyExistException;
 import org.envirocar.server.core.exception.UserNotFoundException;
 import org.envirocar.server.core.exception.ValidationException;
-import org.envirocar.server.core.util.Pagination;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.RESTConstants;
 import org.envirocar.server.rest.Schemas;
@@ -64,18 +63,14 @@ public class GroupsResource extends AbstractResource {
                 MediaTypes.XML_RDF,
                 MediaTypes.TURTLE,
                 MediaTypes.TURTLE_ALT })
-    public Groups get(
-            @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit,
-            @QueryParam(RESTConstants.PAGE) @DefaultValue("0") int page,
-            @QueryParam(RESTConstants.SEARCH) String search) {
-        Pagination p = new Pagination(limit, page);
+    public Groups get(@QueryParam(RESTConstants.SEARCH) String search) throws BadRequestException {
         if (user != null) {
-            return getGroupService().getGroups(user, p);
+            return getGroupService().getGroups(user, getPagination());
         } else {
             if (search != null && !search.trim().isEmpty()) {
-                return getGroupService().searchGroups(search, p);
+                return getGroupService().searchGroups(search, getPagination());
             } else {
-                return getGroupService().getGroups(p);
+                return getGroupService().getGroups(getPagination());
             }
         }
     }

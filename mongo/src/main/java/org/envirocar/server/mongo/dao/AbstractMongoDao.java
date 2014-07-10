@@ -16,8 +16,8 @@
  */
 package org.envirocar.server.mongo.dao;
 
-import org.envirocar.server.core.util.Paginated;
-import org.envirocar.server.core.util.Pagination;
+import org.envirocar.server.core.util.pagination.Paginated;
+import org.envirocar.server.core.util.pagination.Pagination;
 import org.envirocar.server.mongo.MongoDB;
 import org.envirocar.server.mongo.entity.MongoEntityBase;
 import org.joda.time.DateTime;
@@ -90,7 +90,7 @@ public abstract class AbstractMongoDao<K, E, C extends Paginated<? super E>> {
         long count = 0;
         if (p != null) {
             count = count(q);
-            q.offset(p.getOffset()).limit(p.getLimit());
+            q.offset((int)p.getBegin()).limit((int)p.getLimit());
         }
         return createPaginatedIterable(fetch(q), p, count);
     }

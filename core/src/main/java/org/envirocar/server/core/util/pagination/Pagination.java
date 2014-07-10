@@ -14,13 +14,28 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.core.dao;
+package org.envirocar.server.core.util.pagination;
 
-import org.envirocar.server.core.entities.Badges;
-import org.envirocar.server.core.util.pagination.Pagination;
+import com.google.common.base.Optional;
 
-public interface BadgesDao {
+/**
+ * TODO JavaDoc
+ *
+ * @author Christian Autermann <autermann@uni-muenster.de>
+ */
+public interface Pagination {
 
-	Badges get(Pagination pagination);
+    long getBegin();
+    long getEnd();
 
+    long getPage();
+    long getLimit();
+
+    Optional<Pagination> first(long elements);
+
+    Optional<Pagination> previous(long elements);
+
+    Optional<Pagination> next(long elements);
+
+    Optional<Pagination> last(long elements);
 }

@@ -25,7 +25,7 @@ import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.entities.Users;
 import org.envirocar.server.core.exception.BadRequestException;
 import org.envirocar.server.core.exception.InvalidUserMailCombinationException;
-import org.envirocar.server.core.util.Pagination;
+import org.envirocar.server.core.util.pagination.Pagination;
 import org.envirocar.server.mongo.MongoDB;
 import org.envirocar.server.mongo.dao.privates.PasswordResetDAO;
 import org.envirocar.server.mongo.entity.MongoPasswordReset;

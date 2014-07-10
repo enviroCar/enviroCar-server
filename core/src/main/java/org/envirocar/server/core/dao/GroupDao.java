@@ -20,7 +20,7 @@ import org.envirocar.server.core.entities.Group;
 import org.envirocar.server.core.entities.Groups;
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.entities.Users;
-import org.envirocar.server.core.util.Pagination;
+import org.envirocar.server.core.util.pagination.Pagination;
 
 /**
  * TODO JavaDoc

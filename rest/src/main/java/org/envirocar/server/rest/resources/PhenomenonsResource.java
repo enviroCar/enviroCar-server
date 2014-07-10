@@ -17,22 +17,19 @@
 package org.envirocar.server.rest.resources;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
 import org.envirocar.server.core.entities.Phenomenon;
 import org.envirocar.server.core.entities.Phenomenons;
+import org.envirocar.server.core.exception.BadRequestException;
 
 import org.envirocar.server.core.exception.PhenomenonNotFoundException;
-import org.envirocar.server.core.util.Pagination;
 import org.envirocar.server.rest.MediaTypes;
-import org.envirocar.server.rest.RESTConstants;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.auth.Authenticated;
 
@@ -53,10 +50,8 @@ public class PhenomenonsResource extends AbstractResource {
                 MediaTypes.XML_RDF,
                 MediaTypes.TURTLE,
                 MediaTypes.TURTLE_ALT })
-    public Phenomenons get(
-            @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit,
-            @QueryParam(RESTConstants.PAGE) @DefaultValue("0") int page) {
-        return getDataService().getPhenomenons(new Pagination(limit, page));
+    public Phenomenons get() throws BadRequestException {
+        return getDataService().getPhenomenons(getPagination());
     }
 
     @POST

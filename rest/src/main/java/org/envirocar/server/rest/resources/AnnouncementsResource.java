@@ -16,15 +16,12 @@
  */
 package org.envirocar.server.rest.resources;
 
-import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 
 import org.envirocar.server.core.entities.Announcements;
-import org.envirocar.server.core.util.Pagination;
+import org.envirocar.server.core.exception.BadRequestException;
 import org.envirocar.server.rest.MediaTypes;
-import org.envirocar.server.rest.RESTConstants;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.validation.Schema;
 
@@ -33,10 +30,8 @@ public class AnnouncementsResource extends AbstractResource {
 	@GET
     @Schema(response = Schemas.ANNOUNCEMENTS)
     @Produces({ MediaTypes.ANNOUNCEMENTS })
-    public Announcements get(
-            @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit,
-            @QueryParam(RESTConstants.PAGE) @DefaultValue("0") int page) {
-        return getDataService().getAnnouncements(new Pagination(limit, page));
+    public Announcements get() throws BadRequestException {
+        return getDataService().getAnnouncements(getPagination());
     }
-    
+
 }

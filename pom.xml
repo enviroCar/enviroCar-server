@@ -195,6 +195,11 @@
                 <version>${guice-version}</version>
             </dependency>
             <dependency>
+                <groupId>com.google.inject.extensions</groupId>
+                <artifactId>guice-throwingproviders</artifactId>
+                <version>${guice-version}</version>
+            </dependency>
+            <dependency>
                 <artifactId>morphia</artifactId>
                 <groupId>com.github.jmkgreen.morphia</groupId>
                 <version>${morphia-version}</version>

@@ -28,10 +28,11 @@ import javax.ws.rs.core.Response;
 
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.entities.Users;
+import org.envirocar.server.core.exception.BadRequestException;
 import org.envirocar.server.core.exception.ResourceAlreadyExistException;
 import org.envirocar.server.core.exception.UserNotFoundException;
 import org.envirocar.server.core.exception.ValidationException;
-import org.envirocar.server.core.util.Pagination;
+import org.envirocar.server.core.util.pagination.Pagination;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.RESTConstants;
 import org.envirocar.server.rest.Schemas;
@@ -52,11 +53,9 @@ public class UsersResource extends AbstractResource {
                 MediaTypes.XML_RDF,
                 MediaTypes.TURTLE,
                 MediaTypes.TURTLE_ALT })
-    public Users get(
-            @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit,
-            @QueryParam(RESTConstants.PAGE) @DefaultValue("0") int page) {
+    public Users get() throws BadRequestException {
         checkRights(getRights().canSeeUsers());
-        return getUserService().getUsers(new Pagination(limit, page));
+        return getUserService().getUsers(getPagination());
     }
 
     @POST

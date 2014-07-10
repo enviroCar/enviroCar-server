@@ -18,7 +18,7 @@ package org.envirocar.server.core.dao;
 
 import org.envirocar.server.core.entities.TermsOfUse;
 import org.envirocar.server.core.entities.TermsOfUseInstance;
-import org.envirocar.server.core.util.Pagination;
+import org.envirocar.server.core.util.pagination.Pagination;
 
 public interface TermsOfUseDao {
 

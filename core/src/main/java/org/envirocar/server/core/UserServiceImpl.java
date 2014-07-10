@@ -34,7 +34,7 @@ import org.envirocar.server.core.exception.UserNotFoundException;
 import org.envirocar.server.core.exception.ValidationException;
 import org.envirocar.server.core.filter.ActivityFilter;
 import org.envirocar.server.core.update.EntityUpdater;
-import org.envirocar.server.core.util.Pagination;
+import org.envirocar.server.core.util.pagination.Pagination;
 import org.envirocar.server.core.util.PasswordEncoder;
 import org.envirocar.server.core.validation.EntityValidator;
 
