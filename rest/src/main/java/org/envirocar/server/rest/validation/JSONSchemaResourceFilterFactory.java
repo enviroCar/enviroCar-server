@@ -152,8 +152,8 @@ public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
     }
 
     private class JSONSchemaResourceFilter implements ResourceFilter {
-        private String request;
-        private String response;
+        private final String request;
+        private final String response;
 
         JSONSchemaResourceFilter(String request, String response) {
             this.request = request;
@@ -299,12 +299,14 @@ public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
             byte[] bytes = this.baos.toByteArray();
             ReaderWriter.writeTo(new ByteArrayInputStream(bytes), this.crwout);
             this.crw.finish();
-            String contentEncoding = (String) httpHeaders
-                    .getFirst(HttpHeaders.CONTENT_ENCODING);
-            if (contentEncoding != null && contentEncoding.equals("gzip")) {
-                validate(gunzip(bytes));
-            } else {
-                validate(bytes);
+            if (bytes.length > 0) {
+                String contentEncoding = (String) httpHeaders
+                        .getFirst(HttpHeaders.CONTENT_ENCODING);
+                if (contentEncoding != null && contentEncoding.equals("gzip")) {
+                    validate(gunzip(bytes));
+                } else {
+                    validate(bytes);
+                }
             }
         }
 
