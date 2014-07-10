@@ -22,7 +22,7 @@
         </init-param>
         <init-param>
             <param-name>cors.exposedHeaders</param-name>
-            <param-value>Content-Type, Content-Encoding, Link</param-value>
+            <param-value>Content-Type, Content-Encoding, Link, Content-Range</param-value>
         </init-param>
         <init-param>
             <param-name>cors.supportsCredentials</param-name>
