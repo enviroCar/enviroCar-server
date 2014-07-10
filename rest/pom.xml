@@ -51,6 +51,10 @@
             <artifactId>jersey-guice</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.github.autermann</groupId>
+            <artifactId>jersey-cache-control</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
         </dependency>

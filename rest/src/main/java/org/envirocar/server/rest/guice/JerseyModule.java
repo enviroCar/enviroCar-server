@@ -18,6 +18,7 @@ package org.envirocar.server.rest.guice;
 
 import java.util.Map;
 
+import org.envirocar.server.rest.CachingFilter;
 import org.envirocar.server.rest.PaginationFilter;
 import org.envirocar.server.rest.URIContentNegotiationFilter;
 import org.envirocar.server.rest.auth.AuthenticationFilter;
@@ -64,7 +65,8 @@ public class JerseyModule extends JerseyServletModule {
     }
 
     protected ImmutableList<Class<? extends ContainerResponseFilter>> responseFilters() {
-        return ImmutableList.of(PaginationFilter.class,
+        return ImmutableList.of(CachingFilter.class,
+                                PaginationFilter.class,
                                 GZIPContentEncodingFilter.class);
     }
 
