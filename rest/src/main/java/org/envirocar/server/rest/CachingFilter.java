@@ -50,11 +50,6 @@ public class CachingFilter implements ContainerResponseFilter {
         return response;
     }
 
-    protected void addLastModifiedHeader(Object entity,
-                                         ContainerResponse response) {
-
-    }
-
     protected Date getLastModificationTime(BaseEntity entity) {
         if (entity.hasModificationTime()) {
             return entity.getModificationTime().toDate();
