@@ -275,6 +275,11 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
+                <groupId>com.github.autermann</groupId>
+                <artifactId>jersey-cache-control</artifactId>
+                <version>1.0.0</version>
+            </dependency>
+            <dependency>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-servlet</artifactId>
                 <version>7.6.10.v20130312</version>
