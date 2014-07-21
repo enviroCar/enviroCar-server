@@ -16,6 +16,7 @@
  */
 package org.envirocar.server.core.util.pagination;
 
+import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 
 public class PageBasedPagination implements Pagination {
@@ -96,8 +97,32 @@ public class PageBasedPagination implements Pagination {
     }
 
     protected long lastPage(long elements) {
+        if (elements == 0) { return 1; }
         long p = elements / size;
         return (elements % size) == 0 ? p : p + 1;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(this.size, this.page);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof PageBasedPagination) {
+            PageBasedPagination that = (PageBasedPagination) obj;
+            return this.getPage() == that.getPage() &&
+                   this.getLimit() == that.getLimit();
+        }
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+                .add("size", this.size)
+                .add("page", this.page)
+                .toString();
     }
 
 }
