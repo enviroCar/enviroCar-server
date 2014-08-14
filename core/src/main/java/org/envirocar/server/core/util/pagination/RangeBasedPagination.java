@@ -32,8 +32,14 @@ public class RangeBasedPagination implements Pagination {
         if (end < 0 || end < begin) {
             throw new IllegalArgumentException();
         }
+        
+        if (end - begin > MAX_PAGE_SIZE) {
+        	throw new IllegalArgumentException(
+        			String.format("Maximum response limit exceeded. Max is %s", MAX_PAGE_SIZE));
+        }
+        
         this.begin = begin;
-        this.end = begin + Math.min(end - begin, MAX_PAGE_SIZE - 1);
+        this.end = end;
         this.size = this.end - this.begin + 1;
         this.paginated = this.begin % this.size == 0L;
         this.isFirstChunk = this.begin <= 0L;

@@ -75,15 +75,10 @@ public class RangeBasedPaginationTest {
         assertThat(range(90, 99).previous(100), isPresentAndRange(80, 89));
     }
     
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void testMaxSize() {
     	long configuredMax = Pagination.MAX_PAGE_SIZE;
-    	long start = configuredMax;
-    	RangeBasedPagination pbp = new RangeBasedPagination(start, start + configuredMax + 100);
-    	assertThat(pbp.getLimit(), Matchers.is(configuredMax));
-    	assertThat(pbp.getBegin(), Matchers.is(start));
-    	assertThat(pbp.getEnd(), Matchers.is(start + configuredMax - 1));
-    	assertThat(pbp.getPage(), Matchers.is(2L));
+    	new RangeBasedPagination(configuredMax, configuredMax*2 + 100);
     }
 
     protected static Pagination range(int begin, int end) {
