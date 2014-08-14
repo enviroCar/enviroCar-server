@@ -20,7 +20,7 @@ import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 
 public class PageBasedPagination implements Pagination {
-    private final long size;
+	private final long size;
     private final long page;
     private final long begin;
     private final long end;
@@ -30,7 +30,7 @@ public class PageBasedPagination implements Pagination {
     }
 
     public PageBasedPagination(long size, long page) {
-        this.size = size <= 0 ? 100 : size;
+        this.size = size <= 0 ? 100 : Math.min(size, MAX_PAGE_SIZE);
         this.page = page <= 0 ? 1 : page;
         this.begin = (this.page - 1) * this.size;
         this.end = this.size + this.begin;

@@ -33,7 +33,7 @@ public class RangeBasedPagination implements Pagination {
             throw new IllegalArgumentException();
         }
         this.begin = begin;
-        this.end = end;
+        this.end = begin + Math.min(end - begin, MAX_PAGE_SIZE - 1);
         this.size = this.end - this.begin + 1;
         this.paginated = this.begin % this.size == 0L;
         this.isFirstChunk = this.begin <= 0L;
