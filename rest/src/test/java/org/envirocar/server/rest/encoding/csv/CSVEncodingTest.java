@@ -22,7 +22,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.MeasurementValue;
@@ -49,18 +51,6 @@ import com.vividsolutions.jts.geom.Coordinate;
  * @author Benjamin Pross
  */
 public class CSVEncodingTest extends AbstractEncodingTest{
-	
-	private String csvEncodedTrackAllMeasurementsHaveAllPhenomenonsHeader = "id; RPM(u/min); Speed(km/h); Intake Temperature(C); MAF(l/s); longitude; latitude; time";
-	private String csvEncodedTrackAllMeasurementsHaveAllPhenomenonsLine1 = "537b0ef874c965606f093b0f; 1; 3; 2; 4; 1.1; 1.2;";
-	private String csvEncodedTrackAllMeasurementsHaveAllPhenomenonsLine2 = "537b0ef874c965606f093b10; 2; 4; 3; 5; 2.1; 2.2;";
-	
-	private String csvEncodedTrackFirstMeasurementHasLessPhenomenonsHeader = "id; RPM(u/min); Speed(km/h); Intake Temperature(C); MAF(l/s); longitude; latitude; time";
-	private String csvEncodedTrackFirstMeasurementHasLessPhenomenonsLine1 = "537b0ef874c965606f093b11; 1; 3; 2; ; 1.1; 1.2;";
-	private String csvEncodedTrackFirstMeasurementHasLessPhenomenonsLine2 = "537b0ef874c965606f093b12; 2; 4; 3; 5; 2.1; 2.2;";
-	
-	private String csvEncodedTrackFirstMeasurementHasMorePhenomenonsHeader = "id; RPM(u/min); Speed(km/h); Intake Temperature(C); longitude; latitude; time";
-	private String csvEncodedTrackFirstMeasurementHasMorePhenomenonsLine1 = "537b0ef874c965606f093b13; 1; 3; 2; 1.1; 1.2;";
-	private String csvEncodedTrackFirstMeasurementHasMorePhenomenonsLine2 = "537b0ef874c965606f093b14; 2; ; 3; 2.1; 2.2;";
 
 	private String dateTime = "2014-05-20T08:42:06Z";
 
@@ -132,18 +122,55 @@ public class CSVEncodingTest extends AbstractEncodingTest{
 						MediaTypes.TEXT_CSV_TYPE)));
 
 		String line = "";
+		
+		String[] propertyNames = new String[0];
+		String[] propertyValues1 = new String[0];
+		String[] propertyValues2 = new String[0];
 
-		String content = "";
+		for (int i = 0; i < 3; i++) {
+			line = bufferedReader.readLine();
+			if(line != null){
+				switch (i) {
+				case 0:
+					propertyNames = line.split(";");
+					break;
+				case 1:
+					propertyValues1 = line.split(";");
+					break;
+				case 2:
+					propertyValues2 = line.split(";");
+					break;
 
-		while ((line = bufferedReader.readLine()) != null) {
-
-			content = content.concat(line + "\n");
-
+				default:
+					break;
+				}
+			}
+			
 		}
 
-		assertTrue(content.contains(csvEncodedTrackAllMeasurementsHaveAllPhenomenonsHeader));
-		assertTrue(content.contains(csvEncodedTrackAllMeasurementsHaveAllPhenomenonsLine1));
-		assertTrue(content.contains(csvEncodedTrackAllMeasurementsHaveAllPhenomenonsLine2));
+		Map<String, String> expectedValues = new HashMap<String, String>();
+		
+		expectedValues.put("id", "537b0ef874c965606f093b0f");
+		expectedValues.put("RPM(u/min)", "1");
+		expectedValues.put("Speed(km/h)", "3");
+		expectedValues.put("Intake Temperature(C)", "2");
+		expectedValues.put("MAF(l/s)", "4");
+		expectedValues.put("longitude", "1.1");
+		expectedValues.put("latitude", "1.2");
+		
+		checkMeasurementValues(propertyNames, propertyValues1, expectedValues);
+		
+		expectedValues = new HashMap<String, String>();
+		
+		expectedValues.put("id", "537b0ef874c965606f093b10");
+		expectedValues.put("RPM(u/min)", "2");
+		expectedValues.put("Speed(km/h)", "4");
+		expectedValues.put("Intake Temperature(C)", "3");
+		expectedValues.put("MAF(l/s)", "5");
+		expectedValues.put("longitude", "2.1");
+		expectedValues.put("latitude", "2.2");
+		
+		checkMeasurementValues(propertyNames, propertyValues2, expectedValues);
 
 	}
 	
@@ -157,17 +184,54 @@ public class CSVEncodingTest extends AbstractEncodingTest{
 		
 		String line = "";
 		
-		String content = "";
-		
-		while ((line = bufferedReader.readLine()) != null) {
-			
-			content = content.concat(line + "\n");
+		String[] propertyNames = new String[0];
+		String[] propertyValues1 = new String[0];
+		String[] propertyValues2 = new String[0];
+
+		for (int i = 0; i < 3; i++) {
+			line = bufferedReader.readLine();
+			if(line != null){
+				switch (i) {
+				case 0:
+					propertyNames = line.split(";");
+					break;
+				case 1:
+					propertyValues1 = line.split(";");
+					break;
+				case 2:
+					propertyValues2 = line.split(";");
+					break;
+
+				default:
+					break;
+				}
+			}
 			
 		}
 		
-		assertTrue(content.contains(csvEncodedTrackFirstMeasurementHasLessPhenomenonsHeader));
-		assertTrue(content.contains(csvEncodedTrackFirstMeasurementHasLessPhenomenonsLine1));
-		assertTrue(content.contains(csvEncodedTrackFirstMeasurementHasLessPhenomenonsLine2));
+		Map<String, String> expectedValues = new HashMap<String, String>();
+		
+		expectedValues.put("id", "537b0ef874c965606f093b11");
+		expectedValues.put("RPM(u/min)", "1");
+		expectedValues.put("Speed(km/h)", "3");
+		expectedValues.put("Intake Temperature(C)", "2");
+		expectedValues.put("MAF(l/s)", "");
+		expectedValues.put("longitude", "1.1");
+		expectedValues.put("latitude", "1.2");
+		
+		checkMeasurementValues(propertyNames, propertyValues1, expectedValues);
+		
+		expectedValues = new HashMap<String, String>();
+		
+		expectedValues.put("id", "537b0ef874c965606f093b12");
+		expectedValues.put("RPM(u/min)", "2");
+		expectedValues.put("Speed(km/h)", "4");
+		expectedValues.put("Intake Temperature(C)", "3");
+		expectedValues.put("MAF(l/s)", "5");
+		expectedValues.put("longitude", "2.1");
+		expectedValues.put("latitude", "2.2");
+		
+		checkMeasurementValues(propertyNames, propertyValues2, expectedValues);
 		
 	}
 	
@@ -181,17 +245,52 @@ public class CSVEncodingTest extends AbstractEncodingTest{
 		
 		String line = "";
 		
-		String content = "";
-		
-		while ((line = bufferedReader.readLine()) != null) {
-			
-			content = content.concat(line + "\n");
+		String[] propertyNames = new String[0];
+		String[] propertyValues1 = new String[0];
+		String[] propertyValues2 = new String[0];
+
+		for (int i = 0; i < 3; i++) {
+			line = bufferedReader.readLine();
+			if(line != null){
+				switch (i) {
+				case 0:
+					propertyNames = line.split(";");
+					break;
+				case 1:
+					propertyValues1 = line.split(";");
+					break;
+				case 2:
+					propertyValues2 = line.split(";");
+					break;
+
+				default:
+					break;
+				}
+			}
 			
 		}
 		
-		assertTrue(content.contains(csvEncodedTrackFirstMeasurementHasMorePhenomenonsHeader));
-		assertTrue(content.contains(csvEncodedTrackFirstMeasurementHasMorePhenomenonsLine1));
-		assertTrue(content.contains(csvEncodedTrackFirstMeasurementHasMorePhenomenonsLine2));
+		Map<String, String> expectedValues = new HashMap<String, String>();
+		
+		expectedValues.put("id", "537b0ef874c965606f093b13");
+		expectedValues.put("RPM(u/min)", "1");
+		expectedValues.put("Speed(km/h)", "3");
+		expectedValues.put("Intake Temperature(C)", "2");
+		expectedValues.put("longitude", "1.1");
+		expectedValues.put("latitude", "1.2");
+		
+		checkMeasurementValues(propertyNames, propertyValues1, expectedValues);
+		
+		expectedValues = new HashMap<String, String>();
+		
+		expectedValues.put("id", "537b0ef874c965606f093b14");
+		expectedValues.put("RPM(u/min)", "2");
+		expectedValues.put("Speed(km/h)", "");
+		expectedValues.put("Intake Temperature(C)", "3");
+		expectedValues.put("longitude", "2.1");
+		expectedValues.put("latitude", "2.2");
+		
+		checkMeasurementValues(propertyNames, propertyValues2, expectedValues);
 		
 	}
 	
@@ -297,7 +396,7 @@ public class CSVEncodingTest extends AbstractEncodingTest{
 
 			MeasurementValue measurementValue = entityFactory
 					.createMeasurementValue();
-
+			
 			measurementValue.setPhenomenon(phenomenon);
 
 			measurementValue.setValue(value);
@@ -400,6 +499,26 @@ public class CSVEncodingTest extends AbstractEncodingTest{
 		}
 		return user;
 
+	}
+	
+	private void checkMeasurementValues(String[] propertyNames, String[] propertyValues,  Map<String, String> expectedValues){
+		
+		for (int i = 0; i < propertyNames.length; i++) {
+
+			String propertyName = propertyNames[i].trim();
+
+			if (!propertyName.equals("time")) {
+
+				String expectedMeasurementValue = expectedValues
+						.get(propertyName);
+
+				String propertyValue = propertyValues[i].trim();
+
+				assertTrue("Value for " + propertyName + " does not match expected. Got " + propertyValue + " expected " + expectedMeasurementValue + ".", expectedMeasurementValue
+						.equals(propertyValue));
+			}
+
+		}
 	}
 
 }
