@@ -16,6 +16,9 @@
  */
 package org.envirocar.server.core.util;
 
+import org.envirocar.server.core.util.pagination.Paginated;
+import org.envirocar.server.core.util.pagination.Pagination;
+
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;

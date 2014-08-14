@@ -19,24 +19,21 @@ package org.envirocar.server.rest.resources;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
 import org.envirocar.server.core.TemporalFilter;
 import org.envirocar.server.core.entities.Fueling;
 import org.envirocar.server.core.entities.Fuelings;
 import org.envirocar.server.core.entities.User;
+import org.envirocar.server.core.exception.BadRequestException;
 import org.envirocar.server.core.exception.FuelingNotFoundException;
 import org.envirocar.server.core.filter.FuelingFilter;
-import org.envirocar.server.core.util.Pagination;
 import org.envirocar.server.rest.MediaTypes;
-import org.envirocar.server.rest.RESTConstants;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.validation.Schema;
 
@@ -63,12 +60,9 @@ public class FuelingsResource extends AbstractResource {
                 MediaTypes.XML_RDF,
                 MediaTypes.TURTLE,
                 MediaTypes.TURTLE_ALT })
-    public Fuelings getAll(
-            @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit,
-            @QueryParam(RESTConstants.PAGE) @DefaultValue("0") int page) {
+    public Fuelings getAll() throws BadRequestException {
         TemporalFilter tf = parseTemporalFilterForInstant();
-        Pagination p = new Pagination(limit, page);
-        return getDataService().getFuelings(new FuelingFilter(user, tf, p));
+        return getDataService().getFuelings(new FuelingFilter(user, tf, getPagination()));
     }
 
     @POST
@@ -88,7 +82,7 @@ public class FuelingsResource extends AbstractResource {
                 MediaTypes.XML_RDF,
                 MediaTypes.TURTLE,
                 MediaTypes.TURTLE_ALT })
-    public Fueling getFueling(@PathParam("id") String id) 
+    public Fueling getFueling(@PathParam("id") String id)
             throws FuelingNotFoundException {
         return getDataService().getFueling(user, id);
     }

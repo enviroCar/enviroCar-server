@@ -48,6 +48,8 @@ import com.mongodb.ServerAddress;
 
 import org.envirocar.server.mongo.entity.MongoMeasurement;
 
+import com.mongodb.BasicDBObjectBuilder;
+
 /**
  * TODO JavaDoc
  *
@@ -125,10 +127,12 @@ public class MongoDB {
      * FIXME remove this once 2dsphere indexes are supported by morphia in v1.3.0
      */
     private void ensureIndexes() {
-        DBCollection collection = getDatastore()
-                .getCollection(MongoMeasurement.class);
-        collection.ensureIndex(new BasicDBObject(MongoMeasurement.GEOMETRY,
-                                                 "2dsphere"));
+        DBCollection collection = getDatastore().getCollection(MongoMeasurement.class);
+        collection.ensureIndex(new BasicDBObject(MongoMeasurement.GEOMETRY, "2dsphere"));
+        collection.ensureIndex(new BasicDBObjectBuilder()
+                .append(MongoMeasurement.GEOMETRY, "2dsphere")
+                .append(MongoMeasurement.TIME, 1)
+                .get());
     }
 
     public <T> T deref(Class<T> c, Key<T> key) {

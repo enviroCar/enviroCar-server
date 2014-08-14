@@ -18,11 +18,19 @@
         </init-param>
         <init-param>
             <param-name>cors.supportedHeaders</param-name>
-            <param-value>Content-Type, Content-Encoding, Accept, Accept-Encoding, X-User, X-Token</param-value>
+            <param-value>*</param-value>
         </init-param>
         <init-param>
             <param-name>cors.exposedHeaders</param-name>
-            <param-value>Content-Type, Content-Encoding, Link</param-value>
+            <param-value>Content-Type, Content-Encoding, Link, Content-Range</param-value>
+        </init-param>
+        <init-param>
+            <param-name>cors.supportsCredentials</param-name>
+            <param-value>true</param-value>
+        </init-param>
+        <init-param>
+            <param-name>cors.maxAge</param-name>
+            <param-value>86400</param-value>
         </init-param>
     </filter>
     <filter-mapping>

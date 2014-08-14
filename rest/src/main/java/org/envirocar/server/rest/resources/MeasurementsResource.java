@@ -31,13 +31,13 @@ import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.Measurements;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.entities.User;
+import org.envirocar.server.core.exception.BadRequestException;
 import org.envirocar.server.core.exception.MeasurementNotFoundException;
 import org.envirocar.server.core.exception.ResourceAlreadyExistException;
 import org.envirocar.server.core.exception.TrackNotFoundException;
 import org.envirocar.server.core.exception.UserNotFoundException;
 import org.envirocar.server.core.exception.ValidationException;
 import org.envirocar.server.core.filter.MeasurementFilter;
-import org.envirocar.server.core.util.Pagination;
 import org.envirocar.server.rest.BoundingBox;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.RESTConstants;
@@ -80,7 +80,7 @@ public class MeasurementsResource extends AbstractResource {
             @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit,
             @QueryParam(RESTConstants.PAGE) @DefaultValue("0") int page,
             @QueryParam(RESTConstants.BBOX) BoundingBox bbox)
-            throws UserNotFoundException, TrackNotFoundException {
+            throws UserNotFoundException, TrackNotFoundException, BadRequestException {
         Polygon poly = null;
         if (bbox != null) {
             poly = bbox.asPolygon(geometryFactory);
@@ -88,7 +88,7 @@ public class MeasurementsResource extends AbstractResource {
         return getDataService()
                 .getMeasurements(new MeasurementFilter(track, user, poly,
                                                        parseTemporalFilterForInstant(),
-                                                       new Pagination(limit, page)));
+                                                       getPagination()));
     }
 
     @POST

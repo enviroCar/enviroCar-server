@@ -21,7 +21,7 @@ import org.envirocar.server.core.dao.FuelingDao;
 import org.envirocar.server.core.entities.Fueling;
 import org.envirocar.server.core.entities.Fuelings;
 import org.envirocar.server.core.filter.FuelingFilter;
-import org.envirocar.server.core.util.Pagination;
+import org.envirocar.server.core.util.pagination.Pagination;
 import org.envirocar.server.mongo.MongoDB;
 import org.envirocar.server.mongo.entity.MongoFueling;
 import org.envirocar.server.mongo.entity.MongoUser;

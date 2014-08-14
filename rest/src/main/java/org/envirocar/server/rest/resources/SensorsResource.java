@@ -34,11 +34,11 @@ import com.google.common.collect.Sets;
 
 import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.core.entities.Sensors;
+import org.envirocar.server.core.exception.BadRequestException;
 
 import org.envirocar.server.core.exception.SensorNotFoundException;
 import org.envirocar.server.core.filter.PropertyFilter;
 import org.envirocar.server.core.filter.SensorFilter;
-import org.envirocar.server.core.util.Pagination;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.RESTConstants;
 import org.envirocar.server.rest.Schemas;
@@ -62,9 +62,7 @@ public class SensorsResource extends AbstractResource {
                 MediaTypes.TURTLE,
                 MediaTypes.TURTLE_ALT })
     public Sensors get(
-            @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit,
-            @QueryParam(RESTConstants.PAGE) @DefaultValue("0") int page,
-            @QueryParam(RESTConstants.TYPE) String type) {
+            @QueryParam(RESTConstants.TYPE) String type) throws BadRequestException {
         MultivaluedMap<String, String> queryParameters =
                 getUriInfo().getQueryParameters();
         Set<PropertyFilter> filters = Sets.newHashSet();
@@ -79,8 +77,7 @@ public class SensorsResource extends AbstractResource {
                 filters.add(new PropertyFilter(key, value));
             }
         }
-        Pagination p = new Pagination(limit, page);
-        return getDataService().getSensors(new SensorFilter(type, filters, p));
+        return getDataService().getSensors(new SensorFilter(type, filters, getPagination()));
     }
 
     @POST

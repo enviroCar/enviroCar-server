@@ -19,7 +19,7 @@ package org.envirocar.server.core.filter;
 import java.util.Collections;
 import java.util.Set;
 
-import org.envirocar.server.core.util.Pagination;
+import org.envirocar.server.core.util.pagination.Pagination;
 
 /**
  * TODO JavaDoc

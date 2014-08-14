@@ -18,7 +18,7 @@ package org.envirocar.server.core.filter;
 
 import org.envirocar.server.core.TemporalFilter;
 import org.envirocar.server.core.entities.User;
-import org.envirocar.server.core.util.Pagination;
+import org.envirocar.server.core.util.pagination.Pagination;
 
 import com.vividsolutions.jts.geom.Geometry;
 
