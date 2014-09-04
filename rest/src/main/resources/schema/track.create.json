@@ -38,6 +38,9 @@
                 },
                 "touVersion": {
                 	"type": "string"
+                },
+                "length": {
+                	"type": "number"
                 }
             }
         },

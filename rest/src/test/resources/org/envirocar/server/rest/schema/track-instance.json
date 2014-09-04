@@ -15,7 +15,8 @@
       },
 	"appVersion": "Version 0.9.0-SNAPSHOT (21), 11.11.13 14:48",
 	"obdDevice": "DRIVEDECK BT OBD W4",
-	"touVersion": "2013-10-01"
+	"touVersion": "2013-10-01",
+	"length": 100.5
    },
    "features":[
       {

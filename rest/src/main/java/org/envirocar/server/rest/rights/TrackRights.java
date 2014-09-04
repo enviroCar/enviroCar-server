@@ -53,4 +53,6 @@ public interface TrackRights {
     boolean canSeeObdDeviceOf(Track track);
     
     boolean canSeeTouVersionOf(Track track);
+
+	boolean canSeeLengthOf(Track t);
 }
