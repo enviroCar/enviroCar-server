@@ -141,12 +141,12 @@ public class MongoTrackDao extends AbstractMongoDao<ObjectId, MongoTrack, Tracks
 
     @Override
     protected Iterable<MongoTrack> fetch(Query<MongoTrack> q) {
-        return super.fetch(q.order(MongoTrack.RECENTLY_MODIFIED_ORDER));
+        return super.fetch(q.order(MongoTrack.RECENTLY_CREATED_ORDER));
     }
 
     @Override
     protected Tracks fetch(Query<MongoTrack> q, Pagination p) {
-        return super.fetch(q.order(MongoTrack.RECENTLY_MODIFIED_ORDER), p);
+        return super.fetch(q.order(MongoTrack.RECENTLY_CREATED_ORDER), p);
     }
 
     protected <T> List<Object> toIdList(List<Key<T>> keys) {
