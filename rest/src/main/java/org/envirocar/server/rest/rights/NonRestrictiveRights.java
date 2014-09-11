@@ -466,4 +466,9 @@ public class NonRestrictiveRights implements AccessRights {
     public boolean canSeeFuelingsOf(User user) {
         return true;
     }
+
+	@Override
+	public boolean canSeeLengthOf(Track t) {
+		return true;
+	}
 }
