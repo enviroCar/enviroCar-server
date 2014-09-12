@@ -332,10 +332,11 @@ public class CSVEncodingTest extends AbstractEncodingTest{
 	private void createTrackWithMeasurements_AllMeasurementsHaveAllPhenomenons(
 			Track track, List<Phenomenon> phenomenons, User user, Sensor sensor) {
 
+		DateTime now = DateTime.now();
 		createMeasurement(track, measurementObjectId1, phenomenons, user,
-				sensor, 1);
+				sensor, 1, now.minusSeconds(5));
 		createMeasurement(track, measurementObjectId2, phenomenons, user,
-				sensor, 2);
+				sensor, 2, now);
 
 		dataService.createTrack(track);
 
@@ -352,11 +353,12 @@ public class CSVEncodingTest extends AbstractEncodingTest{
 		
 		phenomenons.remove(phenomenons.size()-1);
 		
+		DateTime now = DateTime.now();
 		createMeasurement(track, measurementObjectId3, phenomenons, user,
-				sensor, 1);
+				sensor, 1, now.minusSeconds(5));
 		
 		createMeasurement(track, measurementObjectId4, originalPhenomenons, user,
-				sensor, 2);
+				sensor, 2, now);
 
 		dataService.createTrack(track);
 	}
@@ -364,20 +366,21 @@ public class CSVEncodingTest extends AbstractEncodingTest{
 	private void createTrackWithMeasurements_FirstMeasurementHasMorePhenomenons(			
 			Track track, List<Phenomenon> phenomenons, User user, Sensor sensor) {
 
+		DateTime now = DateTime.now();
 		createMeasurement(track, measurementObjectId5, phenomenons, user,
-				sensor, 1);
+				sensor, 1, now.minusSeconds(5));
 		
 		phenomenons.remove(phenomenons.size()-1);
 		
 		createMeasurement(track, measurementObjectId6, phenomenons, user,
-				sensor, 2);
+				sensor, 2, now);
 
 		dataService.createTrack(track);
 	}
 
 	private Measurement createMeasurement(Track testTrack, String objectId,
 			List<Phenomenon> phenomenons, User user, Sensor sensor,
-			int basenumber) {
+			int basenumber, DateTime time) {
 
 		Measurement measurement = entityFactory.createMeasurement();
 
@@ -406,7 +409,7 @@ public class CSVEncodingTest extends AbstractEncodingTest{
 			value++;
 		}
 
-		measurement.setTime(DateTime.now());
+		measurement.setTime(time);
 		
 		measurement.setTrack(testTrack);
 
