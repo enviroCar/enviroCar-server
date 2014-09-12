@@ -263,4 +263,9 @@ public class TrackWithMeasurments implements Track, Iterable<Measurement> {
 	public void setLength(double length) {
 		track.setLength(length);		
 	}
+
+	@Override
+	public boolean hasLength() {
+		return track.hasLength();
+	}
 }

@@ -63,6 +63,7 @@ import org.envirocar.server.core.filter.MeasurementFilter;
 import org.envirocar.server.core.filter.SensorFilter;
 import org.envirocar.server.core.filter.TrackFilter;
 import org.envirocar.server.core.update.EntityUpdater;
+import org.envirocar.server.core.util.GeometryOperations;
 import org.envirocar.server.core.util.pagination.Pagination;
 import org.envirocar.server.core.validation.EntityValidator;
 import org.joda.time.DateTime;
@@ -92,6 +93,7 @@ public class DataServiceImpl implements DataService {
     private final EventBus eventBus;
 	private final AnnouncementsDao announcementsDao;
 	private final BadgesDao badgesDao;
+	private final GeometryOperations geomOps;
 
     @Inject
     public DataServiceImpl(TrackDao trackDao, MeasurementDao measurementDao,
@@ -104,7 +106,8 @@ public class DataServiceImpl implements DataService {
                            EntityUpdater<Measurement> measurementUpdater,
                            EntityValidator<Measurement> measurementValidator,
                            EntityValidator<Fueling> fuelingValidator,
-                           EventBus eventBus) {
+                           EventBus eventBus,
+                           GeometryOperations geomOps) {
         this.trackDao = trackDao;
         this.measurementDao = measurementDao;
         this.sensorDao = sensorDao;
@@ -119,6 +122,7 @@ public class DataServiceImpl implements DataService {
         this.badgesDao = badgesDao;
         this.fuelingValidator = fuelingValidator;
         this.fuelingDao = fuelingDao;
+        this.geomOps = geomOps;
     }
 
     @Override
@@ -165,6 +169,11 @@ public class DataServiceImpl implements DataService {
         }
         track.setBegin(begin);
         track.setEnd(end);
+        
+        if (!track.hasLength()) {
+        	track.setLength(geomOps.calculateLength(measurements));
+        }
+        
         this.trackDao.create(track);
         for (Measurement m : measurements) {
             this.measurementDao.create(m);
