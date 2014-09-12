@@ -95,4 +95,6 @@ public interface Track extends BaseEntity {
 	double getLength();
 	
 	void setLength(double length);
+
+	boolean hasLength();
 }

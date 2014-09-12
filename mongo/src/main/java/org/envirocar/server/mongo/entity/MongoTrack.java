@@ -297,5 +297,10 @@ public class MongoTrack extends MongoEntityBase implements Track {
 	public boolean hasTouVersion() {
 		return touVersion != null && !touVersion.isEmpty();
 	}
+
+	@Override
+	public boolean hasLength() {
+		return getLength() != 0.0;
+	}
     
 }
