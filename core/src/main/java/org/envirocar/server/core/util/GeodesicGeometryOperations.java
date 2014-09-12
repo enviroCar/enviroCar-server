@@ -42,16 +42,16 @@ public class GeodesicGeometryOperations implements GeometryOperations {
 	public double calculateLength(List<Measurement> measurements) {
 		Iterator<Measurement> it = measurements.iterator();
 		double length = 0.0;
-		Measurement previousCoordinate;
+		Measurement previousMeasurement;
 		if (it.hasNext()) {
-			previousCoordinate = it.next();
+			previousMeasurement = it.next();
 		} else {
 			return 0;
 		}
 		while (it.hasNext()) {
 			Measurement currentCoordinate = it.next();
-			length += calculateDistance(previousCoordinate, currentCoordinate);
-			previousCoordinate = currentCoordinate;
+			length += calculateDistance(previousMeasurement, currentCoordinate);
+			previousMeasurement = currentCoordinate;
 		}
 		return length;
 	}
