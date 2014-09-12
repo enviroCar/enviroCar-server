@@ -49,9 +49,9 @@ public class GeodesicGeometryOperations implements GeometryOperations {
 			return 0;
 		}
 		while (it.hasNext()) {
-			Measurement currentCoordinate = it.next();
-			length += calculateDistance(previousMeasurement, currentCoordinate);
-			previousMeasurement = currentCoordinate;
+			Measurement currentMeasurement = it.next();
+			length += calculateDistance(previousMeasurement, currentMeasurement);
+			previousMeasurement = currentMeasurement;
 		}
 		return length;
 	}
