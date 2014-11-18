@@ -33,7 +33,7 @@ import com.vividsolutions.jts.geom.Polygon;
 public class BoundingBox {
     public static final int MIN_Y = -90;
     public static final int MAX_Y = 90;
-    public static final int MIN_X = 0;
+    public static final int MIN_X = -180;
     public static final int MAX_X = 180;
     private final Coordinate lowerleft;
     private final Coordinate lowerRight;
