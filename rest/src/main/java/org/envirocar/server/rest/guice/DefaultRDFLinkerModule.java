@@ -41,8 +41,8 @@ import org.envirocar.server.rest.encoding.rdf.linker.SensorDCTermsLinker;
 import org.envirocar.server.rest.encoding.rdf.linker.SensorSSNLinker;
 import org.envirocar.server.rest.encoding.rdf.linker.SensorVSOLinker;
 import org.envirocar.server.rest.encoding.rdf.linker.StatisticDCTermsLinker;
+import org.envirocar.server.rest.encoding.rdf.linker.TrackDCTermsLinker;
 import org.envirocar.server.rest.encoding.rdf.linker.TrackDULLinker;
-import org.envirocar.server.rest.encoding.rdf.linker.TrackMeasurementsLinker;
 import org.envirocar.server.rest.encoding.rdf.linker.UserDCTermsLinker;
 import org.envirocar.server.rest.encoding.rdf.linker.UserFOAFLinker;
 import org.envirocar.server.rest.encoding.rdf.linker.UserVCardLinker;
@@ -131,6 +131,7 @@ public class DefaultRDFLinkerModule extends AbstractModule {
         });
 //        b.addBinding().to(TrackMeasurementsLinker.class);
         b.addBinding().to(TrackDULLinker.class);
+        b.addBinding().to(TrackDCTermsLinker.class);
     }
 
     protected void bindUserLinker() {
