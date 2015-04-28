@@ -61,7 +61,7 @@ public class MeasurementSSNLinker extends AbstractSSNLinker<Measurement> {
     }
 
     @Override
-    protected void link1(Model m, Measurement t, AccessRights rights,
+    protected void linkInternal(Model m, Measurement t, AccessRights rights,
                          Resource measurement, Provider<UriBuilder> uriBuilder) {
         MeasurementValues values = t.getValues();
 

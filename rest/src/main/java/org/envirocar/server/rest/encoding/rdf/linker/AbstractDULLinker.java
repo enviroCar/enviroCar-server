@@ -16,24 +16,33 @@
  */
 package org.envirocar.server.rest.encoding.rdf.linker;
 
-import org.envirocar.server.rest.encoding.rdf.vocab.SSN;
+import javax.ws.rs.core.UriBuilder;
+
+import org.envirocar.server.rest.encoding.rdf.vocab.DUL;
 
 import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.Resource;
 
 /**
  * TODO JavaDoc
  *
- * @author Christian Autermann <autermann@uni-muenster.de>
+ * @author Christian Autermann
  */
-public abstract class AbstractSSNLinker<T> extends AbstractDULLinker<T> {
+public abstract class AbstractDULLinker<T> extends AbstractLinker<T> {
+
+    protected void addDULNamespace(Model m) {
+        m.setNsPrefix(DUL.PREFIX, DUL.URI);
+    }
 
     @Override
     protected void addNamespaces(Model m) {
-        super.addNamespaces(m);
-        addSSNNamespace(m);
+        addDULNamespace(m);
     }
 
-    protected void addSSNNamespace(Model m) {
-        m.setNsPrefix(SSN.PREFIX, SSN.URI);
+    protected String fragment(Resource resource, String fragment) {
+        return UriBuilder.fromUri(resource.getURI())
+                .fragment(fragment)
+                .build()
+                .toASCIIString();
     }
 }
