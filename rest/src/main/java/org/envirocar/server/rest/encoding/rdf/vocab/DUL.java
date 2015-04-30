@@ -36,11 +36,17 @@ public class DUL {
             m.createResource(URI + "TimeInterval");
     public static final Resource Amount =
             m.createResource(URI + "Amount");
-    
+
     public static final Property isClassifiedBy =
             m.createProperty(URI, "isClassifiedBy");
     public static final Property hasDataValue =
             m.createProperty(URI, "hasDataValue");
+    public static final Property hasMember =
+            m.createProperty(URI, "hasMember");
+    public static final Property isMemberOf =
+            m.createProperty(URI, "isMemberOf");
+    public static final Property Collection =
+            m.createProperty(URI, "Collection");
 
     private DUL() {
     }

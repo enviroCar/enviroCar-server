@@ -14,38 +14,37 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.rest.encoding.rdf;
-
-import java.util.Set;
+package org.envirocar.server.rest.encoding.rdf.linker;
 
 import javax.ws.rs.core.UriBuilder;
 
+import org.envirocar.server.rest.encoding.rdf.RDFLinker;
 import org.envirocar.server.rest.rights.AccessRights;
 
 import com.google.inject.Provider;
 import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 
-public abstract class AbstractLinkerRDFEntityEncoder<T> extends AbstractRDFEntityEncoder<T> {
-    private final Set<RDFLinker<T>> linkers;
-
-    public AbstractLinkerRDFEntityEncoder(Class<T> classType,
-                                          Set<RDFLinker<T>> linkers) {
-        super(classType);
-        this.linkers = linkers;
-    }
+/**
+ * TODO JavaDoc
+ *
+ * @author Christian Autermann
+ */
+public abstract class AbstractLinker<T> implements RDFLinker<T> {
 
     @Override
-    public Model encodeRDF(T t, AccessRights rights,
+    public final void link(Model m, T t, AccessRights rights, Resource uri,
                            Provider<UriBuilder> uriBuilder) {
-        Model m = ModelFactory.createDefaultModel();
-        Resource r = m.createResource(getURI(t, uriBuilder));
-        for (RDFLinker<T> linker : linkers) {
-            linker.link(m, t, rights, r, uriBuilder);
-        }
-        return m;
+        addNamespaces(m);
+        linkInternal(m, t, rights, uri, uriBuilder);
     }
 
-    protected abstract String getURI(T t, Provider<UriBuilder> uri);
+    protected abstract void addNamespaces(Model m);
+
+    protected abstract void linkInternal(Model model,
+                                         T entity,
+                                         AccessRights rights,
+                                         Resource uri,
+                                         Provider<UriBuilder> uriBuilder);
+
 }

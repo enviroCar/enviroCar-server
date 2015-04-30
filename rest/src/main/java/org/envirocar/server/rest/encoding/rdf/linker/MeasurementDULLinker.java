@@ -18,37 +18,41 @@ package org.envirocar.server.rest.encoding.rdf.linker;
 
 import javax.ws.rs.core.UriBuilder;
 
-import org.envirocar.server.core.entities.Phenomenon;
+import org.envirocar.server.core.entities.Measurement;
+import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.rest.encoding.rdf.vocab.DUL;
-import org.envirocar.server.rest.encoding.rdf.vocab.SSN;
-import org.envirocar.server.rest.resources.PhenomenonsResource;
 import org.envirocar.server.rest.resources.RootResource;
+import org.envirocar.server.rest.resources.TracksResource;
 import org.envirocar.server.rest.rights.AccessRights;
 
 import com.google.inject.Provider;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.vocabulary.RDF;
-import com.hp.hpl.jena.vocabulary.RDFS;
 
 /**
  * TODO JavaDoc
  *
- * @author Christian Autermann <autermann@uni-muenster.de>
+ * @author Christian Autermann
  */
-public class PhenomenonSSNLinker extends AbstractSSNLinker<Phenomenon> {
+public class MeasurementDULLinker extends AbstractDULLinker<Measurement> {
+
     @Override
-    protected void linkInternal(Model m, Phenomenon t, AccessRights rights,
-            Resource uri, Provider<UriBuilder> uriBuilder) {
-        Resource phenomenon = m.createResource(uriBuilder.get()
-                .path(RootResource.class).path(RootResource.PHENOMENONS)
-                .path(PhenomenonsResource.PHENOMENON).build(t.getName())
-                .toASCIIString());
-        phenomenon.addProperty(RDF.type, SSN.Property);
-        Resource unit = m.createResource(fragment(phenomenon,
-                MeasurementSSNLinker.UNIT_FRAGMENT));
-        unit.addProperty(RDF.type, DUL.UnitOfMeasure);
-        unit.addLiteral(RDFS.comment, t.getUnit());
+    protected void linkInternal(Model model, Measurement entity,
+                                AccessRights rights, Resource resource,
+                                Provider<UriBuilder> uriBuilder) {
+        if (entity.hasTrack()) {
+            String uri = getTrackURI(uriBuilder, entity.getTrack());
+            resource.addProperty(DUL.isMemberOf, model.createResource(uri));
+        }
+    }
+
+    private String getTrackURI(Provider<UriBuilder> uriBuilder, Track entity) {
+        return uriBuilder.get()
+                .path(RootResource.class)
+                .path(RootResource.TRACKS)
+                .path(TracksResource.TRACK)
+                .build(entity.getIdentifier())
+                .toASCIIString();
     }
 
 }
