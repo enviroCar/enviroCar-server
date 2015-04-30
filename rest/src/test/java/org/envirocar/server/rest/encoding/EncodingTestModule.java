@@ -54,7 +54,9 @@ import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.util.BCryptPasswordEncoder;
+import org.envirocar.server.core.util.GeodesicGeometryOperations;
 import org.envirocar.server.core.util.GeometryConverter;
+import org.envirocar.server.core.util.GeometryOperations;
 import org.envirocar.server.core.util.PasswordEncoder;
 import org.envirocar.server.mongo.activities.MongoActivity;
 import org.envirocar.server.mongo.activities.MongoGroupActivity;
@@ -112,6 +114,7 @@ public class EncodingTestModule extends AbstractModule {
         bind(GroupService.class).to(GroupServiceImpl.class);
         bind(StatisticsService.class).to(StatisticsServiceImpl.class);
         bind(PasswordEncoder.class).to(BCryptPasswordEncoder.class);
+        bind(GeometryOperations.class).to(GeodesicGeometryOperations.class);
         Multibinder.newSetBinder(binder(), TypeConverter.class);
         bind(new TypeLiteral<GeometryConverter<BSONObject>>() {
         }).to(GeoBSON.class);

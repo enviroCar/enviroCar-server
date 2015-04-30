@@ -14,26 +14,16 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.rest.encoding.rdf.linker;
+package org.envirocar.server.core.util;
 
-import org.envirocar.server.rest.encoding.rdf.vocab.SSN;
+import java.util.List;
 
-import com.hp.hpl.jena.rdf.model.Model;
+import org.envirocar.server.core.entities.Measurement;
 
-/**
- * TODO JavaDoc
- *
- * @author Christian Autermann <autermann@uni-muenster.de>
- */
-public abstract class AbstractSSNLinker<T> extends AbstractDULLinker<T> {
+public interface GeometryOperations {
 
-    @Override
-    protected void addNamespaces(Model m) {
-        super.addNamespaces(m);
-        addSSNNamespace(m);
-    }
-
-    protected void addSSNNamespace(Model m) {
-        m.setNsPrefix(SSN.PREFIX, SSN.URI);
-    }
+	public double calculateDistance(Measurement m1, Measurement m2);
+	
+	public double calculateLength(List<Measurement> measurements);
+	
 }

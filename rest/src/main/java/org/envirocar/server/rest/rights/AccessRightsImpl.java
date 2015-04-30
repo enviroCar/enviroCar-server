@@ -478,4 +478,9 @@ public class AccessRightsImpl extends AbstractAccessRights {
     public boolean canSeeFuelingsOf(User user) {
         return isSelf(user);
     }
+
+	@Override
+	public boolean canSeeLengthOf(Track t) {
+		return true;
+	}
 }

@@ -40,6 +40,7 @@ public class TrackWithMeasurments implements Track, Iterable<Measurement> {
     public static final String BBOX = "bbox";
     public static final String NAME = "name";
     public static final String DESCIPTION = "description";
+    public static final String LENGTH = "length";
     private Track track;
     private List<Measurement> measurements = Lists.newLinkedList();
 
@@ -251,5 +252,20 @@ public class TrackWithMeasurments implements Track, Iterable<Measurement> {
 	@Override
 	public boolean hasTouVersion() {
 		return track.hasTouVersion();
+	}
+
+	@Override
+	public double getLength() {
+		return track.getLength();
+	}
+
+	@Override
+	public void setLength(double length) {
+		track.setLength(length);		
+	}
+
+	@Override
+	public boolean hasLength() {
+		return track.hasLength();
 	}
 }

@@ -91,4 +91,10 @@ public interface Track extends BaseEntity {
 	boolean hasObdDevice();
 
 	boolean hasTouVersion();
+	
+	double getLength();
+	
+	void setLength(double length);
+
+	boolean hasLength();
 }

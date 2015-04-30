@@ -33,6 +33,7 @@ import org.envirocar.server.rest.encoding.rdf.linker.FuelingDCTermsLinker;
 import org.envirocar.server.rest.encoding.rdf.linker.GroupDCTermsLinker;
 import org.envirocar.server.rest.encoding.rdf.linker.GroupFOAFLinker;
 import org.envirocar.server.rest.encoding.rdf.linker.MeasurementDCTermsLinker;
+import org.envirocar.server.rest.encoding.rdf.linker.MeasurementDULLinker;
 import org.envirocar.server.rest.encoding.rdf.linker.MeasurementSSNLinker;
 import org.envirocar.server.rest.encoding.rdf.linker.PhenomenonDCTermsLinker;
 import org.envirocar.server.rest.encoding.rdf.linker.PhenomenonSSNLinker;
@@ -40,7 +41,8 @@ import org.envirocar.server.rest.encoding.rdf.linker.SensorDCTermsLinker;
 import org.envirocar.server.rest.encoding.rdf.linker.SensorSSNLinker;
 import org.envirocar.server.rest.encoding.rdf.linker.SensorVSOLinker;
 import org.envirocar.server.rest.encoding.rdf.linker.StatisticDCTermsLinker;
-import org.envirocar.server.rest.encoding.rdf.linker.TrackMeasurementsLinker;
+import org.envirocar.server.rest.encoding.rdf.linker.TrackDCTermsLinker;
+import org.envirocar.server.rest.encoding.rdf.linker.TrackDULLinker;
 import org.envirocar.server.rest.encoding.rdf.linker.UserDCTermsLinker;
 import org.envirocar.server.rest.encoding.rdf.linker.UserFOAFLinker;
 import org.envirocar.server.rest.encoding.rdf.linker.UserVCardLinker;
@@ -94,6 +96,7 @@ public class DefaultRDFLinkerModule extends AbstractModule {
         b.addBinding().to(W3CGeoMeasurementLinker.class);
         b.addBinding().to(MeasurementDCTermsLinker.class);
         b.addBinding().to(MeasurementSSNLinker.class);
+        b.addBinding().to(MeasurementDULLinker.class);
     }
 
     protected void bindPhenomenonLinker() {
@@ -126,7 +129,9 @@ public class DefaultRDFLinkerModule extends AbstractModule {
         Multibinder<RDFLinker<Track>> b = Multibinder.newSetBinder(
                 binder(), new TypeLiteral<RDFLinker<Track>>() {
         });
-        b.addBinding().to(TrackMeasurementsLinker.class);
+//        b.addBinding().to(TrackMeasurementsLinker.class);
+        b.addBinding().to(TrackDULLinker.class);
+        b.addBinding().to(TrackDCTermsLinker.class);
     }
 
     protected void bindUserLinker() {

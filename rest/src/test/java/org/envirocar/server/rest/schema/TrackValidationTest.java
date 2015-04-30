@@ -38,16 +38,22 @@ public class TrackValidationTest {
 	public final ValidationRule validate = new ValidationRule();
 
 	@Test
+	public void validateValidTrackInstanceWithNoLengthAttribute() {
+		assertThat(validate.parse(loadTrackInstance("track-instance-no-length-attribute.json")),
+				is(validate.validInstanceOf(MediaTypes.TRACK_TYPE)));
+	}
+	
+	@Test
 	public void validateValidTrackInstance() {
-		assertThat(validate.parse(loadTrackInstance()),
+		assertThat(validate.parse(loadTrackInstance("track-instance.json")),
 				is(validate.validInstanceOf(MediaTypes.TRACK_TYPE)));
 	}
 
-	private String loadTrackInstance() {
+	private String loadTrackInstance(String resourceName) {
 		StringBuilder sb = new StringBuilder();
 		
 		Scanner sc = null;
-		sc = new Scanner(getClass().getResourceAsStream("track-instance.json"));
+		sc = new Scanner(getClass().getResourceAsStream(resourceName));
 		while (sc.hasNext()) {
 			sb.append(sc.nextLine());
 		}

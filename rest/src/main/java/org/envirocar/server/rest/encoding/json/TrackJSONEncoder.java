@@ -97,6 +97,9 @@ public class TrackJSONEncoder extends AbstractJSONEntityEncoder<Track> {
                 properties.put(JSONConstants.USER_KEY, userEncoder
                         .encodeJSON(t.getUser(), rights, mediaType));
             }
+            if (rights.canSeeLengthOf(t)) {
+            	properties.put(JSONConstants.LENGTH_KEY, t.getLength());
+            }
             if (t.hasAppVersion() && rights.canSeeAppVersionOf(t)) {
             	properties.put(JSONConstants.APP_VERSION_KEY, t.getAppVersion());
             }
