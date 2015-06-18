@@ -52,6 +52,7 @@ public class MongoTrack extends MongoEntityBase implements Track {
 	public static final String APP_VERSION = "appVersion";
 	public static final String OBD_DEVICE = "obdDevice";
 	public static final String TERMS_OF_USE_VERSION = "touVersion";
+	public static final String LENGTH = "length";
     @Id
     private ObjectId id = new ObjectId();
     @Property(USER)
@@ -76,6 +77,8 @@ public class MongoTrack extends MongoEntityBase implements Track {
     private String obdDevice;
     @Property(TERMS_OF_USE_VERSION)
     private String touVersion;
+    @Property(LENGTH)
+    private double length;
 
     @Override
     public MongoUser getUser() {
@@ -265,6 +268,16 @@ public class MongoTrack extends MongoEntityBase implements Track {
 		return touVersion;
 	}
 
+	@Override
+	public double getLength() {		
+		return length;
+	}
+
+	@Override
+	public void setLength(double length) {
+		this.length = length;
+	}
+
     @Override
 	public void setTouVersion(String touVersion) {
 		this.touVersion = touVersion;
@@ -283,6 +296,11 @@ public class MongoTrack extends MongoEntityBase implements Track {
 	@Override
 	public boolean hasTouVersion() {
 		return touVersion != null && !touVersion.isEmpty();
+	}
+
+	@Override
+	public boolean hasLength() {
+		return getLength() != 0.0;
 	}
     
 }

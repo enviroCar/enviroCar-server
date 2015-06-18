@@ -28,6 +28,8 @@ import org.envirocar.server.core.UserService;
 import org.envirocar.server.core.UserServiceImpl;
 import org.envirocar.server.core.activities.ActivityListener;
 import org.envirocar.server.core.util.BCryptPasswordEncoder;
+import org.envirocar.server.core.util.GeodesicGeometryOperations;
+import org.envirocar.server.core.util.GeometryOperations;
 import org.envirocar.server.core.util.PasswordEncoder;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormatter;
@@ -55,6 +57,7 @@ public class CoreModule extends AbstractModule {
         bind(StatisticsService.class).to(StatisticsServiceImpl.class);
         bind(ActivityListener.class).asEagerSingleton();
         bind(PasswordEncoder.class).to(BCryptPasswordEncoder.class);
+        bind(GeometryOperations.class).to(GeodesicGeometryOperations.class);
         DateTimeZone.setDefault(DateTimeZone.UTC);
     }
 
