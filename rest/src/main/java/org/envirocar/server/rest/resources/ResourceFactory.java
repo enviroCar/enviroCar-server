@@ -108,4 +108,6 @@ public interface ResourceFactory {
 	ResetPasswordResource createResetPasswordResource();
 
     FuelingsResource createFuelingsResource(User user);
+    
+    ShareResource createShareResource();
 }
