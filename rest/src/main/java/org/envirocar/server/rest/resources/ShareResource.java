@@ -4,6 +4,8 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.imageio.ImageIO;
@@ -21,8 +23,11 @@ import org.envirocar.server.core.exception.TrackNotFoundException;
 import org.envirocar.server.core.filter.MeasurementFilter;
 import org.envirocar.server.core.statistics.Statistics;
 import org.envirocar.server.rest.MediaTypes;
+import org.envirocar.server.rest.util.OSMTileRenderer;
 import org.envirocar.server.rest.util.ShareImageRenderUtil;
 import org.joda.time.DateTime;
+
+import com.vividsolutions.jts.geom.Coordinate;
 
 public class ShareResource extends AbstractResource {
 	public static final String TRACK = "{track}";
@@ -38,10 +43,50 @@ public class ShareResource extends AbstractResource {
 			InputStream in = this.getClass().getClassLoader()
 					.getResourceAsStream("images/gmaps.jpg");
 			BufferedImage image = ImageIO.read(in);
+			Track track;
+			Measurements measurements;
+			track = getDataService().getTrack(trackId);
+			measurements = getDataService().getMeasurements(
+					new MeasurementFilter(track));
 			ShareImageRenderUtil imp = new ShareImageRenderUtil();
-			HashMap<String, String> hm = getDetails(trackId);
+			HashMap<String, String> hm = getDetails(trackId,track,measurements);
 			BufferedImage renderedImage = imp.process(image, hm.get(MAXSPEED),
 					hm.get(TIME), "0l/100km");
+			/*OSMTileRenderer osm=new OSMTileRenderer();
+			BufferedImage renderedImage = osm.getTile(getCoordinates(measurements));
+			*/byteArrayOS = new ByteArrayOutputStream();
+			ImageIO.write(renderedImage, "png", byteArrayOS);
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (TrackNotFoundException e) {
+			e.printStackTrace();
+		}
+
+		byte[] imageData = byteArrayOS.toByteArray();
+		return Response.ok(imageData).build();
+	}
+	
+	@GET
+	@Path("map/"+TRACK)
+	@Produces(MediaTypes.PNG_IMAGE)
+	public Response getMapImage(@PathParam("track") String trackId) {
+		ByteArrayOutputStream byteArrayOS = null;
+		try {
+			InputStream in = this.getClass().getClassLoader()
+					.getResourceAsStream("images/gmaps.jpg");
+			BufferedImage image = ImageIO.read(in);
+			Track track;
+			Measurements measurements;
+			track = getDataService().getTrack(trackId);
+			measurements = getDataService().getMeasurements(
+					new MeasurementFilter(track));
+			ShareImageRenderUtil imp = new ShareImageRenderUtil();
+			HashMap<String, String> hm = getDetails(trackId,track,measurements);
+			/*BufferedImage renderedImage = imp.process(image, hm.get(MAXSPEED),
+					hm.get(TIME), "0l/100km");*/
+			OSMTileRenderer osm=new OSMTileRenderer();
+			BufferedImage renderedImage = osm.getTile(getCoordinates(measurements));
 			byteArrayOS = new ByteArrayOutputStream();
 			ImageIO.write(renderedImage, "png", byteArrayOS);
 
@@ -56,14 +101,9 @@ public class ShareResource extends AbstractResource {
 	}
 
 	// "5577008eccf24b5d2a54a5e9"
-	public HashMap<String, String> getDetails(String trackId)
+	public HashMap<String, String> getDetails(String trackId,Track track,Measurements measurements)
 			throws TrackNotFoundException {
-		Track track;
-		Measurements measurements;
 		HashMap<String, String> hm = new HashMap<String, String>();
-		track = getDataService().getTrack(trackId);
-		measurements = getDataService().getMeasurements(
-				new MeasurementFilter(track));
 		hm.put(TIME, calculateTime(track.getBegin(), track.getEnd()));
 		hm.put(MAXSPEED, maxSpeed(measurements));
 		return hm;
@@ -154,7 +194,11 @@ public class ShareResource extends AbstractResource {
 		html += "<li>" + track.getObdDevice() + "</li>";
 		html += "<li>" + track.getTouVersion() + "</li>";
 		html += "<li>" + track.getIdentifier() + "</li>";
+		
 		for (Measurement m : measurements) {
+			html += "<li>" + m.getGeometry().getCoordinate().x + ":"
+					+  m.getGeometry().getCoordinate().y + ":" 
+					+ "</li>";
 			for (MeasurementValue mv : m.getValues()) {
 				html += "<li>" + mv.getPhenomenon().getName() + ":"
 						+ mv.getValue() + " " + mv.getPhenomenon().getUnit()
@@ -162,9 +206,18 @@ public class ShareResource extends AbstractResource {
 			}
 			html += "</br>";
 		}
+		
 
 		html += "<li>" + track.getSensor() + "</li>";
 		html += "</ul>";
 		return html;
 	}*/
+	
+	public ArrayList<Coordinate> getCoordinates(Measurements measurements){
+		ArrayList<Coordinate> coords=new ArrayList<Coordinate>();
+		for (Measurement m : measurements) {
+			coords.add(new Coordinate(m.getGeometry().getCoordinate().x ,m.getGeometry().getCoordinate().y)) ;
+		}
+		return coords;
+	}
 }
