@@ -4,7 +4,7 @@ layout: default
 
 This is the Phenomenons resource.
 
-# /rest/phenomenons/:name
+# /phenomenons/:name
 ### GET
 Get the phenomenon with the name `name`.
 #### Response Schema
@@ -12,7 +12,7 @@ Get the phenomenon with the name `name`.
 #### Response Example
 {% include_example phenomenon %}
 
-# /rest/phenomenons
+# /phenomenons
 ### GET
 Get a list of all phenomenons.
 #### Schema

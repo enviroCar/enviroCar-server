@@ -1,7 +1,7 @@
 ---
 layout: default
 ---
-# /rest/statistics
+# /statistics
 ### GET
 Get a list of statistics for all phenomenons.
 #### Response Schema
@@ -10,7 +10,7 @@ Get a list of statistics for all phenomenons.
 {% include_example statistics %}
 
 
-# /rest/statistics/:phenomenon
+# /statistics/:phenomenon
 ### GET
 Get the statistics for the specified `phenomenon`.
 #### Response Schema

@@ -2,7 +2,7 @@
 layout: default
 ---
 
-# /rest/users/:username/friends
+# /users/:username/friends
 This is the Friends resource.
 
 ### GET
@@ -17,7 +17,7 @@ Adds a user as a friend to user `username`.
 #### Request Schema
 {% include_example user.create %}
 
-# /rest/users/:username/friends/:friend
+# /users/:username/friends/:friend
 ### GET 
 Get a specific friend `friend` of the user `username`. 
 

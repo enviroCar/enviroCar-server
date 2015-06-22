@@ -2,7 +2,7 @@
 layout: default
 ---
 
-# /rest/measurements
+# /measurements
 ### GET
 Get a list of all measurements.
 #### Response Schema
@@ -10,8 +10,8 @@ Get a list of all measurements.
 #### Response Example
 {% include_example measurements %}
 
-In addition to the standard query parameters, tracks can be queried by a given boundingbox. Therefore you have to add the following get parameter: `bbox="minx,miny,maxx,maxy"`. 
-(example: `/rest/measurements?bbox="7.0,51.1,7.3,52.0"`)
+In addition to the standard query parameters, measurements can be queried by a given boundingbox. Therefore you have to add the following get parameter: `bbox=minx,miny,maxx,maxy`.
+(example: `/measurements?bbox=7.0,51.1,7.3,52.0`)
 
 ### POST
 Creates new measurements.
@@ -21,7 +21,7 @@ Creates new measurements.
 {% include_example measurement.create %}
 
 
-# /rest/measurements/:measurement
+# /measurements/:measurement
 ### GET
 Get the measurement `measurement`.
 ### Response Schema

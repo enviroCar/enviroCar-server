@@ -4,7 +4,7 @@ layout: default
 
 This is the groups resource.
 
-# /rest/groups #
+# /groups #
 ### GET
 Get a list of all groups.
 #### Response Schema
@@ -12,7 +12,7 @@ Get a list of all groups.
 #### Response Example
 {% include_example groups %}
 
-# /rest/groups/:group
+# /groups/:group
 ### GET
 Get the group with the name `group`.
 #### Response Schema
@@ -30,7 +30,7 @@ Updates the group `group`.
 ### DELETE
 Deletes the group `group`. Just the owner of the group is able to delete the group.
 
-# /rest/groups/:group/members
+# /groups/:group/members
 ### GET
 Get a list of members of the group `group`.
 #### Response Schema
@@ -46,7 +46,7 @@ Adds a user to the group `group`.
 {% include_example user.ref %}
 
 
-# /rest/groups/:group/members/:member
+# /groups/:group/members/:member
 Get the member `member` of the group `group`.
 ### GET
 Get the member `member` of the group `group`.
