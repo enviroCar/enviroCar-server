@@ -21,6 +21,7 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
@@ -28,7 +29,6 @@ import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
 import org.envirocar.server.core.entities.Track;
-
 import org.envirocar.server.core.exception.IllegalModificationException;
 import org.envirocar.server.core.exception.TrackNotFoundException;
 import org.envirocar.server.core.exception.UserNotFoundException;
@@ -36,7 +36,6 @@ import org.envirocar.server.core.exception.ValidationException;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.auth.Authenticated;
-
 import org.envirocar.server.rest.validation.Schema;
 
 /**
@@ -48,6 +47,8 @@ public class TrackResource extends AbstractResource {
     public static final String MEASUREMENTS = "measurements";
     public static final String SENSOR = "sensor";
     public static final String STATISTICS = "statistics";
+    public static final String SHARE = "share";
+    public static final String PREVIEW = "preview";
     private final Track track;
 
     @Inject
@@ -104,4 +105,17 @@ public class TrackResource extends AbstractResource {
         checkRights(getRights().canSeeStatisticsOf(track));
         return getResourceFactory().createStatisticsResource(track);
     }
+    
+    @Path(SHARE)
+    public ShareResource share(){
+    		return getResourceFactory().createShareResource(track);
+    }
+    
+    /*@Path(PREVIEW)
+    public ShareResource preview(@PathParam("track") String id)
+            throws TrackNotFoundException {
+    		Track track = getDataService().getTrack(id);
+    		return getResourceFactory().createShareResource(track);
+        
+    }*/
 }

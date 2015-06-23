@@ -35,28 +35,18 @@ import com.vividsolutions.jts.geom.Coordinate;
 
 public class OSMTileRenderer {
 	final static String saveFileDir = "";
-
+	int xNumber=0;
+	int yNumber=0;
+	int baseTileX=0;
+	int baseTileY=0;
 	public BufferedImage getTile(ArrayList<Coordinate> coords)
 			throws IOException {
 		int zoom = 19;
-		Coordinate coor = getLowestLat(coords);
-		double lat = coor.y;
-		double lon = coor.x;
 		zoom= getZoomLevel(coords);
 		// format to single tile
-		String picUri = "http://tile.openstreetmap.org/"
-				+ getTileNumber(lat, lon, zoom) + ".png";
-		System.out.println(picUri);
-		
-		URL url = new URL(picUri);
-		InputStream is = url.openStream();
-		BufferedImage image = new BufferedImage(512, 256,BufferedImage.TYPE_INT_RGB);//ImageIO.read(is);
-		BufferedImage image1 = ImageIO.read(is);
-		Graphics2D g2d = image.createGraphics();
-		g2d.drawImage(image1,0,0,null);
-		g2d.drawImage(image1,256,0,null);
+		BufferedImage image = new BufferedImage(256*xNumber, 256*yNumber,BufferedImage.TYPE_INT_RGB);//ImageIO.read(is);
+		Graphics2D g2d = appendImage(image, baseTileX+xNumber, baseTileX, baseTileY+yNumber, baseTileY, zoom);
 		drawRoute(g2d, coords, zoom); 
-
 		g2d.dispose();
 		return image;
 	}
@@ -107,7 +97,7 @@ public class OSMTileRenderer {
 	}
 
 	public int getX(final double lon, final int zoom, int pic) {
-		double x = getFraction((lon + 180) / 360 * (1 << zoom),34160); 
+		double x = getFraction((lon + 180) / 360 * (1 << zoom),baseTileX); 
 		System.out.print(getXTile(lon, zoom) + " ++ ");
 		return (int) Math.round((x * pic));
 	}
@@ -116,31 +106,38 @@ public class OSMTileRenderer {
 		double y = getFraction((1 - Math.log(Math.tan(Math.toRadians(lat)) + 1
 				/ Math.cos(Math.toRadians(lat)))
 				/ Math.PI)
-				/ 2 * (1 << zoom),21666);
+				/ 2 * (1 << zoom),baseTileY);
 		 System.out.print(getYTile(lat, zoom) + " ++ ");
 		return (int) Math.round(y * pic);
 	}
 
 	public int getZoomLevel(ArrayList<Coordinate> coords) {
 		BoundingBox bbox = findBoundingBoxForGivenLocations(coords);
+		
 		int leastZoomLevelX = 1;
 		int leastZoomLevelY = 1;
-		int baseTileY;
-		int baseTileX;
 		int finalZoom = 1;
+		System.out.println(bbox.north+" : "+bbox.south+" : "+bbox.east+" : "+ bbox.west);//-5.76275,41.487958,-5.717187,41.525271
+		//-5.76275,41.487958,-5.717187,41.525271
+
 		for (int zoom = 19; zoom >= 1; zoom--) { // considering x
-			if ((getTileDetails(bbox.east, bbox.north, zoom)[1] - getTileDetails(
-					bbox.west, bbox.north, zoom)[1]) <= 0) {
+			int xlength=(getTileDetails(bbox.west, bbox.north, zoom)[0] - getTileDetails(
+					bbox.east, bbox.north, zoom)[0]);
+			
+			if (xlength<= 3) {
 				leastZoomLevelX = zoom;
+				xNumber=(xlength);
 				break;
 			} else {
 				leastZoomLevelX = 0; // special case
 			}
 		}
 		for (int zoom = 19; zoom >= 1; zoom--) {// considering y
-			if ((getTileDetails(bbox.west, bbox.north, zoom)[0] - getTileDetails(
-					bbox.west, bbox.south, zoom)[0]) <= 0) {
-				leastZoomLevelY = zoom;
+			int ylength=(getTileDetails(bbox.west, bbox.south, zoom)[1] - getTileDetails(
+					bbox.west, bbox.north, zoom)[1]);
+			if (ylength <= 2) {
+				leastZoomLevelY = zoom; 
+				yNumber=(ylength); 
 				break;
 			} else {
 				leastZoomLevelY = 0; // special case
@@ -148,11 +145,18 @@ public class OSMTileRenderer {
 		}
 		if (leastZoomLevelY > leastZoomLevelX) {
 			finalZoom = leastZoomLevelX;
+			System.out.println("leastZoomLevelX"+leastZoomLevelX);
 		} else if (leastZoomLevelX > leastZoomLevelY) {
 			finalZoom = leastZoomLevelY;
+			System.out.println("leastZoomLevelX"+leastZoomLevelX);
+			System.out.println("leastZoomLevelY"+leastZoomLevelY);
 		} else {
 			finalZoom = leastZoomLevelX;
 		}
+		int [] ar=getTileDetails(bbox.east, bbox.north, --finalZoom);
+		//System.out.println("TileNumber"+getTileNumber(bbox.east, bbox.north, finalZoom));
+		baseTileX=ar[0];
+		baseTileY=ar[1];
 		return finalZoom;
 	}
 
@@ -179,7 +183,7 @@ public class OSMTileRenderer {
 		return iPart;
 	}
 
-	public String getTileNumber(final double lat, final double lon,
+	public String getTileNumber(final double lon, final double lat,
 			final int zoom) {
 		int xtile = (int) Math.floor((lon + 180) / 360 * (1 << zoom));
 		int ytile = (int) Math
@@ -199,7 +203,7 @@ public class OSMTileRenderer {
 		return ("" + zoom + "/" + xtile + "/" + ytile);
 	}
 
-	public int[] getTileDetails(final double lat, final double lon,
+	public int[] getTileDetails(final double lon, final double lat,
 			final int zoom) {
 		int xtile = (int) Math.floor((lon + 180) / 360 * (1 << zoom));
 		int ytile = (int) Math
@@ -246,11 +250,13 @@ public class OSMTileRenderer {
 
 		for (int lc = 0; lc < coordinates.size(); lc++) {
 			Coordinate loc = coordinates.get(lc);
+			System.out.println(loc.y);
 			if (lc == 0) {
 				north = loc.y;
 				south = loc.y;
 				west = loc.x;
 				east = loc.x;
+		
 			} else {
 				if (loc.y > north) {
 					north = loc.y;
@@ -264,8 +270,13 @@ public class OSMTileRenderer {
 				}
 			}
 		}
+		/*double padding = 0.001;
+	    north = north + padding;
+	    south = south - padding;
+	    west = west - padding;
+	    east = east + padding;*/
 
-		return new BoundingBox(north, south, east, west);
+		return new BoundingBox(north, south, west, east);
 	}
 
 	public void saveFile(BufferedImage image, String trackId)
@@ -280,14 +291,15 @@ public class OSMTileRenderer {
 	public Graphics2D appendImage(BufferedImage newTile,int highestX,int lowestX,int highestY,int lowestY,int zoom)
 			throws IOException {
 		Graphics2D g2d = newTile.createGraphics();
+		System.out.println(lowestX+" : "+lowestY+" : "+highestX+" : "+highestY);
 		for (int i = lowestX; i <= highestX; i++) {
-			Graphics2D temp;
 			for (int j = lowestY; j <= highestY; j++) {
 				BufferedImage image=downloadTile(i, j, zoom);
+				g2d.drawImage(image,(i-lowestX)*256,(j-lowestY)*256,null);
+				//g2d.drawImage(image1,256,0,null);
 				//temp.add(0,256,image.createGraphics());
 				//temp=composite image
 			}
-			//g2d.add(256*(i-lowestX),0,temp);
 		}
 		return g2d;
 	}
@@ -295,6 +307,7 @@ public class OSMTileRenderer {
 	public BufferedImage downloadTile(int x,int y,int zoom) throws IOException {
 		String picUri = "http://tile.openstreetmap.org/"
 				 + zoom + "/" + x + "/" + y+ ".png";
+		System.out.println(picUri);
 		URL url = new URL(picUri);
 		InputStream is = url.openStream();
 		BufferedImage image = ImageIO.read(is);

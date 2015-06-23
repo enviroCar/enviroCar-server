@@ -42,29 +42,34 @@ import org.envirocar.server.rest.util.OSMTileRenderer;
 import org.envirocar.server.rest.util.ShareImageRenderUtil;
 import org.joda.time.DateTime;
 
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 import com.vividsolutions.jts.geom.Coordinate;
 
 public class ShareResource extends AbstractResource {
 	public static final String TRACK = "{track}";
 	public static final String TIME = "time";
 	public static final String MAXSPEED = "maxspeed";
+	private final Track track;
 
+    @Inject
+    public ShareResource(@Assisted Track track) {
+        this.track = track;
+    }
+	
 	@GET
-	@Path(TRACK)
 	@Produces(MediaTypes.PNG_IMAGE)
-	public Response getShareImage(@PathParam("track") String trackId) {
+	public Response getShareImage() {
 		ByteArrayOutputStream byteArrayOS = null;
 		try {
 			InputStream in = this.getClass().getClassLoader()
 					.getResourceAsStream("images/gmaps.jpg");
 			BufferedImage image = ImageIO.read(in);
-			Track track;
 			Measurements measurements;
-			track = getDataService().getTrack(trackId);
 			measurements = getDataService().getMeasurements(
 					new MeasurementFilter(track));
 			ShareImageRenderUtil imp = new ShareImageRenderUtil();
-			HashMap<String, String> hm = getDetails(trackId,track,measurements);
+			HashMap<String, String> hm = getDetails(track.getIdentifier(),track,measurements);
 			BufferedImage renderedImage = imp.process(image, hm.get(MAXSPEED),
 					hm.get(TIME), "0l/100km");
 			/*OSMTileRenderer osm=new OSMTileRenderer();
@@ -83,21 +88,19 @@ public class ShareResource extends AbstractResource {
 	}
 	
 	@GET
-	@Path("preview/"+TRACK)
+	@Path("preview")
 	@Produces(MediaTypes.PNG_IMAGE)
-	public Response getMapImage(@PathParam("track") String trackId) {
+	public Response getMapImage() {
 		ByteArrayOutputStream byteArrayOS = null;
 		try {
 			InputStream in = this.getClass().getClassLoader()
 					.getResourceAsStream("images/gmaps.jpg");
 			BufferedImage image = ImageIO.read(in);
-			Track track;
 			Measurements measurements;
-			track = getDataService().getTrack(trackId);
 			measurements = getDataService().getMeasurements(
 					new MeasurementFilter(track));
 			ShareImageRenderUtil imp = new ShareImageRenderUtil();
-			HashMap<String, String> hm = getDetails(trackId,track,measurements);
+			HashMap<String, String> hm = getDetails(track.getIdentifier(),track,measurements);
 			/*BufferedImage renderedImage = imp.process(image, hm.get(MAXSPEED),
 					hm.get(TIME), "0l/100km");*/
 			OSMTileRenderer osm=new OSMTileRenderer();
