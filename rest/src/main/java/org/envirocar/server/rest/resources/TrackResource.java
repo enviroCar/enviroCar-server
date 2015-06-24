@@ -108,14 +108,12 @@ public class TrackResource extends AbstractResource {
     
     @Path(SHARE)
     public ShareResource share(){
-    		return getResourceFactory().createShareResource(track);
+    	return getResourceFactory().createShareResource(track);
     }
     
-    /*@Path(PREVIEW)
-    public ShareResource preview(@PathParam("track") String id)
-            throws TrackNotFoundException {
-    		Track track = getDataService().getTrack(id);
-    		return getResourceFactory().createShareResource(track);
+    @Path(PREVIEW)
+    public PreviewResource preview(){
+    	return getResourceFactory().createPreviewResource(track);
         
-    }*/
+    }
 }

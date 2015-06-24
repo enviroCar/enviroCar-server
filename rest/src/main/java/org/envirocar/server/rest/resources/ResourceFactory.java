@@ -110,4 +110,6 @@ public interface ResourceFactory {
     FuelingsResource createFuelingsResource(User user);
     
     ShareResource createShareResource(Track track);
+    
+    PreviewResource createPreviewResource(Track track);
 }

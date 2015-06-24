@@ -60,6 +60,9 @@ public class ShareImageRenderUtil {
 	    FontMetrics fm = g2d.getFontMetrics();
 		int y = h - (h / 4) + h / 8 - 20;
 		int textY = h - (h / 4) + h / 8 + 10;
+		/*int x = boxIn.x + ((boxIn.width - fm.stringWidth(text)) / 2);
+        int y = boxIn.y + (((boxIn.height - fm.getHeight()) / 2) + fm.getAscent());*/
+
 		//int y = (((3*h/4)-(25 + (h / 4))- fm.getHeight()) / 2) + fm.getAscent(); 
 		g2d.drawString(DETAIL1, (w / 6) - 70, y);
 		g2d.drawString(DETAIL2, (3 * w / 6) - 70, y);
