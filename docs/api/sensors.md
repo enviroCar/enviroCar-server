@@ -1,7 +1,7 @@
 ---
 layout: default
 ---
-# /rest/sensors #
+# /sensors #
 ### GET
 Get a list of all sensors.
 #### Response Schema
@@ -9,7 +9,7 @@ Get a list of all sensors.
 #### Response Example
 {% include_example groups %}
 
-# /rest/sensors/:sensor #
+# /sensors/:sensor #
 ### GET
 Get the sensor `sensor`.
 #### Response Schema

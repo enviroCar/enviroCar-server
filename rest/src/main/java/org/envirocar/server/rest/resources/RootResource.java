@@ -50,7 +50,7 @@ public class RootResource extends AbstractResource {
     public static final String ANNOUNCEMENTS = "announcements";
     public static final String BADGES = "badges";
     public static final String RESET_PASSWORD = "resetPassword";
-    
+        
     @Inject
     private JsonNodeFactory factory;
 
@@ -186,7 +186,7 @@ public class RootResource extends AbstractResource {
     public ResetPasswordResource resetPassword() {
     	return getResourceFactory().createResetPasswordResource();
     }
-
+    
     @Path("rest")
     public RootResource redirect() {
         return this;

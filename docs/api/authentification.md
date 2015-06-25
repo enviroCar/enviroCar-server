@@ -3,7 +3,7 @@ layout: default
 ---
 
 # Registration
-See [`POST /rest/users`](Users)
+See [`POST /users`](Users)
 
 ### Login
 

@@ -108,4 +108,8 @@ public interface ResourceFactory {
 	ResetPasswordResource createResetPasswordResource();
 
     FuelingsResource createFuelingsResource(User user);
+    
+    ShareResource createShareResource(Track track);
+    
+    PreviewResource createPreviewResource(Track track);
 }

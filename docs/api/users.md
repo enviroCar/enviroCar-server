@@ -2,7 +2,7 @@
 layout: default
 ---
 
-# /rest/users #
+# /users #
 ### GET
 Get a list of all users.
 #### Response Schema
@@ -10,7 +10,7 @@ Get a list of all users.
 #### Response Example
 {% include_example users %}
 
-# /rest/users/:user #
+# /users/:user #
 ### GET
 Get the user `user`.
 #### Response Schema
