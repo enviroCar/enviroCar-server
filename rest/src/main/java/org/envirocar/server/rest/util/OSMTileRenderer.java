@@ -42,7 +42,7 @@ import org.joda.time.DateTime;
 import com.vividsolutions.jts.geom.Coordinate;
 
 public class OSMTileRenderer {
-	final static String saveFileDir = "/home/hetti/Desktop/Devops/temp";//"/tmp/envirocar/previews";//
+	final static String saveFileDir = "/var/data/envirocar/previews";//"/tmp/envirocar/previews";//
 	public static final String TIME = "time";
 	public static final String MAXSPEED = "maxspeed";
 	int numberOfXTiles = 0;
