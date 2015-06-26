@@ -37,6 +37,9 @@ import org.envirocar.server.core.entities.Measurements;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.exception.TrackNotFoundException;
 import org.envirocar.server.core.filter.MeasurementFilter;
+import org.envirocar.server.core.filter.StatisticsFilter;
+import org.envirocar.server.core.statistics.Statistic;
+import org.envirocar.server.core.statistics.Statistics;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.util.OSMTileRenderer;
 import org.envirocar.server.rest.util.ShareImageRenderUtil;
@@ -49,7 +52,7 @@ import com.vividsolutions.jts.geom.Coordinate;
 public class ShareResource extends AbstractResource {
 	public static final String TRACK = "{track}";
 	private final Track track;
-
+ 
     @Inject
     public ShareResource(@Assisted Track track) {
         this.track = track;
@@ -60,14 +63,22 @@ public class ShareResource extends AbstractResource {
 	public Response getShareImage() {
 		ByteArrayOutputStream byteArrayOS = null;
 		try {
-			Measurements measurements = getDataService().getMeasurements(
-					new MeasurementFilter(track));
+			Statistics statistics = null;
 			ShareImageRenderUtil imp = new ShareImageRenderUtil();
 			OSMTileRenderer osm=new OSMTileRenderer();
-			BufferedImage mapImage = osm.getImage(track.getIdentifier(),measurements);
-			HashMap<String, String> hm = osm.getDetails(track,measurements);
+			statistics = getStatisticsService().getStatistics(new StatisticsFilter(track));
+			BufferedImage mapImage = null;
+			if(osm.imageExists(track.getIdentifier())){
+				mapImage = osm.loadImage(track.getIdentifier());
+			}else{
+				Measurements measurements = getDataService().getMeasurements(
+						new MeasurementFilter(track));
+				mapImage = osm.createImage(measurements);
+				osm.saveImage(mapImage, track.getIdentifier());
+			}
+			HashMap<String, String> hm = osm.getDetails(track,statistics);
 			BufferedImage renderedImage = imp.process(mapImage, hm.get(osm.MAXSPEED),
-					hm.get(osm.TIME), "0l/100km");
+					hm.get(osm.TIME), hm.get(osm.CONSUMPTION));
 			byteArrayOS = new ByteArrayOutputStream();
 			ImageIO.write(renderedImage, "png", byteArrayOS);
 
@@ -82,16 +93,14 @@ public class ShareResource extends AbstractResource {
 	}
 	
 	/*@GET
-	@Path(TRACK)
 	@Produces("text/html")
-	public String testService(@PathParam("track") String trackId)
+	public String testService()
 			throws TrackNotFoundException {
-		Track track;
 		Measurements measurements;
 		Statistics statistics;
-		track = getDataService().getTrack(trackId);
 		measurements = getDataService().getMeasurements(
 				new MeasurementFilter(track));
+		statistics = getStatisticsService().getStatistics(new StatisticsFilter(track));
 		String html = "<h2>All stuff</h2><ul>";
 		html += "<li>" + "Hi all" + "</li>";
 		html += "<li>" + track.getBegin() + "</li>";
@@ -100,10 +109,12 @@ public class ShareResource extends AbstractResource {
 		html += "<li>" + track.getObdDevice() + "</li>";
 		html += "<li>" + track.getTouVersion() + "</li>";
 		html += "<li>" + track.getIdentifier() + "</li>";
-		
-		for (Measurement m : measurements) {
-			html += "<li>" + m.getGeometry().getCoordinate().x + ":"
-					+  m.getGeometry().getCoordinate().y + ":" 
+		html += "<li>" + statistics
+				+ "</li>";
+		for (Statistic m : statistics) {
+			html += "<li>" + m.getPhenomenon().getName() + ":"
+					+  m.getMean() + ":" 
+					+  m.getPhenomenon().getUnit() + ":" 
 					+ "</li>";
 			for (MeasurementValue mv : m.getValues()) {
 				html += "<li>" + mv.getPhenomenon().getName() + ":"
@@ -114,7 +125,6 @@ public class ShareResource extends AbstractResource {
 		}
 		
 
-		html += "<li>" + track.getSensor() + "</li>";
 		html += "</ul>";
 		return html;
 	}*/

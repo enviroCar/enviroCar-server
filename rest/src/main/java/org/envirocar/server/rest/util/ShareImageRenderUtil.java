@@ -25,11 +25,11 @@ import java.awt.image.BufferedImage;
 
 public class ShareImageRenderUtil {
 	final String FONT_FILE = "segoeuib.ttf";
-	final String DETAIL1 = "Speed";
+	final String DETAIL1 = "Max Speed";
 	final String DETAIL2 = "Time";
 	final String DETAIL3 = "Consumption";
 
-	public BufferedImage process(BufferedImage old, String distance,
+	public synchronized BufferedImage process(BufferedImage old, String distance,
 			String time, String consumption) {
 		/*
 		 * GraphicsEnvironment ge =
@@ -52,25 +52,32 @@ public class ShareImageRenderUtil {
 		AlphaComposite alcom2 = AlphaComposite.getInstance(
 				AlphaComposite.SRC_OVER, 0.7f);
 		g2d.setComposite(alcom);
-		g2d.fillRect(0, h - (h / 4) - 25, w, 25 + (h / 4));
+		g2d.fillRect(0, h - (h / 4), w,(h / 4));
 		Font font = new Font("Segoe UI Bold", Font.BOLD, 28);
 		g2d.setFont(font);
 		g2d.setComposite(alcom2);
 		g2d.setPaint(Color.white);
 	    FontMetrics fm = g2d.getFontMetrics();
-		int y = h - (h / 4) + h / 8 - 20;
-		int textY = h - (h / 4) + h / 8 + 10;
-		/*int x = boxIn.x + ((boxIn.width - fm.stringWidth(text)) / 2);
-        int y = boxIn.y + (((boxIn.height - fm.getHeight()) / 2) + fm.getAscent());*/
+		//int y = h - (h / 4) + h / 8 - 20;
+		
+		int x1 = 0 + ((w/3 - fm.stringWidth(DETAIL1)) / 2);
+		int x2 = w/3 + ((w/3 - fm.stringWidth(DETAIL2)) / 2);
+		int x3 = 2*w/3 + ((w/3 - fm.stringWidth(DETAIL3)) / 2);
+        int y = h - (h / 4) + ((((h / 4) - fm.getHeight()) / 2) + fm.getAscent()) - fm.getHeight()/2;
 
 		//int y = (((3*h/4)-(25 + (h / 4))- fm.getHeight()) / 2) + fm.getAscent(); 
-		g2d.drawString(DETAIL1, (w / 6) - 70, y);
-		g2d.drawString(DETAIL2, (3 * w / 6) - 70, y);
-		g2d.drawString(DETAIL3, (5 * w / 6) - 120, y);
-		g2d.setFont(new Font("Segoe UI", Font.BOLD, 16));
-		g2d.drawString(distance, (w / 6) - 70, textY);
-		g2d.drawString(time, (3 * w / 6) - 70, textY);
-		g2d.drawString(consumption, (5 * w / 6) - 70, textY);
+		g2d.drawString(DETAIL1, x1, y);
+		g2d.drawString(DETAIL2, x2, y);
+		g2d.drawString(DETAIL3, x3, y);
+		g2d.setFont(new Font("Segoe UI", Font.PLAIN, 18));
+		FontMetrics fm2 = g2d.getFontMetrics();
+		int distanceX = 0 + ((w/3 - fm2.stringWidth(distance)) / 2);
+		int timeX = w/3 + ((w/3 - fm2.stringWidth(time)) / 2);
+		int consumptionX = 2*w/3 + ((w/3 - fm2.stringWidth(consumption)) / 2);
+        int textY = h - (h / 4) + ((((h / 4) - fm2.getHeight()) / 2) + fm2.getAscent()) + fm.getHeight()/2;
+        g2d.drawString(distance, distanceX, textY);
+		g2d.drawString(time, timeX, textY);
+		g2d.drawString(consumption, consumptionX, textY);
 		g2d.dispose();
 		return img;
 	}

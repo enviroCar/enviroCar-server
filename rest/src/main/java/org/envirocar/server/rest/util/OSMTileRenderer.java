@@ -37,6 +37,8 @@ import org.envirocar.server.core.entities.MeasurementValue;
 import org.envirocar.server.core.entities.Measurements;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.exception.TrackNotFoundException;
+import org.envirocar.server.core.statistics.Statistic;
+import org.envirocar.server.core.statistics.Statistics;
 import org.joda.time.DateTime;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -45,24 +47,18 @@ public class OSMTileRenderer {
 	final static String saveFileDir = "/home/hetti/Desktop/Devops/temp";//"/tmp/envirocar/previews";//
 	public static final String TIME = "time";
 	public static final String MAXSPEED = "maxspeed";
+	public static final String AVGSPEED = "avgspeed";
+	public static final String CMAF = "Calculated MAF";
+	public static final String AVGRPM = "RPM";
+	public static final String IPRESSURE = "IntakePressure";
+	public static final String ITEMP = "IntakeTemperature";
+	public static final String CONSUMPTION = "Consumption";
+	public static final String CO2 = "CO2";
 	int numberOfXTiles = 0;
 	int numberOfYTiles = 0;
 	int baseTileX = 0;
 	int baseTileY = 0;
 
-	public BufferedImage getImage(String trackID,Measurements measurements)
-			throws IOException {
-		BufferedImage image = null;
-		if(imageExists(trackID)){
-			image = loadImage(trackID);
-		}else{
-			image = createImage(measurements);
-			saveImage(image, trackID);
-		}	
-		
-		return image;
-	}
-	
 	public BufferedImage createImage(Measurements measurements) throws IOException{
 		ArrayList<Coordinate> coords = getCoordinates(measurements);
 		int zoom = getZoomLevel(coords);
@@ -272,24 +268,25 @@ public class OSMTileRenderer {
 		return image;
 	}
 
-	public BufferedImage loadImage(String trackId) throws IOException {
-		String filePath = saveFileDir + "/" + trackId + ".png";
+	public synchronized BufferedImage loadImage(String trackId) throws IOException {
+		String filePath =new StringBuilder(saveFileDir).append(File.separator).append(trackId).append(".png").toString();
 		File f = new File(filePath);
 		return ImageIO.read(f);
 	}
 	
-	public void saveImage(BufferedImage image, String trackId)
+	public synchronized void saveImage(BufferedImage image, String trackId)
 			throws IOException {
-		String filePath = saveFileDir + "/" + trackId + ".png";
+		String filePath = new StringBuilder(saveFileDir).append(File.separator).append(trackId).append(".png").toString();
 		File f = new File(filePath);
 		if (!f.exists()) {
 			ImageIO.write(image, "PNG", f);
 		}
 	}
 	
-	public boolean imageExists(String trackId)
+	public synchronized boolean imageExists(String trackId)
 			throws IOException {
-		String filePath = saveFileDir + "/" + trackId + ".png";
+		String filePath = new StringBuilder(saveFileDir).append(File.separator).append(trackId).append(".png").toString();
+		System.out.println(filePath);
 		File f = new File(filePath);
 		if (f.exists()) {
 			return true;
@@ -308,11 +305,39 @@ public class OSMTileRenderer {
 		return coords;
 	}
 	
-	public HashMap<String, String> getDetails(Track track,Measurements measurements)
+	public HashMap<String, String> getDetails(Track track,Statistics statistics)
 			throws TrackNotFoundException {
 		HashMap<String, String> hm = new HashMap<String, String>();
 		hm.put(TIME, calculateTime(track.getBegin(), track.getEnd()));
-		hm.put(MAXSPEED, maxSpeed(measurements));
+		hm.put(MAXSPEED, new StringBuilder("N/A").toString());
+		hm.put(AVGSPEED, new StringBuilder("N/A").toString());
+		hm.put(CMAF, new StringBuilder("N/A").toString());
+		hm.put(AVGRPM, new StringBuilder("N/A").toString());
+		hm.put(IPRESSURE, new StringBuilder("N/A").toString());
+		hm.put(ITEMP, new StringBuilder("N/A").toString());
+		hm.put(CONSUMPTION, new StringBuilder("N/A").toString());
+		hm.put(CO2, new StringBuilder("N/A").toString());
+
+		for (Statistic statistic : statistics) {
+			if(statistic.getPhenomenon().getName().equalsIgnoreCase("Speed")){ 
+				hm.put(MAXSPEED, new StringBuilder(Math.round(statistic.getMax()*100.0)/100.0+"").append(" ").append(statistic.getPhenomenon().getUnit()).toString());
+				hm.put(AVGSPEED, new StringBuilder(Math.round(statistic.getMean()*100.0)/100.0+"").append(" ").append(statistic.getPhenomenon().getUnit()).toString());
+			}if(statistic.getPhenomenon().getName().equalsIgnoreCase("Calculated MAF")){ 
+				hm.put(CMAF, new StringBuilder(Math.round(statistic.getMean()*100.0)/100.0+"").append(" ").append(statistic.getPhenomenon().getUnit()).toString());
+			}if(statistic.getPhenomenon().getName().equalsIgnoreCase("Rpm")){ 
+				hm.put(AVGRPM, new StringBuilder(Math.round(statistic.getMean()*100.0)/100.0+"").append(" ").append(statistic.getPhenomenon().getUnit()).toString());
+			}if(statistic.getPhenomenon().getName().equalsIgnoreCase("Intake Temperature")){ 
+				hm.put(IPRESSURE, new StringBuilder(Math.round(statistic.getMean()*100.0)/100.0+"").append(" ").append(statistic.getPhenomenon().getUnit()).toString());
+			}if(statistic.getPhenomenon().getName().equalsIgnoreCase("Intake Pressure")){ 
+				hm.put(ITEMP, new StringBuilder(Math.round(statistic.getMean()*100.0)/100.0+"").append(" ").append(statistic.getPhenomenon().getUnit()).toString());
+			}if(statistic.getPhenomenon().getName().equalsIgnoreCase(CONSUMPTION)){ 
+				hm.put(CONSUMPTION, new StringBuilder(Math.round(statistic.getMean()*100.0)/100.0+"").append(" ").append(statistic.getPhenomenon().getUnit()).toString());
+			}if(statistic.getPhenomenon().getName().equalsIgnoreCase(CO2)){ 
+				hm.put(CO2, new StringBuilder(Math.round(statistic.getMean()*100.0)/100.0+"").append(" ").append(statistic.getPhenomenon().getUnit()).toString());
+			}
+			
+		}
+		
 		return hm;
 	}
 
@@ -362,25 +387,6 @@ public class OSMTileRenderer {
 		return (rad * 180 / Math.PI);
 	}
 
-	public String maxSpeed(Measurements measurements) {
-		String maxSpeed = "0";
-		for (Measurement m : measurements) {
-			Double tempSpeed = 0.0;
-			for (MeasurementValue mv : m.getValues()) {
-				if (mv.getPhenomenon().getName().equalsIgnoreCase("Speed")) {
-					Double instanceSpeed = Double.parseDouble(mv.getValue()
-							+ "");
-					if (tempSpeed < instanceSpeed) {
-						tempSpeed = instanceSpeed;
-						maxSpeed = tempSpeed + " "
-								+ mv.getPhenomenon().getUnit();
-					}
-				}
-			}
-
-		}
-		return maxSpeed;
-	}
 }
 
 class BoundingBox {
