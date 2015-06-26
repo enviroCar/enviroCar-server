@@ -46,10 +46,16 @@ public class PreviewResource extends AbstractResource {
 	public Response getMapImage() {
 		ByteArrayOutputStream byteArrayOS = null;
 		try {
-			Measurements measurements = getDataService().getMeasurements(
-					new MeasurementFilter(track));
 			OSMTileRenderer osm=new OSMTileRenderer();
-			BufferedImage renderedImage = osm.getImage(track.getIdentifier(),measurements);
+			BufferedImage renderedImage = null;
+			if(osm.imageExists(track.getIdentifier())){
+				renderedImage = osm.loadImage(track.getIdentifier());
+			}else{
+				Measurements measurements = getDataService().getMeasurements(
+						new MeasurementFilter(track));
+				renderedImage = osm.createImage(measurements);
+				osm.saveImage(renderedImage, track.getIdentifier());
+			}
 			byteArrayOS = new ByteArrayOutputStream();
 			ImageIO.write(renderedImage, "png", byteArrayOS);
 
