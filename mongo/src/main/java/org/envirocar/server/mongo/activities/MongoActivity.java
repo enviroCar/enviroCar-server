@@ -16,6 +16,8 @@
  */
 package org.envirocar.server.mongo.activities;
 
+import java.util.Objects;
+
 import org.bson.types.ObjectId;
 import org.envirocar.server.core.activities.Activity;
 import org.envirocar.server.core.activities.ActivityType;
@@ -33,8 +35,8 @@ import com.github.jmkgreen.morphia.annotations.Property;
 import com.github.jmkgreen.morphia.annotations.Transient;
 import com.github.jmkgreen.morphia.mapping.Mapper;
 import com.github.jmkgreen.morphia.utils.IndexDirection;
-import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
+import com.google.common.base.MoreObjects;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
@@ -151,7 +153,7 @@ public class MongoActivity implements Activity {
             return false;
         }
         final MongoActivity other = (MongoActivity) obj;
-        return Objects.equal(this.id, other.getId());
+        return Objects.equals(this.id, other.getId());
     }
 
     @Override
@@ -160,7 +162,7 @@ public class MongoActivity implements Activity {
     }
 
     protected ToStringHelper toStringHelper() {
-        return Objects.toStringHelper(this)
+        return MoreObjects.toStringHelper(this)
                 .omitNullValues()
                 .add(ID, this.id)
                 .add(TYPE, this.type)

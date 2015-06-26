@@ -311,13 +311,9 @@ public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
         }
 
         protected byte[] gunzip(byte[] bytes) throws IOException {
-            GZIPInputStream gzin = null;
-            ByteArrayInputStream bain = null;
-            ByteArrayOutputStream out = null;
-            try {
-                bain = new ByteArrayInputStream(bytes);
-                out = new ByteArrayOutputStream();
-                gzin = new GZIPInputStream(bain);
+            try (ByteArrayInputStream bain = new ByteArrayInputStream(bytes);
+                 ByteArrayOutputStream out = new ByteArrayOutputStream();
+                 GZIPInputStream gzin = new GZIPInputStream(bain)) {
                 byte[] buffer = new byte[1024];
                 int bytesRead;
                 while ((bytesRead = gzin.read(buffer)) > 0) {
@@ -325,10 +321,6 @@ public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
                 }
                 out.flush();
                 return out.toByteArray();
-            } finally {
-                Closeables.closeQuietly(bain);
-                Closeables.closeQuietly(gzin);
-                Closeables.closeQuietly(out);
             }
         }
 

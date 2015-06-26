@@ -29,7 +29,6 @@ import com.google.inject.throwingproviders.CheckedProvider;
 public interface PaginationProvider extends CheckedProvider<Pagination> {
 
     @Override
-    public Pagination get()
-            throws BadRequestException;
+    Pagination get() throws BadRequestException;
 
 }

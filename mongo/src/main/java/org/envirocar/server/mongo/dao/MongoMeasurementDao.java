@@ -18,6 +18,7 @@ package org.envirocar.server.mongo.dao;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.bson.BSONObject;
@@ -225,48 +226,31 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
     }
 
     List<Key<MongoTrack>> getTrackKeysByBbox(MeasurementFilter filter) {
-        ArrayList<DBObject> filters = new ArrayList<DBObject>(4);
+        ArrayList<DBObject> ops = new ArrayList<>(6);
         if (filter.hasGeometry()) {
-            filters.add(matchGeometry(filter.getGeometry()));
+            ops.add(matchGeometry(filter.getGeometry()));
         }
         if (filter.hasUser()) {
-            filters.add(matchUser(filter.getUser()));
+            ops.add(matchUser(filter.getUser()));
         }
         if (filter.hasTrack()) {
-            filters.add(matchTrack(filter.getTrack()));
+            ops.add(matchTrack(filter.getTrack()));
         }
         if (filter.hasTemporalFilter()) {
-            filters.add(matchTime(filter.getTemporalFilter()));
+            ops.add(matchTime(filter.getTemporalFilter()));
         }
 
-        final AggregationOutput out;
-        if (filters.isEmpty()) {
-            out = aggregate(project(), group());
-        } else {
-            int size = filters.size();
-            if (size == 1) {
-                out = aggregate(filters.get(0), project(), group());
-            } else {
-                DBObject first = filters.get(0);
-                DBObject[] other = new DBObject[size + 1];
-                for (int i = 1; i < size; ++i) {
-                    other[i - 1] = filters.get(i);
-                }
-                other[other.length - 2] = project();
-                other[other.length - 1] = group();
-                out = aggregate(first, other);
-            }
-        }
+        ops.add(project());
+        ops.add(group());
+
+        AggregationOutput out = aggregate(ops);
         return toKeyList(out.results());
     }
 
-    private AggregationOutput aggregate(DBObject firstOp,
-                                        DBObject... additionalOps) {
-        AggregationOutput result = mongoDB.getDatastore()
+    private AggregationOutput aggregate(List<DBObject> ops) {
+        return mongoDB.getDatastore()
                 .getCollection(MongoMeasurement.class)
-                .aggregate(firstOp, additionalOps);
-        result.getCommandResult().throwOnError();
-        return result;
+                .aggregate(ops);
     }
 
     private DBObject matchGeometry(Geometry polygon) {

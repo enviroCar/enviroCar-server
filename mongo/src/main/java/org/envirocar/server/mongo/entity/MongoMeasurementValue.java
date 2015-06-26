@@ -16,12 +16,14 @@
  */
 package org.envirocar.server.mongo.entity;
 
+import java.util.Objects;
+
 import org.envirocar.server.core.entities.MeasurementValue;
 import org.envirocar.server.core.entities.Phenomenon;
 
 import com.github.jmkgreen.morphia.annotations.Embedded;
 import com.github.jmkgreen.morphia.annotations.Property;
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 
 /**
  * TODO JavaDoc
@@ -69,7 +71,7 @@ public class MongoMeasurementValue implements MeasurementValue {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this)
+        return MoreObjects.toStringHelper(this)
                 .add(VALUE, value)
                 .add(PHENOMENON, phenomenon)
                 .toString();
@@ -77,7 +79,7 @@ public class MongoMeasurementValue implements MeasurementValue {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(this.value, this.phenomenon);
+        return Objects.hash(this.value, this.phenomenon);
     }
 
     @Override
@@ -89,7 +91,7 @@ public class MongoMeasurementValue implements MeasurementValue {
             return false;
         }
         final MongoMeasurementValue other = (MongoMeasurementValue) obj;
-        return Objects.equal(this.value, other.value) &&
-               Objects.equal(this.phenomenon, other.phenomenon);
+        return Objects.equals(this.value, other.value) &&
+               Objects.equals(this.phenomenon, other.phenomenon);
     }
 }

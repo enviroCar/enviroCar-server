@@ -18,6 +18,7 @@ package org.envirocar.server.core;
 
 import org.joda.time.DateTime;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 
@@ -69,7 +70,7 @@ public class TemporalFilter {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(TemporalFilter.class)
+        return MoreObjects.toStringHelper(TemporalFilter.class)
                 .add("op", getOperator())
                 .add("begin", getBegin())
                 .add("end", getEnd())

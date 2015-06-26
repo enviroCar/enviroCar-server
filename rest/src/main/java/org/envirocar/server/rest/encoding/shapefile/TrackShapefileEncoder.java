@@ -71,7 +71,7 @@ import com.vividsolutions.jts.geom.Point;
 
 /**
  * TODO: Javadoc
- * 
+ *
  * @author Benjamin Pross
  */
 @Provider
@@ -79,7 +79,7 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder<Track> 
 
 	private static final Logger log = LoggerFactory
             .getLogger(TrackShapefileEncoder.class);
-	
+
 	private SimpleFeatureTypeBuilder typeBuilder;
     private final DataService dataService;
     private CoordinateReferenceSystem crs_wgs84;
@@ -89,7 +89,7 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder<Track> 
 	private Properties properties;
     private static final String PROPERTIES = "/export.properties";
     private static final String DEFAULT_PROPERTIES = "/export.default.properties";
-    
+
     @Inject
 	public TrackShapefileEncoder(DataService dataService){
     	super(Track.class);
@@ -115,7 +115,7 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder<Track> 
         } finally {
             Closeables.closeQuietly(in);
         }
-        
+
 		if (properties != null) {
 			String property = properties
 					.getProperty(shapefileExportThresholdPropertyName);
@@ -124,7 +124,7 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder<Track> 
 			}
 		}
 	}
-	
+
 	@Override
 	public File encodeShapefile(Track t, AccessRights rights,
 			MediaType mediaType) throws TrackTooLongException {
@@ -135,11 +135,11 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder<Track> 
 				Measurements measurements = dataService
 						.getMeasurements(new MeasurementFilter(t));
 				zippedShapeFile = createZippedShapefile(createShapeFile(createFeatureCollection(measurements)));
-			}			
+			}
 		} catch (IOException e) {
 			log.debug(e.getMessage());
-		} 
-		
+		}
+
 		return zippedShapeFile;
 	}
 
@@ -154,13 +154,13 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder<Track> 
 		String idAttributeName = "id";
 		String geometryAttributeName = "geometry";
 		String timeAttributeName = "time";
-		
+
 		SimpleFeatureType sft = null;
 
 		SimpleFeatureBuilder sfb = null;
 
 		typeBuilder = new SimpleFeatureTypeBuilder();
-		
+
 		typeBuilder.setCRS(getCRS_WGS84());
 
 		typeBuilder.setNamespaceURI(namespace);
@@ -169,27 +169,27 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder<Track> 
 
 		typeBuilder.add(geometryAttributeName, Point.class);
 		typeBuilder.add(idAttributeName, String.class);
-		typeBuilder.add(timeAttributeName, String.class);		
-		
+		typeBuilder.add(timeAttributeName, String.class);
+
 		if (sft == null) {
 			sft = buildFeatureType(measurements);
 			sfb = new SimpleFeatureBuilder(sft);
-		}	
-		
+		}
+
         for (Measurement measurement : measurements) {
-        	
+
         	MeasurementValues values = measurement.getValues();
 
 			String id = measurement.getIdentifier();
-			
+
 			sfb.set(idAttributeName, id);
 			sfb.set(timeAttributeName, measurement.getTime().toString());
 			sfb.set(geometryAttributeName, measurement.getGeometry());
-			
+
         	for (MeasurementValue measurementValue : values) {
-				
+
         		Phenomenon phenomenon = measurementValue.getPhenomenon();
-        		
+
 				String value = measurementValue.getValue().toString();
 				String unit = phenomenon.getUnit();
 
@@ -197,7 +197,7 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder<Track> 
 				 * create property name
 				 */
 				String propertyName = getPropertyName(phenomenon.getName(), unit);
-				
+
 				if (sfb != null) {
 					sfb.set(propertyName, value);
 				}
@@ -206,19 +206,19 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder<Track> 
 				simpleFeatureList.add(sfb.buildFeature(id));
 			}
         }
-        return  new ListFeatureCollection(sft, simpleFeatureList);		
+        return  new ListFeatureCollection(sft, simpleFeatureList);
 	}
-	
+
 	private SimpleFeatureType buildFeatureType(Measurements measurements) throws TrackTooLongException {
 
 		Set<String> distinctPhenomenonNames = new HashSet<String>();
-		
+
 		int count = 0;
-		
+
 		for (Measurement measurement : measurements) {
 
 			count++;
-			
+
 			MeasurementValues values = measurement.getValues();
 
 			for (MeasurementValue measurementValue : values) {
@@ -231,12 +231,12 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder<Track> 
 				 * create property name
 				 */
 				String propertyName = getPropertyName(phenomenon.getName(), unit);
-				
+
 				distinctPhenomenonNames.add(propertyName);
 			}
 
 		}
-		
+
 		if(count >= shapeFileExportThreshold){
 			throw new TrackTooLongException(track.getIdentifier(), shapeFileExportThreshold, count);
 		}
@@ -245,29 +245,27 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder<Track> 
 				.iterator();
 
 		while (distinctPhenomenonNamesIterator.hasNext()) {
-			String phenomenonNameAndUnit = (String) distinctPhenomenonNamesIterator
-					.next();
-			typeBuilder.add(phenomenonNameAndUnit,
-					String.class);
+			String phenomenonNameAndUnit = distinctPhenomenonNamesIterator.next();
+			typeBuilder.add(phenomenonNameAndUnit, String.class);
 		}
 
 		return typeBuilder.buildFeatureType();
 	}
 
 	private File createShapeFile(FeatureCollection<SimpleFeatureType, SimpleFeature> collection) throws IOException {
-		
+
 		String shapeFileSuffix = ".shp";
-		
+
 		File tempBaseFile = File.createTempFile("resolveDir", ".tmp");
 		tempBaseFile.deleteOnExit();
 		File parent = tempBaseFile.getParentFile();
-		
+
 		File shpBaseDirectory = new File(parent, UUID.randomUUID().toString());
-		
+
 		if (!shpBaseDirectory.mkdir()) {
 			throw new IllegalStateException("Could not create temporary shp directory.");
 		}
-		
+
 		File tempSHPfile = File.createTempFile("shp", shapeFileSuffix, shpBaseDirectory);
 		tempSHPfile.deleteOnExit();
 		DataStoreFactorySpi dataStoreFactory = new ShapefileDataStoreFactory();
@@ -278,7 +276,7 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder<Track> 
 		ShapefileDataStore newDataStore = (ShapefileDataStore) dataStoreFactory
 				.createNewDataStore(params);
 
-		newDataStore.createSchema((SimpleFeatureType) collection.getSchema());
+		newDataStore.createSchema(collection.getSchema());
 		if(collection.getSchema().getCoordinateReferenceSystem()==null){
 			newDataStore.forceSchemaCRS(getCRS_WGS84());
 		}else{
@@ -308,17 +306,17 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder<Track> 
 		File shx = new File(baseName + ".shx");
 		File dbf = new File(baseName + ".dbf");
 		File prj = new File(baseName + ".prj");
-		
+
 		// mark created files for delete
 		tempSHPfile.deleteOnExit();
 		shx.deleteOnExit();
 		dbf.deleteOnExit();
 		prj.deleteOnExit();
 		shpBaseDirectory.deleteOnExit();
-		
+
 		return shpBaseDirectory;
 	}
-	
+
 	private File createZippedShapefile(File shapeDirectory) throws IOException {
 		if (shapeDirectory != null && shapeDirectory.isDirectory()) {
 			File[] files = shapeDirectory.listFiles();
@@ -327,12 +325,12 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder<Track> 
 
 		return null;
 	}
-	
+
 	private String getPropertyName(String propertyName, String unit){
-		
-		return propertyName + "(" + unit + ")";		
+
+		return propertyName + "(" + unit + ")";
 	}
-	
+
 	private CoordinateReferenceSystem getCRS_WGS84() {
 
 		if (crs_wgs84 == null) {
@@ -347,5 +345,5 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder<Track> 
 		}
 		return crs_wgs84;
 	}
-	
+
 }
