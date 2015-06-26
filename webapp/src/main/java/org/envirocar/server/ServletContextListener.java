@@ -16,7 +16,7 @@
  */
 package org.envirocar.server;
 
-import java.util.logging.Handler;
+import java.util.Arrays;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
@@ -47,10 +47,8 @@ public class ServletContextListener extends GuiceServletContextListener {
 
     protected void configureLogging() {
         Logger rootLogger = LogManager.getLogManager().getLogger("");
-        Handler[] handlers = rootLogger.getHandlers();
-        for (int i = 0; i < handlers.length; i++) {
-            rootLogger.removeHandler(handlers[i]);
-        }
+        Arrays.stream(rootLogger.getHandlers())
+                .forEach(rootLogger::removeHandler);
         SLF4JBridgeHandler.install();
     }
 }

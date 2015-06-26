@@ -28,8 +28,8 @@ import com.github.jmkgreen.morphia.annotations.PrePersist;
 import com.github.jmkgreen.morphia.annotations.Property;
 import com.github.jmkgreen.morphia.annotations.Transient;
 import com.github.jmkgreen.morphia.utils.IndexDirection;
-import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
+import com.google.common.base.MoreObjects;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.inject.Inject;
 
 /**
@@ -98,7 +98,7 @@ public abstract class MongoEntityBase implements BaseEntity {
     }
 
     protected ToStringHelper toStringHelper() {
-        return Objects.toStringHelper(this)
+        return MoreObjects.toStringHelper(this)
                 .omitNullValues()
                 .add(CREATION_DATE, this.creationTime)
                 .add(LAST_MODIFIED, this.modificationTime);

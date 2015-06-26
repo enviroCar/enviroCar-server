@@ -23,10 +23,11 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 
+import org.envirocar.server.mongo.entity.MongoMeasurement;
+
 import com.github.jmkgreen.morphia.Datastore;
 import com.github.jmkgreen.morphia.Key;
 import com.github.jmkgreen.morphia.Morphia;
-import com.github.jmkgreen.morphia.converters.DefaultConverters;
 import com.github.jmkgreen.morphia.converters.TypeConverter;
 import com.github.jmkgreen.morphia.logging.MorphiaLoggerFactory;
 import com.github.jmkgreen.morphia.logging.slf4j.SLF4JLogrImplFactory;
@@ -41,14 +42,11 @@ import com.google.inject.Injector;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import com.mongodb.BasicDBObject;
+import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBCollection;
 import com.mongodb.DBRef;
 import com.mongodb.MongoClient;
 import com.mongodb.ServerAddress;
-
-import org.envirocar.server.mongo.entity.MongoMeasurement;
-
-import com.mongodb.BasicDBObjectBuilder;
 
 /**
  * TODO JavaDoc
@@ -111,16 +109,11 @@ public class MongoDB {
     }
 
     private void addConverters(Set<TypeConverter> converters) {
-        DefaultConverters dc = getMapper().getConverters();
-        for (TypeConverter tc : converters) {
-            dc.addConverter(tc);
-        }
+        converters.forEach(getMapper().getConverters()::addConverter);
     }
 
     private void addMappedClasses(Set<Class<?>> mappedClasses) {
-        for (Class<?> c : mappedClasses) {
-            getMapper().addMappedClass(c);
-        }
+        mappedClasses.forEach(getMapper()::addMappedClass);
     }
 
     /*
@@ -128,8 +121,8 @@ public class MongoDB {
      */
     private void ensureIndexes() {
         DBCollection collection = getDatastore().getCollection(MongoMeasurement.class);
-        collection.ensureIndex(new BasicDBObject(MongoMeasurement.GEOMETRY, "2dsphere"));
-        collection.ensureIndex(new BasicDBObjectBuilder()
+        collection.createIndex(new BasicDBObject(MongoMeasurement.GEOMETRY, "2dsphere"));
+        collection.createIndex(new BasicDBObjectBuilder()
                 .append(MongoMeasurement.GEOMETRY, "2dsphere")
                 .append(MongoMeasurement.TIME, 1)
                 .get());
@@ -152,13 +145,11 @@ public class MongoDB {
         List<Iterable<T>> fetched = Lists.newLinkedList();
         for (String kind : kindMap.keySet()) {
             List<Key<T>> kindKeys = kindMap.get(kind);
-            List<Object> objIds = new ArrayList<Object>(kindKeys.size());
+            List<Object> objIds = new ArrayList<>(kindKeys.size());
             Class<T> kindClass = clazz == null
                                  ? (Class<T>) kindKeys.get(0).getKindClass()
                                  : clazz;
-            for (Key<T> key : kindKeys) {
-                objIds.add(key.getId());
-            }
+            kindKeys.stream().map(Key::getId).forEach(objIds::add);
             fetched.add(getDatastore()
                     .find(kind, kindClass)
                     .disableValidation()
