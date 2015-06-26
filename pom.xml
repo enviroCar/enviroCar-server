@@ -331,12 +331,6 @@
                 <artifactId>apache-jena-libs</artifactId>
                 <version>2.13.0</version>
                 <type>pom</type>
-                <exclusions>
-                    <exclusion>
-                        <groupId>log4j</groupId>
-                        <artifactId>log4j</artifactId>
-                    </exclusion>
-                </exclusions>
             </dependency>
             <dependency>
                 <groupId>commons-codec</groupId>

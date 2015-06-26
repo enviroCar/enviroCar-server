@@ -103,19 +103,19 @@ public class MongoStatisticsDao implements StatisticsDao {
         MongoStatisticKey key = key(request);
         MongoStatistics v = this.dao.get(key);
         if (v == null) {
-            AggregationOutput aggregate = mongoDB.getDatastore()
-                    .getCollection(MongoMeasurement.class)
-                    .aggregate(Arrays.asList(
-                                    matches(request),
-                                    project(),
-                                    unwind(),
-                                    group()));
-            List<MongoStatistic> statistics = parseStatistics(aggregate.results());
+            AggregationOutput aggregate = aggregate(matches(request),
+                                                    project(),
+                                                    unwind(),
+                                                    group());
+            List<MongoStatistic> statistics =
+                    parseStatistics(aggregate.results());
+
             v = new MongoStatistics(key, statistics);
             this.dao.save(v);
         }
         return v;
     }
+
 
     private MongoStatisticKey key(StatisticsFilter request) {
         MongoTrack track = (MongoTrack) request.getTrack();
@@ -124,6 +124,15 @@ public class MongoStatisticsDao implements StatisticsDao {
         return new MongoStatisticKey(mongoDB.key(track),
                                      mongoDB.key(user),
                                      mongoDB.key(sensor));
+    }
+
+    private AggregationOutput aggregate(DBObject firstOp,
+                                        DBObject... additionalOps) {
+        AggregationOutput result = mongoDB.getDatastore()
+                .getCollection(MongoMeasurement.class)
+                .aggregate(firstOp, additionalOps);
+        result.getCommandResult().throwOnError();
+        return result;
     }
 
     private List<MongoStatistic> parseStatistics(Iterable<DBObject> results) {
