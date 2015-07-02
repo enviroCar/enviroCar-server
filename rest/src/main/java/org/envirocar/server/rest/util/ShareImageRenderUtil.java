@@ -22,10 +22,12 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class ShareImageRenderUtil {
 	final String FONT_FILE = "segoeuib.ttf";
-	final String DETAIL1 = "Max Speed";
+	final String DETAIL1 = "Max_Speed";
 	final String DETAIL2 = "Time";
 	final String DETAIL3 = "Consumption";
 
@@ -59,16 +61,15 @@ public class ShareImageRenderUtil {
 		g2d.setPaint(Color.white);
 	    FontMetrics fm = g2d.getFontMetrics();
 		//int y = h - (h / 4) + h / 8 - 20;
-		
-		int x1 = 0 + ((w/3 - fm.stringWidth(DETAIL1)) / 2);
-		int x2 = w/3 + ((w/3 - fm.stringWidth(DETAIL2)) / 2);
-		int x3 = 2*w/3 + ((w/3 - fm.stringWidth(DETAIL3)) / 2);
+	    ResourceBundle bundleDE = ResourceBundle.getBundle("ApplicationMessages", new Locale("de", "DE")); //localize
+		int x1 = 0 + ((w/3 - fm.stringWidth(bundleDE.getString(DETAIL1))) / 2);
+		int x2 = w/3 + ((w/3 - fm.stringWidth(bundleDE.getString(DETAIL2))) / 2);
+		int x3 = 2*w/3 + ((w/3 - fm.stringWidth(bundleDE.getString(DETAIL3))) / 2);
         int y = h - (h / 4) + ((((h / 4) - fm.getHeight()) / 2) + fm.getAscent()) - fm.getHeight()/2;
-
-		//int y = (((3*h/4)-(25 + (h / 4))- fm.getHeight()) / 2) + fm.getAscent(); 
-		g2d.drawString(DETAIL1, x1, y);
-		g2d.drawString(DETAIL2, x2, y);
-		g2d.drawString(DETAIL3, x3, y);
+       //int y = (((3*h/4)-(25 + (h / 4))- fm.getHeight()) / 2) + fm.getAscent(); 
+		g2d.drawString(bundleDE.getString(DETAIL1), x1, y);
+		g2d.drawString(bundleDE.getString(DETAIL2), x2, y);
+		g2d.drawString(bundleDE.getString(DETAIL3), x3, y);
 		g2d.setFont(new Font("Segoe UI", Font.PLAIN, 18));
 		FontMetrics fm2 = g2d.getFontMetrics();
 		int distanceX = 0 + ((w/3 - fm2.stringWidth(distance)) / 2);

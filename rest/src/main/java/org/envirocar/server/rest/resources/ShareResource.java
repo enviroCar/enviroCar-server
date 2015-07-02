@@ -29,7 +29,9 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.MeasurementValue;
@@ -65,7 +67,7 @@ public class ShareResource extends AbstractResource {
 		try {
 			Statistics statistics = null;
 			ShareImageRenderUtil imp = new ShareImageRenderUtil();
-			OSMTileRenderer osm=new OSMTileRenderer();
+			OSMTileRenderer osm=OSMTileRenderer.create();
 			statistics = getStatisticsService().getStatistics(new StatisticsFilter(track));
 			BufferedImage mapImage = null;
 			if(osm.imageExists(track.getIdentifier())){
@@ -82,14 +84,17 @@ public class ShareResource extends AbstractResource {
 			byteArrayOS = new ByteArrayOutputStream();
 			ImageIO.write(renderedImage, "png", byteArrayOS);
 
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (TrackNotFoundException e) {
-			e.printStackTrace();
-		}
-
+		
 		byte[] imageData = byteArrayOS.toByteArray();
 		return Response.ok(imageData).build();
+		} catch (IOException e) {
+			throw new WebApplicationException(e, Status.INTERNAL_SERVER_ERROR);
+		} catch (TrackNotFoundException e) {
+			throw new WebApplicationException(e, Status.INTERNAL_SERVER_ERROR);
+		} catch (NullPointerException e) {
+			throw new WebApplicationException(e, Status.INTERNAL_SERVER_ERROR);
+		} 
+
 	}
 	
 	/*@GET
