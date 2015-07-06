@@ -35,6 +35,7 @@ import javax.imageio.ImageIO;
 
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.MeasurementValue;
+import org.envirocar.server.core.entities.MeasurementValues;
 import org.envirocar.server.core.entities.Measurements;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.exception.TrackNotFoundException;
@@ -72,12 +73,13 @@ public class OSMTileRenderer {
 	public BufferedImage createImage(Measurements measurements)
 			throws IOException {
 		ArrayList<Coordinate> coords = getCoordinates(measurements);
+		HashMap<Coordinate,Color> colors = getColors(measurements);
 		int zoom = getZoomLevel(coords);
 		BufferedImage image = new BufferedImage(256 * (numberOfXTiles + 1),
 				256 * (numberOfYTiles + 1), BufferedImage.TYPE_INT_RGB);
 		Graphics2D g2d = appendImage(image, baseTileX + numberOfXTiles,
 				baseTileX, baseTileY + numberOfYTiles, baseTileY, zoom);
-		drawRoute(g2d, coords, zoom);
+		drawRoute(g2d, coords,colors, zoom);
 		g2d.dispose();
 		return image;
 	}
@@ -124,12 +126,12 @@ public class OSMTileRenderer {
 		return finalZoom;
 	}
 
-	public Graphics2D drawRoute(Graphics2D g2d, ArrayList<Coordinate> coords,
+	public Graphics2D drawRoute(Graphics2D g2d, ArrayList<Coordinate> coords,HashMap<Coordinate,Color> colors,
 			int zoom) {
-		g2d.setPaint(new Color(138, 7, 7));
 		g2d.setStroke(new BasicStroke(3));
 		for (int i = 0; i < coords.size(); i++) {
 			if (i <= (coords.size() - 2)) {
+				g2d.setPaint(colors.get(coords.get(i + 1)));
 				double oldX = coords.get(i).x;
 				double oldY = coords.get(i).y;
 				double newX = coords.get(i + 1).x;
@@ -316,6 +318,42 @@ public class OSMTileRenderer {
 			coords.add(m.getGeometry().getCoordinate());
 		}
 		return coords;
+	}
+	
+	public HashMap<Coordinate,Color> getColors(Measurements measurements) {
+		HashMap<Coordinate,Color> coords = new HashMap<Coordinate,Color>();
+		for (Measurement m : measurements) {
+			for(MeasurementValue mv:m.getValues()){
+				if(mv.getPhenomenon().getName().equals("Speed")){
+					coords.put(m.getGeometry().getCoordinate(),getColorCode(Double.parseDouble(mv.getValue().toString())));
+				}
+			}
+		}
+		return coords;
+	}
+	
+	public Color getColorCode(double speed) {
+		
+		if(speed<=30){
+			return new Color(0, 102, 0);
+		}else if(speed>30 && speed<=50){
+			return new Color(0, 153, 0);
+		}else if(speed>50 && speed<=70){
+			return new Color(0, 204, 0);
+		}else if(speed>70 && speed<=90){
+			return new Color(204, 204, 0);
+		}else if(speed>90 && speed<=110){
+			return new Color(255, 255, 0);
+		}else if(speed>110 && speed<=130){
+			return new Color(255, 128, 0);
+		}else if(speed>130 && speed<=160){
+			return new Color(204, 0, 0);
+		}else if(speed>160){
+			return new Color(255, 0, 0);
+		}else{
+			return new Color(255, 7, 7);
+		}
+		
 	}
 
 	public HashMap<String, String> getDetails(Track track, Statistics statistics)

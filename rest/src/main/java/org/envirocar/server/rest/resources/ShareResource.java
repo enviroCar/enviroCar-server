@@ -116,11 +116,7 @@ public class ShareResource extends AbstractResource {
 		html += "<li>" + track.getIdentifier() + "</li>";
 		html += "<li>" + statistics
 				+ "</li>";
-		for (Statistic m : statistics) {
-			html += "<li>" + m.getPhenomenon().getName() + ":"
-					+  m.getMean() + ":" 
-					+  m.getPhenomenon().getUnit() + ":" 
-					+ "</li>";
+		for (Measurement m : measurements) {
 			for (MeasurementValue mv : m.getValues()) {
 				html += "<li>" + mv.getPhenomenon().getName() + ":"
 						+ mv.getValue() + " " + mv.getPhenomenon().getUnit()

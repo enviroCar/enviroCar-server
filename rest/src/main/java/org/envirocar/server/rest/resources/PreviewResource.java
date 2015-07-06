@@ -27,7 +27,6 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import org.apache.jena.atlas.logging.Log;
 import org.envirocar.server.core.entities.Measurements;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.filter.MeasurementFilter;
