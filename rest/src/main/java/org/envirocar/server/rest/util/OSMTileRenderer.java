@@ -33,6 +33,8 @@ import java.util.HashMap;
 
 import javax.imageio.ImageIO;
 
+import junit.framework.Assert;
+
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.MeasurementValue;
 import org.envirocar.server.core.entities.MeasurementValues;
@@ -47,7 +49,7 @@ import com.vividsolutions.jts.geom.Coordinate;
 
 public class OSMTileRenderer {
 
-	private OSMTileRenderer() {
+	OSMTileRenderer() {
 		super();
 	}
 
@@ -266,12 +268,15 @@ public class OSMTileRenderer {
 				// temp=composite image
 			}
 		}
+		
 		return g2d;
 	}
 
 	public BufferedImage downloadTile(int x, int y, int zoom)
 			throws IOException {
-		String picUri = "http://tile.openstreetmap.org/" + zoom + "/" + x + "/"
+		/*String picUri = "http://tile.openstreetmap.org/" + zoom + "/" + x + "/"
+				+ y + ".png";*/
+		String picUri = "http://otile1.mqcdn.com/tiles/1.0.0/map/" + zoom + "/" + x + "/"
 				+ y + ".png";
 		System.out.println(picUri);
 		URL url = new URL(picUri);

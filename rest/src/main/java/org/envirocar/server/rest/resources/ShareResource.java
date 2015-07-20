@@ -53,6 +53,8 @@ import com.vividsolutions.jts.geom.Coordinate;
 
 public class ShareResource extends AbstractResource {
 	public static final String TRACK = "{track}";
+	public static final String LOCALE = "{locale}";
+
 	private final Track track;
  
     @Inject
@@ -80,7 +82,45 @@ public class ShareResource extends AbstractResource {
 			}
 			HashMap<String, String> hm = osm.getDetails(track,statistics);
 			BufferedImage renderedImage = imp.process(mapImage, hm.get(osm.MAXSPEED),
-					hm.get(osm.TIME), hm.get(osm.CONSUMPTION));
+					hm.get(osm.TIME), hm.get(osm.CONSUMPTION),"EN");
+			byteArrayOS = new ByteArrayOutputStream();
+			ImageIO.write(renderedImage, "png", byteArrayOS);
+
+		
+		byte[] imageData = byteArrayOS.toByteArray();
+		return Response.ok(imageData).build();
+		} catch (IOException e) {
+			throw new WebApplicationException(e, Status.INTERNAL_SERVER_ERROR);
+		} catch (TrackNotFoundException e) {
+			throw new WebApplicationException(e, Status.INTERNAL_SERVER_ERROR);
+		} catch (NullPointerException e) {
+			throw new WebApplicationException(e, Status.INTERNAL_SERVER_ERROR);
+		} 
+
+	}
+	
+	@GET
+	@Path(LOCALE)
+	@Produces(MediaTypes.PNG_IMAGE)
+	public Response getLocalizedShareImage(@PathParam("locale") String locale) {
+		ByteArrayOutputStream byteArrayOS = null;
+		try {
+			Statistics statistics = null;
+			ShareImageRenderUtil imp = new ShareImageRenderUtil();
+			OSMTileRenderer osm=OSMTileRenderer.create();
+			statistics = getStatisticsService().getStatistics(new StatisticsFilter(track));
+			BufferedImage mapImage = null;
+			if(osm.imageExists(track.getIdentifier())){
+				mapImage = osm.loadImage(track.getIdentifier());
+			}else{
+				Measurements measurements = getDataService().getMeasurements(
+						new MeasurementFilter(track));
+				mapImage = osm.createImage(measurements);
+				osm.saveImage(mapImage, track.getIdentifier());
+			}
+			HashMap<String, String> hm = osm.getDetails(track,statistics);
+			BufferedImage renderedImage = imp.process(mapImage, hm.get(osm.MAXSPEED),
+					hm.get(osm.TIME), hm.get(osm.CONSUMPTION),locale);
 			byteArrayOS = new ByteArrayOutputStream();
 			ImageIO.write(renderedImage, "png", byteArrayOS);
 
