@@ -23,7 +23,9 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.ws.rs.GET;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import org.envirocar.server.core.entities.Measurements;
 import org.envirocar.server.core.entities.Track;
@@ -45,8 +47,38 @@ public class PreviewResource extends AbstractResource {
 	@Produces(MediaTypes.PNG_IMAGE)
 	public Response getMapImage() {
 		ByteArrayOutputStream byteArrayOS = null;
+		
 		try {
-			OSMTileRenderer osm=new OSMTileRenderer();
+			OSMTileRenderer osm=OSMTileRenderer.create();
+			BufferedImage renderedImage = null;
+			if(osm.imageExists(track.getIdentifier())){
+				renderedImage = osm.loadImage(track.getIdentifier());
+			}else{
+				Measurements measurements = getDataService().getMeasurements(
+						new MeasurementFilter(track));
+				renderedImage = osm.createImage(measurements);
+				BufferedImage clipImage=osm.clipImage(renderedImage,measurements, 60, 60);
+				renderedImage = clipImage;
+				osm.saveImage(renderedImage, track.getIdentifier());
+			}
+			
+			byteArrayOS = new ByteArrayOutputStream();
+			ImageIO.write(renderedImage, "png", byteArrayOS);
+			byte[] imageData = byteArrayOS.toByteArray();
+			return Response.ok(imageData).build();
+		} catch (IOException e) {
+			throw new WebApplicationException(e, Status.INTERNAL_SERVER_ERROR);
+		}  catch (NullPointerException e) {
+			throw new WebApplicationException(e, Status.INTERNAL_SERVER_ERROR);
+		} 
+	}
+	
+	/*@GET
+	@Produces(MediaTypes.PNG_IMAGE)
+	public Response getMapImage() {
+		ByteArrayOutputStream byteArrayOS = null;
+		try {
+			OSMTileRenderer osm=OSMTileRenderer.create();
 			BufferedImage renderedImage = null;
 			if(osm.imageExists(track.getIdentifier())){
 				renderedImage = osm.loadImage(track.getIdentifier());
@@ -58,11 +90,12 @@ public class PreviewResource extends AbstractResource {
 			}
 			byteArrayOS = new ByteArrayOutputStream();
 			ImageIO.write(renderedImage, "png", byteArrayOS);
-
+			byte[] imageData = byteArrayOS.toByteArray();
+			return Response.ok(imageData).build();
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw new WebApplicationException(e, Status.INTERNAL_SERVER_ERROR);
+		}  catch (NullPointerException e) {
+			throw new WebApplicationException(e, Status.INTERNAL_SERVER_ERROR);
 		} 
-		byte[] imageData = byteArrayOS.toByteArray();
-		return Response.ok(imageData).build();
-	}
+	}*/
 }

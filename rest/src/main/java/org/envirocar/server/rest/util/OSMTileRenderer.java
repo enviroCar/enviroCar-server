@@ -22,6 +22,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -32,8 +33,11 @@ import java.util.HashMap;
 
 import javax.imageio.ImageIO;
 
+
+
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.MeasurementValue;
+import org.envirocar.server.core.entities.MeasurementValues;
 import org.envirocar.server.core.entities.Measurements;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.exception.TrackNotFoundException;
@@ -44,6 +48,15 @@ import org.joda.time.DateTime;
 import com.vividsolutions.jts.geom.Coordinate;
 
 public class OSMTileRenderer {
+
+	OSMTileRenderer() {
+		super();
+	}
+
+	public static OSMTileRenderer create() {
+		return new OSMTileRenderer();
+	}
+
 	final static String saveFileDir = "/var/data/envirocar/previews";//"/tmp/envirocar/previews";//
 	public static final String TIME = "time";
 	public static final String MAXSPEED = "maxspeed";
@@ -59,14 +72,16 @@ public class OSMTileRenderer {
 	int baseTileX = 0;
 	int baseTileY = 0;
 
-	public BufferedImage createImage(Measurements measurements) throws IOException{
+	public BufferedImage createImage(Measurements measurements)
+			throws IOException {
 		ArrayList<Coordinate> coords = getCoordinates(measurements);
+		HashMap<Coordinate,Color> colors = getColors(measurements);
 		int zoom = getZoomLevel(coords);
 		BufferedImage image = new BufferedImage(256 * (numberOfXTiles + 1),
 				256 * (numberOfYTiles + 1), BufferedImage.TYPE_INT_RGB);
-		Graphics2D g2d = appendImage(image, baseTileX + numberOfXTiles, baseTileX,
-				baseTileY + numberOfYTiles, baseTileY, zoom);
-		drawRoute(g2d, coords, zoom);
+		Graphics2D g2d = appendImage(image, baseTileX + numberOfXTiles,
+				baseTileX, baseTileY + numberOfYTiles, baseTileY, zoom);
+		drawRoute(g2d, coords,colors, zoom);
 		g2d.dispose();
 		return image;
 	}
@@ -114,12 +129,12 @@ public class OSMTileRenderer {
 		return finalZoom;
 	}
 
-	public Graphics2D drawRoute(Graphics2D g2d, ArrayList<Coordinate> coords,
+	public Graphics2D drawRoute(Graphics2D g2d, ArrayList<Coordinate> coords,HashMap<Coordinate,Color> colors,
 			int zoom) {
-		g2d.setPaint(new Color(138, 7, 7));
 		g2d.setStroke(new BasicStroke(3));
 		for (int i = 0; i < coords.size(); i++) {
 			if (i <= (coords.size() - 2)) {
+				g2d.setPaint(colors.get(coords.get(i + 1)));
 				double oldX = coords.get(i).x;
 				double oldY = coords.get(i).y;
 				double newX = coords.get(i + 1).x;
@@ -259,7 +274,9 @@ public class OSMTileRenderer {
 
 	public BufferedImage downloadTile(int x, int y, int zoom)
 			throws IOException {
-		String picUri = "http://tile.openstreetmap.org/" + zoom + "/" + x + "/"
+		/*String picUri = "http://tile.openstreetmap.org/" + zoom + "/" + x + "/"
+				+ y + ".png";*/
+		String picUri = "http://otile1.mqcdn.com/tiles/1.0.0/map/" + zoom + "/" + x + "/"
 				+ y + ".png";
 		System.out.println(picUri);
 		URL url = new URL(picUri);
@@ -268,24 +285,27 @@ public class OSMTileRenderer {
 		return image;
 	}
 
-	public synchronized BufferedImage loadImage(String trackId) throws IOException {
-		String filePath =new StringBuilder(saveFileDir).append(File.separator).append(trackId).append(".png").toString();
+	public synchronized BufferedImage loadImage(String trackId)
+			throws IOException {
+		String filePath = new StringBuilder(saveFileDir).append(File.separator)
+				.append(trackId).append(".png").toString();
 		File f = new File(filePath);
 		return ImageIO.read(f);
 	}
 	
 	public synchronized void saveImage(BufferedImage image, String trackId)
 			throws IOException {
-		String filePath = new StringBuilder(saveFileDir).append(File.separator).append(trackId).append(".png").toString();
+		String filePath = new StringBuilder(saveFileDir).append(File.separator)
+				.append(trackId).append(".png").toString();
 		File f = new File(filePath);
 		if (!f.exists()) {
 			ImageIO.write(image, "PNG", f);
 		}
 	}
 	
-	public synchronized boolean imageExists(String trackId)
-			throws IOException {
-		String filePath = new StringBuilder(saveFileDir).append(File.separator).append(trackId).append(".png").toString();
+	public synchronized boolean imageExists(String trackId) throws IOException {
+		String filePath = new StringBuilder(saveFileDir).append(File.separator)
+				.append(trackId).append(".png").toString();
 		System.out.println(filePath);
 		File f = new File(filePath);
 		if (f.exists()) {
@@ -305,6 +325,42 @@ public class OSMTileRenderer {
 		return coords;
 	}
 	
+	public HashMap<Coordinate,Color> getColors(Measurements measurements) {
+		HashMap<Coordinate,Color> coords = new HashMap<Coordinate,Color>();
+		for (Measurement m : measurements) {
+			for(MeasurementValue mv:m.getValues()){
+				if(mv.getPhenomenon().getName().equals("Speed")){
+					coords.put(m.getGeometry().getCoordinate(),getColorCode(Double.parseDouble(mv.getValue().toString())));
+				}
+			}
+		}
+		return coords;
+	}
+	
+	public Color getColorCode(double speed) {
+		
+		if(speed<=30){
+			return new Color(0, 102, 0);
+		}else if(speed>30 && speed<=50){
+			return new Color(0, 153, 0);
+		}else if(speed>50 && speed<=70){
+			return new Color(0, 204, 0);
+		}else if(speed>70 && speed<=90){
+			return new Color(204, 204, 0);
+		}else if(speed>90 && speed<=110){
+			return new Color(255, 255, 0);
+		}else if(speed>110 && speed<=130){
+			return new Color(255, 128, 0);
+		}else if(speed>130 && speed<=160){
+			return new Color(204, 0, 0);
+		}else if(speed>160){
+			return new Color(255, 0, 0);
+		}else{
+			return new Color(255, 7, 7);
+		}
+		
+	}
+
 	public HashMap<String, String> getDetails(Track track,Statistics statistics)
 			throws TrackNotFoundException {
 		HashMap<String, String> hm = new HashMap<String, String>();
@@ -320,20 +376,70 @@ public class OSMTileRenderer {
 
 		for (Statistic statistic : statistics) {
 			if(statistic.getPhenomenon().getName().equalsIgnoreCase("Speed")){ 
-				hm.put(MAXSPEED, new StringBuilder(Math.round(statistic.getMax()*100.0)/100.0+"").append(" ").append(statistic.getPhenomenon().getUnit()).toString());
-				hm.put(AVGSPEED, new StringBuilder(Math.round(statistic.getMean()*100.0)/100.0+"").append(" ").append(statistic.getPhenomenon().getUnit()).toString());
-			}if(statistic.getPhenomenon().getName().equalsIgnoreCase("Calculated MAF")){ 
-				hm.put(CMAF, new StringBuilder(Math.round(statistic.getMean()*100.0)/100.0+"").append(" ").append(statistic.getPhenomenon().getUnit()).toString());
-			}if(statistic.getPhenomenon().getName().equalsIgnoreCase("Rpm")){ 
-				hm.put(AVGRPM, new StringBuilder(Math.round(statistic.getMean()*100.0)/100.0+"").append(" ").append(statistic.getPhenomenon().getUnit()).toString());
-			}if(statistic.getPhenomenon().getName().equalsIgnoreCase("Intake Temperature")){ 
-				hm.put(IPRESSURE, new StringBuilder(Math.round(statistic.getMean()*100.0)/100.0+"").append(" ").append(statistic.getPhenomenon().getUnit()).toString());
-			}if(statistic.getPhenomenon().getName().equalsIgnoreCase("Intake Pressure")){ 
-				hm.put(ITEMP, new StringBuilder(Math.round(statistic.getMean()*100.0)/100.0+"").append(" ").append(statistic.getPhenomenon().getUnit()).toString());
-			}if(statistic.getPhenomenon().getName().equalsIgnoreCase(CONSUMPTION)){ 
-				hm.put(CONSUMPTION, new StringBuilder(Math.round(statistic.getMean()*100.0)/100.0+"").append(" ").append(statistic.getPhenomenon().getUnit()).toString());
-			}if(statistic.getPhenomenon().getName().equalsIgnoreCase(CO2)){ 
-				hm.put(CO2, new StringBuilder(Math.round(statistic.getMean()*100.0)/100.0+"").append(" ").append(statistic.getPhenomenon().getUnit()).toString());
+				hm.put(MAXSPEED,
+						new StringBuilder(
+								Math.round(statistic.getMax() * 100.0) / 100.0
+										+ "").append(" ")
+								.append(statistic.getPhenomenon().getUnit())
+								.toString());
+				hm.put(AVGSPEED,
+						new StringBuilder(
+								Math.round(statistic.getMean() * 100.0) / 100.0
+										+ "").append(" ")
+								.append(statistic.getPhenomenon().getUnit())
+								.toString());
+			}
+			if (statistic.getPhenomenon().getName()
+					.equalsIgnoreCase("Calculated MAF")) {
+				hm.put(CMAF,
+						new StringBuilder(
+								Math.round(statistic.getMean() * 100.0) / 100.0
+										+ "").append(" ")
+								.append(statistic.getPhenomenon().getUnit())
+								.toString());
+			}
+			if (statistic.getPhenomenon().getName().equalsIgnoreCase("Rpm")) {
+				hm.put(AVGRPM,
+						new StringBuilder(
+								Math.round(statistic.getMean() * 100.0) / 100.0
+										+ "").append(" ")
+								.append(statistic.getPhenomenon().getUnit())
+								.toString());
+			}
+			if (statistic.getPhenomenon().getName()
+					.equalsIgnoreCase("Intake Temperature")) {
+				hm.put(IPRESSURE,
+						new StringBuilder(
+								Math.round(statistic.getMean() * 100.0) / 100.0
+										+ "").append(" ")
+								.append(statistic.getPhenomenon().getUnit())
+								.toString());
+			}
+			if (statistic.getPhenomenon().getName()
+					.equalsIgnoreCase("Intake Pressure")) {
+				hm.put(ITEMP,
+						new StringBuilder(
+								Math.round(statistic.getMean() * 100.0) / 100.0
+										+ "").append(" ")
+								.append(statistic.getPhenomenon().getUnit())
+								.toString());
+			}
+			if (statistic.getPhenomenon().getName()
+					.equalsIgnoreCase(CONSUMPTION)) {
+				hm.put(CONSUMPTION,
+						new StringBuilder(
+								Math.round(statistic.getMean() * 100.0) / 100.0
+										+ "").append(" ")
+								.append(statistic.getPhenomenon().getUnit())
+								.toString());
+			}
+			if (statistic.getPhenomenon().getName().equalsIgnoreCase(CO2)) {
+				hm.put(CO2,
+						new StringBuilder(
+								Math.round(statistic.getMean() * 100.0) / 100.0
+										+ "").append(" ")
+								.append(statistic.getPhenomenon().getUnit())
+								.toString());
 			}
 			
 		}
@@ -387,6 +493,24 @@ public class OSMTileRenderer {
 		return (rad * 180 / Math.PI);
 	}
 
+	public BufferedImage clipImage(BufferedImage image,Measurements measurements,int requiredwidth,int requiredHeight) {
+		ArrayList<Coordinate> coords = getCoordinates(measurements);
+		int zoom = getZoomLevel(coords);
+		BoundingBox bbox = findBoundingBoxForGivenLocations(coords);
+		int clipWidth = getX(bbox.west,zoom,256)-getX(bbox.east,zoom,256);
+		int clipHeight = getY(bbox.south,zoom,256)-getY(bbox.north,zoom,256);
+		int x=getX(bbox.east,zoom,256);
+		int y=getY(bbox.north,zoom,256);
+		BufferedImage dbi = image.getSubimage(x, y, clipWidth, clipHeight);
+		/*System.out.println(x+" : "+clipWidth);
+		System.out.println(y+" : "+clipHeight);
+		Graphics2D g2d=dbi.createGraphics();
+		g2d.setClip(new Rectangle(x, y, clipWidth, clipHeight));
+		g2d.clipRect(x, y, clipWidth, clipHeight);
+		AffineTransform at = AffineTransform.getScaleInstance(clipWidth,clipHeight);
+        g2d.drawImage(image,0, 0, clipWidth, clipHeight,null);*/
+		return dbi; 
+	}
 }
 
 class BoundingBox {
