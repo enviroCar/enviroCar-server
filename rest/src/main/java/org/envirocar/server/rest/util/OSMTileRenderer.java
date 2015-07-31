@@ -19,10 +19,7 @@ package org.envirocar.server.rest.util;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -30,16 +27,12 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.ResourceBundle;
 
 import javax.imageio.ImageIO;
 
-import junit.framework.Assert;
-
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.MeasurementValue;
-import org.envirocar.server.core.entities.MeasurementValues;
 import org.envirocar.server.core.entities.Measurements;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.exception.TrackNotFoundException;
@@ -512,6 +505,7 @@ public class OSMTileRenderer {
 				- getY(bbox.north, zoom, 256);
 		int x = getX(bbox.east, zoom, 256);
 		int y = getY(bbox.north, zoom, 256);
+		
 		BufferedImage dbi = image.getSubimage(x, y, clipWidth, clipHeight);
 		/*
 		 * System.out.println(x+" : "+clipWidth);
@@ -522,6 +516,28 @@ public class OSMTileRenderer {
 		 * AffineTransform.getScaleInstance(clipWidth,clipHeight);
 		 * g2d.drawImage(image,0, 0, clipWidth, clipHeight,null);
 		 */
+		return dbi;
+	}
+	
+	public Coordinate findBoundingBoxCenter(BoundingBox bbox) {
+		double x = (bbox.west+bbox.east)/2;	
+		double y = (bbox.north+bbox.south)/2;	
+		return new Coordinate(x,y);
+	}
+	
+	public BufferedImage addPaddingTiles(BufferedImage image,
+			Measurements measurements, int requiredwidth, int requiredHeight) {
+		ArrayList<Coordinate> coords = getCoordinates(measurements);
+		int zoom = getZoomLevel(coords);
+		BoundingBox bbox = findBoundingBoxForGivenLocations(coords);
+		Coordinate center = findBoundingBoxCenter(bbox);
+		
+		int clipWidth = getX(bbox.west, zoom, 256) - getX(bbox.east, zoom, 256);
+		int clipHeight = getY(bbox.south, zoom, 256)
+				- getY(bbox.north, zoom, 256);
+		int x = getX(bbox.east, zoom, 256);
+		int y = getY(bbox.north, zoom, 256);
+		BufferedImage dbi = image.getSubimage(x, y, clipWidth, clipHeight);
 		return dbi;
 	}
 }
