@@ -9,6 +9,7 @@ import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import org.envirocar.server.rest.schema.GuiceRunner;
@@ -38,9 +39,11 @@ public class OSMTileRendererTests {
 
 	@Test
 	public void zoomLevelRangeTest() throws IOException {
-		int level = osmt.getZoomLevel(populateCoordinates());
-		assertTrue("Zoom level exceeds limit", 19 >= level);
-		assertTrue("Zoom level lower than limit", 0 <= level);
+		ArrayList<Coordinate> coords = new ArrayList<Coordinate>();
+		coords.add(new Coordinate(89.9,179.9));
+		coords.add(new Coordinate(-89.9,-179.9));
+		int level = osmt.getZoomLevel(coords);
+		assertTrue("Zoom level exceeds limit", 2 == level);
 	}
 
 	@Test
@@ -95,10 +98,10 @@ public class OSMTileRendererTests {
 	public void bBox() throws IOException {
 		BoundingBox bbox = osmt
 				.findBoundingBoxForGivenLocations(populateCoordinates());
-		assertTrue(bbox.east == 7.651712168008089);
-		assertTrue(bbox.west == 7.653740337118506);
-		assertTrue(bbox.north == 51.93612792994827);
-		assertTrue(bbox.south == 51.934406915679574);
+		assertTrue(decimalRound(bbox.east) == decimalRound(7.651712168008089));
+		assertTrue(decimalRound(bbox.west) == decimalRound(7.653740337118506));
+		assertTrue(decimalRound(bbox.north) == decimalRound(51.93612792994827));
+		assertTrue(decimalRound(bbox.south) == decimalRound(51.934406915679574));
 	}
 	
 	@Test
@@ -107,10 +110,16 @@ public class OSMTileRendererTests {
 		int yTile=0;
 		int zoom = 19;
 		BoundingBox bbox=osmt.tile2boundingBox(xTile,yTile,zoom);
-		assertTrue(bbox.east == -179.9993133544922);
-		assertTrue(bbox.west == -180.0);
-		assertTrue(bbox.north == 85.05112877980659);
-		assertTrue(bbox.south == 85.05106954478461);
+		assertTrue(decimalRound(bbox.east) == decimalRound(-179.9993133544922));
+		assertTrue(decimalRound(bbox.west) == decimalRound(-180.0));
+		assertTrue(decimalRound(bbox.north) == decimalRound(85.05112877980659));
+		assertTrue(decimalRound(bbox.south) == decimalRound(85.05106954478461));
+	}
+	
+	public double decimalRound(double input) throws IOException {
+		DecimalFormat f = new DecimalFormat("##.000000");
+		double output = Double.parseDouble(f.format(input));
+		return output;
 	}
 	
 	private ArrayList<Coordinate> populateCoordinates() throws IOException {

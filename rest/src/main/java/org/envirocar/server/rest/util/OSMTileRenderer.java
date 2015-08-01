@@ -59,6 +59,7 @@ public class OSMTileRenderer {
 	int numberOfYTiles = 0;
 	int baseTileX = 0;
 	int baseTileY = 0;
+	int imagePadding = 1;
 
 	OSMTileRenderer() {
 		super();
@@ -75,11 +76,11 @@ public class OSMTileRenderer {
 		ArrayList<Coordinate> coords = getCoordinates(measurements);
 		HashMap<Coordinate, Color> colors = getColors(measurements);
 		int zoom = getZoomLevel(coords);
-		BufferedImage image = new BufferedImage(256 * (numberOfXTiles + 1),
-				256 * (numberOfYTiles + 1), BufferedImage.TYPE_INT_RGB);
+		BufferedImage image = new BufferedImage(256 * (numberOfXTiles + 3),
+				256 * (numberOfYTiles + 3), BufferedImage.TYPE_INT_RGB);
 		Graphics2D g2d = appendImage(image, baseTileX + numberOfXTiles,
 				baseTileX, baseTileY + numberOfYTiles, baseTileY, zoom);
-		drawRoute(g2d, coords, colors, zoom);
+		drawRoute(g2d, coords, colors, zoom,imagePadding);
 		g2d.dispose();
 		return image;
 	}
@@ -127,7 +128,7 @@ public class OSMTileRenderer {
 	}
 
 	public Graphics2D drawRoute(Graphics2D g2d, ArrayList<Coordinate> coords,
-			HashMap<Coordinate, Color> colors, int zoom) {
+			HashMap<Coordinate, Color> colors, int zoom,int padding) {
 		g2d.setStroke(new BasicStroke(3));
 		for (int i = 0; i < coords.size(); i++) {
 			if (i <= (coords.size() - 2)) {
@@ -136,8 +137,8 @@ public class OSMTileRenderer {
 				double oldY = coords.get(i).y;
 				double newX = coords.get(i + 1).x;
 				double newY = coords.get(i + 1).y;
-				g2d.drawLine(getX(oldX, zoom, 256), getY(oldY, zoom, 256),
-						getX(newX, zoom, 256), getY(newY, zoom, 256));
+				g2d.drawLine(getX(oldX, zoom, 256)+256*padding, getY(oldY, zoom, 256)+256*padding,
+						getX(newX, zoom, 256)+256*padding, getY(newY, zoom, 256)+256*padding);
 				System.out.println();
 			}
 		}
@@ -251,6 +252,11 @@ public class OSMTileRenderer {
 	public Graphics2D appendImage(BufferedImage newTile, int highestX,
 			int lowestX, int highestY, int lowestY, int zoom)
 			throws IOException {
+		//generalize
+		highestX = lowestX+2;
+		highestY = lowestY+1;
+		lowestX--;highestX++;lowestY--;highestY++;
+		//
 		Graphics2D g2d = newTile.createGraphics();
 		System.out.println(lowestX + " : " + lowestY + " : " + highestX + " : "
 				+ highestY);
@@ -496,17 +502,31 @@ public class OSMTileRenderer {
 	}
 
 	public BufferedImage clipImage(BufferedImage image,
-			Measurements measurements, int requiredwidth, int requiredHeight) {
+			Measurements measurements, int requiredwidth, int requiredHeight,int padding) {
 		ArrayList<Coordinate> coords = getCoordinates(measurements);
 		int zoom = getZoomLevel(coords);
 		BoundingBox bbox = findBoundingBoxForGivenLocations(coords);
-		int clipWidth = getX(bbox.west, zoom, 256) - getX(bbox.east, zoom, 256);
-		int clipHeight = getY(bbox.south, zoom, 256)
-				- getY(bbox.north, zoom, 256);
-		int x = getX(bbox.east, zoom, 256);
-		int y = getY(bbox.north, zoom, 256);
-		
-		BufferedImage dbi = image.getSubimage(x, y, clipWidth, clipHeight);
+		Coordinate center = findBoundingBoxCenter(bbox);
+		int clipWidth = getX(bbox.west, zoom, 256)+256*padding - (getX(bbox.east, zoom, 256)+256*padding);
+		int clipHeight = getY(bbox.south, zoom, 256)+256*padding
+				- (getY(bbox.north, zoom, 256)+256*padding);
+		int x = getX(bbox.east, zoom, 256)+256*padding;
+		int y = getY(bbox.north, zoom, 256)+256*padding;
+		int newx = (x+clipWidth/2)-requiredwidth/2;
+		int newy = (y+clipHeight/2)-requiredHeight/2;
+		// bound adjustments
+		if(newx<=0){newx = 0;}
+		if(newy<=0){newy = 0;}
+		if(newx+requiredwidth>=image.getWidth()){newx = image.getWidth()-requiredwidth;}
+		if(newy+requiredHeight>=image.getHeight()){newy = image.getHeight()-requiredHeight;}
+		//
+		System.out.println("x : "+x);
+		System.out.println("y : "+y);
+		System.out.println("clipWidth : "+clipWidth);
+		System.out.println("clipHeight : "+clipHeight);
+		System.out.println("newx : "+newx);
+		System.out.println("newy : "+newy);
+		BufferedImage dbi = image.getSubimage(newx, newy, requiredwidth, requiredHeight);
 		/*
 		 * System.out.println(x+" : "+clipWidth);
 		 * System.out.println(y+" : "+clipHeight); Graphics2D
@@ -525,13 +545,28 @@ public class OSMTileRenderer {
 		return new Coordinate(x,y);
 	}
 	
+	public Coordinate getSubImage(int centerX,int centerY,int x,int y,int subx,int suby) {
+		if((centerX-(subx/2))>=x/2 && (centerY-(suby/2))>=y/2){
+			return new Coordinate(0,0);
+		}else if((centerX-(subx/2))>=x/2 && (centerY-(suby/2))<y/2){
+			return new Coordinate(0,0);
+		}else if((centerX-(subx/2))>=x/2 && (centerY-(suby/2))>=y/2){
+			return new Coordinate(0,0);
+		}else if((centerX-(subx/2))>=x/2 && (centerY-(suby/2))>=y/2){
+			return new Coordinate(0,0);
+		}else{
+			return new Coordinate(0,0);
+		}
+			
+		
+	}
+	
 	public BufferedImage addPaddingTiles(BufferedImage image,
 			Measurements measurements, int requiredwidth, int requiredHeight) {
 		ArrayList<Coordinate> coords = getCoordinates(measurements);
 		int zoom = getZoomLevel(coords);
 		BoundingBox bbox = findBoundingBoxForGivenLocations(coords);
 		Coordinate center = findBoundingBoxCenter(bbox);
-		
 		int clipWidth = getX(bbox.west, zoom, 256) - getX(bbox.east, zoom, 256);
 		int clipHeight = getY(bbox.south, zoom, 256)
 				- getY(bbox.north, zoom, 256);
