@@ -19,10 +19,7 @@ package org.envirocar.server.rest.util;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -30,14 +27,12 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.ResourceBundle;
 
 import javax.imageio.ImageIO;
 
-
-
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.MeasurementValue;
-import org.envirocar.server.core.entities.MeasurementValues;
 import org.envirocar.server.core.entities.Measurements;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.exception.TrackNotFoundException;
@@ -49,16 +44,9 @@ import com.vividsolutions.jts.geom.Coordinate;
 
 public class OSMTileRenderer {
 
-	OSMTileRenderer() {
-		super();
-	}
-
-	public static OSMTileRenderer create() {
-		return new OSMTileRenderer();
-	}
-
-	final static String saveFileDir = "/var/data/envirocar/previews";//"/tmp/envirocar/previews";//
+	private String saveFileDir;// "/tmp/envirocar/previews";//
 	public static final String TIME = "time";
+	private ResourceBundle config;
 	public static final String MAXSPEED = "maxspeed";
 	public static final String AVGSPEED = "avgspeed";
 	public static final String CMAF = "Calculated MAF";
@@ -71,24 +59,34 @@ public class OSMTileRenderer {
 	int numberOfYTiles = 0;
 	int baseTileX = 0;
 	int baseTileY = 0;
+	int imagePadding = 1;
+
+	OSMTileRenderer() {
+		super();
+		config = ResourceBundle.getBundle("OSMConfig");
+		saveFileDir = config.getString("tile_save_location");
+	}
+
+	public static OSMTileRenderer create() {
+		return new OSMTileRenderer();
+	}
 
 	public BufferedImage createImage(Measurements measurements)
 			throws IOException {
 		ArrayList<Coordinate> coords = getCoordinates(measurements);
-		HashMap<Coordinate,Color> colors = getColors(measurements);
+		HashMap<Coordinate, Color> colors = getColors(measurements);
 		int zoom = getZoomLevel(coords);
-		BufferedImage image = new BufferedImage(256 * (numberOfXTiles + 1),
-				256 * (numberOfYTiles + 1), BufferedImage.TYPE_INT_RGB);
+		BufferedImage image = new BufferedImage(256 * (numberOfXTiles + 3),
+				256 * (numberOfYTiles + 3), BufferedImage.TYPE_INT_RGB);
 		Graphics2D g2d = appendImage(image, baseTileX + numberOfXTiles,
 				baseTileX, baseTileY + numberOfYTiles, baseTileY, zoom);
-		drawRoute(g2d, coords,colors, zoom);
+		drawRoute(g2d, coords, colors, zoom,imagePadding);
 		g2d.dispose();
 		return image;
 	}
 
 	public int getZoomLevel(ArrayList<Coordinate> coords) {
 		BoundingBox bbox = findBoundingBoxForGivenLocations(coords);
-
 		int leastZoomLevelX = 1;
 		int leastZoomLevelY = 1;
 		int finalZoom = 1;
@@ -129,8 +127,8 @@ public class OSMTileRenderer {
 		return finalZoom;
 	}
 
-	public Graphics2D drawRoute(Graphics2D g2d, ArrayList<Coordinate> coords,HashMap<Coordinate,Color> colors,
-			int zoom) {
+	public Graphics2D drawRoute(Graphics2D g2d, ArrayList<Coordinate> coords,
+			HashMap<Coordinate, Color> colors, int zoom,int padding) {
 		g2d.setStroke(new BasicStroke(3));
 		for (int i = 0; i < coords.size(); i++) {
 			if (i <= (coords.size() - 2)) {
@@ -139,8 +137,8 @@ public class OSMTileRenderer {
 				double oldY = coords.get(i).y;
 				double newX = coords.get(i + 1).x;
 				double newY = coords.get(i + 1).y;
-				g2d.drawLine(getX(oldX, zoom, 256), getY(oldY, zoom, 256),
-						getX(newX, zoom, 256), getY(newY, zoom, 256));
+				g2d.drawLine(getX(oldX, zoom, 256)+256*padding, getY(oldY, zoom, 256)+256*padding,
+						getX(newX, zoom, 256)+256*padding, getY(newY, zoom, 256)+256*padding);
 				System.out.println();
 			}
 		}
@@ -254,6 +252,11 @@ public class OSMTileRenderer {
 	public Graphics2D appendImage(BufferedImage newTile, int highestX,
 			int lowestX, int highestY, int lowestY, int zoom)
 			throws IOException {
+		//generalize
+		highestX = lowestX+2;
+		highestY = lowestY+1;
+		lowestX--;highestX++;lowestY--;highestY++;
+		//
 		Graphics2D g2d = newTile.createGraphics();
 		System.out.println(lowestX + " : " + lowestY + " : " + highestX + " : "
 				+ highestY);
@@ -269,15 +272,18 @@ public class OSMTileRenderer {
 				// temp=composite image
 			}
 		}
+
 		return g2d;
 	}
 
 	public BufferedImage downloadTile(int x, int y, int zoom)
 			throws IOException {
-		/*String picUri = "http://tile.openstreetmap.org/" + zoom + "/" + x + "/"
-				+ y + ".png";*/
-		String picUri = "http://otile1.mqcdn.com/tiles/1.0.0/map/" + zoom + "/" + x + "/"
-				+ y + ".png";
+		/*
+		 * String picUri = "http://tile.openstreetmap.org/" + zoom + "/" + x +
+		 * "/" + y + ".png";
+		 */
+		String picUri = "http://otile1.mqcdn.com/tiles/1.0.0/map/" + zoom + "/"
+				+ x + "/" + y + ".png";
 		System.out.println(picUri);
 		URL url = new URL(picUri);
 		InputStream is = url.openStream();
@@ -292,7 +298,7 @@ public class OSMTileRenderer {
 		File f = new File(filePath);
 		return ImageIO.read(f);
 	}
-	
+
 	public synchronized void saveImage(BufferedImage image, String trackId)
 			throws IOException {
 		String filePath = new StringBuilder(saveFileDir).append(File.separator)
@@ -302,7 +308,7 @@ public class OSMTileRenderer {
 			ImageIO.write(image, "PNG", f);
 		}
 	}
-	
+
 	public synchronized boolean imageExists(String trackId) throws IOException {
 		String filePath = new StringBuilder(saveFileDir).append(File.separator)
 				.append(trackId).append(".png").toString();
@@ -310,7 +316,7 @@ public class OSMTileRenderer {
 		File f = new File(filePath);
 		if (f.exists()) {
 			return true;
-		}else{
+		} else {
 			return false;
 		}
 	}
@@ -324,44 +330,46 @@ public class OSMTileRenderer {
 		}
 		return coords;
 	}
-	
-	public HashMap<Coordinate,Color> getColors(Measurements measurements) {
-		HashMap<Coordinate,Color> coords = new HashMap<Coordinate,Color>();
+
+	public HashMap<Coordinate, Color> getColors(Measurements measurements) {
+		HashMap<Coordinate, Color> coords = new HashMap<Coordinate, Color>();
 		for (Measurement m : measurements) {
-			for(MeasurementValue mv:m.getValues()){
-				if(mv.getPhenomenon().getName().equals("Speed")){
-					coords.put(m.getGeometry().getCoordinate(),getColorCode(Double.parseDouble(mv.getValue().toString())));
+			for (MeasurementValue mv : m.getValues()) {
+				if (mv.getPhenomenon().getName().equals("Speed")) {
+					coords.put(m.getGeometry().getCoordinate(),
+							getColorCode(Double.parseDouble(mv.getValue()
+									.toString())));
 				}
 			}
 		}
 		return coords;
 	}
-	
+
 	public Color getColorCode(double speed) {
-		
-		if(speed<=30){
+
+		if (speed <= 30) {
 			return new Color(0, 102, 0);
-		}else if(speed>30 && speed<=50){
+		} else if (speed > 30 && speed <= 50) {
 			return new Color(0, 153, 0);
-		}else if(speed>50 && speed<=70){
+		} else if (speed > 50 && speed <= 70) {
 			return new Color(0, 204, 0);
-		}else if(speed>70 && speed<=90){
+		} else if (speed > 70 && speed <= 90) {
 			return new Color(204, 204, 0);
-		}else if(speed>90 && speed<=110){
+		} else if (speed > 90 && speed <= 110) {
 			return new Color(255, 255, 0);
-		}else if(speed>110 && speed<=130){
+		} else if (speed > 110 && speed <= 130) {
 			return new Color(255, 128, 0);
-		}else if(speed>130 && speed<=160){
+		} else if (speed > 130 && speed <= 160) {
 			return new Color(204, 0, 0);
-		}else if(speed>160){
+		} else if (speed > 160) {
 			return new Color(255, 0, 0);
-		}else{
+		} else {
 			return new Color(255, 7, 7);
 		}
-		
+
 	}
 
-	public HashMap<String, String> getDetails(Track track,Statistics statistics)
+	public HashMap<String, String> getDetails(Track track, Statistics statistics)
 			throws TrackNotFoundException {
 		HashMap<String, String> hm = new HashMap<String, String>();
 		hm.put(TIME, calculateTime(track.getBegin(), track.getEnd()));
@@ -375,7 +383,7 @@ public class OSMTileRenderer {
 		hm.put(CO2, new StringBuilder("N/A").toString());
 
 		for (Statistic statistic : statistics) {
-			if(statistic.getPhenomenon().getName().equalsIgnoreCase("Speed")){ 
+			if (statistic.getPhenomenon().getName().equalsIgnoreCase("Speed")) {
 				hm.put(MAXSPEED,
 						new StringBuilder(
 								Math.round(statistic.getMax() * 100.0) / 100.0
@@ -441,9 +449,9 @@ public class OSMTileRenderer {
 								.append(statistic.getPhenomenon().getUnit())
 								.toString());
 			}
-			
+
 		}
-		
+
 		return hm;
 	}
 
@@ -493,23 +501,79 @@ public class OSMTileRenderer {
 		return (rad * 180 / Math.PI);
 	}
 
-	public BufferedImage clipImage(BufferedImage image,Measurements measurements,int requiredwidth,int requiredHeight) {
+	public BufferedImage clipImage(BufferedImage image,
+			Measurements measurements, int requiredwidth, int requiredHeight,int padding) {
 		ArrayList<Coordinate> coords = getCoordinates(measurements);
 		int zoom = getZoomLevel(coords);
 		BoundingBox bbox = findBoundingBoxForGivenLocations(coords);
-		int clipWidth = getX(bbox.west,zoom,256)-getX(bbox.east,zoom,256);
-		int clipHeight = getY(bbox.south,zoom,256)-getY(bbox.north,zoom,256);
-		int x=getX(bbox.east,zoom,256);
-		int y=getY(bbox.north,zoom,256);
+		Coordinate center = findBoundingBoxCenter(bbox);
+		int clipWidth = getX(bbox.west, zoom, 256)+256*padding - (getX(bbox.east, zoom, 256)+256*padding);
+		int clipHeight = getY(bbox.south, zoom, 256)+256*padding
+				- (getY(bbox.north, zoom, 256)+256*padding);
+		int x = getX(bbox.east, zoom, 256)+256*padding;
+		int y = getY(bbox.north, zoom, 256)+256*padding;
+		int newx = (x+clipWidth/2)-requiredwidth/2;
+		int newy = (y+clipHeight/2)-requiredHeight/2;
+		// bound adjustments
+		if(newx<=0){newx = 0;}
+		if(newy<=0){newy = 0;}
+		if(newx+requiredwidth>=image.getWidth()){newx = image.getWidth()-requiredwidth;}
+		if(newy+requiredHeight>=image.getHeight()){newy = image.getHeight()-requiredHeight;}
+		//
+		System.out.println("x : "+x);
+		System.out.println("y : "+y);
+		System.out.println("clipWidth : "+clipWidth);
+		System.out.println("clipHeight : "+clipHeight);
+		System.out.println("newx : "+newx);
+		System.out.println("newy : "+newy);
+		BufferedImage dbi = image.getSubimage(newx, newy, requiredwidth, requiredHeight);
+		/*
+		 * System.out.println(x+" : "+clipWidth);
+		 * System.out.println(y+" : "+clipHeight); Graphics2D
+		 * g2d=dbi.createGraphics(); g2d.setClip(new Rectangle(x, y, clipWidth,
+		 * clipHeight)); g2d.clipRect(x, y, clipWidth, clipHeight);
+		 * AffineTransform at =
+		 * AffineTransform.getScaleInstance(clipWidth,clipHeight);
+		 * g2d.drawImage(image,0, 0, clipWidth, clipHeight,null);
+		 */
+		return dbi;
+	}
+	
+	public Coordinate findBoundingBoxCenter(BoundingBox bbox) {
+		double x = (bbox.west+bbox.east)/2;	
+		double y = (bbox.north+bbox.south)/2;	
+		return new Coordinate(x,y);
+	}
+	
+	public Coordinate getSubImage(int centerX,int centerY,int x,int y,int subx,int suby) {
+		if((centerX-(subx/2))>=x/2 && (centerY-(suby/2))>=y/2){
+			return new Coordinate(0,0);
+		}else if((centerX-(subx/2))>=x/2 && (centerY-(suby/2))<y/2){
+			return new Coordinate(0,0);
+		}else if((centerX-(subx/2))>=x/2 && (centerY-(suby/2))>=y/2){
+			return new Coordinate(0,0);
+		}else if((centerX-(subx/2))>=x/2 && (centerY-(suby/2))>=y/2){
+			return new Coordinate(0,0);
+		}else{
+			return new Coordinate(0,0);
+		}
+			
+		
+	}
+	
+	public BufferedImage addPaddingTiles(BufferedImage image,
+			Measurements measurements, int requiredwidth, int requiredHeight) {
+		ArrayList<Coordinate> coords = getCoordinates(measurements);
+		int zoom = getZoomLevel(coords);
+		BoundingBox bbox = findBoundingBoxForGivenLocations(coords);
+		Coordinate center = findBoundingBoxCenter(bbox);
+		int clipWidth = getX(bbox.west, zoom, 256) - getX(bbox.east, zoom, 256);
+		int clipHeight = getY(bbox.south, zoom, 256)
+				- getY(bbox.north, zoom, 256);
+		int x = getX(bbox.east, zoom, 256);
+		int y = getY(bbox.north, zoom, 256);
 		BufferedImage dbi = image.getSubimage(x, y, clipWidth, clipHeight);
-		/*System.out.println(x+" : "+clipWidth);
-		System.out.println(y+" : "+clipHeight);
-		Graphics2D g2d=dbi.createGraphics();
-		g2d.setClip(new Rectangle(x, y, clipWidth, clipHeight));
-		g2d.clipRect(x, y, clipWidth, clipHeight);
-		AffineTransform at = AffineTransform.getScaleInstance(clipWidth,clipHeight);
-        g2d.drawImage(image,0, 0, clipWidth, clipHeight,null);*/
-		return dbi; 
+		return dbi;
 	}
 }
 
