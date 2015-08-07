@@ -24,10 +24,7 @@ import org.slf4j.bridge.SLF4JBridgeHandler;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.google.inject.TypeLiteral;
 import com.google.inject.servlet.GuiceServletContextListener;
-import com.google.inject.util.Types;
-import java.util.Set;
 import javax.servlet.ServletContextEvent;
 
 /**
@@ -67,10 +64,6 @@ public class ServletContextListener extends GuiceServletContextListener {
         }
         
         super.contextDestroyed(servletContextEvent);
-    }
-
-    public static <T> TypeLiteral<Set<T>> setOf(Class<T> type) {
-        return (TypeLiteral<Set<T>>)TypeLiteral.get(Types.setOf(type));
     }
 
 }
