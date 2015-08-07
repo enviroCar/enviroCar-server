@@ -117,39 +117,39 @@
             </dependency>
             <!-- externals -->
             <dependency>
-				<groupId>org.n52.wps</groupId>
-				<artifactId>52n-wps-io</artifactId>
-				<version>${wps.version}</version>
+                <groupId>org.n52.wps</groupId>
+                <artifactId>52n-wps-io</artifactId>
+                <version>${wps.version}</version>
             </dependency>
             <!-- START import geotools dependencies -->
-			<dependency>
-				<groupId>org.geotools</groupId>
-				<artifactId>geotools</artifactId>
-				<version>${geotools.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.geotools</groupId>
-				<artifactId>gt-main</artifactId>
-				<version>${geotools.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.geotools</groupId>
-				<artifactId>gt-referencing</artifactId>
-				<version>${geotools.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.geotools</groupId>
-				<artifactId>gt-epsg-wkt</artifactId>
-				<version>${geotools.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.geotools</groupId>
-				<artifactId>gt-shapefile</artifactId>
-				<version>${geotools.version}</version>
-			</dependency>
-			<!-- END import geotools dependencies -->
+            <dependency>
+                    <groupId>org.geotools</groupId>
+                    <artifactId>geotools</artifactId>
+                    <version>${geotools.version}</version>
+                    <type>pom</type>
+                    <scope>import</scope>
+            </dependency>
+            <dependency>
+                    <groupId>org.geotools</groupId>
+                    <artifactId>gt-main</artifactId>
+                    <version>${geotools.version}</version>
+            </dependency>
+            <dependency>
+                    <groupId>org.geotools</groupId>
+                    <artifactId>gt-referencing</artifactId>
+                    <version>${geotools.version}</version>
+            </dependency>
+            <dependency>
+                    <groupId>org.geotools</groupId>
+                    <artifactId>gt-epsg-wkt</artifactId>
+                    <version>${geotools.version}</version>
+            </dependency>
+            <dependency>
+                    <groupId>org.geotools</groupId>
+                    <artifactId>gt-shapefile</artifactId>
+                    <version>${geotools.version}</version>
+            </dependency>
+            <!-- END import geotools dependencies -->
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
@@ -162,11 +162,11 @@
                 <version>1.3</version>
                 <scope>test</scope>
             </dependency>
-			<dependency>
-				<groupId>org.mockito</groupId>
-				<artifactId>mockito-all</artifactId>
-				<version>1.10.19</version>
-			</dependency>
+            <dependency>
+                    <groupId>org.mockito</groupId>
+                    <artifactId>mockito-all</artifactId>
+                    <version>1.10.19</version>
+            </dependency>
             <dependency>
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
@@ -342,11 +342,16 @@
                 <artifactId>oxf-common</artifactId>
                 <version>2.0.0-alpha.4-SNAPSHOT</version>
             </dependency>
-			<dependency>
-				<groupId>org.clojars.ndimiduk</groupId>
-				<artifactId>geodesy</artifactId>
-				<version>1.1.1</version>
-			</dependency>
+            <dependency>
+                    <groupId>org.clojars.ndimiduk</groupId>
+                    <artifactId>geodesy</artifactId>
+                    <version>1.1.1</version>
+            </dependency>
+            <dependency>
+                <groupId>se.jiderhamn</groupId>
+                <artifactId>classloader-leak-prevention</artifactId>
+                <version>1.13.0</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <build>
