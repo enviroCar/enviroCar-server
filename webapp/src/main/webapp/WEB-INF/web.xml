@@ -49,6 +49,6 @@
         <listener-class>org.envirocar.server.ServletContextListener</listener-class>
     </listener>
     <listener>
-        <listener-class>se.jiderhamn.classloader.leak.prevention.ClassLoaderLeakPreventor</listener-class>
+        <listener-class>org.envirocar.server.EnvirocarLeakPreventor</listener-class>
     </listener>
 </web-app>
