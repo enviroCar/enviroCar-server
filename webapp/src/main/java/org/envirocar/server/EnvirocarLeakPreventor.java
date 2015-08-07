@@ -37,5 +37,12 @@ public class EnvirocarLeakPreventor extends ClassLoaderLeakPreventor {
     protected void error(Throwable t) {
         LOGGER.warn("Exception on shutting down resource.", t);
     }
+
+    @Override
+    protected void fixGeoToolsLeak() {
+        //original method broken; uses static call on non-static method
+    }
+    
+    
     
 }
