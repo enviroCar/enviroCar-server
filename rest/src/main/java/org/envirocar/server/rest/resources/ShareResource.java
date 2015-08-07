@@ -78,8 +78,8 @@ public class ShareResource extends AbstractResource {
 				Measurements measurements = getDataService().getMeasurements(
 						new MeasurementFilter(track));
 				mapImage = osm.createImage(measurements);
-				BufferedImage clipImage=osm.clipImage(mapImage,measurements, 768, 512,1);
-				mapImage = clipImage;
+				/*BufferedImage clipImage=osm.clipImage(mapImage,measurements, 768, 512,1);
+				mapImage = clipImage;*/
 				osm.saveImage(mapImage, track.getIdentifier());
 			}
 			HashMap<String, String> hm = osm.getDetails(track,statistics);
