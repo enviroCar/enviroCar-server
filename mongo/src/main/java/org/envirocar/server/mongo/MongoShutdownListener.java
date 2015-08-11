@@ -14,23 +14,37 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.core.dao;
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package org.envirocar.server.mongo;
 
-import org.envirocar.server.core.entities.Phenomenon;
-import org.envirocar.server.core.event.CreatedTrackEvent;
-import org.envirocar.server.core.filter.StatisticsFilter;
-import org.envirocar.server.core.statistics.Statistic;
-import org.envirocar.server.core.statistics.Statistics;
+import com.google.inject.Inject;
+import com.mongodb.Mongo;
+import org.envirocar.server.core.guice.ResourceShutdownListener;
 
 /**
- * TODO JavaDoc
  *
- * @author Jan Wirwahn
+ * @author matthes
  */
-public interface StatisticsDao {
-    Statistics getStatistics(StatisticsFilter request);
+public class MongoShutdownListener implements ResourceShutdownListener {
+   
+    private final Mongo mongo;
 
-    Statistic getStatistic(StatisticsFilter request, Phenomenon phenomenon);
+    @Inject
+    public MongoShutdownListener(Mongo mongo) {
+        this.mongo = mongo;
+    }
 
-    public void updateStatisticsOnNewTrack(CreatedTrackEvent e);
+    
+    
+    @Override
+    public void shutdownResources() {
+        if (mongo != null) {
+            mongo.close();
+        }
+    }
+    
 }

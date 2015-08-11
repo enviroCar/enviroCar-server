@@ -14,23 +14,18 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.core.dao;
-
-import org.envirocar.server.core.entities.Phenomenon;
-import org.envirocar.server.core.event.CreatedTrackEvent;
-import org.envirocar.server.core.filter.StatisticsFilter;
-import org.envirocar.server.core.statistics.Statistic;
-import org.envirocar.server.core.statistics.Statistics;
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package org.envirocar.server.core.guice;
 
 /**
- * TODO JavaDoc
- *
- * @author Jan Wirwahn
+ * Listener interface for freeing resources whenever the app is stopped.
  */
-public interface StatisticsDao {
-    Statistics getStatistics(StatisticsFilter request);
-
-    Statistic getStatistic(StatisticsFilter request, Phenomenon phenomenon);
-
-    public void updateStatisticsOnNewTrack(CreatedTrackEvent e);
+public interface ResourceShutdownListener {
+    
+    void shutdownResources();
+    
 }

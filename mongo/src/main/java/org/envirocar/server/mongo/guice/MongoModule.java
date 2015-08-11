@@ -50,9 +50,14 @@ import com.github.jmkgreen.morphia.mapping.Mapper;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
+import com.google.inject.multibindings.Multibinder;
 import com.mongodb.DB;
 import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
+import org.envirocar.server.core.guice.ResourceShutdownListener;
+import org.envirocar.server.mongo.MongoShutdownListener;
+import org.envirocar.server.mongo.statistics.NewTrackListener;
+import org.envirocar.server.mongo.statistics.StatisticsUpdateScheduler;
 
 /**
  * TODO JavaDoc
@@ -79,6 +84,12 @@ public class MongoModule extends AbstractModule {
                 .implement(UserActivity.class, MongoUserActivity.class)
                 .build(ActivityFactory.class));
         bind(MongoDB.class);
+        bind(StatisticsUpdateScheduler.class).asEagerSingleton();
+        bind(NewTrackListener.class).asEagerSingleton();
+        
+        Multibinder<ResourceShutdownListener> binder = Multibinder.newSetBinder(binder(),
+					ResourceShutdownListener.class);
+        binder.addBinding().to(MongoShutdownListener.class);
     }
 
     @Provides

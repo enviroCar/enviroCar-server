@@ -25,6 +25,7 @@ import org.slf4j.bridge.SLF4JBridgeHandler;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.servlet.GuiceServletContextListener;
+import javax.servlet.ServletContextEvent;
 
 /**
  * TODO JavaDoc
@@ -32,6 +33,7 @@ import com.google.inject.servlet.GuiceServletContextListener;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class ServletContextListener extends GuiceServletContextListener {
+
     private Injector injector;
 
     @Override
@@ -53,4 +55,15 @@ public class ServletContextListener extends GuiceServletContextListener {
         }
         SLF4JBridgeHandler.install();
     }
+
+    @Override
+    public void contextDestroyed(ServletContextEvent servletContextEvent) {
+        if (injector != null) {
+            ShutdownManager manager = injector.getInstance(ShutdownManager.class);
+            manager.shutdownListeners();
+        }
+        
+        super.contextDestroyed(servletContextEvent);
+    }
+
 }
