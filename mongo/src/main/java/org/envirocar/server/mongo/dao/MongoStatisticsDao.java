@@ -46,6 +46,7 @@ import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import java.util.function.Function;
+import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.event.CreatedTrackEvent;
 import org.envirocar.server.mongo.statistics.StatisticsUpdateScheduler;
 
@@ -244,14 +245,16 @@ public class MongoStatisticsDao implements StatisticsDao {
     }
 
     @Override
-    public void updateStatisticsOnNewTrack(CreatedTrackEvent e) {
+    public void updateStatisticsOnNewTrack(Track t) {
         StatisticsFilter allFilter = new StatisticsFilter();
         MongoStatisticKey allKey = key(allFilter);
         this.scheduler.updateStatistics(allFilter, allKey, calculateFunction, false);
         
-        StatisticsFilter userFilter = new StatisticsFilter(e.getUser());
+        StatisticsFilter userFilter = new StatisticsFilter(t.getUser());
         MongoStatisticKey userKey = key(userFilter);
         this.scheduler.updateStatistics(userFilter, userKey, calculateFunction, false);
+        
+        
     }
 
 

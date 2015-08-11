@@ -17,7 +17,7 @@
 package org.envirocar.server.core.dao;
 
 import org.envirocar.server.core.entities.Phenomenon;
-import org.envirocar.server.core.event.CreatedTrackEvent;
+import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.filter.StatisticsFilter;
 import org.envirocar.server.core.statistics.Statistic;
 import org.envirocar.server.core.statistics.Statistics;
@@ -32,5 +32,5 @@ public interface StatisticsDao {
 
     Statistic getStatistic(StatisticsFilter request, Phenomenon phenomenon);
 
-    public void updateStatisticsOnNewTrack(CreatedTrackEvent e);
+    public void updateStatisticsOnNewTrack(Track e);
 }

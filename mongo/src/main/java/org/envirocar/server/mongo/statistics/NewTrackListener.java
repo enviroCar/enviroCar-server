@@ -38,7 +38,7 @@ public class NewTrackListener {
 
     @Subscribe
     public void onCreatedTrackEvent(CreatedTrackEvent e) {
-        this.dao.updateStatisticsOnNewTrack(e);
+        this.dao.updateStatisticsOnNewTrack(e.getTrack());
     }
 
     
