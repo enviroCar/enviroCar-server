@@ -14,21 +14,18 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.rest.pagination;
-
-import org.envirocar.server.core.exception.BadRequestException;
-import org.envirocar.server.core.util.pagination.Pagination;
-
-import com.google.inject.throwingproviders.CheckedProvider;
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package org.envirocar.server.core.guice;
 
 /**
- * TODO JavaDoc
- *
- * @author Christian Autermann
+ * Listener interface for freeing resources whenever the app is stopped.
  */
-public interface PaginationProvider extends CheckedProvider<Pagination> {
-
-    @Override
-    Pagination get() throws BadRequestException;
-
+public interface ResourceShutdownListener {
+    
+    void shutdownResources();
+    
 }

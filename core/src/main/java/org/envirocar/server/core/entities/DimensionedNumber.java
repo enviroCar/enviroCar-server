@@ -18,6 +18,7 @@ package org.envirocar.server.core.entities;
 
 import java.math.BigDecimal;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
@@ -83,7 +84,7 @@ public class DimensionedNumber extends Number {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this)
+        return MoreObjects.toStringHelper(this)
                 .add("value", this.value())
                 .add("unit", this.unit())
                 .toString();

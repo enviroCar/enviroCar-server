@@ -16,7 +16,7 @@
  */
 package org.envirocar.server.core.util.pagination;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
 
 /**
@@ -97,7 +97,7 @@ public abstract class Paginated<T> {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this)
+        return MoreObjects.toStringHelper(this)
                 .add("first", getFirst().orNull())
                 .add("previous", getPrevious().orNull())
                 .add("current", getCurrent().orNull())

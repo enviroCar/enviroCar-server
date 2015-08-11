@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
 import com.github.jmkgreen.morphia.query.Query;
 import com.google.inject.Inject;
 
-public class MongoPasswordResetDAO extends AbstractMongoDao<ObjectId, MongoPasswordReset, MongoPasswordResetDAO.MongoPasswordResetStatusCollection> 
+public class MongoPasswordResetDAO extends AbstractMongoDao<ObjectId, MongoPasswordReset, MongoPasswordResetDAO.MongoPasswordResetStatusCollection>
 	implements PasswordResetDAO {
 
     private static final Logger logger = LoggerFactory.getLogger(MongoPasswordResetDAO.class);
@@ -56,11 +56,11 @@ public class MongoPasswordResetDAO extends AbstractMongoDao<ObjectId, MongoPassw
 		 */
 		return null;
 	}
-	
+
 
 	public PasswordReset requestPasswordReset(User user) throws BadRequestException {
 		MongoPasswordReset status = getPasswordResetStatus(user);
-		
+
 		if (status == null || status.isExpired()) {
 			MongoPasswordReset result = createNewPasswordReset(user);
 			return result;
@@ -74,13 +74,13 @@ public class MongoPasswordResetDAO extends AbstractMongoDao<ObjectId, MongoPassw
 		String uuid = UUID.randomUUID().toString();
 		Calendar expires = Calendar.getInstance();
 		expires.add(Calendar.HOUR, 24);
-		
+
 		MongoPasswordReset entity = createMongoPasswordResetStatus();
 		entity.setCode(uuid);
 		entity.setUser(user);
 		
-		save((MongoPasswordReset) entity);
-		
+		save(entity);
+
 		return entity;
 	}
 
@@ -94,11 +94,11 @@ public class MongoPasswordResetDAO extends AbstractMongoDao<ObjectId, MongoPassw
 	public MongoPasswordReset getPasswordResetStatus(User user) {
 		logger.debug("Querying password reset status for user {} (key={})", user, key(user));
 		Query<MongoPasswordReset> result = q().field(MongoPasswordReset.USER).equal(key(user));
-		
+
 		if (result.fetch().iterator().hasNext()) {
 			return result.fetch().iterator().next();
 		}
-		
+
 		logger.debug("No result for query.");
 		return null;
 	}

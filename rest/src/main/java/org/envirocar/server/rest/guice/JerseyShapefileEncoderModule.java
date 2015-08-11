@@ -23,6 +23,9 @@ import org.envirocar.server.rest.encoding.shapefile.TrackShapefileEncoder;
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
 import com.google.inject.TypeLiteral;
+import com.google.inject.multibindings.Multibinder;
+import org.envirocar.server.core.guice.ResourceShutdownListener;
+import org.envirocar.server.rest.GeotoolsShutdownListener;
 
 /**
  * TODO JavaDoc
@@ -35,5 +38,9 @@ public class JerseyShapefileEncoderModule extends AbstractModule {
         bind(TrackShapefileEncoder.class).in(Scopes.SINGLETON);
         bind(new TypeLiteral<ShapefileTrackEncoder<Track>>() {
         }).to(TrackShapefileEncoder.class);
+        
+        Multibinder<ResourceShutdownListener> binder = Multibinder.newSetBinder(binder(),
+					ResourceShutdownListener.class);
+        binder.addBinding().to(GeotoolsShutdownListener.class);
     }
 }

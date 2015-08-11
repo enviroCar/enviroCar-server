@@ -113,4 +113,11 @@ public class MongoStatisticKey {
             this.sensor = null;
         }
     }
+
+    @Override
+    public String toString() {
+        return String.format("MongoStatisticKey [user=%s, track=%s, sensor=%s]", this.user, this.track, this.sensor);
+    }
+    
+    
 }

@@ -42,11 +42,11 @@
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <logback-version>1.0.11</logback-version>
+        <logback-version>1.1.3</logback-version>
         <morphia-version>1.2.3</morphia-version>
-        <jersey-version>1.17.1</jersey-version>
-        <guice-version>3.0</guice-version>
-        <slf4j-version>1.7.5</slf4j-version>
+        <jersey-version>1.19</jersey-version>
+        <guice-version>4.0</guice-version>
+        <slf4j-version>1.7.12</slf4j-version>
 		<geotools.version>8.7</geotools.version>
 		<wps.version>3.2.0</wps.version>
     </properties>
@@ -117,43 +117,43 @@
             </dependency>
             <!-- externals -->
             <dependency>
-				<groupId>org.n52.wps</groupId>
-				<artifactId>52n-wps-io</artifactId>
-				<version>${wps.version}</version>
+                <groupId>org.n52.wps</groupId>
+                <artifactId>52n-wps-io</artifactId>
+                <version>${wps.version}</version>
             </dependency>
             <!-- START import geotools dependencies -->
-			<dependency>
-				<groupId>org.geotools</groupId>
-				<artifactId>geotools</artifactId>
-				<version>${geotools.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.geotools</groupId>
-				<artifactId>gt-main</artifactId>
-				<version>${geotools.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.geotools</groupId>
-				<artifactId>gt-referencing</artifactId>
-				<version>${geotools.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.geotools</groupId>
-				<artifactId>gt-epsg-wkt</artifactId>
-				<version>${geotools.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.geotools</groupId>
-				<artifactId>gt-shapefile</artifactId>
-				<version>${geotools.version}</version>
-			</dependency>
-			<!-- END import geotools dependencies -->
+            <dependency>
+                    <groupId>org.geotools</groupId>
+                    <artifactId>geotools</artifactId>
+                    <version>${geotools.version}</version>
+                    <type>pom</type>
+                    <scope>import</scope>
+            </dependency>
+            <dependency>
+                    <groupId>org.geotools</groupId>
+                    <artifactId>gt-main</artifactId>
+                    <version>${geotools.version}</version>
+            </dependency>
+            <dependency>
+                    <groupId>org.geotools</groupId>
+                    <artifactId>gt-referencing</artifactId>
+                    <version>${geotools.version}</version>
+            </dependency>
+            <dependency>
+                    <groupId>org.geotools</groupId>
+                    <artifactId>gt-epsg-wkt</artifactId>
+                    <version>${geotools.version}</version>
+            </dependency>
+            <dependency>
+                    <groupId>org.geotools</groupId>
+                    <artifactId>gt-shapefile</artifactId>
+                    <version>${geotools.version}</version>
+            </dependency>
+            <!-- END import geotools dependencies -->
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
-                <version>4.11</version>
+                <version>4.12</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -162,11 +162,11 @@
                 <version>1.3</version>
                 <scope>test</scope>
             </dependency>
-			<dependency>
-				<groupId>org.mockito</groupId>
-				<artifactId>mockito-all</artifactId>
-				<version>1.9.5</version>
-			</dependency>
+            <dependency>
+                    <groupId>org.mockito</groupId>
+                    <artifactId>mockito-all</artifactId>
+                    <version>1.10.19</version>
+            </dependency>
             <dependency>
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
@@ -181,7 +181,7 @@
             <dependency>
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
-                <version>12.0</version>
+                <version>18.0</version>
             </dependency>
             <dependency>
                 <groupId>com.google.inject</groupId>
@@ -207,6 +207,11 @@
                 <groupId>com.google.inject.extensions</groupId>
                 <artifactId>guice-throwingproviders</artifactId>
                 <version>${guice-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.code.findbugs</groupId>
+                <artifactId>jsr305</artifactId>
+                <version>3.0.0</version>
             </dependency>
             <dependency>
                 <artifactId>morphia</artifactId>
@@ -260,7 +265,7 @@
             <dependency>
                 <groupId>joda-time</groupId>
                 <artifactId>joda-time</artifactId>
-                <version>2.2</version>
+                <version>2.8.1</version>
             </dependency>
             <dependency>
                 <groupId>com.vividsolutions</groupId>
@@ -324,24 +329,29 @@
             <dependency>
                 <groupId>org.apache.jena</groupId>
                 <artifactId>apache-jena-libs</artifactId>
-                <version>2.10.1</version>
+                <version>2.13.0</version>
                 <type>pom</type>
             </dependency>
             <dependency>
                 <groupId>commons-codec</groupId>
                 <artifactId>commons-codec</artifactId>
-                <version>1.8</version>
+                <version>1.10</version>
             </dependency>
             <dependency>
                 <groupId>org.n52.sensorweb</groupId>
                 <artifactId>oxf-common</artifactId>
-                <version>2.0.0-alpha.3-SNAPSHOT</version>
+                <version>2.0.0-alpha.4-SNAPSHOT</version>
             </dependency>
-			<dependency>
-				<groupId>org.clojars.ndimiduk</groupId>
-				<artifactId>geodesy</artifactId>
-				<version>1.1.1</version>
-			</dependency>
+            <dependency>
+                    <groupId>org.clojars.ndimiduk</groupId>
+                    <artifactId>geodesy</artifactId>
+                    <version>1.1.1</version>
+            </dependency>
+            <dependency>
+                <groupId>se.jiderhamn</groupId>
+                <artifactId>classloader-leak-prevention</artifactId>
+                <version>1.13.0</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <build>
@@ -397,8 +407,8 @@
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>3.1</version>
                     <configuration>
-                        <source>1.6</source>
-                        <target>1.6</target>
+                        <source>1.8</source>
+                        <target>1.8</target>
                         <showDeprecation>true</showDeprecation>
                         <showWarnings>true</showWarnings>
                         <encoding>UTF-8</encoding>
