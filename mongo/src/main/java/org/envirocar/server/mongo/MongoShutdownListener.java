@@ -14,21 +14,37 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.rest.pagination;
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package org.envirocar.server.mongo;
 
-import org.envirocar.server.core.exception.BadRequestException;
-import org.envirocar.server.core.util.pagination.Pagination;
-
-import com.google.inject.throwingproviders.CheckedProvider;
+import com.google.inject.Inject;
+import com.mongodb.Mongo;
+import org.envirocar.server.core.guice.ResourceShutdownListener;
 
 /**
- * TODO JavaDoc
  *
- * @author Christian Autermann
+ * @author matthes
  */
-public interface PaginationProvider extends CheckedProvider<Pagination> {
+public class MongoShutdownListener implements ResourceShutdownListener {
+   
+    private final Mongo mongo;
 
+    @Inject
+    public MongoShutdownListener(Mongo mongo) {
+        this.mongo = mongo;
+    }
+
+    
+    
     @Override
-    Pagination get() throws BadRequestException;
-
+    public void shutdownResources() {
+        if (mongo != null) {
+            mongo.close();
+        }
+    }
+    
 }

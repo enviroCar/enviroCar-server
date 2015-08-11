@@ -16,6 +16,7 @@
  */
 package org.envirocar.server.core.util.pagination;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 
@@ -119,7 +120,7 @@ public class PageBasedPagination implements Pagination {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this)
+        return MoreObjects.toStringHelper(this)
                 .add("size", this.size)
                 .add("page", this.page)
                 .toString();
