@@ -2,7 +2,7 @@ language: java
 notifications:
     email: false
 jdk:
-    - openjdk8
+    - oraclejdk8
 services: mongodb
 after_script:
     - "gem query --local | grep bundler >/dev/null || gem install bundler"
