@@ -20,10 +20,15 @@ package org.envirocar.server.rest.util;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.color.ColorSpace;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorConvertOp;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -76,8 +81,8 @@ public class OSMTileRenderer {
 		ArrayList<Coordinate> coords = getCoordinates(measurements);
 		HashMap<Coordinate, Color> colors = getColors(measurements);
 		int zoom = getZoomLevel(coords);
-		BufferedImage image = new BufferedImage(256 * (numberOfXTiles + 3),
-				256 * (numberOfYTiles + 3), BufferedImage.TYPE_INT_RGB);
+		BufferedImage image = new BufferedImage(256 * (numberOfXTiles + 1 + 2*imagePadding),
+				256 * (numberOfYTiles + 1 + 2*imagePadding), BufferedImage.TYPE_INT_RGB);
 		Graphics2D g2d = appendImage(image, baseTileX + numberOfXTiles,
 				baseTileX, baseTileY + numberOfYTiles, baseTileY, zoom);
 		drawRoute(g2d, coords, colors, zoom,imagePadding);
@@ -124,22 +129,30 @@ public class OSMTileRenderer {
 		int[] ar = getTileDetails(bbox.east, bbox.north, finalZoom);
 		baseTileX = ar[0];
 		baseTileY = ar[1];
+		if(finalZoom==1){
+			imagePadding=0;
+		}
 		return finalZoom;
 	}
 
 	public Graphics2D drawRoute(Graphics2D g2d, ArrayList<Coordinate> coords,
 			HashMap<Coordinate, Color> colors, int zoom,int padding) {
-		g2d.setStroke(new BasicStroke(3));
+		g2d.setStroke(new BasicStroke(7));
+		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+				RenderingHints.VALUE_ANTIALIAS_ON);
+		g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+				RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+		
 		for (int i = 0; i < coords.size(); i++) {
 			if (i <= (coords.size() - 2)) {
-				g2d.setPaint(colors.get(coords.get(i + 1)));
+				if( colors==null || colors.isEmpty())g2d.setPaint(Color.BLACK);
+				else g2d.setPaint(colors.get(coords.get(i + 1)));
 				double oldX = coords.get(i).x;
 				double oldY = coords.get(i).y;
 				double newX = coords.get(i + 1).x;
 				double newY = coords.get(i + 1).y;
 				g2d.drawLine(getX(oldX, zoom, 256)+256*padding, getY(oldY, zoom, 256)+256*padding,
 						getX(newX, zoom, 256)+256*padding, getY(newY, zoom, 256)+256*padding);
-				System.out.println();
 			}
 		}
 		return g2d;
@@ -253,9 +266,12 @@ public class OSMTileRenderer {
 			int lowestX, int highestY, int lowestY, int zoom)
 			throws IOException {
 		//generalize
+		
+		if(zoom!=1){
 		highestX = lowestX+2;
 		highestY = lowestY+1;
 		lowestX--;highestX++;lowestY--;highestY++;
+		}
 		//
 		Graphics2D g2d = newTile.createGraphics();
 		System.out.println(lowestX + " : " + lowestY + " : " + highestX + " : "
@@ -272,7 +288,8 @@ public class OSMTileRenderer {
 				// temp=composite image
 			}
 		}
-
+		ColorConvertOp op = new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY), null);
+        op.filter(newTile, newTile);
 		return g2d;
 	}
 

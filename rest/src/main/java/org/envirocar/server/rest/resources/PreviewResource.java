@@ -56,9 +56,9 @@ public class PreviewResource extends AbstractResource {
 			}else{
 				Measurements measurements = getDataService().getMeasurements(
 						new MeasurementFilter(track));
-				renderedImage = osm.createImage(measurements);
+				renderedImage = osm.createImage(measurements); 
 				BufferedImage clipImage=osm.clipImage(renderedImage,measurements, 768, 512,1);
-				renderedImage = clipImage;
+				renderedImage = clipImage; 
 				osm.saveImage(renderedImage, track.getIdentifier());
 			}
 			
