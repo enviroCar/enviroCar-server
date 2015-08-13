@@ -20,7 +20,10 @@ package org.envirocar.server.rest.util;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.color.ColorSpace;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorConvertOp;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -134,7 +137,12 @@ public class OSMTileRenderer {
 
 	public Graphics2D drawRoute(Graphics2D g2d, ArrayList<Coordinate> coords,
 			HashMap<Coordinate, Color> colors, int zoom,int padding) {
-		g2d.setStroke(new BasicStroke(10));
+		g2d.setStroke(new BasicStroke(7));
+		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+				RenderingHints.VALUE_ANTIALIAS_ON);
+		g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+				RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+		
 		for (int i = 0; i < coords.size(); i++) {
 			if (i <= (coords.size() - 2)) {
 				if( colors==null || colors.isEmpty())g2d.setPaint(Color.BLACK);
@@ -280,7 +288,8 @@ public class OSMTileRenderer {
 				// temp=composite image
 			}
 		}
-
+		ColorConvertOp op = new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY), null);
+        op.filter(newTile, newTile);
 		return g2d;
 	}
 
