@@ -145,7 +145,7 @@ public class OSMTileRenderer {
 		
 		for (int i = 0; i < coords.size(); i++) {
 			if (i <= (coords.size() - 2)) {
-				if( colors==null || colors.isEmpty())g2d.setPaint(Color.BLACK);
+				if( colors==null || colors.isEmpty())g2d.setPaint(Color.BLUE);
 				else g2d.setPaint(colors.get(coords.get(i + 1)));
 				double oldX = coords.get(i).x;
 				double oldY = coords.get(i).y;
