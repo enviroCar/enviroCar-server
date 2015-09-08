@@ -31,6 +31,15 @@ public class ShareImageRenderUtil {
 	final String DETAIL2 = "Time";
 	final String DETAIL3 = "Consumption";
 
+	/**
+	 * This method draws the statistics on a bufferedimage when the statistics are passed along with the old image.
+	 * @param old
+	 * @param distance 
+	 * @param time
+	 * @param consumption
+	 * @param locale
+	 * @return BufferedImage statistics drawn image
+	 */
 	public synchronized BufferedImage process(BufferedImage old,
 			String distance, String time, String consumption, String locale) {
 		/*

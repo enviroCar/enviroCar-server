@@ -25,10 +25,8 @@ import java.awt.color.ColorSpace;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorConvertOp;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintWriter;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -76,6 +74,12 @@ public class OSMTileRenderer {
 		return new OSMTileRenderer();
 	}
 
+	/**
+	 * This method outputs a rendered image when the image measurements are given
+	 * @param measurements
+	 * @return BufferedImage output
+	 * @throws IOException
+	 */
 	public BufferedImage createImage(Measurements measurements)
 			throws IOException {
 		ArrayList<Coordinate> coords = getCoordinates(measurements);
@@ -90,6 +94,11 @@ public class OSMTileRenderer {
 		return image;
 	}
 
+	/**
+	 * This method outputs the preffered zoom level for given set of coordinates
+	 * @param coords
+	 * @return int zoom level
+	 */
 	public int getZoomLevel(ArrayList<Coordinate> coords) {
 		BoundingBox bbox = findBoundingBoxForGivenLocations(coords);
 		int leastZoomLevelX = 1;
@@ -135,6 +144,15 @@ public class OSMTileRenderer {
 		return finalZoom;
 	}
 
+	/**
+	 * This method draws the route when the map image and image stats are provided
+	 * @param g2d
+	 * @param coords
+	 * @param colors
+	 * @param zoom
+	 * @param padding
+	 * @return Graphics2D drawn route
+	 */
 	public Graphics2D drawRoute(Graphics2D g2d, ArrayList<Coordinate> coords,
 			HashMap<Coordinate, Color> colors, int zoom,int padding) {
 		g2d.setStroke(new BasicStroke(7));
@@ -158,12 +176,26 @@ public class OSMTileRenderer {
 		return g2d;
 	}
 
+	/**
+	 * This method converts the longitude of a geo location in to the X coordinate of the image
+	 * @param lon
+	 * @param zoom
+	 * @param pic
+	 * @return int X coordinate in the image
+	 */
 	public int getX(final double lon, final int zoom, int pic) {
 		double x = getFraction((lon + 180) / 360 * (1 << zoom), baseTileX);
 		// System.out.print(getXTile(lon, zoom) + " ++ ");
 		return (int) Math.floor((x * pic));
 	}
 
+	/**
+	 * This method converts the latitude of a geo location in to the Y coordinate of the image
+	 * @param lat
+	 * @param zoom
+	 * @param pic
+	 * @return int Y coordinate in the image
+	 */
 	public int getY(final double lat, final int zoom, int pic) {
 		double y = getFraction(
 				(1 - Math.log(Math.tan(Math.toRadians(lat)) + 1
@@ -174,6 +206,12 @@ public class OSMTileRenderer {
 		return (int) Math.floor(y * pic);
 	}
 
+	/**
+	 * This method returns the fraction part of a given double number
+	 * @param num
+	 * @param baseTileValue
+	 * @return double fraction of a given number
+	 */
 	public double getFraction(double num, int baseTileValue) {
 
 		long iPart = (long) num;
@@ -182,12 +220,24 @@ public class OSMTileRenderer {
 		return fPart;
 	}
 
+	/**
+	 * This method returns the integer part of a given double number
+	 * @param num
+	 * @return int Integer part of a number
+	 */
 	public int getInteger(double num) {
 
 		int iPart = (int) num;
 		return iPart;
 	}
 
+	/**
+	 * This method returns the OSM tile number which contains a given location (in the format { xtile number, ytile number})
+	 * @param lon
+	 * @param lat
+	 * @param zoom
+	 * @return int[] containing { xtile, ytile } respectively
+	 */
 	public int[] getTileDetails(final double lon, final double lat,
 			final int zoom) {
 		int xtile = (int) Math.floor((lon + 180) / 360 * (1 << zoom));
@@ -208,6 +258,13 @@ public class OSMTileRenderer {
 		return new int[] { xtile, ytile };
 	}
 
+	/**
+	 * This method returns the bounding box of the tile when the tile numbers(xtile,ytile) and zoom level is given
+	 * @param x
+	 * @param y
+	 * @param zoom
+	 * @return BoundingBox bounding box of a given tile
+	 */
 	BoundingBox tile2boundingBox(final int x, final int y, final int zoom) {
 		BoundingBox bb = new BoundingBox();
 		bb.north = tile2lat(y, zoom);
@@ -226,6 +283,11 @@ public class OSMTileRenderer {
 		return Math.toDegrees(Math.atan(Math.sinh(n)));
 	}
 
+	/**
+	 * This method returns a bounding box object which contains a given set of coordinates
+	 * @param coordinates
+	 * @return BoundingBox Bounding box which contains a given set of coordinates
+	 */
 	public BoundingBox findBoundingBoxForGivenLocations(
 			ArrayList<Coordinate> coordinates) {
 		double west = 0.0;
@@ -262,6 +324,17 @@ public class OSMTileRenderer {
 		return new BoundingBox(north, south, west, east);
 	}
 
+	/**
+	 * This method returns the base map image which is used then for route drawing and statistics integration.
+	 * @param newTile
+	 * @param highestX
+	 * @param lowestX
+	 * @param highestY
+	 * @param lowestY
+	 * @param zoom
+	 * @return Graphics2D Generates the base map image
+	 * @throws IOException
+	 */
 	public Graphics2D appendImage(BufferedImage newTile, int highestX,
 			int lowestX, int highestY, int lowestY, int zoom)
 			throws IOException {
@@ -293,6 +366,14 @@ public class OSMTileRenderer {
 		return g2d;
 	}
 
+	/**
+	 * This method downloads a single tile from OSM tile service when xtile, ytile and zoom level is given.
+	 * @param x
+	 * @param y
+	 * @param zoom
+	 * @return BufferedImage BufferedImage for a single tile which is used to create base map
+	 * @throws IOException
+	 */
 	public BufferedImage downloadTile(int x, int y, int zoom)
 			throws IOException {
 		/*
@@ -308,6 +389,12 @@ public class OSMTileRenderer {
 		return image;
 	}
 
+	/**
+	 * This method reads an image from disk and return it as a BufferedImage
+	 * @param trackId
+	 * @return BufferedImage loadedImage
+	 * @throws IOException
+	 */
 	public synchronized BufferedImage loadImage(String trackId)
 			throws IOException {
 		String filePath = new StringBuilder(saveFileDir).append(File.separator)
@@ -316,6 +403,12 @@ public class OSMTileRenderer {
 		return ImageIO.read(f);
 	}
 
+	/**
+	 * This method saves a bufferedImage to a disk
+	 * @param image
+	 * @param trackId
+	 * @throws IOException
+	 */
 	public synchronized void saveImage(BufferedImage image, String trackId)
 			throws IOException {
 		String filePath = new StringBuilder(saveFileDir).append(File.separator)
@@ -326,6 +419,12 @@ public class OSMTileRenderer {
 		}
 	}
 
+	/**
+	 * This methos checks whether an image for a given track exists
+	 * @param trackId
+	 * @return boolean imageExists
+	 * @throws IOException
+	 */
 	public synchronized boolean imageExists(String trackId) throws IOException {
 		String filePath = new StringBuilder(saveFileDir).append(File.separator)
 				.append(trackId).append(".png").toString();
@@ -340,6 +439,11 @@ public class OSMTileRenderer {
 
 	// //////////////////////////////?Retrieval////////////////////////////////
 
+	/**
+	 * Returns a set of coordinates when the measurements of a track is given
+	 * @param measurements
+	 * @return ArrayList of coordinates
+	 */
 	public ArrayList<Coordinate> getCoordinates(Measurements measurements) {
 		ArrayList<Coordinate> coords = new ArrayList<Coordinate>();
 		for (Measurement m : measurements) {
@@ -348,6 +452,11 @@ public class OSMTileRenderer {
 		return coords;
 	}
 
+	/**
+	 * This method returns a hashmap which contains colorcode(color of the route based on speed) for each coordinate
+	 * @param measurements
+	 * @return HashMap which has coordinate as the key and color as the value
+	 */
 	public HashMap<Coordinate, Color> getColors(Measurements measurements) {
 		HashMap<Coordinate, Color> coords = new HashMap<Coordinate, Color>();
 		for (Measurement m : measurements) {
@@ -362,6 +471,11 @@ public class OSMTileRenderer {
 		return coords;
 	}
 
+	/**
+	 * This method returns the relevant color object for the given speed
+	 * @param speed
+	 * @return Color color of the speed
+	 */
 	public Color getColorCode(double speed) {
 
 		if (speed <= 30) {
@@ -386,6 +500,13 @@ public class OSMTileRenderer {
 
 	}
 
+	/**
+	 * This method extracts statistics from statistics object into a HashMap
+	 * @param track
+	 * @param statistics
+	 * @return HashMap which contains statistic name as the key and statistics value as the value
+	 * @throws TrackNotFoundException
+	 */
 	public HashMap<String, String> getDetails(Track track, Statistics statistics)
 			throws TrackNotFoundException {
 		HashMap<String, String> hm = new HashMap<String, String>();
@@ -497,6 +618,15 @@ public class OSMTileRenderer {
 		return time;
 	}
 
+	/**
+	 * This method calculates the distance between two given coordinates
+	 * @param lat1
+	 * @param lon1
+	 * @param lat2
+	 * @param lon2
+	 * @param unit
+	 * @return double Distance between two coordinates
+	 */
 	private double calculateDistance(double lat1, double lon1, double lat2,
 			double lon2, char unit) {
 		double theta = lon1 - lon2;
@@ -510,14 +640,33 @@ public class OSMTileRenderer {
 		return (dist);
 	}
 
+	/**
+	 * Convert degrees value to a radian value
+	 * @param deg
+	 * @return double radian value 
+	 */
 	private double deg2rad(double deg) {
 		return (deg * Math.PI / 180.0);
 	}
 
+	/**
+	 * Converts radian value to a degree value
+	 * @param rad
+	 * @return double degree value
+	 */
 	private double rad2deg(double rad) {
 		return (rad * 180 / Math.PI);
 	}
 
+	/**
+	 * This method returns a clipped image which has a given resolution when a image of a higher size is given
+	 * @param image
+	 * @param measurements
+	 * @param requiredwidth
+	 * @param requiredHeight
+	 * @param padding
+	 * @return BufferedImage clippedImage to required resolution
+	 */
 	public BufferedImage clipImage(BufferedImage image,
 			Measurements measurements, int requiredwidth, int requiredHeight,int padding) {
 		ArrayList<Coordinate> coords = getCoordinates(measurements);
@@ -556,6 +705,11 @@ public class OSMTileRenderer {
 		return dbi;
 	}
 	
+	/**
+	 * Finds the center of a bounding box when bounding box is given
+	 * @param bbox
+	 * @return coordinate which represents the center of the bounding box
+	 */
 	public Coordinate findBoundingBoxCenter(BoundingBox bbox) {
 		double x = (bbox.west+bbox.east)/2;	
 		double y = (bbox.north+bbox.south)/2;	
@@ -604,6 +758,13 @@ class BoundingBox {
 
 	}
 
+	/**
+	 * Creates a new bounding box object when north east west south coordinates are given.
+	 * @param north
+	 * @param south
+	 * @param east
+	 * @param west
+	 */
 	public BoundingBox(double north, double south, double east, double west) {
 		super();
 		this.north = north;
