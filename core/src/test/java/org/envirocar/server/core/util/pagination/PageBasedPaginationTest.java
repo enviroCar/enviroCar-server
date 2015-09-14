@@ -102,15 +102,15 @@ public class PageBasedPaginationTest {
         assertThat(page(10).previous(SIZE), isPresentAndPage(9));
         assertThat(page(11).previous(SIZE), isNotPresent());
     }
-    
+
     @Test
     public void testMaxSize() {
-    	long configuredMax = Pagination.MAX_PAGE_SIZE;
-    	PageBasedPagination pbp = new PageBasedPagination(configuredMax + 10, 1);
-    	assertThat(pbp.getLimit(), Matchers.is(configuredMax));
-    	assertThat(pbp.getBegin(), Matchers.is(0L));
-    	assertThat(pbp.getEnd(), Matchers.is(configuredMax));
-    	assertThat(pbp.getPage(), Matchers.is(1L));
+        long configuredMax = Pagination.MAX_PAGE_SIZE;
+        PageBasedPagination pbp = new PageBasedPagination(configuredMax + 10, 1);
+        assertThat(pbp.getLimit(), Matchers.is(configuredMax));
+        assertThat(pbp.getBegin(), Matchers.is(0L));
+        assertThat(pbp.getEnd(), Matchers.is(configuredMax));
+        assertThat(pbp.getPage(), Matchers.is(1L));
     }
 
     protected static Pagination page(int page) {

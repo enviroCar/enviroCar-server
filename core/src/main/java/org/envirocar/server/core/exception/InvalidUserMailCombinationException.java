@@ -18,13 +18,13 @@ package org.envirocar.server.core.exception;
 
 public class InvalidUserMailCombinationException extends BadRequestException {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
 
-	public InvalidUserMailCombinationException() {
-		super("The given combination of username and email is invalid.");
-	}
-	
+    public InvalidUserMailCombinationException() {
+        super("The given combination of username and email is invalid.");
+    }
+
 }

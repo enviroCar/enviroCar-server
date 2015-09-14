@@ -32,12 +32,12 @@ public class RangeBasedPagination implements Pagination {
         if (end < 0 || end < begin) {
             throw new IllegalArgumentException();
         }
-        
+
         if (end - begin > MAX_PAGE_SIZE) {
-        	throw new IllegalArgumentException(
-        			String.format("Maximum response limit exceeded. Max is %s", MAX_PAGE_SIZE));
+            throw new IllegalArgumentException(
+                    String.format("Maximum response limit exceeded. Max is %s", MAX_PAGE_SIZE));
         }
-        
+
         this.begin = begin;
         this.end = end;
         this.size = this.end - this.begin + 1;

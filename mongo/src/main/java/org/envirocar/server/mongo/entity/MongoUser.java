@@ -100,7 +100,7 @@ public class MongoUser extends MongoEntityBase implements User {
     private String acceptedTermsOfUseVersion;
     @Property(TERMS_OF_USE_VERSION)
     private String termsOfUseVersion;
-    
+
     public MongoUser(String name) {
         this.name = name;
     }
@@ -339,19 +339,19 @@ public class MongoUser extends MongoEntityBase implements User {
     }
 
     @Override
-	public String getTermsOfUseVersion() {
-    	//acceptedTermsOfUseVersion kept for backwards compatibility with older users
-		return termsOfUseVersion != null ? termsOfUseVersion : acceptedTermsOfUseVersion;
-	}
+    public String getTermsOfUseVersion() {
+        //acceptedTermsOfUseVersion kept for backwards compatibility with older users
+        return termsOfUseVersion != null ? termsOfUseVersion : acceptedTermsOfUseVersion;
+    }
 
     @Override
-	public void setTermsOfUseVersion(String tou) {
-		this.termsOfUseVersion = tou;
-	}
+    public void setTermsOfUseVersion(String tou) {
+        this.termsOfUseVersion = tou;
+    }
 
-	@Override
-	public boolean hasAcceptedTermsOfUseVersion() {
-		return getTermsOfUseVersion() != null && !getTermsOfUseVersion().isEmpty();
-	}
-    
+    @Override
+    public boolean hasAcceptedTermsOfUseVersion() {
+        return getTermsOfUseVersion() != null && !getTermsOfUseVersion().isEmpty();
+    }
+
 }

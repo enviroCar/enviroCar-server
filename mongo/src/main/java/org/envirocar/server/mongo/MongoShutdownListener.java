@@ -30,7 +30,7 @@ import org.envirocar.server.core.guice.ResourceShutdownListener;
  * @author matthes
  */
 public class MongoShutdownListener implements ResourceShutdownListener {
-   
+
     private final Mongo mongo;
 
     @Inject
@@ -38,13 +38,13 @@ public class MongoShutdownListener implements ResourceShutdownListener {
         this.mongo = mongo;
     }
 
-    
-    
+
+
     @Override
     public void shutdownResources() {
         if (mongo != null) {
             mongo.close();
         }
     }
-    
+
 }

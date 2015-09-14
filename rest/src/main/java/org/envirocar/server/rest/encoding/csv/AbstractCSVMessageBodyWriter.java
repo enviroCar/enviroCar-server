@@ -34,43 +34,43 @@ import org.envirocar.server.rest.encoding.CSVTrackEncoder;
 
 /**
  * TODO: Javadoc
- * 
+ *
  * @author Benjamin Pross
  */
 @Produces(MediaTypes.TEXT_CSV)
 public abstract class AbstractCSVMessageBodyWriter<T> implements
-		MessageBodyWriter<T>, CSVTrackEncoder<T> {
+        MessageBodyWriter<T>, CSVTrackEncoder<T> {
 
     private final Class<T> classType;
 
     public AbstractCSVMessageBodyWriter(Class<T> classType) {
         this.classType = classType;
     }
-    
-	public abstract InputStream encodeCSV(T t, MediaType mt);
 
-	@Override
-	public long getSize(T t, Class<?> type, Type genericType, Annotation[] annotations,
-			MediaType mediaTyp) {
-		return -1;
-	}
+    public abstract InputStream encodeCSV(T t, MediaType mt);
 
-	@Override
-	public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations,
-			MediaType mediaType) {
+    @Override
+    public long getSize(T t, Class<?> type, Type genericType, Annotation[] annotations,
+            MediaType mediaTyp) {
+        return -1;
+    }
+
+    @Override
+    public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations,
+            MediaType mediaType) {
         return this.classType.isAssignableFrom(type) &&
                 mediaType.isCompatible(MediaTypes.TEXT_CSV_TYPE);
-	}
+    }
 
-	@Override
-	public void writeTo(T t, Class<?> type, Type genericType, Annotation[] annotations,
-			MediaType mediaType, MultivaluedMap<String, Object> h,
-			OutputStream out) throws IOException, WebApplicationException {
-		
-		InputStream inputStream = encodeCSV(t, mediaType);
-		
-		IOUtils.copy(inputStream, out);
-		
-	}
+    @Override
+    public void writeTo(T t, Class<?> type, Type genericType, Annotation[] annotations,
+            MediaType mediaType, MultivaluedMap<String, Object> h,
+            OutputStream out) throws IOException, WebApplicationException {
+
+        InputStream inputStream = encodeCSV(t, mediaType);
+
+        IOUtils.copy(inputStream, out);
+
+    }
 
 }

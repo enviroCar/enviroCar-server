@@ -35,7 +35,7 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.vocabulary.OWL;
 
 /**
- * 
+ *
  * @author Arne de Wall
  *
  */
@@ -45,7 +45,7 @@ public class DBPediaPhenomenonLinker implements RDFLinker<Phenomenon> {
             .getLogger(EEAPhenomenonLinker.class);
     private static final String PROPERTIES = "/DBPedia.properties";
     private final Properties properties;
-    
+
     public DBPediaPhenomenonLinker(){
         this.properties = new Properties();
         InputStream in = null;
@@ -63,7 +63,7 @@ public class DBPediaPhenomenonLinker implements RDFLinker<Phenomenon> {
             Closeables.closeQuietly(in);
         }
     }
-    
+
     @Override
     public void link(Model m, Phenomenon t, AccessRights rights, Resource r,
             Provider<UriBuilder> uriBuilder) {

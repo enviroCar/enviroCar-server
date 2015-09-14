@@ -28,18 +28,18 @@ import com.google.common.base.Objects;
 @Entity("termsOfUse")
 public class MongoTermsOfUseInstance extends MongoEntityBase implements TermsOfUseInstance {
 
-	public static final String NAME = Mapper.ID_KEY;
-	public static final String CONTENTS = "contents";
-	public static final String DATE_STRING = "issuedDate";
+    public static final String NAME = Mapper.ID_KEY;
+    public static final String CONTENTS = "contents";
+    public static final String DATE_STRING = "issuedDate";
 
-	@Id
-	 private ObjectId id = new ObjectId();
-	
-	@Property(DATE_STRING)
-	private String issuedDate;
+    @Id
+     private ObjectId id = new ObjectId();
 
-	@Property(CONTENTS)
-	private String contents;
+    @Property(DATE_STRING)
+    private String issuedDate;
+
+    @Property(CONTENTS)
+    private String contents;
 
     @Override
     public String getIdentifier() {
@@ -51,41 +51,41 @@ public class MongoTermsOfUseInstance extends MongoEntityBase implements TermsOfU
         this.id = id == null ? null : new ObjectId(id);
     }
 
-	@Override
-	public String getIssuedDate() {
-		return this.issuedDate;
-	}
+    @Override
+    public String getIssuedDate() {
+        return this.issuedDate;
+    }
 
-	@Override
-	public void setIssuedDate(String ds) {
-		this.issuedDate = ds;
-	}
+    @Override
+    public void setIssuedDate(String ds) {
+        this.issuedDate = ds;
+    }
 
-	@Override
-	public String getContents() {
-		return this.contents;
-	}
+    @Override
+    public String getContents() {
+        return this.contents;
+    }
 
-	@Override
-	public void setContents(String c) {
-		this.contents = c;
-	}
+    @Override
+    public void setContents(String c) {
+        this.contents = c;
+    }
 
-	@Override
-	public int hashCode() {
-		return Objects.hashCode(this.issuedDate);
-	}
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(this.issuedDate);
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		final MongoTermsOfUseInstance other = (MongoTermsOfUseInstance) obj;
-		return Objects.equal(this.issuedDate, other.issuedDate);
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final MongoTermsOfUseInstance other = (MongoTermsOfUseInstance) obj;
+        return Objects.equal(this.issuedDate, other.issuedDate);
+    }
 
 }

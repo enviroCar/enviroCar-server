@@ -20,12 +20,12 @@ import org.joda.time.DateTime;
 
 public interface PasswordReset extends BaseEntity {
 
-	DateTime getExpires();
+    DateTime getExpires();
 
-	User getUser();
+    User getUser();
 
-	String getCode();
+    String getCode();
 
-	boolean isExpired();
+    boolean isExpired();
 
 }

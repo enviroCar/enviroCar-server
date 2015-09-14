@@ -21,7 +21,7 @@ import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 
 public class PageBasedPagination implements Pagination {
-	private final long size;
+    private final long size;
     private final long page;
     private final long begin;
     private final long end;

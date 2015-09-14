@@ -104,8 +104,8 @@ import com.vividsolutions.jts.geom.Geometry;
 
 public class EncodingTestModule extends AbstractModule {
 
-	@Override
-	protected void configure() {
+    @Override
+    protected void configure() {
         bind(DataService.class).to(DataServiceImpl.class);
         bind(AccessRights.class).to(NonRestrictiveRights.class);
         bind(DataService.class).to(DataServiceImpl.class);
@@ -151,7 +151,7 @@ public class EncodingTestModule extends AbstractModule {
         bind(BadgesDao.class).to(MongoBadgesDao.class);
         bind(PasswordResetDAO.class).to(MongoPasswordResetDAO.class);
         bind(FuelingDao.class).to(MongoFuelingDao.class);
-	}
+    }
 
 
     @Provides
@@ -159,5 +159,5 @@ public class EncodingTestModule extends AbstractModule {
     public DateTimeFormatter formatter() {
         return ISODateTimeFormat.dateTimeNoMillis();
     }
-	
+
 }

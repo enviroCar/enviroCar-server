@@ -41,5 +41,5 @@ public class NewTrackListener {
         this.dao.updateStatisticsOnNewTrack(e.getTrack());
     }
 
-    
+
 }

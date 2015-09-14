@@ -33,7 +33,7 @@ public class TermsOfUseResource extends AbstractResource {
 
     public static final String TERMS_OF_USE_INSTANCE = "{id}";
 
-	@GET
+    @GET
     @Schema(response = Schemas.TERMS_OF_USE)
     @Produces({ MediaTypes.TERMS_OF_USE })
     public TermsOfUse get() throws BadRequestException {

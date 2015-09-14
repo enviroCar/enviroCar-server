@@ -27,4 +27,5 @@ public interface RESTConstants {
     String SEARCH = "q";
     String TYPE = "type";
     String BBOX = "bbox";
+    String NEAR_POINT = "nearPoint";
 }

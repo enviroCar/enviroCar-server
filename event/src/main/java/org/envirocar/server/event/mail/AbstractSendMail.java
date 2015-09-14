@@ -29,55 +29,55 @@ import javax.mail.internet.MimeMessage;
 
 public abstract class AbstractSendMail implements SendMail {
 
-	private String user;
-	private String password;
-	private String from;
-	private String host;
-	private int port;
-	
-	@Override
-	public void setup(String user, String password, String fromEmail,
-			String smtpHost, int smtpPort) {
-		this.user = user;
-		this.password = password;
-		this.from = fromEmail;
-		this.host = smtpHost;
-		this.port = smtpPort;
-	}
+    private String user;
+    private String password;
+    private String from;
+    private String host;
+    private int port;
 
-	@Override
-	public void setup(Properties conf) {
-		setup(conf.getProperty("USER"), conf.getProperty("PASSWORD"),
-				conf.getProperty("FROM_MAIL"), conf.getProperty("SMTP_HOST"),
-				Integer.parseInt(conf.getProperty("SMTP_PORT")));
-	}
-	
-	@Override
-	public void send(String email, String subject, String content)
-			throws MessagingException {
-		Properties props = new Properties();
-		props.put("mail.smtp.host", host);
-		props.put("mail.smtp.auth", "true");
-		props.put("mail.smtp.port", Integer.toString(port));
+    @Override
+    public void setup(String user, String password, String fromEmail,
+            String smtpHost, int smtpPort) {
+        this.user = user;
+        this.password = password;
+        this.from = fromEmail;
+        this.host = smtpHost;
+        this.port = smtpPort;
+    }
 
-		injectProperties(props);
-		
-		Session session = Session.getInstance(props, new Authenticator() {
-			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication(user, password);
-			}
-		});
+    @Override
+    public void setup(Properties conf) {
+        setup(conf.getProperty("USER"), conf.getProperty("PASSWORD"),
+                conf.getProperty("FROM_MAIL"), conf.getProperty("SMTP_HOST"),
+                Integer.parseInt(conf.getProperty("SMTP_PORT")));
+    }
 
-		Message message = new MimeMessage(session);
-		message.setFrom(new InternetAddress(from));
-		message.setRecipients(Message.RecipientType.TO,
-				InternetAddress.parse(email));
-		message.setSubject(subject);
-		message.setText(content);
+    @Override
+    public void send(String email, String subject, String content)
+            throws MessagingException {
+        Properties props = new Properties();
+        props.put("mail.smtp.host", host);
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.port", Integer.toString(port));
 
-		Transport.send(message);
-	}
+        injectProperties(props);
 
-	protected abstract void injectProperties(Properties props);
-	
+        Session session = Session.getInstance(props, new Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(user, password);
+            }
+        });
+
+        Message message = new MimeMessage(session);
+        message.setFrom(new InternetAddress(from));
+        message.setRecipients(Message.RecipientType.TO,
+                InternetAddress.parse(email));
+        message.setSubject(subject);
+        message.setText(content);
+
+        Transport.send(message);
+    }
+
+    protected abstract void injectProperties(Properties props);
+
 }

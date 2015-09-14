@@ -49,10 +49,10 @@ public class MongoTrack extends MongoEntityBase implements Track {
     public static final String BBOX = "bbox";
     public static final String BEGIN = "begin";
     public static final String END = "end";
-	public static final String APP_VERSION = "appVersion";
-	public static final String OBD_DEVICE = "obdDevice";
-	public static final String TERMS_OF_USE_VERSION = "touVersion";
-	public static final String LENGTH = "length";
+    public static final String APP_VERSION = "appVersion";
+    public static final String OBD_DEVICE = "obdDevice";
+    public static final String TERMS_OF_USE_VERSION = "touVersion";
+    public static final String LENGTH = "length";
     @Id
     private ObjectId id = new ObjectId();
     @Property(USER)
@@ -244,63 +244,63 @@ public class MongoTrack extends MongoEntityBase implements Track {
     }
 
     @Override
-	public String getAppVersion() {
-		return appVersion;
-	}
+    public String getAppVersion() {
+        return appVersion;
+    }
 
     @Override
-	public void setAppVersion(String appVersion) {
-		this.appVersion = appVersion;
-	}
+    public void setAppVersion(String appVersion) {
+        this.appVersion = appVersion;
+    }
 
     @Override
-	public String getObdDevice() {
-		return obdDevice;
-	}
+    public String getObdDevice() {
+        return obdDevice;
+    }
 
     @Override
-	public void setObdDevice(String obdDevice) {
-		this.obdDevice = obdDevice;
-	}
+    public void setObdDevice(String obdDevice) {
+        this.obdDevice = obdDevice;
+    }
 
     @Override
-	public String getTouVersion() {
-		return touVersion;
-	}
-
-	@Override
-	public double getLength() {		
-		return length;
-	}
-
-	@Override
-	public void setLength(double length) {
-		this.length = length;
-	}
+    public String getTouVersion() {
+        return touVersion;
+    }
 
     @Override
-	public void setTouVersion(String touVersion) {
-		this.touVersion = touVersion;
-	}
+    public double getLength() {
+        return length;
+    }
 
-	@Override
-	public boolean hasAppVersion() {
-		return appVersion != null && !appVersion.isEmpty();
-	}
+    @Override
+    public void setLength(double length) {
+        this.length = length;
+    }
 
-	@Override
-	public boolean hasObdDevice() {
-		return obdDevice != null && !obdDevice.isEmpty();
-	}
+    @Override
+    public void setTouVersion(String touVersion) {
+        this.touVersion = touVersion;
+    }
 
-	@Override
-	public boolean hasTouVersion() {
-		return touVersion != null && !touVersion.isEmpty();
-	}
+    @Override
+    public boolean hasAppVersion() {
+        return appVersion != null && !appVersion.isEmpty();
+    }
 
-	@Override
-	public boolean hasLength() {
-		return getLength() != 0.0;
-	}
-    
+    @Override
+    public boolean hasObdDevice() {
+        return obdDevice != null && !obdDevice.isEmpty();
+    }
+
+    @Override
+    public boolean hasTouVersion() {
+        return touVersion != null && !touVersion.isEmpty();
+    }
+
+    @Override
+    public boolean hasLength() {
+        return getLength() != 0.0;
+    }
+
 }

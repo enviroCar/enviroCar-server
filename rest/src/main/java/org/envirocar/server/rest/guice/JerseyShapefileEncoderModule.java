@@ -38,9 +38,9 @@ public class JerseyShapefileEncoderModule extends AbstractModule {
         bind(TrackShapefileEncoder.class).in(Scopes.SINGLETON);
         bind(new TypeLiteral<ShapefileTrackEncoder<Track>>() {
         }).to(TrackShapefileEncoder.class);
-        
+
         Multibinder<ResourceShutdownListener> binder = Multibinder.newSetBinder(binder(),
-					ResourceShutdownListener.class);
+                    ResourceShutdownListener.class);
         binder.addBinding().to(GeotoolsShutdownListener.class);
     }
 }

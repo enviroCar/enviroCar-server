@@ -91,9 +91,9 @@ public class DataServiceImpl implements DataService {
     private final EntityValidator<Measurement> measurementValidator;
     private final EntityValidator<Fueling> fuelingValidator;
     private final EventBus eventBus;
-	private final AnnouncementsDao announcementsDao;
-	private final BadgesDao badgesDao;
-	private final GeometryOperations geomOps;
+    private final AnnouncementsDao announcementsDao;
+    private final BadgesDao badgesDao;
+    private final GeometryOperations geomOps;
 
     @Inject
     public DataServiceImpl(TrackDao trackDao, MeasurementDao measurementDao,
@@ -169,11 +169,11 @@ public class DataServiceImpl implements DataService {
         }
         track.setBegin(begin);
         track.setEnd(end);
-        
+
         if (!track.hasLength()) {
-        	track.setLength(geomOps.calculateLength(measurements));
+            track.setLength(geomOps.calculateLength(measurements));
         }
-        
+
         this.trackDao.create(track);
         for (Measurement m : measurements) {
             this.measurementDao.create(m);
@@ -281,40 +281,40 @@ public class DataServiceImpl implements DataService {
         return this.sensorDao.get(request);
     }
 
-	@Override
-	public TermsOfUse getTermsOfUse(Pagination p) {
-		return this.termsOfUseDao.get(p);
-	}
+    @Override
+    public TermsOfUse getTermsOfUse(Pagination p) {
+        return this.termsOfUseDao.get(p);
+    }
 
-	@Override
-	public TermsOfUseInstance getTermsOfUseInstance(String id)
-			throws ResourceNotFoundException {
-		TermsOfUseInstance result = this.termsOfUseDao.getById(id);
-		if (result == null) {
-			throw new ResourceNotFoundException(String.format("TermsOfUse with id '%s' not found.", id));
-		}
-		return result;
-	}
+    @Override
+    public TermsOfUseInstance getTermsOfUseInstance(String id)
+            throws ResourceNotFoundException {
+        TermsOfUseInstance result = this.termsOfUseDao.getById(id);
+        if (result == null) {
+            throw new ResourceNotFoundException(String.format("TermsOfUse with id '%s' not found.", id));
+        }
+        return result;
+    }
 
-	@Override
-	public Announcements getAnnouncements(Pagination pagination) {
-		return this.announcementsDao.get(pagination);
-	}
+    @Override
+    public Announcements getAnnouncements(Pagination pagination) {
+        return this.announcementsDao.get(pagination);
+    }
 
-	@Override
-	public Announcement getAnnouncement(String id)
-			throws ResourceNotFoundException {
-		Announcement result = this.announcementsDao.getById(id);
-		if (result == null) {
-			throw new ResourceNotFoundException(String.format("Announcement with id '%s' not found.", id));
-		}
-		return result;
-	}
+    @Override
+    public Announcement getAnnouncement(String id)
+            throws ResourceNotFoundException {
+        Announcement result = this.announcementsDao.getById(id);
+        if (result == null) {
+            throw new ResourceNotFoundException(String.format("Announcement with id '%s' not found.", id));
+        }
+        return result;
+    }
 
-	@Override
-	public Badges getBadges(Pagination pagination) {
-		return this.badgesDao.get(pagination);
-	}
+    @Override
+    public Badges getBadges(Pagination pagination) {
+        return this.badgesDao.get(pagination);
+    }
 
     @Override
     public Fueling createFueling(Fueling fueling) {

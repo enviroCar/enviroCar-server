@@ -57,7 +57,7 @@ import org.envirocar.server.mongo.statistics.StatisticsUpdateScheduler;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class MongoStatisticsDao implements StatisticsDao {
-    
+
     public static final String ID = Mapper.ID_KEY;
     public static final String PHENOMENON_NAME_PATH =
             MongoUtils.path(MongoMeasurement.PHENOMENONS,
@@ -85,7 +85,7 @@ public class MongoStatisticsDao implements StatisticsDao {
     private MongoPhenomenonDao phenomenonDao;
     private final BasicDAO<MongoStatistics, MongoStatisticKey> dao;
     private final StatisticsUpdateScheduler scheduler;
-    
+
     private final Function<StatisticsFilter, MongoStatistics> calculateFunction = new Function<StatisticsFilter, MongoStatistics>() {
         @Override
         public MongoStatistics apply(StatisticsFilter t) {
@@ -150,8 +150,8 @@ public class MongoStatisticsDao implements StatisticsDao {
         this.dao.save(v);
         return v;
     }
-    
-    
+
+
     private MongoStatisticKey key(StatisticsFilter request) {
         MongoTrack track = (MongoTrack) request.getTrack();
         MongoUser user = (MongoUser) request.getUser();
@@ -249,12 +249,12 @@ public class MongoStatisticsDao implements StatisticsDao {
         StatisticsFilter allFilter = new StatisticsFilter();
         MongoStatisticKey allKey = key(allFilter);
         this.scheduler.updateStatistics(allFilter, allKey, calculateFunction, false);
-        
+
         StatisticsFilter userFilter = new StatisticsFilter(t.getUser());
         MongoStatisticKey userKey = key(userFilter);
         this.scheduler.updateStatistics(userFilter, userKey, calculateFunction, false);
-        
-        
+
+
     }
 
 

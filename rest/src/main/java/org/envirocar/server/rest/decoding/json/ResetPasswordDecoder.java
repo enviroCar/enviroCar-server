@@ -28,23 +28,23 @@ import com.google.inject.Inject;
 @Provider
 public class ResetPasswordDecoder extends AbstractJSONEntityDecoder<ResetPasswordRequest>{
 
-	private JSONEntityDecoder<User> userDecoder;
+    private JSONEntityDecoder<User> userDecoder;
 
-	@Inject
-	public ResetPasswordDecoder(JSONEntityDecoder<User> userDec) {
-		super(ResetPasswordRequest.class);
-		this.userDecoder = userDec;
-	}
+    @Inject
+    public ResetPasswordDecoder(JSONEntityDecoder<User> userDec) {
+        super(ResetPasswordRequest.class);
+        this.userDecoder = userDec;
+    }
 
-	@Override
-	public ResetPasswordRequest decode(JsonNode j, MediaType mt) {
-		ResetPasswordRequest result = new ResetPasswordRequest();
-		result.setUser(this.userDecoder.decode(j.path("user"), mt));
-		if (j.has("code")) {
-			result.setCode(j.path("code").asText());
-		}
-		return result;
-	}
+    @Override
+    public ResetPasswordRequest decode(JsonNode j, MediaType mt) {
+        ResetPasswordRequest result = new ResetPasswordRequest();
+        result.setUser(this.userDecoder.decode(j.path("user"), mt));
+        if (j.has("code")) {
+            result.setCode(j.path("code").asText());
+        }
+        return result;
+    }
 
 
 }

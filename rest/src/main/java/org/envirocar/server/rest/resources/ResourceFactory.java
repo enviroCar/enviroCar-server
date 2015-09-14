@@ -100,16 +100,16 @@ public interface ResourceFactory {
             TermsOfUseInstance t);
 
     JSONSchemaResource createSchemaResource();
-    
+
     AnnouncementsResource createAnnouncementsResource();
 
-	BadgesResource createBadgesResource();
+    BadgesResource createBadgesResource();
 
-	ResetPasswordResource createResetPasswordResource();
+    ResetPasswordResource createResetPasswordResource();
 
     FuelingsResource createFuelingsResource(User user);
-    
+
     ShareResource createShareResource(Track track);
-    
+
     PreviewResource createPreviewResource(Track track);
 }

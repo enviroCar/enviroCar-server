@@ -108,5 +108,5 @@ public enum TemporalFilterOperator {
         }
     }
 
-    
+
 }

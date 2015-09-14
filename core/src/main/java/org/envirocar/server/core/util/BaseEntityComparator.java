@@ -26,15 +26,15 @@ import org.envirocar.server.core.entities.BaseEntity;
  */
 public class BaseEntityComparator<T extends BaseEntity> implements Comparator<BaseEntity> {
 
-	@Override
-	public int compare(BaseEntity o1, BaseEntity o2) {
-		if (o1.getCreationTime() == null && o2.getCreationTime() == null) return 0;
-		
-		if (o1.getCreationTime() == null) return -1;
-		
-		if (o2.getCreationTime() == null) return 1;
-		
-		return o1.getCreationTime().compareTo(o2.getCreationTime());
-	}
+    @Override
+    public int compare(BaseEntity o1, BaseEntity o2) {
+        if (o1.getCreationTime() == null && o2.getCreationTime() == null) return 0;
+
+        if (o1.getCreationTime() == null) return -1;
+
+        if (o2.getCreationTime() == null) return 1;
+
+        return o1.getCreationTime().compareTo(o2.getCreationTime());
+    }
 
 }

@@ -133,21 +133,21 @@ public class JerseyJSONEncoderModule extends AbstractModule {
         bind(GeometryJSONEncoder.class).in(Scopes.SINGLETON);
         bind(new TypeLiteral<JSONEntityEncoder<Geometry>>() {
         }).to(GeometryJSONEncoder.class);
-        
+
         bind(TermsOfUseInstanceJSONEncoder.class).in(Scopes.SINGLETON);
         bind(new TypeLiteral<JSONEntityEncoder<TermsOfUseInstance>>() {
         }).to(TermsOfUseInstanceJSONEncoder.class);
         bind(TermsOfUseJSONEncoder.class).in(Scopes.SINGLETON);
         bind(new TypeLiteral<JSONEntityEncoder<TermsOfUse>>() {
         }).to(TermsOfUseJSONEncoder.class);
-        
+
         bind(AnnouncementJSONEncoder.class).in(Scopes.SINGLETON);
         bind(new TypeLiteral<JSONEntityEncoder<Announcement>>() {
         }).to(AnnouncementJSONEncoder.class);
         bind(AnnouncementsJSONEncoder.class).in(Scopes.SINGLETON);
         bind(new TypeLiteral<JSONEntityEncoder<Announcements>>() {
         }).to(AnnouncementsJSONEncoder.class);
-        
+
         bind(BadgeJSONEncoder.class).in(Scopes.SINGLETON);
         bind(new TypeLiteral<JSONEntityEncoder<Badge>>() {
         }).to(BadgeJSONEncoder.class);

@@ -22,8 +22,8 @@ import org.envirocar.server.core.entities.Measurement;
 
 public interface GeometryOperations {
 
-	public double calculateDistance(Measurement m1, Measurement m2);
-	
-	public double calculateLength(List<Measurement> measurements);
-	
+    public double calculateDistance(Measurement m1, Measurement m2);
+
+    public double calculateLength(List<Measurement> measurements);
+
 }

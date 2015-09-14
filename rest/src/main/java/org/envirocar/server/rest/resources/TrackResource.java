@@ -21,7 +21,6 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
@@ -74,8 +73,8 @@ public class TrackResource extends AbstractResource {
     @Produces({ MediaTypes.TRACK,
                 MediaTypes.XML_RDF,
                 MediaTypes.TURTLE,
-                MediaTypes.TURTLE_ALT, 
-                MediaTypes.TEXT_CSV, 
+                MediaTypes.TURTLE_ALT,
+                MediaTypes.TEXT_CSV,
                 MediaTypes.APPLICATION_ZIPPED_SHP})
     public Track get() throws TrackNotFoundException {
         return track;
@@ -105,15 +104,15 @@ public class TrackResource extends AbstractResource {
         checkRights(getRights().canSeeStatisticsOf(track));
         return getResourceFactory().createStatisticsResource(track);
     }
-    
+
     @Path(SHARE)
     public ShareResource share(){
-    	return getResourceFactory().createShareResource(track);
+        return getResourceFactory().createShareResource(track);
     }
-    
+
     @Path(PREVIEW)
     public PreviewResource preview(){
-    	return getResourceFactory().createPreviewResource(track);
-        
+        return getResourceFactory().createPreviewResource(track);
+
     }
 }

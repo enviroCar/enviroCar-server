@@ -20,25 +20,25 @@ import org.envirocar.server.core.entities.User;
 
 public class ResetPasswordRequest {
 
-	private User user;
-	private String code;
-	
-	
-	public User getUser() {
-		return user;
-	}
+    private User user;
+    private String code;
 
-	public void setUser(User user) {
-		this.user = user;
-	}
 
-	public String getCode() {
-		return code;
-	}
-	
-	public void setCode(String code) {
-		this.code = code;
-	}
-	
-	
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+
 }

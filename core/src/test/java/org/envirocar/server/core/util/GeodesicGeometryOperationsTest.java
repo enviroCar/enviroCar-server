@@ -31,37 +31,37 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 
 public class GeodesicGeometryOperationsTest {
 
-	private static final double TOLERANCE = 0.00005;
-	private static final double EXPECTED_DISTANCE_NORTH_SOUTH = 10001.9657;
-	private static final double EXPECTED_DISTANCE_EAST_WEST = 19903.5934;
-	
-	private GeodesicGeometryOperations ggo = new GeodesicGeometryOperations();
-	private GeometryFactory gf = new GeometryFactory();
-	
-	@Mock
-	private Measurement m1;
-	@Mock
-	private Measurement m2;
-	@Mock
-	private Measurement m3;
-	
-	@Before
-	public void setup() {
-		MockitoAnnotations.initMocks(this);
-		when(m1.getGeometry()).thenReturn(gf.createPoint(new Coordinate(0.0, 90.0)));
-		when(m2.getGeometry()).thenReturn(gf.createPoint(new Coordinate(0.0, 0.0)));
-		when(m3.getGeometry()).thenReturn(gf.createPoint(new Coordinate(180.0, 0.0)));
-	}
-	
-	@Test
-	public void testDistanceCalculation() {
-		double dist = ggo.calculateDistance(m1, m2);
-		double delta = Math.abs(dist - EXPECTED_DISTANCE_NORTH_SOUTH);
-		Assert.assertTrue(delta <= TOLERANCE);
-		
-		dist = ggo.calculateDistance(m3, m2);
-		delta = Math.abs(dist - EXPECTED_DISTANCE_EAST_WEST);
-		Assert.assertTrue(delta <= TOLERANCE);
-	}
-	
+    private static final double TOLERANCE = 0.00005;
+    private static final double EXPECTED_DISTANCE_NORTH_SOUTH = 10001.9657;
+    private static final double EXPECTED_DISTANCE_EAST_WEST = 19903.5934;
+
+    private GeodesicGeometryOperations ggo = new GeodesicGeometryOperations();
+    private GeometryFactory gf = new GeometryFactory();
+
+    @Mock
+    private Measurement m1;
+    @Mock
+    private Measurement m2;
+    @Mock
+    private Measurement m3;
+
+    @Before
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
+        when(m1.getGeometry()).thenReturn(gf.createPoint(new Coordinate(0.0, 90.0)));
+        when(m2.getGeometry()).thenReturn(gf.createPoint(new Coordinate(0.0, 0.0)));
+        when(m3.getGeometry()).thenReturn(gf.createPoint(new Coordinate(180.0, 0.0)));
+    }
+
+    @Test
+    public void testDistanceCalculation() {
+        double dist = ggo.calculateDistance(m1, m2);
+        double delta = Math.abs(dist - EXPECTED_DISTANCE_NORTH_SOUTH);
+        Assert.assertTrue(delta <= TOLERANCE);
+
+        dist = ggo.calculateDistance(m3, m2);
+        delta = Math.abs(dist - EXPECTED_DISTANCE_EAST_WEST);
+        Assert.assertTrue(delta <= TOLERANCE);
+    }
+
 }

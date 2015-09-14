@@ -30,67 +30,67 @@ import com.google.common.base.Objects;
 @Entity("announcements")
 public class MongoAnnouncement extends MongoEntityBase implements Announcement {
 
-	public static final String NAME = Mapper.ID_KEY;
-	public static final String CONTENTS = "content";
-	public static final String VERSIONS = "versions";
-	public static final String PRIORITY = "priority";
-	public static final String CATEGORY = "category";
+    public static final String NAME = Mapper.ID_KEY;
+    public static final String CONTENTS = "content";
+    public static final String VERSIONS = "versions";
+    public static final String PRIORITY = "priority";
+    public static final String CATEGORY = "category";
 
-	@Id
-	private ObjectId id = new ObjectId();
-	
-	@Property(VERSIONS)
-	private String versions;
+    @Id
+    private ObjectId id = new ObjectId();
 
-	@Property(CONTENTS)
-	private Map<String, String> contents;
-	
-	@Property(PRIORITY)
-	private String priority;
-	
-	@Property(CATEGORY)
-	private String category;
+    @Property(VERSIONS)
+    private String versions;
 
-	@Override
-	public String getVersions() {
-		return versions;
-	}
+    @Property(CONTENTS)
+    private Map<String, String> contents;
 
-	@Override
-	public void setVersions(String versions) {
-		this.versions = versions;
-	}
+    @Property(PRIORITY)
+    private String priority;
 
-	@Override
-	public Map<String, String> getContents() {
-		return contents;
-	}
+    @Property(CATEGORY)
+    private String category;
 
-	@Override
-	public void setContents(Map<String, String> contents) {
-		this.contents = contents;
-	}
+    @Override
+    public String getVersions() {
+        return versions;
+    }
 
-	@Override
-	public String getPriority() {
-		return priority;
-	}
+    @Override
+    public void setVersions(String versions) {
+        this.versions = versions;
+    }
 
-	@Override
-	public void setPriority(String priority) {
-		this.priority = priority;
-	}
+    @Override
+    public Map<String, String> getContents() {
+        return contents;
+    }
 
-	@Override
-	public String getCategory() {
-		return category;
-	}
+    @Override
+    public void setContents(Map<String, String> contents) {
+        this.contents = contents;
+    }
 
-	@Override
-	public void setCategory(String category) {
-		this.category = category;
-	}
-	
+    @Override
+    public String getPriority() {
+        return priority;
+    }
+
+    @Override
+    public void setPriority(String priority) {
+        this.priority = priority;
+    }
+
+    @Override
+    public String getCategory() {
+        return category;
+    }
+
+    @Override
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
     @Override
     public String getIdentifier() {
         return this.id == null ? null : this.id.toString();
@@ -100,22 +100,22 @@ public class MongoAnnouncement extends MongoEntityBase implements Announcement {
     public void setIdentifier(String id) {
         this.id = id == null ? null : new ObjectId(id);
     }
-    
-	@Override
-	public int hashCode() {
-		return Objects.hashCode(this.id);
-	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		final MongoAnnouncement other = (MongoAnnouncement) obj;
-		return Objects.equal(this.id, other.id);
-	}
-	
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(this.id);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final MongoAnnouncement other = (MongoAnnouncement) obj;
+        return Objects.equal(this.id, other.id);
+    }
+
 }

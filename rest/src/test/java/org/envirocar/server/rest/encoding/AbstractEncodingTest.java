@@ -36,31 +36,31 @@ import com.google.inject.Inject;
 import com.vividsolutions.jts.geom.GeometryFactory;
 
 @Modules({MongoConverterModule.class, JerseyCodingModule.class, MongoMappedClassesModule.class,
-	MongoConnectionModule.class, EncodingTestModule.class,
-	UpdaterModule.class, ValidatorModule.class })
+    MongoConnectionModule.class, EncodingTestModule.class,
+    UpdaterModule.class, ValidatorModule.class })
 @RunWith(GuiceRunner.class)
 public abstract class AbstractEncodingTest {
 
-	@Inject
-	protected DataService dataService;
+    @Inject
+    protected DataService dataService;
 
-	@Inject
-	protected UserService userService;
+    @Inject
+    protected UserService userService;
 
-	@Inject
-	protected TrackCSVEncoder trackCSVEncoder;
+    @Inject
+    protected TrackCSVEncoder trackCSVEncoder;
 
-	@Inject
-	protected TrackShapefileEncoder trackShapefileEncoder;
+    @Inject
+    protected TrackShapefileEncoder trackShapefileEncoder;
 
-	@Inject
-	protected EntityFactory entityFactory;
+    @Inject
+    protected EntityFactory entityFactory;
 
-	@Inject
-	protected GeometryFactory geometryFactory;
-	
-	public AbstractEncodingTest(){
-		MorphiaLoggerFactory.reset();
-	}
+    @Inject
+    protected GeometryFactory geometryFactory;
+
+    public AbstractEncodingTest(){
+        MorphiaLoggerFactory.reset();
+    }
 
 }

@@ -43,124 +43,124 @@ import com.google.inject.Singleton;
 @Singleton
 public class SendVerificationCodeViaMailListener {
 
-	private static final String USERNAME = "{username}";
-	private static final String CODE = "{code}";
-	private static final String EXPIRATION_TIME = "{expirationTime}";
-	private static final Logger logger = LoggerFactory
-			.getLogger(SendVerificationCodeViaMailListener.class);
-	private static final DateTimeFormatter dateFormat = ISODateTimeFormat.dateTimeNoMillis();
-	private static final String VERIFICATION_CODE_SUBJECT = "VERIFICATION_CODE_SUBJECT";
-	private static final String USE_SSL = "USE_SSL";
-	private static final String EMAIL_TEMPLATE_FILE = "mail-verification-code-template.html";
-	private static final String MAIL_CONFIGURATION_FILE = "mail-configuration.properties";
-	private File templateFile;
-	private File mailConfigFile;
+    private static final String USERNAME = "{username}";
+    private static final String CODE = "{code}";
+    private static final String EXPIRATION_TIME = "{expirationTime}";
+    private static final Logger logger = LoggerFactory
+            .getLogger(SendVerificationCodeViaMailListener.class);
+    private static final DateTimeFormatter dateFormat = ISODateTimeFormat.dateTimeNoMillis();
+    private static final String VERIFICATION_CODE_SUBJECT = "VERIFICATION_CODE_SUBJECT";
+    private static final String USE_SSL = "USE_SSL";
+    private static final String EMAIL_TEMPLATE_FILE = "mail-verification-code-template.html";
+    private static final String MAIL_CONFIGURATION_FILE = "mail-configuration.properties";
+    private File templateFile;
+    private File mailConfigFile;
 
-	public SendVerificationCodeViaMailListener() {
-		String home = System.getProperty("user.home");
-		if (home != null) {
-			File homeDirectory = new File(home);
-			
-			if (homeDirectory != null && homeDirectory.isDirectory()) {
-				templateFile = new File(homeDirectory, EMAIL_TEMPLATE_FILE);
-				mailConfigFile = new File(homeDirectory, MAIL_CONFIGURATION_FILE);
-			}
-		} else {
-			logger.warn("user.home is not specified. Will try to use fallback resources.");
-		}
-		
-	}
+    public SendVerificationCodeViaMailListener() {
+        String home = System.getProperty("user.home");
+        if (home != null) {
+            File homeDirectory = new File(home);
 
-	@Subscribe
-	public void onPasswordResetRequestedEvent(PasswordResetEvent ev) {
-		CharSequence template = fillTemplate(ev);
+            if (homeDirectory != null && homeDirectory.isDirectory()) {
+                templateFile = new File(homeDirectory, EMAIL_TEMPLATE_FILE);
+                mailConfigFile = new File(homeDirectory, MAIL_CONFIGURATION_FILE);
+            }
+        } else {
+            logger.warn("user.home is not specified. Will try to use fallback resources.");
+        }
 
-		try {
-			Properties mailConfiguration = new Properties();
-			mailConfiguration.load(openFileWithFallback(mailConfigFile, MAIL_CONFIGURATION_FILE));
+    }
 
-			SendMail sender = createSender(mailConfiguration);
+    @Subscribe
+    public void onPasswordResetRequestedEvent(PasswordResetEvent ev) {
+        CharSequence template = fillTemplate(ev);
 
-			sender.send(ev.getUser().getMail(),
-					resolveSubject(mailConfiguration),
-					template.toString());
-		} catch (MessagingException e) {
-			logger.warn(e.getMessage(), e);
-		} catch (IOException e) {
-			logger.warn(e.getMessage(), e);
-		}
-	}
+        try {
+            Properties mailConfiguration = new Properties();
+            mailConfiguration.load(openFileWithFallback(mailConfigFile, MAIL_CONFIGURATION_FILE));
 
-	private Reader openFileWithFallback(File f, String fallbackResource) throws IOException {
-		if (f != null && f.exists()) {
-			return new FileReader(f);
-		}
-		logger.info("File {} is not available. Try to use fallback at {}",
-				(f != null ? f : "null"),
-				fallbackResource);
-		return new InputStreamReader(openStreamForResource(fallbackResource));
-	}
+            SendMail sender = createSender(mailConfiguration);
 
-	private String resolveSubject(Properties mailConfiguration) {
-		String result = mailConfiguration.getProperty(VERIFICATION_CODE_SUBJECT);
-		
-		if (result != null) return result;
-		
-		return "Password Reset requested";
-	}
+            sender.send(ev.getUser().getMail(),
+                    resolveSubject(mailConfiguration),
+                    template.toString());
+        } catch (MessagingException e) {
+            logger.warn(e.getMessage(), e);
+        } catch (IOException e) {
+            logger.warn(e.getMessage(), e);
+        }
+    }
 
-	private SendMail createSender(Properties conf) {
-		SendMail result;
-		
-		if (conf.containsKey(USE_SSL) && Boolean.parseBoolean(conf.getProperty(USE_SSL))) {
-			result = new SendMailSSL();
-		}
-		else {
-			result = new SendMailTLS();
-		}
-		
-		result.setup(conf);
-		return result;
-	}
+    private Reader openFileWithFallback(File f, String fallbackResource) throws IOException {
+        if (f != null && f.exists()) {
+            return new FileReader(f);
+        }
+        logger.info("File {} is not available. Try to use fallback at {}",
+                (f != null ? f : "null"),
+                fallbackResource);
+        return new InputStreamReader(openStreamForResource(fallbackResource));
+    }
 
-	private CharSequence fillTemplate(PasswordResetEvent e) {
-		String template = readFile(templateFile, EMAIL_TEMPLATE_FILE)
-				.toString();
-		return template
-				.replace(USERNAME, e.getUser().getName())
-				.replace(CODE, e.getCode())
-				.replace(EXPIRATION_TIME,
-						e.getExpiration().toString(dateFormat));
-	}
+    private String resolveSubject(Properties mailConfiguration) {
+        String result = mailConfiguration.getProperty(VERIFICATION_CODE_SUBJECT);
 
-	private CharSequence readFile(File f, String fallbackResource) {
-		StringBuilder sb = new StringBuilder();
-		Scanner sc = null;
+        if (result != null) return result;
 
-		String sep = System.getProperty("line.separator");
-		try {
-			sc = new Scanner(openFileWithFallback(f, fallbackResource));
-			while (sc.hasNext()) {
-				sb.append(sc.nextLine());
-				sb.append(sep);
-			}
-		} catch (IOException e) {
-			logger.warn(e.getMessage(), e);
-		} finally {
-			if (sc != null) {
-				sc.close();
-			}
-		}
+        return "Password Reset requested";
+    }
 
-		return sb;
-	}
+    private SendMail createSender(Properties conf) {
+        SendMail result;
 
-	private InputStream openStreamForResource(String string) throws IOException {
-		URLConnection conn = getClass().getResource(string)
-				.openConnection();
-		conn.setUseCaches(false);
-		return conn.getInputStream();
-	}
+        if (conf.containsKey(USE_SSL) && Boolean.parseBoolean(conf.getProperty(USE_SSL))) {
+            result = new SendMailSSL();
+        }
+        else {
+            result = new SendMailTLS();
+        }
+
+        result.setup(conf);
+        return result;
+    }
+
+    private CharSequence fillTemplate(PasswordResetEvent e) {
+        String template = readFile(templateFile, EMAIL_TEMPLATE_FILE)
+                .toString();
+        return template
+                .replace(USERNAME, e.getUser().getName())
+                .replace(CODE, e.getCode())
+                .replace(EXPIRATION_TIME,
+                        e.getExpiration().toString(dateFormat));
+    }
+
+    private CharSequence readFile(File f, String fallbackResource) {
+        StringBuilder sb = new StringBuilder();
+        Scanner sc = null;
+
+        String sep = System.getProperty("line.separator");
+        try {
+            sc = new Scanner(openFileWithFallback(f, fallbackResource));
+            while (sc.hasNext()) {
+                sb.append(sc.nextLine());
+                sb.append(sep);
+            }
+        } catch (IOException e) {
+            logger.warn(e.getMessage(), e);
+        } finally {
+            if (sc != null) {
+                sc.close();
+            }
+        }
+
+        return sb;
+    }
+
+    private InputStream openStreamForResource(String string) throws IOException {
+        URLConnection conn = getClass().getResource(string)
+                .openConnection();
+        conn.setUseCaches(false);
+        return conn.getInputStream();
+    }
 
 
 }

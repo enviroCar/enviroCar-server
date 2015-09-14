@@ -47,170 +47,170 @@ import com.vividsolutions.jts.geom.Point;
 
 /**
  * TODO: Javadoc
- * 
+ *
  * @author Benjamin Pross
  */
 @Provider
 public class TrackCSVEncoder extends AbstractCSVTrackEncoder<Track> {
 
-	private static final Logger log = LoggerFactory
-			.getLogger(TrackCSVEncoder.class);
-	private final DataService dataService;
-	private static final String delimiter = "; ";
+    private static final Logger log = LoggerFactory
+            .getLogger(TrackCSVEncoder.class);
+    private final DataService dataService;
+    private static final String delimiter = "; ";
 
-	@Inject
-	public TrackCSVEncoder(DataService dataService) {
-		super(Track.class);
-		this.dataService = dataService;
-	}
+    @Inject
+    public TrackCSVEncoder(DataService dataService) {
+        super(Track.class);
+        this.dataService = dataService;
+    }
 
-	@Override
-	public InputStream encodeCSV(Track t, AccessRights rights,
-			MediaType mediaType) {
+    @Override
+    public InputStream encodeCSV(Track t, AccessRights rights,
+            MediaType mediaType) {
 
-		InputStream resultInputStream = null;
-		try {
-			if (rights.canSeeMeasurementsOf(t)) {
-				Measurements measurements = dataService
-						.getMeasurements(new MeasurementFilter(t));
-				resultInputStream = convert(measurements);
-			}
+        InputStream resultInputStream = null;
+        try {
+            if (rights.canSeeMeasurementsOf(t)) {
+                Measurements measurements = dataService
+                        .getMeasurements(new MeasurementFilter(t));
+                resultInputStream = convert(measurements);
+            }
 
-		} catch (IOException e) {
-			log.debug(e.getMessage());
-		} catch (Exception e) {
-			log.debug(e.getMessage());
-		}
+        } catch (IOException e) {
+            log.debug(e.getMessage());
+        } catch (Exception e) {
+            log.debug(e.getMessage());
+        }
 
-		return resultInputStream;
-	}
+        return resultInputStream;
+    }
 
-	public InputStream convert(Measurements measurements) throws IOException {
+    public InputStream convert(Measurements measurements) throws IOException {
 
-		CharSequence header = null;
+        CharSequence header = null;
 
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(out));
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(out));
 
-		Set<String> properties = gatherPropertiesForHeader(measurements);
+        Set<String> properties = gatherPropertiesForHeader(measurements);
 
-		for (Measurement measurement : measurements) {
+        for (Measurement measurement : measurements) {
 
-			if (header == null) {
-				
-				List<String> spaceTimeProperties = new ArrayList<String>();				
-				spaceTimeProperties.add("longitude");
-				spaceTimeProperties.add("latitude");
-				spaceTimeProperties.add("time");
+            if (header == null) {
 
-				header = createCSVHeader(properties, spaceTimeProperties);
+                List<String> spaceTimeProperties = new ArrayList<String>();
+                spaceTimeProperties.add("longitude");
+                spaceTimeProperties.add("latitude");
+                spaceTimeProperties.add("time");
 
-				bw.append(header);
-				bw.newLine();
+                header = createCSVHeader(properties, spaceTimeProperties);
 
-			}
-			
-			bw.append(measurement.getIdentifier());
-			bw.append(delimiter);
-			
-			for (String key : properties) {
-				
-				Object value = getValue(key, measurement.getValues());
+                bw.append(header);
+                bw.newLine();
 
-				bw.append(value != null ? value.toString() : Double
-						.toString(Double.NaN));
-				bw.append(delimiter);
-			}
+            }
 
-			Point coord = (Point) measurement.getGeometry();
-			bw.append(Double.toString(coord.getCoordinate().x));
-			bw.append(delimiter);
-			bw.append(Double.toString(coord.getCoordinate().y));
-			bw.append(delimiter);
-			bw.append(getDateTimeFormat().print(measurement.getTime()));
+            bw.append(measurement.getIdentifier());
+            bw.append(delimiter);
 
-			bw.newLine();
-		}
+            for (String key : properties) {
 
-		bw.flush();
-		bw.close();
+                Object value = getValue(key, measurement.getValues());
 
-		return new ByteArrayInputStream(out.toByteArray());
-	}
+                bw.append(value != null ? value.toString() : Double
+                        .toString(Double.NaN));
+                bw.append(delimiter);
+            }
 
-	private String createCompundPropertyName(String propertyName, String unit) {
+            Point coord = (Point) measurement.getGeometry();
+            bw.append(Double.toString(coord.getCoordinate().x));
+            bw.append(delimiter);
+            bw.append(Double.toString(coord.getCoordinate().y));
+            bw.append(delimiter);
+            bw.append(getDateTimeFormat().print(measurement.getTime()));
 
-		return propertyName + "(" + unit + ")";
-	}
+            bw.newLine();
+        }
 
-	private String[] dissolvePropertyName(String propertyName) {
+        bw.flush();
+        bw.close();
 
-		return propertyName.replace(")", "").split("\\(");
-	}
+        return new ByteArrayInputStream(out.toByteArray());
+    }
 
-	private CharSequence createCSVHeader(Set<String> properties,
-			List<String> spaceTimeproperties) {
-		StringBuilder sb = new StringBuilder();
+    private String createCompundPropertyName(String propertyName, String unit) {
 
-		sb.append("id");
-		sb.append(delimiter);
-		
-		for (String key : properties) {
-			sb.append(key);
-			sb.append(delimiter);
-		}
+        return propertyName + "(" + unit + ")";
+    }
 
-		for (String key : spaceTimeproperties) {
-			sb.append(key);
-			sb.append(delimiter);
-		}
+    private String[] dissolvePropertyName(String propertyName) {
 
-		return sb.delete(sb.length() - delimiter.length(), sb.length());
-	}
-	
-	private String getValue(String phenomenonName, MeasurementValues values){
-		
-		String[] nameAndUnit = dissolvePropertyName(phenomenonName);
-			
-		for (MeasurementValue measurementValue : values) {
+        return propertyName.replace(")", "").split("\\(");
+    }
 
-			Phenomenon phenomenon = measurementValue.getPhenomenon();
-			
-			if(phenomenon.getName().equals(nameAndUnit[0])){
-				return String.valueOf(measurementValue.getValue());
-			}
-		}
-		
-		return "";
-	}
-	
+    private CharSequence createCSVHeader(Set<String> properties,
+            List<String> spaceTimeproperties) {
+        StringBuilder sb = new StringBuilder();
 
-	private Set<String> gatherPropertiesForHeader(Measurements measurements){
-		
-		Set<String> distinctPhenomenonNames = new HashSet<String>();
-		
-		for (Measurement measurement : measurements) {
+        sb.append("id");
+        sb.append(delimiter);
 
-			MeasurementValues values = measurement.getValues();
+        for (String key : properties) {
+            sb.append(key);
+            sb.append(delimiter);
+        }
 
-			for (MeasurementValue measurementValue : values) {
+        for (String key : spaceTimeproperties) {
+            sb.append(key);
+            sb.append(delimiter);
+        }
 
-				Phenomenon phenomenon = measurementValue.getPhenomenon();
+        return sb.delete(sb.length() - delimiter.length(), sb.length());
+    }
 
-				String unit = phenomenon.getUnit();
+    private String getValue(String phenomenonName, MeasurementValues values){
 
-				/*
-				 * create property name
-				 */
-				String propertyName = createCompundPropertyName(phenomenon.getName(),
-						unit);
+        String[] nameAndUnit = dissolvePropertyName(phenomenonName);
 
-				distinctPhenomenonNames.add(propertyName);
-			}
+        for (MeasurementValue measurementValue : values) {
 
-		}
-		
-		return distinctPhenomenonNames;
-	}	
-	
+            Phenomenon phenomenon = measurementValue.getPhenomenon();
+
+            if(phenomenon.getName().equals(nameAndUnit[0])){
+                return String.valueOf(measurementValue.getValue());
+            }
+        }
+
+        return "";
+    }
+
+
+    private Set<String> gatherPropertiesForHeader(Measurements measurements){
+
+        Set<String> distinctPhenomenonNames = new HashSet<String>();
+
+        for (Measurement measurement : measurements) {
+
+            MeasurementValues values = measurement.getValues();
+
+            for (MeasurementValue measurementValue : values) {
+
+                Phenomenon phenomenon = measurementValue.getPhenomenon();
+
+                String unit = phenomenon.getUnit();
+
+                /*
+                 * create property name
+                 */
+                String propertyName = createCompundPropertyName(phenomenon.getName(),
+                        unit);
+
+                distinctPhenomenonNames.add(propertyName);
+            }
+
+        }
+
+        return distinctPhenomenonNames;
+    }
+
 }

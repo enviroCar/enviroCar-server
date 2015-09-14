@@ -98,19 +98,19 @@ public class TrackJSONEncoder extends AbstractJSONEntityEncoder<Track> {
                         .encodeJSON(t.getUser(), rights, mediaType));
             }
             if (rights.canSeeLengthOf(t)) {
-            	properties.put(JSONConstants.LENGTH_KEY, t.getLength());
+                properties.put(JSONConstants.LENGTH_KEY, t.getLength());
             }
             if (t.hasAppVersion() && rights.canSeeAppVersionOf(t)) {
-            	properties.put(JSONConstants.APP_VERSION_KEY, t.getAppVersion());
+                properties.put(JSONConstants.APP_VERSION_KEY, t.getAppVersion());
             }
             /*
              * do not serialize the OBD device for privacy's sake
              */
 //            if (t.hasObdDevice() && rights.canSeeObdDeviceOf(t)) {
-//            	properties.put(JSONConstants.OBD_DEVICE_KEY, t.getObdDevice());
+//                properties.put(JSONConstants.OBD_DEVICE_KEY, t.getObdDevice());
 //            }
             if (t.hasTouVersion() && rights.canSeeTouVersionOf(t)) {
-            	properties.put(JSONConstants.TOU_VERSION_KEY, t.getTouVersion());
+                properties.put(JSONConstants.TOU_VERSION_KEY, t.getTouVersion());
             }
             JsonNode features;
             if (rights.canSeeMeasurementsOf(t)) {

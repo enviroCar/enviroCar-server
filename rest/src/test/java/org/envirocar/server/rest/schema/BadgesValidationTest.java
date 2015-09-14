@@ -33,9 +33,9 @@ import org.junit.runner.RunWith;
 public class BadgesValidationTest {
     private static final String BADGE
             = "{\"name\":\"contributor\","
-            		+ "\"displayName\": {\"en\": \"Contributor\",\"de\": \"Unterstützer\"},"
-            		+ "\"description\": {\"en\": \"an enviroCar contributor\","
-            		+ "\"de\": \"ein enviroCar unterstützer\"}}";
+                    + "\"displayName\": {\"en\": \"Contributor\",\"de\": \"Unterstützer\"},"
+                    + "\"description\": {\"en\": \"an enviroCar contributor\","
+                    + "\"de\": \"ein enviroCar unterstützer\"}}";
     private static final String BADGES
             = "{\"badges\":[" + BADGE + "]}";
     @Rule
