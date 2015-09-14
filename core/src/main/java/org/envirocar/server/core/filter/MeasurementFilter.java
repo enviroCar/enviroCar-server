@@ -22,7 +22,6 @@ import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.util.pagination.Pagination;
 
-
 /**
  * TODO JavaDoc
  *

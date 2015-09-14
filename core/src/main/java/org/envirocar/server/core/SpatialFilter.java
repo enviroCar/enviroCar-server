@@ -16,85 +16,95 @@
  */
 package org.envirocar.server.core;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.envirocar.server.core.exception.ValidationException;
 
+import com.google.common.base.Preconditions;
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * class for representing spatial filter
- *  
+ *
  * @author staschc
  *
  */
 public class SpatialFilter {
-	
-	/**
-	 * operator of the spatial filter 
-	 */
-	private final SpatialFilterOperator operator;
-	
-	/** 
-	 * generic list for keeping additional filter params
-	 */
-	private List<Double> params;
-	
-	/**
-	 * geometry used in the spatial filter
-	 */
-	private Geometry geom;
-	
-	/**
-	 * constructor for creating bbox filter
-	 * 
-	 * @param poly
-	 * 		polygon keeping min and max point of bbox filter
-	 */
-	public SpatialFilter(Geometry poly){
-		if (poly instanceof Polygon){
-			geom=poly;
-			operator = SpatialFilterOperator.BBOX;
-		}
-		else {
-			throw new ValidationException("Other pure geometry filters than bbox not supported!");
-		}
-	}
-	
-	/**
-	 * generic constructor for spatial filters
-	 * 
-	 * @param operatorp
-	 * @param g
-	 * @param paramsp
-	 */
-	public SpatialFilter(SpatialFilterOperator operatorp, Geometry g, List<Double> paramsp){
-		operator = operatorp;
-		geom = g;
-		params = paramsp;
-	}
-	
-	/**
-	 * enum for keeping the operator that is used in the spatial filter
-	 * 
-	 * @author staschc
-	 *
-	 */
-	public enum SpatialFilterOperator{
-		BBOX,NEARPOINT;
-	}
-	
-	public SpatialFilterOperator getOperator() {
-		return operator;
-	}
 
-	public List<Double> getParams() {
-		return params;
-	}
+    /**
+     * operator of the spatial filter.
+     */
+    private final SpatialFilterOperator operator;
 
-	public Geometry getGeom() {
-		return geom;
-	}
-	
+    /**
+     * generic list for keeping additional filter params.
+     */
+    private final List<Double> params;
+
+    /**
+     * geometry used in the spatial filter.
+     */
+    private final Geometry geom;
+
+    /**
+     * generic constructor for spatial filters
+     *
+     * @param operator
+     * @param geom
+     * @param params
+     */
+    public SpatialFilter(SpatialFilterOperator operator,
+                         Geometry geom,
+                         List<Double> params) {
+        switch (operator) {
+            case BBOX:
+                if (!(geom instanceof Polygon)) {
+                    throw new ValidationException("BBOX requires a Polygon");
+                }
+                break;
+            case NEARPOINT:
+                if (!(geom instanceof Point)) {
+                    throw new ValidationException("NEARPOINT requires a point!");
+                }
+                break;
+        }
+        this.operator = Preconditions.checkNotNull(operator);
+        this.geom = Preconditions.checkNotNull(geom);
+        this.params = params == null ? Collections.emptyList() : params;
+    }
+
+
+    public SpatialFilterOperator getOperator() {
+        return this.operator;
+    }
+
+    public List<Double> getParams() {
+        return Collections.unmodifiableList(this.params);
+    }
+
+    public Geometry getGeom() {
+        return this.geom;
+    }
+
+    /**
+     * enum for keeping the operator that is used in the spatial filter
+     *
+     */
+    public enum SpatialFilterOperator {
+        BBOX,
+        NEARPOINT
+    }
+
+    public static SpatialFilter bbox(Polygon polygon) {
+        return new SpatialFilter(SpatialFilterOperator.BBOX, polygon, null);
+    }
+
+    public static SpatialFilter nearPoint(Point point, double distance) {
+        return new SpatialFilter(SpatialFilterOperator.NEARPOINT, point,
+                Collections.singletonList(distance));
+    }
+
 }

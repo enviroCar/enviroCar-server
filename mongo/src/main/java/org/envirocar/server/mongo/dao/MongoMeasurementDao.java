@@ -61,8 +61,6 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * TODO JavaDoc
@@ -75,8 +73,7 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
     private static final Logger log = LoggerFactory
             .getLogger(MongoMeasurementDao.class);
     private static final String TRACKS = "tracks";
-    private static final String TRACK_NAME_PATH = MongoUtils.path(TRACKS,
-                                                                  MongoMeasurement.TRACK, MongoMeasurement.IDENTIFIER);
+    private static final String TRACK_NAME_PATH = MongoUtils.path(TRACKS, MongoMeasurement.TRACK, MongoMeasurement.IDENTIFIER);
     private static final String TRACK_NAME_VALUE = MongoUtils
             .valueOf(TRACK_NAME_PATH);
     public static final String TRACK_VALUE = MongoUtils
@@ -168,13 +165,14 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
     private Measurements getMongo(MeasurementFilter request) {
         BasicDBObjectBuilder q = new BasicDBObjectBuilder();
         if (request.hasSpatialFilter()) {
-        	SpatialFilter sf = request.getSpatialFilter();
-        	try {
-				q.add(MongoMeasurement.GEOMETRY,
-				    		MongoUtils.spatialFilter(sf,geometryConverter));
-			} catch (GeometryConverterException e) {
-				 log.error("Error while applying spatial filter: " + e.getLocalizedMessage());
-			}        	
+            SpatialFilter sf = request.getSpatialFilter();
+            try {
+                q.add(MongoMeasurement.GEOMETRY,
+                      MongoUtils.spatialFilter(sf, geometryConverter));
+            } catch (GeometryConverterException e) {
+                log.error("Error while applying spatial filter: " + e
+                          .getLocalizedMessage());
+            }
         }
         if (request.hasTrack()) {
             q.add(MongoMeasurement.TRACK, ref(request.getTrack()));
@@ -284,8 +282,8 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
     }
 
     private DBObject matchGeometry(Geometry polygon) {
-        return MongoUtils
-                .match(MongoMeasurement.GEOMETRY, withinGeometry(polygon));
+        return MongoUtils.match(MongoMeasurement.GEOMETRY,
+                                withinGeometry(polygon));
     }
 
     private DBObject matchUser(User user) {
@@ -308,8 +306,6 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
             throw new RuntimeException(e);
         }
     }
-    
-   
 
     private DBObject project() {
         return MongoUtils.project(new BasicDBObject(MongoMeasurement.TRACK, 1));
@@ -326,9 +322,8 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
             Iterable<DBObject> res) {
         List<Key<MongoTrack>> keys = Lists.newLinkedList();
         for (DBObject obj : res) {
-            BasicDBList list = (BasicDBList) obj.get(TRACKS);
-            for (int i = 0; i < list.size(); i++) {
-                DBRef ref = (DBRef) list.get(i);
+            for (Object refObj : (BasicDBList) obj.get(TRACKS)) {
+                DBRef ref = (DBRef) refObj;
                 Key<MongoTrack> key = getMapper().refToKey(ref);
                 keys.add(key);
             }

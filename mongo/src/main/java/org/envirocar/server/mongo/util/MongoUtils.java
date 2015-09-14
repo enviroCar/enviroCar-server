@@ -130,16 +130,21 @@ public class MongoUtils {
         return "-" + order;
     }
     
-    public static DBObject spatialFilter(SpatialFilter sf, GeometryConverter<BSONObject> converter) throws GeometryConverterException{
-    	SpatialFilterOperator ops = sf.getOperator();
-    	switch (ops) {
-    	case BBOX:
-    		return geoWithin(converter.encode(sf.getGeom()));
-    	case NEARPOINT:
-    		return geoNearSphere(converter.encode(sf.getGeom()),sf.getParams().get(0));
-    	default:
-    		throw new InvalidParameterException("Spatial operator" + sf.getOperator().toString() + "not supported!");
-    	}
+    public static DBObject spatialFilter(SpatialFilter sf,
+                                         GeometryConverter<BSONObject> converter)
+            throws GeometryConverterException {
+        SpatialFilterOperator ops = sf.getOperator();
+        switch (ops) {
+            case BBOX:
+                return geoWithin(converter.encode(sf.getGeom()));
+            case NEARPOINT:
+                return geoNearSphere(converter.encode(sf.getGeom()),
+                                     sf.getParams().get(0));
+            default:
+                throw new InvalidParameterException("Spatial operator" + sf
+                                                    .getOperator().toString() +
+                                                    "not supported!");
+        }
     }
 
     public static DBObject geoWithin(BSONObject geometry) {

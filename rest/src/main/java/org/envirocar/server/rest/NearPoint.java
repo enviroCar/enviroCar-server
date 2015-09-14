@@ -16,31 +16,44 @@
  */
 package org.envirocar.server.rest;
 
+import java.util.Objects;
+
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response.Status;
 
+import com.google.common.base.Preconditions;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Point;
 
 /**
- * 
- * 
+ *
+ *
  * @author staschc
  *
  */
 public class NearPoint {
-	
-	private final Point point;
-	private final double distance;
-	
-	public NearPoint(Point pointp, double distancep){
-		point = pointp;
-		distance = distancep;
-	}
-	
-	public static NearPoint valueOf(String nearPointString) {
-        final String[] values = nearPointString.split(",");
+
+    private final Point point;
+    private final double distance;
+
+    public NearPoint(Point point, double distance) {
+        Preconditions.checkNotNull(point);
+        Preconditions.checkArgument(distance>0);
+        this.point = point;
+        this.distance = distance;
+    }
+
+    public Point getPoint() {
+        return this.point;
+    }
+
+    public double getDistance() {
+        return this.distance;
+    }
+
+    public static NearPoint valueOf(String string) {
+        final String[] values = string.split(",");
         if (values.length != 3) {
             throw new WebApplicationException(Status.BAD_REQUEST);
         }
@@ -48,21 +61,13 @@ public class NearPoint {
             double x = Double.parseDouble(values[0]);
             double y = Double.parseDouble(values[1]);
             double distance = Double.parseDouble(values[2]);
-            Point p = new GeometryFactory().createPoint(new Coordinate(x,y));
-            return new NearPoint(p,distance);
+            Point p = new GeometryFactory().createPoint(new Coordinate(x, y));
+            return new NearPoint(p, distance);
         } catch (NumberFormatException e) {
             throw new WebApplicationException(e, Status.BAD_REQUEST);
         } catch (IllegalArgumentException e) {
             throw new WebApplicationException(e, Status.BAD_REQUEST);
         }
     }
-	
-	public Point getPoint() {
-		return point;
-	}
-
-	public double getDistance() {
-		return distance;
-	}
 
 }

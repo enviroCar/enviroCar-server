@@ -47,7 +47,6 @@ import org.envirocar.server.rest.validation.Schema;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * TODO JavaDoc
@@ -73,11 +72,9 @@ public class TracksResource extends AbstractResource {
                 MediaTypes.TURTLE,
                 MediaTypes.TURTLE_ALT })
     public Tracks get(@QueryParam(RESTConstants.BBOX) BoundingBox bbox) throws UserNotFoundException, BadRequestException {
-        Polygon poly = null;
         SpatialFilter spatialFilter = null;
         if (bbox != null) {
-            poly = bbox.asPolygon(factory);
-            spatialFilter = new SpatialFilter(poly);
+            spatialFilter = SpatialFilter.bbox(bbox.asPolygon(factory));
         }
         return getDataService()
                 .getTracks(new TrackFilter(user, spatialFilter,

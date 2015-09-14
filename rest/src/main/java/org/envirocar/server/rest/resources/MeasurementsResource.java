@@ -18,6 +18,7 @@ package org.envirocar.server.rest.resources;
 
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.Nullable;
@@ -55,7 +56,6 @@ import org.envirocar.server.rest.validation.Schema;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * TODO JavaDoc
@@ -87,25 +87,20 @@ public class MeasurementsResource extends AbstractResource {
             @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit,
             @QueryParam(RESTConstants.PAGE) @DefaultValue("0") int page,
             @QueryParam(RESTConstants.BBOX) BoundingBox bbox,
-            @QueryParam(RESTConstants.NEAR_POINT) NearPoint p)
+            @QueryParam(RESTConstants.NEAR_POINT) NearPoint nearPoint)
             throws UserNotFoundException, TrackNotFoundException, BadRequestException {
     	
     	//check spatial filter
         SpatialFilter sf = null;
-        if (bbox != null && p != null){
+        if (bbox != null && nearPoint != null){
         	throw new InvalidParameterException("Only one spatial filter can be applied!");
+        } else if (bbox != null) {
+            sf = SpatialFilter.bbox(bbox.asPolygon(geometryFactory));
+        } else if (nearPoint != null) {
+            sf = SpatialFilter.nearPoint(nearPoint.getPoint(),
+                                         nearPoint.getDistance());
         }
-        else if (bbox != null) {
-            Polygon poly = bbox.asPolygon(geometryFactory);
-            sf = new SpatialFilter(poly);
-        }
-        else if (p != null){
-        	List<Double> paramList = new ArrayList<Double>(1);
-        	paramList.add(p.getDistance());
-        	sf = new SpatialFilter(SpatialFilterOperator.NEARPOINT,p.getPoint(),paramList);
-        }
-        
-        
+
         return getDataService()
                 .getMeasurements(new MeasurementFilter(track, user, sf,
                                                        parseTemporalFilterForInstant(),
