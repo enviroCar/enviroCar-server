@@ -96,10 +96,10 @@ public class MongoTrackDao extends AbstractMongoDao<ObjectId, MongoTrack, Tracks
     @Override
     public Tracks get(TrackFilter request) {
         Query<MongoTrack> q = q();
-        if (request.hasGeometry()) {
+        if (request.hasSpatialFilter()) {
             List<Key<MongoTrack>> keys = measurementDao
                     .getTrackKeysByBbox(new MeasurementFilter(
-                    null, request.getUser(), request.getGeometry(), null, null));
+                    null, request.getUser(), request.getSpatialFilter(), null, null));
             if (keys.isEmpty()) {
                 return Tracks.none();
             }
