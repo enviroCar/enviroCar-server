@@ -22,8 +22,8 @@ import org.envirocar.server.core.util.pagination.Pagination;
 
 public interface TermsOfUseDao {
 
-	TermsOfUse get(Pagination p);
+    TermsOfUse get(Pagination p);
 
-	TermsOfUseInstance getById(String id);
+    TermsOfUseInstance getById(String id);
 
 }

@@ -417,58 +417,58 @@ public class NonRestrictiveRights implements AccessRights {
         return true;
     }
 
-	@Override
-	public boolean canSeeTermsOfUse() {
-		return true;
-	}
+    @Override
+    public boolean canSeeTermsOfUse() {
+        return true;
+    }
 
-	@Override
-	public boolean canSee(TermsOfUseInstance t) {
-		return true;
-	}
+    @Override
+    public boolean canSee(TermsOfUseInstance t) {
+        return true;
+    }
 
     @Override
     public boolean canSeeSchema() {
         return true;
     }
-    
-	@Override
-	public boolean canSeeAppVersionOf(Track track) {
-		return true;
-	}
 
-	@Override
-	public boolean canSeeObdDeviceOf(Track track) {
-		return true;
-	}
+    @Override
+    public boolean canSeeAppVersionOf(Track track) {
+        return true;
+    }
 
-	@Override
-	public boolean canSeeTouVersionOf(Track track) {
-		return true;
-	}
+    @Override
+    public boolean canSeeObdDeviceOf(Track track) {
+        return true;
+    }
 
-	@Override
-	public boolean canSeeAnnouncements() {
-		return true;
-	}
+    @Override
+    public boolean canSeeTouVersionOf(Track track) {
+        return true;
+    }
 
-	@Override
-	public boolean canSeeBadges() {
-		return true;
-	}
+    @Override
+    public boolean canSeeAnnouncements() {
+        return true;
+    }
 
-	@Override
-	public boolean canAccessPasswordReset(HttpServletRequest request) {
-		return true;
-	}
+    @Override
+    public boolean canSeeBadges() {
+        return true;
+    }
+
+    @Override
+    public boolean canAccessPasswordReset(HttpServletRequest request) {
+        return true;
+    }
 
     @Override
     public boolean canSeeFuelingsOf(User user) {
         return true;
     }
 
-	@Override
-	public boolean canSeeLengthOf(Track t) {
-		return true;
-	}
+    @Override
+    public boolean canSeeLengthOf(Track t) {
+        return true;
+    }
 }

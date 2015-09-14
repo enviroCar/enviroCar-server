@@ -42,14 +42,14 @@ public class BadgeJSONEncoder extends AbstractJSONEntityEncoder<Badge> {
         if (badge.getName() != null) {
             json.put(JSONConstants.NAME_KEY, badge.getName());
         }
-        
+
         if (badge.getDisplayName() != null) {
             ObjectNode values = json.putObject(JSONConstants.DISPLAY_NAME_KEY);
             for (Entry<String, String> e : badge.getDisplayName().entrySet()) {
                 values.put(e.getKey(), e.getValue());
             }
         }
-        
+
         if (badge.getDescription() != null) {
             ObjectNode values = json.putObject(JSONConstants.DESCRIPTION_KEY);
             for (Entry<String, String> e : badge.getDescription().entrySet()) {

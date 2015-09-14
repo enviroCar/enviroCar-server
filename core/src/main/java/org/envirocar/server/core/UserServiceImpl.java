@@ -130,36 +130,36 @@ public class UserServiceImpl implements UserService {
         return this.activityDao.get(request, id);
     }
 
-	@Override
-	public void requestPasswordReset(User user) throws BadRequestException {
-		User dbUser = this.userDao.getByName(user.getName());
-		
-		if (!user.equals(dbUser) || !user.getMail().equals(dbUser.getMail())) {
-			throw new InvalidUserMailCombinationException();
-		}
-		
-		PasswordReset code = this.userDao.requestPasswordReset(dbUser);
-		
-		/*
-		 * we got here without exception, fire an event
-		 */
-		eventBus.post(new PasswordResetEvent(code.getCode(), user, code.getExpires()));
-	}
+    @Override
+    public void requestPasswordReset(User user) throws BadRequestException {
+        User dbUser = this.userDao.getByName(user.getName());
 
-	@Override
-	public void resetPassword(User changes, String verificationCode) throws BadRequestException {
-		User dbUser = this.userDao.getByName(changes.getName());
-		
-		if (!changes.equals(dbUser)) {
-			throw new BadRequestException("Invalid username.");
-		}
-		
-		try {
-			this.userUpdater.update(changes, dbUser);
-		} catch (IllegalModificationException e) {
-			throw new InvalidUserMailCombinationException();
-		}
-		this.userDao.resetPassword(dbUser, verificationCode);		
-	}
+        if (!user.equals(dbUser) || !user.getMail().equals(dbUser.getMail())) {
+            throw new InvalidUserMailCombinationException();
+        }
+
+        PasswordReset code = this.userDao.requestPasswordReset(dbUser);
+
+        /*
+         * we got here without exception, fire an event
+         */
+        eventBus.post(new PasswordResetEvent(code.getCode(), user, code.getExpires()));
+    }
+
+    @Override
+    public void resetPassword(User changes, String verificationCode) throws BadRequestException {
+        User dbUser = this.userDao.getByName(changes.getName());
+
+        if (!changes.equals(dbUser)) {
+            throw new BadRequestException("Invalid username.");
+        }
+
+        try {
+            this.userUpdater.update(changes, dbUser);
+        } catch (IllegalModificationException e) {
+            throw new InvalidUserMailCombinationException();
+        }
+        this.userDao.resetPassword(dbUser, verificationCode);
+    }
 
 }

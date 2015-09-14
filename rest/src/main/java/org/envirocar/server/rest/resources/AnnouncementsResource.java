@@ -27,7 +27,7 @@ import org.envirocar.server.rest.validation.Schema;
 
 public class AnnouncementsResource extends AbstractResource {
 
-	@GET
+    @GET
     @Schema(response = Schemas.ANNOUNCEMENTS)
     @Produces({ MediaTypes.ANNOUNCEMENTS })
     public Announcements get() throws BadRequestException {

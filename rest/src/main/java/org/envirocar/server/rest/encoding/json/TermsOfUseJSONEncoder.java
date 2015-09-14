@@ -51,7 +51,7 @@ public class TermsOfUseJSONEncoder extends AbstractJSONEntityEncoder<TermsOfUse>
                                  MediaType mediaType) {
         ObjectNode root = getJsonFactory().objectNode();
         ArrayNode termsOfUse = root.putArray(JSONConstants.TERMS_OF_USE_KEY);
-        
+
         for (TermsOfUseInstance u : t) {
             termsOfUse.add(termsOfUseEncoder.encodeJSON(u, rights, mediaType));
         }

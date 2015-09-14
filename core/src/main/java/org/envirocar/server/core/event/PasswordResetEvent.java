@@ -21,38 +21,38 @@ import org.joda.time.DateTime;
 
 public class PasswordResetEvent {
 
-	private String code;
-	private User user;
-	private DateTime expiration;
+    private String code;
+    private User user;
+    private DateTime expiration;
 
-	public PasswordResetEvent(String code, User user, DateTime exp) {
-		this.code = code;
-		this.user = user;
-		this.expiration = exp;
-	}
+    public PasswordResetEvent(String code, User user, DateTime exp) {
+        this.code = code;
+        this.user = user;
+        this.expiration = exp;
+    }
 
-	public String getCode() {
-		return code;
-	}
+    public String getCode() {
+        return code;
+    }
 
-	public void setCode(String code) {
-		this.code = code;
-	}
+    public void setCode(String code) {
+        this.code = code;
+    }
 
-	public User getUser() {
-		return user;
-	}
+    public User getUser() {
+        return user;
+    }
 
-	public void setUser(User user) {
-		this.user = user;
-	}
+    public void setUser(User user) {
+        this.user = user;
+    }
 
-	public DateTime getExpiration() {
-		return expiration;
-	}
+    public DateTime getExpiration() {
+        return expiration;
+    }
 
-	public void setExpiration(DateTime expiration) {
-		this.expiration = expiration;
-	}
+    public void setExpiration(DateTime expiration) {
+        this.expiration = expiration;
+    }
 
 }

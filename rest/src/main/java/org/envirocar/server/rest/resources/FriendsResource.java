@@ -45,8 +45,8 @@ import org.envirocar.server.rest.validation.Schema;
 public class FriendsResource extends AbstractResource {
     public static final String FRIEND = "{friend}";
     public static final String INCOMING_FRIEND_REQUESTS = "incomingRequests";
-	public static final String OUTGOING_FRIEND_REQUESTS = "outgoingRequests";
-	public static final String DECLINE_FRIEND_REQUEST = "declineRequest";
+    public static final String OUTGOING_FRIEND_REQUESTS = "outgoingRequests";
+    public static final String DECLINE_FRIEND_REQUEST = "declineRequest";
     private final User user;
 
     @Inject
@@ -87,23 +87,23 @@ public class FriendsResource extends AbstractResource {
                 .createFriendResource(user, getFriendService()
                 .getFriend(user, friendName));
     }
-    
+
     @GET
     @Path(INCOMING_FRIEND_REQUESTS)
     @Produces({ MediaTypes.USERS})
     public Users pendingIncomingFriendRequests() {
-    	checkRights(getRights().canSeeFriendsOf(user));
-    	return getFriendService().pendingIncomingRequests(user);
+        checkRights(getRights().canSeeFriendsOf(user));
+        return getFriendService().pendingIncomingRequests(user);
     }
-    
+
     @GET
     @Path(OUTGOING_FRIEND_REQUESTS)
     @Produces({ MediaTypes.USERS})
     public Users pendingOutgoingFriendRequests() {
-    	checkRights(getRights().canSeeFriendsOf(user));
-    	return getFriendService().pendingOutgoingRequests(user);
+        checkRights(getRights().canSeeFriendsOf(user));
+        return getFriendService().pendingOutgoingRequests(user);
     }
-    
+
     @POST
     @Path(DECLINE_FRIEND_REQUEST)
     @Authenticated
@@ -111,9 +111,9 @@ public class FriendsResource extends AbstractResource {
     @Consumes({ MediaTypes.USER_REF })
     public void decline(UserReference friend) throws UserNotFoundException {
         User f = getUserService().getUser(friend.getName());
-        
+
         if (f == null) throw new UserNotFoundException(friend.getName());
-        
+
         getFriendService().removeFriend(f, user);
     }
 }

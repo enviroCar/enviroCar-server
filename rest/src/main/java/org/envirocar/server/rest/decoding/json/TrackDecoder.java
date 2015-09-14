@@ -71,7 +71,7 @@ public class TrackDecoder extends AbstractJSONEntityDecoder<Track> {
             track.setTouVersion(p.path(JSONConstants.TOU_VERSION_KEY)
                     .textValue());
             track.setLength(p.path(JSONConstants.LENGTH_KEY)
-            		.asDouble());
+                    .asDouble());
         }
 
         if (!j.path(GeoJSONConstants.FEATURES_KEY).isMissingNode()) {

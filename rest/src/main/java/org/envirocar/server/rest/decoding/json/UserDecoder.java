@@ -65,10 +65,10 @@ public class UserDecoder extends AbstractJSONEntityDecoder<User> {
 
         if (!user.hasAcceptedTermsOfUseVersion()) {
             // kept for backwards compatibility
-        	user.setTermsOfUseVersion(j.path(JSONConstants.ACCEPTED_TERMS_OF_USE_VERSION_KEY).textValue());
+            user.setTermsOfUseVersion(j.path(JSONConstants.ACCEPTED_TERMS_OF_USE_VERSION_KEY).textValue());
         }
 
-        
+
         JsonNode l = j.path(JSONConstants.LOCATION_KEY);
         if (!l.isMissingNode() && !l.isNull()) {
             user.setLocation(geometryDecoder.decode(l, mediaType));

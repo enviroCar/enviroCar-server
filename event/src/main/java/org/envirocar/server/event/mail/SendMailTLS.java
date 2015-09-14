@@ -20,9 +20,9 @@ import java.util.Properties;
 
 public class SendMailTLS extends AbstractSendMail {
 
-	@Override
-	protected void injectProperties(Properties props) {
-		props.put("mail.smtp.starttls.enable", "true");		
-	}
+    @Override
+    protected void injectProperties(Properties props) {
+        props.put("mail.smtp.starttls.enable", "true");
+    }
 
 }

@@ -118,6 +118,6 @@ public class MongoStatisticKey {
     public String toString() {
         return String.format("MongoStatisticKey [user=%s, track=%s, sensor=%s]", this.user, this.track, this.sensor);
     }
-    
-    
+
+
 }

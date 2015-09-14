@@ -18,13 +18,13 @@ package org.envirocar.server.core.exception;
 
 public class BadRequestException extends Exception {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
 
-	public BadRequestException(String string) {
-		super(string);
-	}
+    public BadRequestException(String string) {
+        super(string);
+    }
 
 }

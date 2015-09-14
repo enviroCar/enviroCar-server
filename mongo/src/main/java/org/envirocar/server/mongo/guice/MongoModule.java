@@ -86,9 +86,9 @@ public class MongoModule extends AbstractModule {
         bind(MongoDB.class);
         bind(StatisticsUpdateScheduler.class).asEagerSingleton();
         bind(NewTrackListener.class).asEagerSingleton();
-        
+
         Multibinder<ResourceShutdownListener> binder = Multibinder.newSetBinder(binder(),
-					ResourceShutdownListener.class);
+                    ResourceShutdownListener.class);
         binder.addBinding().to(MongoShutdownListener.class);
     }
 

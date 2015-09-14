@@ -74,27 +74,27 @@ public interface Track extends BaseEntity {
 
     boolean hasEnd();
 
-	void setTouVersion(String touVersion);
+    void setTouVersion(String touVersion);
 
-	String getTouVersion();
+    String getTouVersion();
 
-	void setObdDevice(String obdDevice);
+    void setObdDevice(String obdDevice);
 
-	String getObdDevice();
+    String getObdDevice();
 
-	void setAppVersion(String appVersion);
+    void setAppVersion(String appVersion);
 
-	String getAppVersion();
+    String getAppVersion();
 
-	boolean hasAppVersion();
+    boolean hasAppVersion();
 
-	boolean hasObdDevice();
+    boolean hasObdDevice();
 
-	boolean hasTouVersion();
-	
-	double getLength();
-	
-	void setLength(double length);
+    boolean hasTouVersion();
 
-	boolean hasLength();
+    double getLength();
+
+    void setLength(double length);
+
+    boolean hasLength();
 }

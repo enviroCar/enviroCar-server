@@ -54,260 +54,260 @@ import com.vividsolutions.jts.geom.Coordinate;
  */
 public class ShapefileEncodingTest extends AbstractEncodingTest{
 
-	@Rule
-	public ExpectedException exception = ExpectedException.none();
-
-	private String dateTime = "2014-05-20T08:42:06Z";
-
-	private Track testTrack1;
-	private Track testTrack2;
-
-	private User user;
-	private Sensor sensor;
-	private List<Phenomenon> phenomenons;
-
-	private String testUserName = "TestUser";
-	
-	private int measurementThreshold = 500;//temp value
-	
-	@Before
-	public void setup() {
-		
-		try {
-
-			measurementThreshold = TrackShapefileEncoder.shapeFileExportThreshold;
-			
-//			testTrack1 = getTestTrack(trackObjectId1);
-//			testTrack2 = getTestTrack(trackObjectId2);
-
-			if (testTrack1 == null) {
-
-				testTrack1 = createTrack(getUser(), getSensor());
-
-				createTrackWithMeasurementsLessThanThreshold(
-						testTrack1, getPhenomenons(), getUser(), getSensor());
-
-			}
-			if(testTrack2 == null){
-
-				testTrack2 = createTrack(getUser(), getSensor());
-				
-				createTrackWithMeasurementsMoreThanThreshold(
-						testTrack2, getPhenomenons(), getUser(), getSensor());
-			}
-
-		} catch (ValidationException e) {
-			e.printStackTrace();
-		}
-
-	}
-	
-	@After
-	public void removeTracks() {
-		if (testTrack1 != null) {
-			dataService.deleteTrack(testTrack1);
-		}
-		
-		if (testTrack2 != null) {
-			dataService.deleteTrack(testTrack2);
-		}
-	}
-
-	@Test
-	public void testShapefileEncoding()
-			throws IOException {
-
-		File shapeFile;
-		try {
-			shapeFile = trackShapefileEncoder.encodeShapefile(testTrack1,
-							MediaTypes.APPLICATION_ZIPPED_SHP_TYPE);
-			assertTrue(shapeFile.exists());
-		} catch (TrackTooLongException e) {
-			e.printStackTrace();
-			fail();
-		} 
-
-	}
-	
-	@Test
-	public void testShapefileEncodingMoreMeasurementsThanAllowed()
-			throws IOException {
-		exception.expect(TrackTooLongException.class);
-		trackShapefileEncoder.encodeShapefile(testTrack2,
-							MediaTypes.APPLICATION_ZIPPED_SHP_TYPE);	
-	}
-	
-	private User getUser(){
-		if(user == null){
-			user =  createUser(testUserName);
-		}
-		return user;
-	}
-	
-	private Sensor getSensor(){
-		
-		if(sensor == null){
-			sensor = createSensor();
-		}
-		return sensor;
-	}
-	
-	private List<Phenomenon> getPhenomenons(){
-		
-		if(phenomenons == null){
-			phenomenons = createPhenomenoms();
-		}		
-		return phenomenons;		
-	}
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
 
+    private String dateTime = "2014-05-20T08:42:06Z";
 
-	private void createTrackWithMeasurementsLessThanThreshold(
-			Track track, List<Phenomenon> phenomenons, User user, Sensor sensor) {
+    private Track testTrack1;
+    private Track testTrack2;
 
-		for (int i = 0; i < measurementThreshold - 1; i++) {			
-			createMeasurement(track, new ObjectId().toString(), phenomenons, user,
-					sensor, i);
-		}
+    private User user;
+    private Sensor sensor;
+    private List<Phenomenon> phenomenons;
 
-		dataService.createTrack(track);
+    private String testUserName = "TestUser";
 
-	}
+    private int measurementThreshold = 500;//temp value
 
-	private void createTrackWithMeasurementsMoreThanThreshold(			
-			Track track, List<Phenomenon> phenomenons, User user, Sensor sensor) {
+    @Before
+    public void setup() {
 
-		for (int i = 0; i <= measurementThreshold + 1; i++) {			
-			createMeasurement(track, new ObjectId().toString(), phenomenons, user,
-					sensor, i);
-		}
+        try {
 
-		dataService.createTrack(track);
-	}
+            measurementThreshold = TrackShapefileEncoder.shapeFileExportThreshold;
 
-	private Measurement createMeasurement(Track testTrack, String objectId,
-			List<Phenomenon> phenomenons, User user, Sensor sensor,
-			int basenumber) {
+//            testTrack1 = getTestTrack(trackObjectId1);
+//            testTrack2 = getTestTrack(trackObjectId2);
 
-		Measurement measurement = entityFactory.createMeasurement();
+            if (testTrack1 == null) {
 
-		measurement.setGeometry(geometryFactory.createPoint(new Coordinate(
-				51.9, 7)));
+                testTrack1 = createTrack(getUser(), getSensor());
 
-		measurement.setSensor(sensor);
+                createTrackWithMeasurementsLessThanThreshold(
+                        testTrack1, getPhenomenons(), getUser(), getSensor());
 
-		measurement.setUser(user);
+            }
+            if(testTrack2 == null){
 
-		measurement.setIdentifier(objectId);
+                testTrack2 = createTrack(getUser(), getSensor());
 
-		int value = basenumber;
+                createTrackWithMeasurementsMoreThanThreshold(
+                        testTrack2, getPhenomenons(), getUser(), getSensor());
+            }
 
-		for (Phenomenon phenomenon : phenomenons) {
+        } catch (ValidationException e) {
+            e.printStackTrace();
+        }
 
-			MeasurementValue measurementValue = entityFactory
-					.createMeasurementValue();
+    }
 
-			measurementValue.setPhenomenon(phenomenon);
+    @After
+    public void removeTracks() {
+        if (testTrack1 != null) {
+            dataService.deleteTrack(testTrack1);
+        }
 
-			measurementValue.setValue(value);
+        if (testTrack2 != null) {
+            dataService.deleteTrack(testTrack2);
+        }
+    }
 
-			measurement.addValue(measurementValue);
+    @Test
+    public void testShapefileEncoding()
+            throws IOException {
 
-			value++;
-		}
+        File shapeFile;
+        try {
+            shapeFile = trackShapefileEncoder.encodeShapefile(testTrack1,
+                            MediaTypes.APPLICATION_ZIPPED_SHP_TYPE);
+            assertTrue(shapeFile.exists());
+        } catch (TrackTooLongException e) {
+            e.printStackTrace();
+            fail();
+        }
 
-		measurement.setTime(DateTime.now());
-		
-		measurement.setTrack(testTrack);
+    }
 
-		dataService.createMeasurement(measurement);
+    @Test
+    public void testShapefileEncodingMoreMeasurementsThanAllowed()
+            throws IOException {
+        exception.expect(TrackTooLongException.class);
+        trackShapefileEncoder.encodeShapefile(testTrack2,
+                            MediaTypes.APPLICATION_ZIPPED_SHP_TYPE);
+    }
 
-		return measurement;
+    private User getUser(){
+        if(user == null){
+            user =  createUser(testUserName);
+        }
+        return user;
+    }
 
-	}
+    private Sensor getSensor(){
 
-	private Track createTrack(User user, Sensor sensor) {
+        if(sensor == null){
+            sensor = createSensor();
+        }
+        return sensor;
+    }
 
-		Track result = entityFactory.createTrack();
+    private List<Phenomenon> getPhenomenons(){
 
-//		result.setIdentifier(objectId);
+        if(phenomenons == null){
+            phenomenons = createPhenomenoms();
+        }
+        return phenomenons;
+    }
 
-		result.setUser(user);
 
-		result.setSensor(sensor);
+    private void createTrackWithMeasurementsLessThanThreshold(
+            Track track, List<Phenomenon> phenomenons, User user, Sensor sensor) {
 
-		return result;
-	}
+        for (int i = 0; i < measurementThreshold - 1; i++) {
+            createMeasurement(track, new ObjectId().toString(), phenomenons, user,
+                    sensor, i);
+        }
 
-	private Sensor createSensor() {
-		Sensor s = entityFactory.createSensor();
+        dataService.createTrack(track);
 
-		s.setIdentifier("51bc53ab5064ba7f336ef920");
+    }
 
-		s.setType("Car");
-		
-		MongoSensor ms = (MongoSensor) s;
+    private void createTrackWithMeasurementsMoreThanThreshold(
+            Track track, List<Phenomenon> phenomenons, User user, Sensor sensor) {
 
-		ms.setCreationTime(DateTime.parse(dateTime));
-		ms.setModificationTime(DateTime.parse(dateTime));
+        for (int i = 0; i <= measurementThreshold + 1; i++) {
+            createMeasurement(track, new ObjectId().toString(), phenomenons, user,
+                    sensor, i);
+        }
 
-		dataService.createSensor(ms);
-		return s;
-	}
+        dataService.createTrack(track);
+    }
 
-	private List<Phenomenon> createPhenomenoms() {
+    private Measurement createMeasurement(Track testTrack, String objectId,
+            List<Phenomenon> phenomenons, User user, Sensor sensor,
+            int basenumber) {
 
-		List<Phenomenon> result = new ArrayList<Phenomenon>();
+        Measurement measurement = entityFactory.createMeasurement();
 
-		result.add(createPhenomenom("RPM", "u/min"));
-		result.add(createPhenomenom("Intake Temperature", "C"));
-		result.add(createPhenomenom("Speed", "km/h"));
-		result.add(createPhenomenom("MAF", "l/s"));
+        measurement.setGeometry(geometryFactory.createPoint(new Coordinate(
+                51.9, 7)));
 
-		return result;
-	}
+        measurement.setSensor(sensor);
 
-	private Phenomenon createPhenomenom(String name, String unit) {
+        measurement.setUser(user);
 
-		Phenomenon f = entityFactory.createPhenomenon();
+        measurement.setIdentifier(objectId);
 
-		f.setName(name);
-		f.setUnit(unit);
+        int value = basenumber;
 
-		dataService.createPhenomenon(f);
+        for (Phenomenon phenomenon : phenomenons) {
 
-		return f;
-	}
+            MeasurementValue measurementValue = entityFactory
+                    .createMeasurementValue();
 
-	private User createUser(String testUserName) {
+            measurementValue.setPhenomenon(phenomenon);
 
-		User user = entityFactory.createUser();
+            measurementValue.setValue(value);
 
-		user.setName(testUserName);
-		user.setMail("info@52north.org");
-		user.setToken("pwd123");
+            measurement.addValue(measurementValue);
 
-		try {
-			if (userService.getUser(testUserName) == null) {
-				userService.createUser(user);
-			}
-		} catch (UserNotFoundException e) {
-			/*
-			 * ignore this one and try to create user
-			 */
-			try {
-				userService.createUser(user);
-			} catch (ValidationException e1) {
-				e1.printStackTrace();
-			} catch (ResourceAlreadyExistException e1) {
-				e1.printStackTrace();
-			}
-		} catch (ValidationException e) {
-			e.printStackTrace();
-		} catch (ResourceAlreadyExistException e) {
-			e.printStackTrace();
-		}
-		return user;
+            value++;
+        }
 
-	}
+        measurement.setTime(DateTime.now());
+
+        measurement.setTrack(testTrack);
+
+        dataService.createMeasurement(measurement);
+
+        return measurement;
+
+    }
+
+    private Track createTrack(User user, Sensor sensor) {
+
+        Track result = entityFactory.createTrack();
+
+//        result.setIdentifier(objectId);
+
+        result.setUser(user);
+
+        result.setSensor(sensor);
+
+        return result;
+    }
+
+    private Sensor createSensor() {
+        Sensor s = entityFactory.createSensor();
+
+        s.setIdentifier("51bc53ab5064ba7f336ef920");
+
+        s.setType("Car");
+
+        MongoSensor ms = (MongoSensor) s;
+
+        ms.setCreationTime(DateTime.parse(dateTime));
+        ms.setModificationTime(DateTime.parse(dateTime));
+
+        dataService.createSensor(ms);
+        return s;
+    }
+
+    private List<Phenomenon> createPhenomenoms() {
+
+        List<Phenomenon> result = new ArrayList<Phenomenon>();
+
+        result.add(createPhenomenom("RPM", "u/min"));
+        result.add(createPhenomenom("Intake Temperature", "C"));
+        result.add(createPhenomenom("Speed", "km/h"));
+        result.add(createPhenomenom("MAF", "l/s"));
+
+        return result;
+    }
+
+    private Phenomenon createPhenomenom(String name, String unit) {
+
+        Phenomenon f = entityFactory.createPhenomenon();
+
+        f.setName(name);
+        f.setUnit(unit);
+
+        dataService.createPhenomenon(f);
+
+        return f;
+    }
+
+    private User createUser(String testUserName) {
+
+        User user = entityFactory.createUser();
+
+        user.setName(testUserName);
+        user.setMail("info@52north.org");
+        user.setToken("pwd123");
+
+        try {
+            if (userService.getUser(testUserName) == null) {
+                userService.createUser(user);
+            }
+        } catch (UserNotFoundException e) {
+            /*
+             * ignore this one and try to create user
+             */
+            try {
+                userService.createUser(user);
+            } catch (ValidationException e1) {
+                e1.printStackTrace();
+            } catch (ResourceAlreadyExistException e1) {
+                e1.printStackTrace();
+            }
+        } catch (ValidationException e) {
+            e.printStackTrace();
+        } catch (ResourceAlreadyExistException e) {
+            e.printStackTrace();
+        }
+        return user;
+
+    }
 
 }

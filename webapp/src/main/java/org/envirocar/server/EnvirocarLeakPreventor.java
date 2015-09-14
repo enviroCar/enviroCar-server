@@ -30,7 +30,7 @@ import se.jiderhamn.classloader.leak.prevention.ClassLoaderLeakPreventor;
  * @author matthes
  */
 public class EnvirocarLeakPreventor extends ClassLoaderLeakPreventor {
-    
+
     private static final Logger LOGGER = LoggerFactory.getLogger(EnvirocarLeakPreventor.class);
 
     @Override
@@ -42,7 +42,7 @@ public class EnvirocarLeakPreventor extends ClassLoaderLeakPreventor {
     protected void fixGeoToolsLeak() {
         //original method broken; uses static call on non-static method
     }
-    
-    
-    
+
+
+
 }

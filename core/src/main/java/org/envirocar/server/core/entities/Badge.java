@@ -20,15 +20,15 @@ import java.util.Map;
 
 public interface Badge extends BaseEntity {
 
-	Map<String, String> getDescription();
+    Map<String, String> getDescription();
 
-	void setDescription(Map<String, String> descriptions);
-	
-	Map<String, String> getDisplayName();
+    void setDescription(Map<String, String> descriptions);
 
-	void setDisplayName(Map<String, String> dnames);
+    Map<String, String> getDisplayName();
 
-	String getName();
-	
-	void setName(String name);
+    void setDisplayName(Map<String, String> dnames);
+
+    String getName();
+
+    void setName(String name);
 }

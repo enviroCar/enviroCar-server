@@ -80,7 +80,7 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
             .valueOf(MongoMeasurement.TRACK);
     private final MongoDB mongoDB;
     private final GeometryConverter<BSONObject> geometryConverter;
-    
+
     @Inject
     private MongoTrackDao trackDao;
 
@@ -187,7 +187,7 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
         return query(q.get(), request.getPagination());
     }
 
-	@Override
+    @Override
     public Measurement getById(String id) {
         ObjectId oid;
         try {
@@ -235,11 +235,11 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
     List<Key<MongoTrack>> getTrackKeysByBbox(MeasurementFilter filter) {
         ArrayList<DBObject> filters = new ArrayList<DBObject>(4);
         if (filter.hasSpatialFilter()) {
-        	SpatialFilter sf = filter.getSpatialFilter();
-        	if (sf.getOperator()==SpatialFilterOperator.BBOX){
-        		filters.add(matchGeometry(filter.getSpatialFilter().getGeom()));
-        	}
-        	//TODO add further spatial filters 
+            SpatialFilter sf = filter.getSpatialFilter();
+            if (sf.getOperator()==SpatialFilterOperator.BBOX){
+                filters.add(matchGeometry(filter.getSpatialFilter().getGeom()));
+            }
+            //TODO add further spatial filters
         }
         if (filter.hasUser()) {
             filters.add(matchUser(filter.getUser()));

@@ -89,11 +89,11 @@ public class MeasurementsResource extends AbstractResource {
             @QueryParam(RESTConstants.BBOX) BoundingBox bbox,
             @QueryParam(RESTConstants.NEAR_POINT) NearPoint nearPoint)
             throws UserNotFoundException, TrackNotFoundException, BadRequestException {
-    	
-    	//check spatial filter
+
+        //check spatial filter
         SpatialFilter sf = null;
         if (bbox != null && nearPoint != null){
-        	throw new InvalidParameterException("Only one spatial filter can be applied!");
+            throw new InvalidParameterException("Only one spatial filter can be applied!");
         } else if (bbox != null) {
             sf = SpatialFilter.bbox(bbox.asPolygon(geometryFactory));
         } else if (nearPoint != null) {

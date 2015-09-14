@@ -27,7 +27,7 @@ import org.envirocar.server.rest.validation.Schema;
 
 public class BadgesResource extends AbstractResource {
 
-	@GET
+    @GET
     @Schema(response = Schemas.BADGES)
     @Produces({ MediaTypes.BADGES })
     public Badges get() throws BadRequestException {

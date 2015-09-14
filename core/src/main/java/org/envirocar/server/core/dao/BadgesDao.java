@@ -21,6 +21,6 @@ import org.envirocar.server.core.util.pagination.Pagination;
 
 public interface BadgesDao {
 
-	Badges get(Pagination pagination);
+    Badges get(Pagination pagination);
 
 }

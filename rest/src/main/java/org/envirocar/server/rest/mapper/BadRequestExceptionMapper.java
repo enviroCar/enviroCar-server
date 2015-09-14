@@ -32,20 +32,20 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 @Provider
 public class BadRequestExceptionMapper implements ExceptionMapper<BadRequestException> {
-    
+
     private static JsonNodeFactory factory = new JsonNodeFactory(false);
 
-	@Override
+    @Override
     public Response toResponse(BadRequestException exception) {
         return Response.status(Status.BAD_REQUEST)
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .entity(createJson(exception.getMessage())).build();
     }
 
-	private JsonNode createJson(String message) {
-		ObjectNode error = factory.objectNode();
+    private JsonNode createJson(String message) {
+        ObjectNode error = factory.objectNode();
         ArrayNode errors = error.putArray(JSONConstants.ERRORS_KEY);
         errors.add(factory.textNode(message));
-		return error;
-	}
+        return error;
+    }
 }

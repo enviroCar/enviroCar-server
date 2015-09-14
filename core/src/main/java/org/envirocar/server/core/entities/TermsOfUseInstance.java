@@ -19,16 +19,16 @@ package org.envirocar.server.core.entities;
 
 public interface TermsOfUseInstance extends BaseEntity {
 
-	String getIssuedDate();
-	
-	void setIssuedDate(String ds);
-	
-	String getContents();
-	
-	void setContents(String c);
+    String getIssuedDate();
 
-	String getIdentifier();
-	
-	void setIdentifier(String id);
-	
+    void setIssuedDate(String ds);
+
+    String getContents();
+
+    void setContents(String c);
+
+    String getIdentifier();
+
+    void setIdentifier(String id);
+
 }

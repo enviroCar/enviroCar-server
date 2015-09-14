@@ -47,7 +47,7 @@ public class FriendServiceImpl implements FriendService {
     public void removeFriend(User user, User friend) {
         this.userDao.removeFriend(user, friend);
         this.eventBus.post(new UnfriendedUserEvent(user, friend));
-        
+
         /*
          * also remove it vice versa as this was explicitly called
          * by one of the former chummies
@@ -82,14 +82,14 @@ public class FriendServiceImpl implements FriendService {
         return this.userDao.getFriend(user1, user2.getName()) != null;
     }
 
-	@Override
-	public Users pendingIncomingRequests(User user) {
-		return this.userDao.getPendingIncomingFriendRequests(user);
-	}
+    @Override
+    public Users pendingIncomingRequests(User user) {
+        return this.userDao.getPendingIncomingFriendRequests(user);
+    }
 
-	@Override
-	public Users pendingOutgoingRequests(User user) {
-		return this.userDao.getPendingOutgoingFriendRequests(user);
-	}
+    @Override
+    public Users pendingOutgoingRequests(User user) {
+        return this.userDao.getPendingOutgoingFriendRequests(user);
+    }
 
 }

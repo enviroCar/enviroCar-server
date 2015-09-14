@@ -37,10 +37,10 @@ public interface AccessRights extends UserRights,
     boolean canSeeStatistics();
 
     boolean canSeeSchema();
-    
+
     boolean canSeeBadges();
 
-	boolean canSeeAnnouncements();
+    boolean canSeeAnnouncements();
 
-	boolean canAccessPasswordReset(HttpServletRequest request);
+    boolean canAccessPasswordReset(HttpServletRequest request);
 }

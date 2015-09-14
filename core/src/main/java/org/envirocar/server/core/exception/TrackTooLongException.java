@@ -18,7 +18,7 @@ package org.envirocar.server.core.exception;
 
 /**
  * TODO: Javadoc
- * 
+ *
  * @author Benjamin Pross
  *
  */

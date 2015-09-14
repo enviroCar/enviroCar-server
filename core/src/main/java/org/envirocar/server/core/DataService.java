@@ -98,7 +98,7 @@ public interface DataService {
 
     TermsOfUse getTermsOfUse(Pagination pagination);
 
-	TermsOfUseInstance getTermsOfUseInstance(String id) throws ResourceNotFoundException;
+    TermsOfUseInstance getTermsOfUseInstance(String id) throws ResourceNotFoundException;
 
     Announcements getAnnouncements(Pagination pagination);
 

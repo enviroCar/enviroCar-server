@@ -60,7 +60,7 @@ public class ServletContextListener extends GuiceServletContextListener {
             ShutdownManager manager = injector.getInstance(ShutdownManager.class);
             manager.shutdownListeners();
         }
-        
+
         super.contextDestroyed(servletContextEvent);
     }
 

@@ -25,7 +25,7 @@ package org.envirocar.server.core.guice;
  * Listener interface for freeing resources whenever the app is stopped.
  */
 public interface ResourceShutdownListener {
-    
+
     void shutdownResources();
-    
+
 }

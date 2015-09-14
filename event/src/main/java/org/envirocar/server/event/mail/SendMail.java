@@ -21,11 +21,11 @@ import java.util.Properties;
 import javax.mail.MessagingException;
 
 public interface SendMail {
-	
-	public void setup(String user, String password, String fromEmail, String smtpHost, int smtpPort);
 
-	public void send(String email, String subject, String content) throws MessagingException;
+    public void setup(String user, String password, String fromEmail, String smtpHost, int smtpPort);
 
-	public void setup(Properties mailConfiguration);
-	
+    public void send(String email, String subject, String content) throws MessagingException;
+
+    public void setup(Properties mailConfiguration);
+
 }

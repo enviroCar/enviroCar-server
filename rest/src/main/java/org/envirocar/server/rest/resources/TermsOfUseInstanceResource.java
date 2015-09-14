@@ -35,16 +35,16 @@ import com.google.inject.assistedinject.Assisted;
 public class TermsOfUseInstanceResource extends AbstractResource {
     private final TermsOfUseInstance termsOfUseInstance;
 
-	@Inject
+    @Inject
     public TermsOfUseInstanceResource(@Assisted TermsOfUseInstance t) {
         this.termsOfUseInstance = t;
     }
-	
+
     @GET
     @Schema(response = Schemas.TERMS_OF_USE_INSTANCE)
     @Produces({ MediaTypes.TERMS_OF_USE_INSTANCE })
     public TermsOfUseInstance get() throws ResourceNotFoundException {
         return termsOfUseInstance;
     }
-    
+
 }

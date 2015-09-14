@@ -28,54 +28,54 @@ import org.gavaghan.geodesy.GlobalPosition;
 import com.vividsolutions.jts.geom.Coordinate;
 
 public class GeodesicGeometryOperations implements GeometryOperations {
-	
-	private GeodeticCalculator geoCalc = new GeodeticCalculator();
 
-	@Override
-	public double calculateDistance(Measurement m1, Measurement m2) {
-		Coordinate coord1 = m1.getGeometry().getCoordinate();
-		Coordinate coord2 = m2.getGeometry().getCoordinate();
-		return getDistance(coord1.y, coord1.x, coord2.y, coord2.x);
-	}
+    private GeodeticCalculator geoCalc = new GeodeticCalculator();
 
-	@Override
-	public double calculateLength(List<Measurement> measurements) {
-		Iterator<Measurement> it = measurements.iterator();
-		double length = 0.0;
-		Measurement previousMeasurement;
-		if (it.hasNext()) {
-			previousMeasurement = it.next();
-		} else {
-			return 0;
-		}
-		while (it.hasNext()) {
-			Measurement currentMeasurement = it.next();
-			length += calculateDistance(previousMeasurement, currentMeasurement);
-			previousMeasurement = currentMeasurement;
-		}
-		return length;
-	}
+    @Override
+    public double calculateDistance(Measurement m1, Measurement m2) {
+        Coordinate coord1 = m1.getGeometry().getCoordinate();
+        Coordinate coord2 = m2.getGeometry().getCoordinate();
+        return getDistance(coord1.y, coord1.x, coord2.y, coord2.x);
+    }
 
-	/**
-	 * Returns the geodetic distance of two Coordinates in kilometers.
-	 *
-	 * @param lat1
-	 * @param lng1
-	 * @param lat2
-	 * @param lng2
-	 * @return distance in km
-	 */
-	private double getDistance(double lat1, double lng1, double lat2, double lng2) {
-		// set position 1
-		GlobalPosition position1 = new GlobalPosition(lat1, lng1, 0.0);
-		// set position 2
-		GlobalPosition position2 = new GlobalPosition(lat2, lng2, 0.0);
-		// calculate the geodetic measurement
-		GeodeticMeasurement geoMeasurement = geoCalc
-				.calculateGeodeticMeasurement(Ellipsoid.WGS84, position1,
-						position2);
-		double p2pKilometers = geoMeasurement.getPointToPointDistance() / 1000.0;
-		return p2pKilometers;
-	}
+    @Override
+    public double calculateLength(List<Measurement> measurements) {
+        Iterator<Measurement> it = measurements.iterator();
+        double length = 0.0;
+        Measurement previousMeasurement;
+        if (it.hasNext()) {
+            previousMeasurement = it.next();
+        } else {
+            return 0;
+        }
+        while (it.hasNext()) {
+            Measurement currentMeasurement = it.next();
+            length += calculateDistance(previousMeasurement, currentMeasurement);
+            previousMeasurement = currentMeasurement;
+        }
+        return length;
+    }
+
+    /**
+     * Returns the geodetic distance of two Coordinates in kilometers.
+     *
+     * @param lat1
+     * @param lng1
+     * @param lat2
+     * @param lng2
+     * @return distance in km
+     */
+    private double getDistance(double lat1, double lng1, double lat2, double lng2) {
+        // set position 1
+        GlobalPosition position1 = new GlobalPosition(lat1, lng1, 0.0);
+        // set position 2
+        GlobalPosition position2 = new GlobalPosition(lat2, lng2, 0.0);
+        // calculate the geodetic measurement
+        GeodeticMeasurement geoMeasurement = geoCalc
+                .calculateGeodeticMeasurement(Ellipsoid.WGS84, position1,
+                        position2);
+        double p2pKilometers = geoMeasurement.getPointToPointDistance() / 1000.0;
+        return p2pKilometers;
+    }
 
 }

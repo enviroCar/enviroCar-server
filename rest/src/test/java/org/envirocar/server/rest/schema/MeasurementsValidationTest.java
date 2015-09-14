@@ -33,31 +33,31 @@ import org.junit.runner.RunWith;
 @RunWith(GuiceRunner.class)
 public class MeasurementsValidationTest {
 
-	@Rule
-	public final ValidationRule validate = new ValidationRule();
+    @Rule
+    public final ValidationRule validate = new ValidationRule();
 
-	@Test
-	public void validateValidMeasurementsInstance() {
-		assertThat(validate.parse(loadMeasurementsInstance("measurements-instance.json")),
-				is(validate.validInstanceOf(MediaTypes.MEASUREMENTS_TYPE)));
-	}
-	
-	@Test
-	public void validateValidMeasurementsInstanceWithoutTrackReference() {
-		assertThat(validate.parse(loadMeasurementsInstance("measurements-instance-wo-trackref.json")),
-				is(validate.validInstanceOf(MediaTypes.MEASUREMENTS_TYPE)));
-	}
+    @Test
+    public void validateValidMeasurementsInstance() {
+        assertThat(validate.parse(loadMeasurementsInstance("measurements-instance.json")),
+                is(validate.validInstanceOf(MediaTypes.MEASUREMENTS_TYPE)));
+    }
 
-	private String loadMeasurementsInstance(String res) {
-		StringBuilder sb = new StringBuilder();
-		
-		Scanner sc = null;
-		sc = new Scanner(getClass().getResourceAsStream(res));
-		while (sc.hasNext()) {
-			sb.append(sc.nextLine());
-		}
-		sc.close();
-		
-		return sb.toString();
-	}
+    @Test
+    public void validateValidMeasurementsInstanceWithoutTrackReference() {
+        assertThat(validate.parse(loadMeasurementsInstance("measurements-instance-wo-trackref.json")),
+                is(validate.validInstanceOf(MediaTypes.MEASUREMENTS_TYPE)));
+    }
+
+    private String loadMeasurementsInstance(String res) {
+        StringBuilder sb = new StringBuilder();
+
+        Scanner sc = null;
+        sc = new Scanner(getClass().getResourceAsStream(res));
+        while (sc.hasNext()) {
+            sb.append(sc.nextLine());
+        }
+        sc.close();
+
+        return sb.toString();
+    }
 }

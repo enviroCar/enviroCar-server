@@ -21,9 +21,9 @@ import org.envirocar.server.core.entities.Announcements;
 import org.envirocar.server.core.util.pagination.Pagination;
 
 public interface AnnouncementsDao {
-	
-	Announcements get(Pagination p);
-	
-	Announcement getById(String id);
+
+    Announcements get(Pagination p);
+
+    Announcement getById(String id);
 
 }

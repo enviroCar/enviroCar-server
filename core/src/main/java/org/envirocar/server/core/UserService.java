@@ -55,7 +55,7 @@ public interface UserService {
 
     Activity getActivity(ActivityFilter request, String id);
 
-	void requestPasswordReset(User user) throws BadRequestException;
+    void requestPasswordReset(User user) throws BadRequestException;
 
-	void resetPassword(User changes, String verificationCode) throws BadRequestException;
+    void resetPassword(User changes, String verificationCode) throws BadRequestException;
 }

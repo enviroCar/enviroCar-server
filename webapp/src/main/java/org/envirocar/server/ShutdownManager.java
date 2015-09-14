@@ -53,15 +53,15 @@ public class ShutdownManager {
         });
         LOGGER.info("finished shutting down resources!");
     }
-    
-    
+
+
     public static class LocalModule implements Module {
 
         @Override
         public void configure(Binder binder) {
             binder.bind(ShutdownManager.class);
         }
-        
+
     }
-    
+
 }

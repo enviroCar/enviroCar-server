@@ -36,17 +36,17 @@ import org.slf4j.LoggerFactory;
  */
 @Singleton
 public class StatisticsUpdateScheduler {
-    
+
     private static final Logger LOGGER = LoggerFactory.getLogger(StatisticsUpdateScheduler.class);
-    
+
     private final Object keyStatisticMutex = new Object();
     private Set<MongoStatisticKey> currentKeyStatisticUpdates = new HashSet<>();
     private Set<MongoStatisticKey> updatePendingForKey = new HashSet<>();
-    
-    
+
+
     public void updateStatistics(StatisticsFilter filter, MongoStatisticKey key,
             Function<StatisticsFilter, MongoStatistics> calculator, boolean waitForResult) {
-        
+
         synchronized (this.keyStatisticMutex) {
             if (this.currentKeyStatisticUpdates.contains(key)) {
                 /*
@@ -66,18 +66,18 @@ public class StatisticsUpdateScheduler {
                 this.currentKeyStatisticUpdates.add(key);
             }
         }
-        
+
         LOGGER.info(String.format("starting statistics update for key %s", key));
         calculator.apply(filter);
         LOGGER.info(String.format("finished statistics update for key %s !", key));
-        
+
         synchronized (this.keyStatisticMutex) {
             this.keyStatisticMutex.notifyAll();
             this.currentKeyStatisticUpdates.remove(key);
-            
+
             if (updatePendingForKey.contains(key)) {
                 updatePendingForKey.remove(key);
-                
+
                 /*
                 another update is pending, start it
                 */
@@ -98,6 +98,6 @@ public class StatisticsUpdateScheduler {
             }
         }
     }
-    
-    
+
+
 }

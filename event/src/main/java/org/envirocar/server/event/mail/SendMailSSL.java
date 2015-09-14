@@ -20,11 +20,11 @@ import java.util.Properties;
 
 public class SendMailSSL extends AbstractSendMail {
 
-	@Override
-	protected void injectProperties(Properties props) {
-		props.put("mail.smtp.socketFactory.port", props.getProperty("mail.smtp.port"));
-		props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");		
-	}
+    @Override
+    protected void injectProperties(Properties props) {
+        props.put("mail.smtp.socketFactory.port", props.getProperty("mail.smtp.port"));
+        props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+    }
 
 
 }

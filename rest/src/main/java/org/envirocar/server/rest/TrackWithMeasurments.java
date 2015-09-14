@@ -209,63 +209,63 @@ public class TrackWithMeasurments implements Track, Iterable<Measurement> {
         return track.hasEnd();
     }
 
-	@Override
-	public void setTouVersion(String touVersion) {
-		track.setTouVersion(touVersion);
-	}
+    @Override
+    public void setTouVersion(String touVersion) {
+        track.setTouVersion(touVersion);
+    }
 
-	@Override
-	public String getTouVersion() {
-		return track.getTouVersion();
-	}
+    @Override
+    public String getTouVersion() {
+        return track.getTouVersion();
+    }
 
-	@Override
-	public void setObdDevice(String obdDevice) {
-		track.setObdDevice(obdDevice);
-	}
+    @Override
+    public void setObdDevice(String obdDevice) {
+        track.setObdDevice(obdDevice);
+    }
 
-	@Override
-	public String getObdDevice() {
-		return track.getObdDevice();
-	}
+    @Override
+    public String getObdDevice() {
+        return track.getObdDevice();
+    }
 
-	@Override
-	public void setAppVersion(String appVersion) {
-		track.setAppVersion(appVersion);
-	}
+    @Override
+    public void setAppVersion(String appVersion) {
+        track.setAppVersion(appVersion);
+    }
 
-	@Override
-	public String getAppVersion() {
-		return track.getAppVersion();
-	}
+    @Override
+    public String getAppVersion() {
+        return track.getAppVersion();
+    }
 
-	@Override
-	public boolean hasAppVersion() {
-		return track.hasAppVersion();
-	}
+    @Override
+    public boolean hasAppVersion() {
+        return track.hasAppVersion();
+    }
 
-	@Override
-	public boolean hasObdDevice() {
-		return track.hasObdDevice();
-	}
+    @Override
+    public boolean hasObdDevice() {
+        return track.hasObdDevice();
+    }
 
-	@Override
-	public boolean hasTouVersion() {
-		return track.hasTouVersion();
-	}
+    @Override
+    public boolean hasTouVersion() {
+        return track.hasTouVersion();
+    }
 
-	@Override
-	public double getLength() {
-		return track.getLength();
-	}
+    @Override
+    public double getLength() {
+        return track.getLength();
+    }
 
-	@Override
-	public void setLength(double length) {
-		track.setLength(length);		
-	}
+    @Override
+    public void setLength(double length) {
+        track.setLength(length);
+    }
 
-	@Override
-	public boolean hasLength() {
-		return track.hasLength();
-	}
+    @Override
+    public boolean hasLength() {
+        return track.hasLength();
+    }
 }

@@ -48,11 +48,11 @@ public interface UserDao {
 
     void removeFriend(User user, User friend);
 
-	PasswordReset requestPasswordReset(User user) throws BadRequestException;
+    PasswordReset requestPasswordReset(User user) throws BadRequestException;
 
-	void resetPassword(User user, String verificationCode) throws BadRequestException;
+    void resetPassword(User user, String verificationCode) throws BadRequestException;
 
-	Users getPendingIncomingFriendRequests(User user);
+    Users getPendingIncomingFriendRequests(User user);
 
-	Users getPendingOutgoingFriendRequests(User user);
+    Users getPendingOutgoingFriendRequests(User user);
 }

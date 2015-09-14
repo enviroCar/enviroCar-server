@@ -34,7 +34,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class GeotoolsShutdownListener implements ResourceShutdownListener {
-    
+
     private static final org.slf4j.Logger logger = LoggerFactory
         .getLogger(GeotoolsShutdownListener.class);
 
@@ -43,7 +43,7 @@ public class GeotoolsShutdownListener implements ResourceShutdownListener {
         List<CRSAuthorityFactory> candidates = new ArrayList<>(2);
         candidates.add(org.geotools.referencing.CRS.getAuthorityFactory(true));
         candidates.add(org.geotools.referencing.CRS.getAuthorityFactory(false));
-        
+
         candidates.stream().filter((factory) -> (factory != null)).map((factory) -> {
             if (factory instanceof DeferredAuthorityFactory) {
                 DeferredAuthorityFactory.exit();
@@ -57,5 +57,5 @@ public class GeotoolsShutdownListener implements ResourceShutdownListener {
             }
         });
     }
-    
+
 }

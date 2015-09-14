@@ -20,8 +20,8 @@ import org.envirocar.server.core.entities.TermsOfUseInstance;
 
 public interface TermsOfUseRights {
 
-	boolean canSeeTermsOfUse();
-	
-	boolean canSee(TermsOfUseInstance t);
-	
+    boolean canSeeTermsOfUse();
+
+    boolean canSee(TermsOfUseInstance t);
+
 }

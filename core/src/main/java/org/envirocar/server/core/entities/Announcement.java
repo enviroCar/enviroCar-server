@@ -20,24 +20,24 @@ import java.util.Map;
 
 public interface Announcement extends BaseEntity {
 
-	String getVersions();
+    String getVersions();
 
-	void setVersions(String versions);
+    void setVersions(String versions);
 
-	Map<String, String> getContents();
+    Map<String, String> getContents();
 
-	void setContents(Map<String, String> contents);
+    void setContents(Map<String, String> contents);
 
-	String getPriority();
+    String getPriority();
 
-	void setPriority(String priority);
+    void setPriority(String priority);
 
-	String getCategory();
+    String getCategory();
 
-	void setCategory(String category);
+    void setCategory(String category);
 
-	String getIdentifier();
+    String getIdentifier();
 
-	void setIdentifier(String id);
+    void setIdentifier(String id);
 
 }
