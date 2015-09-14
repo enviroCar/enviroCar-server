@@ -22,6 +22,8 @@ import java.util.List;
 
 import org.bson.BSONObject;
 import org.bson.types.ObjectId;
+import org.envirocar.server.core.SpatialFilter;
+import org.envirocar.server.core.SpatialFilter.SpatialFilterOperator;
 import org.envirocar.server.core.TemporalFilter;
 import org.envirocar.server.core.dao.MeasurementDao;
 import org.envirocar.server.core.entities.Measurement;
@@ -59,6 +61,8 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * TODO JavaDoc
@@ -79,6 +83,7 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
             .valueOf(MongoMeasurement.TRACK);
     private final MongoDB mongoDB;
     private final GeometryConverter<BSONObject> geometryConverter;
+    
     @Inject
     private MongoTrackDao trackDao;
 
@@ -135,7 +140,7 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
 
     @Override
     public Measurements get(MeasurementFilter request) {
-        if (request.hasGeometry()) {
+        if (request.hasSpatialFilter()) {
             //needed because of lacking geo2d support in morphia
             return getMongo(request);
         } else {
@@ -162,9 +167,14 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
 
     private Measurements getMongo(MeasurementFilter request) {
         BasicDBObjectBuilder q = new BasicDBObjectBuilder();
-        if (request.hasGeometry()) {
-            q.add(MongoMeasurement.GEOMETRY,
-                  withinGeometry(request.getGeometry()));
+        if (request.hasSpatialFilter()) {
+        	SpatialFilter sf = request.getSpatialFilter();
+        	try {
+				q.add(MongoMeasurement.GEOMETRY,
+				    		MongoUtils.spatialFilter(sf,geometryConverter));
+			} catch (GeometryConverterException e) {
+				 log.error("Error while applying spatial filter: " + e.getLocalizedMessage());
+			}        	
         }
         if (request.hasTrack()) {
             q.add(MongoMeasurement.TRACK, ref(request.getTrack()));
@@ -179,7 +189,7 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
         return query(q.get(), request.getPagination());
     }
 
-    @Override
+	@Override
     public Measurement getById(String id) {
         ObjectId oid;
         try {
@@ -226,8 +236,12 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
 
     List<Key<MongoTrack>> getTrackKeysByBbox(MeasurementFilter filter) {
         ArrayList<DBObject> filters = new ArrayList<DBObject>(4);
-        if (filter.hasGeometry()) {
-            filters.add(matchGeometry(filter.getGeometry()));
+        if (filter.hasSpatialFilter()) {
+        	SpatialFilter sf = filter.getSpatialFilter();
+        	if (sf.getOperator()==SpatialFilterOperator.BBOX){
+        		filters.add(matchGeometry(filter.getSpatialFilter().getGeom()));
+        	}
+        	//TODO add further spatial filters 
         }
         if (filter.hasUser()) {
             filters.add(matchUser(filter.getUser()));
@@ -294,6 +308,8 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
             throw new RuntimeException(e);
         }
     }
+    
+   
 
     private DBObject project() {
         return MongoUtils.project(new BasicDBObject(MongoMeasurement.TRACK, 1));

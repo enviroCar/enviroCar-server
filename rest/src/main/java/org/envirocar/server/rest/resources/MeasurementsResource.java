@@ -16,6 +16,10 @@
  */
 package org.envirocar.server.rest.resources;
 
+import java.security.InvalidParameterException;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.annotation.Nullable;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
@@ -27,6 +31,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
+import org.envirocar.server.core.SpatialFilter;
+import org.envirocar.server.core.SpatialFilter.SpatialFilterOperator;
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.Measurements;
 import org.envirocar.server.core.entities.Track;
@@ -40,6 +46,7 @@ import org.envirocar.server.core.exception.ValidationException;
 import org.envirocar.server.core.filter.MeasurementFilter;
 import org.envirocar.server.rest.BoundingBox;
 import org.envirocar.server.rest.MediaTypes;
+import org.envirocar.server.rest.NearPoint;
 import org.envirocar.server.rest.RESTConstants;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.auth.Authenticated;
@@ -79,14 +86,28 @@ public class MeasurementsResource extends AbstractResource {
     public Measurements get(
             @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit,
             @QueryParam(RESTConstants.PAGE) @DefaultValue("0") int page,
-            @QueryParam(RESTConstants.BBOX) BoundingBox bbox)
+            @QueryParam(RESTConstants.BBOX) BoundingBox bbox,
+            @QueryParam(RESTConstants.NEAR_POINT) NearPoint p)
             throws UserNotFoundException, TrackNotFoundException, BadRequestException {
-        Polygon poly = null;
-        if (bbox != null) {
-            poly = bbox.asPolygon(geometryFactory);
+    	
+    	//check spatial filter
+        SpatialFilter sf = null;
+        if (bbox != null && p != null){
+        	throw new InvalidParameterException("Only one spatial filter can be applied!");
         }
+        else if (bbox != null) {
+            Polygon poly = bbox.asPolygon(geometryFactory);
+            sf = new SpatialFilter(poly);
+        }
+        else if (p != null){
+        	List<Double> paramList = new ArrayList<Double>(1);
+        	paramList.add(p.getDistance());
+        	sf = new SpatialFilter(SpatialFilterOperator.NEARPOINT,p.getPoint(),paramList);
+        }
+        
+        
         return getDataService()
-                .getMeasurements(new MeasurementFilter(track, user, poly,
+                .getMeasurements(new MeasurementFilter(track, user, sf,
                                                        parseTemporalFilterForInstant(),
                                                        getPagination()));
     }

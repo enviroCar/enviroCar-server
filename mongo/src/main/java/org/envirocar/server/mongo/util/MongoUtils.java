@@ -23,10 +23,15 @@ import static org.envirocar.server.core.TemporalFilterOperator.during;
 import static org.envirocar.server.core.TemporalFilterOperator.ends;
 import static org.envirocar.server.core.TemporalFilterOperator.equals;
 
+import java.security.InvalidParameterException;
 import java.util.List;
 
 import org.bson.BSONObject;
+import org.envirocar.server.core.SpatialFilter;
+import org.envirocar.server.core.SpatialFilter.SpatialFilterOperator;
 import org.envirocar.server.core.TemporalFilter;
+import org.envirocar.server.core.exception.GeometryConverterException;
+import org.envirocar.server.core.util.GeometryConverter;
 
 import com.google.common.base.Joiner;
 import com.mongodb.BasicDBObject;
@@ -124,9 +129,29 @@ public class MongoUtils {
     public static String reverse(String order) {
         return "-" + order;
     }
+    
+    public static DBObject spatialFilter(SpatialFilter sf, GeometryConverter<BSONObject> converter) throws GeometryConverterException{
+    	SpatialFilterOperator ops = sf.getOperator();
+    	switch (ops) {
+    	case BBOX:
+    		return geoWithin(converter.encode(sf.getGeom()));
+    	case NEARPOINT:
+    		return geoNearSphere(converter.encode(sf.getGeom()),sf.getParams().get(0));
+    	default:
+    		throw new InvalidParameterException("Spatial operator" + sf.getOperator().toString() + "not supported!");
+    	}
+    }
 
     public static DBObject geoWithin(BSONObject geometry) {
         return new BasicDBObject(Ops.GEOWITHIN, geometry(geometry));
+    }
+    
+    public static DBObject geoNearSphere(BSONObject geometry, double distance) {
+    	
+    	BasicDBObject geom = geometry(geometry);
+    	geom.append("$maxDistance", distance);
+    	BasicDBObject nearSphereDBObj = new BasicDBObject(Ops.NEARSPHERE, geom);
+    	return nearSphereDBObj;
     }
 
     protected static BasicDBObject geometry(BSONObject geometry) {

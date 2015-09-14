@@ -26,6 +26,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
+import org.envirocar.server.core.SpatialFilter;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.entities.Tracks;
 import org.envirocar.server.core.entities.User;
@@ -73,11 +74,13 @@ public class TracksResource extends AbstractResource {
                 MediaTypes.TURTLE_ALT })
     public Tracks get(@QueryParam(RESTConstants.BBOX) BoundingBox bbox) throws UserNotFoundException, BadRequestException {
         Polygon poly = null;
+        SpatialFilter spatialFilter = null;
         if (bbox != null) {
             poly = bbox.asPolygon(factory);
+            spatialFilter = new SpatialFilter(poly);
         }
         return getDataService()
-                .getTracks(new TrackFilter(user, poly,
+                .getTracks(new TrackFilter(user, spatialFilter,
                                            parseTemporalFilterForInterval(),
                                            getPagination()));
     }
