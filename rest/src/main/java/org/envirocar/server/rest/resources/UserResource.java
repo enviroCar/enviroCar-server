@@ -60,6 +60,7 @@ public class UserResource extends AbstractResource {
     public static final String FRIEND_ACTIVITIES = "friendActivities";
     public static final String AVATAR = "avatar";
     public static final String FUELINGS = "fuelings";
+    public static final String SENSORS = "sensors";
     private final User user;
 
     @Inject
@@ -162,5 +163,11 @@ public class UserResource extends AbstractResource {
     public FuelingsResource fuelings() {
         checkRights(getRights().canSeeFuelingsOf(user));
         return getResourceFactory().createFuelingsResource(this.user);
+    }
+
+    @Path(SENSORS)
+    public SensorsResource cars() {
+        checkRights(getRights().canSee(user));
+        return getResourceFactory().createSensorsResource(this.user);
     }
 }

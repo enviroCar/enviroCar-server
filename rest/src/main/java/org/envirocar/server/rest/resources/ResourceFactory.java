@@ -71,6 +71,8 @@ public interface ResourceFactory {
 
     SensorsResource createSensorsResource();
 
+    SensorsResource createSensorsResource(User user);
+
     StatisticsResource createStatisticsResource();
 
     StatisticsResource createStatisticsResource(User user);
@@ -100,7 +102,7 @@ public interface ResourceFactory {
             TermsOfUseInstance t);
 
     JSONSchemaResource createSchemaResource();
-    
+
     AnnouncementsResource createAnnouncementsResource();
 
 	BadgesResource createBadgesResource();
@@ -108,8 +110,8 @@ public interface ResourceFactory {
 	ResetPasswordResource createResetPasswordResource();
 
     FuelingsResource createFuelingsResource(User user);
-    
+
     ShareResource createShareResource(Track track);
-    
+
     PreviewResource createPreviewResource(Track track);
 }

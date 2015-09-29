@@ -150,9 +150,8 @@ public class MongoUtils {
     public static DBObject geoWithin(BSONObject geometry) {
         return new BasicDBObject(Ops.GEOWITHIN, geometry(geometry));
     }
-    
+
     public static DBObject geoNearSphere(BSONObject geometry, double distance) {
-    	
     	BasicDBObject geom = geometry(geometry);
     	geom.append("$maxDistance", distance);
     	BasicDBObject nearSphereDBObj = new BasicDBObject(Ops.NEARSPHERE, geom);

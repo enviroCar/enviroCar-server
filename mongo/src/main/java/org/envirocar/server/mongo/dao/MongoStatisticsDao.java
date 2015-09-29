@@ -76,7 +76,7 @@ public class MongoStatisticsDao implements StatisticsDao {
             MongoUtils.valueOf(MongoMeasurement.USER);
     public static final String SENSOR_ID_PATH =
             MongoUtils.path(MongoMeasurement.SENSOR,
-                            MongoSensor.NAME);
+                            MongoSensor.ID);
     public static final String SENSOR_ID_VALUE =
             MongoUtils.valueOf(SENSOR_ID_PATH);
     private static final String SENSOR_VALUE =
