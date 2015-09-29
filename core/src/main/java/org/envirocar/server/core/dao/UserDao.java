@@ -38,7 +38,7 @@ public interface UserDao {
 
     User save(User user);
 
-    void delete(User user);
+    void delete(User user, boolean deleteContent);
 
     Users getFriends(User user);
 

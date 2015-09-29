@@ -129,7 +129,7 @@ public class MongoUtils {
     public static String reverse(String order) {
         return "-" + order;
     }
-    
+
     public static DBObject spatialFilter(SpatialFilter sf,
                                          GeometryConverter<BSONObject> converter)
             throws GeometryConverterException {

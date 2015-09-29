@@ -35,4 +35,5 @@ public interface MeasurementDao {
     Measurement getById(String id);
 
     Measurements get(MeasurementFilter request);
+
 }
