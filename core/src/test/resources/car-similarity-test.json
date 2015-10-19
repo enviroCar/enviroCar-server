@@ -1,0 +1,5 @@
+{
+    "manufacturers" : [
+	{"name": "Vito", "matches": ["vito mobile", "vito", "vito premium"]}
+    ]
+}

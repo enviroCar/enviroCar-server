@@ -1,0 +1,112 @@
+{
+    "manufacturers": [
+        {
+            "name": "Volkswagen",
+            "matches": ["volkswagen", "vw"]
+        },
+        {
+            "name": "BMW",
+            "matches": ["bmw"]
+        },
+        {
+            "name": "Mercedes Benz",
+            "matches": ["mercedes", "mercedes benz", "benz", "daimler"]
+        },
+        {
+            "name": "Audi",
+            "matches": ["audi"]
+        },
+        {
+            "name": "Skoda",
+            "matches": ["skoda"]
+        },
+        {
+            "name": "Citroen",
+            "matches": ["citroen"]
+        },
+        {
+            "name": "Volvo",
+            "matches": ["volvo"]
+        },
+        {
+            "name": "Peugeot",
+            "matches": ["peugeot"]
+        },
+        {
+            "name": "Nissan",
+            "matches": ["nissan"]
+        },
+        {
+            "name": "Toyota",
+            "matches": ["toyota"]
+        },
+        {
+            "name": "Suzuki",
+            "matches": ["suzuki"]
+        },
+        {
+            "name": "Honda",
+            "matches": ["honda"]
+        },
+        {
+            "name": "Opel",
+            "matches": ["opel"]
+        },
+        {
+            "name": "Subaru",
+            "matches": ["subaru"]
+        },
+        {
+            "name": "Mitsubishi",
+            "matches": ["mitsubishi"]
+        },
+        {
+            "name": "Ford",
+            "matches": ["ford"]
+        },
+        {
+            "name": "Renault",
+            "matches": ["renault"]
+        },
+        {
+            "name": "Jeep",
+            "matches": ["jeep"]
+        },
+        {
+            "name": "Chrysler",
+            "matches": ["chrysler"]
+        },
+        {
+            "name": "Fiat",
+            "matches": ["fiat"]
+        },
+        {
+            "name": "Mazda",
+            "matches": ["mazda"]
+        },
+        {
+            "name": "Seat",
+            "matches": ["seat"]
+        },
+        {
+            "name": "Lexus",
+            "matches": ["lexus"]
+        },
+        {
+            "name": "Kia",
+            "matches": ["kia"]
+        },
+        {
+            "name": "Fiat",
+            "matches": ["fiat"]
+        },
+        {
+            "name": "Porsche",
+            "matches": ["porsche"]
+        },
+        {
+            "name": "Chevrolet",
+            "matches": ["chevrolet"]
+        }
+    ]
+}
