@@ -25,9 +25,7 @@ import javax.ws.rs.ext.Provider;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
 import com.vividsolutions.jts.geom.Geometry;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.envirocar.server.core.dao.PhenomenonDao;

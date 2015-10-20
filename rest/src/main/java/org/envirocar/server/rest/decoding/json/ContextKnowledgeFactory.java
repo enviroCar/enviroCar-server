@@ -16,11 +16,14 @@
  */
 package org.envirocar.server.rest.decoding.json;
 
-import java.util.HashMap;
 
 /**
  *
  */
-public class ContextKnowledge extends HashMap<String, Object> {
+public class ContextKnowledgeFactory {
+    
+    public ContextKnowledge create() {
+        return new ContextKnowledge();
+    }
 
 }

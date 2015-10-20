@@ -41,6 +41,8 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
 import com.google.inject.TypeLiteral;
 import com.vividsolutions.jts.geom.Geometry;
+import org.envirocar.server.rest.decoding.json.ContextKnowledgeFactory;
+import org.opengis.geometry.coordinate.Cone;
 
 /**
  * TODO JavaDoc
@@ -79,5 +81,6 @@ public class JerseyDecoderModule extends AbstractModule {
         bind(FuelingDecoder.class).in(Scopes.SINGLETON);
         bind(new TypeLiteral<JSONEntityDecoder<Fueling>>() {
         }).to(FuelingDecoder.class);
+        bind(ContextKnowledgeFactory.class).toInstance(new ContextKnowledgeFactory());
     }
 }
