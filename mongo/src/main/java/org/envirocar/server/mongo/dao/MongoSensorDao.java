@@ -25,11 +25,13 @@ import com.github.jmkgreen.morphia.query.Query;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
+import org.envirocar.server.core.CarSimilarityService;
 
 import org.envirocar.server.core.dao.SensorDao;
 
 import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.core.entities.Sensors;
+import org.envirocar.server.core.exception.ResourceNotFoundException;
 import org.envirocar.server.core.filter.PropertyFilter;
 import org.envirocar.server.core.filter.SensorFilter;
 import org.envirocar.server.core.util.pagination.Pagination;
@@ -37,6 +39,8 @@ import org.envirocar.server.mongo.MongoDB;
 import org.envirocar.server.mongo.entity.MongoSensor;
 
 import org.envirocar.server.mongo.util.MongoUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * TODO JavaDoc
@@ -45,13 +49,30 @@ import org.envirocar.server.mongo.util.MongoUtils;
  */
 public class MongoSensorDao extends AbstractMongoDao<ObjectId, MongoSensor, Sensors>
         implements SensorDao {
+    
+    private static final Logger log = LoggerFactory.getLogger(MongoSensorDao.class);
+    private final CarSimilarityService carSimilarity;
+    
     @Inject
-    public MongoSensorDao(MongoDB mongoDB) {
+    public MongoSensorDao(MongoDB mongoDB, CarSimilarityService carSimilarity) {
         super(MongoSensor.class, mongoDB);
+        this.carSimilarity = carSimilarity;
     }
 
     @Override
     public Sensor getByIdentifier(String id) {
+        try {
+            /**
+             * this is a backwards-compatibility solution for
+             * client that use old (removed/mapped) sensor ids
+             * that were duplicates. --> DB related, thats why
+             * applied here
+             */
+            return this.carSimilarity.resolveMappedSensor(id);
+        } catch (ResourceNotFoundException ex) {
+            log.trace("No mapped sensor found for id {}, fetching from db", id);
+        }
+        
         ObjectId oid;
         try {
             oid = new ObjectId(id);

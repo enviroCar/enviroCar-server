@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2013 The enviroCar project
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.envirocar.server.core;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -33,7 +49,8 @@ public class CarSimilarityServiceImpl implements CarSimilarityService {
     private static final String MODEL = "model";
     
     private final SensorDao sensorDao;
-    private Map<String, Set<String>> similarManufactures = new HashMap<>();
+    private final Map<String, Set<String>> similarManufactures = new HashMap<>();
+    private final Map<String, String> staticIdMappings = new HashMap<>();
 
     @Inject
     public CarSimilarityServiceImpl(SensorDao sensorDao) {
@@ -41,8 +58,12 @@ public class CarSimilarityServiceImpl implements CarSimilarityService {
         
         loadSimilarityDefinition("/car-similarity.json");
     }
+    
+    public void addSimilarityDefinition(String carSimilarityResourcePath) {
+        loadSimilarityDefinition(carSimilarityResourcePath);
+    }
 
-    protected void loadSimilarityDefinition(String carSimilarityResourcePath) {
+    private void loadSimilarityDefinition(String carSimilarityResourcePath) {
         InputStream res = getClass().getResourceAsStream(carSimilarityResourcePath);
         
         if (res != null) {
@@ -57,6 +78,11 @@ public class CarSimilarityServiceImpl implements CarSimilarityService {
                         String name = t.path("name").asText();
                         this.similarManufactures.put(name, matches);
                     });
+                }
+                
+                JsonNode mappingsJson = json.path("staticIdMapping");
+                if (!mappingsJson.isMissingNode()) {
+                    this.staticIdMappings.putAll(mapper.convertValue(mappingsJson, Map.class));
                 }
             } catch (IOException ex) {
                 log.warn("Could not read Similarity Definition", ex);
@@ -152,6 +178,15 @@ public class CarSimilarityServiceImpl implements CarSimilarityService {
         }
         
         return s;
+    }
+
+    @Override
+    public Sensor resolveMappedSensor(String id) throws ResourceNotFoundException {
+        if (this.staticIdMappings.containsKey(id)) {
+            return this.sensorDao.getByIdentifier(this.staticIdMappings.get(id));
+        }
+        
+        throw new ResourceNotFoundException("No static mapping found for sensor "+id);
     }
     
     private class Holder {
