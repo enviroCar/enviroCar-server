@@ -80,7 +80,7 @@ public abstract class AbstractJSONMessageBodyReader<T>
         }
     }
 
-    public T decode(JsonNode j, MediaType mt, ContextKnowledge<T> knowledge) {
+    public T decode(JsonNode j, MediaType mt, ContextKnowledge knowledge) {
         return decode(j, mt);
     };
     

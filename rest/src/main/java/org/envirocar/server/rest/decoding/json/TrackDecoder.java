@@ -78,7 +78,7 @@ public class TrackDecoder extends AbstractJSONEntityDecoder<Track> {
             JsonNode ms = j.path(GeoJSONConstants.FEATURES_KEY);
             TrackWithMeasurments twm = new TrackWithMeasurments(track);
             
-            ContextKnowledge<Measurement> knowledge = null;
+            ContextKnowledge knowledge = new ContextKnowledge();
             
             for (int i = 0; i < ms.size(); i++) {
                 Measurement m = measurementDecoder.decode(ms.get(i), mediaType, knowledge);
@@ -87,10 +87,6 @@ public class TrackDecoder extends AbstractJSONEntityDecoder<Track> {
                     m.setSensor(trackSensor);
                 }
                 twm.addMeasurement(m);
-                
-                if (knowledge == null) {
-                    knowledge = new ContextKnowledge<>(m);
-                }
                 
             }
             track = twm;
