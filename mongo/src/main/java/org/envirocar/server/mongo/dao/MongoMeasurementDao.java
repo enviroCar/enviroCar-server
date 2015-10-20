@@ -56,10 +56,12 @@ import com.mongodb.AggregationOutput;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
+import com.mongodb.CommandResult;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
+import com.mongodb.WriteResult;
 import com.vividsolutions.jts.geom.Geometry;
 
 /**
@@ -80,7 +82,7 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
             .valueOf(MongoMeasurement.TRACK);
     private final MongoDB mongoDB;
     private final GeometryConverter<BSONObject> geometryConverter;
-    
+
     @Inject
     private MongoTrackDao trackDao;
 
@@ -211,6 +213,18 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
         }
     }
 
+    void deleteUser(MongoUser user) {
+        WriteResult result = delete(q().field(MongoTrack.USER).equal(key(user)));
+        CommandResult error = result.getLastError();
+        if (error.ok()) {
+            log.debug("Removed user {} from {} measurement",
+                      user, result.getN());
+        } else {
+            log.error("Error removing user {} from measurement: {}",
+                      user, result.getError());
+        }
+    }
+
     @Override
     protected Measurements createPaginatedIterable(
             Iterable<MongoMeasurement> i,
@@ -220,26 +234,25 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
     }
 
     void removeTrack(MongoTrack track) {
-        UpdateResults<MongoMeasurement> result = update(
-                q().field(MongoMeasurement.TRACK).equal(key(track)),
-                up().unset(MongoMeasurement.TRACK));
-        if (result.getHadError()) {
-            log.error("Error removing track {} from measurements: {}",
-                      track, result.getError());
-        } else {
+        WriteResult delete = delete(q().field(MongoMeasurement.TRACK).equal(key(track)));
+        CommandResult error = delete.getLastError();
+        if (error.ok()) {
             log.debug("Removed track {} from {} measurements",
-                      track, result.getUpdatedCount());
+                      track, delete.getN());
+        } else {
+            log.error("Error removing track {} from measurements: {}",
+                      track, error.getErrorMessage());
         }
     }
 
     List<Key<MongoTrack>> getTrackKeysByBbox(MeasurementFilter filter) {
-        ArrayList<DBObject> filters = new ArrayList<DBObject>(4);
+        ArrayList<DBObject> filters = new ArrayList<>(4);
         if (filter.hasSpatialFilter()) {
         	SpatialFilter sf = filter.getSpatialFilter();
         	if (sf.getOperator()==SpatialFilterOperator.BBOX){
         		filters.add(matchGeometry(filter.getSpatialFilter().getGeom()));
         	}
-        	//TODO add further spatial filters 
+        	//TODO add further spatial filters
         }
         if (filter.hasUser()) {
             filters.add(matchUser(filter.getUser()));
@@ -353,7 +366,7 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
                                                 MongoMeasurement.class,
                                                 mapper, true));
         Iterable<MongoMeasurement> i =
-                new MorphiaIterator<MongoMeasurement, MongoMeasurement>(
+                new MorphiaIterator<>(
                 cursor, mapper, MongoMeasurement.class, coll.getName(),
                 mapper.createEntityCache());
         return createPaginatedIterable(i, p, count);

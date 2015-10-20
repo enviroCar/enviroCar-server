@@ -43,7 +43,7 @@ public interface UserService {
     User getUser(String name) throws
             UserNotFoundException;
 
-    void deleteUser(User user);
+    void deleteUser(User user, boolean deleteContent);
 
     User modifyUser(User user, User changes)
             throws UserNotFoundException,

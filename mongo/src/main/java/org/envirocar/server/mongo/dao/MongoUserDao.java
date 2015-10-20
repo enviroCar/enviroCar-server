@@ -110,11 +110,15 @@ public class MongoUserDao extends AbstractMongoDao<String, MongoUser, Users>
     }
 
     @Override
-    public void delete(User u) {
+    public void delete(User u, boolean deleteContent) {
         MongoUser user = (MongoUser) u;
-
-        trackDao.removeUser(user);
-        measurementDao.removeUser(user);
+        if (deleteContent) {
+             trackDao.deleteUser(user);
+             measurementDao.deleteUser(user);
+        } else {
+            trackDao.removeUser(user);
+            measurementDao.removeUser(user);
+        }
         groupDao.removeUser(user);
         fuelingDao.removeUser(user);
         Key<MongoUser> userRef = key(user);
@@ -204,9 +208,9 @@ public class MongoUserDao extends AbstractMongoDao<String, MongoUser, Users>
         final Set<Key<MongoUser>> friendRefs = getFriendRefs(user);
         final Set<String> ids = Sets.newHashSetWithExpectedSize(friendRefs.size());
         for (Key<MongoUser> key  : friendRefs) { ids.add((String) key.getId()); }
-        
+
         if (ids.isEmpty()) return Sets.newHashSet();
-        
+
         final Iterable<Key<MongoUser>> filtered =q()
                 .field(MongoUser.NAME).in(ids)
                 .field(MongoUser.FRIENDS).hasThisElement(key(user))
@@ -219,14 +223,14 @@ public class MongoUserDao extends AbstractMongoDao<String, MongoUser, Users>
 		if (user == null || user.getName() == null) {
 			throw new InvalidUserMailCombinationException();
 		}
-		
+
 		return this.passwordResetDao.requestPasswordReset(user);
 	}
 
 	@Override
 	public void resetPassword(User user, String verificationCode) throws BadRequestException {
 		MongoPasswordReset status = this.passwordResetDao.getPasswordResetStatus(user);
-		
+
 		if (status != null && !status.isExpired()) {
 			if (status.getCode().equals(verificationCode)) {
 				save(user);
@@ -238,7 +242,7 @@ public class MongoUserDao extends AbstractMongoDao<String, MongoUser, Users>
 		else {
 			throw new BadRequestException("Verification code already expired.");
 		}
-		
+
 		this.passwordResetDao.remove(status);
 	}
 
@@ -246,22 +250,22 @@ public class MongoUserDao extends AbstractMongoDao<String, MongoUser, Users>
 	public Users getPendingIncomingFriendRequests(User user) {
 		final Set<Key<MongoUser>> friendRefs = getFriendRefs(user);
         final Set<String> ids = Sets.newHashSetWithExpectedSize(friendRefs.size());
-        
+
         for (Key<MongoUser> key  : friendRefs) {
         	ids.add((String) key.getId());
         }
         final Iterable<Key<MongoUser>> filtered;
-        
+
         if (ids.isEmpty()) {
         	filtered = q()
                     .field(MongoUser.FRIENDS).hasThisElement(key(user))
-                    .fetchKeys();	
-        } 
+                    .fetchKeys();
+        }
         else {
         	filtered = q()
                     .field(MongoUser.NAME).notIn(ids)
                     .field(MongoUser.FRIENDS).hasThisElement(key(user))
-                    .fetchKeys();	
+                    .fetchKeys();
         }
 
         return Users.from(deref(MongoUser.class, filtered)).build();
@@ -270,12 +274,12 @@ public class MongoUserDao extends AbstractMongoDao<String, MongoUser, Users>
 	@Override
 	public Users getPendingOutgoingFriendRequests(User user) {
 		Set<Key<MongoUser>> candidates = getFriendRefs(user);
-		
+
 		Set<Key<MongoUser>> biDis = getBidirectionalFriendRefs(user);
-		
+
 		Set<Key<MongoUser>> result = Sets.difference(candidates, biDis).immutableCopy();
-		
+
 		return Users.from(deref(MongoUser.class, result)).build();
 	}
-	
+
 }

@@ -129,7 +129,7 @@ public class MongoUtils {
     public static String reverse(String order) {
         return "-" + order;
     }
-    
+
     public static DBObject spatialFilter(SpatialFilter sf,
                                          GeometryConverter<BSONObject> converter)
             throws GeometryConverterException {
@@ -150,9 +150,8 @@ public class MongoUtils {
     public static DBObject geoWithin(BSONObject geometry) {
         return new BasicDBObject(Ops.GEOWITHIN, geometry(geometry));
     }
-    
+
     public static DBObject geoNearSphere(BSONObject geometry, double distance) {
-    	
     	BasicDBObject geom = geometry(geometry);
     	geom.append("$maxDistance", distance);
     	BasicDBObject nearSphereDBObj = new BasicDBObject(Ops.NEARSPHERE, geom);
