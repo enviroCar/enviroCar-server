@@ -36,7 +36,7 @@ import org.envirocar.server.core.entities.Sensor;
  */
 @Entity("sensors")
 public class MongoSensor extends MongoEntityBase implements Sensor {
-    public static final String NAME = Mapper.ID_KEY;
+    public static final String ID = Mapper.ID_KEY;
     public static final String TYPE = "type";
     public static final String PROPERTIES = "properties";
     @Id
@@ -49,7 +49,7 @@ public class MongoSensor extends MongoEntityBase implements Sensor {
     @Override
     public String toString() {
         return toStringHelper()
-                .add(NAME, id).toString();
+                .add(ID, id).toString();
     }
 
     @Override

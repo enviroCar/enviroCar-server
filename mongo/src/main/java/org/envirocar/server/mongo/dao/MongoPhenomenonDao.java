@@ -41,7 +41,7 @@ public class MongoPhenomenonDao extends AbstractMongoDao<String, MongoPhenomenon
 
     @Override
     public MongoPhenomenon getByName(final String name) {
-        return q().field(MongoSensor.NAME).equal(name).get();
+        return q().field(MongoSensor.ID).equal(name).get();
     }
 
     @Override
