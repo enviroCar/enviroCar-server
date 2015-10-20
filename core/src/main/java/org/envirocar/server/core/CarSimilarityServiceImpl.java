@@ -56,14 +56,16 @@ public class CarSimilarityServiceImpl implements CarSimilarityService {
     public CarSimilarityServiceImpl(SensorDao sensorDao) {
         this.sensorDao = sensorDao;
         
-        loadSimilarityDefinition("/car-similarity.json");
+        if (!loadSimilarityDefinition("/car-similarity.json")) {
+            loadSimilarityDefinition("/car-similarity.default.json");
+        }
     }
     
     public void addSimilarityDefinition(String carSimilarityResourcePath) {
         loadSimilarityDefinition(carSimilarityResourcePath);
     }
 
-    private void loadSimilarityDefinition(String carSimilarityResourcePath) {
+    private boolean loadSimilarityDefinition(String carSimilarityResourcePath) {
         InputStream res = getClass().getResourceAsStream(carSimilarityResourcePath);
         
         if (res != null) {
@@ -86,9 +88,12 @@ public class CarSimilarityServiceImpl implements CarSimilarityService {
                 }
             } catch (IOException ex) {
                 log.warn("Could not read Similarity Definition", ex);
+                return false;
             }
+            return true;
         }
         
+        return false;
     }
 
     @Override
