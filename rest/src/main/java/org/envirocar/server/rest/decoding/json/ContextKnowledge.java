@@ -16,16 +16,11 @@
  */
 package org.envirocar.server.rest.decoding.json;
 
-import javax.ws.rs.core.MediaType;
-
-import com.fasterxml.jackson.databind.JsonNode;
+import java.util.HashMap;
 
 /**
- * TODO JavaDoc
  *
- * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public interface JSONEntityDecoder<T> {
-    T decode(JsonNode j, MediaType mt);
-    T decode(JsonNode j, MediaType mt, ContextKnowledge knowledge);
+public class ContextKnowledge extends HashMap<String, Object> {
+
 }

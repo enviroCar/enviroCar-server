@@ -74,7 +74,7 @@ public class HTTPPushListener {
                     .encodeJSON(track, DEFAULT_ACCESS_RIGHTS,
                                 MediaTypes.TRACK_TYPE);
             String content = writer.writeValueAsString(jsonTrack);
-            logger.debug("Entity: {}", content);
+            //logger.debug("Entity: {}", content);
             HttpEntity entity = new StringEntity(
                     content, ContentType.create(MediaTypes.TRACK));
             HttpPost hp = new HttpPost(host);

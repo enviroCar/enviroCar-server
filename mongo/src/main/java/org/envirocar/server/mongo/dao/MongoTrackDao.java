@@ -37,6 +37,8 @@ import com.github.jmkgreen.morphia.query.Query;
 import com.github.jmkgreen.morphia.query.UpdateResults;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
+import com.mongodb.CommandResult;
+import com.mongodb.WriteResult;
 
 /**
  * TODO JavaDoc
@@ -120,6 +122,18 @@ public class MongoTrackDao extends AbstractMongoDao<ObjectId, MongoTrack, Tracks
         updateTimestamp((MongoTrack) track);
     }
 
+    void deleteUser(MongoUser user) {
+        WriteResult result = delete(q().field(MongoTrack.USER).equal(key(user)));
+        CommandResult error = result.getLastError();
+        if (error.ok()) {
+            log.debug("Removed user {} from {} tracks",
+                      user, result.getN());
+        } else {
+            log.error("Error removing user {} from tracks: {}",
+                      user, result.getError());
+        }
+    }
+
     void removeUser(MongoUser user) {
         UpdateResults<MongoTrack> result = update(
                 q().field(MongoTrack.USER).equal(key(user)),
@@ -156,4 +170,5 @@ public class MongoTrackDao extends AbstractMongoDao<ObjectId, MongoTrack, Tracks
         }
         return ids;
     }
+
 }

@@ -105,7 +105,10 @@ public class CarSimilarityServiceImpl implements CarSimilarityService {
 
     @Override
     public Sensor resolveEquivalent(final Sensor s) throws ResourceNotFoundException {
-        Sensors candidates = this.sensorDao.get(new SensorFilter("car", createFilter(s), new PageBasedPagination(PageBasedPagination.MAX_PAGE_SIZE, 0)));
+        Sensors candidates = this.sensorDao.get(new SensorFilter("car",
+                null,
+                createFilter(s),
+                new PageBasedPagination(PageBasedPagination.MAX_PAGE_SIZE, 0)));
         
         final Holder h = new Holder();
 

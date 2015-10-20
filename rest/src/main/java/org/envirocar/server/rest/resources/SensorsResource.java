@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Set;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -30,12 +29,10 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
-import com.google.common.collect.Sets;
-
 import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.core.entities.Sensors;
+import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.exception.BadRequestException;
-
 import org.envirocar.server.core.exception.SensorNotFoundException;
 import org.envirocar.server.core.filter.PropertyFilter;
 import org.envirocar.server.core.filter.SensorFilter;
@@ -43,8 +40,11 @@ import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.RESTConstants;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.auth.Authenticated;
-
 import org.envirocar.server.rest.validation.Schema;
+
+import com.google.common.collect.Sets;
+import com.google.inject.assistedinject.Assisted;
+import com.google.inject.assistedinject.AssistedInject;
 
 /**
  * TODO JavaDoc
@@ -54,6 +54,18 @@ import org.envirocar.server.rest.validation.Schema;
  */
 public class SensorsResource extends AbstractResource {
     public static final String SENSOR = "{sensor}";
+
+    private final User user;
+
+    @AssistedInject
+    public SensorsResource(@Assisted User user) {
+        this.user = user;
+    }
+
+    @AssistedInject
+    public SensorsResource() {
+        this(null);
+    }
 
     @GET
     @Schema(response = Schemas.SENSORS)
@@ -77,7 +89,7 @@ public class SensorsResource extends AbstractResource {
                 filters.add(new PropertyFilter(key, value));
             }
         }
-        return getDataService().getSensors(new SensorFilter(type, filters, getPagination()));
+        return getDataService().getSensors(new SensorFilter(type, user, filters, getPagination()));
     }
 
     @POST

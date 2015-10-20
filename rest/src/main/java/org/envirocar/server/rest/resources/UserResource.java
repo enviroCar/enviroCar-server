@@ -21,10 +21,12 @@ import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
@@ -60,6 +62,8 @@ public class UserResource extends AbstractResource {
     public static final String FRIEND_ACTIVITIES = "friendActivities";
     public static final String AVATAR = "avatar";
     public static final String FUELINGS = "fuelings";
+    public static final String SENSORS = "sensors";
+    public static final String DELETE_CONTENT = "deleteContent";
     private final User user;
 
     @Inject
@@ -106,9 +110,9 @@ public class UserResource extends AbstractResource {
 
     @DELETE
     @Authenticated
-    public void delete() throws ResourceNotFoundException {
+    public void delete(@QueryParam(DELETE_CONTENT) @DefaultValue("false") boolean deleteContent) throws ResourceNotFoundException {
         checkRights(getRights().canDelete(user));
-        getUserService().deleteUser(this.user);
+        getUserService().deleteUser(this.user, deleteContent);
     }
 
     @Path(FRIENDS)
@@ -162,5 +166,11 @@ public class UserResource extends AbstractResource {
     public FuelingsResource fuelings() {
         checkRights(getRights().canSeeFuelingsOf(user));
         return getResourceFactory().createFuelingsResource(this.user);
+    }
+
+    @Path(SENSORS)
+    public SensorsResource cars() {
+        checkRights(getRights().canSee(user));
+        return getResourceFactory().createSensorsResource(this.user);
     }
 }

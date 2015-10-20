@@ -34,8 +34,8 @@ import org.envirocar.server.core.exception.UserNotFoundException;
 import org.envirocar.server.core.exception.ValidationException;
 import org.envirocar.server.core.filter.ActivityFilter;
 import org.envirocar.server.core.update.EntityUpdater;
-import org.envirocar.server.core.util.pagination.Pagination;
 import org.envirocar.server.core.util.PasswordEncoder;
+import org.envirocar.server.core.util.pagination.Pagination;
 import org.envirocar.server.core.validation.EntityValidator;
 
 import com.google.common.eventbus.EventBus;
@@ -115,8 +115,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUser(User user) {
-        this.userDao.delete(user);
+    public void deleteUser(User user, boolean deleteContent) {
+        this.userDao.delete(user, deleteContent);
         this.eventBus.post(new DeletedUserEvent(user));
     }
 
@@ -133,13 +133,13 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void requestPasswordReset(User user) throws BadRequestException {
 		User dbUser = this.userDao.getByName(user.getName());
-		
+
 		if (!user.equals(dbUser) || !user.getMail().equals(dbUser.getMail())) {
 			throw new InvalidUserMailCombinationException();
 		}
-		
+
 		PasswordReset code = this.userDao.requestPasswordReset(dbUser);
-		
+
 		/*
 		 * we got here without exception, fire an event
 		 */
@@ -149,17 +149,17 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void resetPassword(User changes, String verificationCode) throws BadRequestException {
 		User dbUser = this.userDao.getByName(changes.getName());
-		
+
 		if (!changes.equals(dbUser)) {
 			throw new BadRequestException("Invalid username.");
 		}
-		
+
 		try {
 			this.userUpdater.update(changes, dbUser);
 		} catch (IllegalModificationException e) {
 			throw new InvalidUserMailCombinationException();
 		}
-		this.userDao.resetPassword(dbUser, verificationCode);		
+		this.userDao.resetPassword(dbUser, verificationCode);
 	}
 
 }
