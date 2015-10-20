@@ -77,13 +77,21 @@ public class TrackDecoder extends AbstractJSONEntityDecoder<Track> {
         if (!j.path(GeoJSONConstants.FEATURES_KEY).isMissingNode()) {
             JsonNode ms = j.path(GeoJSONConstants.FEATURES_KEY);
             TrackWithMeasurments twm = new TrackWithMeasurments(track);
+            
+            ContextKnowledge<Measurement> knowledge = null;
+            
             for (int i = 0; i < ms.size(); i++) {
-                Measurement m = measurementDecoder.decode(ms.get(i), mediaType);
+                Measurement m = measurementDecoder.decode(ms.get(i), mediaType, knowledge);
                 m.setTrack(track);
                 if (m.getSensor() == null) {
                     m.setSensor(trackSensor);
                 }
                 twm.addMeasurement(m);
+                
+                if (knowledge == null) {
+                    knowledge = new ContextKnowledge<>(m);
+                }
+                
             }
             track = twm;
         }

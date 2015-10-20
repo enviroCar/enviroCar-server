@@ -16,16 +16,20 @@
  */
 package org.envirocar.server.rest.decoding.json;
 
-import javax.ws.rs.core.MediaType;
-
-import com.fasterxml.jackson.databind.JsonNode;
 
 /**
- * TODO JavaDoc
  *
- * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public interface JSONEntityDecoder<T> {
-    T decode(JsonNode j, MediaType mt);
-    T decode(JsonNode j, MediaType mt, ContextKnowledge<T> knowledge);
+public class ContextKnowledge<T> {
+    
+    private final T object;
+
+    public ContextKnowledge(T obj) {
+        this.object = obj;
+    }
+
+    public T get() {
+        return this.object;
+    }
+
 }

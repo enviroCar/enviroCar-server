@@ -32,6 +32,7 @@ import org.envirocar.server.core.dao.SensorDao;
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.MeasurementValue;
 import org.envirocar.server.core.entities.Phenomenon;
+import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.core.util.GeoJSONConstants;
 import org.envirocar.server.rest.JSONConstants;
 
@@ -59,6 +60,11 @@ public class MeasurementDecoder extends AbstractJSONEntityDecoder<Measurement> {
 
     @Override
     public Measurement decode(JsonNode j, MediaType mediaType) {
+        return decode(j, mediaType, null);
+    }
+    
+    @Override
+    public Measurement decode(JsonNode j, MediaType mediaType, ContextKnowledge<Measurement> knowledge) {
         Measurement measurement = getEntityFactory().createMeasurement();
         if (j.has(JSONConstants.GEOMETRY_KEY)) {
             measurement.setGeometry(geometryDecoder.decode(j
@@ -67,8 +73,7 @@ public class MeasurementDecoder extends AbstractJSONEntityDecoder<Measurement> {
         if (j.has(GeoJSONConstants.PROPERTIES_KEY)) {
             JsonNode p = j.path(GeoJSONConstants.PROPERTIES_KEY);
             if (p.has(JSONConstants.SENSOR_KEY)) {
-                measurement.setSensor(sensorDao.getByIdentifier(p
-                        .path(JSONConstants.SENSOR_KEY).textValue()));
+                measurement.setSensor(resolveSensor(p, knowledge));
             }
             if (p.has(JSONConstants.TIME_KEY)) {
                 measurement.setTime(getDateTimeFormat().parseDateTime(p
@@ -103,5 +108,12 @@ public class MeasurementDecoder extends AbstractJSONEntityDecoder<Measurement> {
             }
         }
         return measurement;
+    }
+
+    private Sensor resolveSensor(JsonNode p, ContextKnowledge<Measurement> knowledge) {
+        if (knowledge != null) {
+            return knowledge.get().getSensor();
+}
+        return this.sensorDao.getByIdentifier(p.path(JSONConstants.SENSOR_KEY).textValue());
     }
 }
