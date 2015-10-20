@@ -61,7 +61,14 @@ public class CarSimilarityServiceImpl implements CarSimilarityService {
         }
     }
     
-    public void addSimilarityDefinition(String carSimilarityResourcePath) {
+    public void setSimilarityDefinition(String carSimilarityResourcePath) {
+        if (similarManufactures != null) {
+            similarManufactures.clear();
+        }
+        if (staticIdMappings != null) {
+            staticIdMappings.clear();
+        }
+        
         loadSimilarityDefinition(carSimilarityResourcePath);
     }
 
@@ -192,6 +199,11 @@ public class CarSimilarityServiceImpl implements CarSimilarityService {
         }
         
         throw new ResourceNotFoundException("No static mapping found for sensor "+id);
+    }
+
+    @Override
+    public Set<String> getMappedSensorIds() {
+        return this.staticIdMappings.keySet();
     }
     
     private class Holder {

@@ -17,6 +17,7 @@
 package org.envirocar.server.core;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import org.envirocar.server.core.dao.SensorDao;
@@ -50,7 +51,7 @@ public class CarSimilarityServiceTest {
         
         CarSimilarityServiceImpl service = new CarSimilarityServiceImpl(dao);
         CarSimilarityServiceImpl serviceMock = Mockito.spy(service);
-        serviceMock.addSimilarityDefinition("/car-similarity-test.json");
+        serviceMock.setSimilarityDefinition("/car-similarity-test.json");
         
         Sensor equi = serviceMock.resolveEquivalent(newSensor);
         Assert.assertThat(equi, Matchers.is(oldSensor));
@@ -78,7 +79,7 @@ public class CarSimilarityServiceTest {
         
         CarSimilarityServiceImpl service = new CarSimilarityServiceImpl(dao);
         CarSimilarityServiceImpl serviceMock = Mockito.spy(service);
-        serviceMock.addSimilarityDefinition("/car-similarity-test.json");
+        serviceMock.setSimilarityDefinition("/car-similarity-test.json");
         
         serviceMock.resolveEquivalent(newSensor);
     }
@@ -109,7 +110,7 @@ public class CarSimilarityServiceTest {
         SensorDao dao = createDao();
         
         CarSimilarityServiceImpl service = new CarSimilarityServiceImpl(dao);
-        service.addSimilarityDefinition("/car-similarity-test.json");
+        service.setSimilarityDefinition("/car-similarity-test.json");
         
         Sensor resolved = service.resolveMappedSensor("51ffab4fe4b058cd3d654007");
         Assert.assertThat(resolved, Matchers.is(oldSensor));
@@ -120,9 +121,22 @@ public class CarSimilarityServiceTest {
         SensorDao dao = createDao();
         
         CarSimilarityServiceImpl service = new CarSimilarityServiceImpl(dao);
-        service.addSimilarityDefinition("/car-similarity-test.json");
+        service.setSimilarityDefinition("/car-similarity-test.json");
         
         service.resolveMappedSensor("i-am-no-id");
+    }
+    
+    @Test
+    public void testMappingIdsCollection() {
+        String id = "51ffab4fe4b058cd3d654007";
+        
+        CarSimilarityServiceImpl service = new CarSimilarityServiceImpl(Mockito.mock(SensorDao.class));
+        service.setSimilarityDefinition("/car-similarity-test.json");
+        
+        Collection<String> mapped = service.getMappedSensorIds();
+        
+        Assert.assertThat(mapped.size(), Matchers.is(1));
+        Assert.assertThat(mapped.iterator().next(), Matchers.is(id));
     }
 
 }

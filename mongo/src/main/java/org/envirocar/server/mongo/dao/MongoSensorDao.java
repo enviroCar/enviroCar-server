@@ -91,7 +91,8 @@ public class MongoSensorDao extends AbstractMongoDao<ObjectId, MongoSensor, Sens
         if (request.hasFilters()) {
             applyFilters(q, request.getFilters());
         }
-        return fetch(q, request.getPagination());
+        Sensors result = fetch(q, request.getPagination());
+        return result;
     }
 
     @Override

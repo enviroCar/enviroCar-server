@@ -16,6 +16,7 @@
  */
 package org.envirocar.server.core;
 
+import java.util.Set;
 import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.core.exception.ResourceNotFoundException;
 
@@ -36,5 +37,7 @@ public interface CarSimilarityService {
     Sensor resolveEquivalent(Sensor s) throws ResourceNotFoundException;
     
     Sensor resolveMappedSensor(String id) throws ResourceNotFoundException;
+    
+    Set<String> getMappedSensorIds();
     
 }
