@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.envirocar.server.core.FriendService;
 import org.envirocar.server.core.GroupService;
+import org.envirocar.server.core.entities.Fueling;
 import org.envirocar.server.core.entities.Group;
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.Phenomenon;
@@ -483,4 +484,10 @@ public class AccessRightsImpl extends AbstractAccessRights {
 	public boolean canSeeLengthOf(Track t) {
 		return true;
 	}
+
+    @Override
+    public boolean canDelete(Fueling f) {
+        return isSelf(f.getUser());
+    }
+    
 }

@@ -352,4 +352,9 @@ public class DataServiceImpl implements DataService {
         }
         return m;
     }
+
+    @Override
+    public void deleteFueling(Fueling fueling) {
+        this.fuelingDao.delete(fueling);
+    }
 }

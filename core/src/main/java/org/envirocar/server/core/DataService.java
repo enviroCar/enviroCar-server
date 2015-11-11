@@ -136,4 +136,6 @@ public interface DataService {
      *                                  is not owned by the specified user
      */
     Fueling getFueling(User user, String id) throws FuelingNotFoundException;
+
+    void deleteFueling(Fueling fueling);
 }
