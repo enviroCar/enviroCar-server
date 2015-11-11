@@ -25,10 +25,13 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import org.bson.types.ObjectId;
+
+import org.envirocar.server.core.CarSimilarityService;
+
 import org.envirocar.server.core.dao.SensorDao;
 import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.core.entities.Sensors;
-import org.envirocar.server.core.entities.User;
+import org.envirocar.server.core.exception.ResourceNotFoundException;
 import org.envirocar.server.core.filter.PropertyFilter;
 import org.envirocar.server.core.filter.SensorFilter;
 import org.envirocar.server.core.util.pagination.Pagination;
@@ -36,6 +39,8 @@ import org.envirocar.server.mongo.MongoDB;
 import org.envirocar.server.mongo.entity.MongoMeasurement;
 import org.envirocar.server.mongo.entity.MongoSensor;
 import org.envirocar.server.mongo.util.MongoUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.github.jmkgreen.morphia.query.Query;
 import com.google.common.collect.LinkedListMultimap;
@@ -44,6 +49,7 @@ import com.google.inject.Inject;
 import com.mongodb.AggregationOutput;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
+import org.envirocar.server.core.entities.User;
 
 /**
  * TODO JavaDoc
@@ -52,16 +58,33 @@ import com.mongodb.DBObject;
  */
 public class MongoSensorDao extends AbstractMongoDao<ObjectId, MongoSensor, Sensors>
         implements SensorDao {
+    
+    private static final Logger log = LoggerFactory.getLogger(MongoSensorDao.class);
+    private final CarSimilarityService carSimilarity;
+    
     private final MongoMeasurementDao measurementDao;
 
     @Inject
-    public MongoSensorDao(MongoDB mongoDB, MongoMeasurementDao measurementDao) {
+    public MongoSensorDao(MongoDB mongoDB, CarSimilarityService carSimilarity, MongoMeasurementDao measurementDao) {
         super(MongoSensor.class, mongoDB);
+        this.carSimilarity = carSimilarity;
         this.measurementDao = measurementDao;
     }
 
     @Override
     public Sensor getByIdentifier(String id) {
+        try {
+            /**
+             * this is a backwards-compatibility solution for
+             * client that use old (removed/mapped) sensor ids
+             * that were duplicates. --> DB related, thats why
+             * applied here
+             */
+            return this.carSimilarity.resolveMappedSensor(id);
+        } catch (ResourceNotFoundException ex) {
+            log.trace("No mapped sensor found for id {}, fetching from db", id);
+        }
+        
         ObjectId oid;
         try {
             oid = new ObjectId(id);
@@ -85,7 +108,8 @@ public class MongoSensorDao extends AbstractMongoDao<ObjectId, MongoSensor, Sens
         if (request.hasFilters()) {
             applyFilters(q, request.getFilters());
         }
-        return fetch(q, request.getPagination());
+        Sensors result = fetch(q, request.getPagination());
+        return result;
     }
 
 
@@ -139,9 +163,9 @@ public class MongoSensorDao extends AbstractMongoDao<ObjectId, MongoSensor, Sens
             }
         }
         q.disableValidation();
-        for (String field : map.keySet()) {
+        map.keySet().stream().forEach((field) -> {
             q.field(field).in(map.get(field));
-        }
+        });
         return q.enableValidation();
     }
 

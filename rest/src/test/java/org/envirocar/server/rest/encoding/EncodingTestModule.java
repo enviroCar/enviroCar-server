@@ -101,6 +101,8 @@ import com.google.inject.TypeLiteral;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.multibindings.Multibinder;
 import com.vividsolutions.jts.geom.Geometry;
+import org.envirocar.server.core.CarSimilarityService;
+import org.envirocar.server.core.CarSimilarityServiceImpl;
 
 public class EncodingTestModule extends AbstractModule {
 
@@ -151,6 +153,7 @@ public class EncodingTestModule extends AbstractModule {
         bind(BadgesDao.class).to(MongoBadgesDao.class);
         bind(PasswordResetDAO.class).to(MongoPasswordResetDAO.class);
         bind(FuelingDao.class).to(MongoFuelingDao.class);
+        bind(CarSimilarityService.class).to(CarSimilarityServiceImpl.class);
 	}
 
 

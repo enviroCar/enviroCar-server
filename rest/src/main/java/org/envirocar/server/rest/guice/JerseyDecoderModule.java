@@ -42,7 +42,6 @@ import com.google.inject.Scopes;
 import com.google.inject.TypeLiteral;
 import com.vividsolutions.jts.geom.Geometry;
 import org.envirocar.server.rest.decoding.json.ContextKnowledgeFactory;
-import org.opengis.geometry.coordinate.Cone;
 
 /**
  * TODO JavaDoc
