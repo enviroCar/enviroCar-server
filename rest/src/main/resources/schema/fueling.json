@@ -41,6 +41,9 @@
         },
         "missedFuelStop": {
             "type": "boolean"
+        },
+        "partialFueling": {
+            "type": "boolean"
         }
     },
     "definitions": {

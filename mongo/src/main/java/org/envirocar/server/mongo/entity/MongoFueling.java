@@ -51,6 +51,7 @@ public class MongoFueling extends MongoEntityBase implements Fueling {
     public static final String MILEAGE = "mileage";
     public static final String TIME = "time";
     public static final String MISSED_FUEL_STOP = "missedFuelStop";
+    public static final String PARTIAL_FUELING = "partialFueling";
     public static final String COMMENT = "comment";
     public static final String CAR = "car";
     public static final String USER = "user";
@@ -79,6 +80,8 @@ public class MongoFueling extends MongoEntityBase implements Fueling {
     private User _user;
     @Property(MISSED_FUEL_STOP)
     private boolean missedFuelStop;
+    @Property(PARTIAL_FUELING)
+    private boolean partialFueling;
 
     @Override
     public String getFuelType() {
@@ -248,5 +251,15 @@ public class MongoFueling extends MongoEntityBase implements Fueling {
      */
     public void setId(@Nonnull ObjectId id) {
         this.id = checkNotNull(id);
+    }
+
+    @Override
+    public boolean isPartialFueling() {
+        return this.partialFueling;
+    }
+
+    @Override
+    public void setPartialFueling(boolean partialFueling) {
+        this.partialFueling = partialFueling;
     }
 }

@@ -22,6 +22,7 @@ package org.envirocar.server.rest;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface JSONConstants {
+    String PARTIAL_FUELING = "partialFueling";
     String BADGES = "badges";
     String INSTANCE_KEY = "instance";
     String FRIEND_ACTIVITIES = "friendActivities";
