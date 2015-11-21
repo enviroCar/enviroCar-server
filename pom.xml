@@ -47,8 +47,9 @@
         <jersey-version>1.19</jersey-version>
         <guice-version>4.0</guice-version>
         <slf4j-version>1.7.12</slf4j-version>
-		<geotools.version>8.7</geotools.version>
-		<wps.version>3.2.0</wps.version>
+        <geotools.version>8.7</geotools.version>
+        <wps.version>3.2.0</wps.version>
+        <jackson.version>2.1.4</jackson.version>
     </properties>
     <repositories>
         <repository>
@@ -351,6 +352,21 @@
                 <groupId>se.jiderhamn</groupId>
                 <artifactId>classloader-leak-prevention</artifactId>
                 <version>1.13.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-annotations</artifactId>
+                <version>${jackson.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

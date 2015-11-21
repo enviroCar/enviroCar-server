@@ -14,18 +14,15 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.rest;
+package org.envirocar.server.rest.rights;
+
+import org.envirocar.server.core.entities.Fueling;
 
 /**
- * TODO JavaDoc
  *
- * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public interface RESTConstants {
-    String LIMIT = "limit";
-    String PAGE = "page";
-    String SEARCH = "q";
-    String TYPE = "type";
-    String BBOX = "bbox";
-    String NEAR_POINT = "nearPoint";
+interface FuelingRights {
+
+    boolean canDelete(Fueling f);
+    
 }

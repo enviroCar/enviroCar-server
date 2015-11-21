@@ -16,12 +16,11 @@
  */
 package org.envirocar.server.core.filter;
 
+import org.envirocar.server.core.SpatialFilter;
 import org.envirocar.server.core.TemporalFilter;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.util.pagination.Pagination;
-
-import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * TODO JavaDoc
@@ -31,32 +30,32 @@ import com.vividsolutions.jts.geom.Geometry;
 public class MeasurementFilter {
     private final Track track;
     private final User user;
-    private final Geometry geometry;
+    private final SpatialFilter spatialFilter;
     private final Pagination pagination;
     private final TemporalFilter temporalFilter;
 
-    public MeasurementFilter(Track t, User u, Geometry g,
+    public MeasurementFilter(Track t, User u, SpatialFilter sf,
                              TemporalFilter tf, Pagination p) {
         this.track = t;
         this.user = u;
-        this.geometry = g;
+        this.spatialFilter = sf;
         this.pagination = p;
         this.temporalFilter = tf;
     }
 
-    public MeasurementFilter(Track t, User u, Geometry g, Pagination p) {
+    public MeasurementFilter(Track t, User u, SpatialFilter g, Pagination p) {
         this(t, u, g, null, p);
     }
 
-    public MeasurementFilter(Geometry g, Pagination p) {
+    public MeasurementFilter(SpatialFilter g, Pagination p) {
         this(null, null, g, null, p);
     }
 
-    public MeasurementFilter(Track t, Geometry g, Pagination p) {
+    public MeasurementFilter(Track t, SpatialFilter g, Pagination p) {
         this(t, null, g, null, p);
     }
 
-    public MeasurementFilter(User u, Geometry g, Pagination p) {
+    public MeasurementFilter(User u, SpatialFilter g, Pagination p) {
         this(null, u, g, null, p);
     }
 
@@ -88,12 +87,12 @@ public class MeasurementFilter {
         return user != null;
     }
 
-    public Geometry getGeometry() {
-        return geometry;
+    public SpatialFilter getSpatialFilter() {
+        return spatialFilter;
     }
 
-    public boolean hasGeometry() {
-        return geometry != null;
+    public boolean hasSpatialFilter() {
+        return spatialFilter != null;
     }
 
     public Pagination getPagination() {

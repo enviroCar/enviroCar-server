@@ -25,6 +25,8 @@ import javax.ws.rs.ext.Provider;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
 import com.vividsolutions.jts.geom.Geometry;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.envirocar.server.core.dao.PhenomenonDao;
 import org.envirocar.server.core.dao.SensorDao;
@@ -32,6 +34,7 @@ import org.envirocar.server.core.dao.SensorDao;
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.MeasurementValue;
 import org.envirocar.server.core.entities.Phenomenon;
+import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.core.util.GeoJSONConstants;
 import org.envirocar.server.rest.JSONConstants;
 
@@ -59,6 +62,11 @@ public class MeasurementDecoder extends AbstractJSONEntityDecoder<Measurement> {
 
     @Override
     public Measurement decode(JsonNode j, MediaType mediaType) {
+        return decode(j, mediaType, null);
+    }
+    
+    @Override
+    public Measurement decode(JsonNode j, MediaType mediaType, ContextKnowledge knowledge) {
         Measurement measurement = getEntityFactory().createMeasurement();
         if (j.has(JSONConstants.GEOMETRY_KEY)) {
             measurement.setGeometry(geometryDecoder.decode(j
@@ -67,8 +75,7 @@ public class MeasurementDecoder extends AbstractJSONEntityDecoder<Measurement> {
         if (j.has(GeoJSONConstants.PROPERTIES_KEY)) {
             JsonNode p = j.path(GeoJSONConstants.PROPERTIES_KEY);
             if (p.has(JSONConstants.SENSOR_KEY)) {
-                measurement.setSensor(sensorDao.getByIdentifier(p
-                        .path(JSONConstants.SENSOR_KEY).textValue()));
+                measurement.setSensor(resolveSensor(p, knowledge));
             }
             if (p.has(JSONConstants.TIME_KEY)) {
                 measurement.setTime(getDateTimeFormat().parseDateTime(p
@@ -80,8 +87,7 @@ public class MeasurementDecoder extends AbstractJSONEntityDecoder<Measurement> {
                 Iterator<Entry<String, JsonNode>> fields = phens.fields();
                 while (fields.hasNext()) {
                     Entry<String, JsonNode> field = fields.next();
-                    Phenomenon phenomenon = phenomenonDao.getByName(field
-                            .getKey());
+                    Phenomenon phenomenon = resolvePhenomenon(field, knowledge);
                     JsonNode valueNode = field.getValue()
                             .get(JSONConstants.VALUE_KEY);
                     if (valueNode.isValueNode()) {
@@ -103,5 +109,42 @@ public class MeasurementDecoder extends AbstractJSONEntityDecoder<Measurement> {
             }
         }
         return measurement;
+    }
+
+    private Sensor resolveSensor(JsonNode p, ContextKnowledge knowledge) {
+        if (knowledge != null) {
+            if (knowledge.containsKey(JSONConstants.SENSOR_KEY)) {
+                return (Sensor) knowledge.get(JSONConstants.SENSOR_KEY);
+            }
+        }
+        
+        Sensor result = this.sensorDao.getByIdentifier(p.path(JSONConstants.SENSOR_KEY).textValue());
+        if (knowledge != null) {
+            knowledge.put(JSONConstants.SENSOR_KEY, result);
+        }
+        return result;
+    }
+
+    private Phenomenon resolvePhenomenon(Entry<String, JsonNode> field, ContextKnowledge knowledge) {
+        String key = field.getKey();
+        Map<String, Phenomenon> list = null;
+        if (knowledge != null) {
+            if (knowledge.containsKey(JSONConstants.PHENOMENONS_KEY)) {
+                list = (Map<String, Phenomenon>) knowledge.get(JSONConstants.PHENOMENONS_KEY);
+                if (list.containsKey(key)) {
+                    return list.get(key);
+                }
+            }
+            else {
+                list = new HashMap<>();
+                knowledge.put(JSONConstants.PHENOMENONS_KEY, list);
+            }
+        }
+        
+        Phenomenon result = phenomenonDao.getByName(key);
+        if (list != null) {
+            list.put(key, result);
+        }
+        return result;
     }
 }

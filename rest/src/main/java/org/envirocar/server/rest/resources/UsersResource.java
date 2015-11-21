@@ -17,13 +17,11 @@
 package org.envirocar.server.rest.resources;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
 import org.envirocar.server.core.entities.User;
@@ -32,9 +30,7 @@ import org.envirocar.server.core.exception.BadRequestException;
 import org.envirocar.server.core.exception.ResourceAlreadyExistException;
 import org.envirocar.server.core.exception.UserNotFoundException;
 import org.envirocar.server.core.exception.ValidationException;
-import org.envirocar.server.core.util.pagination.Pagination;
 import org.envirocar.server.rest.MediaTypes;
-import org.envirocar.server.rest.RESTConstants;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.auth.Anonymous;
 import org.envirocar.server.rest.validation.Schema;

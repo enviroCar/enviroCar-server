@@ -1,0 +1,65 @@
+{
+   "type":"FeatureCollection",
+   "properties":{
+      "id":"52600faee4b000fe058019bb",
+      "sensor":{
+         "type":"car",
+         "properties":{
+            "id":"525eab3ce4b000fe057f084d",
+            "model":"Cee'd",
+            "fuelType":"diesel",
+            "manufacturer":"Kia",
+            "constructionYear":2010,
+            "engineDisplacement":1600
+         }
+      },
+	"appVersion": "Version 0.9.0-SNAPSHOT (21), 11.11.13 14:48",
+	"obdDevice": "DRIVEDECK BT OBD W4",
+	"touVersion": "2013-10-01",
+	"length": 100.5
+   },
+   "features":[
+      {
+         "type":"Feature",
+         "geometry":{
+            "type":"Point",
+            "coordinates":[
+               11.11605461,
+               49.42544685
+            ]
+         },
+         "properties":{
+            "id":"52600faee4b000fe058019bd",
+            "time":"2013-10-17T16:22:10Z",
+            "sensor":"525eab3ce4b000fe057f084d",
+            "phenomenons":{
+               "Rpm":{
+                  "value":1318.0,
+                  "unit":"u/min"
+               }
+            }
+         }
+      },
+      {
+         "type":"Feature",
+         "geometry":{
+            "type":"Point",
+            "coordinates":[
+               11.2,
+               49.5
+            ]
+         },
+         "properties":{
+            "id":"52600faee4b000fe058019be",
+            "time":"2013-10-17T16:25:10Z",
+            "sensor":"525eab3ce4b000fe057f084d",
+            "phenomenons":{
+               "Rpm":{
+                  "value":1318.0,
+                  "unit":"u/min"
+               }
+            }
+         }
+      }
+   ]
+}

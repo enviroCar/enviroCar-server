@@ -39,6 +39,9 @@ import org.envirocar.server.rest.validation.Schema;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
+import javax.ws.rs.DELETE;
+import org.envirocar.server.core.exception.UserNotFoundException;
+import org.envirocar.server.rest.auth.Authenticated;
 
 /**
  * TODO JavaDoc
@@ -85,5 +88,14 @@ public class FuelingsResource extends AbstractResource {
     public Fueling getFueling(@PathParam("id") String id)
             throws FuelingNotFoundException {
         return getDataService().getFueling(user, id);
+    }
+    
+    @DELETE
+    @Path(FUELING)
+    @Authenticated
+    public void delete(@PathParam("id") String id) throws FuelingNotFoundException, UserNotFoundException {
+        Fueling fueling = getDataService().getFueling(user, id);
+        checkRights(getRights().canDelete(fueling));
+        getDataService().deleteFueling(fueling);
     }
 }

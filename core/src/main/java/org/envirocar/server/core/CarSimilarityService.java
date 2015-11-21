@@ -14,18 +14,30 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.rest;
+package org.envirocar.server.core;
+
+import java.util.Set;
+import org.envirocar.server.core.entities.Sensor;
+import org.envirocar.server.core.exception.ResourceNotFoundException;
 
 /**
- * TODO JavaDoc
  *
- * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public interface RESTConstants {
-    String LIMIT = "limit";
-    String PAGE = "page";
-    String SEARCH = "q";
-    String TYPE = "type";
-    String BBOX = "bbox";
-    String NEAR_POINT = "nearPoint";
+public interface CarSimilarityService {
+
+    /**
+     * resolve an existing sensor that matches
+     * the properties of the provided sensor
+     * 
+     * @param s the sensor
+     * @return the sensor that is the equivalent
+     * @throws org.envirocar.server.core.exception.SensorNotFoundException if
+     * no equivalent sensor could be found
+     */
+    Sensor resolveEquivalent(Sensor s) throws ResourceNotFoundException;
+    
+    Sensor resolveMappedSensor(String id) throws ResourceNotFoundException;
+    
+    Set<String> getMappedSensorIds();
+    
 }

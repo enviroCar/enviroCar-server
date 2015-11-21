@@ -27,4 +27,5 @@ import com.fasterxml.jackson.databind.JsonNode;
  */
 public interface JSONEntityDecoder<T> {
     T decode(JsonNode j, MediaType mt);
+    T decode(JsonNode j, MediaType mt, ContextKnowledge knowledge);
 }

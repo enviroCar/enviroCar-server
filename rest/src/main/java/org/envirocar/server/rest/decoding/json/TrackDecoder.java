@@ -40,14 +40,16 @@ import com.google.inject.Inject;
 public class TrackDecoder extends AbstractJSONEntityDecoder<Track> {
     private final JSONEntityDecoder<Measurement> measurementDecoder;
     private final SensorDao sensorDao;
+    private final ContextKnowledgeFactory contextKnowledgeFactory;
 
     @Inject
     public TrackDecoder(JSONEntityDecoder<Measurement> measurementDecoder,
                         SensorDao sensorDao,
-                        MeasurementDao measurementDao) {
+                        MeasurementDao measurementDao, ContextKnowledgeFactory ckFac) {
         super(Track.class);
         this.measurementDecoder = measurementDecoder;
         this.sensorDao = sensorDao;
+        this.contextKnowledgeFactory = ckFac;
     }
 
     @Override
@@ -77,13 +79,17 @@ public class TrackDecoder extends AbstractJSONEntityDecoder<Track> {
         if (!j.path(GeoJSONConstants.FEATURES_KEY).isMissingNode()) {
             JsonNode ms = j.path(GeoJSONConstants.FEATURES_KEY);
             TrackWithMeasurments twm = new TrackWithMeasurments(track);
+            
+            ContextKnowledge knowledge = contextKnowledgeFactory.create();
+            
             for (int i = 0; i < ms.size(); i++) {
-                Measurement m = measurementDecoder.decode(ms.get(i), mediaType);
+                Measurement m = measurementDecoder.decode(ms.get(i), mediaType, knowledge);
                 m.setTrack(track);
                 if (m.getSensor() == null) {
                     m.setSensor(trackSensor);
                 }
                 twm.addMeasurement(m);
+                
             }
             track = twm;
         }

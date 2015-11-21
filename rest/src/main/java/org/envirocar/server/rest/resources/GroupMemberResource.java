@@ -18,15 +18,14 @@ package org.envirocar.server.rest.resources;
 
 import javax.ws.rs.DELETE;
 
-import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
-
 import org.envirocar.server.core.entities.Group;
 import org.envirocar.server.core.entities.User;
-
 import org.envirocar.server.core.exception.GroupNotFoundException;
 import org.envirocar.server.core.exception.UserNotFoundException;
 import org.envirocar.server.rest.auth.Authenticated;
+
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 
 /**
  * TODO JavaDoc
@@ -34,7 +33,7 @@ import org.envirocar.server.rest.auth.Authenticated;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class GroupMemberResource extends UserResource {
-    private Group group;
+    private final Group group;
 
     @Inject
     public GroupMemberResource(@Assisted Group group,
@@ -46,7 +45,7 @@ public class GroupMemberResource extends UserResource {
     @DELETE
     @Override
     @Authenticated
-    public void delete() throws UserNotFoundException, GroupNotFoundException {
+    public void delete(boolean ignored) throws UserNotFoundException, GroupNotFoundException {
         checkRights(getRights().canLeaveGroup(group));
         getGroupService().removeGroupMember(group, getUser());
     }

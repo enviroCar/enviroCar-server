@@ -17,6 +17,7 @@
 package org.envirocar.server.rest.rights;
 
 import javax.servlet.http.HttpServletRequest;
+import org.envirocar.server.core.entities.Fueling;
 
 import org.envirocar.server.core.entities.Group;
 import org.envirocar.server.core.entities.Measurement;
@@ -471,4 +472,9 @@ public class NonRestrictiveRights implements AccessRights {
 	public boolean canSeeLengthOf(Track t) {
 		return true;
 	}
+
+    @Override
+    public boolean canDelete(Fueling f) {
+        return true;
+    }
 }

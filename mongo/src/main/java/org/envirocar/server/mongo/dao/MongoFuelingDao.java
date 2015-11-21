@@ -29,6 +29,8 @@ import org.envirocar.server.mongo.util.MorphiaUtils;
 
 import com.github.jmkgreen.morphia.query.Query;
 import com.google.inject.Inject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Mongo implementation of a {@link FuelingDao}.
@@ -37,6 +39,8 @@ import com.google.inject.Inject;
  */
 public class MongoFuelingDao extends AbstractMongoDao<ObjectId, MongoFueling, Fuelings>
         implements FuelingDao {
+    
+    private static final Logger log = LoggerFactory.getLogger(MongoFuelingDao.class);
 
     @Inject
     public MongoFuelingDao(MongoDB mongoDB) {
@@ -82,6 +86,17 @@ public class MongoFuelingDao extends AbstractMongoDao<ObjectId, MongoFueling, Fu
 
     void removeUser(MongoUser user) {
         delete(q().field(MongoFueling.USER).equal(key(user)));
+    }
+
+    @Override
+    public void delete(Fueling fueling) {
+        ObjectId oid;
+        try {
+            oid = new ObjectId(fueling.getIdentifier());
+            delete(oid);
+        } catch (IllegalArgumentException e) {
+            log.warn(String.format("Cannot delete fueling %s", fueling), e);
+        }
     }
 
 }

@@ -14,18 +14,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.rest;
+package org.envirocar.server.rest.decoding.json;
+
+import java.util.HashMap;
 
 /**
- * TODO JavaDoc
  *
- * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public interface RESTConstants {
-    String LIMIT = "limit";
-    String PAGE = "page";
-    String SEARCH = "q";
-    String TYPE = "type";
-    String BBOX = "bbox";
-    String NEAR_POINT = "nearPoint";
+public class ContextKnowledge extends HashMap<String, Object> {
+
 }

@@ -43,11 +43,15 @@ import com.mongodb.WriteResult;
  */
 public abstract class AbstractMongoDao<K, E, C extends Paginated<? super E>> {
     private final BasicDAO<E, K> dao;
-    private MongoDB mongoDB;
+    private final MongoDB mongoDB;
 
     public AbstractMongoDao(Class<E> type, MongoDB mongoDB) {
         this.mongoDB = mongoDB;
-        this.dao = new BasicDAO<E, K>(type, this.mongoDB.getDatastore());
+        this.dao = new BasicDAO<>(type, this.mongoDB.getDatastore());
+    }
+
+    public MongoDB getMongoDB() {
+        return mongoDB;
     }
 
     protected Query<E> q() {

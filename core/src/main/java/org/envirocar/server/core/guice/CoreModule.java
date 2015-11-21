@@ -40,6 +40,8 @@ import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.PrecisionModel;
+import org.envirocar.server.core.CarSimilarityService;
+import org.envirocar.server.core.CarSimilarityServiceImpl;
 
 /**
  * TODO JavaDoc
@@ -58,6 +60,7 @@ public class CoreModule extends AbstractModule {
         bind(ActivityListener.class).asEagerSingleton();
         bind(PasswordEncoder.class).to(BCryptPasswordEncoder.class);
         bind(GeometryOperations.class).to(GeodesicGeometryOperations.class);
+        bind(CarSimilarityService.class).to(CarSimilarityServiceImpl.class);
         DateTimeZone.setDefault(DateTimeZone.UTC);
     }
 

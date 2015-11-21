@@ -35,6 +35,7 @@ public interface Ops {
     String PROJECT = "$project";
     String ADD_TO_SET = "$addToSet";
     String GEOWITHIN = "$geoWithin";
+    String NEARSPHERE = "$nearSphere";
     String GEOMETRY = "$geometry";
     String GREATER_THAN = "$gt";
     String LESS_THAN = "$lt";

@@ -31,7 +31,8 @@ public interface AccessRights extends UserRights,
                                       GroupRights,
                                       SensorRights,
                                       PhenomenonRights,
-                                      TermsOfUseRights {
+                                      TermsOfUseRights,
+                                      FuelingRights {
     boolean isSelf(User user);
 
     boolean canSeeStatistics();

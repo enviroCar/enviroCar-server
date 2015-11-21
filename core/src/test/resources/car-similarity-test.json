@@ -1,0 +1,11 @@
+{
+    "manufacturers": [
+        {
+            "name": "Vito",
+            "matches": ["vito mobile", "vito", "vito premium"]
+        }
+    ],
+    "staticIdMapping": {
+        "51ffab4fe4b058cd3d654007": "51ffab4fe4b058cd3d654006"
+    }
+}

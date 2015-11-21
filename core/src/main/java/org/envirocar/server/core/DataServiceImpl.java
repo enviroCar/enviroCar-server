@@ -70,6 +70,8 @@ import org.joda.time.DateTime;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * TODO JavaDoc
@@ -79,6 +81,9 @@ import com.google.inject.Inject;
  * @author Jan Wirwahn <jan.wirwahn@wwu.de>
  */
 public class DataServiceImpl implements DataService {
+    
+    private static final Logger log = LoggerFactory.getLogger(DataServiceImpl.class);
+    
     private final TrackDao trackDao;
     private final MeasurementDao measurementDao;
     private final SensorDao sensorDao;
@@ -94,6 +99,7 @@ public class DataServiceImpl implements DataService {
 	private final AnnouncementsDao announcementsDao;
 	private final BadgesDao badgesDao;
 	private final GeometryOperations geomOps;
+    private final CarSimilarityService carSimilarity;
 
     @Inject
     public DataServiceImpl(TrackDao trackDao, MeasurementDao measurementDao,
@@ -107,7 +113,8 @@ public class DataServiceImpl implements DataService {
                            EntityValidator<Measurement> measurementValidator,
                            EntityValidator<Fueling> fuelingValidator,
                            EventBus eventBus,
-                           GeometryOperations geomOps) {
+                           GeometryOperations geomOps,
+                           CarSimilarityService carSimilarity) {
         this.trackDao = trackDao;
         this.measurementDao = measurementDao;
         this.sensorDao = sensorDao;
@@ -123,6 +130,7 @@ public class DataServiceImpl implements DataService {
         this.fuelingValidator = fuelingValidator;
         this.fuelingDao = fuelingDao;
         this.geomOps = geomOps;
+        this.carSimilarity = carSimilarity;
     }
 
     @Override
@@ -261,6 +269,12 @@ public class DataServiceImpl implements DataService {
 
     @Override
     public Sensor createSensor(Sensor sensor) {
+        try {
+            return this.carSimilarity.resolveEquivalent(sensor);
+        } catch (ResourceNotFoundException ex) {
+            log.info("No equivalent sensor found, creating new");
+        }
+        
         Sensor s = this.sensorDao.create(sensor);
         this.eventBus.post(new CreatedSensorEvent(s));
         return s;
@@ -337,5 +351,10 @@ public class DataServiceImpl implements DataService {
             throw new FuelingNotFoundException(id);
         }
         return m;
+    }
+
+    @Override
+    public void deleteFueling(Fueling fueling) {
+        this.fuelingDao.delete(fueling);
     }
 }

@@ -37,6 +37,8 @@ import com.github.jmkgreen.morphia.query.Query;
 import com.github.jmkgreen.morphia.query.UpdateResults;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
+import com.mongodb.CommandResult;
+import com.mongodb.WriteResult;
 
 /**
  * TODO JavaDoc
@@ -96,10 +98,10 @@ public class MongoTrackDao extends AbstractMongoDao<ObjectId, MongoTrack, Tracks
     @Override
     public Tracks get(TrackFilter request) {
         Query<MongoTrack> q = q();
-        if (request.hasGeometry()) {
+        if (request.hasSpatialFilter()) {
             List<Key<MongoTrack>> keys = measurementDao
                     .getTrackKeysByBbox(new MeasurementFilter(
-                    null, request.getUser(), request.getGeometry(), null, null));
+                    null, request.getUser(), request.getSpatialFilter(), null, null));
             if (keys.isEmpty()) {
                 return Tracks.none();
             }
@@ -118,6 +120,18 @@ public class MongoTrackDao extends AbstractMongoDao<ObjectId, MongoTrack, Tracks
     @Override
     public void update(Track track) {
         updateTimestamp((MongoTrack) track);
+    }
+
+    void deleteUser(MongoUser user) {
+        WriteResult result = delete(q().field(MongoTrack.USER).equal(key(user)));
+        CommandResult error = result.getLastError();
+        if (error.ok()) {
+            log.debug("Removed user {} from {} tracks",
+                      user, result.getN());
+        } else {
+            log.error("Error removing user {} from tracks: {}",
+                      user, result.getError());
+        }
     }
 
     void removeUser(MongoUser user) {
@@ -156,4 +170,5 @@ public class MongoTrackDao extends AbstractMongoDao<ObjectId, MongoTrack, Tracks
         }
         return ids;
     }
+
 }

@@ -53,4 +53,6 @@ public interface FuelingDao {
      * @return the {@code Fuelings}
      */
     Fuelings get(FuelingFilter request);
+
+    public void delete(Fueling fueling);
 }
