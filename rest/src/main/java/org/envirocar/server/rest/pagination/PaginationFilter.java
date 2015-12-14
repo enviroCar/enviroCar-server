@@ -20,17 +20,15 @@ import java.net.URI;
 
 import javax.ws.rs.core.MediaType;
 
+import org.envirocar.server.core.util.pagination.Paginated;
+import org.envirocar.server.core.util.pagination.Pagination;
+import org.envirocar.server.rest.RESTConstants;
+
+import com.google.common.base.Optional;
 import com.sun.jersey.core.header.LinkHeader;
 import com.sun.jersey.spi.container.ContainerRequest;
 import com.sun.jersey.spi.container.ContainerResponse;
 import com.sun.jersey.spi.container.ContainerResponseFilter;
-
-import org.envirocar.server.core.util.pagination.Paginated;
-import org.envirocar.server.core.util.pagination.Pagination;
-
-import com.google.common.base.Optional;
-
-import org.envirocar.server.rest.RESTConstants;
 
 public class PaginationFilter implements ContainerResponseFilter {
     public static final String REL_FIRST = "first";
@@ -54,16 +52,21 @@ public class PaginationFilter implements ContainerResponseFilter {
         return res;
     }
 
-    private void insertRangeHeader(Paginated<?> p,
-                                   ContainerResponse res) {
-        StringBuilder sb = new StringBuilder("items ");
-        sb.append(p.getCurrent().get().getBegin());
-        sb.append("-");
-        sb.append(p.getCurrent().get().getEnd());
-        if (p.getTotalCount()>=0) {
-            sb.append("/").append(p.getTotalCount());
+    private void insertRangeHeader(Paginated<?> p, ContainerResponse res) {
+        if (p.getCurrent().isPresent()) {
+            Pagination current = p.getCurrent().get();
+            StringBuilder sb = new StringBuilder("items ");
+            sb.append(current.getBegin());
+            sb.append("-");
+            sb.append(current.getEnd());
+            if (p.getTotalCount() < 0) {
+                sb.append(current.getEnd());
+            } else {
+                sb.append(Math.min(current.getEnd(), p.getTotalCount()));
+                sb.append("/").append(p.getTotalCount());
+            }
+            res.getHttpHeaders().add(CONTENT_RANGE_HEADER, sb.toString());
         }
-        res.getHttpHeaders().add(CONTENT_RANGE_HEADER, sb.toString());
     }
 
 
