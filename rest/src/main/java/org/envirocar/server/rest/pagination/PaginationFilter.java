@@ -58,7 +58,6 @@ public class PaginationFilter implements ContainerResponseFilter {
             StringBuilder sb = new StringBuilder("items ");
             sb.append(current.getBegin());
             sb.append("-");
-            sb.append(current.getEnd());
             if (p.getTotalCount() < 0) {
                 sb.append(current.getEnd());
             } else {
