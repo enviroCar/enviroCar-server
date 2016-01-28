@@ -16,6 +16,7 @@
  */
 package org.envirocar.server.rest.guice;
 
+import java.util.Properties;
 import java.util.Set;
 
 import javax.ws.rs.core.SecurityContext;
@@ -35,6 +36,7 @@ import org.envirocar.server.rest.resources.ResourceFactory;
 import org.envirocar.server.rest.resources.RootResource;
 import org.envirocar.server.rest.rights.AccessRights;
 import org.envirocar.server.rest.rights.AccessRightsImpl;
+import org.envirocar.server.rest.rights.ReadOnlyRights;
 
 import com.google.common.base.Optional;
 import com.google.inject.AbstractModule;
@@ -43,10 +45,9 @@ import com.google.inject.Scopes;
 import com.google.inject.TypeLiteral;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.name.Names;
+import com.google.inject.servlet.RequestScoped;
 
 /**
- * TODO JavaDoc
- *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class JerseyResourceModule extends AbstractModule {
@@ -66,11 +67,27 @@ public class JerseyResourceModule extends AbstractModule {
     }
 
     @Provides
+    @RequestScoped
     public AccessRights accessRights(SecurityContext ctx,
                                      GroupService groupService,
-                                     FriendService friendService) {
+                                     FriendService friendService,
+                                     Properties properties) {
         PrincipalImpl p = (PrincipalImpl) ctx.getUserPrincipal();
         User user = p == null ? null : p.getUser();
-        return new AccessRightsImpl(user, groupService, friendService);
+
+        if (isReadOnly(properties)) {
+            return new ReadOnlyRights(user, groupService, friendService);
+        } else {
+            return new AccessRightsImpl(user, groupService, friendService);
+        }
+    }
+
+    private static boolean isReadOnly(Properties properties) {
+        try {
+            return Boolean.parseBoolean(properties
+                    .getProperty("enviroCar.readOnly", "false"));
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
     }
 }

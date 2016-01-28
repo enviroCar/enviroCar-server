@@ -36,10 +36,10 @@ import org.envirocar.server.core.entities.User;
  */
 public class AccessRightsImpl extends AbstractAccessRights {
     public AccessRightsImpl() {
-        super();
     }
 
-    public AccessRightsImpl(User user, GroupService groupService,
+    public AccessRightsImpl(User user,
+                            GroupService groupService,
                             FriendService friendService) {
         super(user, groupService, friendService);
     }
@@ -489,5 +489,5 @@ public class AccessRightsImpl extends AbstractAccessRights {
     public boolean canDelete(Fueling f) {
         return isSelf(f.getUser());
     }
-    
+
 }
