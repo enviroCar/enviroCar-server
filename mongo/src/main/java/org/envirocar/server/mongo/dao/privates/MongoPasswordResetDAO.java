@@ -16,7 +16,6 @@
  */
 package org.envirocar.server.mongo.dao.privates;
 
-
 import java.util.Calendar;
 import java.util.UUID;
 
@@ -36,76 +35,78 @@ import com.github.jmkgreen.morphia.query.Query;
 import com.google.inject.Inject;
 
 public class MongoPasswordResetDAO extends AbstractMongoDao<ObjectId, MongoPasswordReset, MongoPasswordResetDAO.MongoPasswordResetStatusCollection>
-	implements PasswordResetDAO {
+        implements PasswordResetDAO {
 
     private static final Logger logger = LoggerFactory.getLogger(MongoPasswordResetDAO.class);
-	private final MongoDB mongo;
+    private final MongoDB mongo;
 
-	@Inject
+    @Inject
     public MongoPasswordResetDAO(MongoDB mongoDB) {
         super(MongoPasswordReset.class, mongoDB);
         this.mongo = mongoDB;
     }
 
-
-	@Override
-	protected MongoPasswordResetStatusCollection createPaginatedIterable(
-			Iterable<MongoPasswordReset> i, Pagination p, long count) {
-		/*
+    @Override
+    protected MongoPasswordResetStatusCollection createPaginatedIterable(
+            Iterable<MongoPasswordReset> i, Pagination p, long count) {
+        /*
 		 * not required
-		 */
-		return null;
-	}
+         */
+        return null;
+    }
 
+    public PasswordReset requestPasswordReset(User user) throws BadRequestException {
+        MongoPasswordReset status = getPasswordResetStatus(user, null);
 
-	public PasswordReset requestPasswordReset(User user) throws BadRequestException {
-		MongoPasswordReset status = getPasswordResetStatus(user);
+        if (status == null || status.isExpired()) {
+            MongoPasswordReset result = createNewPasswordReset(user);
+            return result;
+        } else {
+            throw new BadRequestException("The given user already has requested a verification code.");
+        }
+    }
 
-		if (status == null || status.isExpired()) {
-			MongoPasswordReset result = createNewPasswordReset(user);
-			return result;
-		}
-		else {
-			throw new BadRequestException("The given user already has requested a verification code.");
-		}
-	}
+    private MongoPasswordReset createNewPasswordReset(User user) {
+        String uuid = UUID.randomUUID().toString();
+        Calendar expires = Calendar.getInstance();
+        expires.add(Calendar.HOUR, 24);
 
-	private MongoPasswordReset createNewPasswordReset(User user) {
-		String uuid = UUID.randomUUID().toString();
-		Calendar expires = Calendar.getInstance();
-		expires.add(Calendar.HOUR, 24);
+        MongoPasswordReset entity = createMongoPasswordResetStatus();
+        entity.setCode(uuid);
+        entity.setUser(user);
 
-		MongoPasswordReset entity = createMongoPasswordResetStatus();
-		entity.setCode(uuid);
-		entity.setUser(user);
-		
-		save(entity);
+        save(entity);
 
-		return entity;
-	}
+        return entity;
+    }
 
-	private MongoPasswordReset createMongoPasswordResetStatus() {
-		MongoPasswordReset result = new MongoPasswordReset();
-		result.setMongoDB(this.mongo);
-		return result;
-	}
+    private MongoPasswordReset createMongoPasswordResetStatus() {
+        MongoPasswordReset result = new MongoPasswordReset();
+        result.setMongoDB(this.mongo);
+        return result;
+    }
 
+    public MongoPasswordReset getPasswordResetStatus(User user, String verificationCode) {
+        logger.debug("Querying password reset status for user {} (key={})", user, key(user));
+        
+        Query<MongoPasswordReset> result = q().field(MongoPasswordReset.USER).equal(key(user));
+        
+        if(verificationCode != null){
+            result.field(MongoPasswordReset.VERIFICATION_CODE).equal(verificationCode);
+        }
+        
+        Iterable<MongoPasswordReset> fetch = result.fetch();
+        if(fetch.iterator().hasNext()) {
+            return result.fetch().iterator().next();
+        }
 
-	public MongoPasswordReset getPasswordResetStatus(User user) {
-		logger.debug("Querying password reset status for user {} (key={})", user, key(user));
-		Query<MongoPasswordReset> result = q().field(MongoPasswordReset.USER).equal(key(user));
+        logger.debug("No result for query.");
+        return null;
+    }
 
-		if (result.fetch().iterator().hasNext()) {
-			return result.fetch().iterator().next();
-		}
-
-		logger.debug("No result for query.");
-		return null;
-	}
-
-	@Override
-	public void remove(MongoPasswordReset status) {
-		delete(status.getId());
+    @Override
+    public void remove(MongoPasswordReset status) {
+        delete(status.getId());
     }
 
     public static class MongoPasswordResetStatusCollection extends UpCastingIterable<MongoPasswordReset> {
@@ -115,6 +116,5 @@ public class MongoPasswordResetDAO extends AbstractMongoDao<ObjectId, MongoPassw
         }
 
     }
-
 
 }
