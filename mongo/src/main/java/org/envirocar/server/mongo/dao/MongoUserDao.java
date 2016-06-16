@@ -48,13 +48,14 @@ import com.google.inject.Inject;
  */
 public class MongoUserDao extends AbstractMongoDao<String, MongoUser, Users>
         implements UserDao {
+
     private static final Logger log = LoggerFactory
             .getLogger(MongoUserDao.class);
     private MongoTrackDao trackDao;
     private MongoMeasurementDao measurementDao;
     private MongoGroupDao groupDao;
     private MongoFuelingDao fuelingDao;
-	private final PasswordResetDAO passwordResetDao;
+    private final PasswordResetDAO passwordResetDao;
 
     @Inject
     public MongoUserDao(MongoDB mongoDB, PasswordResetDAO dao) {
@@ -113,8 +114,8 @@ public class MongoUserDao extends AbstractMongoDao<String, MongoUser, Users>
     public void delete(User u, boolean deleteContent) {
         MongoUser user = (MongoUser) u;
         if (deleteContent) {
-             trackDao.deleteUser(user);
-             measurementDao.deleteUser(user);
+            trackDao.deleteUser(user);
+            measurementDao.deleteUser(user);
         } else {
             trackDao.removeUser(user);
             measurementDao.removeUser(user);
@@ -127,17 +128,17 @@ public class MongoUserDao extends AbstractMongoDao<String, MongoUser, Users>
                 up().removeAll(MongoUser.FRIENDS, userRef));
         if (result.getHadError()) {
             log.error("Error removing user {} as friend: {}",
-                      u, result.getError());
+                    u, result.getError());
         } else {
             log.debug("Removed user {} from {} friend lists",
-                      u, result.getUpdatedCount());
+                    u, result.getUpdatedCount());
         }
         delete(user.getName());
     }
 
     @Override
     protected Users createPaginatedIterable(Iterable<MongoUser> i, Pagination p,
-                                            long count) {
+            long count) {
         return Users.from(i).withPagination(p).withElements(count).build();
     }
 
@@ -207,79 +208,80 @@ public class MongoUserDao extends AbstractMongoDao<String, MongoUser, Users>
     public Set<Key<MongoUser>> getBidirectionalFriendRefs(User user) {
         final Set<Key<MongoUser>> friendRefs = getFriendRefs(user);
         final Set<String> ids = Sets.newHashSetWithExpectedSize(friendRefs.size());
-        for (Key<MongoUser> key  : friendRefs) { ids.add((String) key.getId()); }
+        for (Key<MongoUser> key : friendRefs) {
+            ids.add((String) key.getId());
+        }
 
-        if (ids.isEmpty()) return Sets.newHashSet();
+        if (ids.isEmpty()) {
+            return Sets.newHashSet();
+        }
 
-        final Iterable<Key<MongoUser>> filtered =q()
+        final Iterable<Key<MongoUser>> filtered = q()
                 .field(MongoUser.NAME).in(ids)
                 .field(MongoUser.FRIENDS).hasThisElement(key(user))
                 .fetchKeys();
         return Sets.newHashSet(filtered);
     }
 
-	@Override
-	public PasswordReset requestPasswordReset(User user) throws BadRequestException {
-		if (user == null || user.getName() == null) {
-			throw new InvalidUserMailCombinationException();
-		}
+    @Override
+    public PasswordReset requestPasswordReset(User user) throws BadRequestException {
+        if (user == null || user.getName() == null) {
+            throw new InvalidUserMailCombinationException();
+        }
 
-		return this.passwordResetDao.requestPasswordReset(user);
-	}
+        return this.passwordResetDao.requestPasswordReset(user);
+    }
 
-	@Override
-	public void resetPassword(User user, String verificationCode) throws BadRequestException {
-		MongoPasswordReset status = this.passwordResetDao.getPasswordResetStatus(user);
+    @Override
+    public void resetPassword(User user, String verificationCode) throws BadRequestException {
+        MongoPasswordReset status = this.passwordResetDao.getPasswordResetStatus(user, verificationCode);
 
-		if (status != null && !status.isExpired()) {
-			if (status.getCode().equals(verificationCode)) {
-				save(user);
-			}
-			else {
-				throw new BadRequestException("Wrong verification code.");
-			}
-		}
-		else {
-			throw new BadRequestException("Verification code already expired.");
-		}
+        if (status != null && !status.isExpired()) {
+            if (status.getCode().equals(verificationCode)) {
+                save(user);
+            } else {
+                throw new BadRequestException("Wrong verification code.");
+            }
+        } else {
+            throw new BadRequestException("Verification code already expired.");
+        }
 
-		this.passwordResetDao.remove(status);
-	}
+        this.passwordResetDao.remove(status);
+    }
 
-	@Override
-	public Users getPendingIncomingFriendRequests(User user) {
-		final Set<Key<MongoUser>> friendRefs = getFriendRefs(user);
+    @Override
+    public Users getPendingIncomingFriendRequests(User user) {
+        final Set<Key<MongoUser>> friendRefs = getFriendRefs(user);
         final Set<String> ids = Sets.newHashSetWithExpectedSize(friendRefs.size());
 
-        for (Key<MongoUser> key  : friendRefs) {
-        	ids.add((String) key.getId());
+        for (Key<MongoUser> key : friendRefs) {
+            ids.add((String) key.getId());
         }
         final Iterable<Key<MongoUser>> filtered;
 
         if (ids.isEmpty()) {
-        	filtered = q()
+            filtered = q()
                     .field(MongoUser.FRIENDS).hasThisElement(key(user))
                     .fetchKeys();
-        }
-        else {
-        	filtered = q()
+        } else {
+            filtered = q()
                     .field(MongoUser.NAME).notIn(ids)
                     .field(MongoUser.FRIENDS).hasThisElement(key(user))
                     .fetchKeys();
         }
 
         return Users.from(deref(MongoUser.class, filtered)).build();
-	}
+    }
 
-	@Override
-	public Users getPendingOutgoingFriendRequests(User user) {
-		Set<Key<MongoUser>> candidates = getFriendRefs(user);
+    @Override
+    public Users getPendingOutgoingFriendRequests(User user) {
+        Set<Key<MongoUser>> candidates = getFriendRefs(user);
 
-		Set<Key<MongoUser>> biDis = getBidirectionalFriendRefs(user);
+        Set<Key<MongoUser>> biDis = getBidirectionalFriendRefs(user);
 
-		Set<Key<MongoUser>> result = Sets.difference(candidates, biDis).immutableCopy();
+        Set<Key<MongoUser>> result = Sets.difference(candidates, biDis).immutableCopy();
 
-		return Users.from(deref(MongoUser.class, result)).build();
-	}
+        return Users.from(deref(MongoUser.class, result)).build();
+    }
 
 }
