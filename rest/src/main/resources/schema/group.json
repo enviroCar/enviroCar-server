@@ -23,8 +23,7 @@
     },
     "required": [
         "name",
-        "description",
-        "owner"
+        "description"
     ],
     "type": "object"
 }
