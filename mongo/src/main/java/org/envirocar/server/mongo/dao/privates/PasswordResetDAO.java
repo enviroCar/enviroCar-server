@@ -25,6 +25,8 @@ public interface PasswordResetDAO {
 
 	PasswordReset requestPasswordReset(User user) throws BadRequestException;
         
+        MongoPasswordReset getPasswordResetStatus(User user);
+        
 	MongoPasswordReset getPasswordResetStatus(User user, String verificationCode);
 
 	void remove(MongoPasswordReset status);
