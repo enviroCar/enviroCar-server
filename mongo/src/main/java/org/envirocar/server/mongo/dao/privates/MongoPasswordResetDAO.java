@@ -56,7 +56,7 @@ public class MongoPasswordResetDAO extends AbstractMongoDao<ObjectId, MongoPassw
     }
 
     @Override
-    public PasswordReset requestPasswordReset(User user) throws BadRequestException {
+    public synchronized PasswordReset requestPasswordReset(User user) throws BadRequestException {
         MongoPasswordReset status = getPasswordResetStatus(user);
 
         if (status == null || status.isExpired()) {
@@ -88,12 +88,12 @@ public class MongoPasswordResetDAO extends AbstractMongoDao<ObjectId, MongoPassw
     }
 
     @Override
-    public MongoPasswordReset getPasswordResetStatus(User user) {
+    public synchronized MongoPasswordReset getPasswordResetStatus(User user) {
         return getPasswordResetStatus(user, null);
     }
     
     @Override
-    public MongoPasswordReset getPasswordResetStatus(User user, String verificationCode) {
+    public synchronized MongoPasswordReset getPasswordResetStatus(User user, String verificationCode) {
         logger.debug("Querying password reset status for user {} (key={})", user, key(user));
         
         Query<MongoPasswordReset> result = q().field(MongoPasswordReset.USER).equal(key(user));
@@ -112,7 +112,7 @@ public class MongoPasswordResetDAO extends AbstractMongoDao<ObjectId, MongoPassw
     }
 
     @Override
-    public void remove(MongoPasswordReset status) {
+    public synchronized void remove(MongoPasswordReset status) {
         delete(status.getId());
     }
 
