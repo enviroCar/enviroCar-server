@@ -135,6 +135,20 @@ public class TrackJSONEncoder extends AbstractJSONEntityEncoder<Track> {
             if (t.hasName() && rights.canSeeNameOf(t)) {
                 track.put(JSONConstants.NAME_KEY, t.getName());
             }
+            
+            //additional props
+            if (t.hasLength() && rights.canSeeLengthOf(t)) {
+                track.put(JSONConstants.LENGTH_KEY, t.getLength());
+            }
+            boolean canSeeTime = rights.canSeeCreationTimeOf(t);
+            if (t.hasBegin() && canSeeTime) {
+                track.put(JSONConstants.BEGIN_KEY, getDateTimeFormat()
+                        .print(t.getBegin()));
+            }
+            if (t.hasBegin() && canSeeTime) {
+                track.put(JSONConstants.END_KEY, getDateTimeFormat()
+                        .print(t.getEnd()));
+            }
         }
         return track;
     }
