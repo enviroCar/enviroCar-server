@@ -77,6 +77,7 @@ public class MongoPasswordResetDAO extends AbstractMongoDao<ObjectId, MongoPassw
         entity.setUser(user);
 
         save(entity);
+        logger.info("Stored password reset status for user {} (key={})", user, key(user));
 
         return entity;
     }
@@ -94,7 +95,7 @@ public class MongoPasswordResetDAO extends AbstractMongoDao<ObjectId, MongoPassw
     
     @Override
     public synchronized MongoPasswordReset getPasswordResetStatus(User user, String verificationCode) {
-        logger.debug("Querying password reset status for user {} (key={})", user, key(user));
+        logger.info("Querying password reset status for user {} (key={})", user, key(user));
         
         Query<MongoPasswordReset> result = q().field(MongoPasswordReset.USER).equal(key(user));
         
@@ -107,7 +108,7 @@ public class MongoPasswordResetDAO extends AbstractMongoDao<ObjectId, MongoPassw
             return result.fetch().iterator().next();
         }
 
-        logger.debug("No result for query.");
+        logger.info("No result for query.");
         return null;
     }
 
