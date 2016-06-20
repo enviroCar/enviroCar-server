@@ -79,6 +79,8 @@ public interface JSONConstants {
     String FEMALE = "f";
     String TERMS_OF_USE_KEY = "termsOfUse";
     String LENGTH_KEY = "length";
+    String BEGIN_KEY = "begin";
+    String END_KEY = "end";
 
     /**
      * @deprecated use {@link #TOU_VERSION_KEY} instead. kept for backwards

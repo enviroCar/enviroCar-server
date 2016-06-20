@@ -65,6 +65,14 @@
                 },
                 "length": {
                 	"type": "number"
+                },
+                "begin": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "end": {
+                    "type": "string",
+                    "format": "date-time"
                 }
             }
 
