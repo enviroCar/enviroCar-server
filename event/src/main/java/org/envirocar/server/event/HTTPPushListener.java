@@ -45,7 +45,7 @@ import com.google.inject.Singleton;
 public class HTTPPushListener {
     //TODO make configurable
     private static final String host =
-            "http://ags.dev.52north.org:8080/enviroCar-broker/";
+            "http://ags.52north.org:8080/enviroCar-broker/";
     private static final Logger logger = LoggerFactory
             .getLogger(HTTPPushListener.class);
     public static final AccessRightsImpl DEFAULT_ACCESS_RIGHTS =
