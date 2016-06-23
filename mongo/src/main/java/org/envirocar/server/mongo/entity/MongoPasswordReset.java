@@ -32,43 +32,43 @@ import com.github.jmkgreen.morphia.mapping.Mapper;
 @Entity("passwordResetStatus")
 public class MongoPasswordReset extends MongoEntityBase implements PasswordReset {
 
-	public static final String NAME = Mapper.ID_KEY;
-	public static final String EXPIRES = "expires";
-	public static final String VERIFICATION_CODE = "code";
-	public static final String USER = "user";
-	
-	public static final int EXPIRATION_PERIOD_HOURS = 24;
+    public static final String NAME = Mapper.ID_KEY;
+    public static final String EXPIRES = "expires";
+    public static final String VERIFICATION_CODE = "code";
+    public static final String USER = "user";
 
-	@Id
-	private ObjectId id = new ObjectId();
-	
-	@Property(EXPIRES)
-	@Indexed(expireAfterSeconds = EXPIRATION_PERIOD_HOURS * 60 * 60)
-	private DateTime expires;
-	
-	@Property(USER)
-	private Key<MongoUser> user;
-	
-	@Property(VERIFICATION_CODE)
-	private String code;
-	
-	@Transient
-	private MongoUser _user;
+    public static final int EXPIRATION_PERIOD_HOURS = 24;
 
-	public MongoPasswordReset() {
-		setExpires(new DateTime().plusHours(EXPIRATION_PERIOD_HOURS));
-	}
-	
-	@Override
-	public DateTime getExpires() {
-		return expires;
-	}
+    @Id
+    private ObjectId id = new ObjectId();
 
-	public void setExpires(DateTime expires) {
-		this.expires = expires;
-	}
+    @Property(EXPIRES)
+    @Indexed(expireAfterSeconds = EXPIRATION_PERIOD_HOURS * 60 * 60)
+    private DateTime expires;
 
-	@Override
+    @Property(USER)
+    private Key<MongoUser> user;
+
+    @Property(VERIFICATION_CODE)
+    private String code;
+
+    @Transient
+    private MongoUser _user;
+
+    public MongoPasswordReset() {
+        setExpires(new DateTime().plusHours(EXPIRATION_PERIOD_HOURS));
+    }
+
+    @Override
+    public DateTime getExpires() {
+        return expires;
+    }
+
+    public void setExpires(DateTime expires) {
+        this.expires = expires;
+    }
+
+    @Override
     public User getUser() {
         if (this._user == null) {
             this._user = getMongoDB().deref(MongoUser.class, this.user);
@@ -82,22 +82,21 @@ public class MongoPasswordReset extends MongoEntityBase implements PasswordReset
     }
 
     @Override
-	public String getCode() {
-		return code;
-	}
+    public String getCode() {
+        return code;
+    }
 
-	public void setCode(String code) {
-		this.code = code;
-	}
+    public void setCode(String code) {
+        this.code = code;
+    }
 
-	@Override
-	public boolean isExpired() {
-		return getExpires().isBefore(new DateTime());
-	}
+    @Override
+    public boolean isExpired() {
+        return getExpires().isBefore(new DateTime());
+    }
 
-	public ObjectId getId() {
-		return id;
-	}
-	
-	
+    public ObjectId getId() {
+        return id;
+    }
+
 }
