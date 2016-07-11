@@ -149,6 +149,10 @@ public class TrackJSONEncoder extends AbstractJSONEntityEncoder<Track> {
                 track.put(JSONConstants.END_KEY, getDateTimeFormat()
                         .print(t.getEnd()));
             }
+            if (rights.canSeeSensorOf(t)) {
+                track.put(JSONConstants.SENSOR_KEY,
+                        this.sensorEncoder.encodeJSON(t.getSensor(), rights, mediaType));
+            }
         }
         return track;
     }
