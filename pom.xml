@@ -43,7 +43,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <logback-version>1.1.3</logback-version>
-        <morphia-version>1.2.3</morphia-version>
+        <morphia-version>1.2.1</morphia-version>
         <jersey-version>1.19</jersey-version>
         <guice-version>4.0</guice-version>
         <slf4j-version>1.7.12</slf4j-version>
@@ -216,16 +216,16 @@
             </dependency>
             <dependency>
                 <artifactId>morphia</artifactId>
-                <groupId>com.github.jmkgreen.morphia</groupId>
+                <groupId>org.mongodb.morphia</groupId>
                 <version>${morphia-version}</version>
             </dependency>
             <dependency>
-                <groupId>com.github.jmkgreen.morphia</groupId>
-                <artifactId>morphia-guice-plugin</artifactId>
+                <groupId>org.mongodb.morphia</groupId>
+                <artifactId>morphia-guice-plug</artifactId>
                 <version>${morphia-version}</version>
             </dependency>
             <dependency>
-                <groupId>com.github.jmkgreen.morphia</groupId>
+                <groupId>org.mongodb.morphia</groupId>
                 <artifactId>morphia-logging-slf4j</artifactId>
                 <version>${morphia-version}</version>
             </dependency>
@@ -249,7 +249,7 @@
             <dependency>
                 <artifactId>mongo-java-driver</artifactId>
                 <groupId>org.mongodb</groupId>
-                <version>2.11.1</version>
+                <version>3.2.2</version>
             </dependency>
             <dependency>
                 <groupId>ch.qos.logback</groupId>

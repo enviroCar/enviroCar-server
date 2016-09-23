@@ -22,15 +22,15 @@
             <artifactId>hamcrest-all</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.github.jmkgreen.morphia</groupId>
             <artifactId>morphia</artifactId>
+            <groupId>org.mongodb.morphia</groupId>
         </dependency>
         <dependency>
-            <groupId>com.github.jmkgreen.morphia</groupId>
-            <artifactId>morphia-guice-plugin</artifactId>
+            <groupId>org.mongodb.morphia</groupId>
+            <artifactId>morphia-guice-plug</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.github.jmkgreen.morphia</groupId>
+            <groupId>org.mongodb.morphia</groupId>
             <artifactId>morphia-logging-slf4j</artifactId>
         </dependency>
         <dependency>
