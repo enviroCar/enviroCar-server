@@ -19,8 +19,8 @@ package org.envirocar.server.mongo.entity;
 import org.envirocar.server.core.entities.Phenomenon;
 import org.envirocar.server.core.statistics.Statistic;
 
-import com.github.jmkgreen.morphia.annotations.Embedded;
-import com.github.jmkgreen.morphia.annotations.Property;
+import org.mongodb.morphia.annotations.Embedded;
+import org.mongodb.morphia.annotations.Property;
 
 /**
  * TODO JavaDoc

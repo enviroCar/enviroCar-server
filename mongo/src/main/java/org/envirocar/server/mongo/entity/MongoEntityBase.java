@@ -23,11 +23,11 @@ import org.envirocar.server.mongo.MongoDB;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
-import com.github.jmkgreen.morphia.annotations.Indexed;
-import com.github.jmkgreen.morphia.annotations.PrePersist;
-import com.github.jmkgreen.morphia.annotations.Property;
-import com.github.jmkgreen.morphia.annotations.Transient;
-import com.github.jmkgreen.morphia.utils.IndexDirection;
+import org.mongodb.morphia.annotations.Indexed;
+import org.mongodb.morphia.annotations.PrePersist;
+import org.mongodb.morphia.annotations.Property;
+import org.mongodb.morphia.annotations.Transient;
+import org.mongodb.morphia.utils.IndexDirection;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.inject.Inject;

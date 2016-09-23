@@ -23,9 +23,9 @@ import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.jmkgreen.morphia.Key;
-import com.github.jmkgreen.morphia.query.Query;
-import com.github.jmkgreen.morphia.query.UpdateResults;
+import org.mongodb.morphia.Key;
+import org.mongodb.morphia.query.Query;
+import org.mongodb.morphia.query.UpdateResults;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
@@ -148,13 +148,13 @@ public class MongoGroupDao extends AbstractMongoDao<String, MongoGroup, Groups>
     }
 
     protected void removeOwner(MongoUser user) {
-        UpdateResults<MongoGroup> result = update(
+        UpdateResults result = update(
                 q().field(MongoGroup.OWNER).equal(key(user)),
                 up().unset(MongoGroup.OWNER));
 
-        if (result.getHadError()) {
+        if (result.getWriteResult() != null && !result.getWriteResult().wasAcknowledged()) {
             log.error("Error removing user {} as group owner: {}",
-                      user, result.getError());
+                      user, result.getWriteResult());
         } else {
             log.debug("Removed user {} as owner from {} groups",
                       user, result.getUpdatedCount());
@@ -163,13 +163,13 @@ public class MongoGroupDao extends AbstractMongoDao<String, MongoGroup, Groups>
 
     protected void removeMember(MongoUser user) {
         Key<MongoUser> userRef = key(user);
-        UpdateResults<MongoGroup> result = update(
+        UpdateResults result = update(
                 q().field(MongoGroup.MEMBERS).hasThisElement(userRef),
                 up().removeAll(MongoGroup.MEMBERS, userRef));
 
-        if (result.getHadError()) {
+        if (result.getWriteResult() != null && !result.getWriteResult().wasAcknowledged()) {
             log.error("Error removing user {} as group member: {}",
-                      user, result.getError());
+                      user, result.getWriteResult());
         } else {
             log.debug("Removed user {} as member from {} groups",
                       user, result.getUpdatedCount());
@@ -198,7 +198,7 @@ public class MongoGroupDao extends AbstractMongoDao<String, MongoGroup, Groups>
         Set<Key<MongoUser>> memberRefs = getMemberRefs(group);
         if (memberRefs != null) {
             Key<MongoUser> memberRef = key(new MongoUser(username));
-            getMapper().updateKind(memberRef);
+            getMapper().updateCollection(memberRef);
             if (memberRefs.contains(memberRef)) {
                 return deref(MongoUser.class, memberRef);
             }

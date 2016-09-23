@@ -43,13 +43,13 @@ import org.envirocar.server.mongo.util.MorphiaUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.jmkgreen.morphia.Datastore;
-import com.github.jmkgreen.morphia.Key;
-import com.github.jmkgreen.morphia.mapping.Mapper;
-import com.github.jmkgreen.morphia.query.MorphiaIterator;
-import com.github.jmkgreen.morphia.query.Query;
-import com.github.jmkgreen.morphia.query.QueryImpl;
-import com.github.jmkgreen.morphia.query.UpdateResults;
+import org.mongodb.morphia.Datastore;
+import org.mongodb.morphia.Key;
+import org.mongodb.morphia.mapping.Mapper;
+import org.mongodb.morphia.query.MorphiaIterator;
+import org.mongodb.morphia.query.Query;
+import org.mongodb.morphia.query.QueryImpl;
+import org.mongodb.morphia.query.UpdateResults;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.mongodb.AggregationOutput;
@@ -63,6 +63,7 @@ import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import com.mongodb.WriteResult;
 import com.vividsolutions.jts.geom.Geometry;
+import java.util.Collections;
 
 /**
  * TODO JavaDoc
@@ -201,12 +202,12 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
     }
 
     void removeUser(MongoUser user) {
-        UpdateResults<MongoMeasurement> result = update(
+        UpdateResults result = update(
                 q().field(MongoMeasurement.USER).equal(key(user)),
                 up().unset(MongoMeasurement.USER));
-        if (result.getHadError()) {
+        if (result.getWriteResult() != null && !result.getWriteResult().wasAcknowledged()) {
             log.error("Error removing user {} from measurement: {}",
-                      user, result.getError());
+                      user, result.getWriteResult());
         } else {
             log.debug("Removed user {} from {} measurements",
                       user, result.getUpdatedCount());
@@ -215,13 +216,12 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
 
     void deleteUser(MongoUser user) {
         WriteResult result = delete(q().field(MongoTrack.USER).equal(key(user)));
-        CommandResult error = result.getLastError();
-        if (error.ok()) {
+        if (result.wasAcknowledged()) {
             log.debug("Removed user {} from {} measurement",
                       user, result.getN());
         } else {
             log.error("Error removing user {} from measurement: {}",
-                      user, result.getError());
+                      user, result);
         }
     }
 
@@ -235,13 +235,12 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
 
     void removeTrack(MongoTrack track) {
         WriteResult delete = delete(q().field(MongoMeasurement.TRACK).equal(key(track)));
-        CommandResult error = delete.getLastError();
-        if (error.ok()) {
+        if (delete.wasAcknowledged()) {
             log.debug("Removed track {} from {} measurements",
                       track, delete.getN());
         } else {
             log.error("Error removing track {} from measurements: {}",
-                      track, error.getErrorMessage());
+                      track, delete);
         }
     }
 
@@ -290,7 +289,6 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
         AggregationOutput result = mongoDB.getDatastore()
                 .getCollection(MongoMeasurement.class)
                 .aggregate(firstOp, additionalOps);
-        result.getCommandResult().throwOnError();
         return result;
     }
 
@@ -352,7 +350,7 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
         DBCursor cursor = coll.find(query, null);
         long count = 0;
 
-        cursor.setDecoderFactory(ds.getDecoderFact());
+        cursor.setDecoderFactory(coll.getDBDecoderFactory());
         if (p != null) {
             count = coll.count(query);
             if (p.getBegin()> 0) {
@@ -364,9 +362,10 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
         }
         cursor.sort(QueryImpl.parseFieldsString(MongoMeasurement.TIME,
                                                 MongoMeasurement.class,
-                                                mapper, true));
+                                                mapper, true,
+                                                Collections.emptyList(), Collections.emptyList()));
         Iterable<MongoMeasurement> i =
-                new MorphiaIterator<>(
+                new MorphiaIterator<>(ds,
                 cursor, mapper, MongoMeasurement.class, coll.getName(),
                 mapper.createEntityCache());
         return createPaginatedIterable(i, p, count);

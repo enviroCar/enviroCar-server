@@ -36,8 +36,8 @@ import org.envirocar.server.mongo.entity.MongoUser;
 import org.envirocar.server.mongo.util.MongoUtils;
 import org.envirocar.server.mongo.util.Ops;
 
-import com.github.jmkgreen.morphia.dao.BasicDAO;
-import com.github.jmkgreen.morphia.mapping.Mapper;
+import org.mongodb.morphia.dao.BasicDAO;
+import org.mongodb.morphia.mapping.Mapper;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.mongodb.AggregationOutput;
@@ -166,7 +166,6 @@ public class MongoStatisticsDao implements StatisticsDao {
         AggregationOutput result = mongoDB.getDatastore()
                 .getCollection(MongoMeasurement.class)
                 .aggregate(firstOp, additionalOps);
-        result.getCommandResult().throwOnError();
         return result;
     }
 
