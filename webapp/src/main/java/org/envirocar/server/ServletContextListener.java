@@ -38,6 +38,8 @@ public class ServletContextListener extends GuiceServletContextListener {
 
     @Override
     protected Injector getInjector() {
+        disableJavaUtilPreferences();
+        
         if (injector == null) {
             injector = Guice
                     .createInjector(new ServiceLoaderConfigurationModule());
@@ -62,6 +64,11 @@ public class ServletContextListener extends GuiceServletContextListener {
         }
         
         super.contextDestroyed(servletContextEvent);
+    }
+
+    private void disableJavaUtilPreferences() {
+        System.setProperty("java.util.prefs.PreferencesFactory",
+                DisabledPreferencesFactory.class.getCanonicalName());
     }
 
 }
