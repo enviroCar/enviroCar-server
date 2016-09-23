@@ -93,7 +93,7 @@ import org.envirocar.server.rest.rights.NonRestrictiveRights;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 
-import com.github.jmkgreen.morphia.converters.TypeConverter;
+import org.mongodb.morphia.converters.TypeConverter;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;

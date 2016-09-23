@@ -26,7 +26,7 @@ import org.envirocar.server.mongo.convert.JTSConverter;
 import org.envirocar.server.mongo.convert.URLConverter;
 import org.envirocar.server.mongo.util.GeoBSON;
 
-import com.github.jmkgreen.morphia.converters.TypeConverter;
+import org.mongodb.morphia.converters.TypeConverter;
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
 import com.google.inject.multibindings.Multibinder;

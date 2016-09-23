@@ -32,9 +32,9 @@ import org.envirocar.server.mongo.util.MorphiaUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.jmkgreen.morphia.Key;
-import com.github.jmkgreen.morphia.query.Query;
-import com.github.jmkgreen.morphia.query.UpdateResults;
+import org.mongodb.morphia.Key;
+import org.mongodb.morphia.query.Query;
+import org.mongodb.morphia.query.UpdateResults;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.mongodb.CommandResult;
@@ -124,23 +124,23 @@ public class MongoTrackDao extends AbstractMongoDao<ObjectId, MongoTrack, Tracks
 
     void deleteUser(MongoUser user) {
         WriteResult result = delete(q().field(MongoTrack.USER).equal(key(user)));
-        CommandResult error = result.getLastError();
-        if (error.ok()) {
+        
+        if (result.wasAcknowledged()) {
             log.debug("Removed user {} from {} tracks",
                       user, result.getN());
         } else {
             log.error("Error removing user {} from tracks: {}",
-                      user, result.getError());
+                      user, result);
         }
     }
 
     void removeUser(MongoUser user) {
-        UpdateResults<MongoTrack> result = update(
+        UpdateResults result = update(
                 q().field(MongoTrack.USER).equal(key(user)),
                 up().unset(MongoTrack.USER));
-        if (result.getHadError()) {
+        if (result.getWriteResult() != null && !result.getWriteResult().wasAcknowledged()) {
             log.error("Error removing user {} from tracks: {}",
-                      user, result.getError());
+                      user, result.getWriteResult());
         } else {
             log.debug("Removed user {} from {} tracks",
                       user, result.getUpdatedCount());

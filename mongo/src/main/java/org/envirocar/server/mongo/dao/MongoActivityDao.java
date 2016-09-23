@@ -28,7 +28,7 @@ import org.envirocar.server.mongo.MongoDB;
 import org.envirocar.server.mongo.activities.MongoActivity;
 import org.envirocar.server.mongo.entity.MongoUser;
 
-import com.github.jmkgreen.morphia.query.Query;
+import org.mongodb.morphia.query.Query;
 import com.google.inject.Inject;
 
 /**

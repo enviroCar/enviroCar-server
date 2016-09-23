@@ -42,7 +42,7 @@ import org.envirocar.server.mongo.util.MongoUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.jmkgreen.morphia.query.Query;
+import org.mongodb.morphia.query.Query;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
@@ -119,7 +119,6 @@ public class MongoSensorDao extends AbstractMongoDao<ObjectId, MongoSensor, Sens
         DBObject match = MongoUtils.match(MongoMeasurement.USER, ref(user));
         AggregationOutput result = getMongoDB().getDatastore()
                 .getCollection(MongoMeasurement.class).aggregate(match, group);
-        result.getCommandResult().throwOnError();
         return StreamSupport.stream(result.results().spliterator(), false)
                 .map(x -> (ObjectId) x.get(ID))
 //                .map(x -> new Key<>(MongoSensor.class, x))

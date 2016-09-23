@@ -31,7 +31,7 @@ import org.envirocar.server.rest.schema.GuiceRunner;
 import org.envirocar.server.rest.schema.Modules;
 import org.junit.runner.RunWith;
 
-import com.github.jmkgreen.morphia.logging.MorphiaLoggerFactory;
+import org.mongodb.morphia.logging.MorphiaLoggerFactory;
 import com.google.inject.Inject;
 import com.vividsolutions.jts.geom.GeometryFactory;
 
