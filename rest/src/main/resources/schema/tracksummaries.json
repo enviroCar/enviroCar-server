@@ -1,0 +1,17 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "id": "http://schema.envirocar.org/trackSummaries.json#",
+    "type": "object",
+    "required": [
+		"trackSummaries"
+    ],
+    "properties": {
+		"trackSummaries": {
+			"type": "array",
+			"minItems": 0,
+			"items": {
+				"$ref": "http://schema.envirocar.org/tracksummary.json#"
+			}
+		}
+    }
+}
