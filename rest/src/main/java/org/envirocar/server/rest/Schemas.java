@@ -70,6 +70,8 @@ public class Schemas {
     public static final String PASSWORD_RESET_REQUEST = PREFIX + "passwordResetRequest.json#";
     public static final String PASSWORD_RESET_VERIFICATION = PREFIX + "passwordResetVerification.json#";
 
+    public static final String USERSTATISTIC = PREFIX + "userstatistic.json#";
+    
     private Schemas() {
     }
 }

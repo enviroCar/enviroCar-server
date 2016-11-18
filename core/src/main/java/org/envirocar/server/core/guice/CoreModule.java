@@ -24,6 +24,7 @@ import org.envirocar.server.core.GroupService;
 import org.envirocar.server.core.GroupServiceImpl;
 import org.envirocar.server.core.StatisticsService;
 import org.envirocar.server.core.StatisticsServiceImpl;
+import org.envirocar.server.core.UserStatisticServiceImpl;
 import org.envirocar.server.core.UserService;
 import org.envirocar.server.core.UserServiceImpl;
 import org.envirocar.server.core.activities.ActivityListener;
@@ -42,6 +43,9 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.PrecisionModel;
 import org.envirocar.server.core.CarSimilarityService;
 import org.envirocar.server.core.CarSimilarityServiceImpl;
+import org.envirocar.server.core.entities.TrackSummaries;
+import org.envirocar.server.core.entities.TrackSummary;
+import org.envirocar.server.core.UserStatisticService;
 
 /**
  * TODO JavaDoc
@@ -57,6 +61,7 @@ public class CoreModule extends AbstractModule {
         bind(FriendService.class).to(FriendServiceImpl.class);
         bind(GroupService.class).to(GroupServiceImpl.class);
         bind(StatisticsService.class).to(StatisticsServiceImpl.class);
+        bind(UserStatisticService.class).to(UserStatisticServiceImpl.class);
         bind(ActivityListener.class).asEagerSingleton();
         bind(PasswordEncoder.class).to(BCryptPasswordEncoder.class);
         bind(GeometryOperations.class).to(GeodesicGeometryOperations.class);

@@ -120,4 +120,7 @@ public interface MediaTypes {
     MediaType FUELING_CREATE_TYPE = MediaType.valueOf(FUELING_CREATE);
     String PNG_IMAGE = "image/png";
     MediaType PNG_IMAGE_TYPE = MediaType.valueOf(PNG_IMAGE);
+    
+    String USERSTATISTIC = "application/json; schema=\"" + Schemas.USERSTATISTIC + "\"";
+    MediaType USERSTATISTIC_TYPE = MediaType.valueOf(USERSTATISTIC);
 }

@@ -58,7 +58,7 @@ public class UserResource extends AbstractResource {
     public static final String TRACKS = "tracks";
     public static final String MEASUREMENTS = "measurements";
     public static final String STATISTICS = "statistics";
-    public static final String STATISTICS2 = "statistics2";
+    public static final String USERSTATISTIC = "userStatistic";
     public static final String ACTIVITIES = "activities";
     public static final String FRIEND_ACTIVITIES = "friendActivities";
     public static final String AVATAR = "avatar";
@@ -145,10 +145,10 @@ public class UserResource extends AbstractResource {
         return getResourceFactory().createStatisticsResource(this.user);
     }
     
-    @Path(STATISTICS2)
-    public Statistics2Resource statistics2() {
-        //checkRights(getRights().canSeeStatistics2Of(user));
-        //return getResourceFactory().createStatistics2Resource(this.user);
+    @Path(USERSTATISTIC)
+    public UserStatisticResource userstatistic() {
+        checkRights(getRights().canSeeUserStatisticsOf(user));
+        return getResourceFactory().createUserStatisticsResource(this.user);
     	
     }
 

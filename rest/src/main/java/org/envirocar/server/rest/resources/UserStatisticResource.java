@@ -16,53 +16,47 @@
  */
 package org.envirocar.server.rest.resources;
 
-import javax.annotation.Nullable;
 import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
-import org.envirocar.server.core.entities.Phenomenon;
-import org.envirocar.server.core.entities.Sensor;
-import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.entities.User;
-import org.envirocar.server.core.exception.PhenomenonNotFoundException;
-import org.envirocar.server.core.filter.StatisticsFilter;
-import org.envirocar.server.core.statistics.Statistics;
-import org.envirocar.server.rest.MediaTypes;
-import org.envirocar.server.rest.Schemas;
-import org.envirocar.server.rest.validation.Schema;
+import org.envirocar.server.core.filter.UserStatisticFilter;
 
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
+import javax.annotation.Nullable;
+import org.envirocar.server.rest.MediaTypes;
+import org.envirocar.server.rest.Schemas;
+import org.envirocar.server.rest.validation.Schema;
+import org.envirocar.server.core.entities.UserStatistic;
 
 /**
  * TODO JavaDoc
  *
- * @author Christian Autermann <autermann@uni-muenster.de>
+ * @author Maurin Radtke <maurin.radtke@uni-muenster.de>
  */
-public class Statistics2Resource extends AbstractResource {
+public class UserStatisticResource  extends AbstractResource{
     private final User user;
 
     @AssistedInject
-    public Statistics2Resource() {
+    public UserStatisticResource() {
         this(null);
     }
 
     @AssistedInject
-    public Statistics2Resource(@Assisted User user) {
-        this(user);
+    public UserStatisticResource(@Nullable @Assisted User user) {
+        this.user = user;
     }
 
     @GET
-    @Schema(response = Schemas.STATISTICS2)
-    @Produces({ MediaTypes.STATISTICS2,
+    @Schema(response = Schemas.USERSTATISTIC)
+    @Produces({ MediaTypes.USERSTATISTIC,
                 MediaTypes.XML_RDF,
                 MediaTypes.TURTLE,
                 MediaTypes.TURTLE_ALT })
-    public Statistics2 statistics2() {
-        return getStatistics2Service()
-                .getStatistics2(new Statistics2Filter(user));
+    public UserStatistic UserStatistics() {
+        return getUserStatisticService()
+                .getUserStatistic(new UserStatisticFilter(user));
     }
 
     public User getUser() {

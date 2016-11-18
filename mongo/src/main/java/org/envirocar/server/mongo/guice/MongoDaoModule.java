@@ -44,6 +44,8 @@ import org.envirocar.server.mongo.dao.privates.MongoPasswordResetDAO;
 import org.envirocar.server.mongo.dao.privates.PasswordResetDAO;
 
 import com.google.inject.AbstractModule;
+import org.envirocar.server.core.dao.UserStatisticDao;
+import org.envirocar.server.mongo.dao.MongoUserStatisticDao;
 
 /**
  * TODO JavaDoc
@@ -66,5 +68,6 @@ public class MongoDaoModule extends AbstractModule {
         bind(BadgesDao.class).to(MongoBadgesDao.class);
         bind(PasswordResetDAO.class).to(MongoPasswordResetDAO.class);
         bind(FuelingDao.class).to(MongoFuelingDao.class);
+        bind(UserStatisticDao.class).to(MongoUserStatisticDao.class);
     }
 }

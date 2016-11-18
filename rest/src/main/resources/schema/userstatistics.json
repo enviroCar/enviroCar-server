@@ -1,0 +1,101 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "id": "http://schema.envirocar.org/userstatistics.json#",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "user",
+        "distance",
+        "duration"
+    ],
+    "properties": {
+        "user": {
+            "type": "string"
+        },
+        "distance": {
+            "type": "number"
+        },
+        "duration": {
+            "type": "number"
+        },
+        "userstatistics": {
+            "below60kmh": {
+                "distance": {
+                    "type": "number"
+                },
+                "duration": {
+                    "type": "number"
+                }
+            },
+            "above130kmh": {
+                "distance": {
+                    "type": "number"
+                },
+                "duration": {
+                    "type": "number"
+                }
+            }
+        },
+        "tracksummaries": {
+            "type": "array",
+            "minItems": 0,
+            "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "startPosition": {
+                        "geometry": {
+                            "required": [
+                                "type",
+                                "coordinates"
+                            ],
+                            "$ref": "#/definitions/Point"
+                        }
+                    },
+                    "endPosition": {
+                        "geometry": {
+                            "required": [
+                                "type",
+                                "coordinates"
+                            ],
+                            "$ref": "#/definitions/Point"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "Point": {
+            "title": "Point",
+            "type": "object",
+            "properties": {
+                "type": {
+                    "enum": [
+                        "Point"
+                    ]
+                },
+                "coordinates": {
+                    "$ref": "#/definitions/position"
+                }
+            }
+        },
+        "position": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 2,
+            "additionalItems": false,
+            "items": [
+                {
+                    "type": "number"
+                },
+                {
+                    "type": "number"
+                }
+            ]
+        }
+    }
+}
