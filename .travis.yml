@@ -12,7 +12,4 @@ after_script:
     - "rake travis"
 env:
   global:
-    secure: |-
-      q17geOV/9E+PEzKK5LtAVvuuH089zNsty83En3dI4FX+0KjGvUpHO8YB18R6
-      5kWFqHH9SVSgl5pLWpasrKDvOIOZcPaLtIcTI+GdC2UaOn5Q16+JztTQpzJm
-      s9KtEgCCpnWXujcW5oo31QDlpS53n1g/2wPCbCQon4iKFY3idgA=
+    secure: GwYDfj/JiE/x3Q9BaVlxNSODaidWWL75vjahnTP1XBaViydDSleF+dtLvA2iffSx7vdvQvh7Dr6F43kGwda8dUhahDHk1s3Gt5KFSPfN+urwZ023XoFYCANL/6ys9JR0Hpyz5bIE0F2jGpiD1UyQk3pK10ZuuVHmSD2jpSJLJpw=
