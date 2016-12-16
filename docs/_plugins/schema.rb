@@ -8,15 +8,15 @@ module Jekyll
             super
             case tag_name
             when "include_schema"
-                @delegate = Jekyll::HighlightFileBlock.new(
+                @delegate = Jekyll::HighlightFileBlock.parse(
                     "highlight_file",
                     "#{LANG} #{SCHEMA_PATH}/#{text.strip!}.json",
-                    token)
+                    token, {})
             when "include_example"
-                @delegate = Jekyll::HighlightFileBlock.new(
+                @delegate = Jekyll::HighlightFileBlock.parse(
                     "highlight_file",
                     "#{LANG} #{EXAMPLES_PATH}/#{text.strip!}.json",
-                    token)
+                    token, {})
             else
                 raise "Unrecognized tag name '#{tag_name}'"
             end

@@ -46,6 +46,7 @@ module Jekyll
 
     HostInfo = Struct.new(:repo_url, :file_url, :file_raw_url, :site_name, :site_url)
 
+    public
     def initialize(tag_name, text, token)
       super
 
@@ -151,10 +152,11 @@ BODY
         opt[1] ? opt.join('=') : opt[0]
       }.join ' '
 
-      highlight_block = Jekyll::Tags::HighlightBlock.new(
+      highlight_block = Jekyll::Tags::HighlightBlock.parse(
         'highlight',
         @language + (options_str.empty? ? '' : ' ' + options_str),
-        [ content, "{% endhighlight %}" ]
+        [ content, "{% endhighlight %}" ],
+        {}
       )
 
       highlight_block.render context

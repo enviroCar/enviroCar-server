@@ -1,6 +1,6 @@
 safe: false
 lsi: false
-pygments: true
+highlighter: pygments
 exclude:
     - Gemfile
     - Gemfile.lock
@@ -8,7 +8,7 @@ exclude:
     - README.md
 markdown: redcarpet
 redcarpet:
-    extensions: 
+    extensions:
         - "no_intra_emphasis"
         - "fenced_code_blocks"
         - "autolink"
