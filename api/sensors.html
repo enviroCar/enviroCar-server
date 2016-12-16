@@ -1,0 +1,433 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="chrome=1">
+        <title>EnviroCar Service by enviroCar</title>
+
+        <link rel="stylesheet" href="http://envirocar.github.io/enviroCar-server/stylesheets/styles.css">
+        <link rel="stylesheet" href="http://envirocar.github.io/enviroCar-server/stylesheets/pygment_trac.css">
+        <script src="http://envirocar.github.io/enviroCar-server/javascripts/scale.fix.js"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+        <!--[if lt IE 9]>
+        <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+    </head>
+    <body>
+        <div class="wrapper">
+            <header>
+                <h1 class="header">EnviroCar Service</h1>
+                <p class="header">
+                    <a href="http://envirocar.github.io/enviroCar-server/developer-guide/">Developer Guide</a>
+                </p>
+                <p class="header"><a href="http://envirocar.github.io/enviroCar-server/api/">API Reference</a></p>
+                <p class="header"><a href="http://envirocar.github.io/enviroCar-server/lod/">Linked Open Data</a></p>
+                <p class="header"><a href="http://envirocar.github.io/enviroCar-server/additional-encodings/">Additional encodings for tracks</a></p>
+                <ul>
+                    <li class="but download"><a class="buttons" href="https://github.com/enviroCar/enviroCar-server/zipball/master">Download ZIP</a></li>
+                    <li class="but download"><a class="buttons" href="https://github.com/enviroCar/enviroCar-server/tarball/master">Download TAR</a></li>
+                    <li class="but"><a class="buttons github" href="https://github.com/enviroCar/enviroCar-server">View On GitHub</a></li>
+                </ul>
+            </header>
+            <section>
+                <h1 id="sensors">/sensors</h1>
+
+<h3 id="get">GET</h3>
+
+<p>Get a list of all sensors.</p>
+
+<h4 id="response-schema">Response Schema</h4>
+
+<div class="highlight-file">
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><span></span><span class="p">{</span>
+    <span class="nt">&quot;$schema&quot;</span><span class="p">:</span> <span class="s2">&quot;http://json-schema.org/draft-04/schema#&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;http://schema.envirocar.org/sensor.json#&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;allOf&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;$ref&quot;</span><span class="p">:</span> <span class="s2">&quot;#/definitions/base&quot;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;$ref&quot;</span><span class="p">:</span> <span class="s2">&quot;#/definitions/with-id&quot;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;oneOf&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="p">{</span>
+                    <span class="nt">&quot;not&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="nt">&quot;$ref&quot;</span><span class="p">:</span> <span class="s2">&quot;#/definitions/car-type&quot;</span>
+                    <span class="p">}</span>
+                <span class="p">},</span>
+                <span class="p">{</span>
+                    <span class="nt">&quot;allOf&quot;</span><span class="p">:</span> <span class="p">[</span>
+                        <span class="p">{</span>
+                            <span class="nt">&quot;$ref&quot;</span><span class="p">:</span> <span class="s2">&quot;#/definitions/car-type&quot;</span>
+                        <span class="p">},</span>
+                        <span class="p">{</span>
+                            <span class="nt">&quot;$ref&quot;</span><span class="p">:</span> <span class="s2">&quot;#/definitions/car-properties&quot;</span>
+                        <span class="p">}</span>
+                    <span class="p">]</span>
+                <span class="p">}</span>
+            <span class="p">]</span>
+        <span class="p">}</span>
+    <span class="p">],</span>
+    <span class="nt">&quot;definitions&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;base&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;object&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;required&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;properties&quot;</span>
+            <span class="p">],</span>
+            <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+                <span class="p">},</span>
+                <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;object&quot;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;with-id&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="nt">&quot;required&quot;</span><span class="p">:</span> <span class="p">[</span>
+                        <span class="s2">&quot;id&quot;</span>
+                    <span class="p">],</span>
+                    <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+                        <span class="p">}</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;car-type&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="nt">&quot;enum&quot;</span><span class="p">:</span> <span class="p">[</span>
+                        <span class="s2">&quot;car&quot;</span>
+                    <span class="p">]</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;car-properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="nt">&quot;manufacturer&quot;</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+                        <span class="p">},</span>
+                        <span class="nt">&quot;model&quot;</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+                        <span class="p">},</span>
+                        <span class="nt">&quot;fuelType&quot;</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+                            <span class="nt">&quot;enum&quot;</span><span class="p">:</span> <span class="p">[</span>
+                                <span class="s2">&quot;diesel&quot;</span><span class="p">,</span>
+                                <span class="s2">&quot;gasoline&quot;</span><span class="p">,</span>
+                                <span class="s2">&quot;biodiesel&quot;</span><span class="p">,</span>
+                                <span class="s2">&quot;kerosene&quot;</span><span class="p">,</span>
+                                <span class="s2">&quot;electric&quot;</span>
+                            <span class="p">]</span>
+                        <span class="p">},</span>
+                        <span class="nt">&quot;constructionYear&quot;</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;integer&quot;</span><span class="p">,</span>
+                            <span class="nt">&quot;minimum&quot;</span><span class="p">:</span> <span class="mi">0</span>
+                        <span class="p">},</span>
+                        <span class="nt">&quot;VIN&quot;</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+                        <span class="p">}</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+</div>
+
+<h4 id="response-example">Response Example</h4>
+
+<div class="highlight-file">
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><span></span><span class="p">{</span>
+    <span class="nt">&quot;groups&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;created&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-06-25T10:00:30Z&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Product Owner Description&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;modified&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-06-28T08:47:16Z&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Product Owner&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;owner&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;country&quot;</span><span class="p">:</span> <span class="s2">&quot;Germany&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;created&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-06-25T09:56:13Z&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;dayOfBirth&quot;</span><span class="p">:</span> <span class="s2">&quot;1989-01-01&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;firstName&quot;</span><span class="p">:</span> <span class="s2">&quot;Jakob&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;gender&quot;</span><span class="p">:</span> <span class="s2">&quot;m&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;language&quot;</span><span class="p">:</span> <span class="s2">&quot;de-DE&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;lastName&quot;</span><span class="p">:</span> <span class="s2">&quot;M&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;mail&quot;</span><span class="p">:</span> <span class="s2">&quot;jakob@jakob.de&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;modified&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-07-10T08:30:04Z&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;jakob1&quot;</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;enviroCar Developer Group&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;enviroCar developer&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;owner&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;dustin&quot;</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;FirstTestGroup_ARE_secondInputField&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;FirstTestGroup_ARE&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;owner&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;created&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-06-28T15:47:04Z&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;modified&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-07-03T16:13:46Z&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;AlbertRemke&quot;</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;enviroCar Scrum Master Group&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;scrum master&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;owner&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;dustin&quot;</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;52\u00b0North staff members&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;52\u00b0North&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;owner&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;daniel&quot;</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Wer sp\u00e4ter bremst bleibt l\u00e4nger schnell.&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Raser-Club M\u00fcnster&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;owner&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;created&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-06-25T15:21:17Z&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;modified&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-07-01T17:18:03Z&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Turbomartin&quot;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">]</span>
+<span class="p">}</span></code></pre></figure>
+
+</div>
+
+<h1 id="sensors-sensor">/sensors/:sensor</h1>
+
+<h3 id="get">GET</h3>
+
+<p>Get the sensor <code>sensor</code>.</p>
+
+<h4 id="response-schema">Response Schema</h4>
+
+<div class="highlight-file">
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><span></span><span class="p">{</span>
+    <span class="nt">&quot;$schema&quot;</span><span class="p">:</span> <span class="s2">&quot;http://json-schema.org/draft-04/schema#&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;http://schema.envirocar.org/sensor.json#&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;allOf&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;$ref&quot;</span><span class="p">:</span> <span class="s2">&quot;#/definitions/base&quot;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;$ref&quot;</span><span class="p">:</span> <span class="s2">&quot;#/definitions/with-id&quot;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;oneOf&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="p">{</span>
+                    <span class="nt">&quot;not&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="nt">&quot;$ref&quot;</span><span class="p">:</span> <span class="s2">&quot;#/definitions/car-type&quot;</span>
+                    <span class="p">}</span>
+                <span class="p">},</span>
+                <span class="p">{</span>
+                    <span class="nt">&quot;allOf&quot;</span><span class="p">:</span> <span class="p">[</span>
+                        <span class="p">{</span>
+                            <span class="nt">&quot;$ref&quot;</span><span class="p">:</span> <span class="s2">&quot;#/definitions/car-type&quot;</span>
+                        <span class="p">},</span>
+                        <span class="p">{</span>
+                            <span class="nt">&quot;$ref&quot;</span><span class="p">:</span> <span class="s2">&quot;#/definitions/car-properties&quot;</span>
+                        <span class="p">}</span>
+                    <span class="p">]</span>
+                <span class="p">}</span>
+            <span class="p">]</span>
+        <span class="p">}</span>
+    <span class="p">],</span>
+    <span class="nt">&quot;definitions&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;base&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;object&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;required&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;properties&quot;</span>
+            <span class="p">],</span>
+            <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+                <span class="p">},</span>
+                <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;object&quot;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;with-id&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="nt">&quot;required&quot;</span><span class="p">:</span> <span class="p">[</span>
+                        <span class="s2">&quot;id&quot;</span>
+                    <span class="p">],</span>
+                    <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+                        <span class="p">}</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;car-type&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="nt">&quot;enum&quot;</span><span class="p">:</span> <span class="p">[</span>
+                        <span class="s2">&quot;car&quot;</span>
+                    <span class="p">]</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;car-properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="nt">&quot;manufacturer&quot;</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+                        <span class="p">},</span>
+                        <span class="nt">&quot;model&quot;</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+                        <span class="p">},</span>
+                        <span class="nt">&quot;fuelType&quot;</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+                            <span class="nt">&quot;enum&quot;</span><span class="p">:</span> <span class="p">[</span>
+                                <span class="s2">&quot;diesel&quot;</span><span class="p">,</span>
+                                <span class="s2">&quot;gasoline&quot;</span><span class="p">,</span>
+                                <span class="s2">&quot;biodiesel&quot;</span><span class="p">,</span>
+                                <span class="s2">&quot;kerosene&quot;</span><span class="p">,</span>
+                                <span class="s2">&quot;electric&quot;</span>
+                            <span class="p">]</span>
+                        <span class="p">},</span>
+                        <span class="nt">&quot;constructionYear&quot;</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;integer&quot;</span><span class="p">,</span>
+                            <span class="nt">&quot;minimum&quot;</span><span class="p">:</span> <span class="mi">0</span>
+                        <span class="p">},</span>
+                        <span class="nt">&quot;VIN&quot;</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+                        <span class="p">}</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+</div>
+
+<h4 id="response-example">Response Example</h4>
+
+<div class="highlight-file">
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><span></span><span class="p">{</span>
+    <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;constructionYear&quot;</span><span class="p">:</span> <span class="mi">2012</span><span class="p">,</span>
+        <span class="nt">&quot;created&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-07-15T13:34:18Z&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;fuelType&quot;</span><span class="p">:</span> <span class="s2">&quot;gasoline&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;51e3fa5ae4b0feb05dbf4168&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;manufacturer&quot;</span><span class="p">:</span> <span class="s2">&quot;Toyota&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;model&quot;</span><span class="p">:</span> <span class="s2">&quot;Prius III&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;modified&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-07-15T13:34:18Z&quot;</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;car&quot;</span>
+<span class="p">}</span></code></pre></figure>
+
+</div>
+
+<h3 id="post">POST</h3>
+
+<p>Creates a new sensor.</p>
+
+<h4 id="request-schema">Request Schema</h4>
+
+<div class="highlight-file">
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><span></span><span class="p">{</span>
+    <span class="nt">&quot;$schema&quot;</span><span class="p">:</span> <span class="s2">&quot;http://json-schema.org/draft-04/schema#&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;http://schema.envirocar.org/sensor.create.json#&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;allOf&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;$ref&quot;</span><span class="p">:</span> <span class="s2">&quot;http://schema.envirocar.org/sensor.json#/definitions/base&quot;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;oneOf&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="p">{</span>
+                    <span class="nt">&quot;not&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="nt">&quot;$ref&quot;</span><span class="p">:</span> <span class="s2">&quot;http://schema.envirocar.org/sensor.json#/definitions/car-type&quot;</span>
+                    <span class="p">}</span>
+                <span class="p">},</span>
+                <span class="p">{</span>
+                    <span class="nt">&quot;allOf&quot;</span><span class="p">:</span> <span class="p">[</span>
+                        <span class="p">{</span>
+                            <span class="nt">&quot;$ref&quot;</span><span class="p">:</span> <span class="s2">&quot;http://schema.envirocar.org/sensor.json#/definitions/car-type&quot;</span>
+                        <span class="p">},</span>
+                        <span class="p">{</span>
+                            <span class="nt">&quot;$ref&quot;</span><span class="p">:</span> <span class="s2">&quot;#/definitions/car-properties&quot;</span>
+                        <span class="p">}</span>
+                    <span class="p">]</span>
+                <span class="p">}</span>
+            <span class="p">]</span>
+        <span class="p">}</span>
+    <span class="p">],</span>
+    <span class="nt">&quot;definitions&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;car-properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;allOf&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="p">{</span>
+                    <span class="nt">&quot;$ref&quot;</span><span class="p">:</span> <span class="s2">&quot;http://schema.envirocar.org/sensor.json#/definitions/car-properties&quot;</span>
+                <span class="p">},</span>
+                <span class="p">{</span>
+                    <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="nt">&quot;required&quot;</span><span class="p">:</span> <span class="p">[</span>
+                                <span class="s2">&quot;manufacturer&quot;</span><span class="p">,</span>
+                                <span class="s2">&quot;model&quot;</span><span class="p">,</span>
+                                <span class="s2">&quot;fuelType&quot;</span><span class="p">,</span>
+                                <span class="s2">&quot;constructionYear&quot;</span>
+                            <span class="p">]</span>
+                        <span class="p">}</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">]</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+</div>
+
+<h4 id="request-example">Request Example</h4>
+
+<div class="highlight-file">
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><span></span><span class="p">{</span>
+  <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;car&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;model&quot;</span><span class="p">:</span> <span class="s2">&quot;TestCar&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;fuelType&quot;</span><span class="p">:</span> <span class="s2">&quot;gasolene&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;manufacturer&quot;</span><span class="p">:</span> <span class="s2">&quot;TestManufacturer&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;constructionYear&quot;</span><span class="p">:</span> <span class="mi">2001</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+</div>
+
+            </section>
+            <footer>
+                <p><small>This project is maintained by the <a href="https://github.com/enviroCar">enviroCar</a> community</small></p>
+            </footer>
+        </div>
+        <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    </body>
+</html>

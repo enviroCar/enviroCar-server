@@ -1,0 +1,511 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="chrome=1">
+        <title>EnviroCar Service by enviroCar</title>
+
+        <link rel="stylesheet" href="http://envirocar.github.io/enviroCar-server/stylesheets/styles.css">
+        <link rel="stylesheet" href="http://envirocar.github.io/enviroCar-server/stylesheets/pygment_trac.css">
+        <script src="http://envirocar.github.io/enviroCar-server/javascripts/scale.fix.js"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+        <!--[if lt IE 9]>
+        <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+    </head>
+    <body>
+        <div class="wrapper">
+            <header>
+                <h1 class="header">EnviroCar Service</h1>
+                <p class="header">
+                    <a href="http://envirocar.github.io/enviroCar-server/developer-guide/">Developer Guide</a>
+                </p>
+                <p class="header"><a href="http://envirocar.github.io/enviroCar-server/api/">API Reference</a></p>
+                <p class="header"><a href="http://envirocar.github.io/enviroCar-server/lod/">Linked Open Data</a></p>
+                <p class="header"><a href="http://envirocar.github.io/enviroCar-server/additional-encodings/">Additional encodings for tracks</a></p>
+                <ul>
+                    <li class="but download"><a class="buttons" href="https://github.com/enviroCar/enviroCar-server/zipball/master">Download ZIP</a></li>
+                    <li class="but download"><a class="buttons" href="https://github.com/enviroCar/enviroCar-server/tarball/master">Download TAR</a></li>
+                    <li class="but"><a class="buttons github" href="https://github.com/enviroCar/enviroCar-server">View On GitHub</a></li>
+                </ul>
+            </header>
+            <section>
+                <h1 id="tracks">/tracks</h1>
+
+<h3 id="get">GET</h3>
+
+<p>Get a list of all tracks.</p>
+
+<h4 id="response-schema">Response Schema</h4>
+
+<div class="highlight-file">
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><span></span><span class="p">{</span>
+    <span class="nt">&quot;$schema&quot;</span><span class="p">:</span> <span class="s2">&quot;http://json-schema.org/draft-04/schema#&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;http://schema.envirocar.org/tracks.json#&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;object&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;additionalProperties&quot;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nt">&quot;required&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;tracks&quot;</span>
+    <span class="p">],</span>
+    <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;tracks&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;array&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;minItems&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="nt">&quot;items&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;$ref&quot;</span><span class="p">:</span> <span class="s2">&quot;http://schema.envirocar.org/definitions.json#/track-ref&quot;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+</div>
+
+<h4 id="response-example">Response Example</h4>
+
+<div class="highlight-file">
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><span></span><span class="p">{</span>
+    <span class="nt">&quot;tracks&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;51dff239e4b0feb05dbee0d7&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;modified&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-07-12T12:10:33Z&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Track 2013-7-12&quot;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;51dff0a1e4b0feb05dbee00e&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;modified&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-07-12T12:03:45Z&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Track 2013-7-12&quot;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;51dfefa1e4b0feb05dbedfbf&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;modified&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-07-12T11:59:29Z&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Track 2013-7-12&quot;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;51dfeed9e4b0feb05dbedf68&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;modified&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-07-12T11:56:09Z&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Track 2013-7-12&quot;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;51dfee07e4b0feb05dbedf0b&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;modified&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-07-12T11:52:39Z&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Track 2013-7-12&quot;</span>
+        <span class="p">}</span>
+    <span class="p">]</span>
+<span class="p">}</span></code></pre></figure>
+
+</div>
+
+<p>In addition to the standard query parameters, tracks can be queried by a given boundingbox. Therefore you have to add the following get parameter: <code>bbox=minx,miny,maxx,maxy</code>.
+(example: <code>/tracks?bbox=7.0,51.1,7.3,52.0</code>)</p>
+
+<h3 id="post">POST</h3>
+
+<p>Creates a new tracks and adds current user as the owner.</p>
+
+<h4 id="request-schema">Request Schema</h4>
+
+<div class="highlight-file">
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><span></span><span class="p">{</span>
+    <span class="nt">&quot;$schema&quot;</span><span class="p">:</span> <span class="s2">&quot;http://json-schema.org/draft-04/schema#&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;http://schema.envirocar.org/track.create.json#&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;object&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;additionalProperties&quot;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nt">&quot;required&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;properties&quot;</span>
+    <span class="p">],</span>
+    <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;enum&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s2">&quot;FeatureCollection&quot;</span>
+            <span class="p">]</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;object&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;additionalProperties&quot;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+            <span class="nt">&quot;required&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s2">&quot;sensor&quot;</span>
+            <span class="p">],</span>
+            <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;sensor&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+                    <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;the name of an existing sensor resource&quot;</span>
+                <span class="p">},</span>
+                <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+                <span class="p">},</span>
+                <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+                <span class="p">},</span>
+                <span class="nt">&quot;appVersion&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+                <span class="p">},</span>
+                <span class="nt">&quot;obdDevice&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+                <span class="p">},</span>
+                <span class="nt">&quot;touVersion&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+                <span class="p">},</span>
+                <span class="nt">&quot;length&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;number&quot;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;features&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;array&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;minItems&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="nt">&quot;items&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;$ref&quot;</span><span class="p">:</span> <span class="s2">&quot;http://schema.envirocar.org/measurement.create.json#&quot;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+</div>
+
+<h4 id="request-example">Request Example</h4>
+
+<div class="highlight-file">
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><span></span><span class="p">{</span>
+    <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;sensor&quot;</span><span class="p">:</span> <span class="s2">&quot;51bc53ab5064ba7f336ef920&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;test track&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;description of track&quot;</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;features&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Feature&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;geometry&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Point&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;coordinates&quot;</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="mf">12.365</span><span class="p">,</span>
+                    <span class="mf">24.068</span>
+                <span class="p">]</span>
+            <span class="p">},</span>
+            <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;time&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-05-16T02:13:27Z&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;sensor&quot;</span><span class="p">:</span> <span class="s2">&quot;51bc53ab5064ba7f336ef920&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;phenomenons&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="nt">&quot;testphenomenon3&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="nt">&quot;value&quot;</span><span class="p">:</span> <span class="mf">3.457</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">]</span>
+<span class="p">}</span></code></pre></figure>
+
+</div>
+
+<h1 id="tracks-trackid">/tracks/:trackid</h1>
+
+<h3 id="get">GET</h3>
+
+<p>Get a track.</p>
+
+<h3 id="response-schema">Response Schema</h3>
+
+<div class="highlight-file">
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><span></span><span class="p">{</span>
+    <span class="nt">&quot;$schema&quot;</span><span class="p">:</span> <span class="s2">&quot;http://json-schema.org/draft-04/schema#&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;http://schema.envirocar.org/track.json#&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;object&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;additionalProperties&quot;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nt">&quot;required&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;properties&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;features&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;type&quot;</span>
+    <span class="p">],</span>
+    <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;enum&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s2">&quot;FeatureCollection&quot;</span>
+            <span class="p">]</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;features&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;array&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;minItems&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="nt">&quot;items&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;$ref&quot;</span><span class="p">:</span> <span class="s2">&quot;http://schema.envirocar.org/measurement.json#&quot;</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;object&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;additionalProperties&quot;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+            <span class="nt">&quot;required&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s2">&quot;id&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;sensor&quot;</span>
+            <span class="p">],</span>
+            <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+                <span class="p">},</span>
+                <span class="nt">&quot;created&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+                    <span class="nt">&quot;format&quot;</span><span class="p">:</span> <span class="s2">&quot;date-time&quot;</span>
+
+                <span class="p">},</span>
+                <span class="nt">&quot;modified&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+                    <span class="nt">&quot;format&quot;</span><span class="p">:</span> <span class="s2">&quot;date-time&quot;</span>
+                <span class="p">},</span>
+                <span class="nt">&quot;sensor&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="nt">&quot;$ref&quot;</span><span class="p">:</span> <span class="s2">&quot;http://schema.envirocar.org/sensor.json#&quot;</span>
+                <span class="p">},</span>
+                <span class="nt">&quot;user&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="nt">&quot;$ref&quot;</span><span class="p">:</span> <span class="s2">&quot;http://schema.envirocar.org/user.json#&quot;</span>
+                <span class="p">},</span>
+                <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+                <span class="p">},</span>
+                <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+                <span class="p">},</span>
+                <span class="nt">&quot;appVersion&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+                <span class="p">},</span>
+                <span class="nt">&quot;obdDevice&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+                <span class="p">},</span>
+                <span class="nt">&quot;touVersion&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+                <span class="p">},</span>
+                <span class="nt">&quot;length&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;number&quot;</span>
+                <span class="p">},</span>
+                <span class="nt">&quot;begin&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+                    <span class="nt">&quot;format&quot;</span><span class="p">:</span> <span class="s2">&quot;date-time&quot;</span>
+                <span class="p">},</span>
+                <span class="nt">&quot;end&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+                    <span class="nt">&quot;format&quot;</span><span class="p">:</span> <span class="s2">&quot;date-time&quot;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+</div>
+
+<h3 id="response-example">Response Example</h3>
+
+<div class="highlight-file">
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><span></span><span class="p">{</span>
+    <span class="nt">&quot;features&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;geometry&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;coordinates&quot;</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="mf">7.61083</span><span class="p">,</span>
+                    <span class="mf">51.9414</span>
+                <span class="p">],</span>
+                <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Point&quot;</span>
+            <span class="p">},</span>
+            <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;51c980c8e4b05956bbffceff&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;phenomenons&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="nt">&quot;CO2&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="nt">&quot;unit&quot;</span><span class="p">:</span> <span class="s2">&quot;g/s&quot;</span><span class="p">,</span>
+                        <span class="nt">&quot;value&quot;</span><span class="p">:</span> <span class="mf">0.0</span>
+                    <span class="p">},</span>
+                    <span class="nt">&quot;Consumption&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="nt">&quot;unit&quot;</span><span class="p">:</span> <span class="s2">&quot;l/s&quot;</span><span class="p">,</span>
+                        <span class="nt">&quot;value&quot;</span><span class="p">:</span> <span class="mf">0.0</span>
+                    <span class="p">},</span>
+                    <span class="nt">&quot;MAF&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="nt">&quot;unit&quot;</span><span class="p">:</span> <span class="s2">&quot;l/s&quot;</span><span class="p">,</span>
+                        <span class="nt">&quot;value&quot;</span><span class="p">:</span> <span class="mf">0.0</span>
+                    <span class="p">},</span>
+                    <span class="nt">&quot;Speed&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="nt">&quot;unit&quot;</span><span class="p">:</span> <span class="s2">&quot;km/h&quot;</span><span class="p">,</span>
+                        <span class="nt">&quot;value&quot;</span><span class="p">:</span> <span class="mf">0.0</span>
+                    <span class="p">}</span>
+                <span class="p">},</span>
+                <span class="nt">&quot;time&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-06-08T11:28:20Z&quot;</span>
+            <span class="p">},</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Feature&quot;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;geometry&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;coordinates&quot;</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="mf">7.59575</span><span class="p">,</span>
+                    <span class="mf">51.973</span>
+                <span class="p">],</span>
+                <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Point&quot;</span>
+            <span class="p">},</span>
+            <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;51c980c9e4b05956bbffd1fd&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;phenomenons&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="nt">&quot;CO2&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="nt">&quot;unit&quot;</span><span class="p">:</span> <span class="s2">&quot;g/s&quot;</span><span class="p">,</span>
+                        <span class="nt">&quot;value&quot;</span><span class="p">:</span> <span class="mf">2.91</span>
+                    <span class="p">},</span>
+                    <span class="nt">&quot;Consumption&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="nt">&quot;unit&quot;</span><span class="p">:</span> <span class="s2">&quot;l/s&quot;</span><span class="p">,</span>
+                        <span class="nt">&quot;value&quot;</span><span class="p">:</span> <span class="mf">0.0006227631614894954</span>
+                    <span class="p">},</span>
+                    <span class="nt">&quot;MAF&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="nt">&quot;unit&quot;</span><span class="p">:</span> <span class="s2">&quot;l/s&quot;</span><span class="p">,</span>
+                        <span class="nt">&quot;value&quot;</span><span class="p">:</span> <span class="mf">0.00026500560063382785</span>
+                    <span class="p">},</span>
+                    <span class="nt">&quot;Speed&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="nt">&quot;unit&quot;</span><span class="p">:</span> <span class="s2">&quot;km/h&quot;</span><span class="p">,</span>
+                        <span class="nt">&quot;value&quot;</span><span class="p">:</span> <span class="mf">34.0</span>
+                    <span class="p">}</span>
+                <span class="p">},</span>
+                <span class="nt">&quot;time&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-06-08T12:07:06Z&quot;</span>
+            <span class="p">},</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Feature&quot;</span>
+        <span class="p">}</span>
+    <span class="p">],</span>
+    <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;created&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-06-25T11:36:41Z&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;From home to IfGI&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;51c980c8e4b05956bbffcefd&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;modified&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-06-25T11:36:43Z&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Way to work&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;sensor&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;constructionYear&quot;</span><span class="p">:</span> <span class="mi">2001</span><span class="p">,</span>
+                <span class="nt">&quot;fuelType&quot;</span><span class="p">:</span> <span class="s2">&quot;gasoline&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;51c97f0ee4b05956bbffcef8&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;manufacturer&quot;</span><span class="p">:</span> <span class="s2">&quot;BMW&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;model&quot;</span><span class="p">:</span> <span class="s2">&quot;Z4&quot;</span>
+            <span class="p">},</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;car&quot;</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;user&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;country&quot;</span><span class="p">:</span> <span class="s2">&quot;Germany&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;created&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-06-25T09:56:13Z&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;dayOfBirth&quot;</span><span class="p">:</span> <span class="s2">&quot;1989-01-01&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;firstName&quot;</span><span class="p">:</span> <span class="s2">&quot;Jakob&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;gender&quot;</span><span class="p">:</span> <span class="s2">&quot;m&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;language&quot;</span><span class="p">:</span> <span class="s2">&quot;de-DE&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;lastName&quot;</span><span class="p">:</span> <span class="s2">&quot;M&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;mail&quot;</span><span class="p">:</span> <span class="s2">&quot;jakob@jakob.de&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;modified&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-07-10T08:30:04Z&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;jakob1&quot;</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;FeatureCollection&quot;</span>
+<span class="p">}</span></code></pre></figure>
+
+</div>
+
+<h3 id="put">PUT</h3>
+
+<p>Modify a track.</p>
+
+<h3 id="request-schema">Request Schema</h3>
+
+<div class="highlight-file">
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><span></span><span class="p">{</span>
+    <span class="nt">&quot;$schema&quot;</span><span class="p">:</span> <span class="s2">&quot;http://json-schema.org/draft-04/schema#&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;http://schema.envirocar.org/track.create.json#&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;object&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;additionalProperties&quot;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nt">&quot;required&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;properties&quot;</span>
+    <span class="p">],</span>
+    <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;enum&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s2">&quot;FeatureCollection&quot;</span>
+            <span class="p">]</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;object&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;additionalProperties&quot;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+            <span class="nt">&quot;required&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s2">&quot;sensor&quot;</span>
+            <span class="p">],</span>
+            <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;sensor&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+                    <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;the name of an existing sensor resource&quot;</span>
+                <span class="p">},</span>
+                <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+                <span class="p">},</span>
+                <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+                <span class="p">},</span>
+                <span class="nt">&quot;appVersion&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+                <span class="p">},</span>
+                <span class="nt">&quot;obdDevice&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+                <span class="p">},</span>
+                <span class="nt">&quot;touVersion&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+                <span class="p">},</span>
+                <span class="nt">&quot;length&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;number&quot;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;features&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;array&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;minItems&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="nt">&quot;items&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;$ref&quot;</span><span class="p">:</span> <span class="s2">&quot;http://schema.envirocar.org/measurement.create.json#&quot;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+</div>
+
+<h3 id="request-example">Request Example</h3>
+
+<div class="highlight-file">
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><span></span><span class="p">{</span>
+    <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;sensor&quot;</span><span class="p">:</span> <span class="s2">&quot;51bc53ab5064ba7f336ef920&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;test track&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;description of track&quot;</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;features&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Feature&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;geometry&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Point&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;coordinates&quot;</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="mf">12.365</span><span class="p">,</span>
+                    <span class="mf">24.068</span>
+                <span class="p">]</span>
+            <span class="p">},</span>
+            <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;time&quot;</span><span class="p">:</span> <span class="s2">&quot;2013-05-16T02:13:27Z&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;sensor&quot;</span><span class="p">:</span> <span class="s2">&quot;51bc53ab5064ba7f336ef920&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;phenomenons&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="nt">&quot;testphenomenon3&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="nt">&quot;value&quot;</span><span class="p">:</span> <span class="mf">3.457</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">]</span>
+<span class="p">}</span></code></pre></figure>
+
+</div>
+
+            </section>
+            <footer>
+                <p><small>This project is maintained by the <a href="https://github.com/enviroCar">enviroCar</a> community</small></p>
+            </footer>
+        </div>
+        <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    </body>
+</html>
