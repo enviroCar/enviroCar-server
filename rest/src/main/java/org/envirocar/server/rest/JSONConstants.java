@@ -86,6 +86,7 @@ public interface JSONConstants {
     String DURATION_KEY = "duration";
     String BELOW60KMH_KEY = "below60kmh";
     String ABOVE130KMH_KEY = "above130kmh";
+    String NAN_KEY = "NaN";
     String TRACKSUMMARIES_KEY = "trackSummaries";
     String STARTPOSITION_KEY = "startPosition";
     String ENDPOSITION_KEY = "endPosition";

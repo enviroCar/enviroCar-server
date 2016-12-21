@@ -38,6 +38,8 @@ public class UserStatisticImpl implements UserStatistic {
     private double durationBelow60kmh;
     private double distanceAbove130kmh;
     private double durationAbove130kmh;
+    private double distanceNaN;
+    private double durationNaN;
     private TrackSummaries trackSummaries;
     
     public UserStatisticImpl(){
@@ -117,6 +119,26 @@ public class UserStatisticImpl implements UserStatistic {
     public void setDurationAbove130kmh(double durationAbove130kmh) {
         this.durationAbove130kmh = durationAbove130kmh;
     }
+    
+    @Override
+    public double getDistanceNaN() {
+        return this.distanceNaN;
+    }
+
+    @Override
+    public void setDistanceNaN(double distance) {
+        this.distanceNaN = distance;
+    }
+
+    @Override
+    public double getDurationNaN() {
+        return this.durationNaN;
+    }
+
+    @Override
+    public void setDurationNaN(double duration) {
+        this.durationNaN = duration;
+    }
 
     @Override
     public TrackSummaries getTrackSummaries() {
@@ -151,5 +173,5 @@ public class UserStatisticImpl implements UserStatistic {
     public boolean hasModificationTime() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
+    
 }

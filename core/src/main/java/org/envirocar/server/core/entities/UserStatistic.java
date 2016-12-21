@@ -58,6 +58,14 @@ public interface UserStatistic extends BaseEntity {
     
     void setDurationAbove130kmh(double duration);
     
+    double getDistanceNaN();
+    
+    void setDistanceNaN(double distance);
+    
+    double getDurationNaN();
+    
+    void setDurationNaN(double duration);
+    
     TrackSummaries getTrackSummaries();
     
     void setTrackSummaries(TrackSummaries trackSummaries);

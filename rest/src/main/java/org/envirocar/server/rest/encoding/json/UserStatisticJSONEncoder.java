@@ -47,7 +47,7 @@ public class UserStatisticJSONEncoder extends AbstractJSONEntityEncoder<UserStat
 
     @Inject
     public UserStatisticJSONEncoder(
-            JSONEntityEncoder<User> userProvider, 
+            JSONEntityEncoder<User> userProvider,
             JSONEntityEncoder<Geometry> geometryEncoder) {
         super(UserStatistic.class);
         this.userProvider = userProvider;
@@ -61,70 +61,84 @@ public class UserStatisticJSONEncoder extends AbstractJSONEntityEncoder<UserStat
             MediaType mt) {
 
         ObjectNode userStatistics = getJsonFactory().objectNode();
-        /**userStatistics.put(JSONConstants.USER_KEY,
-                t.getUser().getName());*/
+        /**
+         * userStatistics.put(JSONConstants.USER_KEY,
+                t.getUser().getName());
+         */
 
         //if (rights.canSeeUserStatisticsOf(t.getUser())) {
-                userStatistics.putPOJO(JSONConstants.DISTANCE_KEY,
-                        t.getDistance());
-                userStatistics.putPOJO(JSONConstants.DURATION_KEY,
-                        t.getDuration());
+        userStatistics.putPOJO(JSONConstants.DISTANCE_KEY,
+                t.getDistance());
+        userStatistics.putPOJO(JSONConstants.DURATION_KEY,
+                t.getDuration());
 
-            ObjectNode statistics = userStatistics
-                    .putObject(JSONConstants.USERSTATISTIC_KEY);
+        ObjectNode statistics = userStatistics
+                .putObject(JSONConstants.USERSTATISTIC_KEY);
 
-            ObjectNode below60kmh = statistics.
-                    putObject(JSONConstants.BELOW60KMH_KEY);
-            
-                below60kmh.putPOJO(JSONConstants.DISTANCE_KEY,
-                        t.getDistanceBelow60kmh());
-                
-                
-                below60kmh.putPOJO(JSONConstants.DURATION_KEY,
-                        t.getDurationBelow60kmh());
-                
+        ObjectNode below60kmh = statistics.
+                putObject(JSONConstants.BELOW60KMH_KEY);
 
-            ObjectNode above130kmh = statistics.
-                    putObject(JSONConstants.ABOVE130KMH_KEY);
-            
-                above130kmh.putPOJO(JSONConstants.DISTANCE_KEY,
-                        t.getDistanceAbove130kmh());
-        
-                above130kmh.putPOJO(JSONConstants.DURATION_KEY,
-                        t.getDurationAbove130kmh());
+        below60kmh.putPOJO(JSONConstants.DISTANCE_KEY,
+                t.getDistanceBelow60kmh());
 
-            if (t.hasTrackSummaries()) {
-                userStatistics
-                        .put(
-                                JSONConstants.TRACKSUMMARIES_KEY,
-                                getTrackSummeries(t.getTrackSummaries(), rights, mt)
-                        );
-            }
+        below60kmh.putPOJO(JSONConstants.DURATION_KEY,
+                t.getDurationBelow60kmh());
+
+        ObjectNode above130kmh = statistics.
+                putObject(JSONConstants.ABOVE130KMH_KEY);
+
+        above130kmh.putPOJO(JSONConstants.DISTANCE_KEY,
+                t.getDistanceAbove130kmh());
+
+        above130kmh.putPOJO(JSONConstants.DURATION_KEY,
+                t.getDurationAbove130kmh());
+
+        ObjectNode NaN = statistics.
+                putObject(JSONConstants.NAN_KEY);
+
+        NaN.putPOJO(JSONConstants.DISTANCE_KEY,
+                t.getDistanceNaN());
+
+        NaN.putPOJO(JSONConstants.DURATION_KEY,
+                t.getDurationNaN());
+
+        if (t.hasTrackSummaries()) {
+            userStatistics
+                    .put(
+                            JSONConstants.TRACKSUMMARIES_KEY,
+                            getTrackSummeries(t.getTrackSummaries(), rights, mt)
+                    );
+        }
         //}
         return userStatistics;
     }
 
     private JsonNode getTrackSummeries(TrackSummaries t, AccessRights rights, MediaType mediaType) {
         ArrayNode result = getJsonFactory().arrayNode();
-        for (TrackSummary item : t.getTrackSummaryList()) {
-            ObjectNode ts = result.addObject();
-            if (item.hasIdentifier()) {
-                ts.putPOJO(JSONConstants.IDENTIFIER_KEY, item.getIdentifier());
+        try {
+            // getTrackSummaryList() might throw an NullPointerException if its empty
+            for (TrackSummary item : t.getTrackSummaryList()) {
+                ObjectNode ts = result.addObject();
+                if (item.hasIdentifier()) {
+                    ts.putPOJO(JSONConstants.IDENTIFIER_KEY, item.getIdentifier());
+                }
+                if (item.hasStartPosition()) {
+                    ObjectNode startPos = ts
+                            .putObject(JSONConstants.STARTPOSITION_KEY);
+                    startPos.put(JSONConstants.GEOMETRY_KEY,
+                            geometryEncoder
+                                    .encodeJSON(item.getStartPosition(), rights, mediaType));
+                }
+                if (item.hasEndPosition()) {
+                    ObjectNode endPos = ts
+                            .putObject(JSONConstants.ENDPOSITION_KEY);
+                    endPos.put(JSONConstants.GEOMETRY_KEY,
+                            geometryEncoder
+                                    .encodeJSON(item.getEndPosition(), rights, mediaType));
+                }
             }
-            if (item.hasStartPosition()) {
-                ObjectNode startPos = ts
-                        .putObject(JSONConstants.STARTPOSITION_KEY);
-                startPos.put(JSONConstants.GEOMETRY_KEY,
-                        geometryEncoder
-                                .encodeJSON(item.getStartPosition(), rights, mediaType));
-            }
-            if (item.hasEndPosition()) {
-                ObjectNode endPos = ts
-                        .putObject(JSONConstants.ENDPOSITION_KEY);
-                endPos.put(JSONConstants.GEOMETRY_KEY,
-                        geometryEncoder
-                                .encodeJSON(item.getEndPosition(), rights, mediaType));
-            }
+        } catch (NullPointerException npe) {
+            // keep result an empty array: []
         }
         return result;
     }

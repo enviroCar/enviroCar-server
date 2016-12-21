@@ -47,6 +47,8 @@ public class MongoUserStatistic extends MongoEntityBase implements UserStatistic
     public static final String DURA_BELOW60KMH = "durationBelow60kmh";
     public static final String DIST_ABOVE130KMH = "distanceAbove130kmh";
     public static final String DURA_ABOVE130KMH = "durationAbove130kmh";
+    public static final String DIST_NAN = "distanceNaN";
+    public static final String DURA_NAN = "durationNaN";
     public static final String TRACKSUMMARIES = "trackSummaries";
     public static final String USER = "user";
 
@@ -68,6 +70,10 @@ public class MongoUserStatistic extends MongoEntityBase implements UserStatistic
     private double distanceAbove130kmh;
     @Property(DURA_ABOVE130KMH)
     private double durationAbove130kmh;
+    @Property(DIST_NAN)
+    private double distanceNaN;
+    @Property(DURA_NAN)
+    private double durationNaN;
     @Property(TRACKSUMMARIES)
     private TrackSummaries trackSummaries;
 
@@ -148,6 +154,26 @@ public class MongoUserStatistic extends MongoEntityBase implements UserStatistic
     @Override
     public void setDurationAbove130kmh(double durationAbove130kmh) {
         this.durationAbove130kmh = durationAbove130kmh;
+    }
+    
+    @Override
+    public double getDistanceNaN() {
+        return this.distanceNaN;
+    }
+
+    @Override
+    public void setDistanceNaN(double distance) {
+        this.distanceNaN = distance;
+    }
+
+    @Override
+    public double getDurationNaN() {
+        return this.durationNaN;
+    }
+
+    @Override
+    public void setDurationNaN(double duration) {
+        this.durationNaN = duration;
     }
 
     @Override

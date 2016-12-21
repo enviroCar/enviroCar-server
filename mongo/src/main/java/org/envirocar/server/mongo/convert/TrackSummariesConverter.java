@@ -42,7 +42,7 @@ import org.slf4j.LoggerFactory;
 /**
  * MongoDB type converter for {@link DimensionedNumber}s.
  *
- * @author Christian Autermann
+ * @author Maurin Radtke <maurin.radtke@uni-muenster.de>
  */
 public class TrackSummariesConverter
         extends TypeConverter implements SimpleValueConverter {
@@ -59,13 +59,24 @@ public class TrackSummariesConverter
             return null;
         }
         TrackSummaries dn = (TrackSummaries) trackSummaries;
-        //DBObject obj
-        /**
-         * return BasicDBObjectBuilder.start() .add("value",
-         * dn.value().toString()) .add("unit", dn.unit()).get();
-         *
-         */
-        return dn;
+        List<TrackSummary> trackSummaryList = dn.getTrackSummaryList();
+        BasicDBList bdbl  = new BasicDBList();
+        for (int i = 0; i < trackSummaryList.size(); i++){
+            TrackSummary ts = trackSummaryList.get(0);
+            double startLng = ts.getStartPosition().getCoordinate().x;
+            double startLat = ts.getStartPosition().getCoordinate().y;
+            double endLng = ts.getEndPosition().getCoordinate().x;
+            double endLat = ts.getEndPosition().getCoordinate().y;
+            
+            Object bdbo = BasicDBObjectBuilder.start()
+                    .add("id", ts.getIdentifier())
+                    .add("startPositionLat", startLat)
+                    .add("startPositionLng", startLng)
+                    .add("endPositionLat", endLat)
+                    .add("endPositionLng", endLng).get();
+            bdbl.add(bdbo);
+        }
+        return bdbl;
     }
 
     @Override

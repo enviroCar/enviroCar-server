@@ -151,7 +151,6 @@ public class MongoStatisticsDao implements StatisticsDao {
         return v;
     }
     
-    
     private MongoStatisticKey key(StatisticsFilter request) {
         MongoTrack track = (MongoTrack) request.getTrack();
         MongoUser user = (MongoUser) request.getUser();
@@ -253,8 +252,6 @@ public class MongoStatisticsDao implements StatisticsDao {
         StatisticsFilter userFilter = new StatisticsFilter(t.getUser());
         MongoStatisticKey userKey = key(userFilter);
         this.scheduler.updateStatistics(userFilter, userKey, calculateFunction, false);
-        
-        
     }
 
 
