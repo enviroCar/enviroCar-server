@@ -102,8 +102,173 @@ public class MongoUserStatisticDao extends AbstractBasicMongoDao<ObjectId, Mongo
 
     @Override
     public void updateStatisticsOnTrackDeletion(Track t) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        // this.dao.save(entity)
+        // berechne statistiken vom track und ziehe sieh von den current userstatistics ab:
+        GeodesicGeometryOperations ggo = new GeodesicGeometryOperations();
+
+        // berechne statistiken vom track:
+        UserStatisticImpl us = new UserStatisticImpl();
+        TrackSummary ts = null;
+
+        us.setUser(t.getUser());
+
+        if (t instanceof Iterable) {
+            Iterable<Measurement> measurementIterator = (Iterable<Measurement>) t;
+            List<Measurement> list = new ArrayList();
+            for (Measurement m : measurementIterator) {
+                list.add(m);
+            }
+
+            // calculate userstatistic for this track:
+            double total_dist = 0;
+            double total_dura = 0;
+            double total_dist60 = 0;
+            double total_dura60 = 0;
+            double total_dist130 = 0;
+            double total_dura130 = 0;
+            double total_distNaN = 0;
+            double total_duraNaN = 0;
+            for (int i = 0; i < list.size(); i++) {
+                Measurement m_this = list.get(i);
+                Measurement m_next = list.get(i + 1);
+
+                // calculate dist:
+                double dist = ggo.calculateDistance(
+                        m_this,
+                        m_next);
+
+                // calculate dura:
+                DateTime t_start = m_this.getTime();
+                DateTime t_end = m_next.getTime();
+                double dura_millis
+                        = t_end.getMillis()
+                        - t_start.getMillis();
+
+                // b. fill dist and dura according to intervals <60,>130,NaN:
+                Double speed = null;
+                MeasurementValues values = m_this.getValues();
+                for (MeasurementValue value : values) {
+                    if (value.getPhenomenon().getName().equals("Speed")) {
+                        speed = (double) value.getValue();
+                        break;
+                    }
+                }
+                if (speed == null) {
+                    total_distNaN += dist;
+                    total_duraNaN += dura_millis;
+                } else if (speed > 130) {
+                    total_dist130 += dist;
+                    total_dura130 += dura_millis;
+                } else if (speed < 60) {
+                    total_dist60 += dist;
+                    total_dura60 += dura_millis;
+                }
+                total_dist += dist;
+                total_dura += dura_millis;
+            }
+            // format milliseconds to hours:
+            total_dura /= (60 * 60 * 1000);
+            total_dura60 /= (60 * 60 * 1000);
+            total_dura130 /= (60 * 60 * 1000);
+            total_duraNaN /= (60 * 60 * 1000);
+
+            // create TrackSummary object for the track identifier
+            ts = new TrackSummary();
+            ts.setIdentifier(t.getIdentifier());
+
+            // d. put in userstatistics object:
+            us.setDistance(total_dist);
+            us.setDistanceBelow60kmh(total_dist60);
+            us.setDistanceAbove130kmh(total_dist130);
+            us.setDistanceNaN(total_distNaN);
+            us.setDuration(total_dura);
+            us.setDurationBelow60kmh(total_dura60);
+            us.setDurationAbove130kmh(total_dura130);
+            us.setDurationNaN(total_duraNaN);
+
+        } else {
+            // track has no measurements. put empty zeros:
+            us.setDistance(0);
+            us.setDistanceBelow60kmh(0);
+            us.setDistanceAbove130kmh(0);
+            us.setDistanceNaN(0);
+            us.setDuration(0);
+            us.setDurationBelow60kmh(0);
+            us.setDurationAbove130kmh(0);
+            us.setDurationNaN(0);
+
+            // create TrackSummary object for the track identifier
+            ts = new TrackSummary();
+            ts.setIdentifier(t.getIdentifier());
+        }
+
+        // save mongouserstatistic:
+        removeFromUserStatistics(us, ts);
+    }
+
+    private void removeFromUserStatistics(UserStatisticImpl userStatistic, TrackSummary trackSummary) {
+        // get current user's userstatistic:
+        final Datastore ds = this.mongoDB.getDatastore();
+        final DBCollection userstats = ds.getCollection(MongoUserStatistic.class);
+        BasicDBObjectBuilder q = new BasicDBObjectBuilder();
+        q.add(MongoUserStatistic.USER, ref(userStatistic.getUser()));
+        DBCursor results = userstats.find(
+                q.get()
+        );
+        TrackSummaries ts;
+        MongoUserStatistic v;
+
+        if (results.size() > 1) {
+            // TODO: catch this error:
+            // error: more than 1 userstatistic available with identical user identifier
+        } else if (results.size() == 1) {
+            // previous userstatistic exists --> update them:
+            MongoUserStatistic previous = (MongoUserStatistic) results.curr();
+            v = new MongoUserStatistic();
+
+            v.setUser(userStatistic.getUser());
+            v.setDistance(
+                    previous.getDistance() - userStatistic.getDistance()
+            );
+            v.setDistanceAbove130kmh(
+                    previous.getDistanceAbove130kmh() - userStatistic.getDistanceAbove130kmh()
+            );
+            v.setDistanceBelow60kmh(
+                    previous.getDistanceBelow60kmh() - userStatistic.getDistanceBelow60kmh()
+            );
+            v.setDistanceNaN(
+                    previous.getDistanceNaN() - userStatistic.getDistanceNaN()
+            );
+            v.setDuration(
+                    previous.getDuration() - userStatistic.getDuration()
+            );
+            v.setDurationAbove130kmh(
+                    previous.getDurationAbove130kmh() - userStatistic.getDurationAbove130kmh()
+            );
+            v.setDurationBelow60kmh(
+                    previous.getDurationBelow60kmh() - userStatistic.getDurationBelow60kmh()
+            );
+            v.setDurationNaN(
+                    previous.getDurationNaN() - userStatistic.getDurationNaN()
+            );
+            if (trackSummary != null) {
+                ts = previous.getTrackSummaries();
+                TrackSummaries resultSummaries = new TrackSummaries();
+                for (TrackSummary currTS : ts.getTrackSummaryList()) {
+                    // if currTS !== DeletedTrack
+                    if (!currTS.getIdentifier()
+                            .equals(trackSummary.getIdentifier())) // add to result:
+                    {
+                        resultSummaries.addTrackSummary(currTS);
+                    }
+                }
+                // update v'TrackSummaries
+                v.setTrackSummaries(ts);
+            }
+            this.dao.save(v);
+        } else {
+            // TODO: catch this error:
+            // no previous userstatistic exists --> error/ do nothing:
+        }
     }
 
     @Override
@@ -136,19 +301,19 @@ public class MongoUserStatisticDao extends AbstractBasicMongoDao<ObjectId, Mongo
                 Measurement m_this = list.get(i);
                 Measurement m_next = list.get(i + 1);
 
-                // berechne dist:
+                // calculate dist:
                 double dist = ggo.calculateDistance(
                         m_this,
                         m_next);
 
-                // berechne dura:
-                DateTime t_start = m_this.getCreationTime();
-                DateTime t_end = m_next.getCreationTime();
+                // calculate dura:
+                DateTime t_start = m_this.getTime();
+                DateTime t_end = m_next.getTime();
                 double dura_millis
                         = t_end.getMillis()
                         - t_start.getMillis();
 
-                // b. fülle entsprechend ein in interval <60,>130,NaN:
+                // b. fill dist and dura according to intervals <60,>130,NaN:
                 Double speed = null;
                 MeasurementValues values = m_this.getValues();
                 for (MeasurementValue value : values) {
@@ -170,7 +335,7 @@ public class MongoUserStatisticDao extends AbstractBasicMongoDao<ObjectId, Mongo
                 total_dist += dist;
                 total_dura += dura_millis;
             }
-            // umrechnen von millis nach stunden:
+            // format milliseconds to hours:
             total_dura /= (60 * 60 * 1000);
             total_dura60 /= (60 * 60 * 1000);
             total_dura130 /= (60 * 60 * 1000);
@@ -185,7 +350,7 @@ public class MongoUserStatisticDao extends AbstractBasicMongoDao<ObjectId, Mongo
             ts.setEndPosition(valuesEnd.getGeometry());
             ts.setIdentifier(t.getIdentifier());
 
-            // d. packe in userstatistic objekt:
+            // d. put in userstatistics object:
             us.setDistance(total_dist);
             us.setDistanceBelow60kmh(total_dist60);
             us.setDistanceAbove130kmh(total_dist130);

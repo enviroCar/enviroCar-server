@@ -1,0 +1,47 @@
+{
+   "features":[
+      {
+         "type":"Feature",
+         "geometry":{
+            "type":"Point",
+            "coordinates":[
+               7.62554,
+               51.9557
+            ]
+         },
+         "properties":{
+            "id":"51c97d05e4b0fe5a04e9e7bd",
+            "time":"2013-06-08T11:35:15Z",
+            "sensor":{
+               "type":"car",
+               "properties":{
+                  "id":"51c96afce4b0fd063432096f",
+                  "model":"R 1200 GS ADV",
+                  "fuelType":"gasoline",
+                  "manufacturer":"BMW",
+                  "constructionYear":2012
+               }
+            },
+            "phenomenons":{
+               "Speed":{
+                  "value":3.0,
+                  "unit":"km/h"
+               },
+               "MAF":{
+                  "value":9.625804806527699E-4,
+                  "unit":"l/s"
+               },
+               "Consumption":{
+                  "value":0.002262064129534009,
+                  "unit":"l/s"
+               },
+               "CO2":{
+                  "value":10.57,
+                  "unit":"g/s"
+               }
+            }
+         }
+      }
+   ],
+   "type":"FeatureCollection"
+}

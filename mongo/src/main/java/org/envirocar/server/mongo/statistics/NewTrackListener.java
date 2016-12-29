@@ -27,6 +27,7 @@ import com.google.inject.Singleton;
 import org.envirocar.server.core.dao.StatisticsDao;
 import org.envirocar.server.core.dao.UserStatisticDao;
 import org.envirocar.server.core.event.CreatedTrackEvent;
+import org.envirocar.server.core.event.DeletedTrackEvent;
 
 @Singleton
 public class NewTrackListener {
@@ -45,4 +46,10 @@ public class NewTrackListener {
         this.statisticDao.updateStatisticsOnNewTrack(e.getTrack());
         this.userStatisticDao.updateStatisticsOnNewTrack(e.getTrack());
     }
+    
+    @Subscribe
+    public void onDeletedTrackEvent(DeletedTrackEvent e) {
+        this.userStatisticDao.updateStatisticsOnTrackDeletion(e.getTrack());
+    }
+    
 }

@@ -192,8 +192,8 @@ public class DataServiceImpl implements DataService {
 
     @Override
     public void deleteTrack(Track track) {
-        this.trackDao.delete(track);
         this.eventBus.post(new DeletedTrackEvent(track, track.getUser()));
+        this.trackDao.delete(track);
     }
 
     @Override
