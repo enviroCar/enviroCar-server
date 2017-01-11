@@ -36,6 +36,13 @@ import com.github.jmkgreen.morphia.query.Query;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
+import org.envirocar.server.core.DataService;
+import org.envirocar.server.core.entities.Measurements;
+import org.envirocar.server.core.entities.TrackSummaries;
+import org.envirocar.server.core.entities.Tracks;
+import org.envirocar.server.core.filter.MeasurementFilter;
+import org.envirocar.server.core.filter.TrackFilter;
+import org.envirocar.server.core.util.pagination.PageBasedPagination;
 import org.envirocar.server.mongo.util.UserStatisticUtils;
 
 /**
@@ -49,13 +56,15 @@ public class MongoUserStatisticDao extends AbstractBasicMongoDao<ObjectId, Mongo
     private static final Logger log = LoggerFactory.getLogger(MongoUserStatisticDao.class);
     private final BasicDAO<MongoUserStatistic, ObjectId> dao;
     private final MongoDB mongoDB;
+    private final DataService dataService;
 
     @Inject
-    public MongoUserStatisticDao(MongoDB mongoDB) {
+    public MongoUserStatisticDao(MongoDB mongoDB, DataService dataService) {
         super(MongoUserStatistic.class, mongoDB);
         this.dao = new BasicDAO<>(
                 MongoUserStatistic.class, mongoDB.getDatastore());
         this.mongoDB = mongoDB;
+        this.dataService = dataService;
     }
 
     @Override
@@ -86,13 +95,14 @@ public class MongoUserStatisticDao extends AbstractBasicMongoDao<ObjectId, Mongo
         } else {
             return null;
         }
+        
         return result;
     }
-    
+
     @Override
     public void updateStatisticsOnTrackDeletion(Track t) {
         UserStatisticUtils usu = new UserStatisticUtils();
-        
+
         // get current user's userstatistic:
         final Datastore ds = this.mongoDB.getDatastore();
         final DBCollection userstats = ds.getCollection(MongoUserStatistic.class);
@@ -102,13 +112,17 @@ public class MongoUserStatisticDao extends AbstractBasicMongoDao<ObjectId, Mongo
                 q.get()
         );
 
+        // get track measurements:
+        Measurements values = dataService
+                .getMeasurements(new MeasurementFilter(t));
+
         if (results.size() > 1) {
-            // TODO: catch this error:
+            // TODO: err... wtf?
             // error: more than 1 userstatistic available with identical user identifier
         } else if (results.size() == 1) {
             // previous userstatistic exists --> update them:
             MongoUserStatistic previous = (MongoUserStatistic) results.curr();
-            MongoUserStatistic v = usu.removeTrackStatistic(previous, t);
+            MongoUserStatistic v = usu.removeTrackStatistic(previous, t, values);
             v.setUser(previous.getUser());
             this.dao.save(v);
         } else {
@@ -117,11 +131,10 @@ public class MongoUserStatisticDao extends AbstractBasicMongoDao<ObjectId, Mongo
         }
     }
 
-
     @Override
     public void updateStatisticsOnNewTrack(Track t) {
         UserStatisticUtils usu = new UserStatisticUtils();
-            
+
         // get current user's userstatistic:
         final Datastore ds = this.mongoDB.getDatastore();
         final DBCollection userstats = ds.getCollection(MongoUserStatistic.class);
@@ -132,36 +145,53 @@ public class MongoUserStatisticDao extends AbstractBasicMongoDao<ObjectId, Mongo
         );
 
         if (results.size() > 1) {
+            // TODO: err... wtf?
             // error: more than 1 userstatistic available with identical user identifier
         } else if (results.size() == 1) {
             // previous userstatistic exists --> update them:
+            // get track measurements:
+            Measurements values = dataService
+                    .getMeasurements(new MeasurementFilter(t));
             MongoUserStatistic previous = (MongoUserStatistic) results.curr();
-            MongoUserStatistic v = usu.addTrackStatistic(previous, t);
+            MongoUserStatistic v = usu.addTrackStatistic(previous, t, values);
             v.setUser(previous.getUser());
             this.dao.save(v);
         } else {
-            // no previous userstatistic exists --> insert new one:
-            // TODO: "dann mache erstmal garnichts (Arne, 19.12.2016)"   
-            // - Das Userstatistic retroffing script hätte für jeden user eine userstatistic nachrechnen müssen!
+            // no previous userstatistic exists --> calculate for all usertracks and insert new one:
+            MongoUserStatistic previous = new MongoUserStatistic();
+            
+            previous.setDistance(0);
+            previous.setDuration(0);
+            previous.setDistanceAbove130kmh(0);
+            previous.setDurationAbove130kmh(0);
+            previous.setDistanceBelow60kmh(0);
+            previous.setDurationBelow60kmh(0);
+            previous.setDistanceNaN(0);
+            previous.setDurationNaN(0);
+            previous.setUser(t.getUser());
+            previous.setTrackSummaries(new TrackSummaries());
+            Tracks tracks = dataService.getTracks(
+                    new TrackFilter(
+                            t.getUser(),
+                            new PageBasedPagination(10000,1)
+                    )
+            );
+            Iterable<Track> userTracks = Tracks.from(tracks).build();
+            for (Track track : userTracks)  {
+                // get all measurments of this track:
+                Measurements values = dataService
+                    .getMeasurements(new MeasurementFilter(track));
+                previous = usu.addTrackStatistic(previous, t, values);
+            }
 
-            /**
-             * v = new MongoUserStatistic();
-             *
-             * v.setUser(userStatistic.getUser());
-             * v.setDistance(userStatistic.getDistance());
-             * v.setDistanceAbove130kmh(userStatistic.getDistanceAbove130kmh());
-             * v.setDistanceBelow60kmh(userStatistic.getDistanceBelow60kmh());
-             * v.setDistanceNaN(userStatistic.getDistanceNaN());
-             * v.setDuration(userStatistic.getDuration());
-             * v.setDurationAbove130kmh(userStatistic.getDurationAbove130kmh());
-             * v.setDurationBelow60kmh(userStatistic.getDurationBelow60kmh());
-             * v.setDurationNaN(userStatistic.getDurationNaN());
-             *
-             * ts = new TrackSummaries(); ts.addTrackSummary(trackSummary);
-             * v.setTrackSummaries(ts);
-             *
-             * this.dao.save(v);
-             */
+            // update mongoUS by this track:
+            // get track measurements:
+            Measurements values = dataService
+                    .getMeasurements(new MeasurementFilter(t));
+            previous = usu.addTrackStatistic(previous, t, values);
+
+            // persistiere
+            this.dao.save(previous);
         }
     }
 

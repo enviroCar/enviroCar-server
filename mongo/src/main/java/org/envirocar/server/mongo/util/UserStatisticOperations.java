@@ -16,13 +16,20 @@
  */
 package org.envirocar.server.mongo.util;
 
+import org.envirocar.server.core.entities.Measurements;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.entities.UserStatistic;
 
 public interface UserStatisticOperations {
 
-	public UserStatistic addTrackStatistic(UserStatistic previous, Track track);
+	public UserStatistic addTrackStatistic(
+                UserStatistic previous, 
+                Track track,
+                Measurements values);
 	
-        public UserStatistic removeTrackStatistic(UserStatistic previous, Track track);
+        public UserStatistic removeTrackStatistic(
+                UserStatistic previous,
+                Track track,
+                Measurements values);
 	
 }

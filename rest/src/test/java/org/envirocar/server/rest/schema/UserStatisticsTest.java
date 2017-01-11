@@ -22,7 +22,9 @@ import com.vividsolutions.jts.geom.Coordinate;
 import java.util.ArrayList;
 import java.util.List;
 import org.envirocar.server.core.entities.Gender;
+import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.MeasurementValue;
+import org.envirocar.server.core.entities.Measurements;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.mongo.entity.MongoMeasurement;
 import org.envirocar.server.mongo.entity.MongoMeasurementValue;
@@ -138,7 +140,10 @@ public class UserStatisticsTest {
         ts.setTrackSummariesList(new ArrayList<>());
         mus.setTrackSummaries(ts);
 
-        MongoUserStatistic result = new UserStatisticUtils().addTrackStatistic(mus, twm);
+        List<Measurement> list = twm.getMeasurements();
+        Measurements measures = Measurements.from(list).build();
+
+        MongoUserStatistic result = new UserStatisticUtils().addTrackStatistic(mus, twm, measures);
 
         // test results:
         assertThat(result.getDistance() - (0.3338 + 0.3614) < TOLERANCE_KM, is(true));
@@ -149,7 +154,7 @@ public class UserStatisticsTest {
         assertThat(result.getDurationAbove130kmh() > 0, is(false));
         assertThat(result.getDistanceNaN() > 0, is(false));
         assertThat(result.getDurationNaN() > 0, is(false));
-        
+
         // test tracksummary:
         assertThat(result.getTrackSummaries().getTrackSummaryList().size() == 1, is(true));
         TrackSummary first = result.getTrackSummaries().getTrackSummaryList().get(0);
@@ -181,8 +186,10 @@ public class UserStatisticsTest {
         ts.addTrackSummary(trackSummary);
 
         mus.setTrackSummaries(ts);
-        
-        MongoUserStatistic result = new UserStatisticUtils().removeTrackStatistic(mus, twm);
+
+        List<Measurement> list = twm.getMeasurements();
+        Measurements measures = Measurements.from(list).build();
+        MongoUserStatistic result = new UserStatisticUtils().removeTrackStatistic(mus, twm, measures);
 
         // test results:
         assertThat(result.getDistance() - 0 < TOLERANCE_KM, is(true));
@@ -240,8 +247,10 @@ public class UserStatisticsTest {
         ts.addTrackSummary(trackSummary);
 
         mus.setTrackSummaries(ts);
-
-        MongoUserStatistic result = new UserStatisticUtils().addTrackStatistic(mus, twm);
+        
+        List<Measurement> list = twm.getMeasurements();
+        Measurements measures = Measurements.from(list).build();
+        MongoUserStatistic result = new UserStatisticUtils().addTrackStatistic(mus, twm, measures);
 
         // test results:
         assertThat(result.getDistance() - (145.2 + 0.3338 + 0.3614 + 1.347) < TOLERANCE_KM, is(true));
@@ -256,10 +265,10 @@ public class UserStatisticsTest {
         // test tracksummary:
         TrackSummary first = result.getTrackSummaries().getTrackSummaryList().get(0);
         TrackSummary second = result.getTrackSummaries().getTrackSummaryList().get(1);
-        
+
         assertThat(result.getTrackSummaries().getTrackSummaryList().size() == 2, is(true));
         assertThat(first.getIdentifier().equals("identifier-123-abc-testtrack"), is(true));
         assertThat(second.getIdentifier().equals("58122cd0e4b01fb1c099aa85"), is(true));
     }
-    
+
 }

@@ -24,7 +24,6 @@ package org.envirocar.server.mongo.entity;
 import com.github.jmkgreen.morphia.Key;
 import com.github.jmkgreen.morphia.annotations.Entity;
 import com.github.jmkgreen.morphia.annotations.Id;
-import com.github.jmkgreen.morphia.annotations.Indexed;
 import com.github.jmkgreen.morphia.annotations.Property;
 import com.github.jmkgreen.morphia.annotations.Transient;
 import org.bson.types.ObjectId;
@@ -32,7 +31,6 @@ import org.bson.types.ObjectId;
 import org.envirocar.server.core.entities.TrackSummaries;
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.entities.UserStatistic;
-import static org.envirocar.server.mongo.entity.MongoTrack.USER;
 
 /**
  *

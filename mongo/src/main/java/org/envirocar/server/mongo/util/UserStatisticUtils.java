@@ -22,6 +22,7 @@ import org.envirocar.server.core.entities.Measurement;
 import java.util.ArrayList;
 import org.envirocar.server.core.entities.MeasurementValue;
 import org.envirocar.server.core.entities.MeasurementValues;
+import org.envirocar.server.core.entities.Measurements;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.entities.TrackSummaries;
 import org.envirocar.server.core.entities.TrackSummary;
@@ -34,15 +35,18 @@ import org.joda.time.DateTime;
 public class UserStatisticUtils implements UserStatisticOperations {
 
     @Override
-    public MongoUserStatistic addTrackStatistic(UserStatistic previous, Track track) {
+    public MongoUserStatistic addTrackStatistic(
+            UserStatistic previous, 
+            Track track,
+            Measurements values) {
         GeodesicGeometryOperations ggo = new GeodesicGeometryOperations();
 
         // calculate statistics of Track and add to resulting UserStatistics:
         MongoUserStatistic updatedUserStatistics = new MongoUserStatistic();
         TrackSummary ts;
         
-        if (track instanceof Iterable) {
-            Iterable<Measurement> measurementIterator = (Iterable<Measurement>) track;
+        if (values instanceof Iterable) {
+            Iterable<Measurement> measurementIterator = (Iterable<Measurement>) values;
             List<Measurement> list = new ArrayList();
             for (Measurement m : measurementIterator) {
                 list.add(m);
@@ -75,8 +79,8 @@ public class UserStatisticUtils implements UserStatisticOperations {
 
                 // b. fill dist and dura according to intervals <60,>130,NaN:
                 Double speed = null;
-                MeasurementValues values = m_this.getValues();
-                for (MeasurementValue value : values) {
+                MeasurementValues m_values = m_this.getValues();
+                for (MeasurementValue value : m_values) {
                     if (value.getPhenomenon().getName().equals("Speed")) {
                         speed = (double) ((Integer) value.getValue());
                         break;
@@ -127,7 +131,6 @@ public class UserStatisticUtils implements UserStatisticOperations {
         } else {
             // track has no measurements. put empty zeros:
             TrackSummaries trackSummaries = previous.getTrackSummaries();
-
             updatedUserStatistics.setDistance(0.5);
             updatedUserStatistics.setDistanceBelow60kmh(0);
             updatedUserStatistics.setDistanceAbove130kmh(0);
@@ -136,7 +139,7 @@ public class UserStatisticUtils implements UserStatisticOperations {
             updatedUserStatistics.setDurationBelow60kmh(0);
             updatedUserStatistics.setDurationAbove130kmh(0);
             updatedUserStatistics.setDurationNaN(0);
-
+            
             updatedUserStatistics.setTrackSummaries(trackSummaries);
         }
 
@@ -144,15 +147,18 @@ public class UserStatisticUtils implements UserStatisticOperations {
     }
 
     @Override
-    public MongoUserStatistic removeTrackStatistic(UserStatistic previous, Track track) {
+    public MongoUserStatistic removeTrackStatistic(
+            UserStatistic previous, 
+            Track track,
+            Measurements values) {
         GeodesicGeometryOperations ggo = new GeodesicGeometryOperations();
 
         // calculate statistics of Track and add to resulting UserStatistics:
         MongoUserStatistic updatedUserStatistics = new MongoUserStatistic();
         TrackSummary trackSummary;
 
-        if (track instanceof Iterable) {
-            Iterable<Measurement> measurementIterator = (Iterable<Measurement>) track;
+        if (values instanceof Iterable) {
+            Iterable<Measurement> measurementIterator = (Iterable<Measurement>) values;
             List<Measurement> list = new ArrayList();
             for (Measurement m : measurementIterator) {
                 list.add(m);
@@ -185,8 +191,8 @@ public class UserStatisticUtils implements UserStatisticOperations {
 
                 // b. fill dist and dura according to intervals <60,>130,NaN:
                 Double speed = null;
-                MeasurementValues values = m_this.getValues();
-                for (MeasurementValue value : values) {
+                MeasurementValues m_values = m_this.getValues();
+                for (MeasurementValue value : m_values) {
                     if (value.getPhenomenon().getName().equals("Speed")) {
                         speed = (double) ((Integer) value.getValue());
                         break;
