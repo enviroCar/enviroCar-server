@@ -31,16 +31,23 @@ import java.util.List;
 public class TrackSummaries {
 
     private List<TrackSummary> tracklist;
+    
+    public TrackSummaries(){
+        this.tracklist = new ArrayList<>();
+    }
 
     public TrackSummaries getTrackSummaries() {
         return this;
     }
 
     public List<TrackSummary> getTrackSummaryList() {
+        if (this.tracklist == null){
+            this.tracklist = new ArrayList<>();
+        }
         return this.tracklist;
     }
 
-    public void setTrackSummaries(List<TrackSummary> trackSummaries) {
+    public void setTrackSummariesList(List<TrackSummary> trackSummaries) {
         this.tracklist = trackSummaries;
     }
 

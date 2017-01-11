@@ -40,7 +40,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import javax.ws.rs.core.MediaType;
 import org.envirocar.server.core.event.DeletedTrackEvent;
 
 @Singleton

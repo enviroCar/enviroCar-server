@@ -14,31 +14,15 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.core;
+package org.envirocar.server.mongo.util;
 
-import org.envirocar.server.core.filter.UserStatisticFilter;
-
-import com.google.inject.Inject;
-import org.envirocar.server.core.dao.UserStatisticDao;
+import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.entities.UserStatistic;
 
-/**
- * TODO JavaDoc
- *
- * @author Maurin Radtke <maurin.radtke@uni-muenster.de>
- */
-public class UserStatisticServiceImpl implements UserStatisticService {
+public interface UserStatisticOperations {
 
-    private final UserStatisticDao dao;
-
-    @Inject
-    public UserStatisticServiceImpl(UserStatisticDao dao) {
-        this.dao = dao;
-    }
-
-    @Override
-    public UserStatistic getUserStatistic(UserStatisticFilter request) {
-         return this.dao.get(request);
-    }
-    
+	public UserStatistic addTrackStatistic(UserStatistic previous, Track track);
+	
+        public UserStatistic removeTrackStatistic(UserStatistic previous, Track track);
+	
 }

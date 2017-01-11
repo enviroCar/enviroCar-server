@@ -43,8 +43,6 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.PrecisionModel;
 import org.envirocar.server.core.CarSimilarityService;
 import org.envirocar.server.core.CarSimilarityServiceImpl;
-import org.envirocar.server.core.entities.TrackSummaries;
-import org.envirocar.server.core.entities.TrackSummary;
 import org.envirocar.server.core.UserStatisticService;
 
 /**
