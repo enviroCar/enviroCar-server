@@ -17,6 +17,7 @@
 package org.envirocar.server.core.dao;
 
 import java.util.List;
+import org.envirocar.server.core.entities.Measurements;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.entities.UserStatistic;
 import org.envirocar.server.core.filter.UserStatisticFilter;
@@ -27,22 +28,7 @@ import org.envirocar.server.core.filter.UserStatisticFilter;
  * @author Maurin Radtke <maurin.radtke@uni-muenster.de>
  */
 public interface UserStatisticDao {
-    
-    /**
-     * Get the {@code UserStatistic} with the specified identifier.
-     * 
-     * @param identifier the identifier
-     * @return the {@code UserStatistic}
-     */
-    UserStatistic getById(String identifier);
-    
-    /**
-     * Save the supplied {@code UserStatistic}.
-     * @param userStatistic the UserStatistic
-     * @return the {@code UserStatistic}
-     */
-    UserStatistic create(UserStatistic userStatistic);
-    
+  
     /**
      * Get the {@code UserStatistic}s matching the specified filter.
      *
@@ -52,7 +38,7 @@ public interface UserStatisticDao {
      */
     UserStatistic get(UserStatisticFilter request);
     
-    public void updateStatisticsOnTrackDeletion(Track e);
+    public void updateStatisticsOnTrackDeletion(Track e, Measurements m);
     
     public void updateStatisticsOnNewTrack(Track e);
     

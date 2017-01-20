@@ -26,13 +26,13 @@ import com.google.inject.Inject;
 import com.vividsolutions.jts.geom.Geometry;
 import org.envirocar.server.core.entities.TrackSummaries;
 import org.envirocar.server.core.entities.TrackSummary;
-import org.envirocar.server.core.entities.User;
-
 import org.envirocar.server.rest.JSONConstants;
 import org.envirocar.server.rest.encoding.JSONEntityEncoder;
 
 import org.envirocar.server.rest.rights.AccessRights;
 import org.envirocar.server.core.entities.UserStatistic;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * TODO JavaDoc
@@ -42,15 +42,14 @@ import org.envirocar.server.core.entities.UserStatistic;
 @Provider
 public class UserStatisticJSONEncoder extends AbstractJSONEntityEncoder<UserStatistic> {
 
-    private final JSONEntityEncoder<User> userProvider;
+    private static final Logger log = LoggerFactory.getLogger(UserStatisticJSONEncoder.class);
+
     private final JSONEntityEncoder<Geometry> geometryEncoder;
 
     @Inject
     public UserStatisticJSONEncoder(
-            JSONEntityEncoder<User> userProvider,
             JSONEntityEncoder<Geometry> geometryEncoder) {
         super(UserStatistic.class);
-        this.userProvider = userProvider;
         this.geometryEncoder = geometryEncoder;
     }
 
@@ -62,8 +61,7 @@ public class UserStatisticJSONEncoder extends AbstractJSONEntityEncoder<UserStat
 
         ObjectNode userStatistics = getJsonFactory().objectNode();
         /**
-         * userStatistics.put(JSONConstants.USER_KEY,
-                t.getUser().getName());
+         * userStatistics.put(JSONConstants.USER_KEY, t.getUser().getName());
          */
 
         //if (rights.canSeeUserStatisticsOf(t.getUser())) {
@@ -102,20 +100,18 @@ public class UserStatisticJSONEncoder extends AbstractJSONEntityEncoder<UserStat
         NaN.putPOJO(JSONConstants.DURATION_KEY,
                 t.getDurationNaN());
 
-        if (t.hasTrackSummaries()) {
-            userStatistics
-                    .put(
-                            JSONConstants.TRACKSUMMARIES_KEY,
-                            getTrackSummeries(t.getTrackSummaries(), rights, mt)
-                    );
-        }
+        userStatistics
+                .put(
+                        JSONConstants.TRACKSUMMARIES_KEY,
+                        getTrackSummeries(t.getTrackSummaries(), rights, mt)
+                );
         //}
         return userStatistics;
     }
 
     private JsonNode getTrackSummeries(TrackSummaries t, AccessRights rights, MediaType mediaType) {
         ArrayNode result = getJsonFactory().arrayNode();
-        try {
+        if (t.hasTrackSummaries()) {
             // getTrackSummaryList() might throw an NullPointerException if its empty
             for (TrackSummary item : t.getTrackSummaryList()) {
                 ObjectNode ts = result.addObject();
@@ -137,8 +133,8 @@ public class UserStatisticJSONEncoder extends AbstractJSONEntityEncoder<UserStat
                                     .encodeJSON(item.getEndPosition(), rights, mediaType));
                 }
             }
-        } catch (NullPointerException npe) {
-            // keep result an empty array: []
+        } else {
+            // keep result as an empty jsonarray:   [  ]
         }
         return result;
     }

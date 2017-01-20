@@ -14,31 +14,34 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.envirocar.server.mongo.entity;
 
-import com.github.jmkgreen.morphia.Key;
+import com.github.jmkgreen.morphia.annotations.Embedded;
 import com.github.jmkgreen.morphia.annotations.Entity;
 import com.github.jmkgreen.morphia.annotations.Id;
+import com.github.jmkgreen.morphia.annotations.Indexed;
 import com.github.jmkgreen.morphia.annotations.Property;
-import com.github.jmkgreen.morphia.annotations.Transient;
-import org.bson.types.ObjectId;
+import com.github.jmkgreen.morphia.mapping.Mapper;
 
 import org.envirocar.server.core.entities.TrackSummaries;
-import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.entities.UserStatistic;
+
+import com.google.common.base.Objects;
+
+import org.joda.time.DateTime;
 
 /**
  *
  * @author Maurin Radtke <maurin.radtke@uni-muenster.de>
  */
 @Entity("userstatistic")
-public class MongoUserStatistic extends MongoEntityBase implements UserStatistic {
+public class MongoUserStatistic implements UserStatistic {
 
+    public static final int METER_TOLERANCE = 1000;    
+    public static final int SECOND_TOLERANCE = 10000;
+
+    public static final String KEY = Mapper.ID_KEY;
+    public static final String CREATED = "created";
     public static final String DIST_TOTAL = "distance";
     public static final String DURA_TOTAL = "duration";
     public static final String DIST_BELOW60KMH = "distanceBelow60kmh";
@@ -51,11 +54,11 @@ public class MongoUserStatistic extends MongoEntityBase implements UserStatistic
     public static final String USER = "user";
 
     @Id
-    private ObjectId id = new ObjectId();
-    @Property(USER)
-    private Key<MongoUser> user;
-    @Transient
-    private MongoUser _user;
+    @Embedded
+    private MongoUserStatisticKey key;
+    @Indexed
+    @Property(CREATED)
+    private DateTime created = new DateTime();
     @Property(DIST_TOTAL)
     private double distance;
     @Property(DURA_TOTAL)
@@ -75,23 +78,49 @@ public class MongoUserStatistic extends MongoEntityBase implements UserStatistic
     @Property(TRACKSUMMARIES)
     private TrackSummaries trackSummaries;
 
+    public MongoUserStatistic() {
+    }
+
+    public MongoUserStatistic(MongoUserStatisticKey key) {
+        this.key = key;
+        this.distance = 0;
+        this.duration = 0;
+        this.distanceAbove130kmh = 0;
+        this.durationAbove130kmh = 0;
+        this.distanceBelow60kmh = 0;
+        this.durationBelow60kmh = 0;
+        this.distanceNaN = 0;
+        this.durationNaN = 0;
+        this.trackSummaries = new TrackSummaries();
+    }
+
+    public DateTime getCreated() {
+        return this.created;
+    }
+
+    public MongoUserStatisticKey getKey() {
+        return this.key;
+    }
+
+    public void setKey(MongoUserStatisticKey key) {
+        this.key = key;
+    }
+
     @Override
-    public User getUser() {
-        if (this._user == null) {
-            this._user = getMongoDB().deref(MongoUser.class, this.user);
+    public int hashCode() {
+        return Objects.hashCode(this.key);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
         }
-        return this._user;
-    }
-
-    @Override
-    public void setUser(User user) {
-        this._user = (MongoUser) user;
-        this.user = getMongoDB().key(this._user);
-    }
-
-    @Override
-    public boolean hasUser() {
-        return getUser() != null;
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final MongoUserStatistic other = (MongoUserStatistic) obj;
+        return Objects.equal(this.key, other.key);
     }
 
     @Override
@@ -101,7 +130,7 @@ public class MongoUserStatistic extends MongoEntityBase implements UserStatistic
 
     @Override
     public void setDistance(double distance) {
-        this.distance = distance;
+        this.distance = round_by_meters(distance);
     }
 
     @Override
@@ -111,7 +140,7 @@ public class MongoUserStatistic extends MongoEntityBase implements UserStatistic
 
     @Override
     public void setDuration(double duration) {
-        this.duration = duration;
+        this.duration = round_by_seconds(duration);
     }
 
     @Override
@@ -121,7 +150,7 @@ public class MongoUserStatistic extends MongoEntityBase implements UserStatistic
 
     @Override
     public void setDistanceBelow60kmh(double distanceBelow60kmh) {
-        this.distanceBelow60kmh = distanceBelow60kmh;
+        this.distanceBelow60kmh = round_by_meters(distanceBelow60kmh);
     }
 
     @Override
@@ -131,7 +160,7 @@ public class MongoUserStatistic extends MongoEntityBase implements UserStatistic
 
     @Override
     public void setDurationBelow60kmh(double durationBelow60kmh) {
-        this.durationBelow60kmh = durationBelow60kmh;
+        this.durationBelow60kmh = round_by_seconds(durationBelow60kmh);
     }
 
     @Override
@@ -141,7 +170,7 @@ public class MongoUserStatistic extends MongoEntityBase implements UserStatistic
 
     @Override
     public void setDistanceAbove130kmh(double distanceAbove130kmh) {
-        this.distanceAbove130kmh = distanceAbove130kmh;
+        this.distanceAbove130kmh = round_by_meters(distanceAbove130kmh);
     }
 
     @Override
@@ -151,9 +180,9 @@ public class MongoUserStatistic extends MongoEntityBase implements UserStatistic
 
     @Override
     public void setDurationAbove130kmh(double durationAbove130kmh) {
-        this.durationAbove130kmh = durationAbove130kmh;
+        this.durationAbove130kmh = round_by_seconds(durationAbove130kmh);
     }
-    
+
     @Override
     public double getDistanceNaN() {
         return this.distanceNaN;
@@ -161,7 +190,7 @@ public class MongoUserStatistic extends MongoEntityBase implements UserStatistic
 
     @Override
     public void setDistanceNaN(double distance) {
-        this.distanceNaN = distance;
+        this.distanceNaN = round_by_meters(distance);
     }
 
     @Override
@@ -171,7 +200,7 @@ public class MongoUserStatistic extends MongoEntityBase implements UserStatistic
 
     @Override
     public void setDurationNaN(double duration) {
-        this.durationNaN = duration;
+        this.durationNaN = round_by_seconds(duration);
     }
 
     @Override
@@ -187,6 +216,16 @@ public class MongoUserStatistic extends MongoEntityBase implements UserStatistic
     @Override
     public boolean hasTrackSummaries() {
         return (this.trackSummaries != null);
+    }
+    
+    private double round_by_meters(double distance){
+        double rounded = Math.round(distance * METER_TOLERANCE);
+        return rounded / METER_TOLERANCE;
+    }
+    
+    private double round_by_seconds(double duration){
+        double rounded = Math.round(duration * SECOND_TOLERANCE);
+        return rounded / SECOND_TOLERANCE;
     }
 
 }

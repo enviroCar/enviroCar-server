@@ -26,13 +26,7 @@ package org.envirocar.server.core.entities;
  *
  * @author Maurin Radtke <Maurin.Radtke@uni-muenster.de>
  */
-public interface UserStatistic extends BaseEntity {
-    
-    User getUser();
-    
-    void setUser(User user);
-    
-    boolean hasUser();
+public interface UserStatistic {
     
     double getDistance();
     

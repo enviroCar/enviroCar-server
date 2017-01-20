@@ -16,8 +16,6 @@
  */
 package org.envirocar.server.mongo.convert;
 
-import java.math.BigDecimal;
-
 import org.envirocar.server.core.entities.DimensionedNumber;
 
 import com.github.jmkgreen.morphia.converters.SimpleValueConverter;
@@ -53,6 +51,13 @@ public class TrackSummariesConverter
         super(TrackSummaries.class);
     }
 
+    /**
+     * FIX ME: encode & decode as defined in the Schemas: via geometry objects
+     * instead off double lat,lng, ...
+     * @param trackSummaries
+     * @param optionalExtraInfo
+     * @return 
+     */
     @Override
     public Object encode(Object trackSummaries, MappedField optionalExtraInfo) {
         if (trackSummaries == null) {
@@ -62,7 +67,7 @@ public class TrackSummariesConverter
         List<TrackSummary> trackSummaryList = dn.getTrackSummaryList();
         BasicDBList bdbl  = new BasicDBList();
         for (int i = 0; i < trackSummaryList.size(); i++){
-            TrackSummary ts = trackSummaryList.get(0);
+            TrackSummary ts = trackSummaryList.get(i);
             double startLng = ts.getStartPosition().getCoordinate().x;
             double startLat = ts.getStartPosition().getCoordinate().y;
             double endLng = ts.getEndPosition().getCoordinate().x;
@@ -79,6 +84,15 @@ public class TrackSummariesConverter
         return bdbl;
     }
 
+    /**
+     *  * FIX ME: encode & decode as defined in the Schemas: via geometry objects
+     * instead off double lat,lng, ...
+     * @param c
+     * @param o
+     * @param i
+     * @return
+     * @throws MappingException 
+     */
     @Override
     public TrackSummaries decode(Class c, Object o, MappedField i) throws
             MappingException {
@@ -138,8 +152,7 @@ public class TrackSummariesConverter
 
                 GeometryFactory geomFac = new GeometryFactory();
                 Coordinate startPt = new Coordinate(value, value2);
-                Coordinate endPt
-                        = new Coordinate(value3, value4);
+                Coordinate endPt = new Coordinate(value3, value4);
                 Geometry startPos
                         = geomFac.createPoint(startPt);
                 Geometry endPos

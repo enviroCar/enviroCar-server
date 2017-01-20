@@ -70,6 +70,7 @@ import org.joda.time.DateTime;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
+import java.util.ArrayList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -81,9 +82,9 @@ import org.slf4j.LoggerFactory;
  * @author Jan Wirwahn <jan.wirwahn@wwu.de>
  */
 public class DataServiceImpl implements DataService {
-    
+
     private static final Logger log = LoggerFactory.getLogger(DataServiceImpl.class);
-    
+
     private final TrackDao trackDao;
     private final MeasurementDao measurementDao;
     private final SensorDao sensorDao;
@@ -96,25 +97,25 @@ public class DataServiceImpl implements DataService {
     private final EntityValidator<Measurement> measurementValidator;
     private final EntityValidator<Fueling> fuelingValidator;
     private final EventBus eventBus;
-	private final AnnouncementsDao announcementsDao;
-	private final BadgesDao badgesDao;
-	private final GeometryOperations geomOps;
+    private final AnnouncementsDao announcementsDao;
+    private final BadgesDao badgesDao;
+    private final GeometryOperations geomOps;
     private final CarSimilarityService carSimilarity;
 
     @Inject
     public DataServiceImpl(TrackDao trackDao, MeasurementDao measurementDao,
-                           SensorDao sensorDao, PhenomenonDao phenomenonDao,
-                           TermsOfUseDao termsOfUseDao,
-                           AnnouncementsDao announcementsDao,
-                           BadgesDao badgesDao, FuelingDao fuelingDao,
-                           EntityValidator<Track> trackValidator,
-                           EntityUpdater<Track> trackUpdater,
-                           EntityUpdater<Measurement> measurementUpdater,
-                           EntityValidator<Measurement> measurementValidator,
-                           EntityValidator<Fueling> fuelingValidator,
-                           EventBus eventBus,
-                           GeometryOperations geomOps,
-                           CarSimilarityService carSimilarity) {
+            SensorDao sensorDao, PhenomenonDao phenomenonDao,
+            TermsOfUseDao termsOfUseDao,
+            AnnouncementsDao announcementsDao,
+            BadgesDao badgesDao, FuelingDao fuelingDao,
+            EntityValidator<Track> trackValidator,
+            EntityUpdater<Track> trackUpdater,
+            EntityUpdater<Measurement> measurementUpdater,
+            EntityValidator<Measurement> measurementValidator,
+            EntityValidator<Fueling> fuelingValidator,
+            EventBus eventBus,
+            GeometryOperations geomOps,
+            CarSimilarityService carSimilarity) {
         this.trackDao = trackDao;
         this.measurementDao = measurementDao;
         this.sensorDao = sensorDao;
@@ -177,11 +178,11 @@ public class DataServiceImpl implements DataService {
         }
         track.setBegin(begin);
         track.setEnd(end);
-        
+
         if (!track.hasLength()) {
-        	track.setLength(geomOps.calculateLength(measurements));
+            track.setLength(geomOps.calculateLength(measurements));
         }
-        
+
         this.trackDao.create(track);
         for (Measurement m : measurements) {
             this.measurementDao.create(m);
@@ -192,7 +193,15 @@ public class DataServiceImpl implements DataService {
 
     @Override
     public void deleteTrack(Track track) {
-        this.eventBus.post(new DeletedTrackEvent(track, track.getUser()));
+        MeasurementFilter filter = new MeasurementFilter(track);
+        Measurements measurements = getMeasurements(filter);
+        Iterable<Measurement> measurementIterator = (Iterable<Measurement>) measurements;
+        List<Measurement> list = new ArrayList();
+        for (Measurement m : measurementIterator) {
+            list.add(m);
+        }
+        log.debug(list.size()+"");
+        this.eventBus.post(new DeletedTrackEvent(track, track.getUser(), measurements));
         this.trackDao.delete(track);
     }
 
@@ -274,7 +283,7 @@ public class DataServiceImpl implements DataService {
         } catch (ResourceNotFoundException ex) {
             log.info("No equivalent sensor found, creating new");
         }
-        
+
         Sensor s = this.sensorDao.create(sensor);
         this.eventBus.post(new CreatedSensorEvent(s));
         return s;
@@ -295,40 +304,40 @@ public class DataServiceImpl implements DataService {
         return this.sensorDao.get(request);
     }
 
-	@Override
-	public TermsOfUse getTermsOfUse(Pagination p) {
-		return this.termsOfUseDao.get(p);
-	}
+    @Override
+    public TermsOfUse getTermsOfUse(Pagination p) {
+        return this.termsOfUseDao.get(p);
+    }
 
-	@Override
-	public TermsOfUseInstance getTermsOfUseInstance(String id)
-			throws ResourceNotFoundException {
-		TermsOfUseInstance result = this.termsOfUseDao.getById(id);
-		if (result == null) {
-			throw new ResourceNotFoundException(String.format("TermsOfUse with id '%s' not found.", id));
-		}
-		return result;
-	}
+    @Override
+    public TermsOfUseInstance getTermsOfUseInstance(String id)
+            throws ResourceNotFoundException {
+        TermsOfUseInstance result = this.termsOfUseDao.getById(id);
+        if (result == null) {
+            throw new ResourceNotFoundException(String.format("TermsOfUse with id '%s' not found.", id));
+        }
+        return result;
+    }
 
-	@Override
-	public Announcements getAnnouncements(Pagination pagination) {
-		return this.announcementsDao.get(pagination);
-	}
+    @Override
+    public Announcements getAnnouncements(Pagination pagination) {
+        return this.announcementsDao.get(pagination);
+    }
 
-	@Override
-	public Announcement getAnnouncement(String id)
-			throws ResourceNotFoundException {
-		Announcement result = this.announcementsDao.getById(id);
-		if (result == null) {
-			throw new ResourceNotFoundException(String.format("Announcement with id '%s' not found.", id));
-		}
-		return result;
-	}
+    @Override
+    public Announcement getAnnouncement(String id)
+            throws ResourceNotFoundException {
+        Announcement result = this.announcementsDao.getById(id);
+        if (result == null) {
+            throw new ResourceNotFoundException(String.format("Announcement with id '%s' not found.", id));
+        }
+        return result;
+    }
 
-	@Override
-	public Badges getBadges(Pagination pagination) {
-		return this.badgesDao.get(pagination);
-	}
+    @Override
+    public Badges getBadges(Pagination pagination) {
+        return this.badgesDao.get(pagination);
+    }
 
     @Override
     public Fueling createFueling(Fueling fueling) {

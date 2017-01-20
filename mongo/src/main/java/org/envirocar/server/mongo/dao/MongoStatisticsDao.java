@@ -122,6 +122,7 @@ public class MongoStatisticsDao implements StatisticsDao {
                 /*
                 overall stats
                 */
+               
                 this.scheduler.updateStatistics(request, key, calculateFunction, true);
                 v = this.dao.get(key);
             }

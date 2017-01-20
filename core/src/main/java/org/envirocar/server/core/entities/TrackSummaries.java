@@ -61,6 +61,8 @@ public class TrackSummaries {
     }
 
     public boolean hasTrackSummaries() {
+        if (this.tracklist == null)
+            return false;
         return (!this.tracklist.isEmpty());
     }
 

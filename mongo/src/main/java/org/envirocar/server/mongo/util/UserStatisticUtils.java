@@ -26,26 +26,26 @@ import org.envirocar.server.core.entities.Measurements;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.entities.TrackSummaries;
 import org.envirocar.server.core.entities.TrackSummary;
-import org.envirocar.server.core.entities.UserStatistic;
 import org.envirocar.server.core.util.GeodesicGeometryOperations;
 import org.envirocar.server.mongo.entity.MongoUserStatistic;
 
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class UserStatisticUtils implements UserStatisticOperations {
 
+    private static final Logger log = LoggerFactory.getLogger(UserStatisticUtils.class);
+
     @Override
     public MongoUserStatistic addTrackStatistic(
-            UserStatistic previous, 
+            MongoUserStatistic previous, 
             Track track,
             Measurements values) {
         GeodesicGeometryOperations ggo = new GeodesicGeometryOperations();
 
-        // calculate statistics of Track and add to resulting UserStatistics:
-        MongoUserStatistic updatedUserStatistics = new MongoUserStatistic();
-        TrackSummary ts;
-        
         if (values instanceof Iterable) {
+            
             Iterable<Measurement> measurementIterator = (Iterable<Measurement>) values;
             List<Measurement> list = new ArrayList();
             for (Measurement m : measurementIterator) {
@@ -82,7 +82,7 @@ public class UserStatisticUtils implements UserStatisticOperations {
                 MeasurementValues m_values = m_this.getValues();
                 for (MeasurementValue value : m_values) {
                     if (value.getPhenomenon().getName().equals("Speed")) {
-                        speed = (double) ((Integer) value.getValue());
+                        speed = (double) value.getValue();
                         break;
                     }
                 }
@@ -110,52 +110,44 @@ public class UserStatisticUtils implements UserStatisticOperations {
             Measurement valuesStart = list.get(0);
             Measurement valuesEnd = list.get(list.size()-1);
 
-            ts = new TrackSummary();
+            TrackSummary ts = new TrackSummary();
             ts.setStartPosition(valuesStart.getGeometry());
             ts.setEndPosition(valuesEnd.getGeometry());
             ts.setIdentifier(track.getIdentifier());
             TrackSummaries trackSummaries = previous.getTrackSummaries();
             trackSummaries.addTrackSummary(ts);
 
-            updatedUserStatistics.setDistance(previous.getDistance() + total_dist);
-            updatedUserStatistics.setDistanceBelow60kmh(previous.getDistanceBelow60kmh() + total_dist60);
-            updatedUserStatistics.setDistanceAbove130kmh(previous.getDistanceAbove130kmh() + total_dist130);
-            updatedUserStatistics.setDistanceNaN(previous.getDistanceNaN() + total_distNaN);
-            updatedUserStatistics.setDuration(previous.getDuration() + total_dura);
-            updatedUserStatistics.setDurationBelow60kmh(previous.getDurationBelow60kmh() + total_dura60);
-            updatedUserStatistics.setDurationAbove130kmh(previous.getDurationAbove130kmh() + total_dura130);
-            updatedUserStatistics.setDurationNaN(previous.getDurationNaN() + total_duraNaN);
+            previous.setDistance(
+                    previous.getDistance() + total_dist);
+            previous.setDistanceBelow60kmh(
+                    previous.getDistanceBelow60kmh() + total_dist60);
+            previous.setDistanceAbove130kmh(
+                    previous.getDistanceAbove130kmh() + total_dist130);
+            previous.setDistanceNaN(
+                    previous.getDistanceNaN() + total_distNaN);
+            previous.setDuration(
+                    previous.getDuration() + total_dura);
+            previous.setDurationBelow60kmh(
+                    previous.getDurationBelow60kmh() + total_dura60);
+            previous.setDurationAbove130kmh(
+                    previous.getDurationAbove130kmh() + total_dura130);
+            previous.setDurationNaN(
+                    previous.getDurationNaN() + total_duraNaN);
 
             // update TrackSummaries:
-            updatedUserStatistics.setTrackSummaries(trackSummaries);
+            previous.setTrackSummaries(trackSummaries);
         } else {
-            // track has no measurements. put empty zeros:
-            TrackSummaries trackSummaries = previous.getTrackSummaries();
-            updatedUserStatistics.setDistance(0.5);
-            updatedUserStatistics.setDistanceBelow60kmh(0);
-            updatedUserStatistics.setDistanceAbove130kmh(0);
-            updatedUserStatistics.setDistanceNaN(0);
-            updatedUserStatistics.setDuration(0);
-            updatedUserStatistics.setDurationBelow60kmh(0);
-            updatedUserStatistics.setDurationAbove130kmh(0);
-            updatedUserStatistics.setDurationNaN(0);
-            
-            updatedUserStatistics.setTrackSummaries(trackSummaries);
+            log.error("no measurements for track available...");
         }
-
-        return updatedUserStatistics;
+        return previous;
     }
 
     @Override
     public MongoUserStatistic removeTrackStatistic(
-            UserStatistic previous, 
+            MongoUserStatistic previous, 
             Track track,
             Measurements values) {
         GeodesicGeometryOperations ggo = new GeodesicGeometryOperations();
-
-        // calculate statistics of Track and add to resulting UserStatistics:
-        MongoUserStatistic updatedUserStatistics = new MongoUserStatistic();
-        TrackSummary trackSummary;
 
         if (values instanceof Iterable) {
             Iterable<Measurement> measurementIterator = (Iterable<Measurement>) values;
@@ -194,7 +186,7 @@ public class UserStatisticUtils implements UserStatisticOperations {
                 MeasurementValues m_values = m_this.getValues();
                 for (MeasurementValue value : m_values) {
                     if (value.getPhenomenon().getName().equals("Speed")) {
-                        speed = (double) ((Integer) value.getValue());
+                        speed = (double) value.getValue();
                         break;
                     }
                 }
@@ -222,32 +214,32 @@ public class UserStatisticUtils implements UserStatisticOperations {
             Measurement valuesStart = list.get(0);
             Measurement valuesEnd = list.get(list.size()-1);
 
-            updatedUserStatistics.setDistance(
+            previous.setDistance(
                     previous.getDistance() - total_dist
             );
-            updatedUserStatistics.setDistanceAbove130kmh(
+            previous.setDistanceAbove130kmh(
                     previous.getDistanceAbove130kmh() - total_dist130
             );
-            updatedUserStatistics.setDistanceBelow60kmh(
+            previous.setDistanceBelow60kmh(
                     previous.getDistanceBelow60kmh() - total_dist60
             );
-            updatedUserStatistics.setDistanceNaN(
+            previous.setDistanceNaN(
                     previous.getDistanceNaN() - total_distNaN
             );
-            updatedUserStatistics.setDuration(
+            previous.setDuration(
                     previous.getDuration() - total_dura
             );
-            updatedUserStatistics.setDurationAbove130kmh(
+            previous.setDurationAbove130kmh(
                     previous.getDurationAbove130kmh() - total_dura130
             );
-            updatedUserStatistics.setDurationBelow60kmh(
+            previous.setDurationBelow60kmh(
                     previous.getDurationBelow60kmh() - total_dura60
             );
-            updatedUserStatistics.setDurationNaN(
+            previous.setDurationNaN(
                     previous.getDurationNaN() - total_duraNaN
             );
 
-            trackSummary = new TrackSummary();
+            TrackSummary trackSummary = new TrackSummary();
             trackSummary.setStartPosition(valuesStart.getGeometry());
             trackSummary.setEndPosition(valuesEnd.getGeometry());
             trackSummary.setIdentifier(track.getIdentifier());
@@ -263,23 +255,13 @@ public class UserStatisticUtils implements UserStatisticOperations {
                 }
             }
             // update TrackSummaries:
-            updatedUserStatistics.setTrackSummaries(resultSummaries);
+            previous.setTrackSummaries(resultSummaries);
 
         } else {
-            // track is not instance of iterable
-            updatedUserStatistics.setDistance(0);
-            updatedUserStatistics.setDistanceBelow60kmh(0);
-            updatedUserStatistics.setDistanceAbove130kmh(0);
-            updatedUserStatistics.setDistanceNaN(0);
-            updatedUserStatistics.setDuration(0);
-            updatedUserStatistics.setDurationBelow60kmh(0);
-            updatedUserStatistics.setDurationAbove130kmh(0);
-            updatedUserStatistics.setDurationNaN(0);
-
-            updatedUserStatistics.setTrackSummaries(previous.getTrackSummaries());
+            log.error("no measurements for track available...");
         }
 
-        return updatedUserStatistics;
+        return previous;
     }
 
 }

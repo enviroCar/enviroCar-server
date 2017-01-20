@@ -68,7 +68,7 @@ public class HTTPPushListener {
     public void onCreatedTrackEvent(CreatedTrackEvent e) {
         pushNewTrack(e.getTrack());
     }
-
+    
     public void onDeletedTrackEvent(DeletedTrackEvent e) {
         popDeletedTrack(e.getTrack());
     }

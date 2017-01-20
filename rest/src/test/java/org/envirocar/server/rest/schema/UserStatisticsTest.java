@@ -21,7 +21,6 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Coordinate;
 import java.util.ArrayList;
 import java.util.List;
-import org.envirocar.server.core.entities.Gender;
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.MeasurementValue;
 import org.envirocar.server.core.entities.Measurements;
@@ -29,14 +28,11 @@ import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.mongo.entity.MongoMeasurement;
 import org.envirocar.server.mongo.entity.MongoMeasurementValue;
 import org.envirocar.server.mongo.entity.MongoTrack;
-import org.envirocar.server.mongo.entity.MongoUser;
 import org.envirocar.server.mongo.entity.MongoPhenomenon;
 import org.envirocar.server.mongo.entity.MongoUserStatistic;
-import org.envirocar.server.mongo.dao.MongoUserStatisticDao;
 import org.envirocar.server.core.entities.TrackSummaries;
 import org.envirocar.server.core.entities.TrackSummary;
 import org.envirocar.server.core.entities.UserStatistic;
-import org.envirocar.server.core.filter.UserStatisticFilter;
 import org.envirocar.server.mongo.util.UserStatisticUtils;
 import org.envirocar.server.rest.TrackWithMeasurments;
 import org.joda.time.DateTime;
@@ -44,7 +40,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -80,7 +75,7 @@ public class UserStatisticsTest {
         measurement1.setGeometry(g1);
         measurement1.setTime(begin);
         MeasurementValue mv = new MongoMeasurementValue();
-        mv.setValue(10);
+        mv.setValue(10.0);
         MongoPhenomenon mp = new MongoPhenomenon();
         mp.setName("Speed");
         mp.setUnit("km/h");
@@ -96,7 +91,7 @@ public class UserStatisticsTest {
         DateTime time2 = new DateTime(2016, 7, 23, 8, 53, 10);
         measurement2.setTime(time2);
         MeasurementValue mv2 = new MongoMeasurementValue();
-        mv2.setValue(100);
+        mv2.setValue(100.0);
         MongoPhenomenon mp2 = new MongoPhenomenon();
         mp2.setName("Speed");
         mp2.setUnit("km/h");
@@ -112,7 +107,7 @@ public class UserStatisticsTest {
         DateTime time3 = new DateTime(2016, 7, 23, 8, 53, 15);
         measurement3.setTime(time3);
         MeasurementValue mv3 = new MongoMeasurementValue();
-        mv3.setValue(133);
+        mv3.setValue(133.0);
         MongoPhenomenon mp3 = new MongoPhenomenon();
         mp3.setName("Speed");
         mp3.setUnit("km/h");

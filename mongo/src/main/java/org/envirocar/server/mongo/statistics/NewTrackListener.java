@@ -28,9 +28,13 @@ import org.envirocar.server.core.dao.StatisticsDao;
 import org.envirocar.server.core.dao.UserStatisticDao;
 import org.envirocar.server.core.event.CreatedTrackEvent;
 import org.envirocar.server.core.event.DeletedTrackEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Singleton
 public class NewTrackListener {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(NewTrackListener.class);
 
     private final StatisticsDao statisticDao;
     private final UserStatisticDao userStatisticDao;
@@ -46,10 +50,10 @@ public class NewTrackListener {
         this.statisticDao.updateStatisticsOnNewTrack(e.getTrack());
         this.userStatisticDao.updateStatisticsOnNewTrack(e.getTrack());
     }
-    
+
     @Subscribe
     public void onDeletedTrackEvent(DeletedTrackEvent e) {
-        this.userStatisticDao.updateStatisticsOnTrackDeletion(e.getTrack());
+        this.userStatisticDao.updateStatisticsOnTrackDeletion(e.getTrack(), e.getMeasurements());
     }
-    
+
 }
