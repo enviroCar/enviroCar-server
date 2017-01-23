@@ -53,6 +53,7 @@ public class CarSimilarityServiceTest {
         CarSimilarityServiceImpl serviceMock = Mockito.spy(service);
         serviceMock.setSimilarityDefinition("/car-similarity-test.json");
         
+        
         Sensor equi = serviceMock.resolveEquivalent(newSensor);
         Assert.assertThat(equi, Matchers.is(oldSensor));
         

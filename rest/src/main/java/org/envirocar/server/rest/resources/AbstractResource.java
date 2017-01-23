@@ -46,6 +46,7 @@ import com.google.common.base.Optional;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.name.Named;
+import org.envirocar.server.core.UserStatisticService;
 
 /**
  * TODO JavaDoc
@@ -65,6 +66,7 @@ public abstract class AbstractResource {
     private Provider<GroupService> groupService;
     private Provider<UserService> userService;
     private Provider<StatisticsService> statisticsService;
+    private Provider<UserStatisticService> userStatisticService;
     private Provider<UriInfo> uriInfo;
     private Provider<ResourceFactory> resourceFactory;
     private Provider<EntityFactory> entityFactory;
@@ -101,6 +103,10 @@ public abstract class AbstractResource {
 
     protected StatisticsService getStatisticsService() {
         return statisticsService.get();
+    }
+    
+    protected UserStatisticService getUserStatisticService() {
+        return userStatisticService.get();
     }
 
     protected ResourceFactory getResourceFactory() {
@@ -172,6 +178,12 @@ public abstract class AbstractResource {
     public void setStatisticsService(
             Provider<StatisticsService> statisticsService) {
         this.statisticsService = statisticsService;
+    }
+    
+    @Inject
+    public void setUserStatisticService(
+            Provider<UserStatisticService> userStatisticsService) {
+        this.userStatisticService = userStatisticsService;
     }
 
     @Inject

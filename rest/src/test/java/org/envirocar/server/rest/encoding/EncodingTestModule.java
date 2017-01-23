@@ -44,6 +44,7 @@ import org.envirocar.server.core.dao.StatisticsDao;
 import org.envirocar.server.core.dao.TermsOfUseDao;
 import org.envirocar.server.core.dao.TrackDao;
 import org.envirocar.server.core.dao.UserDao;
+import org.envirocar.server.core.dao.UserStatisticDao;
 import org.envirocar.server.core.entities.EntityFactory;
 import org.envirocar.server.core.entities.Fueling;
 import org.envirocar.server.core.entities.Group;
@@ -53,6 +54,7 @@ import org.envirocar.server.core.entities.Phenomenon;
 import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.entities.User;
+import org.envirocar.server.core.entities.UserStatistic;
 import org.envirocar.server.core.util.BCryptPasswordEncoder;
 import org.envirocar.server.core.util.GeodesicGeometryOperations;
 import org.envirocar.server.core.util.GeometryConverter;
@@ -76,6 +78,8 @@ import org.envirocar.server.mongo.dao.MongoTrackDao;
 import org.envirocar.server.mongo.dao.MongoUserDao;
 import org.envirocar.server.mongo.dao.privates.MongoPasswordResetDAO;
 import org.envirocar.server.mongo.dao.privates.PasswordResetDAO;
+import org.envirocar.server.mongo.dao.MongoUserStatisticDao;
+import org.envirocar.server.mongo.entity.MongoUserStatistic;
 import org.envirocar.server.mongo.entity.MongoFueling;
 import org.envirocar.server.mongo.entity.MongoGroup;
 import org.envirocar.server.mongo.entity.MongoMeasurement;
@@ -103,6 +107,8 @@ import com.google.inject.multibindings.Multibinder;
 import com.vividsolutions.jts.geom.Geometry;
 import org.envirocar.server.core.CarSimilarityService;
 import org.envirocar.server.core.CarSimilarityServiceImpl;
+import org.envirocar.server.core.UserStatisticService;
+import org.envirocar.server.core.UserStatisticServiceImpl;
 
 public class EncodingTestModule extends AbstractModule {
 
@@ -116,6 +122,7 @@ public class EncodingTestModule extends AbstractModule {
         bind(GroupService.class).to(GroupServiceImpl.class);
         bind(StatisticsService.class).to(StatisticsServiceImpl.class);
         bind(PasswordEncoder.class).to(BCryptPasswordEncoder.class);
+        bind(UserStatisticService.class).to(UserStatisticServiceImpl.class);
         bind(GeometryOperations.class).to(GeodesicGeometryOperations.class);
         Multibinder.newSetBinder(binder(), TypeConverter.class);
         bind(new TypeLiteral<GeometryConverter<BSONObject>>() {
@@ -128,6 +135,7 @@ public class EncodingTestModule extends AbstractModule {
         .implement(User.class, MongoUser.class)
         .implement(Group.class, MongoGroup.class)
         .implement(Track.class, MongoTrack.class)
+        .implement(UserStatistic.class, MongoUserStatistic.class)
         .implement(Measurement.class, MongoMeasurement.class)
         .implement(MeasurementValue.class, MongoMeasurementValue.class)
         .implement(Phenomenon.class, MongoPhenomenon.class)
@@ -143,6 +151,7 @@ public class EncodingTestModule extends AbstractModule {
         bind(UserDao.class).to(MongoUserDao.class);
         bind(GroupDao.class).to(MongoGroupDao.class);
         bind(TrackDao.class).to(MongoTrackDao.class);
+        bind(UserStatisticDao.class).to(MongoUserStatisticDao.class);
         bind(MeasurementDao.class).to(MongoMeasurementDao.class);
         bind(SensorDao.class).to(MongoSensorDao.class);
         bind(StatisticsDao.class).to(MongoStatisticsDao.class);

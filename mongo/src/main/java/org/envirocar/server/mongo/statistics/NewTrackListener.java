@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-/*
+ /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -25,21 +25,35 @@ import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.envirocar.server.core.dao.StatisticsDao;
+import org.envirocar.server.core.dao.UserStatisticDao;
 import org.envirocar.server.core.event.CreatedTrackEvent;
+import org.envirocar.server.core.event.DeletedTrackEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Singleton
 public class NewTrackListener {
-    private final StatisticsDao dao;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(NewTrackListener.class);
+
+    private final StatisticsDao statisticDao;
+    private final UserStatisticDao userStatisticDao;
 
     @Inject
-    public NewTrackListener(StatisticsDao dao) {
-        this.dao = dao;
+    public NewTrackListener(StatisticsDao statisticDao, UserStatisticDao userStatisticDao) {
+        this.statisticDao = statisticDao;
+        this.userStatisticDao = userStatisticDao;
     }
 
     @Subscribe
     public void onCreatedTrackEvent(CreatedTrackEvent e) {
-        this.dao.updateStatisticsOnNewTrack(e.getTrack());
+        this.statisticDao.updateStatisticsOnNewTrack(e.getTrack());
+        this.userStatisticDao.updateStatisticsOnNewTrack(e.getTrack());
     }
 
-    
+    @Subscribe
+    public void onDeletedTrackEvent(DeletedTrackEvent e) {
+        this.userStatisticDao.updateStatisticsOnTrackDeletion(e.getTrack(), e.getMeasurements());
+    }
+
 }

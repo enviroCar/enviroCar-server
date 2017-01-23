@@ -14,44 +14,31 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.core.event;
+package org.envirocar.server.core.filter;
 
-import org.envirocar.server.core.entities.Measurements;
-import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.entities.User;
 
 /**
  * TODO JavaDoc
  *
- * @author Christian Autermann <autermann@uni-muenster.de>
+ * @author Maurin Radtke <maurin.radtke@uni-muenster.de>
  */
-public class DeletedTrackEvent implements TrackEvent {
-
-    private final Track track;
+public class UserStatisticFilter {
     private final User user;
-    private final Measurements measurements;
 
-    public DeletedTrackEvent(Track track, User user) {
-        this(track, user, null);
-    }
-
-    public DeletedTrackEvent(Track track, User user, Measurements measurements) {
-        this.track = track;
+    public UserStatisticFilter(User user) {
         this.user = user;
-        this.measurements = measurements;
     }
 
-    @Override
-    public Track getTrack() {
-        return track;
+    public UserStatisticFilter() {
+        this(null);
     }
 
-    @Override
     public User getUser() {
         return user;
     }
-    
-    public Measurements getMeasurements(){
-        return measurements;
+
+    public boolean hasUser() {
+        return this.user != null;
     }
 }

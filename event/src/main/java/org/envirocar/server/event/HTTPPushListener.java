@@ -40,23 +40,25 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import org.envirocar.server.core.event.DeletedTrackEvent;
 
 @Singleton
 public class HTTPPushListener {
+
     //TODO make configurable
-    private static final String host =
-            "http://ags.52north.org:8080/enviroCar-broker/";
+    private static final String host
+            = "http://ags.52north.org:8080/enviroCar-broker/";
     private static final Logger logger = LoggerFactory
             .getLogger(HTTPPushListener.class);
-    public static final AccessRightsImpl DEFAULT_ACCESS_RIGHTS =
-            new AccessRightsImpl();
+    public static final AccessRightsImpl DEFAULT_ACCESS_RIGHTS
+            = new AccessRightsImpl();
     private final HttpClient client;
     private final JSONEntityEncoder<Track> encoder;
     private final ObjectWriter writer;
 
     @Inject
     public HTTPPushListener(JSONEntityEncoder<Track> encoder,
-                            ObjectWriter writer) throws Exception {
+            ObjectWriter writer) throws Exception {
         this.client = createClient();
         this.encoder = encoder;
         this.writer = writer;
@@ -66,13 +68,21 @@ public class HTTPPushListener {
     public void onCreatedTrackEvent(CreatedTrackEvent e) {
         pushNewTrack(e.getTrack());
     }
+    
+    public void onDeletedTrackEvent(DeletedTrackEvent e) {
+        popDeletedTrack(e.getTrack());
+    }
+
+    private synchronized void popDeletedTrack(Track track) {
+        // TODO: forward track deletion
+    }
 
     private synchronized void pushNewTrack(Track track) {
         HttpResponse resp = null;
         try {
             ObjectNode jsonTrack = encoder
                     .encodeJSON(track, DEFAULT_ACCESS_RIGHTS,
-                                MediaTypes.TRACK_TYPE);
+                            MediaTypes.TRACK_TYPE);
             String content = writer.writeValueAsString(jsonTrack);
             //logger.debug("Entity: {}", content);
             HttpEntity entity = new StringEntity(

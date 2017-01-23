@@ -26,6 +26,7 @@ import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.core.entities.TermsOfUseInstance;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.entities.User;
+import org.envirocar.server.core.entities.UserStatistic;
 
 /**
  * TODO JavaDoc
@@ -145,6 +146,11 @@ public class NonRestrictiveRights implements AccessRights {
 
     @Override
     public boolean canSeeStatisticsOf(User user) {
+        return true;
+    }
+    
+    @Override
+    public boolean canSeeUserStatisticsOf(User user) {
         return true;
     }
 

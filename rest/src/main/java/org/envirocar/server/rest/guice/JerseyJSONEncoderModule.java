@@ -72,6 +72,8 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
 import com.google.inject.TypeLiteral;
 import com.vividsolutions.jts.geom.Geometry;
+import org.envirocar.server.rest.encoding.json.UserStatisticJSONEncoder;
+import org.envirocar.server.core.entities.UserStatistic;
 
 /**
  * TODO JavaDoc
@@ -161,5 +163,10 @@ public class JerseyJSONEncoderModule extends AbstractModule {
         bind(FuelingsJSONEncoder.class).in(Scopes.SINGLETON);
         bind(new TypeLiteral<JSONEntityEncoder<Fuelings>>() {
         }).to(FuelingsJSONEncoder.class);
+        
+        bind(UserStatisticJSONEncoder.class).in(Scopes.SINGLETON);
+        bind(new TypeLiteral<JSONEntityEncoder<UserStatistic>>() {
+        }).to(UserStatisticJSONEncoder.class);
+        
     }
 }
