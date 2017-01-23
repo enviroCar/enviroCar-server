@@ -16,8 +16,6 @@
  */
 package org.envirocar.server.mongo.dao;
 
-import org.bson.types.ObjectId;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,8 +29,6 @@ import org.envirocar.server.core.entities.UserStatistic;
 import org.envirocar.server.core.filter.UserStatisticFilter;
 import org.envirocar.server.mongo.entity.MongoUserStatistic;
 
-import com.github.jmkgreen.morphia.Datastore;
-import com.github.jmkgreen.morphia.Key;
 import com.github.jmkgreen.morphia.dao.BasicDAO;
 import com.github.jmkgreen.morphia.mapping.Mapper;
 
@@ -65,7 +61,7 @@ public class MongoUserStatisticDao implements UserStatisticDao {
     private final MongoDB mongoDB;
     private final UserStatisticUpdateScheduler scheduler;
 
-    // calculate on get() when not existing
+    // calculate on get() calculation function, if UserStatistics have not been created yet
     private final Function<UserStatisticFilter, MongoUserStatistic> calculateAllFunction
             = new Function<UserStatisticFilter, MongoUserStatistic>() {
         @Override
@@ -75,7 +71,7 @@ public class MongoUserStatisticDao implements UserStatisticDao {
         }
     };
 
-    // update on New Track when existing
+    // update on New Track calculation function
     private final Function<Object[], MongoUserStatistic> calculateOnNewTrackFunction
             = new Function<Object[], MongoUserStatistic>() {
         @Override
@@ -87,7 +83,7 @@ public class MongoUserStatisticDao implements UserStatisticDao {
         }
     };
 
-    // update on Track Deletion when existing
+    // update on Track Deletion calculation function
     private final Function<Object[], MongoUserStatistic> calculateOnTrackDeletionFunction
             = new Function<Object[], MongoUserStatistic>() {
         @Override

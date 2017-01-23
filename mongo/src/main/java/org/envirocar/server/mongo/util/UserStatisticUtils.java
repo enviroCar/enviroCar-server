@@ -39,13 +39,13 @@ public class UserStatisticUtils implements UserStatisticOperations {
 
     @Override
     public MongoUserStatistic addTrackStatistic(
-            MongoUserStatistic previous, 
+            MongoUserStatistic previous,
             Track track,
             Measurements values) {
         GeodesicGeometryOperations ggo = new GeodesicGeometryOperations();
 
         if (values instanceof Iterable) {
-            
+
             Iterable<Measurement> measurementIterator = (Iterable<Measurement>) values;
             List<Measurement> list = new ArrayList();
             for (Measurement m : measurementIterator) {
@@ -61,7 +61,7 @@ public class UserStatisticUtils implements UserStatisticOperations {
             double total_dura130 = 0;
             double total_distNaN = 0;
             double total_duraNaN = 0;
-            for (int i = 0; i < list.size()-1; i++) {
+            for (int i = 0; i < list.size() - 1; i++) {
                 Measurement m_this = list.get(i);
                 Measurement m_next = list.get(i + 1);
 
@@ -108,7 +108,7 @@ public class UserStatisticUtils implements UserStatisticOperations {
             // create TrackSummary object:
             // get first and last measurements geometries
             Measurement valuesStart = list.get(0);
-            Measurement valuesEnd = list.get(list.size()-1);
+            Measurement valuesEnd = list.get(list.size() - 1);
 
             TrackSummary ts = new TrackSummary();
             ts.setStartPosition(valuesStart.getGeometry());
@@ -144,7 +144,7 @@ public class UserStatisticUtils implements UserStatisticOperations {
 
     @Override
     public MongoUserStatistic removeTrackStatistic(
-            MongoUserStatistic previous, 
+            MongoUserStatistic previous,
             Track track,
             Measurements values) {
         GeodesicGeometryOperations ggo = new GeodesicGeometryOperations();
@@ -165,7 +165,7 @@ public class UserStatisticUtils implements UserStatisticOperations {
             double total_dura130 = 0;
             double total_distNaN = 0;
             double total_duraNaN = 0;
-            for (int i = 0; i < list.size()-1; i++) {
+            for (int i = 0; i < list.size() - 1; i++) {
                 Measurement m_this = list.get(i);
                 Measurement m_next = list.get(i + 1);
 
@@ -212,7 +212,7 @@ public class UserStatisticUtils implements UserStatisticOperations {
             // create TrackSummary object:
             // get first and last measurements geometries
             Measurement valuesStart = list.get(0);
-            Measurement valuesEnd = list.get(list.size()-1);
+            Measurement valuesEnd = list.get(list.size() - 1);
 
             previous.setDistance(
                     previous.getDistance() - total_dist
@@ -243,7 +243,7 @@ public class UserStatisticUtils implements UserStatisticOperations {
             trackSummary.setStartPosition(valuesStart.getGeometry());
             trackSummary.setEndPosition(valuesEnd.getGeometry());
             trackSummary.setIdentifier(track.getIdentifier());
-            
+
             TrackSummaries trackSummaries = previous.getTrackSummaries();
             TrackSummaries resultSummaries = new TrackSummaries();
             for (TrackSummary currTS : trackSummaries.getTrackSummaryList()) {

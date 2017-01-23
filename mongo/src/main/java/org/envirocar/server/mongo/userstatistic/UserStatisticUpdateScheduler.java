@@ -14,11 +14,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.envirocar.server.mongo.userstatistic;
 
 import com.google.inject.Singleton;
@@ -34,7 +29,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
+ * TODO: This Scheduler manages updates on the UserStatistics while Tracks are added and others are deleted at same time, asynchronously.
+ * TODO: The eventBus onTrackDeletion and onNewTrack is unfortunetly not managing the order of these events correctly. Fix this.
  */
 @Singleton
 public class UserStatisticUpdateScheduler {
@@ -42,8 +38,8 @@ public class UserStatisticUpdateScheduler {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserStatisticUpdateScheduler.class);
     
     private final Object keyUserStatisticMutex = new Object();
-    private Set<MongoUserStatisticKey> currentKeyUserStatisticUpdates = new HashSet<>();
-    private Set<MongoUserStatisticKey> updatePendingForKey = new HashSet<>();
+    private final Set<MongoUserStatisticKey> currentKeyUserStatisticUpdates = new HashSet<>();
+    private final Set<MongoUserStatisticKey> updatePendingForKey = new HashSet<>();
     
     
     public void updateUserStatistic(
@@ -72,9 +68,9 @@ public class UserStatisticUpdateScheduler {
             }
         }
         
-        LOGGER.info(String.format("starting userstatistic calculation for key %s", key));
+        LOGGER.info(String.format("starting userstatistic calculation on get for key %s", key));
         calculator.apply(filter);
-        LOGGER.info(String.format("finished userstatistic calculation for key %s !", key));
+        LOGGER.info(String.format("finished userstatistic calculation on get for key %s !", key));
         
         synchronized (this.keyUserStatisticMutex) {
             this.keyUserStatisticMutex.notifyAll();

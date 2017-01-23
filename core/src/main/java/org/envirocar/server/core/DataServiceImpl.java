@@ -196,11 +196,10 @@ public class DataServiceImpl implements DataService {
         MeasurementFilter filter = new MeasurementFilter(track);
         Measurements measurements = getMeasurements(filter);
         Iterable<Measurement> measurementIterator = (Iterable<Measurement>) measurements;
-        List<Measurement> list = new ArrayList();
-        for (Measurement m : measurementIterator) {
-            list.add(m);
-        }
-        log.debug(list.size()+"");
+            List<Measurement> list = new ArrayList();
+            for (Measurement m : measurementIterator) {
+                list.add(m);
+            }
         this.eventBus.post(new DeletedTrackEvent(track, track.getUser(), measurements));
         this.trackDao.delete(track);
     }
