@@ -103,13 +103,13 @@ public class UserStatisticJSONEncoder extends AbstractJSONEntityEncoder<UserStat
         userStatistics
                 .put(
                         JSONConstants.TRACKSUMMARIES_KEY,
-                        getTrackSummeries(t.getTrackSummaries(), rights, mt)
+                        getTrackSummaries(t.getTrackSummaries(), rights, mt)
                 );
         //}
         return userStatistics;
     }
 
-    private JsonNode getTrackSummeries(TrackSummaries t, AccessRights rights, MediaType mediaType) {
+    private JsonNode getTrackSummaries(TrackSummaries t, AccessRights rights, MediaType mediaType) {
         ArrayNode result = getJsonFactory().arrayNode();
         if (t.hasTrackSummaries()) {
             // getTrackSummaryList() might throw an NullPointerException if its empty

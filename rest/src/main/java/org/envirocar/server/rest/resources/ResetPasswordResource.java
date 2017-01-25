@@ -31,33 +31,32 @@ import org.envirocar.server.rest.validation.Schema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 public class ResetPasswordResource extends AbstractResource {
-	
-	private static final Logger logger = LoggerFactory.getLogger(ResetPasswordResource.class);
-	
-	@POST
-    @Schema(request = Schemas.PASSWORD_RESET_REQUEST)
-	@Consumes({ MediaTypes.PASSWORD_RESET_REQUEST })
-    public Response get(@Context HttpServletRequest request, ResetPasswordRequest resetPassword) throws BadRequestException {
-		checkRights(getRights().canAccessPasswordReset(request));
-		
-		getUserService().requestPasswordReset(resetPassword.getUser());
-		logger.info("Successfully processed password reset request for user {}", resetPassword.getUser());
 
-		return Response.noContent().build();
+    private static final Logger logger = LoggerFactory.getLogger(ResetPasswordResource.class);
+
+    @POST
+    @Schema(request = Schemas.PASSWORD_RESET_REQUEST)
+    @Consumes({MediaTypes.PASSWORD_RESET_REQUEST})
+    public Response get(@Context HttpServletRequest request, ResetPasswordRequest resetPassword) throws BadRequestException {
+        checkRights(getRights().canAccessPasswordReset(request));
+
+        getUserService().requestPasswordReset(resetPassword.getUser());
+        logger.info("Successfully processed password reset request for user {}", resetPassword.getUser());
+
+        return Response.noContent().build();
     }
-	
-	@PUT
-	@Schema(request = Schemas.PASSWORD_RESET_VERIFICATION)
-    @Consumes({ MediaTypes.PASSWORD_RESET_VERIFICATION })
-	public Response resetPassword(@Context HttpServletRequest request, ResetPasswordRequest resetPassword) throws BadRequestException {
-		checkRights(getRights().canAccessPasswordReset(request));
-		
-		getUserService().resetPassword(resetPassword.getUser(), resetPassword.getCode());
-		logger.info("Password reset for user {}", resetPassword.getUser());
-		
-		return Response.noContent().build();
+
+    @PUT
+    @Schema(request = Schemas.PASSWORD_RESET_VERIFICATION)
+    @Consumes({MediaTypes.PASSWORD_RESET_VERIFICATION})
+    public Response resetPassword(@Context HttpServletRequest request, ResetPasswordRequest resetPassword) throws BadRequestException {
+        checkRights(getRights().canAccessPasswordReset(request));
+
+        getUserService().resetPassword(resetPassword.getUser(), resetPassword.getCode());
+        logger.info("Password reset for user {}", resetPassword.getUser());
+
+        return Response.noContent().build();
     }
 
 }

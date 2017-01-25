@@ -51,29 +51,28 @@ public class MongoUserStatistic implements UserStatistic {
     public static final String DIST_NAN = "distanceNaN";
     public static final String DURA_NAN = "durationNaN";
     public static final String TRACKSUMMARIES = "trackSummaries";
-    public static final String USER = "user";
 
     @Id
     @Embedded
     private MongoUserStatisticKey key;
     @Indexed
-    @Property(CREATED)
+    @Embedded(CREATED)
     private DateTime created = new DateTime();
-    @Property(DIST_TOTAL)
+    @Embedded(DIST_TOTAL)
     private double distance;
-    @Property(DURA_TOTAL)
+    @Embedded(DURA_TOTAL)
     private double duration;
-    @Property(DIST_BELOW60KMH)
+    @Embedded(DIST_BELOW60KMH)
     private double distanceBelow60kmh;
-    @Property(DURA_BELOW60KMH)
+    @Embedded(DURA_BELOW60KMH)
     private double durationBelow60kmh;
-    @Property(DIST_ABOVE130KMH)
+    @Embedded(DIST_ABOVE130KMH)
     private double distanceAbove130kmh;
-    @Property(DURA_ABOVE130KMH)
+    @Embedded(DURA_ABOVE130KMH)
     private double durationAbove130kmh;
-    @Property(DIST_NAN)
+    @Embedded(DIST_NAN)
     private double distanceNaN;
-    @Property(DURA_NAN)
+    @Embedded(DURA_NAN)
     private double durationNaN;
     @Property(TRACKSUMMARIES)
     private TrackSummaries trackSummaries;
@@ -83,14 +82,6 @@ public class MongoUserStatistic implements UserStatistic {
 
     public MongoUserStatistic(MongoUserStatisticKey key) {
         this.key = key;
-        this.distance = 0;
-        this.duration = 0;
-        this.distanceAbove130kmh = 0;
-        this.durationAbove130kmh = 0;
-        this.distanceBelow60kmh = 0;
-        this.durationBelow60kmh = 0;
-        this.distanceNaN = 0;
-        this.durationNaN = 0;
         this.trackSummaries = new TrackSummaries();
     }
 

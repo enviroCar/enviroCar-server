@@ -143,15 +143,6 @@ public class MongoUserStatisticDao implements UserStatisticDao {
 
     private MongoUserStatistic calculateAndSaveUserStatistic(UserStatisticFilter request, MongoUserStatisticKey key) {
         MongoUserStatistic v = new MongoUserStatistic(key);
-
-        v.setDistance(0);
-        v.setDuration(0);
-        v.setDistanceAbove130kmh(0);
-        v.setDurationAbove130kmh(0);
-        v.setDistanceBelow60kmh(0);
-        v.setDurationBelow60kmh(0);
-        v.setDistanceNaN(0);
-        v.setDurationNaN(0);
         v.setTrackSummaries(new TrackSummaries());
 
         // calculate it:
