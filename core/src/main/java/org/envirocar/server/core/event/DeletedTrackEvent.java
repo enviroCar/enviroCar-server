@@ -16,6 +16,7 @@
  */
 package org.envirocar.server.core.event;
 
+import org.envirocar.server.core.entities.Measurements;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.entities.User;
 
@@ -25,12 +26,19 @@ import org.envirocar.server.core.entities.User;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class DeletedTrackEvent implements TrackEvent {
+
     private final Track track;
     private final User user;
+    private final Measurements measurements;
 
     public DeletedTrackEvent(Track track, User user) {
+        this(track, user, null);
+    }
+
+    public DeletedTrackEvent(Track track, User user, Measurements measurements) {
         this.track = track;
         this.user = user;
+        this.measurements = measurements;
     }
 
     @Override
@@ -41,5 +49,9 @@ public class DeletedTrackEvent implements TrackEvent {
     @Override
     public User getUser() {
         return user;
+    }
+    
+    public Measurements getMeasurements(){
+        return measurements;
     }
 }

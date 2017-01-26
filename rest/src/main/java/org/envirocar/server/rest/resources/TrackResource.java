@@ -63,7 +63,7 @@ public class TrackResource extends AbstractResource {
                                                  UserNotFoundException,
                                                  IllegalModificationException,
                                                  ValidationException {
-        checkRights(getRights().canModify(track));
+            checkRights(getRights().canModify(track));
         getDataService().modifyTrack(track, changes);
         return Response.ok().build();
     }

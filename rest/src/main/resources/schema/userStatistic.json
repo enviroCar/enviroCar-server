@@ -1,0 +1,67 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "id": "http://schema.envirocar.org/userstatistic.json#",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "distance",
+        "duration"
+    ],
+    "properties": {
+        "distance": {
+            "type": "number"
+        },
+        "duration": {
+            "type": "number"
+        },
+        "userstatistic": {
+            "below60kmh": {
+                "distance": {
+                    "type": "number"
+                },
+                "duration": {
+                    "type": "number"
+                }
+            },
+            "above130kmh": {
+                "distance": {
+                    "type": "number"
+                },
+                "duration": {
+                    "type": "number"
+                }
+            },
+            "NaN": {
+                "distance": {
+                    "type": "number"
+                },
+                "duration": {
+                    "type": "number"
+                }
+            }
+        },
+        "trackSummaries": {
+            "type": "array",
+            "minItems": 0,
+            "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "startPosition": {
+                        "geometry": {
+                            "$ref": "http://schema.envirocar.org/geometry.json#"
+                        }
+                    },
+                    "endPosition": {
+                        "geometry": {
+                            "$ref": "http://schema.envirocar.org/geometry.json#"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

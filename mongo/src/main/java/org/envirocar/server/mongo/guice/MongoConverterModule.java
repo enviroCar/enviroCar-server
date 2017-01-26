@@ -30,6 +30,7 @@ import org.mongodb.morphia.converters.TypeConverter;
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
 import com.google.inject.multibindings.Multibinder;
+import org.envirocar.server.mongo.convert.TrackSummariesConverter;
 
 /**
  * TODO JavaDoc
@@ -49,5 +50,6 @@ public class MongoConverterModule extends AbstractModule {
         mb.addBinding().to(JTSConverter.class);
         mb.addBinding().to(URLConverter.class);
         mb.addBinding().to(DimensionedNumberConverter.class);
+        mb.addBinding().to(TrackSummariesConverter.class);
     }
 }

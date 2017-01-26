@@ -40,6 +40,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
 import com.google.inject.multibindings.Multibinder;
 import com.google.inject.name.Names;
+import org.envirocar.server.mongo.entity.MongoUserStatistic;
 
 /**
  * TODO JavaDoc
@@ -72,5 +73,6 @@ public class MongoMappedClassesModule extends AbstractModule {
         mb.addBinding().toInstance(MongoBadge.class);
         mb.addBinding().toInstance(MongoPasswordReset.class);
         mb.addBinding().toInstance(MongoFueling.class);
+        mb.addBinding().toInstance(MongoUserStatistic.class);
     }
 }

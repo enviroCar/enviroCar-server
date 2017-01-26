@@ -17,6 +17,7 @@
 package org.envirocar.server.rest.rights;
 
 import org.envirocar.server.core.entities.User;
+import org.envirocar.server.core.entities.UserStatistic;
 
 /**
  * TODO JavaDoc
@@ -65,6 +66,8 @@ public interface UserRights {
     boolean canSeeFriendsOf(User user);
 
     boolean canSeeStatisticsOf(User user);
+    
+    boolean canSeeUserStatisticsOf(User user);
 
     boolean canSeeGroupsOf(User user);
 
