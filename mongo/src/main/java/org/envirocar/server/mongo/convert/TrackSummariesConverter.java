@@ -82,10 +82,10 @@ public class TrackSummariesConverter
         BasicDBList bdbl  = new BasicDBList();
         for (int i = 0; i < trackSummaryList.size(); i++){
             TrackSummary ts = trackSummaryList.get(i);
-            double startLng = ts.getStartPosition().getCoordinate().x;
-            double startLat = ts.getStartPosition().getCoordinate().y;
-            double endLng = ts.getEndPosition().getCoordinate().x;
-            double endLat = ts.getEndPosition().getCoordinate().y;
+            double startLng = ts.getStartPosition().getCoordinate().y;
+            double startLat = ts.getStartPosition().getCoordinate().x;
+            double endLng = ts.getEndPosition().getCoordinate().y;
+            double endLat = ts.getEndPosition().getCoordinate().x;
             
             Object bdbo = BasicDBObjectBuilder.start()
                     .add("id", ts.getIdentifier())
