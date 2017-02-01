@@ -27,6 +27,12 @@ import org.envirocar.server.core.validation.GroupValidator;
 import org.envirocar.server.core.validation.MeasurementValidator;
 import org.envirocar.server.core.validation.TrackValidator;
 import org.envirocar.server.core.validation.UserValidator;
+import org.envirocar.server.core.entities.TrackSummaries;
+import org.envirocar.server.core.validation.UserStatisticValidator;
+import org.envirocar.server.core.entities.TrackSummary;
+import org.envirocar.server.core.validation.TrackSummariesValidator;
+import org.envirocar.server.core.validation.TrackSummaryValidator;
+import org.envirocar.server.core.entities.UserStatistic;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
@@ -49,5 +55,11 @@ public class ValidatorModule extends AbstractModule {
         }).to(MeasurementValidator.class);
         bind(new TypeLiteral<EntityValidator<Fueling>>() {
         }).to(FuelingValidator.class);
+        bind(new TypeLiteral<EntityValidator<UserStatistic>>() {
+        }).to(UserStatisticValidator.class);
+        bind(new TypeLiteral<EntityValidator<TrackSummary>>() {
+        }).to(TrackSummaryValidator.class);
+        bind(new TypeLiteral<EntityValidator<TrackSummaries>>() {
+        }).to(TrackSummariesValidator.class);
     }
 }

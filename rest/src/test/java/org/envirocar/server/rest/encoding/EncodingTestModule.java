@@ -27,6 +27,12 @@ import org.envirocar.server.core.StatisticsService;
 import org.envirocar.server.core.StatisticsServiceImpl;
 import org.envirocar.server.core.UserService;
 import org.envirocar.server.core.UserServiceImpl;
+import org.envirocar.server.core.CarSimilarityService;
+import org.envirocar.server.core.CarSimilarityServiceImpl;
+import org.envirocar.server.core.UserStatisticService;
+import org.envirocar.server.core.UserStatisticServiceImpl;
+import org.envirocar.server.core.dao.UserStatisticDao;
+import org.envirocar.server.core.entities.UserStatistic;
 import org.envirocar.server.core.activities.Activity;
 import org.envirocar.server.core.activities.ActivityFactory;
 import org.envirocar.server.core.activities.GroupActivity;
@@ -73,6 +79,7 @@ import org.envirocar.server.mongo.dao.MongoSensorDao;
 import org.envirocar.server.mongo.dao.MongoStatisticsDao;
 import org.envirocar.server.mongo.dao.MongoTermsOfUseDao;
 import org.envirocar.server.mongo.dao.MongoTrackDao;
+import org.envirocar.server.mongo.dao.MongoUserStatisticDao;
 import org.envirocar.server.mongo.dao.MongoUserDao;
 import org.envirocar.server.mongo.dao.privates.MongoPasswordResetDAO;
 import org.envirocar.server.mongo.dao.privates.PasswordResetDAO;
@@ -83,6 +90,7 @@ import org.envirocar.server.mongo.entity.MongoMeasurementValue;
 import org.envirocar.server.mongo.entity.MongoPhenomenon;
 import org.envirocar.server.mongo.entity.MongoSensor;
 import org.envirocar.server.mongo.entity.MongoTrack;
+import org.envirocar.server.mongo.entity.MongoUserStatistic;
 import org.envirocar.server.mongo.entity.MongoUser;
 import org.envirocar.server.mongo.util.GeoBSON;
 import org.envirocar.server.rest.decoding.json.GeoJSONDecoder;
@@ -101,8 +109,6 @@ import com.google.inject.TypeLiteral;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.multibindings.Multibinder;
 import com.vividsolutions.jts.geom.Geometry;
-import org.envirocar.server.core.CarSimilarityService;
-import org.envirocar.server.core.CarSimilarityServiceImpl;
 
 public class EncodingTestModule extends AbstractModule {
 
@@ -116,6 +122,7 @@ public class EncodingTestModule extends AbstractModule {
         bind(GroupService.class).to(GroupServiceImpl.class);
         bind(StatisticsService.class).to(StatisticsServiceImpl.class);
         bind(PasswordEncoder.class).to(BCryptPasswordEncoder.class);
+        bind(UserStatisticService.class).to(UserStatisticServiceImpl.class);
         bind(GeometryOperations.class).to(GeodesicGeometryOperations.class);
         Multibinder.newSetBinder(binder(), TypeConverter.class);
         bind(new TypeLiteral<GeometryConverter<BSONObject>>() {
@@ -128,6 +135,7 @@ public class EncodingTestModule extends AbstractModule {
         .implement(User.class, MongoUser.class)
         .implement(Group.class, MongoGroup.class)
         .implement(Track.class, MongoTrack.class)
+        .implement(UserStatistic.class, MongoUserStatistic.class)
         .implement(Measurement.class, MongoMeasurement.class)
         .implement(MeasurementValue.class, MongoMeasurementValue.class)
         .implement(Phenomenon.class, MongoPhenomenon.class)
@@ -143,6 +151,7 @@ public class EncodingTestModule extends AbstractModule {
         bind(UserDao.class).to(MongoUserDao.class);
         bind(GroupDao.class).to(MongoGroupDao.class);
         bind(TrackDao.class).to(MongoTrackDao.class);
+        bind(UserStatisticDao.class).to(MongoUserStatisticDao.class);
         bind(MeasurementDao.class).to(MongoMeasurementDao.class);
         bind(SensorDao.class).to(MongoSensorDao.class);
         bind(StatisticsDao.class).to(MongoStatisticsDao.class);

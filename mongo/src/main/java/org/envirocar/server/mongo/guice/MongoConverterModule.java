@@ -21,6 +21,7 @@ import org.envirocar.server.core.util.GeometryConverter;
 import org.envirocar.server.mongo.convert.DateTimeConverter;
 import org.envirocar.server.mongo.convert.DimensionedNumberConverter;
 import org.envirocar.server.mongo.convert.DurationConverter;
+import org.envirocar.server.mongo.convert.TrackSummariesConverter;
 import org.envirocar.server.mongo.convert.FileConverter;
 import org.envirocar.server.mongo.convert.JTSConverter;
 import org.envirocar.server.mongo.convert.URLConverter;
@@ -49,5 +50,6 @@ public class MongoConverterModule extends AbstractModule {
         mb.addBinding().to(JTSConverter.class);
         mb.addBinding().to(URLConverter.class);
         mb.addBinding().to(DimensionedNumberConverter.class);
+        mb.addBinding().to(TrackSummariesConverter.class);
     }
 }

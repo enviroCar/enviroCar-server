@@ -33,6 +33,7 @@ import org.envirocar.server.core.entities.User;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class NonRestrictiveRights implements AccessRights {
+
     @Override
     public boolean isSelf(User user) {
         return true;
@@ -145,6 +146,11 @@ public class NonRestrictiveRights implements AccessRights {
 
     @Override
     public boolean canSeeStatisticsOf(User user) {
+        return true;
+    }
+
+    @Override
+    public boolean canSeeUserStatisticsOf(User user) {
         return true;
     }
 
@@ -418,60 +424,60 @@ public class NonRestrictiveRights implements AccessRights {
         return true;
     }
 
-	@Override
-	public boolean canSeeTermsOfUse() {
-		return true;
-	}
+    @Override
+    public boolean canSeeTermsOfUse() {
+        return true;
+    }
 
-	@Override
-	public boolean canSee(TermsOfUseInstance t) {
-		return true;
-	}
+    @Override
+    public boolean canSee(TermsOfUseInstance t) {
+        return true;
+    }
 
     @Override
     public boolean canSeeSchema() {
         return true;
     }
-    
-	@Override
-	public boolean canSeeAppVersionOf(Track track) {
-		return true;
-	}
 
-	@Override
-	public boolean canSeeObdDeviceOf(Track track) {
-		return true;
-	}
+    @Override
+    public boolean canSeeAppVersionOf(Track track) {
+        return true;
+    }
 
-	@Override
-	public boolean canSeeTouVersionOf(Track track) {
-		return true;
-	}
+    @Override
+    public boolean canSeeObdDeviceOf(Track track) {
+        return true;
+    }
 
-	@Override
-	public boolean canSeeAnnouncements() {
-		return true;
-	}
+    @Override
+    public boolean canSeeTouVersionOf(Track track) {
+        return true;
+    }
 
-	@Override
-	public boolean canSeeBadges() {
-		return true;
-	}
+    @Override
+    public boolean canSeeAnnouncements() {
+        return true;
+    }
 
-	@Override
-	public boolean canAccessPasswordReset(HttpServletRequest request) {
-		return true;
-	}
+    @Override
+    public boolean canSeeBadges() {
+        return true;
+    }
+
+    @Override
+    public boolean canAccessPasswordReset(HttpServletRequest request) {
+        return true;
+    }
 
     @Override
     public boolean canSeeFuelingsOf(User user) {
         return true;
     }
 
-	@Override
-	public boolean canSeeLengthOf(Track t) {
-		return true;
-	}
+    @Override
+    public boolean canSeeLengthOf(Track t) {
+        return true;
+    }
 
     @Override
     public boolean canDelete(Fueling f) {
