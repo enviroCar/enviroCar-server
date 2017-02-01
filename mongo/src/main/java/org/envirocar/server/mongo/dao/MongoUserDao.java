@@ -34,9 +34,9 @@ import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.jmkgreen.morphia.Key;
-import com.github.jmkgreen.morphia.query.Query;
-import com.github.jmkgreen.morphia.query.UpdateResults;
+import org.mongodb.morphia.Key;
+import org.mongodb.morphia.query.Query;
+import org.mongodb.morphia.query.UpdateResults;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 
@@ -123,12 +123,12 @@ public class MongoUserDao extends AbstractMongoDao<String, MongoUser, Users>
         groupDao.removeUser(user);
         fuelingDao.removeUser(user);
         Key<MongoUser> userRef = key(user);
-        UpdateResults<MongoUser> result = update(
+        UpdateResults result = update(
                 q().field(MongoUser.FRIENDS).hasThisElement(userRef),
                 up().removeAll(MongoUser.FRIENDS, userRef));
-        if (result.getHadError()) {
+        if (result.getWriteResult() != null && !result.getWriteResult().wasAcknowledged()) {
             log.error("Error removing user {} as friend: {}",
-                    u, result.getError());
+                    u, result.getWriteResult());
         } else {
             log.debug("Removed user {} from {} friend lists",
                     u, result.getUpdatedCount());
@@ -159,7 +159,7 @@ public class MongoUserDao extends AbstractMongoDao<String, MongoUser, Users>
         Set<Key<MongoUser>> friendRefs = getFriendRefs(user);
         if (friendRefs != null) {
             Key<MongoUser> friendRef = key(new MongoUser(friendName));
-            getMapper().updateKind(friendRef);
+            getMapper().updateCollection(friendRef);
             if (friendRefs.contains(friendRef)) {
                 return deref(MongoUser.class, friendRef);
             }

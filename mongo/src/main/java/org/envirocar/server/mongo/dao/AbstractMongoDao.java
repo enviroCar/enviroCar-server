@@ -22,13 +22,13 @@ import org.envirocar.server.mongo.MongoDB;
 import org.envirocar.server.mongo.entity.MongoEntityBase;
 import org.joda.time.DateTime;
 
-import com.github.jmkgreen.morphia.Datastore;
-import com.github.jmkgreen.morphia.Key;
-import com.github.jmkgreen.morphia.dao.BasicDAO;
-import com.github.jmkgreen.morphia.mapping.Mapper;
-import com.github.jmkgreen.morphia.query.Query;
-import com.github.jmkgreen.morphia.query.UpdateOperations;
-import com.github.jmkgreen.morphia.query.UpdateResults;
+import org.mongodb.morphia.Datastore;
+import org.mongodb.morphia.Key;
+import org.mongodb.morphia.dao.BasicDAO;
+import org.mongodb.morphia.mapping.Mapper;
+import org.mongodb.morphia.query.Query;
+import org.mongodb.morphia.query.UpdateOperations;
+import org.mongodb.morphia.query.UpdateResults;
 import com.mongodb.DBRef;
 import com.mongodb.WriteResult;
 
@@ -78,11 +78,11 @@ public abstract class AbstractMongoDao<K, E, C extends Paginated<? super E>> {
         return dao.save(entity);
     }
 
-    protected UpdateResults<E> update(K key, UpdateOperations<E> ops) {
+    protected UpdateResults update(K key, UpdateOperations<E> ops) {
         return dao.update(q().field(Mapper.ID_KEY).equal(key), ops);
     }
 
-    protected UpdateResults<E> update(Query<E> q, UpdateOperations<E> ops) {
+    protected UpdateResults update(Query<E> q, UpdateOperations<E> ops) {
         return dao.update(q, ops);
     }
 

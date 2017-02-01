@@ -65,7 +65,9 @@ public interface UserRights {
     boolean canSeeFriendsOf(User user);
 
     boolean canSeeStatisticsOf(User user);
-
+    
+    boolean canSeeUserStatisticsOf(User user);
+    
     boolean canSeeGroupsOf(User user);
 
     boolean canSeeActivitiesOf(User user);

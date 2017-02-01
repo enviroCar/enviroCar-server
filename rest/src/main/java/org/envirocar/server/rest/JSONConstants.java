@@ -81,6 +81,16 @@ public interface JSONConstants {
     String LENGTH_KEY = "length";
     String BEGIN_KEY = "begin";
     String END_KEY = "end";
+    String USERSTATISTIC_KEY = "userstatistic";
+    String DISTANCE_KEY = "distance";
+    String DURATION_KEY = "duration";
+    String BELOW60KMH_KEY = "below60kmh";
+    String ABOVE130KMH_KEY = "above130kmh";
+    String NAN_KEY = "NaN";
+    String TRACKSUMMARIES_KEY = "trackSummaries";
+    String STARTPOSITION_KEY = "startPosition";
+    String ENDPOSITION_KEY = "endPosition";
+    String TRACKSUMMARY_KEY = "trackSummary";
 
     /**
      * @deprecated use {@link #TOU_VERSION_KEY} instead. kept for backwards

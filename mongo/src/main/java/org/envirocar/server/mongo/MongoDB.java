@@ -25,14 +25,13 @@ import javax.annotation.Nullable;
 
 import org.envirocar.server.mongo.entity.MongoMeasurement;
 
-import com.github.jmkgreen.morphia.Datastore;
-import com.github.jmkgreen.morphia.Key;
-import com.github.jmkgreen.morphia.Morphia;
-import com.github.jmkgreen.morphia.converters.TypeConverter;
-import com.github.jmkgreen.morphia.logging.MorphiaLoggerFactory;
-import com.github.jmkgreen.morphia.logging.slf4j.SLF4JLogrImplFactory;
-import com.github.jmkgreen.morphia.mapping.DefaultCreator;
-import com.github.jmkgreen.morphia.mapping.Mapper;
+import org.mongodb.morphia.Datastore;
+import org.mongodb.morphia.Key;
+import org.mongodb.morphia.Morphia;
+import org.mongodb.morphia.converters.TypeConverter;
+import org.mongodb.morphia.logging.MorphiaLoggerFactory;
+import org.mongodb.morphia.mapping.DefaultCreator;
+import org.mongodb.morphia.mapping.Mapper;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.ListMultimap;
@@ -46,7 +45,9 @@ import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBCollection;
 import com.mongodb.DBRef;
 import com.mongodb.MongoClient;
+import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
+import org.mongodb.morphia.logging.slf4j.SLF4JLoggerImplFactory;
 
 /**
  * TODO JavaDoc
@@ -75,15 +76,22 @@ public class MongoDB {
                    @Nullable @Named(USER_PROPERTY) String username,
                    @Nullable @Named(PASS_PROPERTY) char[] password) {
         try {
-            MorphiaLoggerFactory.registerLogger(SLF4JLogrImplFactory.class);
-            mongo = new MongoClient(new ServerAddress(host, port));
+            MorphiaLoggerFactory.registerLogger(SLF4JLoggerImplFactory.class);
+            if (username == null) {
+                mongo = new MongoClient(new ServerAddress(host, port));
+            }
+            else {
+                mongo = new MongoClient(new ServerAddress(host, port), Collections.singletonList(
+                    MongoCredential.createMongoCRCredential(username, database, password)));
+            }
+            
             morphia = new Morphia();
-            morphia.getMapper().getOptions().objectFactory =
-                    new CustomGuiceObjectFactory(new DefaultCreator(), injector);
+            morphia.getMapper().getOptions().setObjectFactory(new CustomGuiceObjectFactory(new DefaultCreator(), injector));
             addConverters(converters);
             addMappedClasses(mappedClasses);
+            
             datastore = morphia
-                    .createDatastore(mongo, database, username, password);
+                    .createDatastore(mongo, database);
             datastore.ensureIndexes();
             ensureIndexes();
             datastore.ensureCaps();
@@ -147,11 +155,11 @@ public class MongoDB {
             List<Key<T>> kindKeys = kindMap.get(kind);
             List<Object> objIds = new ArrayList<>(kindKeys.size());
             Class<T> kindClass = clazz == null
-                                 ? (Class<T>) kindKeys.get(0).getKindClass()
+                                 ? (Class<T>) kindKeys.get(0).getType()
                                  : clazz;
             kindKeys.stream().map(Key::getId).forEach(objIds::add);
             fetched.add(getDatastore()
-                    .find(kind, kindClass)
+                    .find(kindClass)
                     .disableValidation()
                     .field(Mapper.ID_KEY)
                     .in(objIds)
@@ -165,7 +173,7 @@ public class MongoDB {
     }
 
     public <T> DBRef ref(T entity) {
-        return entity == null ? null : getMapper().keyToRef(key(entity));
+        return entity == null ? null : getMapper().keyToDBRef(key(entity));
     }
 
     protected <T> ListMultimap<String, Key<T>> getKindMap(Class<T> clazz,
@@ -174,13 +182,13 @@ public class MongoDB {
         String clazzKind = (clazz == null) ? null : getMapper()
                 .getCollectionName(clazz);
         for (Key<T> key : keys) {
-            getMapper().updateKind(key);
-            String kind = key.getKind();
+            getMapper().updateCollection(key);
+            String kind = key.getCollection();
 
             if (clazzKind != null && !kind.equals(clazzKind)) {
                 throw new IllegalArgumentException(String.format(
                         "Types are not equal (%s!=%s) for key and method parameter clazz",
-                        clazz, key.getKindClass()));
+                        clazz, key.getType()));
             }
             kindMap.put(kind, key);
         }

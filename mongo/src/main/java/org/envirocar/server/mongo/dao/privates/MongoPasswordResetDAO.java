@@ -31,7 +31,7 @@ import org.envirocar.server.mongo.entity.MongoPasswordReset;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.jmkgreen.morphia.query.Query;
+import org.mongodb.morphia.query.Query;
 import com.google.inject.Inject;
 
 public class MongoPasswordResetDAO extends AbstractMongoDao<ObjectId, MongoPasswordReset, MongoPasswordResetDAO.MongoPasswordResetStatusCollection>

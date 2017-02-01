@@ -28,6 +28,7 @@ import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.core.entities.TermsOfUseInstance;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.entities.User;
+import org.envirocar.server.core.entities.UserStatistic;
 
 /**
  * TODO JavaDoc
@@ -228,7 +229,12 @@ public class AccessRightsImpl extends AbstractAccessRights {
     public boolean canSeeStatisticsOf(User user) {
         return isSelfFriendOfOrShareGroup(user);
     }
-
+    
+    @Override
+    public boolean canSeeUserStatisticsOf(User user) {
+        return isSelfFriendOfOrShareGroup(user);
+    }
+    
     @Override
     public boolean canSeeFriendActivitiesOf(User user) {
         return isSelf(user);

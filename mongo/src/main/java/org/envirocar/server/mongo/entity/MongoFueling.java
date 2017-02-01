@@ -28,14 +28,14 @@ import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.core.entities.User;
 import org.joda.time.DateTime;
 
-import com.github.jmkgreen.morphia.Key;
-import com.github.jmkgreen.morphia.annotations.Embedded;
-import com.github.jmkgreen.morphia.annotations.Entity;
-import com.github.jmkgreen.morphia.annotations.Id;
-import com.github.jmkgreen.morphia.annotations.Indexed;
-import com.github.jmkgreen.morphia.annotations.Property;
-import com.github.jmkgreen.morphia.annotations.Transient;
-import com.github.jmkgreen.morphia.utils.IndexDirection;
+import org.mongodb.morphia.Key;
+import org.mongodb.morphia.annotations.Embedded;
+import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.annotations.Indexed;
+import org.mongodb.morphia.annotations.Property;
+import org.mongodb.morphia.annotations.Transient;
+import org.mongodb.morphia.utils.IndexDirection;
 import com.google.common.base.Strings;
 
 /**

@@ -16,9 +16,9 @@
  */
 package org.envirocar.server.mongo.entity;
 
-import com.github.jmkgreen.morphia.Key;
-import com.github.jmkgreen.morphia.annotations.Embedded;
-import com.github.jmkgreen.morphia.annotations.Property;
+import org.mongodb.morphia.Key;
+import org.mongodb.morphia.annotations.Embedded;
+import org.mongodb.morphia.annotations.Property;
 import com.google.common.base.Objects;
 
 /**

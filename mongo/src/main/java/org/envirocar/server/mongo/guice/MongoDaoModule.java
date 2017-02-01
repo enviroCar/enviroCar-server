@@ -28,6 +28,7 @@ import org.envirocar.server.core.dao.StatisticsDao;
 import org.envirocar.server.core.dao.TermsOfUseDao;
 import org.envirocar.server.core.dao.TrackDao;
 import org.envirocar.server.core.dao.UserDao;
+import org.envirocar.server.core.dao.UserStatisticDao;
 import org.envirocar.server.mongo.dao.MongoActivityDao;
 import org.envirocar.server.mongo.dao.MongoAnnouncementsDao;
 import org.envirocar.server.mongo.dao.MongoBadgesDao;
@@ -40,6 +41,7 @@ import org.envirocar.server.mongo.dao.MongoStatisticsDao;
 import org.envirocar.server.mongo.dao.MongoTermsOfUseDao;
 import org.envirocar.server.mongo.dao.MongoTrackDao;
 import org.envirocar.server.mongo.dao.MongoUserDao;
+import org.envirocar.server.mongo.dao.MongoUserStatisticDao;
 import org.envirocar.server.mongo.dao.privates.MongoPasswordResetDAO;
 import org.envirocar.server.mongo.dao.privates.PasswordResetDAO;
 
@@ -66,5 +68,6 @@ public class MongoDaoModule extends AbstractModule {
         bind(BadgesDao.class).to(MongoBadgesDao.class);
         bind(PasswordResetDAO.class).to(MongoPasswordResetDAO.class);
         bind(FuelingDao.class).to(MongoFuelingDao.class);
+        bind(UserStatisticDao.class).to(MongoUserStatisticDao.class);
     }
 }
