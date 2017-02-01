@@ -14,43 +14,31 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.core.event;
+package org.envirocar.server.core.dao;
 
 import org.envirocar.server.core.entities.Measurements;
 import org.envirocar.server.core.entities.Track;
-import org.envirocar.server.core.entities.User;
+import org.envirocar.server.core.entities.UserStatistic;
+import org.envirocar.server.core.filter.UserStatisticFilter;
 
 /**
- * TODO JavaDoc
+ * Dao for {@link UserStatistic}s
  *
- * @author Christian Autermann <autermann@uni-muenster.de>
+ * @author Maurin Radtke <maurin.radtke@uni-muenster.de>
  */
-public class DeletedTrackEvent implements TrackEvent {
-    private final Track track;
-    private final User user;
-    private final Measurements measurements;
-
-    public DeletedTrackEvent(Track track, User user) {
-        this(track, user, null);
-    }
-
-    public DeletedTrackEvent(Track track, User user, Measurements measurements) {
-        this.track = track;
-        this.user = user;
-        this.measurements = measurements;
-    }
-
-    @Override
-    public Track getTrack() {
-        return track;
-    }
-
-    @Override
-    public User getUser() {
-        return user;
-    }
+public interface UserStatisticDao {
+  
+    /**
+     * Get the {@code UserStatistic}s matching the specified filter.
+     *
+     * @param request the request
+     *
+     * @return the {@code UserStatistics}
+     */
+    UserStatistic get(UserStatisticFilter request);
     
-    public Measurements getMeasurements(){
-        return measurements;
-    }
+    public void updateStatisticsOnTrackDeletion(Track e, Measurements m);
+    
+    public void updateStatisticsOnNewTrack(Track e);
+    
 }

@@ -38,6 +38,7 @@ import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.entities.Tracks;
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.entities.Users;
+import org.envirocar.server.core.entities.UserStatistic;
 import org.envirocar.server.core.statistics.Statistic;
 import org.envirocar.server.core.statistics.Statistics;
 import org.envirocar.server.rest.encoding.JSONEntityEncoder;
@@ -67,6 +68,7 @@ import org.envirocar.server.rest.encoding.json.TrackJSONEncoder;
 import org.envirocar.server.rest.encoding.json.TracksJSONEncoder;
 import org.envirocar.server.rest.encoding.json.UserJSONEncoder;
 import org.envirocar.server.rest.encoding.json.UsersJSONEncoder;
+import org.envirocar.server.rest.encoding.json.UserStatisticJSONEncoder;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
@@ -161,5 +163,9 @@ public class JerseyJSONEncoderModule extends AbstractModule {
         bind(FuelingsJSONEncoder.class).in(Scopes.SINGLETON);
         bind(new TypeLiteral<JSONEntityEncoder<Fuelings>>() {
         }).to(FuelingsJSONEncoder.class);
+        
+        bind(UserStatisticJSONEncoder.class).in(Scopes.SINGLETON);
+        bind(new TypeLiteral<JSONEntityEncoder<UserStatistic>>() {
+        }).to(UserStatisticJSONEncoder.class);
     }
 }

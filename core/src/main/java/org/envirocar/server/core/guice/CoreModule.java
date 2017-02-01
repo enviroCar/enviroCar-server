@@ -42,6 +42,8 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.PrecisionModel;
 import org.envirocar.server.core.CarSimilarityService;
 import org.envirocar.server.core.CarSimilarityServiceImpl;
+import org.envirocar.server.core.UserStatisticService;
+import org.envirocar.server.core.UserStatisticServiceImpl;
 
 /**
  * TODO JavaDoc
@@ -57,6 +59,7 @@ public class CoreModule extends AbstractModule {
         bind(FriendService.class).to(FriendServiceImpl.class);
         bind(GroupService.class).to(GroupServiceImpl.class);
         bind(StatisticsService.class).to(StatisticsServiceImpl.class);
+        bind(UserStatisticService.class).to(UserStatisticServiceImpl.class);
         bind(ActivityListener.class).asEagerSingleton();
         bind(PasswordEncoder.class).to(BCryptPasswordEncoder.class);
         bind(GeometryOperations.class).to(GeodesicGeometryOperations.class);

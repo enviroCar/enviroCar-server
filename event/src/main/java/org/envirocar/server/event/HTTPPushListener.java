@@ -40,6 +40,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import org.envirocar.server.core.event.DeletedTrackEvent;
 
 @Singleton
 public class HTTPPushListener {
@@ -65,6 +66,14 @@ public class HTTPPushListener {
     @Subscribe
     public void onCreatedTrackEvent(CreatedTrackEvent e) {
         pushNewTrack(e.getTrack());
+    }
+    
+    public void onDeletedTrackEvent(DeletedTrackEvent e){
+        popDeletedTrack(e.getTrack());
+    }
+    
+    private synchronized void popDeletedTrack(Track track){
+        // TODO: USE ME
     }
 
     private synchronized void pushNewTrack(Track track) {

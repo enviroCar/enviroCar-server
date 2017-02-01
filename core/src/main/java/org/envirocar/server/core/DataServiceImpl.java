@@ -70,6 +70,7 @@ import org.joda.time.DateTime;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
+import java.util.ArrayList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -192,8 +193,15 @@ public class DataServiceImpl implements DataService {
 
     @Override
     public void deleteTrack(Track track) {
+        MeasurementFilter filter = new MeasurementFilter(track);
+        Measurements measurements = getMeasurements(filter);
+        Iterable<Measurement> measurementIterator = (Iterable<Measurement>) measurements;
+            List<Measurement> list = new ArrayList();
+            for (Measurement m : measurementIterator) {
+                list.add(m);
+            }
+        this.eventBus.post(new DeletedTrackEvent(track, track.getUser(), measurements));
         this.trackDao.delete(track);
-        this.eventBus.post(new DeletedTrackEvent(track, track.getUser()));
     }
 
     @Override

@@ -43,6 +43,7 @@ import org.envirocar.server.mongo.entity.MongoPhenomenon;
 import org.envirocar.server.mongo.entity.MongoSensor;
 import org.envirocar.server.mongo.entity.MongoTrack;
 import org.envirocar.server.mongo.entity.MongoUser;
+import org.envirocar.server.mongo.entity.MongoUserStatistic;
 
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
@@ -54,6 +55,7 @@ import com.google.inject.multibindings.Multibinder;
 import com.mongodb.DB;
 import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
+import org.envirocar.server.core.entities.UserStatistic;
 import org.envirocar.server.core.guice.ResourceShutdownListener;
 import org.envirocar.server.mongo.MongoShutdownListener;
 import org.envirocar.server.mongo.statistics.NewTrackListener;
@@ -76,6 +78,7 @@ public class MongoModule extends AbstractModule {
                 .implement(Phenomenon.class, MongoPhenomenon.class)
                 .implement(Sensor.class, MongoSensor.class)
                 .implement(Fueling.class, MongoFueling.class)
+                .implement(UserStatistic.class, MongoUserStatistic.class)
                 .build(EntityFactory.class));
         install(new FactoryModuleBuilder()
                 .implement(Activity.class, MongoActivity.class)

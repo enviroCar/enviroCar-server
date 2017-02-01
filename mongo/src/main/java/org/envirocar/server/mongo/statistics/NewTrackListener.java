@@ -25,21 +25,29 @@ import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.envirocar.server.core.dao.StatisticsDao;
+import org.envirocar.server.core.dao.UserStatisticDao;
 import org.envirocar.server.core.event.CreatedTrackEvent;
+import org.envirocar.server.core.event.DeletedTrackEvent;
 
 @Singleton
 public class NewTrackListener {
     private final StatisticsDao dao;
+    private final UserStatisticDao userStatisticDao;
 
     @Inject
-    public NewTrackListener(StatisticsDao dao) {
+    public NewTrackListener(StatisticsDao dao, UserStatisticDao userStatisticDao) {
         this.dao = dao;
+        this.userStatisticDao = userStatisticDao;
     }
 
     @Subscribe
     public void onCreatedTrackEvent(CreatedTrackEvent e) {
         this.dao.updateStatisticsOnNewTrack(e.getTrack());
+        this.userStatisticDao.updateStatisticsOnNewTrack(e.getTrack());
     }
 
-    
+    @Subscribe
+    public void onDeletedTrackEvent(DeletedTrackEvent e) {
+        this.userStatisticDao.updateStatisticsOnTrackDeletion(e.getTrack(), e.getMeasurements());
+    }
 }
