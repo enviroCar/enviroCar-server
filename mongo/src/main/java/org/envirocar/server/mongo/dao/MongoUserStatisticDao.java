@@ -153,6 +153,7 @@ public class MongoUserStatisticDao implements UserStatisticDao {
             Measurements values = dataService.getMeasurements(new MeasurementFilter(track));
             v = new UserStatisticUtils().addTrackStatistic(v, track, values);
         }
+        // persist:
         this.dao.save(v);
         return v;
     }
