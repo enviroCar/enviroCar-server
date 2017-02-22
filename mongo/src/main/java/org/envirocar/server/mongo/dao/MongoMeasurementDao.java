@@ -347,7 +347,7 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
         final Datastore ds = this.mongoDB.getDatastore();
         final DBCollection coll = ds.getCollection(MongoMeasurement.class);
 
-        DBCursor cursor = coll.find(query, null);
+        DBCursor cursor = coll.find(query);
         long count = 0;
 
         cursor.setDecoderFactory(coll.getDBDecoderFactory());
@@ -362,8 +362,7 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
         }
         cursor.sort(QueryImpl.parseFieldsString(MongoMeasurement.TIME,
                                                 MongoMeasurement.class,
-                                                mapper, true,
-                                                Collections.emptyList(), Collections.emptyList()));
+                                                mapper, true));
         Iterable<MongoMeasurement> i =
                 new MorphiaIterator<>(ds,
                 cursor, mapper, MongoMeasurement.class, coll.getName(),
