@@ -380,7 +380,7 @@ public class OSMTileRenderer {
 		 * String picUri = "http://tile.openstreetmap.org/" + zoom + "/" + x +
 		 * "/" + y + ".png";
 		 */
-		String picUri = "http://otile1.mqcdn.com/tiles/1.0.0/map/" + zoom + "/"
+		String picUri = "http://a.tile.stamen.com/terrain/" + zoom + "/"
 				+ x + "/" + y + ".png";
 		System.out.println(picUri);
 		URL url = new URL(picUri);
