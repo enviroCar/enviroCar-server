@@ -385,7 +385,7 @@
                     <strictCheck>true</strictCheck>
                     <properties>
                         <author>The enviroCar project</author>
-                        <year>${project.inceptionYear}</year>
+                        <year>${project.inceptionYear}-2018</year>
                     </properties>
                     <mapping>
                         <java>SLASHSTAR_STYLE</java>

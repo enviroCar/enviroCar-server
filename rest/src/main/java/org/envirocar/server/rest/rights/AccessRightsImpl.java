@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 The enviroCar project
+ * Copyright (C) 2013-2018 The enviroCar project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -37,10 +37,10 @@ import org.envirocar.server.core.entities.UserStatistic;
  */
 public class AccessRightsImpl extends AbstractAccessRights {
     public AccessRightsImpl() {
-        super();
     }
 
-    public AccessRightsImpl(User user, GroupService groupService,
+    public AccessRightsImpl(User user,
+                            GroupService groupService,
                             FriendService friendService) {
         super(user, groupService, friendService);
     }
@@ -495,5 +495,5 @@ public class AccessRightsImpl extends AbstractAccessRights {
     public boolean canDelete(Fueling f) {
         return isSelf(f.getUser());
     }
-    
+
 }
