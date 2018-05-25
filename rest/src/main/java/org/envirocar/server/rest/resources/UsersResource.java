@@ -16,23 +16,17 @@
  */
 package org.envirocar.server.rest.resources;
 
-import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Response;
 
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.entities.Users;
 import org.envirocar.server.core.exception.BadRequestException;
-import org.envirocar.server.core.exception.ResourceAlreadyExistException;
 import org.envirocar.server.core.exception.UserNotFoundException;
-import org.envirocar.server.core.exception.ValidationException;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
-import org.envirocar.server.rest.auth.Anonymous;
 import org.envirocar.server.rest.validation.Schema;
 
 /**
@@ -54,6 +48,7 @@ public class UsersResource extends AbstractResource {
         return getUserService().getUsers(getPagination());
     }
 
+    /*
     @POST
     @Anonymous
     @Schema(request = Schemas.USER_CREATE)
@@ -66,6 +61,7 @@ public class UsersResource extends AbstractResource {
                 .path(getUserService().createUser(user).getName())
                 .build()).build();
     }
+    */
 
     @Path(USER)
     public UserResource user(@PathParam("username") String username) throws
