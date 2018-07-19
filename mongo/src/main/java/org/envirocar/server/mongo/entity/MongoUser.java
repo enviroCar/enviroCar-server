@@ -67,7 +67,7 @@ public class MongoUser extends MongoEntityBase implements User {
     private boolean isAdmin = false;
     @Id
     private String name;
-    @Indexed(unique = true)
+    @Indexed
     @Property(MAIL)
     private String mail;
     @Property(FRIENDS)
