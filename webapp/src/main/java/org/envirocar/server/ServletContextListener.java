@@ -17,15 +17,19 @@
 package org.envirocar.server;
 
 import java.util.Arrays;
-import java.util.logging.LogManager;
-import java.util.logging.Logger;
 
+import javax.servlet.ServletContextEvent;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 
+import com.google.inject.CreationException;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.Module;
 import com.google.inject.servlet.GuiceServletContextListener;
-import javax.servlet.ServletContextEvent;
+import com.google.inject.util.Modules;
 
 /**
  * TODO JavaDoc
@@ -33,24 +37,41 @@ import javax.servlet.ServletContextEvent;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class ServletContextListener extends GuiceServletContextListener {
-
+    private static final Logger LOG = LoggerFactory.getLogger(ServletContextListener.class);
     private Injector injector;
+
+    private Module overrides;
+
+    public ServletContextListener() {
+    }
+
+    public ServletContextListener(Module overrides) {
+        this.overrides = overrides;
+    }
 
     @Override
     protected Injector getInjector() {
+
         if (injector == null) {
-            injector = Guice
-                    .createInjector(new ServiceLoaderConfigurationModule());
-            configureLogging();
+            Module module = new ServiceLoaderConfigurationModule();
+            if (overrides != null) {
+                module = Modules.override(module).with(overrides);
+            }
+            try {
+                injector = Guice.createInjector(module);
+            } catch (CreationException ex) {
+                LOG.error("Error creating injector", ex);
+                throw ex;
+            }
         }
+
         return injector;
 
     }
 
     protected void configureLogging() {
-        Logger rootLogger = LogManager.getLogManager().getLogger("");
-        Arrays.stream(rootLogger.getHandlers())
-                .forEach(rootLogger::removeHandler);
+        java.util.logging.Logger rootLogger = java.util.logging.LogManager.getLogManager().getLogger("");
+        Arrays.stream(rootLogger.getHandlers()).forEach(rootLogger::removeHandler);
         SLF4JBridgeHandler.install();
     }
 
@@ -60,8 +81,16 @@ public class ServletContextListener extends GuiceServletContextListener {
             ShutdownManager manager = injector.getInstance(ShutdownManager.class);
             manager.shutdownListeners();
         }
-        
+
         super.contextDestroyed(servletContextEvent);
+    }
+
+    @Override
+    public void contextInitialized(ServletContextEvent servletContextEvent) {
+
+        configureLogging();
+
+        super.contextInitialized(servletContextEvent);
     }
 
 }
