@@ -20,16 +20,15 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response.Status;
 
+import org.envirocar.server.core.UserService;
+import org.envirocar.server.core.entities.User;
+import org.envirocar.server.core.exception.UserNotFoundException;
+import org.envirocar.server.core.util.PasswordEncoder;
+
 import com.google.inject.Inject;
 import com.sun.jersey.core.util.Base64;
 import com.sun.jersey.spi.container.ContainerRequest;
 import com.sun.jersey.spi.container.ContainerRequestFilter;
-
-import org.envirocar.server.core.UserService;
-import org.envirocar.server.core.entities.User;
-
-import org.envirocar.server.core.exception.UserNotFoundException;
-import org.envirocar.server.core.util.PasswordEncoder;
 
 /**
  * TODO JavaDoc

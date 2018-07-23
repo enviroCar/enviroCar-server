@@ -19,18 +19,7 @@ package org.envirocar.server.mongo.dao;
 import java.util.Collections;
 import java.util.Set;
 
-import org.joda.time.DateTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.mongodb.morphia.Key;
-import org.mongodb.morphia.query.Query;
-import org.mongodb.morphia.query.UpdateResults;
-import com.google.common.collect.Lists;
-import com.google.inject.Inject;
-
 import org.envirocar.server.core.dao.GroupDao;
-
 import org.envirocar.server.core.entities.Group;
 import org.envirocar.server.core.entities.Groups;
 import org.envirocar.server.core.entities.User;
@@ -39,6 +28,15 @@ import org.envirocar.server.core.util.pagination.Pagination;
 import org.envirocar.server.mongo.MongoDB;
 import org.envirocar.server.mongo.entity.MongoGroup;
 import org.envirocar.server.mongo.entity.MongoUser;
+import org.joda.time.DateTime;
+import org.mongodb.morphia.Key;
+import org.mongodb.morphia.query.Query;
+import org.mongodb.morphia.query.UpdateResults;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.google.common.collect.Lists;
+import com.google.inject.Inject;
 
 /**
  * TODO JavaDoc
@@ -118,11 +116,8 @@ public class MongoGroupDao extends AbstractMongoDao<String, MongoGroup, Groups>
 
     @Override
     public Group get(User user, String groupName) {
-        return q()
-                .field(MongoGroup.NAME)
-                .equal(groupName)
-                .field(MongoGroup.MEMBERS)
-                .hasThisElement(key(user)).get();
+        return q().field(MongoGroup.NAME).equal(groupName)
+                .field(MongoGroup.MEMBERS).hasThisElement(key(user)).get();
     }
 
     @Override
@@ -135,16 +130,16 @@ public class MongoGroupDao extends AbstractMongoDao<String, MongoGroup, Groups>
     public void removeMember(Group group, User user) {
         MongoGroup g = (MongoGroup) group;
         update(g.getName(), up()
-                .removeAll(MongoGroup.MEMBERS, key(user))
-                .set(MongoGroup.LAST_MODIFIED, new DateTime()));
+               .removeAll(MongoGroup.MEMBERS, key(user))
+               .set(MongoGroup.LAST_MODIFIED, new DateTime()));
     }
 
     @Override
     public void addMember(Group group, User user) {
         MongoGroup g = (MongoGroup) group;
         update(g.getName(), up()
-                .add(MongoGroup.MEMBERS, key(user))
-                .set(MongoGroup.LAST_MODIFIED, new DateTime()));
+               .addToSet(MongoGroup.MEMBERS, key(user))
+               .set(MongoGroup.LAST_MODIFIED, new DateTime()));
     }
 
     protected void removeOwner(MongoUser user) {
@@ -190,7 +185,7 @@ public class MongoGroupDao extends AbstractMongoDao<String, MongoGroup, Groups>
 
     @Override
     protected Groups fetch(Query<MongoGroup> q, Pagination p) {
-        return super.fetch(q.retrievedFields(false, MongoGroup.MEMBERS), p);
+        return super.fetch(q.project(MongoGroup.MEMBERS, false), p);
     }
 
     @Override
@@ -212,7 +207,7 @@ public class MongoGroupDao extends AbstractMongoDao<String, MongoGroup, Groups>
         if (memberRefs == null) {
             MongoGroup groupWithMembers = q()
                     .field(MongoGroup.NAME).equal(g.getName())
-                    .retrievedFields(true, MongoGroup.MEMBERS).get();
+                    .project(MongoGroup.MEMBERS, true).get();
             if (groupWithMembers != null) {
                 memberRefs = groupWithMembers.getMembers();
             }

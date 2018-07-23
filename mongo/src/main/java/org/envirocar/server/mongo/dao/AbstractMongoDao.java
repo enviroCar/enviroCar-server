@@ -21,14 +21,15 @@ import org.envirocar.server.core.util.pagination.Pagination;
 import org.envirocar.server.mongo.MongoDB;
 import org.envirocar.server.mongo.entity.MongoEntityBase;
 import org.joda.time.DateTime;
-
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Key;
 import org.mongodb.morphia.dao.BasicDAO;
 import org.mongodb.morphia.mapping.Mapper;
+import org.mongodb.morphia.query.FindOptions;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.UpdateOperations;
 import org.mongodb.morphia.query.UpdateResults;
+
 import com.mongodb.DBRef;
 import com.mongodb.WriteResult;
 
@@ -87,16 +88,19 @@ public abstract class AbstractMongoDao<K, E, C extends Paginated<? super E>> {
     }
 
     protected Iterable<E> fetch(Query<E> q) {
-        return dao.find(q).fetch();
+        return q.fetch();
     }
 
     protected C fetch(Query<E> q, Pagination p) {
         long count = 0;
+
+        FindOptions findOptions = new FindOptions();
         if (p != null) {
             count = count(q);
-            q.offset((int)p.getBegin()).limit((int)p.getLimit());
+            findOptions.skip((int)p.getBegin());
+            findOptions.limit((int)p.getLimit());
         }
-        return createPaginatedIterable(fetch(q), p, count);
+        return createPaginatedIterable(q.fetch(findOptions), p, count);
     }
 
     protected abstract C createPaginatedIterable(

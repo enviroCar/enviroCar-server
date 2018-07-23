@@ -16,6 +16,7 @@
  */
 package org.envirocar.server.core;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.envirocar.server.core.dao.AnnouncementsDao;
@@ -67,12 +68,11 @@ import org.envirocar.server.core.util.GeometryOperations;
 import org.envirocar.server.core.util.pagination.Pagination;
 import org.envirocar.server.core.validation.EntityValidator;
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
-import java.util.ArrayList;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * TODO JavaDoc
@@ -82,9 +82,9 @@ import org.slf4j.LoggerFactory;
  * @author Jan Wirwahn <jan.wirwahn@wwu.de>
  */
 public class DataServiceImpl implements DataService {
-    
+
     private static final Logger log = LoggerFactory.getLogger(DataServiceImpl.class);
-    
+
     private final TrackDao trackDao;
     private final MeasurementDao measurementDao;
     private final SensorDao sensorDao;
@@ -178,11 +178,11 @@ public class DataServiceImpl implements DataService {
         }
         track.setBegin(begin);
         track.setEnd(end);
-        
+
         if (!track.hasLength()) {
         	track.setLength(geomOps.calculateLength(measurements));
         }
-        
+
         this.trackDao.create(track);
         for (Measurement m : measurements) {
             this.measurementDao.create(m);
@@ -196,7 +196,7 @@ public class DataServiceImpl implements DataService {
         MeasurementFilter filter = new MeasurementFilter(track);
         Measurements measurements = getMeasurements(filter);
         Iterable<Measurement> measurementIterator = (Iterable<Measurement>) measurements;
-            List<Measurement> list = new ArrayList();
+            List<Measurement> list = new ArrayList<>();
             for (Measurement m : measurementIterator) {
                 list.add(m);
             }
@@ -282,7 +282,7 @@ public class DataServiceImpl implements DataService {
         } catch (ResourceNotFoundException ex) {
             log.info("No equivalent sensor found, creating new");
         }
-        
+
         Sensor s = this.sensorDao.create(sensor);
         this.eventBus.post(new CreatedSensorEvent(s));
         return s;

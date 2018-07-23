@@ -25,9 +25,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response.Status;
 
-import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
-
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.entities.Users;
 import org.envirocar.server.core.exception.UserNotFoundException;
@@ -36,6 +33,9 @@ import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.UserReference;
 import org.envirocar.server.rest.auth.Authenticated;
 import org.envirocar.server.rest.validation.Schema;
+
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 
 /**
  * TODO JavaDoc
@@ -83,11 +83,10 @@ public class FriendsResource extends AbstractResource {
     public UserResource friend(@PathParam("friend") String friendName) throws
             UserNotFoundException {
         checkRights(getRights().canSeeFriendsOf(user));
-        return getResourceFactory()
-                .createFriendResource(user, getFriendService()
-                .getFriend(user, friendName));
+        User friends = getFriendService().getFriend(user, friendName);
+        return getResourceFactory().createFriendResource(user, friends);
     }
-    
+
     @GET
     @Path(INCOMING_FRIEND_REQUESTS)
     @Produces({ MediaTypes.USERS})
@@ -95,7 +94,7 @@ public class FriendsResource extends AbstractResource {
     	checkRights(getRights().canSeeFriendsOf(user));
     	return getFriendService().pendingIncomingRequests(user);
     }
-    
+
     @GET
     @Path(OUTGOING_FRIEND_REQUESTS)
     @Produces({ MediaTypes.USERS})
@@ -103,7 +102,7 @@ public class FriendsResource extends AbstractResource {
     	checkRights(getRights().canSeeFriendsOf(user));
     	return getFriendService().pendingOutgoingRequests(user);
     }
-    
+
     @POST
     @Path(DECLINE_FRIEND_REQUEST)
     @Authenticated
@@ -111,9 +110,9 @@ public class FriendsResource extends AbstractResource {
     @Consumes({ MediaTypes.USER_REF })
     public void decline(UserReference friend) throws UserNotFoundException {
         User f = getUserService().getUser(friend.getName());
-        
+
         if (f == null) throw new UserNotFoundException(friend.getName());
-        
+
         getFriendService().removeFriend(f, user);
     }
 }

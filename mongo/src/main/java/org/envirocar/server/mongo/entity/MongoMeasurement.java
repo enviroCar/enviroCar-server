@@ -30,6 +30,7 @@ import org.mongodb.morphia.annotations.Property;
 import org.mongodb.morphia.annotations.Transient;
 import org.mongodb.morphia.mapping.Mapper;
 import org.mongodb.morphia.utils.IndexDirection;
+
 import com.google.common.base.Objects;
 import com.google.common.collect.Sets;
 import com.vividsolutions.jts.geom.Geometry;

@@ -16,10 +16,10 @@
  */
 package org.envirocar.server.rest.decoding.json;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
+
 import javax.ws.rs.core.MediaType;
+
 import org.envirocar.server.core.dao.MeasurementDao;
 import org.envirocar.server.core.dao.PhenomenonDao;
 import org.envirocar.server.core.dao.SensorDao;
@@ -35,6 +35,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vividsolutions.jts.geom.Geometry;
+
 /**
  *
  */
@@ -46,7 +50,7 @@ public class ContextKnowledgeTest {
     private DateTimeFormatter dtf;
     private ContextKnowledgeFactory ckf;
     private ContextKnowledge context;
-    
+
     @Before
     public void initMocks() {
         this.ef = Mockito.mock(EntityFactory.class);
@@ -56,26 +60,26 @@ public class ContextKnowledgeTest {
         Mockito.when(ef.createPhenomenon()).thenReturn(Mockito.mock(Phenomenon.class));
 
         this.dtf = ISODateTimeFormat.dateTimeNoMillis();
-        
+
         this.ckf = Mockito.mock(ContextKnowledgeFactory.class);
         this.context = Mockito.spy(new ContextKnowledge());
         Mockito.when(this.ckf.create()).thenReturn(context);
     }
-    
+
     @Test
     public void testContextKnowledge() throws IOException {
         createDaos();
-        JSONEntityDecoder geomDec = Mockito.mock(JSONEntityDecoder.class);
+        JSONEntityDecoder<Geometry> geomDec = Mockito.mock(JSONEntityDecoder.class);
         MeasurementDecoder measDec = new MeasurementDecoder(geomDec, phenonmenonDao, sensorDao);
         measDec.setEntityFactory(ef);
         measDec.setDateTimeFormat(dtf);
-        
+
         TrackDecoder trackDec = new TrackDecoder(measDec, sensorDao, measurementsDao, ckf);
         trackDec.setEntityFactory(ef);
-        
+
         JsonNode node = new ObjectMapper().readTree(getClass().getResourceAsStream("track-context-test.json"));
         trackDec.decode(node, MediaType.APPLICATION_JSON_TYPE);
-        
+
         Mockito.verify(context, Mockito.times(1)).get(JSONConstants.SENSOR_KEY);
         Mockito.verify(context, Mockito.times(1)).get(JSONConstants.PHENOMENONS_KEY);
     }
@@ -86,9 +90,9 @@ public class ContextKnowledgeTest {
         this.phenonmenonDao = Mockito.mock(PhenomenonDao.class);
         Mockito.when(phenonmenonDao.getByName(Mockito.any(String.class))).thenReturn(Mockito.mock(LocalPhenomenon.class));
     }
-    
+
     public abstract class LocalPhenomenon implements Phenomenon {
-        
+
     }
-    
+
 }

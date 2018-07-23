@@ -18,6 +18,8 @@ package org.envirocar.server.mongo.dao;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import org.bson.BSONObject;
@@ -40,23 +42,23 @@ import org.envirocar.server.mongo.entity.MongoTrack;
 import org.envirocar.server.mongo.entity.MongoUser;
 import org.envirocar.server.mongo.util.MongoUtils;
 import org.envirocar.server.mongo.util.MorphiaUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Key;
 import org.mongodb.morphia.mapping.Mapper;
+import org.mongodb.morphia.query.FindOptions;
 import org.mongodb.morphia.query.MorphiaIterator;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.QueryImpl;
 import org.mongodb.morphia.query.UpdateResults;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.mongodb.AggregationOutput;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
-import com.mongodb.CommandResult;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBDecoderFactory;
@@ -64,7 +66,6 @@ import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import com.mongodb.WriteResult;
 import com.vividsolutions.jts.geom.Geometry;
-import java.util.Collections;
 
 /**
  * TODO JavaDoc
@@ -120,17 +121,20 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
         boolean update = false;
         Track track = m.getTrack();
         if (track.hasBegin() && m.getTime().equals(track.getBegin())) {
-            MongoMeasurement newBegin = q()
+            Iterator<MongoMeasurement> it = q()
                     .field(MongoMeasurement.TRACK).equal(key(track))
-                    .order(MongoMeasurement.TIME).limit(1).get();
+                    .order(MongoMeasurement.TIME)
+                    .fetch(new FindOptions().limit(1));
+            MongoMeasurement newBegin = it.hasNext() ? it.next() : null;
             track.setBegin(newBegin == null ? null : newBegin.getTime());
             update = true;
         }
         if (track.hasEnd() && m.getTime().equals(track.getEnd())) {
-            MongoMeasurement newEnd = q()
+            Iterator<MongoMeasurement> it = q()
                     .field(MongoMeasurement.TRACK).equal(key(track))
                     .order(MongoUtils.reverse(MongoMeasurement.TIME))
-                    .limit(1).get();
+                    .fetch(new FindOptions().limit(1));
+            MongoMeasurement newEnd = it.hasNext() ? it.next() : null;
             track.setEnd(newEnd == null ? null : newEnd.getTime());
             update = true;
         }
@@ -246,51 +250,39 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
     }
 
     List<Key<MongoTrack>> getTrackKeysByBbox(MeasurementFilter filter) {
-        ArrayList<DBObject> filters = new ArrayList<>(4);
+        ArrayList<DBObject> ops = new ArrayList<>(4);
         if (filter.hasSpatialFilter()) {
         	SpatialFilter sf = filter.getSpatialFilter();
         	if (sf.getOperator()==SpatialFilterOperator.BBOX){
-        		filters.add(matchGeometry(filter.getSpatialFilter().getGeom()));
+        		ops.add(matchGeometry(filter.getSpatialFilter().getGeom()));
         	}
         	//TODO add further spatial filters
         }
         if (filter.hasUser()) {
-            filters.add(matchUser(filter.getUser()));
+            ops.add(matchUser(filter.getUser()));
         }
         if (filter.hasTrack()) {
-            filters.add(matchTrack(filter.getTrack()));
+            ops.add(matchTrack(filter.getTrack()));
         }
         if (filter.hasTemporalFilter()) {
-            filters.add(matchTime(filter.getTemporalFilter()));
+            ops.add(matchTime(filter.getTemporalFilter()));
         }
+        ops.add(project());
+        ops.add(group());
 
-        final AggregationOutput out;
-        if (filters.isEmpty()) {
-            out = aggregate(project(), group());
-        } else {
-            int size = filters.size();
-            if (size == 1) {
-                out = aggregate(filters.get(0), project(), group());
-            } else {
-                DBObject first = filters.get(0);
-                DBObject[] other = new DBObject[size + 1];
-                for (int i = 1; i < size; ++i) {
-                    other[i - 1] = filters.get(i);
-                }
-                other[other.length - 2] = project();
-                other[other.length - 1] = group();
-                out = aggregate(first, other);
-            }
-        }
+        AggregationOutput out = aggregate(ops);
+
         return toKeyList(out.results());
     }
 
-    private AggregationOutput aggregate(DBObject firstOp,
-                                        DBObject... additionalOps) {
-        AggregationOutput result = mongoDB.getDatastore()
+    private AggregationOutput aggregate(DBObject... ops) {
+        return aggregate(Arrays.asList(ops));
+    }
+
+    private AggregationOutput aggregate(List<DBObject> ops) {
+        return mongoDB.getDatastore()
                 .getCollection(MongoMeasurement.class)
-                .aggregate(firstOp, additionalOps);
-        return result;
+                .aggregate(ops);
     }
 
     private DBObject matchGeometry(Geometry polygon) {
@@ -358,7 +350,7 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
                     .getDbDecoderFactory();
         }
         cursor.setDecoderFactory(dbDecoderFactory);
-        
+
         if (p != null) {
             count = coll.count(query);
             if (p.getBegin()> 0) {

@@ -21,32 +21,34 @@
  */
 package org.envirocar.server.mongo.statistics;
 
-import com.google.inject.Singleton;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Function;
+
 import org.envirocar.server.core.filter.StatisticsFilter;
 import org.envirocar.server.mongo.entity.MongoStatisticKey;
 import org.envirocar.server.mongo.entity.MongoStatistics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.inject.Singleton;
+
 /**
  *
  */
 @Singleton
 public class StatisticsUpdateScheduler {
-    
+
     private static final Logger LOGGER = LoggerFactory.getLogger(StatisticsUpdateScheduler.class);
-    
+
     private final Object keyStatisticMutex = new Object();
     private Set<MongoStatisticKey> currentKeyStatisticUpdates = new HashSet<>();
     private Set<MongoStatisticKey> updatePendingForKey = new HashSet<>();
-    
-    
+
+
     public void updateStatistics(StatisticsFilter filter, MongoStatisticKey key,
             Function<StatisticsFilter, MongoStatistics> calculator, boolean waitForResult) {
-        
+
         synchronized (this.keyStatisticMutex) {
             if (this.currentKeyStatisticUpdates.contains(key)) {
                 /*
@@ -66,18 +68,18 @@ public class StatisticsUpdateScheduler {
                 this.currentKeyStatisticUpdates.add(key);
             }
         }
-        
+
         LOGGER.info(String.format("starting statistics update for key %s", key));
         calculator.apply(filter);
         LOGGER.info(String.format("finished statistics update for key %s !", key));
-        
+
         synchronized (this.keyStatisticMutex) {
             this.keyStatisticMutex.notifyAll();
             this.currentKeyStatisticUpdates.remove(key);
-            
+
             if (updatePendingForKey.contains(key)) {
                 updatePendingForKey.remove(key);
-                
+
                 /*
                 another update is pending, start it
                 */
@@ -85,12 +87,7 @@ public class StatisticsUpdateScheduler {
                     /*
                     the thread is waiting, do not use it again and spawn a new
                     */
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            updateStatistics(filter, key, calculator, false);
-                        }
-                    }).start();
+                    new Thread(() -> updateStatistics(filter, key, calculator, false)).start();
                 }
                 else {
                     updateStatistics(filter, key, calculator, false);
@@ -98,6 +95,6 @@ public class StatisticsUpdateScheduler {
             }
         }
     }
-    
-    
+
+
 }

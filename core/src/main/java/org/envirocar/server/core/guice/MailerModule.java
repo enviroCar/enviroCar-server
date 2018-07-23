@@ -14,15 +14,15 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.event.mail;
+package org.envirocar.server.event.guice;
 
-import java.util.Properties;
+import org.envirocar.server.event.HTTPPushListener;
 
-public class SendMailTLS extends AbstractSendMail {
+import com.google.inject.AbstractModule;
 
-	@Override
-	protected void injectProperties(Properties props) {
-		props.put("mail.smtp.starttls.enable", "true");		
-	}
-
+public class HTTPPushModule extends AbstractModule {
+    @Override
+    protected void configure() {
+        bind(HTTPPushListener.class).asEagerSingleton();
+    }
 }

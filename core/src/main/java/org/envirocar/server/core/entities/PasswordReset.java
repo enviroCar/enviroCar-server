@@ -19,7 +19,6 @@ package org.envirocar.server.core.entities;
 import org.joda.time.DateTime;
 
 public interface PasswordReset extends BaseEntity {
-
 	DateTime getExpires();
 
 	User getUser();
