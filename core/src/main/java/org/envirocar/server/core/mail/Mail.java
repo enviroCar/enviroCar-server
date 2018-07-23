@@ -16,8 +16,20 @@
  */
 package org.envirocar.server.core.mail;
 
-public interface Mailer {
+import java.util.List;
 
-    void send(Mail mail) throws MailerException;
+/**
+ * TODO JavaDoc
+ *
+ * @author Christian Autermann
+ */
+public interface Mail {
+    String getRecipientAddress();
+
+    String getRecipientName();
+
+    String getSubject();
+
+    List<MailContent> getContents();
 
 }

@@ -16,8 +16,31 @@
  */
 package org.envirocar.server.core.mail;
 
-public interface Mailer {
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
-    void send(Mail mail) throws MailerException;
+import org.envirocar.server.core.entities.User;
+
+public class PlainMail extends UserMail {
+
+    private final String subject;
+    private final MailContent content;
+
+    public PlainMail(User user, String subject, String content) {
+        super(user);
+        this.subject = Objects.requireNonNull(subject);
+        this.content = DefaultMailContent.plain(content);
+    }
+
+    @Override
+    public String getSubject() {
+        return this.subject;
+    }
+
+    @Override
+    public List<MailContent> getContents() {
+        return Collections.singletonList(this.content);
+    }
 
 }

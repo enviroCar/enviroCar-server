@@ -32,9 +32,7 @@ import org.envirocar.server.core.entities.Phenomenon;
 import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.entities.User;
-import org.envirocar.server.core.exception.ResourceAlreadyExistException;
 import org.envirocar.server.core.exception.TrackNotFoundException;
-import org.envirocar.server.core.exception.UserNotFoundException;
 import org.envirocar.server.core.exception.ValidationException;
 import org.envirocar.server.mongo.entity.MongoSensor;
 import org.envirocar.server.rest.MediaTypes;
@@ -50,478 +48,464 @@ import com.vividsolutions.jts.geom.Coordinate;
  *
  * @author Benjamin Pross
  */
-public class CSVEncodingTest extends AbstractEncodingTest{
+public class CSVEncodingTest extends AbstractEncodingTest {
 
-	private String dateTime = "2014-05-20T08:42:06Z";
+    private String dateTime = "2014-05-20T08:42:06Z";
 
-	String trackObjectId1 = "537a0d68b7c39b56ef230942";
-	String trackObjectId2 = "537b0ef874c965606f093b0d";
-	String trackObjectId3 = "537b0ef874c965606f093b0e";
+    String trackObjectId1 = "537a0d68b7c39b56ef230942";
+    String trackObjectId2 = "537b0ef874c965606f093b0d";
+    String trackObjectId3 = "537b0ef874c965606f093b0e";
 
-	private String measurementObjectId1 = "537b0ef874c965606f093b0f";
-	private String measurementObjectId2 = "537b0ef874c965606f093b10";
-	private String measurementObjectId3 = "537b0ef874c965606f093b11";
-	private String measurementObjectId4 = "537b0ef874c965606f093b12";
-	private String measurementObjectId5 = "537b0ef874c965606f093b13";
-	private String measurementObjectId6 = "537b0ef874c965606f093b14";
+    private String measurementObjectId1 = "537b0ef874c965606f093b0f";
+    private String measurementObjectId2 = "537b0ef874c965606f093b10";
+    private String measurementObjectId3 = "537b0ef874c965606f093b11";
+    private String measurementObjectId4 = "537b0ef874c965606f093b12";
+    private String measurementObjectId5 = "537b0ef874c965606f093b13";
+    private String measurementObjectId6 = "537b0ef874c965606f093b14";
 
-	private Track testTrack1;
-	private Track testTrack2;
-	private Track testTrack3;
+    private Track testTrack1;
+    private Track testTrack2;
+    private Track testTrack3;
 
-	private User user;
-	private Sensor sensor;
-	private List<Phenomenon> phenomenons;
+    private User user;
+    private Sensor sensor;
+    private List<Phenomenon> phenomenons;
 
-	String testUserName = "TestUser";
-	
-	@Before
-	public void setup() {
+    String testUserName = "TestUser";
 
-		try {
+    @Before
+    public void setup() {
 
-			testTrack1 = getTestTrack(trackObjectId1);
-			testTrack2 = getTestTrack(trackObjectId2);
-			testTrack3 = getTestTrack(trackObjectId3);
+        try {
 
-			if (testTrack1 == null) {
+            testTrack1 = getTestTrack(trackObjectId1);
+            testTrack2 = getTestTrack(trackObjectId2);
+            testTrack3 = getTestTrack(trackObjectId3);
 
-				testTrack1 = createTrack(trackObjectId1, getUser(), getSensor());
+            if (testTrack1 == null) {
 
-				createTrackWithMeasurements_AllMeasurementsHaveAllPhenomenons(
-						testTrack1, getPhenomenons(), getUser(), getSensor());
+                testTrack1 = createTrack(trackObjectId1, getUser(), getSensor());
 
-			}
-			if(testTrack2 == null){
+                createTrackWithMeasurements_AllMeasurementsHaveAllPhenomenons(
+                        testTrack1, getPhenomenons(), getUser(), getSensor());
 
-				testTrack2 = createTrack(trackObjectId2, getUser(), getSensor());
-				
-				createTrackWithMeasurements_FirstMeasurementHasLessPhenomenons(
-						testTrack2, getPhenomenons(), getUser(), getSensor());				
-			}			
-			if(testTrack3 == null){
+            }
+            if (testTrack2 == null) {
 
-				testTrack3 = createTrack(trackObjectId3, getUser(), getSensor());
-				
-				createTrackWithMeasurements_FirstMeasurementHasMorePhenomenons(
-						testTrack3, getPhenomenons(), getUser(), getSensor());				
-			}
+                testTrack2 = createTrack(trackObjectId2, getUser(), getSensor());
 
-		} catch (ValidationException e) {
-			e.printStackTrace();
-		}
+                createTrackWithMeasurements_FirstMeasurementHasLessPhenomenons(
+                        testTrack2, getPhenomenons(), getUser(), getSensor());
+            }
+            if (testTrack3 == null) {
 
-	}
+                testTrack3 = createTrack(trackObjectId3, getUser(), getSensor());
 
-	@Test
-	public void testCSVEncodingAllMeasurementsHaveAllPhenomenons()
-			throws IOException {
+                createTrackWithMeasurements_FirstMeasurementHasMorePhenomenons(
+                        testTrack3, getPhenomenons(), getUser(), getSensor());
+            }
 
-		BufferedReader bufferedReader = new BufferedReader(
-				new InputStreamReader(trackCSVEncoder.encodeCSV(testTrack1,
-						MediaTypes.TEXT_CSV_TYPE)));
+        } catch (ValidationException e) {
+            e.printStackTrace();
+        }
 
-		String line = "";
-		
-		String[] propertyNames = new String[0];
-		String[] propertyValues1 = new String[0];
-		String[] propertyValues2 = new String[0];
+    }
 
-		for (int i = 0; i < 3; i++) {
-			line = bufferedReader.readLine();
-			if(line != null){
-				switch (i) {
-				case 0:
-					propertyNames = line.split(";");
-					break;
-				case 1:
-					propertyValues1 = line.split(";");
-					break;
-				case 2:
-					propertyValues2 = line.split(";");
-					break;
+    @Test
+    public void testCSVEncodingAllMeasurementsHaveAllPhenomenons()
+            throws IOException {
 
-				default:
-					break;
-				}
-			}
-			
-		}
+        BufferedReader bufferedReader = new BufferedReader(
+                new InputStreamReader(trackCSVEncoder.encodeCSV(testTrack1,
+                                                                MediaTypes.TEXT_CSV_TYPE)));
 
-		Map<String, String> expectedValues = new HashMap<String, String>();
-		
-		expectedValues.put("id", "537b0ef874c965606f093b0f");
-		expectedValues.put("RPM(u/min)", "1");
-		expectedValues.put("Speed(km/h)", "3");
-		expectedValues.put("Intake Temperature(C)", "2");
-		expectedValues.put("MAF(l/s)", "4");
-		expectedValues.put("longitude", "1.1");
-		expectedValues.put("latitude", "1.2");
-		
-		checkMeasurementValues(propertyNames, propertyValues1, expectedValues);
-		
-		expectedValues = new HashMap<String, String>();
-		
-		expectedValues.put("id", "537b0ef874c965606f093b10");
-		expectedValues.put("RPM(u/min)", "2");
-		expectedValues.put("Speed(km/h)", "4");
-		expectedValues.put("Intake Temperature(C)", "3");
-		expectedValues.put("MAF(l/s)", "5");
-		expectedValues.put("longitude", "2.1");
-		expectedValues.put("latitude", "2.2");
-		
-		checkMeasurementValues(propertyNames, propertyValues2, expectedValues);
+        String line = "";
 
-	}
-	
-	@Test
-	public void testCSVEncodingFirstMeasurementHasLessPhenomenons()
-			throws IOException {
-		
-		BufferedReader bufferedReader = new BufferedReader(
-				new InputStreamReader(trackCSVEncoder.encodeCSV(testTrack2,
-						MediaTypes.TEXT_CSV_TYPE)));
-		
-		String line = "";
-		
-		String[] propertyNames = new String[0];
-		String[] propertyValues1 = new String[0];
-		String[] propertyValues2 = new String[0];
+        String[] propertyNames = new String[0];
+        String[] propertyValues1 = new String[0];
+        String[] propertyValues2 = new String[0];
 
-		for (int i = 0; i < 3; i++) {
-			line = bufferedReader.readLine();
-			if(line != null){
-				switch (i) {
-				case 0:
-					propertyNames = line.split(";");
-					break;
-				case 1:
-					propertyValues1 = line.split(";");
-					break;
-				case 2:
-					propertyValues2 = line.split(";");
-					break;
+        for (int i = 0; i < 3; i++) {
+            line = bufferedReader.readLine();
+            if (line != null) {
+                switch (i) {
+                    case 0:
+                        propertyNames = line.split(";");
+                        break;
+                    case 1:
+                        propertyValues1 = line.split(";");
+                        break;
+                    case 2:
+                        propertyValues2 = line.split(";");
+                        break;
 
-				default:
-					break;
-				}
-			}
-			
-		}
-		
-		Map<String, String> expectedValues = new HashMap<String, String>();
-		
-		expectedValues.put("id", "537b0ef874c965606f093b11");
-		expectedValues.put("RPM(u/min)", "1");
-		expectedValues.put("Speed(km/h)", "3");
-		expectedValues.put("Intake Temperature(C)", "2");
-		expectedValues.put("MAF(l/s)", "");
-		expectedValues.put("longitude", "1.1");
-		expectedValues.put("latitude", "1.2");
-		
-		checkMeasurementValues(propertyNames, propertyValues1, expectedValues);
-		
-		expectedValues = new HashMap<String, String>();
-		
-		expectedValues.put("id", "537b0ef874c965606f093b12");
-		expectedValues.put("RPM(u/min)", "2");
-		expectedValues.put("Speed(km/h)", "4");
-		expectedValues.put("Intake Temperature(C)", "3");
-		expectedValues.put("MAF(l/s)", "5");
-		expectedValues.put("longitude", "2.1");
-		expectedValues.put("latitude", "2.2");
-		
-		checkMeasurementValues(propertyNames, propertyValues2, expectedValues);
-		
-	}
-	
-	@Test
-	public void testCSVEncodingFirstMeasurementHasMorePhenomenons()
-			throws IOException {
-		
-		BufferedReader bufferedReader = new BufferedReader(
-				new InputStreamReader(trackCSVEncoder.encodeCSV(testTrack3,
-						MediaTypes.TEXT_CSV_TYPE)));
-		
-		String line = "";
-		
-		String[] propertyNames = new String[0];
-		String[] propertyValues1 = new String[0];
-		String[] propertyValues2 = new String[0];
+                    default:
+                        break;
+                }
+            }
 
-		for (int i = 0; i < 3; i++) {
-			line = bufferedReader.readLine();
-			if(line != null){
-				switch (i) {
-				case 0:
-					propertyNames = line.split(";");
-					break;
-				case 1:
-					propertyValues1 = line.split(";");
-					break;
-				case 2:
-					propertyValues2 = line.split(";");
-					break;
+        }
 
-				default:
-					break;
-				}
-			}
-			
-		}
-		
-		Map<String, String> expectedValues = new HashMap<String, String>();
-		
-		expectedValues.put("id", "537b0ef874c965606f093b13");
-		expectedValues.put("RPM(u/min)", "1");
-		expectedValues.put("Speed(km/h)", "3");
-		expectedValues.put("Intake Temperature(C)", "2");
-		expectedValues.put("longitude", "1.1");
-		expectedValues.put("latitude", "1.2");
-		
-		checkMeasurementValues(propertyNames, propertyValues1, expectedValues);
-		
-		expectedValues = new HashMap<String, String>();
-		
-		expectedValues.put("id", "537b0ef874c965606f093b14");
-		expectedValues.put("RPM(u/min)", "2");
-		expectedValues.put("Speed(km/h)", "");
-		expectedValues.put("Intake Temperature(C)", "3");
-		expectedValues.put("longitude", "2.1");
-		expectedValues.put("latitude", "2.2");
-		
-		checkMeasurementValues(propertyNames, propertyValues2, expectedValues);
-		
-	}
-	
-	private User getUser(){
-		if(user == null){
-			user =  createUser(testUserName);
-		}
-		return user;
-	}
-	
-	private Sensor getSensor(){
-		
-		if(sensor == null){
-			sensor = createSensor();
-		}
-		return sensor;
-	}
-	
-	private List<Phenomenon> getPhenomenons(){
-		
-		if(phenomenons == null){
-			phenomenons = createPhenomenoms();
-		}		
-		return phenomenons;		
-	}
+        Map<String, String> expectedValues = new HashMap<String, String>();
 
-	private Track getTestTrack(String trackId) {
-		Track testTrack = null;
-		try {
-			testTrack = dataService.getTrack(trackId);
-		} catch (TrackNotFoundException e) {
-			/*
+        expectedValues.put("id", "537b0ef874c965606f093b0f");
+        expectedValues.put("RPM(u/min)", "1");
+        expectedValues.put("Speed(km/h)", "3");
+        expectedValues.put("Intake Temperature(C)", "2");
+        expectedValues.put("MAF(l/s)", "4");
+        expectedValues.put("longitude", "1.1");
+        expectedValues.put("latitude", "1.2");
+
+        checkMeasurementValues(propertyNames, propertyValues1, expectedValues);
+
+        expectedValues = new HashMap<String, String>();
+
+        expectedValues.put("id", "537b0ef874c965606f093b10");
+        expectedValues.put("RPM(u/min)", "2");
+        expectedValues.put("Speed(km/h)", "4");
+        expectedValues.put("Intake Temperature(C)", "3");
+        expectedValues.put("MAF(l/s)", "5");
+        expectedValues.put("longitude", "2.1");
+        expectedValues.put("latitude", "2.2");
+
+        checkMeasurementValues(propertyNames, propertyValues2, expectedValues);
+
+    }
+
+    @Test
+    public void testCSVEncodingFirstMeasurementHasLessPhenomenons()
+            throws IOException {
+
+        BufferedReader bufferedReader = new BufferedReader(
+                new InputStreamReader(trackCSVEncoder.encodeCSV(testTrack2,
+                                                                MediaTypes.TEXT_CSV_TYPE)));
+
+        String line = "";
+
+        String[] propertyNames = new String[0];
+        String[] propertyValues1 = new String[0];
+        String[] propertyValues2 = new String[0];
+
+        for (int i = 0; i < 3; i++) {
+            line = bufferedReader.readLine();
+            if (line != null) {
+                switch (i) {
+                    case 0:
+                        propertyNames = line.split(";");
+                        break;
+                    case 1:
+                        propertyValues1 = line.split(";");
+                        break;
+                    case 2:
+                        propertyValues2 = line.split(";");
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+
+        }
+
+        Map<String, String> expectedValues = new HashMap<String, String>();
+
+        expectedValues.put("id", "537b0ef874c965606f093b11");
+        expectedValues.put("RPM(u/min)", "1");
+        expectedValues.put("Speed(km/h)", "3");
+        expectedValues.put("Intake Temperature(C)", "2");
+        expectedValues.put("MAF(l/s)", "");
+        expectedValues.put("longitude", "1.1");
+        expectedValues.put("latitude", "1.2");
+
+        checkMeasurementValues(propertyNames, propertyValues1, expectedValues);
+
+        expectedValues = new HashMap<String, String>();
+
+        expectedValues.put("id", "537b0ef874c965606f093b12");
+        expectedValues.put("RPM(u/min)", "2");
+        expectedValues.put("Speed(km/h)", "4");
+        expectedValues.put("Intake Temperature(C)", "3");
+        expectedValues.put("MAF(l/s)", "5");
+        expectedValues.put("longitude", "2.1");
+        expectedValues.put("latitude", "2.2");
+
+        checkMeasurementValues(propertyNames, propertyValues2, expectedValues);
+
+    }
+
+    @Test
+    public void testCSVEncodingFirstMeasurementHasMorePhenomenons()
+            throws IOException {
+
+        BufferedReader bufferedReader = new BufferedReader(
+                new InputStreamReader(trackCSVEncoder.encodeCSV(testTrack3,
+                                                                MediaTypes.TEXT_CSV_TYPE)));
+
+        String line = "";
+
+        String[] propertyNames = new String[0];
+        String[] propertyValues1 = new String[0];
+        String[] propertyValues2 = new String[0];
+
+        for (int i = 0; i < 3; i++) {
+            line = bufferedReader.readLine();
+            if (line != null) {
+                switch (i) {
+                    case 0:
+                        propertyNames = line.split(";");
+                        break;
+                    case 1:
+                        propertyValues1 = line.split(";");
+                        break;
+                    case 2:
+                        propertyValues2 = line.split(";");
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+
+        }
+
+        Map<String, String> expectedValues = new HashMap<String, String>();
+
+        expectedValues.put("id", "537b0ef874c965606f093b13");
+        expectedValues.put("RPM(u/min)", "1");
+        expectedValues.put("Speed(km/h)", "3");
+        expectedValues.put("Intake Temperature(C)", "2");
+        expectedValues.put("longitude", "1.1");
+        expectedValues.put("latitude", "1.2");
+
+        checkMeasurementValues(propertyNames, propertyValues1, expectedValues);
+
+        expectedValues = new HashMap<String, String>();
+
+        expectedValues.put("id", "537b0ef874c965606f093b14");
+        expectedValues.put("RPM(u/min)", "2");
+        expectedValues.put("Speed(km/h)", "");
+        expectedValues.put("Intake Temperature(C)", "3");
+        expectedValues.put("longitude", "2.1");
+        expectedValues.put("latitude", "2.2");
+
+        checkMeasurementValues(propertyNames, propertyValues2, expectedValues);
+
+    }
+
+    private User getUser() {
+        if (user == null) {
+            user = createUser(testUserName);
+        }
+        return user;
+    }
+
+    private Sensor getSensor() {
+
+        if (sensor == null) {
+            sensor = createSensor();
+        }
+        return sensor;
+    }
+
+    private List<Phenomenon> getPhenomenons() {
+
+        if (phenomenons == null) {
+            phenomenons = createPhenomenoms();
+        }
+        return phenomenons;
+    }
+
+    private Track getTestTrack(String trackId) {
+        Track testTrack = null;
+        try {
+            testTrack = dataService.getTrack(trackId);
+        } catch (TrackNotFoundException e) {
+            /*
 			 * ignore
-			 */
-		}
-		return testTrack;
-	}
+             */
+        }
+        return testTrack;
+    }
 
-	private void createTrackWithMeasurements_AllMeasurementsHaveAllPhenomenons(
-			Track track, List<Phenomenon> phenomenons, User user, Sensor sensor) {
+    private void createTrackWithMeasurements_AllMeasurementsHaveAllPhenomenons(
+            Track track, List<Phenomenon> phenomenons, User user, Sensor sensor) {
 
-		DateTime now = DateTime.now();
-		createMeasurement(track, measurementObjectId1, phenomenons, user,
-				sensor, 1, now.minusSeconds(5));
-		createMeasurement(track, measurementObjectId2, phenomenons, user,
-				sensor, 2, now);
+        DateTime now = DateTime.now();
+        createMeasurement(track, measurementObjectId1, phenomenons, user,
+                          sensor, 1, now.minusSeconds(5));
+        createMeasurement(track, measurementObjectId2, phenomenons, user,
+                          sensor, 2, now);
 
-		dataService.createTrack(track);
+        dataService.createTrack(track);
 
-	}
+    }
 
-	private void createTrackWithMeasurements_FirstMeasurementHasLessPhenomenons(			
-			Track track, List<Phenomenon> phenomenons, User user, Sensor sensor) {
+    private void createTrackWithMeasurements_FirstMeasurementHasLessPhenomenons(
+            Track track, List<Phenomenon> phenomenons, User user, Sensor sensor) {
 
-		List<Phenomenon> originalPhenomenons = new ArrayList<Phenomenon>(phenomenons.size()); 
-		
-		for (Phenomenon phenomenon : phenomenons) {
-			originalPhenomenons.add(phenomenon);
-		}
-		
-		phenomenons.remove(phenomenons.size()-1);
-		
-		DateTime now = DateTime.now();
-		createMeasurement(track, measurementObjectId3, phenomenons, user,
-				sensor, 1, now.minusSeconds(5));
-		
-		createMeasurement(track, measurementObjectId4, originalPhenomenons, user,
-				sensor, 2, now);
+        List<Phenomenon> originalPhenomenons = new ArrayList<Phenomenon>(phenomenons.size());
 
-		dataService.createTrack(track);
-	}
+        for (Phenomenon phenomenon : phenomenons) {
+            originalPhenomenons.add(phenomenon);
+        }
 
-	private void createTrackWithMeasurements_FirstMeasurementHasMorePhenomenons(			
-			Track track, List<Phenomenon> phenomenons, User user, Sensor sensor) {
+        phenomenons.remove(phenomenons.size() - 1);
 
-		DateTime now = DateTime.now();
-		createMeasurement(track, measurementObjectId5, phenomenons, user,
-				sensor, 1, now.minusSeconds(5));
-		
-		phenomenons.remove(phenomenons.size()-1);
-		
-		createMeasurement(track, measurementObjectId6, phenomenons, user,
-				sensor, 2, now);
+        DateTime now = DateTime.now();
+        createMeasurement(track, measurementObjectId3, phenomenons, user,
+                          sensor, 1, now.minusSeconds(5));
 
-		dataService.createTrack(track);
-	}
+        createMeasurement(track, measurementObjectId4, originalPhenomenons, user,
+                          sensor, 2, now);
 
-	private Measurement createMeasurement(Track testTrack, String objectId,
-			List<Phenomenon> phenomenons, User user, Sensor sensor,
-			int basenumber, DateTime time) {
+        dataService.createTrack(track);
+    }
 
-		Measurement measurement = entityFactory.createMeasurement();
+    private void createTrackWithMeasurements_FirstMeasurementHasMorePhenomenons(
+            Track track, List<Phenomenon> phenomenons, User user, Sensor sensor) {
 
-		measurement.setGeometry(geometryFactory.createPoint(new Coordinate(
-				basenumber + 0.1, basenumber + 0.2)));
+        DateTime now = DateTime.now();
+        createMeasurement(track, measurementObjectId5, phenomenons, user,
+                          sensor, 1, now.minusSeconds(5));
 
-		measurement.setSensor(sensor);
+        phenomenons.remove(phenomenons.size() - 1);
 
-		measurement.setUser(user);
+        createMeasurement(track, measurementObjectId6, phenomenons, user,
+                          sensor, 2, now);
 
-		measurement.setIdentifier(objectId);
+        dataService.createTrack(track);
+    }
 
-		int value = basenumber;
+    private Measurement createMeasurement(Track testTrack, String objectId,
+                                          List<Phenomenon> phenomenons, User user, Sensor sensor,
+                                          int basenumber, DateTime time) {
 
-		for (Phenomenon phenomenon : phenomenons) {
+        Measurement measurement = entityFactory.createMeasurement();
 
-			MeasurementValue measurementValue = entityFactory
-					.createMeasurementValue();
-			
-			measurementValue.setPhenomenon(phenomenon);
+        measurement.setGeometry(geometryFactory.createPoint(new Coordinate(
+                basenumber + 0.1, basenumber + 0.2)));
 
-			measurementValue.setValue(value);
+        measurement.setSensor(sensor);
 
-			measurement.addValue(measurementValue);
+        measurement.setUser(user);
 
-			value++;
-		}
+        measurement.setIdentifier(objectId);
 
-		measurement.setTime(time);
-		
-		measurement.setTrack(testTrack);
+        int value = basenumber;
 
-		dataService.createMeasurement(measurement);
+        for (Phenomenon phenomenon : phenomenons) {
 
-		return measurement;
+            MeasurementValue measurementValue = entityFactory
+                    .createMeasurementValue();
 
-	}
+            measurementValue.setPhenomenon(phenomenon);
 
-	private Track createTrack(String objectId, User user, Sensor sensor) {
+            measurementValue.setValue(value);
 
-		Track result = entityFactory.createTrack();
+            measurement.addValue(measurementValue);
 
-		result.setIdentifier(objectId);
+            value++;
+        }
 
-		result.setUser(user);
+        measurement.setTime(time);
 
-		result.setSensor(sensor);
+        measurement.setTrack(testTrack);
 
-		return result;
-	}
+        dataService.createMeasurement(measurement);
 
-	private Sensor createSensor() {
-		Sensor s = entityFactory.createSensor();
+        return measurement;
 
-		s.setIdentifier("51bc53ab5064ba7f336ef920");
+    }
 
-		s.setType("Car");
-		
-		MongoSensor ms = (MongoSensor) s;
+    private Track createTrack(String objectId, User user, Sensor sensor) {
 
-		ms.setCreationTime(DateTime.parse(dateTime));
-		ms.setModificationTime(DateTime.parse(dateTime));
+        Track result = entityFactory.createTrack();
 
-		dataService.createSensor(ms);
-		return s;
-	}
+        result.setIdentifier(objectId);
 
-	private List<Phenomenon> createPhenomenoms() {
+        result.setUser(user);
 
-		List<Phenomenon> result = new ArrayList<Phenomenon>();
+        result.setSensor(sensor);
 
-		result.add(createPhenomenom("RPM", "u/min"));
-		result.add(createPhenomenom("Intake Temperature", "C"));
-		result.add(createPhenomenom("Speed", "km/h"));
-		result.add(createPhenomenom("MAF", "l/s"));
+        return result;
+    }
 
-		return result;
-	}
+    private Sensor createSensor() {
+        Sensor s = entityFactory.createSensor();
 
-	private Phenomenon createPhenomenom(String name, String unit) {
+        s.setIdentifier("51bc53ab5064ba7f336ef920");
 
-		Phenomenon f = entityFactory.createPhenomenon();
+        s.setType("Car");
 
-		f.setName(name);
-		f.setUnit(unit);
+        MongoSensor ms = (MongoSensor) s;
 
-		dataService.createPhenomenon(f);
+        ms.setCreationTime(DateTime.parse(dateTime));
+        ms.setModificationTime(DateTime.parse(dateTime));
 
-		return f;
-	}
+        dataService.createSensor(ms);
+        return s;
+    }
 
-	private User createUser(String testUserName) {
+    private List<Phenomenon> createPhenomenoms() {
 
-		User user = entityFactory.createUser();
+        List<Phenomenon> result = new ArrayList<Phenomenon>();
 
-		user.setName(testUserName);
-		user.setMail("info@52north.org");
-		user.setToken("pwd123");
+        result.add(createPhenomenom("RPM", "u/min"));
+        result.add(createPhenomenom("Intake Temperature", "C"));
+        result.add(createPhenomenom("Speed", "km/h"));
+        result.add(createPhenomenom("MAF", "l/s"));
 
-		try {
-			if (userService.getUser(testUserName) == null) {
-				userService.createUser(user);
-			}
-		} catch (UserNotFoundException e) {
-			/*
-			 * ignore this one and try to create user
-			 */
-			try {
-				userService.createUser(user);
-			} catch (ValidationException e1) {
-				e1.printStackTrace();
-			} catch (ResourceAlreadyExistException e1) {
-				e1.printStackTrace();
-			}
-		} catch (ValidationException e) {
-			e.printStackTrace();
-		} catch (ResourceAlreadyExistException e) {
-			e.printStackTrace();
-		}
-		return user;
+        return result;
+    }
 
-	}
-	
-	private void checkMeasurementValues(String[] propertyNames, String[] propertyValues,  Map<String, String> expectedValues){
-		
-		for (int i = 0; i < propertyNames.length; i++) {
+    private Phenomenon createPhenomenom(String name, String unit) {
 
-			String propertyName = propertyNames[i].trim();
+        Phenomenon f = entityFactory.createPhenomenon();
 
-			if (!propertyName.equals("time")) {
+        f.setName(name);
+        f.setUnit(unit);
 
-				String expectedMeasurementValue = expectedValues
-						.get(propertyName);
+        dataService.createPhenomenon(f);
 
-				String propertyValue = propertyValues[i].trim();
+        return f;
+    }
 
-				assertTrue("Value for " + propertyName + " does not match expected. Got " + propertyValue + " expected " + expectedMeasurementValue + ".", expectedMeasurementValue
-						.equals(propertyValue));
-			}
+    private User createUser(String testUserName) {
 
-		}
-	}
+        User user = entityFactory.createUser();
+
+        user.setName(testUserName);
+        user.setMail("info@52north.org");
+        user.setToken("pwd123");
+
+        if (userDao.getByName(testUserName) == null) {
+            userDao.save(user);
+        }
+
+        return user;
+
+    }
+
+    private void checkMeasurementValues(String[] propertyNames, String[] propertyValues,
+                                        Map<String, String> expectedValues) {
+
+        for (int i = 0; i < propertyNames.length; i++) {
+
+            String propertyName = propertyNames[i].trim();
+
+            if (!propertyName.equals("time")) {
+
+                String expectedMeasurementValue = expectedValues
+                        .get(propertyName);
+
+                String propertyValue = propertyValues[i].trim();
+
+                assertTrue("Value for " + propertyName + " does not match expected. Got " + propertyValue + " expected " +
+                           expectedMeasurementValue + ".", expectedMeasurementValue
+                                   .equals(propertyValue));
+            }
+
+        }
+    }
 
 }

@@ -18,14 +18,13 @@ package org.envirocar.server.rest.guice;
 
 import java.util.Map;
 
-import org.envirocar.server.rest.pagination.PaginationFilter;
 import org.envirocar.server.rest.CachingFilter;
 import org.envirocar.server.rest.URIContentNegotiationFilter;
 import org.envirocar.server.rest.auth.AuthenticationFilter;
 import org.envirocar.server.rest.auth.AuthenticationResourceFilterFactory;
+import org.envirocar.server.rest.pagination.PaginationFilter;
 import org.envirocar.server.rest.validation.JSONSchemaResourceFilterFactory;
 
-import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -59,9 +58,7 @@ public class JerseyModule extends JerseyServletModule {
     }
 
     private String classList(Iterable<? extends Class<?>> classes) {
-        return Joiner.on(",").join(Iterables.transform(classes, new Function<Class<?>, String>() {
-            @Override public String apply(Class<?> type) { return type.getName(); }
-        }));
+        return Joiner.on(",").join(Iterables.transform(classes, Class<?>::getName));
     }
 
     protected ImmutableList<Class<? extends ContainerResponseFilter>> responseFilters() {

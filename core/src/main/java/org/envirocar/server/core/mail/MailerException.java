@@ -16,8 +16,25 @@
  */
 package org.envirocar.server.core.mail;
 
-public interface Mailer {
+/**
+ * TODO JavaDoc
+ *
+ * @author Christian Autermann
+ */
+public class MailerException extends Exception {
 
-    void send(Mail mail) throws MailerException;
+    private static final long serialVersionUID = 6627998932153624017L;
+
+    public MailerException(String message) {
+        super(message);
+    }
+
+    public MailerException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public MailerException(Throwable cause) {
+        super(cause);
+    }
 
 }

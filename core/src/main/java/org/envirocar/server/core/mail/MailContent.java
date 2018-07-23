@@ -16,8 +16,17 @@
  */
 package org.envirocar.server.core.mail;
 
-public interface Mailer {
 
-    void send(Mail mail) throws MailerException;
+import com.google.common.net.MediaType;
+
+/**
+ * TODO JavaDoc
+ *
+ * @author Christian Autermann
+ */
+public interface MailContent {
+    MediaType getContentType();
+
+    String getContent();
 
 }

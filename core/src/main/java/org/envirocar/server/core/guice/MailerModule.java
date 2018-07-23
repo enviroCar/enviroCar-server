@@ -14,15 +14,65 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.event.guice;
+package org.envirocar.server.core.guice;
 
-import org.envirocar.server.event.HTTPPushListener;
+import java.io.IOException;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Properties;
+
+import javax.inject.Named;
+
+import org.envirocar.server.core.mail.Mailer;
+import org.envirocar.server.core.mail.MailerImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.Provides;
 
-public class HTTPPushModule extends AbstractModule {
+public class MailerModule extends AbstractModule {
+    private static final Logger LOG = LoggerFactory.getLogger(MailerModule.class);
+
+    @Provides
+    @Named("mail")
+    public Properties getMailProperties() throws IOException {
+        Properties properties = new Properties();
+
+        Path file;
+
+        file = Paths.get(".").resolve("mail.properties").toAbsolutePath();
+        if (!Files.exists(file)) {
+            LOG.warn("{} does not exists", file);
+            String home = System.getProperty("user.home");
+            if (home != null) {
+                file = Paths.get(home).resolve("mail.properties");
+                if (!Files.exists(file)) {
+                    LOG.warn("{} does not exists", file);
+                }
+            }
+        }
+
+        if (!Files.exists(file)) {
+            throw new IOException("could not locate mail.properties");
+        }
+        try (Reader reader = Files.newBufferedReader(file, StandardCharsets.UTF_8)) {
+            properties.load(reader);
+        }
+
+        for (Object key : properties.keySet()) {
+            LOG.debug("mail config: {} -> {}", key, properties.get(key));
+        }
+
+        return properties;
+
+    }
+
     @Override
     protected void configure() {
-        bind(HTTPPushListener.class).asEagerSingleton();
+        bind(Mailer.class).to(MailerImpl.class).asEagerSingleton();
     }
 }

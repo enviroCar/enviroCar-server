@@ -16,8 +16,21 @@
  */
 package org.envirocar.server.core.mail;
 
-public interface Mailer {
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-    void send(Mail mail) throws MailerException;
+/**
+ * TODO JavaDoc
+ *
+ * @author Christian Autermann
+ */
+public class NoopMailer implements Mailer {
+
+    private static final Logger LOG = LoggerFactory.getLogger(NoopMailer.class);
+
+    @Override
+    public void send(Mail mail) throws MailerException {
+        LOG.info("Discarding mail {}", mail);
+    }
 
 }

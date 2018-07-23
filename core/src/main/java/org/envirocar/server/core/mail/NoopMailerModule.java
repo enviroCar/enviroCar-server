@@ -16,8 +16,18 @@
  */
 package org.envirocar.server.core.mail;
 
-public interface Mailer {
 
-    void send(Mail mail) throws MailerException;
+import com.google.inject.AbstractModule;
+
+/**
+ * TODO JavaDoc
+ *
+ * @author Christian Autermann
+ */
+public class NoopMailerModule extends AbstractModule {
+    @Override
+    protected void configure() {
+        bind(Mailer.class).to(NoopMailer.class);
+    }
 
 }
