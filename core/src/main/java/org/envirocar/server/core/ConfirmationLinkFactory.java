@@ -14,20 +14,16 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.rest;
+package org.envirocar.server.core;
+
+import java.net.URI;
+
 
 /**
  * TODO JavaDoc
  *
- * @author Christian Autermann <autermann@uni-muenster.de>
+ * @author Christian Autermann
  */
-public interface RESTConstants {
-    String LIMIT = "limit";
-    String PAGE = "page";
-    String SEARCH = "q";
-    String TYPE = "type";
-    String BBOX = "bbox";
-    String NEAR_POINT = "nearPoint";
-    String USER = "user";
-    String CODE = "code";
+public interface ConfirmationLinkFactory {
+    URI getConfirmationLink(String username, String code);
 }

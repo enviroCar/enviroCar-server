@@ -16,6 +16,17 @@
  */
 package org.envirocar.server.core;
 
+import static java.util.stream.Collectors.joining;
+
+import java.io.IOException;
+import java.net.URI;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.UUID;
+
 import org.envirocar.server.core.activities.Activities;
 import org.envirocar.server.core.activities.Activity;
 import org.envirocar.server.core.dao.ActivityDao;
@@ -33,13 +44,22 @@ import org.envirocar.server.core.exception.ResourceAlreadyExistException;
 import org.envirocar.server.core.exception.UserNotFoundException;
 import org.envirocar.server.core.exception.ValidationException;
 import org.envirocar.server.core.filter.ActivityFilter;
+import org.envirocar.server.core.mail.Mailer;
+import org.envirocar.server.core.mail.MailerException;
+import org.envirocar.server.core.mail.PlainMail;
 import org.envirocar.server.core.update.EntityUpdater;
 import org.envirocar.server.core.util.PasswordEncoder;
 import org.envirocar.server.core.util.pagination.Pagination;
 import org.envirocar.server.core.validation.EntityValidator;
+import org.joda.time.DateTime;
+import org.joda.time.Duration;
+import org.joda.time.format.ISODateTimeFormat;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 /**
  * TODO JavaDoc
@@ -47,12 +67,20 @@ import com.google.inject.Inject;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class UserServiceImpl implements UserService {
+    private static final Logger LOG = LoggerFactory.getLogger(UserServiceImpl.class);
+    private static final Path EMAIL_TEMPLATE_FILE = Paths.get("mail-verification-mail-template.txt");
+    private static final String REGISTRATION_LINK_PLACEHOLDER = "{link}";
+    private static final String REGISTRATION_USERNAME_PLACEHOLDER = "{name}";
+    private static final String REGISTRATION_EXIRATION_TIME_PLACEHOLDER = "{expirationTime}";
+    private static final String REGISTRATION_FALLBACK_SUBJECT = "enviroCar Registration Confirmation";
     private final ActivityDao activityDao;
     private final PasswordEncoder passwordEncoder;
     private final UserDao userDao;
     private final EntityValidator<User> userValidator;
     private final EntityUpdater<User> userUpdater;
     private final EventBus eventBus;
+    private final Mailer mailer;
+    private final Provider<ConfirmationLinkFactory> confirmationLinkFactory;
 
     @Inject
     public UserServiceImpl(ActivityDao activityDao,
@@ -60,27 +88,70 @@ public class UserServiceImpl implements UserService {
                            PasswordEncoder passwordEncoder,
                            EntityValidator<User> userValidator,
                            EntityUpdater<User> userUpdater,
-                           EventBus eventBus) {
+                           EventBus eventBus,
+                           Mailer mailer,
+                           Provider<ConfirmationLinkFactory> confirmationLinkFactory) {
         this.activityDao = activityDao;
         this.passwordEncoder = passwordEncoder;
         this.userDao = userDao;
         this.userValidator = userValidator;
         this.userUpdater = userUpdater;
         this.eventBus = eventBus;
+        this.mailer = mailer;
+        this.confirmationLinkFactory = confirmationLinkFactory;
     }
 
     @Override
     public User createUser(User user) throws ValidationException,
                                              ResourceAlreadyExistException {
         userValidator.validateCreate(user);
-        if (userDao.getByName(user.getName()) != null) {
+        if (userDao.getByName(user.getName(), true) != null) {
             throw new ResourceAlreadyExistException();
         }
-        if (userDao.getByMail(user.getMail()) != null) {
+        // fixme this won't find the user if not
+        if (userDao.getByMail(user.getMail(), true) != null) {
             throw new ResourceAlreadyExistException();
         }
+        // set the hashed password
         user.setToken(passwordEncoder.encode(user.getToken()));
-        return this.userDao.create(user);
+
+        // add a confirmation code
+        user.setConfirmationCode(UUID.randomUUID().toString());
+        user.setExpirationDate(DateTime.now().plus(Duration.standardDays(1)));
+
+        User created = this.userDao.create(user);
+
+        try {
+            mailer.send(createVerificationMail(created));
+        } catch (MailerException ex) {
+            throw new RuntimeException(ex);
+        }
+
+        return user;
+    }
+
+    private Path getTemplatePath() {
+        String home = System.getProperty("user.home");
+        Path path;
+        if (home != null && !home.isEmpty()) {
+            Path homeDirectory = Paths.get(home);
+
+            path = homeDirectory.resolve(EMAIL_TEMPLATE_FILE).toAbsolutePath();
+
+            if (Files.exists(path)) {
+                return path;
+            } else {
+                LOG.warn("Could not find mail verification template at {}", path);
+            }
+        } else {
+            LOG.warn("user.home is not specified. Will try to use fallback resources.");
+        }
+        path = EMAIL_TEMPLATE_FILE.toAbsolutePath();
+        if (Files.exists(path)) {
+            return path;
+        }
+        LOG.warn("Could not find mail verification template at {}", path);
+        return null;
     }
 
     @Override
@@ -130,36 +201,78 @@ public class UserServiceImpl implements UserService {
         return this.activityDao.get(request, id);
     }
 
-	@Override
-	public void requestPasswordReset(User user) throws BadRequestException {
-		User dbUser = this.userDao.getByName(user.getName());
+    @Override
+    public void requestPasswordReset(User user) throws BadRequestException {
+        User dbUser = this.userDao.getByName(user.getName());
 
-		if (!user.equals(dbUser) || !user.getMail().equals(dbUser.getMail())) {
-			throw new InvalidUserMailCombinationException();
-		}
+        if (!user.equals(dbUser) || !user.getMail().equals(dbUser.getMail())) {
+            throw new InvalidUserMailCombinationException();
+        }
 
-		PasswordReset code = this.userDao.requestPasswordReset(dbUser);
+        PasswordReset code = this.userDao.requestPasswordReset(dbUser);
 
-		/*
+        /*
 		 * we got here without exception, fire an event
-		 */
-		eventBus.post(new PasswordResetEvent(code.getCode(), user, code.getExpires()));
-	}
+         */
+        eventBus.post(new PasswordResetEvent(code.getCode(), user, code.getExpires()));
+    }
 
-	@Override
-	public void resetPassword(User changes, String verificationCode) throws BadRequestException {
-		User dbUser = this.userDao.getByName(changes.getName());
+    @Override
+    public void resetPassword(User changes, String verificationCode) throws BadRequestException {
+        User dbUser = this.userDao.getByName(changes.getName());
 
-		if (!changes.equals(dbUser)) {
-			throw new BadRequestException("Invalid username.");
-		}
+        if (!changes.equals(dbUser)) {
+            throw new BadRequestException("Invalid username.");
+        }
 
-		try {
-			this.userUpdater.update(changes, dbUser);
-		} catch (IllegalModificationException e) {
-			throw new InvalidUserMailCombinationException();
-		}
-		this.userDao.resetPassword(dbUser, verificationCode);
-	}
+        try {
+            this.userUpdater.update(changes, dbUser);
+        } catch (IllegalModificationException e) {
+            throw new InvalidUserMailCombinationException();
+        }
+        this.userDao.resetPassword(dbUser, verificationCode);
+    }
+
+    @Override
+    public boolean confirmUser(String name, String code) throws BadRequestException {
+        if (name == null || name.isEmpty()) {
+            throw new BadRequestException("missing username");
+        }
+        if (code == null || code.isEmpty()) {
+            throw new BadRequestException("missing verification code");
+        }
+        return this.userDao.confirm(name, code);
+    }
+
+    private PlainMail createVerificationMail(User user) {
+        URI confirmationLink = confirmationLinkFactory.get()
+                .getConfirmationLink(user.getName(), user.getConfirmationCode());
+        String expirationTime = user.getExpirationDate().toString(ISODateTimeFormat.dateTimeNoMillis());
+        String mailSubject = REGISTRATION_FALLBACK_SUBJECT;
+        String mailBody = null;
+        Path templatePath = getTemplatePath();
+        if (templatePath != null) {
+            try {
+                List<String> lines = Files.readAllLines(templatePath, StandardCharsets.UTF_8);
+                // first line is subject, second line empty, the rest is the body
+                if (lines.size() < 3) {
+                    LOG.error("At least 3 lines of content required to be a valid mail template file");
+                } else {
+                    mailSubject = lines.iterator().next();
+                    String template = lines.stream().skip(2).collect(joining(System.lineSeparator()));
+                    mailBody = template.replace(REGISTRATION_LINK_PLACEHOLDER, confirmationLink.toString())
+                            .replace(REGISTRATION_USERNAME_PLACEHOLDER, user.getName())
+                            .replace(REGISTRATION_EXIRATION_TIME_PLACEHOLDER, expirationTime);
+                }
+            } catch (IOException ex) {
+                LOG.warn("Could not read mail template", ex);
+            }
+        }
+        if (mailBody == null || mailBody.isEmpty()) {
+            LOG.warn("Could not find mail template, just sending the link");
+            mailBody = confirmationLink.toString();
+        }
+        return new PlainMail(user, mailSubject, mailBody);
+    }
 
 }

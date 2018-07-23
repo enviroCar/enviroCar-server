@@ -16,11 +16,14 @@
  */
 package org.envirocar.server.rest.guice;
 
+import org.envirocar.server.rest.resources.ConfirmationLinkFactoryImpl;
+
 import java.util.Properties;
 import java.util.Set;
 
 import javax.ws.rs.core.SecurityContext;
 
+import org.envirocar.server.core.ConfirmationLinkFactory;
 import org.envirocar.server.core.FriendService;
 import org.envirocar.server.core.GroupService;
 import org.envirocar.server.core.entities.User;
@@ -63,6 +66,7 @@ public class JerseyResourceModule extends AbstractModule {
         bind(JsonValidationExceptionMapper.class).in(Scopes.SINGLETON);
         bind(BadRequestExceptionMapper.class).in(Scopes.SINGLETON);
         install(new FactoryModuleBuilder().build(ResourceFactory.class));
+        bind(ConfirmationLinkFactory.class).to(ConfirmationLinkFactoryImpl.class);
         bind(RootResource.class);
     }
 

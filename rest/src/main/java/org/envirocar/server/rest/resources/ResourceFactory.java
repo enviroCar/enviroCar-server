@@ -85,9 +85,9 @@ public interface ResourceFactory {
                                               @Nullable User user,
                                               @Nullable Track track,
                                               @Nullable Sensor sensor);
-    
+
     UserStatisticResource createUserStatisticsResource();
-    
+
     UserStatisticResource createUserStatisticsResource(@Nullable User user);
 
     ActivitiesResource createActivitiesResource();
@@ -118,4 +118,6 @@ public interface ResourceFactory {
     ShareResource createShareResource(Track track);
 
     PreviewResource createPreviewResource(Track track);
+
+    ConfirmResource createConfirmResource();
 }

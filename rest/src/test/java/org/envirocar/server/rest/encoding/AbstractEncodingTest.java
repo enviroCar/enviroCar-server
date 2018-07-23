@@ -45,6 +45,7 @@ import com.vividsolutions.jts.geom.GeometryFactory;
     UpdaterModule.class,
     ValidatorModule.class,
     NoopMailerModule.class,
+    DummyConfirmationLinkFactoryModule.class
 })
 @RunWith(GuiceRunner.class)
 public abstract class AbstractEncodingTest {

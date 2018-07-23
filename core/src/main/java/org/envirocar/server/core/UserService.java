@@ -34,14 +34,17 @@ import org.envirocar.server.core.util.pagination.Pagination;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface UserService {
+
     User createUser(User user)
             throws ValidationException,
                    ResourceAlreadyExistException;
 
     Users getUsers(Pagination p);
 
-    User getUser(String name) throws
-            UserNotFoundException;
+    User getUser(String name) throws UserNotFoundException;
+
+    boolean confirmUser(String name, String code)
+            throws BadRequestException;
 
     void deleteUser(User user, boolean deleteContent);
 
@@ -55,7 +58,7 @@ public interface UserService {
 
     Activity getActivity(ActivityFilter request, String id);
 
-	void requestPasswordReset(User user) throws BadRequestException;
+    void requestPasswordReset(User user) throws BadRequestException;
 
-	void resetPassword(User changes, String verificationCode) throws BadRequestException;
+    void resetPassword(User changes, String verificationCode) throws BadRequestException;
 }
