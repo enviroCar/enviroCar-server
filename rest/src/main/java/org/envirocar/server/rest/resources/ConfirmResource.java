@@ -35,12 +35,13 @@ import org.envirocar.server.rest.auth.Anonymous;
  * @author Christian Autermann
  */
 public class ConfirmResource extends AbstractResource {
+    public static final String CODE = "{code}";
     private static final URI WEBSITE = URI.create("https://envirocar.org");
     private static final URI APP = WEBSITE.resolve("/app");
 
     @GET
     @Anonymous
-    @Path("{code}")
+    @Path(ConfirmResource.CODE)
     public Response confirm(@PathParam("code") String confirmationCode)
             throws BadRequestException, ResourceNotFoundException {
         User confirmed = getUserService().confirmUser(confirmationCode);
