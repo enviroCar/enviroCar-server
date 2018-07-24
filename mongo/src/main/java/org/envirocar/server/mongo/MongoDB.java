@@ -76,19 +76,18 @@ public class MongoDB {
         try {
             if (username == null) {
                 mongo = new MongoClient(new ServerAddress(host, port));
-            }
-            else {
+            } else {
                 mongo = new MongoClient(new ServerAddress(host, port), Collections.singletonList(
-                    MongoCredential.createMongoCRCredential(username, database, password)));
+                                        MongoCredential.createMongoCRCredential(username, database, password)));
             }
 
             morphia = new Morphia();
-            morphia.getMapper().getOptions().setObjectFactory(new CustomGuiceObjectFactory(new DefaultCreator(), injector));
+            morphia.getMapper().getOptions()
+                    .setObjectFactory(new CustomGuiceObjectFactory(new DefaultCreator(), injector));
             addConverters(converters);
             addMappedClasses(mappedClasses);
 
-            datastore = morphia
-                    .createDatastore(mongo, database);
+            datastore = morphia.createDatastore(mongo, database);
             datastore.ensureIndexes();
             ensureIndexes();
             datastore.ensureCaps();
@@ -179,15 +178,15 @@ public class MongoDB {
         String clazzKind = (clazz == null) ? null : getMapper()
                 .getCollectionName(clazz);
         for (Key<T> key : keys) {
-            getMapper().updateCollection(key);
-            String kind = key.getCollection();
+                    getMapper().updateCollection(key);
+                    String kind = key.getCollection();
 
-            if (clazzKind != null && !kind.equals(clazzKind)) {
-                throw new IllegalArgumentException(String.format(
-                        "Types are not equal (%s!=%s) for key and method parameter clazz",
+                    if (clazzKind != null && !kind.equals(clazzKind)) {
+                        throw new IllegalArgumentException(String.format(
+                                "Types are not equal (%s!=%s) for key and method parameter clazz",
                         clazz, key.getType()));
-            }
-            kindMap.put(kind, key);
+                    }
+                    kindMap.put(kind, key);
         }
         return kindMap;
     }

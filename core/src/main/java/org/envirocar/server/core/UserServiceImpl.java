@@ -25,7 +25,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.UUID;
 
 import org.envirocar.server.core.activities.Activities;
 import org.envirocar.server.core.activities.Activity;
@@ -51,8 +50,6 @@ import org.envirocar.server.core.update.EntityUpdater;
 import org.envirocar.server.core.util.PasswordEncoder;
 import org.envirocar.server.core.util.pagination.Pagination;
 import org.envirocar.server.core.validation.EntityValidator;
-import org.joda.time.DateTime;
-import org.joda.time.Duration;
 import org.joda.time.format.ISODateTimeFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -114,10 +111,6 @@ public class UserServiceImpl implements UserService {
         }
         // set the hashed password
         user.setToken(passwordEncoder.encode(user.getToken()));
-
-        // add a confirmation code
-        user.setConfirmationCode(UUID.randomUUID().toString());
-        user.setExpirationDate(DateTime.now().plus(Duration.standardDays(1)));
 
         User created = this.userDao.create(user);
 
@@ -234,19 +227,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean confirmUser(String name, String code) throws BadRequestException {
-        if (name == null || name.isEmpty()) {
-            throw new BadRequestException("missing username");
-        }
+    public User confirmUser(String code) throws BadRequestException {
         if (code == null || code.isEmpty()) {
             throw new BadRequestException("missing verification code");
         }
-        return this.userDao.confirm(name, code);
+        return this.userDao.confirm(code);
     }
 
     private PlainMail createVerificationMail(User user) {
-        URI confirmationLink = confirmationLinkFactory.get()
-                .getConfirmationLink(user.getName(), user.getConfirmationCode());
+        URI confirmationLink = confirmationLinkFactory.get().getConfirmationLink(user);
         String expirationTime = user.getExpirationDate().toString(ISODateTimeFormat.dateTimeNoMillis());
         String mailSubject = REGISTRATION_FALLBACK_SUBJECT;
         String mailBody = null;

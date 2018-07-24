@@ -43,8 +43,7 @@ public interface UserService {
 
     User getUser(String name) throws UserNotFoundException;
 
-    boolean confirmUser(String name, String code)
-            throws BadRequestException;
+    User confirmUser(String code) throws BadRequestException;
 
     void deleteUser(User user, boolean deleteContent);
 

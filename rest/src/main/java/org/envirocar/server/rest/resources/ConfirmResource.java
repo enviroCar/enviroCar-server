@@ -19,12 +19,14 @@ package org.envirocar.server.rest.resources;
 import java.net.URI;
 
 import javax.ws.rs.GET;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 
+import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.exception.BadRequestException;
-import org.envirocar.server.rest.RESTConstants;
+import org.envirocar.server.core.exception.ResourceNotFoundException;
 import org.envirocar.server.rest.auth.Anonymous;
 
 /**
@@ -33,24 +35,25 @@ import org.envirocar.server.rest.auth.Anonymous;
  * @author Christian Autermann
  */
 public class ConfirmResource extends AbstractResource {
-
     private static final URI WEBSITE = URI.create("https://envirocar.org");
-    private static final URI APP = URI.create("https://envirocar.org/app");
+    private static final URI APP = WEBSITE.resolve("/app");
 
     @GET
     @Anonymous
-    public Response confirm(@QueryParam(RESTConstants.USER) String username,
-                            @QueryParam(RESTConstants.CODE) String confirmationCode) throws BadRequestException {
-        boolean confirmed = getUserService().confirmUser(username, confirmationCode);
+    @Path("{code}")
+    public Response confirm(@PathParam("code") String confirmationCode)
+            throws BadRequestException, ResourceNotFoundException {
+        User confirmed = getUserService().confirmUser(confirmationCode);
 
-        URI uri = WEBSITE;
+        if (confirmed == null) {
+            throw new ResourceNotFoundException(String.format("confirmation code %s not found", confirmationCode));
+        }
 
-        if (confirmed) {
-            uri = UriBuilder.fromUri(APP)
-                    .queryParam("username", username)
+        URI uri = UriBuilder.fromUri(APP)
+                    .queryParam("username", confirmed.getName())
                     .fragment("#!/login")
                     .build();
-        }
+
 
         return Response.seeOther(uri).build();
     }

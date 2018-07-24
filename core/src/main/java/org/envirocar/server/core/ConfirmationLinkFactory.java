@@ -18,6 +18,8 @@ package org.envirocar.server.core;
 
 import java.net.URI;
 
+import org.envirocar.server.core.entities.User;
+
 
 /**
  * TODO JavaDoc
@@ -25,5 +27,5 @@ import java.net.URI;
  * @author Christian Autermann
  */
 public interface ConfirmationLinkFactory {
-    URI getConfirmationLink(String username, String code);
+    URI getConfirmationLink(User user);
 }

@@ -105,7 +105,8 @@ public class MongoUser extends MongoEntityBase implements User {
     private String acceptedTermsOfUseVersion;
     @Property(MongoUser.TERMS_OF_USE_VERSION)
     private String termsOfUseVersion;
-    @Indexed
+    @Indexed(options = @IndexOptions(unique = true,
+                                     partialFilter = "{confirmationCode:{$type: \"string\"}}"))
     @Property(MongoUser.CONFIRMATION_CODE)
     private String confirmationCode;
     @Indexed(options = @IndexOptions(expireAfterSeconds = 0))

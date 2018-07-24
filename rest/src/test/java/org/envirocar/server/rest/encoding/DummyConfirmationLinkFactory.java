@@ -17,9 +17,9 @@
 package org.envirocar.server.rest.encoding;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 
 import org.envirocar.server.core.ConfirmationLinkFactory;
+import org.envirocar.server.core.entities.User;
 
 /**
  * TODO JavaDoc
@@ -29,13 +29,8 @@ import org.envirocar.server.core.ConfirmationLinkFactory;
 public class DummyConfirmationLinkFactory implements ConfirmationLinkFactory {
 
     @Override
-    public URI getConfirmationLink(String user, String code) {
-        try {
-            return new URI("https", "envirocar.org", "/api/dev/confirm", String.format("user=%s&code=%s", user, code), null);
-        } catch (URISyntaxException ex) {
-            throw new Error(ex);
-        }
-
+    public URI getConfirmationLink(User user) {
+        return URI.create("https://envirocar.org/api/dev/confirm/" + user.getConfirmationCode());
     }
 
 }

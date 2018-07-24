@@ -32,12 +32,11 @@ public interface UserDao {
     /**
      * Try to confirm the the user.
      *
-     * @param name The name of the {@link User}.
      * @param code The confirmation code of the {@link User}.
      *
      * @return If the user could be confirmed.
      */
-    boolean confirm(String name, String code);
+    User confirm(String code);
 
     default User getByName(String name) {
         return getByName(name, false);

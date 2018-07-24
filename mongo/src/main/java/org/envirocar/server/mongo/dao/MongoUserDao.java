@@ -20,6 +20,7 @@ import static java.util.stream.Collectors.toSet;
 
 import java.util.Collections;
 import java.util.Set;
+import java.util.UUID;
 
 import org.envirocar.server.core.dao.UserDao;
 import org.envirocar.server.core.entities.PasswordReset;
@@ -33,6 +34,7 @@ import org.envirocar.server.mongo.dao.privates.PasswordResetDAO;
 import org.envirocar.server.mongo.entity.MongoPasswordReset;
 import org.envirocar.server.mongo.entity.MongoUser;
 import org.joda.time.DateTime;
+import org.joda.time.Duration;
 import org.mongodb.morphia.Key;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.UpdateOperations;
@@ -42,6 +44,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
+import com.mongodb.DuplicateKeyException;
 
 /**
  * TODO JavaDoc
@@ -112,6 +115,18 @@ public class MongoUserDao extends AbstractMongoDao<String, MongoUser, Users>
 
     @Override
     public MongoUser create(User user) {
+
+        // add a confirmation code
+        user.setConfirmationCode(UUID.randomUUID().toString());
+        user.setExpirationDate(DateTime.now().plus(Duration.standardDays(1)));
+
+        try {
+            save(user);
+        } catch(DuplicateKeyException ex) {
+            log.warn("Error saving user, retrying with different confirmation code", ex);
+            user.setConfirmationCode(UUID.randomUUID().toString());
+            save(user);
+        }
         return save(user);
     }
 
@@ -295,21 +310,20 @@ public class MongoUserDao extends AbstractMongoDao<String, MongoUser, Users>
     }
 
     @Override
-    public boolean confirm(String name, String code) {
-
-        if (name == null || name.isEmpty() || code == null || code.isEmpty()) {
-            return false;
+    public User confirm(String code) {
+        if (code == null || code.isEmpty()) {
+            return null;
         }
 
         Query<MongoUser> query = q()
-                .field(MongoUser.NAME).equal(name)
                 .field(MongoUser.CONFIRMATION_CODE).equal(code);
+
         UpdateOperations<MongoUser> update = up()
                 .unset(MongoUser.CONFIRMATION_CODE)
                 .unset(MongoUser.EXPIRE_AT)
                 .set(MongoUser.LAST_MODIFIED, DateTime.now());
 
-        return update(query, update).getUpdatedExisting();
+        return findAndModify(query, update, true);
     }
 
 }

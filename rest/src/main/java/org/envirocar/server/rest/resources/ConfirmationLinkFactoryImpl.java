@@ -21,7 +21,7 @@ import java.net.URI;
 import javax.ws.rs.core.UriInfo;
 
 import org.envirocar.server.core.ConfirmationLinkFactory;
-import org.envirocar.server.rest.RESTConstants;
+import org.envirocar.server.core.entities.User;
 
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
@@ -42,12 +42,11 @@ public class ConfirmationLinkFactoryImpl implements ConfirmationLinkFactory {
     }
 
     @Override
-    public URI getConfirmationLink(String username, String code) {
+    public URI getConfirmationLink(User user) {
         return uriInfo.getBaseUriBuilder()
                 .path(RootResource.CONFIRM)
-                .queryParam(RESTConstants.USER, username)
-                .queryParam(RESTConstants.CODE, code)
-                .build();
+                .path(ConfirmResource.CODE)
+                .build(user.getConfirmationCode());
     }
 
 }
