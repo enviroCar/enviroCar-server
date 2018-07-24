@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 The enviroCar project
+ * Copyright (C) 2013-2018 The enviroCar project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -16,10 +16,10 @@
  */
 package org.envirocar.server.mongo.util;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.envirocar.server.core.entities.Measurement;
-import java.util.ArrayList;
 import org.envirocar.server.core.entities.MeasurementValue;
 import org.envirocar.server.core.entities.MeasurementValues;
 import org.envirocar.server.core.entities.Measurements;
@@ -28,7 +28,6 @@ import org.envirocar.server.core.entities.TrackSummaries;
 import org.envirocar.server.core.entities.TrackSummary;
 import org.envirocar.server.core.util.GeodesicGeometryOperations;
 import org.envirocar.server.mongo.entity.MongoUserStatistic;
-
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +46,7 @@ public class UserStatisticUtils implements UserStatisticOperations {
         if (values instanceof Iterable) {
 
             Iterable<Measurement> measurementIterator = (Iterable<Measurement>) values;
-            List<Measurement> list = new ArrayList();
+            List<Measurement> list = new ArrayList<>();
             for (Measurement m : measurementIterator) {
                 list.add(m);
             }
@@ -165,7 +164,7 @@ public class UserStatisticUtils implements UserStatisticOperations {
 
         if (values instanceof Iterable) {
             Iterable<Measurement> measurementIterator = (Iterable<Measurement>) values;
-            List<Measurement> list = new ArrayList();
+            List<Measurement> list = new ArrayList<>();
             for (Measurement m : measurementIterator) {
                 list.add(m);
             }

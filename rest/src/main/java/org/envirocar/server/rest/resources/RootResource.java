@@ -50,7 +50,8 @@ public class RootResource extends AbstractResource {
     public static final String ANNOUNCEMENTS = "announcements";
     public static final String BADGES = "badges";
     public static final String RESET_PASSWORD = "resetPassword";
-        
+    public static final String CONFIRM = "confirm";
+
     @Inject
     private JsonNodeFactory factory;
 
@@ -157,7 +158,7 @@ public class RootResource extends AbstractResource {
         checkRights(getRights().canSeeStatistics());
         return getResourceFactory().createStatisticsResource();
     }
-    
+
     @Path(TERMS_OF_USE)
     public TermsOfUseResource termsOfUse() {
         checkRights(getRights().canSeeTermsOfUse());
@@ -169,24 +170,29 @@ public class RootResource extends AbstractResource {
         checkRights(getRights().canSeeSchema());
         return getResourceFactory().createSchemaResource();
     }
-    
+
     @Path(ANNOUNCEMENTS)
     public AnnouncementsResource announcements() {
     	checkRights(getRights().canSeeAnnouncements());
     	return getResourceFactory().createAnnouncementsResource();
     }
-    
+
     @Path(BADGES)
     public BadgesResource badges() {
     	checkRights(getRights().canSeeBadges());
     	return getResourceFactory().createBadgesResource();
     }
-    
+
     @Path(RESET_PASSWORD)
     public ResetPasswordResource resetPassword() {
     	return getResourceFactory().createResetPasswordResource();
     }
-    
+
+    @Path(CONFIRM)
+    public ConfirmResource confirm() {
+        return getResourceFactory().createConfirmResource();
+    }
+
     @Path("rest")
     public RootResource redirect() {
         return this;

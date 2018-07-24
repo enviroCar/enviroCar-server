@@ -24,14 +24,13 @@ import java.util.Set;
 import javax.annotation.Nullable;
 
 import org.envirocar.server.mongo.entity.MongoMeasurement;
-
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Key;
 import org.mongodb.morphia.Morphia;
 import org.mongodb.morphia.converters.TypeConverter;
-import org.mongodb.morphia.logging.MorphiaLoggerFactory;
 import org.mongodb.morphia.mapping.DefaultCreator;
 import org.mongodb.morphia.mapping.Mapper;
+
 import com.google.common.collect.Iterables;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.ListMultimap;
@@ -47,7 +46,6 @@ import com.mongodb.DBRef;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
-import org.mongodb.morphia.logging.slf4j.SLF4JLoggerImplFactory;
 
 /**
  * TODO JavaDoc
@@ -76,22 +74,20 @@ public class MongoDB {
                    @Nullable @Named(USER_PROPERTY) String username,
                    @Nullable @Named(PASS_PROPERTY) char[] password) {
         try {
-            MorphiaLoggerFactory.registerLogger(SLF4JLoggerImplFactory.class);
             if (username == null) {
                 mongo = new MongoClient(new ServerAddress(host, port));
-            }
-            else {
+            } else {
                 mongo = new MongoClient(new ServerAddress(host, port), Collections.singletonList(
-                    MongoCredential.createMongoCRCredential(username, database, password)));
+                                        MongoCredential.createMongoCRCredential(username, database, password)));
             }
-            
+
             morphia = new Morphia();
-            morphia.getMapper().getOptions().setObjectFactory(new CustomGuiceObjectFactory(new DefaultCreator(), injector));
+            morphia.getMapper().getOptions()
+                    .setObjectFactory(new CustomGuiceObjectFactory(new DefaultCreator(), injector));
             addConverters(converters);
             addMappedClasses(mappedClasses);
-            
-            datastore = morphia
-                    .createDatastore(mongo, database);
+
+            datastore = morphia.createDatastore(mongo, database);
             datastore.ensureIndexes();
             ensureIndexes();
             datastore.ensureCaps();
@@ -182,15 +178,15 @@ public class MongoDB {
         String clazzKind = (clazz == null) ? null : getMapper()
                 .getCollectionName(clazz);
         for (Key<T> key : keys) {
-            getMapper().updateCollection(key);
-            String kind = key.getCollection();
+                    getMapper().updateCollection(key);
+                    String kind = key.getCollection();
 
-            if (clazzKind != null && !kind.equals(clazzKind)) {
-                throw new IllegalArgumentException(String.format(
-                        "Types are not equal (%s!=%s) for key and method parameter clazz",
+                    if (clazzKind != null && !kind.equals(clazzKind)) {
+                        throw new IllegalArgumentException(String.format(
+                                "Types are not equal (%s!=%s) for key and method parameter clazz",
                         clazz, key.getType()));
-            }
-            kindMap.put(kind, key);
+                    }
+                    kindMap.put(kind, key);
         }
         return kindMap;
     }

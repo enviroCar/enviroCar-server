@@ -15,8 +15,8 @@
         <url>http://github.com/enviroCar/enviroCar-server</url>
         <connection>scm:git:ssh://github.com/enviroCar/enviroCar-server.git</connection>
         <developerConnection>scm:git:git+ssh://git@github.com/enviroCar/enviroCar-server.git</developerConnection>
-      <tag>server-1.1.0</tag>
-  </scm>
+        <tag>server-1.1.0</tag>
+    </scm>
     <issueManagement>
         <system>GitHub Issue Management</system>
         <url>https://github.com/enviroCar/enviroCar-server/issues</url>
@@ -60,26 +60,26 @@
                 <enabled>false</enabled>
             </snapshots>
         </repository>
-		<repository>
-			<id>geotools</id>
-			<name>Geotools Repo</name>
-			<url>http://download.osgeo.org/webdav/geotools</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-		<repository>
-			<id>n52-releases</id>
-			<name>52n Releases</name>
-			<url>http://52north.org/maven/repo/releases</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-		<repository>
-			<id>clojars.org</id>
-			<url>http://clojars.org/repo</url>
-		</repository>
+        <repository>
+            <id>geotools</id>
+            <name>Geotools Repo</name>
+            <url>http://download.osgeo.org/webdav/geotools</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>n52-releases</id>
+            <name>52n Releases</name>
+            <url>http://52north.org/maven/repo/releases</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>clojars.org</id>
+            <url>http://clojars.org/repo</url>
+        </repository>
     </repositories>
     <dependencyManagement>
         <dependencies>
@@ -124,31 +124,31 @@
             </dependency>
             <!-- START import geotools dependencies -->
             <dependency>
-                    <groupId>org.geotools</groupId>
-                    <artifactId>geotools</artifactId>
-                    <version>${geotools.version}</version>
-                    <type>pom</type>
-                    <scope>import</scope>
+                <groupId>org.geotools</groupId>
+                <artifactId>geotools</artifactId>
+                <version>${geotools.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
             <dependency>
-                    <groupId>org.geotools</groupId>
-                    <artifactId>gt-main</artifactId>
-                    <version>${geotools.version}</version>
+                <groupId>org.geotools</groupId>
+                <artifactId>gt-main</artifactId>
+                <version>${geotools.version}</version>
             </dependency>
             <dependency>
-                    <groupId>org.geotools</groupId>
-                    <artifactId>gt-referencing</artifactId>
-                    <version>${geotools.version}</version>
+                <groupId>org.geotools</groupId>
+                <artifactId>gt-referencing</artifactId>
+                <version>${geotools.version}</version>
             </dependency>
             <dependency>
-                    <groupId>org.geotools</groupId>
-                    <artifactId>gt-epsg-wkt</artifactId>
-                    <version>${geotools.version}</version>
+                <groupId>org.geotools</groupId>
+                <artifactId>gt-epsg-wkt</artifactId>
+                <version>${geotools.version}</version>
             </dependency>
             <dependency>
-                    <groupId>org.geotools</groupId>
-                    <artifactId>gt-shapefile</artifactId>
-                    <version>${geotools.version}</version>
+                <groupId>org.geotools</groupId>
+                <artifactId>gt-shapefile</artifactId>
+                <version>${geotools.version}</version>
             </dependency>
             <!-- END import geotools dependencies -->
             <dependency>
@@ -164,9 +164,9 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
-                    <groupId>org.mockito</groupId>
-                    <artifactId>mockito-all</artifactId>
-                    <version>1.10.19</version>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-all</artifactId>
+                <version>1.10.19</version>
             </dependency>
             <dependency>
                 <groupId>commons-io</groupId>
@@ -247,6 +247,12 @@
                 <scope>runtime</scope>
             </dependency>
             <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-simple</artifactId>
+                <version>${slf4j-version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
                 <artifactId>mongo-java-driver</artifactId>
                 <groupId>org.mongodb</groupId>
                 <version>3.4.2</version>
@@ -313,6 +319,11 @@
                 <scope>provided</scope>
             </dependency>
             <dependency>
+                <groupId>javax.mail</groupId>
+                <artifactId>mail</artifactId>
+                <version>1.4</version>
+            </dependency>
+            <dependency>
                 <groupId>org.mindrot</groupId>
                 <artifactId>jbcrypt</artifactId>
                 <version>0.3m</version>
@@ -344,9 +355,9 @@
                 <version>2.0.0-alpha.4-SNAPSHOT</version>
             </dependency>
             <dependency>
-                    <groupId>org.clojars.ndimiduk</groupId>
-                    <artifactId>geodesy</artifactId>
-                    <version>1.1.1</version>
+                <groupId>org.clojars.ndimiduk</groupId>
+                <artifactId>geodesy</artifactId>
+                <version>1.1.1</version>
             </dependency>
             <dependency>
                 <groupId>se.jiderhamn</groupId>

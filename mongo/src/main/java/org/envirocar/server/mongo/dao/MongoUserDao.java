@@ -16,8 +16,11 @@
  */
 package org.envirocar.server.mongo.dao;
 
+import static java.util.stream.Collectors.toSet;
+
 import java.util.Collections;
 import java.util.Set;
+import java.util.UUID;
 
 import org.envirocar.server.core.dao.UserDao;
 import org.envirocar.server.core.entities.PasswordReset;
@@ -31,14 +34,17 @@ import org.envirocar.server.mongo.dao.privates.PasswordResetDAO;
 import org.envirocar.server.mongo.entity.MongoPasswordReset;
 import org.envirocar.server.mongo.entity.MongoUser;
 import org.joda.time.DateTime;
+import org.joda.time.Duration;
+import org.mongodb.morphia.Key;
+import org.mongodb.morphia.query.Query;
+import org.mongodb.morphia.query.UpdateOperations;
+import org.mongodb.morphia.query.UpdateResults;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.mongodb.morphia.Key;
-import org.mongodb.morphia.query.Query;
-import org.mongodb.morphia.query.UpdateResults;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
+import com.mongodb.DuplicateKeyException;
 
 /**
  * TODO JavaDoc
@@ -84,22 +90,43 @@ public class MongoUserDao extends AbstractMongoDao<String, MongoUser, Users>
     }
 
     @Override
-    public MongoUser getByName(final String name) {
-        return q().field(MongoUser.NAME).equal(name).get();
+    public MongoUser getByName(final String name, boolean includeUnconfirmed) {
+        Query<MongoUser> q = q().field(MongoUser.NAME).equal(name);
+
+        if (!includeUnconfirmed) {
+            q = q.field(MongoUser.CONFIRMATION_CODE).doesNotExist();
+        }
+        return q.get();
     }
 
     @Override
-    public MongoUser getByMail(String mail) {
-        return q().field(MongoUser.MAIL).equal(mail).get();
+    public MongoUser getByMail(String mail, boolean includeUnconfirmed) {
+        Query<MongoUser> q = q().field(MongoUser.MAIL).equal(mail);
+        if (!includeUnconfirmed) {
+            q = q.field(MongoUser.CONFIRMATION_CODE).doesNotExist();
+        }
+        return q.get();
     }
 
     @Override
     public Users get(Pagination p) {
-        return fetch(q().order(MongoUser.CREATION_DATE), p);
+        return fetch(q().field(MongoUser.CONFIRMATION_CODE).doesNotExist().order(MongoUser.CREATION_DATE), p);
     }
 
     @Override
     public MongoUser create(User user) {
+
+        // add a confirmation code
+        user.setConfirmationCode(UUID.randomUUID().toString());
+        user.setExpirationDate(DateTime.now().plus(Duration.standardDays(1)));
+
+        try {
+            save(user);
+        } catch(DuplicateKeyException ex) {
+            log.warn("Error saving user, retrying with different confirmation code", ex);
+            user.setConfirmationCode(UUID.randomUUID().toString());
+            save(user);
+        }
         return save(user);
     }
 
@@ -128,17 +155,17 @@ public class MongoUserDao extends AbstractMongoDao<String, MongoUser, Users>
                 up().removeAll(MongoUser.FRIENDS, userRef));
         if (result.getWriteResult() != null && !result.getWriteResult().wasAcknowledged()) {
             log.error("Error removing user {} as friend: {}",
-                    u, result.getWriteResult());
+                      u, result.getWriteResult());
         } else {
             log.debug("Removed user {} from {} friend lists",
-                    u, result.getUpdatedCount());
+                      u, result.getUpdatedCount());
         }
         delete(user.getName());
     }
 
     @Override
     protected Users createPaginatedIterable(Iterable<MongoUser> i, Pagination p,
-            long count) {
+                                            long count) {
         return Users.from(i).withPagination(p).withElements(count).build();
     }
 
@@ -171,21 +198,21 @@ public class MongoUserDao extends AbstractMongoDao<String, MongoUser, Users>
     public void addFriend(User user, User friend) {
         MongoUser g = (MongoUser) user;
         update(g.getName(), up()
-                .add(MongoUser.FRIENDS, key(friend))
-                .set(MongoUser.LAST_MODIFIED, new DateTime()));
+               .addToSet(MongoUser.FRIENDS, key(friend))
+               .set(MongoUser.LAST_MODIFIED, DateTime.now()));
     }
 
     @Override
     public void removeFriend(User user, User friend) {
         MongoUser g = (MongoUser) user;
         update(g.getName(), up()
-                .removeAll(MongoUser.FRIENDS, key(friend))
-                .set(MongoUser.LAST_MODIFIED, new DateTime()));
+               .removeAll(MongoUser.FRIENDS, key(friend))
+               .set(MongoUser.LAST_MODIFIED, DateTime.now()));
     }
 
     @Override
     protected Users fetch(Query<MongoUser> q, Pagination p) {
-        return super.fetch(q.retrievedFields(false, MongoUser.FRIENDS), p);
+        return super.fetch(q.field(MongoUser.CONFIRMATION_CODE).doesNotExist().project(MongoUser.FRIENDS, false), p);
     }
 
     public Set<Key<MongoUser>> getFriendRefs(User user) {
@@ -194,7 +221,7 @@ public class MongoUserDao extends AbstractMongoDao<String, MongoUser, Users>
         if (friendRefs == null) {
             MongoUser userWithFriends = q()
                     .field(MongoUser.NAME).equal(u.getName())
-                    .retrievedFields(true, MongoUser.FRIENDS).get();
+                    .project(MongoUser.FRIENDS, true).get();
             if (userWithFriends != null) {
                 friendRefs = userWithFriends.getFriends();
             }
@@ -206,11 +233,9 @@ public class MongoUserDao extends AbstractMongoDao<String, MongoUser, Users>
     }
 
     public Set<Key<MongoUser>> getBidirectionalFriendRefs(User user) {
-        final Set<Key<MongoUser>> friendRefs = getFriendRefs(user);
-        final Set<String> ids = Sets.newHashSetWithExpectedSize(friendRefs.size());
-        for (Key<MongoUser> key : friendRefs) {
-            ids.add((String) key.getId());
-        }
+        final Set<String> ids = getFriendRefs(user).stream()
+                .map(key -> (String) key.getId())
+                .collect(toSet());
 
         if (ids.isEmpty()) {
             return Sets.newHashSet();
@@ -282,6 +307,23 @@ public class MongoUserDao extends AbstractMongoDao<String, MongoUser, Users>
         Set<Key<MongoUser>> result = Sets.difference(candidates, biDis).immutableCopy();
 
         return Users.from(deref(MongoUser.class, result)).build();
+    }
+
+    @Override
+    public User confirm(String code) {
+        if (code == null || code.isEmpty()) {
+            return null;
+        }
+
+        Query<MongoUser> query = q()
+                .field(MongoUser.CONFIRMATION_CODE).equal(code);
+
+        UpdateOperations<MongoUser> update = up()
+                .unset(MongoUser.CONFIRMATION_CODE)
+                .unset(MongoUser.EXPIRE_AT)
+                .set(MongoUser.LAST_MODIFIED, DateTime.now());
+
+        return findAndModify(query, update, true);
     }
 
 }

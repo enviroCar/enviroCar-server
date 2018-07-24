@@ -23,21 +23,21 @@ import org.bson.types.ObjectId;
 import org.envirocar.server.core.entities.PasswordReset;
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.exception.BadRequestException;
-import org.envirocar.server.core.util.pagination.Pagination;
 import org.envirocar.server.core.util.UpCastingIterable;
+import org.envirocar.server.core.util.pagination.Pagination;
 import org.envirocar.server.mongo.MongoDB;
 import org.envirocar.server.mongo.dao.AbstractMongoDao;
 import org.envirocar.server.mongo.entity.MongoPasswordReset;
+import org.mongodb.morphia.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.mongodb.morphia.query.Query;
 import com.google.inject.Inject;
 
 public class MongoPasswordResetDAO extends AbstractMongoDao<ObjectId, MongoPasswordReset, MongoPasswordResetDAO.MongoPasswordResetStatusCollection>
         implements PasswordResetDAO {
 
-    private static final Logger logger = LoggerFactory.getLogger(MongoPasswordResetDAO.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MongoPasswordResetDAO.class);
     private final MongoDB mongo;
 
     @Inject
@@ -77,7 +77,7 @@ public class MongoPasswordResetDAO extends AbstractMongoDao<ObjectId, MongoPassw
         entity.setUser(user);
 
         save(entity);
-        logger.info("Stored password reset status for user {} (key={})", user, key(user));
+        LOG.info("Stored password reset status for user {} (key={})", user, key(user));
 
         return entity;
     }
@@ -92,23 +92,23 @@ public class MongoPasswordResetDAO extends AbstractMongoDao<ObjectId, MongoPassw
     public synchronized MongoPasswordReset getPasswordResetStatus(User user) {
         return getPasswordResetStatus(user, null);
     }
-    
+
     @Override
     public synchronized MongoPasswordReset getPasswordResetStatus(User user, String verificationCode) {
-        logger.info("Querying password reset status for user {} (key={})", user, key(user));
-        
+        LOG.info("Querying password reset status for user {} (key={})", user, key(user));
+
         Query<MongoPasswordReset> result = q().field(MongoPasswordReset.USER).equal(key(user));
-        
+
         if (verificationCode != null) {
             result.field(MongoPasswordReset.VERIFICATION_CODE).equal(verificationCode);
         }
-        
+
         Iterable<MongoPasswordReset> fetch = result.fetch();
         if (fetch.iterator().hasNext()) {
             return result.fetch().iterator().next();
         }
 
-        logger.info("No result for query.");
+        LOG.info("No result for query.");
         return null;
     }
 

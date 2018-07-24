@@ -14,17 +14,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.event.mail;
+package org.envirocar.server.core.mail;
 
-import java.util.Properties;
+public interface Mailer {
 
-public class SendMailSSL extends AbstractSendMail {
-
-	@Override
-	protected void injectProperties(Properties props) {
-		props.put("mail.smtp.socketFactory.port", props.getProperty("mail.smtp.port"));
-		props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");		
-	}
-
+    void send(Mail mail) throws MailerException;
 
 }

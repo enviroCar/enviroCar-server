@@ -23,12 +23,12 @@ import org.envirocar.server.mongo.entity.MongoPasswordReset;
 
 public interface PasswordResetDAO {
 
-	PasswordReset requestPasswordReset(User user) throws BadRequestException;
-        
-        MongoPasswordReset getPasswordResetStatus(User user);
-        
-	MongoPasswordReset getPasswordResetStatus(User user, String verificationCode);
+    PasswordReset requestPasswordReset(User user) throws BadRequestException;
 
-	void remove(MongoPasswordReset status);
+    MongoPasswordReset getPasswordResetStatus(User user);
+
+    MongoPasswordReset getPasswordResetStatus(User user, String verificationCode);
+
+    void remove(MongoPasswordReset status);
 
 }

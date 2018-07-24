@@ -16,10 +16,13 @@
  */
 package org.envirocar.server.mongo.dao;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
 
 import org.envirocar.server.core.dao.StatisticsDao;
 import org.envirocar.server.core.entities.Phenomenon;
+import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.filter.StatisticsFilter;
 import org.envirocar.server.core.statistics.Statistic;
 import org.envirocar.server.core.statistics.Statistics;
@@ -33,11 +36,12 @@ import org.envirocar.server.mongo.entity.MongoStatisticKey;
 import org.envirocar.server.mongo.entity.MongoStatistics;
 import org.envirocar.server.mongo.entity.MongoTrack;
 import org.envirocar.server.mongo.entity.MongoUser;
+import org.envirocar.server.mongo.statistics.StatisticsUpdateScheduler;
 import org.envirocar.server.mongo.util.MongoUtils;
 import org.envirocar.server.mongo.util.Ops;
-
 import org.mongodb.morphia.dao.BasicDAO;
 import org.mongodb.morphia.mapping.Mapper;
+
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.mongodb.AggregationOutput;
@@ -45,10 +49,6 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
-import java.util.function.Function;
-import org.envirocar.server.core.entities.Track;
-import org.envirocar.server.core.event.CreatedTrackEvent;
-import org.envirocar.server.mongo.statistics.StatisticsUpdateScheduler;
 
 /**
  * TODO JavaDoc
@@ -57,7 +57,7 @@ import org.envirocar.server.mongo.statistics.StatisticsUpdateScheduler;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class MongoStatisticsDao implements StatisticsDao {
-    
+
     public static final String ID = Mapper.ID_KEY;
     public static final String PHENOMENON_NAME_PATH =
             MongoUtils.path(MongoMeasurement.PHENOMENONS,
@@ -85,22 +85,16 @@ public class MongoStatisticsDao implements StatisticsDao {
     private MongoPhenomenonDao phenomenonDao;
     private final BasicDAO<MongoStatistics, MongoStatisticKey> dao;
     private final StatisticsUpdateScheduler scheduler;
-    
-    private final Function<StatisticsFilter, MongoStatistics> calculateFunction = new Function<StatisticsFilter, MongoStatistics>() {
-        @Override
-        public MongoStatistics apply(StatisticsFilter t) {
-            MongoStatistics v = calculateAndSaveStatistics(t, key(t));
-            return v;
-        }
-    };
+
+    private final Function<StatisticsFilter, MongoStatistics> calculateFunction
+            = t -> calculateAndSaveStatistics(t, key(t));
 
 
     @Inject
     public MongoStatisticsDao(MongoDB mongoDB, StatisticsUpdateScheduler scheduler) {
         this.mongoDB = mongoDB;
         this.scheduler = scheduler;
-        this.dao = new BasicDAO<MongoStatistics, MongoStatisticKey>(
-                MongoStatistics.class, mongoDB.getDatastore());
+        this.dao = new BasicDAO<>(MongoStatistics.class, mongoDB.getDatastore());
     }
 
     @Override
@@ -150,8 +144,8 @@ public class MongoStatisticsDao implements StatisticsDao {
         this.dao.save(v);
         return v;
     }
-    
-    
+
+
     private MongoStatisticKey key(StatisticsFilter request) {
         MongoTrack track = (MongoTrack) request.getTrack();
         MongoUser user = (MongoUser) request.getUser();
@@ -161,11 +155,14 @@ public class MongoStatisticsDao implements StatisticsDao {
                                      mongoDB.key(sensor));
     }
 
-    private AggregationOutput aggregate(DBObject firstOp,
-                                        DBObject... additionalOps) {
+    private AggregationOutput aggregate(DBObject... ops) {
+        return aggregate(Arrays.asList(ops));
+    }
+
+    private AggregationOutput aggregate(List<DBObject> ops) {
         AggregationOutput result = mongoDB.getDatastore()
                 .getCollection(MongoMeasurement.class)
-                .aggregate(firstOp, additionalOps);
+                .aggregate(ops);
         return result;
     }
 
@@ -248,12 +245,12 @@ public class MongoStatisticsDao implements StatisticsDao {
         StatisticsFilter allFilter = new StatisticsFilter();
         MongoStatisticKey allKey = key(allFilter);
         this.scheduler.updateStatistics(allFilter, allKey, calculateFunction, false);
-        
+
         StatisticsFilter userFilter = new StatisticsFilter(t.getUser());
         MongoStatisticKey userKey = key(userFilter);
         this.scheduler.updateStatistics(userFilter, userKey, calculateFunction, false);
-        
-        
+
+
     }
 
 

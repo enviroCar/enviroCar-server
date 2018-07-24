@@ -34,7 +34,7 @@ import org.slf4j.LoggerFactory;
 
 public class ResetPasswordResource extends AbstractResource {
 	
-	private static final Logger logger = LoggerFactory.getLogger(ResetPasswordResource.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ResetPasswordResource.class);
 	
 	@POST
     @Schema(request = Schemas.PASSWORD_RESET_REQUEST)
@@ -43,7 +43,7 @@ public class ResetPasswordResource extends AbstractResource {
 		checkRights(getRights().canAccessPasswordReset(request));
 		
 		getUserService().requestPasswordReset(resetPassword.getUser());
-		logger.info("Successfully processed password reset request for user {}", resetPassword.getUser());
+		LOG.info("Successfully processed password reset request for user {}", resetPassword.getUser());
 
 		return Response.noContent().build();
     }
@@ -55,7 +55,7 @@ public class ResetPasswordResource extends AbstractResource {
 		checkRights(getRights().canAccessPasswordReset(request));
 		
 		getUserService().resetPassword(resetPassword.getUser(), resetPassword.getCode());
-		logger.info("Password reset for user {}", resetPassword.getUser());
+		LOG.info("Password reset for user {}", resetPassword.getUser());
 		
 		return Response.noContent().build();
     }

@@ -16,22 +16,22 @@
  */
 package org.envirocar.server.event;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.net.URLConnection;
-import java.util.Properties;
-import java.util.Scanner;
+import static java.util.stream.Collectors.joining;
 
-import javax.mail.MessagingException;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.Objects;
+
+import javax.inject.Inject;
 
 import org.envirocar.server.core.event.PasswordResetEvent;
-import org.envirocar.server.event.mail.SendMail;
-import org.envirocar.server.event.mail.SendMailSSL;
-import org.envirocar.server.event.mail.SendMailTLS;
+import org.envirocar.server.core.mail.Mailer;
+import org.envirocar.server.core.mail.MailerException;
+import org.envirocar.server.core.mail.PlainMail;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 import org.slf4j.Logger;
@@ -43,124 +43,60 @@ import com.google.inject.Singleton;
 @Singleton
 public class SendVerificationCodeViaMailListener {
 
-	private static final String USERNAME = "{username}";
-	private static final String CODE = "{code}";
-	private static final String EXPIRATION_TIME = "{expirationTime}";
-	private static final Logger logger = LoggerFactory
-			.getLogger(SendVerificationCodeViaMailListener.class);
-	private static final DateTimeFormatter dateFormat = ISODateTimeFormat.dateTimeNoMillis();
-	private static final String VERIFICATION_CODE_SUBJECT = "VERIFICATION_CODE_SUBJECT";
-	private static final String USE_SSL = "USE_SSL";
-	private static final String EMAIL_TEMPLATE_FILE = "mail-verification-code-template.html";
-	private static final String MAIL_CONFIGURATION_FILE = "mail-configuration.properties";
-	private File templateFile;
-	private File mailConfigFile;
+    private static final String USERNAME = "{username}";
+    private static final String CODE = "{code}";
+    private static final String EXPIRATION_TIME = "{expirationTime}";
+    private static final Logger LOG = LoggerFactory.getLogger(SendVerificationCodeViaMailListener.class);
+    private static final DateTimeFormatter DATE_FORMAT = ISODateTimeFormat.dateTimeNoMillis();
+    private static final Path EMAIL_TEMPLATE_FILE = Paths.get("password-recovery-mail-template.txt");
+    private Path templateFile;
+    private final Mailer mailer;
 
-	public SendVerificationCodeViaMailListener() {
-		String home = System.getProperty("user.home");
-		if (home != null) {
-			File homeDirectory = new File(home);
-			
-			if (homeDirectory != null && homeDirectory.isDirectory()) {
-				templateFile = new File(homeDirectory, EMAIL_TEMPLATE_FILE);
-				mailConfigFile = new File(homeDirectory, MAIL_CONFIGURATION_FILE);
-			}
-		} else {
-			logger.warn("user.home is not specified. Will try to use fallback resources.");
-		}
-		
-	}
+    @Inject
+    public SendVerificationCodeViaMailListener(Mailer mailer) {
+        this.mailer = Objects.requireNonNull(mailer);
+        String home = System.getProperty("user.home");
+        if (home != null) {
+            Path homeDirectory = Paths.get(home);
+            if (Files.isDirectory(homeDirectory)) {
+                this.templateFile = homeDirectory.resolve(EMAIL_TEMPLATE_FILE).toAbsolutePath();
+            }
+        } else {
+            LOG.warn("user.home is not specified. Will try to use fallback resources.");
+        }
 
-	@Subscribe
-	public void onPasswordResetRequestedEvent(PasswordResetEvent ev) {
-		CharSequence template = fillTemplate(ev);
+    }
 
-		try {
-			Properties mailConfiguration = new Properties();
-			mailConfiguration.load(openFileWithFallback(mailConfigFile, MAIL_CONFIGURATION_FILE));
+    @Subscribe
+    public void onPasswordResetRequestedEvent(PasswordResetEvent e) {
+        try {
+            Path path;
+            if (Files.exists(templateFile)) {
+                path = templateFile;
+            } else if (Files.exists(EMAIL_TEMPLATE_FILE.toAbsolutePath())) {
+                path = EMAIL_TEMPLATE_FILE.toAbsolutePath();
+            } else {
+                LOG.error("Could not find email template file for password reset at {} or {}",
+                          templateFile, EMAIL_TEMPLATE_FILE.toAbsolutePath());
+                return;
+            }
 
-			SendMail sender = createSender(mailConfiguration);
+            List<String> lines = Files.readAllLines(path, StandardCharsets.UTF_8);
 
-			sender.send(ev.getUser().getMail(),
-					resolveSubject(mailConfiguration),
-					template.toString());
-		} catch (MessagingException e) {
-			logger.warn(e.getMessage(), e);
-		} catch (IOException e) {
-			logger.warn(e.getMessage(), e);
-		}
-	}
+            if (lines.size() < 3) {
+                LOG.error("At least 3 lines of content required to be a valid mail template file");
+            }
 
-	private Reader openFileWithFallback(File f, String fallbackResource) throws IOException {
-		if (f != null && f.exists()) {
-			return new FileReader(f);
-		}
-		logger.info("File {} is not available. Try to use fallback at {}",
-				(f != null ? f : "null"),
-				fallbackResource);
-		return new InputStreamReader(openStreamForResource(fallbackResource));
-	}
+            String subject = lines.stream().findFirst().orElse(null);
+            String content = lines.stream().skip(2).collect(joining(System.lineSeparator()))
+                    .replace(USERNAME, e.getUser().getName())
+                    .replace(CODE, e.getCode())
+                    .replace(EXPIRATION_TIME, e.getExpiration().toString(DATE_FORMAT));
 
-	private String resolveSubject(Properties mailConfiguration) {
-		String result = mailConfiguration.getProperty(VERIFICATION_CODE_SUBJECT);
-		
-		if (result != null) return result;
-		
-		return "Password Reset requested";
-	}
+            this.mailer.send(new PlainMail(e.getUser(), subject, content));
 
-	private SendMail createSender(Properties conf) {
-		SendMail result;
-		
-		if (conf.containsKey(USE_SSL) && Boolean.parseBoolean(conf.getProperty(USE_SSL))) {
-			result = new SendMailSSL();
-		}
-		else {
-			result = new SendMailTLS();
-		}
-		
-		result.setup(conf);
-		return result;
-	}
-
-	private CharSequence fillTemplate(PasswordResetEvent e) {
-		String template = readFile(templateFile, EMAIL_TEMPLATE_FILE)
-				.toString();
-		return template
-				.replace(USERNAME, e.getUser().getName())
-				.replace(CODE, e.getCode())
-				.replace(EXPIRATION_TIME,
-						e.getExpiration().toString(dateFormat));
-	}
-
-	private CharSequence readFile(File f, String fallbackResource) {
-		StringBuilder sb = new StringBuilder();
-		Scanner sc = null;
-
-		String sep = System.getProperty("line.separator");
-		try {
-			sc = new Scanner(openFileWithFallback(f, fallbackResource));
-			while (sc.hasNext()) {
-				sb.append(sc.nextLine());
-				sb.append(sep);
-			}
-		} catch (IOException e) {
-			logger.warn(e.getMessage(), e);
-		} finally {
-			if (sc != null) {
-				sc.close();
-			}
-		}
-
-		return sb;
-	}
-
-	private InputStream openStreamForResource(String string) throws IOException {
-		URLConnection conn = getClass().getResource(string)
-				.openConnection();
-		conn.setUseCaches(false);
-		return conn.getInputStream();
-	}
-
-
+        } catch (MailerException | IOException ex) {
+            LOG.warn(ex.getMessage(), ex);
+        }
+    }
 }

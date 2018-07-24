@@ -14,27 +14,29 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-/*
+ /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
 package org.envirocar.server;
 
-import com.google.inject.Binder;
-import com.google.inject.Inject;
-import com.google.inject.Module;
 import java.util.Set;
+
 import org.envirocar.server.core.guice.ResourceShutdownListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.inject.Binder;
+import com.google.inject.Inject;
+import com.google.inject.Module;
 
 /**
  * Manager class to shutdown resources via ResourceShutdownListener instances.
  */
 public class ShutdownManager {
+    private static final Logger LOG = LoggerFactory.getLogger(ShutdownManager.class);
     private final Set<ResourceShutdownListener> listeners;
-    private static final Logger LOGGER = LoggerFactory.getLogger(ShutdownManager.class);
 
     @Inject
     public ShutdownManager(Set<ResourceShutdownListener> listeners) {
@@ -42,26 +44,24 @@ public class ShutdownManager {
     }
 
     void shutdownListeners() {
-        LOGGER.info(String.format("shutting down resources of %s listeners", listeners.size()));
-        listeners.stream().forEach((listener) -> {
+        LOG.info(String.format("shutting down resources of %s listeners", listeners.size()));
+        listeners.stream().forEach(listener -> {
             try {
                 listener.shutdownResources();
-            }
-            catch (RuntimeException e) {
-                LOGGER.warn("Could not shutdown "+ listener.getClass(), e);
+            } catch (Throwable e) {
+                LOG.warn("Could not shutdown " + listener.getClass(), e);
             }
         });
-        LOGGER.info("finished shutting down resources!");
+        LOG.info("finished shutting down resources!");
     }
-    
-    
+
     public static class LocalModule implements Module {
 
         @Override
         public void configure(Binder binder) {
             binder.bind(ShutdownManager.class);
         }
-        
+
     }
-    
+
 }

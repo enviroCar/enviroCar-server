@@ -20,10 +20,10 @@ import org.bson.types.ObjectId;
 import org.envirocar.server.core.entities.PasswordReset;
 import org.envirocar.server.core.entities.User;
 import org.joda.time.DateTime;
-
 import org.mongodb.morphia.Key;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.annotations.IndexOptions;
 import org.mongodb.morphia.annotations.Indexed;
 import org.mongodb.morphia.annotations.Property;
 import org.mongodb.morphia.annotations.Transient;
@@ -31,6 +31,7 @@ import org.mongodb.morphia.mapping.Mapper;
 
 @Entity("passwordResetStatus")
 public class MongoPasswordReset extends MongoEntityBase implements PasswordReset {
+
 
     public static final String NAME = Mapper.ID_KEY;
     public static final String EXPIRES = "expires";
@@ -43,7 +44,7 @@ public class MongoPasswordReset extends MongoEntityBase implements PasswordReset
     private ObjectId id = new ObjectId();
 
     @Property(EXPIRES)
-    @Indexed(expireAfterSeconds = EXPIRATION_PERIOD_HOURS * 60 * 60)
+    @Indexed(options = @IndexOptions(expireAfterSeconds = EXPIRATION_PERIOD_HOURS * 60 * 60))
     private DateTime expires;
 
     @Property(USER)

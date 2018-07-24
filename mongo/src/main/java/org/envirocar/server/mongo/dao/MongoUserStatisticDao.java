@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 The enviroCar project
+ * Copyright (C) 2013-2018 The enviroCar project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -16,35 +16,31 @@
  */
 package org.envirocar.server.mongo.dao;
 
+import java.util.function.Function;
+
+import org.envirocar.server.core.DataService;
+import org.envirocar.server.core.dao.UserStatisticDao;
+import org.envirocar.server.core.entities.Measurements;
+import org.envirocar.server.core.entities.Track;
+import org.envirocar.server.core.entities.TrackSummaries;
+import org.envirocar.server.core.entities.Tracks;
+import org.envirocar.server.core.entities.UserStatistic;
+import org.envirocar.server.core.filter.MeasurementFilter;
+import org.envirocar.server.core.filter.TrackFilter;
+import org.envirocar.server.core.filter.UserStatisticFilter;
+import org.envirocar.server.core.util.pagination.PageBasedPagination;
+import org.envirocar.server.mongo.MongoDB;
+import org.envirocar.server.mongo.entity.MongoUser;
+import org.envirocar.server.mongo.entity.MongoUserStatistic;
+import org.envirocar.server.mongo.entity.MongoUserStatisticKey;
+import org.envirocar.server.mongo.userstatistic.UserStatisticUpdateScheduler;
+import org.envirocar.server.mongo.util.UserStatisticUtils;
+import org.mongodb.morphia.dao.BasicDAO;
+import org.mongodb.morphia.mapping.Mapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
-
-import org.envirocar.server.mongo.MongoDB;
-
-import org.envirocar.server.core.dao.UserStatisticDao;
-import org.envirocar.server.core.entities.Track;
-import org.envirocar.server.core.entities.UserStatistic;
-import org.envirocar.server.core.filter.UserStatisticFilter;
-import org.envirocar.server.mongo.entity.MongoUserStatistic;
-
-import org.mongodb.morphia.dao.BasicDAO;
-import org.mongodb.morphia.mapping.Mapper;
-
-import org.envirocar.server.core.DataService;
-import org.envirocar.server.core.entities.Measurements;
-import org.envirocar.server.core.entities.TrackSummaries;
-import org.envirocar.server.core.entities.Tracks;
-import org.envirocar.server.core.filter.MeasurementFilter;
-import org.envirocar.server.core.filter.TrackFilter;
-import org.envirocar.server.core.util.pagination.PageBasedPagination;
-import org.envirocar.server.mongo.entity.MongoUser;
-import org.envirocar.server.mongo.entity.MongoUserStatisticKey;
-import org.envirocar.server.mongo.util.UserStatisticUtils;
-
-import java.util.function.Function;
-import org.envirocar.server.mongo.userstatistic.UserStatisticUpdateScheduler;
 
 /**
  * TODO JavaDoc
@@ -63,38 +59,21 @@ public class MongoUserStatisticDao implements UserStatisticDao {
 
     // calculate on get() calculation function, if UserStatistics have not been created yet
     private final Function<UserStatisticFilter, MongoUserStatistic> calculateAllFunction
-            = new Function<UserStatisticFilter, MongoUserStatistic>() {
-        @Override
-        public MongoUserStatistic apply(UserStatisticFilter t) {
-            MongoUserStatistic v = calculateAndSaveUserStatistic(t, key(t));
-            return v;
-        }
-    };
+            = t -> calculateAndSaveUserStatistic(t, key(t));
 
     // update on New Track calculation function
     private final Function<Object[], MongoUserStatistic> calculateOnNewTrackFunction
-            = new Function<Object[], MongoUserStatistic>() {
-        @Override
-        public MongoUserStatistic apply(Object[] params) {
-            UserStatisticFilter t = (UserStatisticFilter) params[0];
-            Track track = (Track) params[1];
-            MongoUserStatistic v = calculateAndSaveUserStatisticOnNewTrack(t, key(t), track);
-            return v;
-        }
-    };
+            = params -> {
+                UserStatisticFilter t = (UserStatisticFilter) params[0];
+                return calculateAndSaveUserStatisticOnNewTrack(t, key(t), (Track) params[1]);
+            };
 
     // update on Track Deletion calculation function
     private final Function<Object[], MongoUserStatistic> calculateOnTrackDeletionFunction
-            = new Function<Object[], MongoUserStatistic>() {
-        @Override
-        public MongoUserStatistic apply(Object[] params) {
-            UserStatisticFilter t = (UserStatisticFilter) params[0];
-            Track track = (Track) params[1];
-            Measurements measurements = (Measurements) params[2];
-            MongoUserStatistic v = calculateAndSaveUserStatisticOnTrackDeletion(t, key(t), track, measurements);
-            return v;
-        }
-    };
+            = params -> {
+                UserStatisticFilter t = (UserStatisticFilter) params[0];
+                return calculateAndSaveUserStatisticOnTrackDeletion(t, key(t), (Track) params[1], (Measurements) params[2]);
+            };
 
     @Inject
     public MongoUserStatisticDao(MongoDB mongoDB, DataService dataService, UserStatisticUpdateScheduler scheduler) {

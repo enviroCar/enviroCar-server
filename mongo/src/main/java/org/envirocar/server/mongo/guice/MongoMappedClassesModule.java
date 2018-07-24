@@ -52,9 +52,7 @@ public class MongoMappedClassesModule extends AbstractModule {
     @SuppressWarnings("rawtypes")
     protected void configure() {
         Multibinder<Class<?>> mb = Multibinder.newSetBinder(
-                binder(), new TypeLiteral<Class<?>>() {
-        },
-                Names.named(MongoDB.MAPPED_CLASSES));
+                binder(), new TypeLiteral<Class<?>>() {}, Names.named(MongoDB.MAPPED_CLASSES));
         mb.addBinding().toInstance(MongoUser.class);
         mb.addBinding().toInstance(MongoGroup.class);
         mb.addBinding().toInstance(MongoTrack.class);
