@@ -16,6 +16,9 @@
  */
 package org.envirocar.server.core.guice;
 
+import org.envirocar.server.core.CarSimilarityService;
+import org.envirocar.server.core.CarSimilarityServiceImpl;
+import org.envirocar.server.core.ConfirmationLinkFactory;
 import org.envirocar.server.core.DataService;
 import org.envirocar.server.core.DataServiceImpl;
 import org.envirocar.server.core.FriendService;
@@ -26,6 +29,8 @@ import org.envirocar.server.core.StatisticsService;
 import org.envirocar.server.core.StatisticsServiceImpl;
 import org.envirocar.server.core.UserService;
 import org.envirocar.server.core.UserServiceImpl;
+import org.envirocar.server.core.UserStatisticService;
+import org.envirocar.server.core.UserStatisticServiceImpl;
 import org.envirocar.server.core.activities.ActivityListener;
 import org.envirocar.server.core.util.BCryptPasswordEncoder;
 import org.envirocar.server.core.util.GeodesicGeometryOperations;
@@ -40,10 +45,6 @@ import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.PrecisionModel;
-import org.envirocar.server.core.CarSimilarityService;
-import org.envirocar.server.core.CarSimilarityServiceImpl;
-import org.envirocar.server.core.UserStatisticService;
-import org.envirocar.server.core.UserStatisticServiceImpl;
 
 /**
  * TODO JavaDoc
@@ -65,6 +66,7 @@ public class CoreModule extends AbstractModule {
         bind(GeometryOperations.class).to(GeodesicGeometryOperations.class);
         bind(CarSimilarityService.class).to(CarSimilarityServiceImpl.class);
         DateTimeZone.setDefault(DateTimeZone.UTC);
+        requireBinding(ConfirmationLinkFactory.class);
     }
 
     @Provides

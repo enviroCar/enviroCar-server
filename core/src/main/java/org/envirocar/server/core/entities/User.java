@@ -19,6 +19,8 @@ package org.envirocar.server.core.entities;
 import java.net.URL;
 import java.util.Set;
 
+import org.joda.time.DateTime;
+
 import com.vividsolutions.jts.geom.Geometry;
 
 /**
@@ -50,6 +52,16 @@ public interface User extends BaseEntity {
     boolean hasToken();
 
     boolean isAdmin();
+
+    boolean isConfirmed();
+
+    String getConfirmationCode();
+
+    void setConfirmationCode(String code);
+
+    DateTime getExpirationDate();
+
+    void setExpirationDate(DateTime time);
 
     void setAdmin(boolean isAdmin);
 

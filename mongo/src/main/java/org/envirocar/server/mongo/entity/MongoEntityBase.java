@@ -22,12 +22,12 @@ import org.envirocar.server.core.entities.BaseEntity;
 import org.envirocar.server.mongo.MongoDB;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
-
 import org.mongodb.morphia.annotations.Indexed;
 import org.mongodb.morphia.annotations.PrePersist;
 import org.mongodb.morphia.annotations.Property;
 import org.mongodb.morphia.annotations.Transient;
 import org.mongodb.morphia.utils.IndexDirection;
+
 import com.google.common.base.MoreObjects;
 import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.inject.Inject;

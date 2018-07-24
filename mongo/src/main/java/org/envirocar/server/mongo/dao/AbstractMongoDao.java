@@ -21,16 +21,25 @@ import org.envirocar.server.core.util.pagination.Pagination;
 import org.envirocar.server.mongo.MongoDB;
 import org.envirocar.server.mongo.entity.MongoEntityBase;
 import org.joda.time.DateTime;
-
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Key;
+import org.mongodb.morphia.annotations.Version;
 import org.mongodb.morphia.dao.BasicDAO;
+import org.mongodb.morphia.mapping.MappedClass;
+import org.mongodb.morphia.mapping.MappedField;
 import org.mongodb.morphia.mapping.Mapper;
+import org.mongodb.morphia.mapping.cache.EntityCache;
+import org.mongodb.morphia.query.FindOptions;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.UpdateOperations;
+import org.mongodb.morphia.query.UpdateOpsImpl;
 import org.mongodb.morphia.query.UpdateResults;
+
+import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import com.mongodb.WriteResult;
+import com.mongodb.client.model.DBCollectionFindAndModifyOptions;
 
 /**
  * TODO JavaDoc
@@ -82,21 +91,64 @@ public abstract class AbstractMongoDao<K, E, C extends Paginated<? super E>> {
         return dao.update(q().field(Mapper.ID_KEY).equal(key), ops);
     }
 
+    protected BasicDAO<E, K> dao() {
+        return this.dao;
+    }
+
     protected UpdateResults update(Query<E> q, UpdateOperations<E> ops) {
         return dao.update(q, ops);
     }
 
     protected Iterable<E> fetch(Query<E> q) {
-        return dao.find(q).fetch();
+        return q.fetch();
     }
 
     protected C fetch(Query<E> q, Pagination p) {
         long count = 0;
+
+        FindOptions findOptions = new FindOptions();
         if (p != null) {
             count = count(q);
-            q.offset((int)p.getBegin()).limit((int)p.getLimit());
+            findOptions.skip((int) p.getBegin());
+            findOptions.limit((int) p.getLimit());
         }
-        return createPaginatedIterable(fetch(q), p, count);
+        return createPaginatedIterable(q.fetch(findOptions), p, count);
+    }
+
+    protected E findAndModify(Query<E> query, UpdateOperations<E> update, boolean returnNew) {
+        Class<E> entityClass = query.getEntityClass();
+
+        Mapper mapper = getMapper();
+        Datastore datastore = getDatastore();
+        DBCollection dbColl = datastore.getCollection(entityClass);
+        MappedClass mc = mapper.getMappedClass(entityClass);
+
+        DBObject queryObject = query.getQueryObject();
+
+        if (update.isIsolated()) {
+            queryObject.put("$isolated", true);
+        }
+
+        mc.getFieldsAnnotatedWith(Version.class).stream()
+                .map(MappedField::getNameToStore)
+                .forEach(field -> update.inc(field, 1));
+
+        DBObject operations = ((UpdateOpsImpl) update).getOps();
+
+        DBCollectionFindAndModifyOptions options = new DBCollectionFindAndModifyOptions()
+                .upsert(false).remove(false).update(operations).returnNew(returnNew);
+
+        DBObject dbObject = dbColl.findAndModify(queryObject, options);
+
+        if (dbObject == null) {
+            return null;
+        }
+
+        EntityCache entityCache = mapper.createEntityCache();
+
+        E entity = mapper.fromDBObject(datastore, entityClass, dbObject, entityCache);
+
+        return entity;
     }
 
     protected abstract C createPaginatedIterable(
@@ -113,7 +165,7 @@ public abstract class AbstractMongoDao<K, E, C extends Paginated<? super E>> {
     @SuppressWarnings("unchecked")
     protected void updateTimestamp(E e) {
         update((K) this.mongoDB.getMapper().getId(e), up()
-                .set(MongoEntityBase.LAST_MODIFIED, new DateTime()));
+               .set(MongoEntityBase.LAST_MODIFIED, new DateTime()));
     }
 
     public <T> T deref(Class<T> c, Key<T> key) {

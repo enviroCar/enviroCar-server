@@ -14,15 +14,11 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.envirocar.server;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import se.jiderhamn.classloader.leak.prevention.ClassLoaderLeakPreventor;
 
 /**
@@ -30,7 +26,7 @@ import se.jiderhamn.classloader.leak.prevention.ClassLoaderLeakPreventor;
  * @author matthes
  */
 public class EnvirocarLeakPreventor extends ClassLoaderLeakPreventor {
-    
+
     private static final Logger LOGGER = LoggerFactory.getLogger(EnvirocarLeakPreventor.class);
 
     @Override
@@ -42,7 +38,7 @@ public class EnvirocarLeakPreventor extends ClassLoaderLeakPreventor {
     protected void fixGeoToolsLeak() {
         //original method broken; uses static call on non-static method
     }
-    
-    
-    
+
+
+
 }

@@ -22,13 +22,15 @@ import java.util.Set;
 
 import org.envirocar.server.core.entities.Gender;
 import org.envirocar.server.core.entities.User;
-
+import org.joda.time.DateTime;
 import org.mongodb.morphia.Key;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.annotations.IndexOptions;
 import org.mongodb.morphia.annotations.Indexed;
 import org.mongodb.morphia.annotations.Property;
 import org.mongodb.morphia.mapping.Mapper;
+
 import com.google.common.base.Objects;
 import com.vividsolutions.jts.geom.Geometry;
 
@@ -54,6 +56,9 @@ public class MongoUser extends MongoEntityBase implements User {
     public static final String GENDER = "gender";
     public static final String LANGUAGE = "lang";
     public static final String BADGES = "badges";
+    public static final String CONFIRMATION_CODE = "confirmationCode";
+    public static final String EXPIRE_AT = "expireAt";
+
     /**
      * @deprecated use {@link #TERMS_OF_USE_VERSION} instead. kept for backwards compatibility
      */
@@ -61,46 +66,53 @@ public class MongoUser extends MongoEntityBase implements User {
     public static final String ACCEPTED_TERMS_OF_USE = "acceptedTermsOfUseVersion";
     public static final String TERMS_OF_USE_VERSION = "touVersion";
 
-    @Property(TOKEN)
+    @Property(MongoUser.TOKEN)
     private String token;
-    @Property(IS_ADMIN)
+    @Property(MongoUser.IS_ADMIN)
     private boolean isAdmin = false;
     @Id
     private String name;
     @Indexed
-    @Property(MAIL)
+    @Property(MongoUser.MAIL)
     private String mail;
-    @Property(FRIENDS)
+    @Property(MongoUser.FRIENDS)
     private Set<Key<MongoUser>> friends;
-    @Property(FIRST_NAME)
+    @Property(MongoUser.FIRST_NAME)
     private String firstName;
-    @Property(LAST_NAME)
+    @Property(MongoUser.LAST_NAME)
     private String lastName;
-    @Property(COUNTRY)
+    @Property(MongoUser.COUNTRY)
     private String country;
-    @Property(LOCATION)
+    @Property(MongoUser.LOCATION)
     private Geometry location;
-    @Property(ABOUT_ME)
+    @Property(MongoUser.ABOUT_ME)
     private String aboutMe;
-    @Property(URL)
+    @Property(MongoUser.URL)
     private URL url;
-    @Property(DAY_OF_BIRTH)
+    @Property(MongoUser.DAY_OF_BIRTH)
     private String dayOfBirth;
-    @Property(GENDER)
+    @Property(MongoUser.GENDER)
     private Gender gender;
-    @Property(LANGUAGE)
+    @Property(MongoUser.LANGUAGE)
     private String language;
-    @Property(BADGES)
+    @Property(MongoUser.BADGES)
     private Set<String> badges;
     /**
      * @deprecated use {@link #termsOfUseVersion} instead. kept for backwards compatibility
      */
     @Deprecated
-    @Property(ACCEPTED_TERMS_OF_USE)
+    @Property(MongoUser.ACCEPTED_TERMS_OF_USE)
     private String acceptedTermsOfUseVersion;
-    @Property(TERMS_OF_USE_VERSION)
+    @Property(MongoUser.TERMS_OF_USE_VERSION)
     private String termsOfUseVersion;
-    
+    @Indexed(options = @IndexOptions(unique = true,
+                                     partialFilter = "{confirmationCode:{$type: \"string\"}}"))
+    @Property(MongoUser.CONFIRMATION_CODE)
+    private String confirmationCode;
+    @Indexed(options = @IndexOptions(expireAfterSeconds = 0))
+    @Property(MongoUser.EXPIRE_AT)
+    private DateTime expireAt;
+
     public MongoUser(String name) {
         this.name = name;
     }
@@ -339,19 +351,43 @@ public class MongoUser extends MongoEntityBase implements User {
     }
 
     @Override
-	public String getTermsOfUseVersion() {
-    	//acceptedTermsOfUseVersion kept for backwards compatibility with older users
-		return termsOfUseVersion != null ? termsOfUseVersion : acceptedTermsOfUseVersion;
-	}
+    public String getTermsOfUseVersion() {
+        //acceptedTermsOfUseVersion kept for backwards compatibility with older users
+        return termsOfUseVersion != null ? termsOfUseVersion : acceptedTermsOfUseVersion;
+    }
 
     @Override
-	public void setTermsOfUseVersion(String tou) {
-		this.termsOfUseVersion = tou;
-	}
+    public void setTermsOfUseVersion(String tou) {
+        this.termsOfUseVersion = tou;
+    }
 
-	@Override
-	public boolean hasAcceptedTermsOfUseVersion() {
-		return getTermsOfUseVersion() != null && !getTermsOfUseVersion().isEmpty();
-	}
-    
+    @Override
+    public boolean hasAcceptedTermsOfUseVersion() {
+        return getTermsOfUseVersion() != null && !getTermsOfUseVersion().isEmpty();
+    }
+
+    @Override
+    public boolean isConfirmed() {
+        return this.confirmationCode == null || this.confirmationCode.isEmpty();
+    }
+
+    @Override
+    public String getConfirmationCode() {
+        return this.confirmationCode;
+    }
+
+    @Override
+    public void setConfirmationCode(String code) {
+        this.confirmationCode = code;
+    }
+
+    @Override
+    public void setExpirationDate(DateTime expireAt) {
+        this.expireAt = expireAt;
+    }
+
+    @Override
+    public DateTime getExpirationDate() {
+        return this.expireAt;
+    }
 }

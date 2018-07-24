@@ -14,15 +14,23 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.event.mail;
+package org.envirocar.server.rest.encoding;
 
-import java.util.Properties;
+import java.net.URI;
 
-public class SendMailTLS extends AbstractSendMail {
+import org.envirocar.server.core.ConfirmationLinkFactory;
+import org.envirocar.server.core.entities.User;
 
-	@Override
-	protected void injectProperties(Properties props) {
-		props.put("mail.smtp.starttls.enable", "true");		
-	}
+/**
+ * TODO JavaDoc
+ *
+ * @author Christian Autermann
+ */
+public class DummyConfirmationLinkFactory implements ConfirmationLinkFactory {
+
+    @Override
+    public URI getConfirmationLink(User user) {
+        return URI.create("https://envirocar.org/api/dev/confirm/" + user.getConfirmationCode());
+    }
 
 }

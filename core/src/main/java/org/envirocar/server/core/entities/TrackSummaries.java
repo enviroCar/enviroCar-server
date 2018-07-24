@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 The enviroCar project
+ * Copyright (C) 2013-2018 The enviroCar project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -26,7 +26,7 @@ import java.util.List;
 public class TrackSummaries {
 
     private List<TrackSummary> tracklist;
-    
+
     public TrackSummaries(){
         this.tracklist = new ArrayList<>();
     }
@@ -50,7 +50,7 @@ public class TrackSummaries {
         if (this.tracklist != null) {
             this.tracklist.add(trackSummary);
         } else {
-            this.tracklist = new ArrayList();
+            this.tracklist = new ArrayList<>();
             this.tracklist.add(trackSummary);
         }
     }

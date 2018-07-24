@@ -28,9 +28,27 @@ import org.envirocar.server.core.util.pagination.Pagination;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface UserDao {
-    User getByName(String name);
 
-    User getByMail(String mail);
+    /**
+     * Try to confirm the the user.
+     *
+     * @param code The confirmation code of the {@link User}.
+     *
+     * @return If the user could be confirmed.
+     */
+    User confirm(String code);
+
+    default User getByName(String name) {
+        return getByName(name, false);
+    }
+
+    default User getByMail(String mail) {
+        return getByMail(mail, false);
+    }
+
+    User getByName(String name, boolean includeUnconfirmed);
+
+    User getByMail(String mail, boolean includeUnconfirmed);
 
     Users get(Pagination p);
 
@@ -48,11 +66,11 @@ public interface UserDao {
 
     void removeFriend(User user, User friend);
 
-	PasswordReset requestPasswordReset(User user) throws BadRequestException;
+    PasswordReset requestPasswordReset(User user) throws BadRequestException;
 
-	void resetPassword(User user, String verificationCode) throws BadRequestException;
+    void resetPassword(User user, String verificationCode) throws BadRequestException;
 
-	Users getPendingIncomingFriendRequests(User user);
+    Users getPendingIncomingFriendRequests(User user);
 
-	Users getPendingOutgoingFriendRequests(User user);
+    Users getPendingOutgoingFriendRequests(User user);
 }

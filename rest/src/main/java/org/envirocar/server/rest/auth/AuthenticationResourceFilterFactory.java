@@ -34,8 +34,7 @@ import com.sun.jersey.spi.container.ResourceFilterFactory;
  *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class AuthenticationResourceFilterFactory implements
-        ResourceFilterFactory {
+public class AuthenticationResourceFilterFactory implements ResourceFilterFactory {
     @Override
     public List<ResourceFilter> create(AbstractMethod am) {
         Authenticated authenticated = am.getAnnotation(Authenticated.class);

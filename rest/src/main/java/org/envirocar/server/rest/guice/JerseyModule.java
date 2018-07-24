@@ -16,20 +16,21 @@
  */
 package org.envirocar.server.rest.guice;
 
-import java.util.Map;
+import static java.util.stream.Collectors.joining;
 
-import org.envirocar.server.rest.pagination.PaginationFilter;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.StreamSupport;
+
 import org.envirocar.server.rest.CachingFilter;
 import org.envirocar.server.rest.URIContentNegotiationFilter;
 import org.envirocar.server.rest.auth.AuthenticationFilter;
 import org.envirocar.server.rest.auth.AuthenticationResourceFilterFactory;
+import org.envirocar.server.rest.pagination.PaginationFilter;
 import org.envirocar.server.rest.validation.JSONSchemaResourceFilterFactory;
 
-import com.google.common.base.Function;
-import com.google.common.base.Joiner;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Iterables;
 import com.sun.jersey.api.container.filter.GZIPContentEncodingFilter;
 import com.sun.jersey.api.core.ResourceConfig;
 import com.sun.jersey.guice.JerseyServletModule;
@@ -59,25 +60,23 @@ public class JerseyModule extends JerseyServletModule {
     }
 
     private String classList(Iterable<? extends Class<?>> classes) {
-        return Joiner.on(",").join(Iterables.transform(classes, new Function<Class<?>, String>() {
-            @Override public String apply(Class<?> type) { return type.getName(); }
-        }));
+        return StreamSupport.stream(classes.spliterator(), false).map(c -> c.getName()).collect(joining(","));
     }
 
-    protected ImmutableList<Class<? extends ContainerResponseFilter>> responseFilters() {
-        return ImmutableList.of(CachingFilter.class,
-                                PaginationFilter.class,
-                                GZIPContentEncodingFilter.class);
+    protected List<Class<? extends ContainerResponseFilter>> responseFilters() {
+        return Arrays.asList(CachingFilter.class,
+                             PaginationFilter.class,
+                             GZIPContentEncodingFilter.class);
     }
 
-    protected ImmutableList<Class<? extends ContainerRequestFilter>> requestFilters() {
-        return ImmutableList.of(GZIPContentEncodingFilter.class,
-                                URIContentNegotiationFilter.class,
-                                AuthenticationFilter.class);
+    protected List<Class<? extends ContainerRequestFilter>> requestFilters() {
+        return Arrays.asList(GZIPContentEncodingFilter.class,
+                             URIContentNegotiationFilter.class,
+                             AuthenticationFilter.class);
     }
 
-    protected ImmutableList<Class<? extends ResourceFilterFactory>> filterFactories() {
-        return ImmutableList.of(AuthenticationResourceFilterFactory.class,
-                                JSONSchemaResourceFilterFactory.class);
+    protected List<Class<? extends ResourceFilterFactory>> filterFactories() {
+        return Arrays.asList(AuthenticationResourceFilterFactory.class,
+                             JSONSchemaResourceFilterFactory.class);
     }
 }

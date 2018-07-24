@@ -19,18 +19,18 @@ package org.envirocar.server.mongo.dao;
 import static org.envirocar.server.mongo.dao.MongoMeasurementDao.ID;
 
 import java.text.DecimalFormatSymbols;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import org.bson.types.ObjectId;
-
 import org.envirocar.server.core.CarSimilarityService;
-
 import org.envirocar.server.core.dao.SensorDao;
 import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.core.entities.Sensors;
+import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.exception.ResourceNotFoundException;
 import org.envirocar.server.core.filter.PropertyFilter;
 import org.envirocar.server.core.filter.SensorFilter;
@@ -39,17 +39,16 @@ import org.envirocar.server.mongo.MongoDB;
 import org.envirocar.server.mongo.entity.MongoMeasurement;
 import org.envirocar.server.mongo.entity.MongoSensor;
 import org.envirocar.server.mongo.util.MongoUtils;
+import org.mongodb.morphia.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.mongodb.morphia.query.Query;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
 import com.mongodb.AggregationOutput;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
-import org.envirocar.server.core.entities.User;
 
 /**
  * TODO JavaDoc
@@ -58,10 +57,10 @@ import org.envirocar.server.core.entities.User;
  */
 public class MongoSensorDao extends AbstractMongoDao<ObjectId, MongoSensor, Sensors>
         implements SensorDao {
-    
+
     private static final Logger log = LoggerFactory.getLogger(MongoSensorDao.class);
     private final CarSimilarityService carSimilarity;
-    
+
     private final MongoMeasurementDao measurementDao;
 
     @Inject
@@ -84,7 +83,7 @@ public class MongoSensorDao extends AbstractMongoDao<ObjectId, MongoSensor, Sens
         } catch (ResourceNotFoundException ex) {
             log.trace("No mapped sensor found for id {}, fetching from db", id);
         }
-        
+
         ObjectId oid;
         try {
             oid = new ObjectId(id);
@@ -118,7 +117,7 @@ public class MongoSensorDao extends AbstractMongoDao<ObjectId, MongoSensor, Sens
         DBObject group = MongoUtils.group(new BasicDBObject(ID, MongoUtils.valueOf(MongoMeasurement.SENSOR, ID)));
         DBObject match = MongoUtils.match(MongoMeasurement.USER, ref(user));
         AggregationOutput result = getMongoDB().getDatastore()
-                .getCollection(MongoMeasurement.class).aggregate(match, group);
+                .getCollection(MongoMeasurement.class).aggregate(Arrays.asList(match, group));
         return StreamSupport.stream(result.results().spliterator(), false)
                 .map(x -> (ObjectId) x.get(ID))
 //                .map(x -> new Key<>(MongoSensor.class, x))

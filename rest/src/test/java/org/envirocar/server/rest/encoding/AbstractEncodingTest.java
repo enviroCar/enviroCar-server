@@ -17,10 +17,11 @@
 package org.envirocar.server.rest.encoding;
 
 import org.envirocar.server.core.DataService;
-import org.envirocar.server.core.UserService;
+import org.envirocar.server.core.dao.UserDao;
 import org.envirocar.server.core.entities.EntityFactory;
 import org.envirocar.server.core.guice.UpdaterModule;
 import org.envirocar.server.core.guice.ValidatorModule;
+import org.envirocar.server.core.mail.NoopMailerModule;
 import org.envirocar.server.mongo.guice.MongoConnectionModule;
 import org.envirocar.server.mongo.guice.MongoConverterModule;
 import org.envirocar.server.mongo.guice.MongoMappedClassesModule;
@@ -30,37 +31,45 @@ import org.envirocar.server.rest.guice.JerseyCodingModule;
 import org.envirocar.server.rest.schema.GuiceRunner;
 import org.envirocar.server.rest.schema.Modules;
 import org.junit.runner.RunWith;
-
 import org.mongodb.morphia.logging.MorphiaLoggerFactory;
+
 import com.google.inject.Inject;
 import com.vividsolutions.jts.geom.GeometryFactory;
 
-@Modules({MongoConverterModule.class, JerseyCodingModule.class, MongoMappedClassesModule.class,
-	MongoConnectionModule.class, EncodingTestModule.class,
-	UpdaterModule.class, ValidatorModule.class })
+@Modules({
+    MongoConverterModule.class,
+    JerseyCodingModule.class,
+    MongoMappedClassesModule.class,
+    MongoConnectionModule.class,
+    EncodingTestModule.class,
+    UpdaterModule.class,
+    ValidatorModule.class,
+    NoopMailerModule.class,
+    DummyConfirmationLinkFactoryModule.class
+})
 @RunWith(GuiceRunner.class)
 public abstract class AbstractEncodingTest {
+    
+    @Inject
+    protected DataService dataService;
 
-	@Inject
-	protected DataService dataService;
+    @Inject
+    protected UserDao userDao;
 
-	@Inject
-	protected UserService userService;
+    @Inject
+    protected TrackCSVEncoder trackCSVEncoder;
 
-	@Inject
-	protected TrackCSVEncoder trackCSVEncoder;
+    @Inject
+    protected TrackShapefileEncoder trackShapefileEncoder;
 
-	@Inject
-	protected TrackShapefileEncoder trackShapefileEncoder;
+    @Inject
+    protected EntityFactory entityFactory;
 
-	@Inject
-	protected EntityFactory entityFactory;
+    @Inject
+    protected GeometryFactory geometryFactory;
 
-	@Inject
-	protected GeometryFactory geometryFactory;
-	
-	public AbstractEncodingTest(){
-		MorphiaLoggerFactory.reset();
-	}
+    public AbstractEncodingTest() {
+        MorphiaLoggerFactory.reset();
+    }
 
 }

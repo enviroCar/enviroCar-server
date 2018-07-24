@@ -19,6 +19,7 @@ package org.envirocar.server;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.envirocar.server.core.mail.NoopMailerModule;
 
 import com.google.inject.Injector;
 import com.google.inject.servlet.GuiceFilter;
@@ -38,8 +39,7 @@ public class EnviroCarServer {
         server.setStopAtShutdown(true);
         ServletContextHandler sch = new ServletContextHandler(server, "/");
         sch.addFilter(GuiceFilter.class, "/*", null);
-        ServletContextListener servletContextListener =
-                new ServletContextListener();
+        ServletContextListener servletContextListener = new ServletContextListener(new NoopMailerModule());
         injector = servletContextListener.getInjector();
         sch.addEventListener(servletContextListener);
         sch.addServlet(DefaultServlet.class, "/");

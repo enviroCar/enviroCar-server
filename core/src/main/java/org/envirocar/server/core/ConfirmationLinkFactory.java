@@ -14,18 +14,18 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.event.mail;
+package org.envirocar.server.core;
 
-import java.util.Properties;
+import java.net.URI;
 
-import javax.mail.MessagingException;
+import org.envirocar.server.core.entities.User;
 
-public interface SendMail {
-	
-	public void setup(String user, String password, String fromEmail, String smtpHost, int smtpPort);
 
-	public void send(String email, String subject, String content) throws MessagingException;
-
-	public void setup(Properties mailConfiguration);
-	
+/**
+ * TODO JavaDoc
+ *
+ * @author Christian Autermann
+ */
+public interface ConfirmationLinkFactory {
+    URI getConfirmationLink(User user);
 }

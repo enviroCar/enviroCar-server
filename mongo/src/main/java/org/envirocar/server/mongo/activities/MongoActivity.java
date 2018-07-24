@@ -30,11 +30,11 @@ import org.mongodb.morphia.Key;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Indexed;
-import org.mongodb.morphia.annotations.Polymorphic;
 import org.mongodb.morphia.annotations.Property;
 import org.mongodb.morphia.annotations.Transient;
 import org.mongodb.morphia.mapping.Mapper;
 import org.mongodb.morphia.utils.IndexDirection;
+
 import com.google.common.base.MoreObjects;
 import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.inject.Inject;
@@ -46,7 +46,6 @@ import com.google.inject.assistedinject.AssistedInject;
  *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-@Polymorphic
 @Entity("activities")
 public class MongoActivity implements Activity {
     public static final String ID = Mapper.ID_KEY;
