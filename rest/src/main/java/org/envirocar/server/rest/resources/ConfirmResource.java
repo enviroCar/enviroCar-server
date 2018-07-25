@@ -16,7 +16,10 @@
  */
 package org.envirocar.server.rest.resources;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -50,12 +53,15 @@ public class ConfirmResource extends AbstractResource {
             throw new ResourceNotFoundException(String.format("confirmation code %s not found", confirmationCode));
         }
 
-        URI uri = UriBuilder.fromUri(APP)
-                    .queryParam("username", confirmed.getName())
-                    .fragment("#!/login")
+        try {
+            URI uri = UriBuilder.fromUri(APP)
+                    .fragment("#!/login?username=" + URLEncoder
+                              .encode(confirmed.getName(), StandardCharsets.UTF_8.name()))
                     .build();
+            return Response.seeOther(uri).build();
+        } catch (UnsupportedEncodingException ex) {
+            throw new RuntimeException(ex);
+        }
 
-
-        return Response.seeOther(uri).build();
     }
 }
