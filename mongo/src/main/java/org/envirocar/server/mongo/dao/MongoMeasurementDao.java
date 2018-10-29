@@ -18,8 +18,8 @@ package org.envirocar.server.mongo.dao;
 
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.bson.BSONObject;
@@ -55,10 +55,11 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
-import com.mongodb.AggregationOutput;
+import com.mongodb.AggregationOptions;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
+import com.mongodb.Cursor;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBDecoderFactory;
@@ -270,19 +271,17 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
         ops.add(project());
         ops.add(group());
 
-        AggregationOutput out = aggregate(ops);
-
-        return toKeyList(out.results());
+        return toKeyList(aggregate(ops));
     }
 
-    private AggregationOutput aggregate(DBObject... ops) {
-        return aggregate(Arrays.asList(ops));
-    }
-
-    private AggregationOutput aggregate(List<DBObject> ops) {
-        return mongoDB.getDatastore()
-                .getCollection(MongoMeasurement.class)
-                .aggregate(ops);
+    private Iterable<DBObject> aggregate(List<DBObject> ops) {
+        AggregationOptions options = AggregationOptions.builder().build();
+        DBCollection collection = mongoDB.getDatastore().getCollection(MongoMeasurement.class);
+        try (Cursor cursor = collection.aggregate(ops, options)) {
+            LinkedList<DBObject> list = new LinkedList<>();
+            cursor.forEachRemaining(list::add);
+            return list;
+        }
     }
 
     private DBObject matchGeometry(Geometry polygon) {
