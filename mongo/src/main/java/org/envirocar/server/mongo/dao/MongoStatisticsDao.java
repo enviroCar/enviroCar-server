@@ -17,6 +17,7 @@
 package org.envirocar.server.mongo.dao;
 
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Function;
 
@@ -44,9 +45,11 @@ import org.mongodb.morphia.mapping.Mapper;
 
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
-import com.mongodb.AggregationOutput;
+import com.mongodb.AggregationOptions;
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
+import com.mongodb.Cursor;
+import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 
@@ -134,12 +137,13 @@ public class MongoStatisticsDao implements StatisticsDao {
     }
 
     private MongoStatistics calculateAndSaveStatistics(StatisticsFilter request, MongoStatisticKey key) {
-        AggregationOutput aggregate = aggregate(matches(request),
-                project(),
-                unwind(),
-                group());
+        Iterable<DBObject> aggregate = aggregate(matches(request),
+                                  project(),
+                                  unwind(),
+                                  group());
+
         List<MongoStatistic> statistics =
-                    parseStatistics(aggregate.results());
+                    parseStatistics(aggregate);
         MongoStatistics v = new MongoStatistics(key, statistics);
         this.dao.save(v);
         return v;
@@ -155,15 +159,18 @@ public class MongoStatisticsDao implements StatisticsDao {
                                      mongoDB.key(sensor));
     }
 
-    private AggregationOutput aggregate(DBObject... ops) {
+    private Iterable<DBObject> aggregate(DBObject... ops) {
         return aggregate(Arrays.asList(ops));
     }
 
-    private AggregationOutput aggregate(List<DBObject> ops) {
-        AggregationOutput result = mongoDB.getDatastore()
-                .getCollection(MongoMeasurement.class)
-                .aggregate(ops);
-        return result;
+    private Iterable<DBObject> aggregate(List<DBObject> ops) {
+        AggregationOptions options = AggregationOptions.builder().build();
+        DBCollection collection = mongoDB.getDatastore().getCollection(MongoMeasurement.class);
+        try (Cursor cursor = collection.aggregate(ops, options)) {
+            LinkedList<DBObject> list = new LinkedList<>();
+            cursor.forEachRemaining(list::add);
+            return list;
+        }
     }
 
     private List<MongoStatistic> parseStatistics(Iterable<DBObject> results) {

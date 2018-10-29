@@ -20,10 +20,9 @@ import static org.envirocar.server.mongo.dao.MongoMeasurementDao.ID;
 
 import java.text.DecimalFormatSymbols;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import org.bson.types.ObjectId;
 import org.envirocar.server.core.CarSimilarityService;
@@ -46,8 +45,10 @@ import org.slf4j.LoggerFactory;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
-import com.mongodb.AggregationOutput;
+import com.mongodb.AggregationOptions;
 import com.mongodb.BasicDBObject;
+import com.mongodb.Cursor;
+import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 
 /**
@@ -116,12 +117,18 @@ public class MongoSensorDao extends AbstractMongoDao<ObjectId, MongoSensor, Sens
     public List<ObjectId> getIds(User user) {
         DBObject group = MongoUtils.group(new BasicDBObject(ID, MongoUtils.valueOf(MongoMeasurement.SENSOR, ID)));
         DBObject match = MongoUtils.match(MongoMeasurement.USER, ref(user));
-        AggregationOutput result = getMongoDB().getDatastore()
-                .getCollection(MongoMeasurement.class).aggregate(Arrays.asList(match, group));
-        return StreamSupport.stream(result.results().spliterator(), false)
-                .map(x -> (ObjectId) x.get(ID))
-//                .map(x -> new Key<>(MongoSensor.class, x))
-                .collect(Collectors.toList());
+        DBCollection collection = getMongoDB().getDatastore().getCollection(MongoMeasurement.class);
+        List<DBObject> ops = Arrays.asList(match, group);
+        AggregationOptions options = AggregationOptions.builder().build();
+        try (Cursor result = collection.aggregate(ops, options)) {
+            List<ObjectId> ids = new LinkedList<>();
+            result.forEachRemaining(x -> {
+                //ids.add(new Key<>(MongoSensor.class, collection.getName(), x.get(ID)));
+                ids.add((ObjectId) x.get(ID));
+            });
+            return ids;
+        }
+
     }
 
     @Override
