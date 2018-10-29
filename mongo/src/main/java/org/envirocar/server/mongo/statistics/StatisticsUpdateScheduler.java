@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-/*
+ /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -42,18 +42,17 @@ public class StatisticsUpdateScheduler {
     private static final Logger LOGGER = LoggerFactory.getLogger(StatisticsUpdateScheduler.class);
 
     private final Object keyStatisticMutex = new Object();
-    private Set<MongoStatisticKey> currentKeyStatisticUpdates = new HashSet<>();
-    private Set<MongoStatisticKey> updatePendingForKey = new HashSet<>();
-
+    private final Set<MongoStatisticKey> currentKeyStatisticUpdates = new HashSet<>();
+    private final Set<MongoStatisticKey> updatePendingForKey = new HashSet<>();
 
     public void updateStatistics(StatisticsFilter filter, MongoStatisticKey key,
-            Function<StatisticsFilter, MongoStatistics> calculator, boolean waitForResult) {
+                                 Function<StatisticsFilter, MongoStatistics> calculator, boolean waitForResult) {
 
         synchronized (this.keyStatisticMutex) {
             if (this.currentKeyStatisticUpdates.contains(key)) {
                 /*
                 schedule another update
-                */
+                 */
                 updatePendingForKey.add(key);
                 if (waitForResult) {
                     try {
@@ -63,8 +62,7 @@ public class StatisticsUpdateScheduler {
                     }
                 }
                 return;
-            }
-            else {
+            } else {
                 this.currentKeyStatisticUpdates.add(key);
             }
         }
@@ -82,19 +80,18 @@ public class StatisticsUpdateScheduler {
 
                 /*
                 another update is pending, start it
-                */
+                 */
                 if (waitForResult) {
                     /*
                     the thread is waiting, do not use it again and spawn a new
-                    */
-                    new Thread(() -> updateStatistics(filter, key, calculator, false)).start();
-                }
-                else {
+                     */
+                    new Thread(() -> {
+                        updateStatistics(filter, key, calculator, false);
+                    }).start();
+                } else {
                     updateStatistics(filter, key, calculator, false);
                 }
             }
         }
     }
-
-
 }

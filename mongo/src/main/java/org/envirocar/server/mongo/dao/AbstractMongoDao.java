@@ -103,6 +103,10 @@ public abstract class AbstractMongoDao<K, E, C extends Paginated<? super E>> {
         return q.fetch();
     }
 
+    protected Iterable<E> fetch(Query<E> q, FindOptions options) {
+        return dao.find(q).fetch(options);
+    }
+
     protected C fetch(Query<E> q, Pagination p) {
         long count = 0;
 
@@ -112,7 +116,7 @@ public abstract class AbstractMongoDao<K, E, C extends Paginated<? super E>> {
             findOptions.skip((int) p.getBegin());
             findOptions.limit((int) p.getLimit());
         }
-        return createPaginatedIterable(q.fetch(findOptions), p, count);
+        return createPaginatedIterable(fetch(q,findOptions), p, count);
     }
 
     protected E findAndModify(Query<E> query, UpdateOperations<E> update, boolean returnNew) {

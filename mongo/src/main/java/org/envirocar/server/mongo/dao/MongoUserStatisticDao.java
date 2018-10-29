@@ -37,8 +37,6 @@ import org.envirocar.server.mongo.userstatistic.UserStatisticUpdateScheduler;
 import org.envirocar.server.mongo.util.UserStatisticUtils;
 import org.mongodb.morphia.dao.BasicDAO;
 import org.mongodb.morphia.mapping.Mapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
 
@@ -49,8 +47,6 @@ import com.google.inject.Inject;
  */
 public class MongoUserStatisticDao implements UserStatisticDao {
 
-    private static final Logger log = LoggerFactory.getLogger(MongoUserStatisticDao.class);
-
     public static final String ID = Mapper.ID_KEY;
     private final BasicDAO<MongoUserStatistic, MongoUserStatisticKey> dao;
     private final DataService dataService;
@@ -58,22 +54,24 @@ public class MongoUserStatisticDao implements UserStatisticDao {
     private final UserStatisticUpdateScheduler scheduler;
 
     // calculate on get() calculation function, if UserStatistics have not been created yet
-    private final Function<UserStatisticFilter, MongoUserStatistic> calculateAllFunction
-            = t -> calculateAndSaveUserStatistic(t, key(t));
+    private final Function<UserStatisticFilter, MongoUserStatistic> calculateAllFunction = (UserStatisticFilter t) -> {
+        return calculateAndSaveUserStatistic(t, key(t));
+    };
 
     // update on New Track calculation function
-    private final Function<Object[], MongoUserStatistic> calculateOnNewTrackFunction
-            = params -> {
-                UserStatisticFilter t = (UserStatisticFilter) params[0];
-                return calculateAndSaveUserStatisticOnNewTrack(t, key(t), (Track) params[1]);
-            };
+    private final Function<Object[], MongoUserStatistic> calculateOnNewTrackFunction = (Object[] params) -> {
+        UserStatisticFilter t = (UserStatisticFilter) params[0];
+        Track track = (Track) params[1];
+        return calculateAndSaveUserStatisticOnNewTrack(t, key(t), track);
+    };
 
     // update on Track Deletion calculation function
-    private final Function<Object[], MongoUserStatistic> calculateOnTrackDeletionFunction
-            = params -> {
-                UserStatisticFilter t = (UserStatisticFilter) params[0];
-                return calculateAndSaveUserStatisticOnTrackDeletion(t, key(t), (Track) params[1], (Measurements) params[2]);
-            };
+    private final Function<Object[], MongoUserStatistic> calculateOnTrackDeletionFunction = (Object[] params) -> {
+        UserStatisticFilter t = (UserStatisticFilter) params[0];
+        Track track = (Track) params[1];
+        Measurements measurements = (Measurements) params[2];
+        return calculateAndSaveUserStatisticOnTrackDeletion(t, key(t), track, measurements);
+    };
 
     @Inject
     public MongoUserStatisticDao(MongoDB mongoDB, DataService dataService, UserStatisticUpdateScheduler scheduler) {
@@ -89,16 +87,16 @@ public class MongoUserStatisticDao implements UserStatisticDao {
         MongoUserStatisticKey key = key(request);
         MongoUserStatistic result = this.dao.get(key);
         if (result == null) {
-            /**
-             * calculate UserStatistics:
-             */
+            // calculate UserStatistics:
             this.scheduler.updateUserStatistic(request, key, calculateAllFunction, true);
             result = this.dao.get(key);
         }
         return result;
     }
 
-    private MongoUserStatistic calculateAndSaveUserStatisticOnTrackDeletion(UserStatisticFilter request, MongoUserStatisticKey key, Track track, Measurements measurements) {
+    private MongoUserStatistic calculateAndSaveUserStatisticOnTrackDeletion(UserStatisticFilter request,
+                                                                            MongoUserStatisticKey key, Track track,
+                                                                            Measurements measurements) {
         // get previous:
         MongoUserStatistic v = this.dao.get(key);
         // calculate:
@@ -108,7 +106,8 @@ public class MongoUserStatisticDao implements UserStatisticDao {
         return v;
     }
 
-    private MongoUserStatistic calculateAndSaveUserStatisticOnNewTrack(UserStatisticFilter request, MongoUserStatisticKey key, Track track) {
+    private MongoUserStatistic calculateAndSaveUserStatisticOnNewTrack(UserStatisticFilter request,
+                                                                       MongoUserStatisticKey key, Track track) {
         // get previous:
         MongoUserStatistic v = this.dao.get(key);
         // get measurements:
@@ -148,7 +147,8 @@ public class MongoUserStatisticDao implements UserStatisticDao {
         MongoUserStatisticKey userKey = key(userFilter);
         MongoUserStatistic v = this.dao.get(userKey);
         if (v != null) {
-            this.scheduler.updateUserStatisticOnTrackDeletion(userFilter, userKey, calculateOnTrackDeletionFunction, true, t, m);
+            this.scheduler
+                    .updateUserStatisticOnTrackDeletion(userFilter, userKey, calculateOnTrackDeletionFunction, true, t, m);
         }
     }
 

@@ -52,11 +52,8 @@ import com.mongodb.DuplicateKeyException;
  * @author Christian Autermann <autermann@uni-muenster.de>
  * @author Arne de Wall
  */
-public class MongoUserDao extends AbstractMongoDao<String, MongoUser, Users>
-        implements UserDao {
-
-    private static final Logger log = LoggerFactory
-            .getLogger(MongoUserDao.class);
+public class MongoUserDao extends AbstractMongoDao<String, MongoUser, Users> implements UserDao {
+    private static final Logger LOG = LoggerFactory.getLogger(MongoUserDao.class);
     private MongoTrackDao trackDao;
     private MongoMeasurementDao measurementDao;
     private MongoGroupDao groupDao;
@@ -123,7 +120,7 @@ public class MongoUserDao extends AbstractMongoDao<String, MongoUser, Users>
         try {
             save(user);
         } catch(DuplicateKeyException ex) {
-            log.warn("Error saving user, retrying with different confirmation code", ex);
+            LOG.warn("Error saving user, retrying with different confirmation code", ex);
             user.setConfirmationCode(UUID.randomUUID().toString());
             save(user);
         }
@@ -154,10 +151,10 @@ public class MongoUserDao extends AbstractMongoDao<String, MongoUser, Users>
                 q().field(MongoUser.FRIENDS).hasThisElement(userRef),
                 up().removeAll(MongoUser.FRIENDS, userRef));
         if (result.getWriteResult() != null && !result.getWriteResult().wasAcknowledged()) {
-            log.error("Error removing user {} as friend: {}",
+            LOG.error("Error removing user {} as friend: {}",
                       u, result.getWriteResult());
         } else {
-            log.debug("Removed user {} from {} friend lists",
+            LOG.debug("Removed user {} from {} friend lists",
                       u, result.getUpdatedCount());
         }
         delete(user.getName());
@@ -277,11 +274,7 @@ public class MongoUserDao extends AbstractMongoDao<String, MongoUser, Users>
     @Override
     public Users getPendingIncomingFriendRequests(User user) {
         final Set<Key<MongoUser>> friendRefs = getFriendRefs(user);
-        final Set<String> ids = Sets.newHashSetWithExpectedSize(friendRefs.size());
-
-        for (Key<MongoUser> key : friendRefs) {
-            ids.add((String) key.getId());
-        }
+        final Set<String> ids = friendRefs.stream().map(Key::getId).map(x -> (String) x).collect(toSet());
         final Iterable<Key<MongoUser>> filtered;
 
         if (ids.isEmpty()) {
@@ -315,8 +308,7 @@ public class MongoUserDao extends AbstractMongoDao<String, MongoUser, Users>
             return null;
         }
 
-        Query<MongoUser> query = q()
-                .field(MongoUser.CONFIRMATION_CODE).equal(code);
+        Query<MongoUser> query = q().field(MongoUser.CONFIRMATION_CODE).equal(code);
 
         UpdateOperations<MongoUser> update = up()
                 .unset(MongoUser.CONFIRMATION_CODE)
