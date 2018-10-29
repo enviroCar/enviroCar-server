@@ -18,7 +18,6 @@ package org.envirocar.server.mongo.dao;
 
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -273,10 +272,6 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
         AggregationOutput out = aggregate(ops);
 
         return toKeyList(out.results());
-    }
-
-    private AggregationOutput aggregate(DBObject... ops) {
-        return aggregate(Arrays.asList(ops));
     }
 
     private AggregationOutput aggregate(List<DBObject> ops) {
