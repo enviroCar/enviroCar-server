@@ -51,7 +51,6 @@ import com.github.fge.jsonschema.main.JsonSchemaFactory;
 import com.github.fge.jsonschema.report.ProcessingMessage;
 import com.github.fge.jsonschema.report.ProcessingReport;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.io.Closeables;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import com.sun.jersey.api.container.ContainerException;
@@ -111,8 +110,7 @@ public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
             }
         }
         if (requestSchema != null || responseSchema != null) {
-            JSONSchemaResourceFilter filter =
-                    new JSONSchemaResourceFilter(requestSchema, responseSchema);
+            JSONSchemaResourceFilter filter = new JSONSchemaResourceFilter(requestSchema, responseSchema);
             return Collections.<ResourceFilter>singletonList(filter);
         } else {
             return Collections.emptyList();
@@ -128,8 +126,7 @@ public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
         return null;
     }
 
-    protected void validate(JsonNode entity, String schema) throws
-            ValidationException, IOException {
+    protected void validate(JsonNode entity, String schema) throws ValidationException, IOException {
         try {
             validate(entity, schemaFactory.getJsonSchema(schema));
         } catch (ProcessingException ex) {
@@ -137,8 +134,7 @@ public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
         }
     }
 
-    protected void validate(JsonNode instance, JsonSchema schema) throws
-            ValidationException, ProcessingException {
+    protected void validate(JsonNode instance, JsonSchema schema) throws ValidationException, ProcessingException {
         ProcessingReport report = schema.validate(instance);
         if (!report.isSuccess()) {
             ObjectNode error = factory.objectNode();
@@ -146,7 +142,7 @@ public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
             for (ProcessingMessage message : report) {
                 errors.add(message.asJson());
             }
-            error.put(JSONConstants.INSTANCE_KEY, instance);
+            error.set(JSONConstants.INSTANCE_KEY, instance);
             throw new JSONValidationException(error);
         }
     }

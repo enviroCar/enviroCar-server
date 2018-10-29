@@ -59,44 +59,34 @@ public class MeasurementJSONEncoder extends AbstractJSONEntityEncoder<Measuremen
     public ObjectNode encodeJSON(Measurement t, AccessRights rights,
                                  MediaType mediaType) {
         ObjectNode measurement = getJsonFactory().objectNode();
-        measurement.put(GeoJSONConstants.TYPE_KEY,
-                        GeoJSONConstants.FEATURE_TYPE);
+        measurement.put(GeoJSONConstants.TYPE_KEY, GeoJSONConstants.FEATURE_TYPE);
         if (t.hasGeometry() && rights.canSeeGeometryOf(t)) {
-            measurement.put(JSONConstants.GEOMETRY_KEY,
-                            geometryEncoder
-                    .encodeJSON(t.getGeometry(), rights, mediaType));
+            measurement.set(JSONConstants.GEOMETRY_KEY, geometryEncoder.encodeJSON(t.getGeometry(), rights, mediaType));
         }
 
-        ObjectNode properties = measurement
-                .putObject(GeoJSONConstants.PROPERTIES_KEY);
+        ObjectNode properties = measurement.putObject(GeoJSONConstants.PROPERTIES_KEY);
         if (t.hasIdentifier()) {
             properties.put(JSONConstants.IDENTIFIER_KEY, t.getIdentifier());
         }
         if (t.hasTime() && rights.canSeeTimeOf(t)) {
-            properties.put(JSONConstants.TIME_KEY,
-                           getDateTimeFormat().print(t.getTime()));
+            properties.put(JSONConstants.TIME_KEY, getDateTimeFormat().print(t.getTime()));
         }
 
         if (!mediaType.equals(MediaTypes.TRACK_TYPE)) {
             if (t.hasSensor() && rights.canSeeSensorOf(t)) {
-                properties.put(JSONConstants.SENSOR_KEY,
-                               sensorProvider
-                        .encodeJSON(t.getSensor(), rights, mediaType));
+                properties.set(JSONConstants.SENSOR_KEY, sensorProvider.encodeJSON(t.getSensor(), rights, mediaType));
             }
             if (t.hasUser() && rights.canSeeUserOf(t)) {
-                properties.put(JSONConstants.USER_KEY, userProvider
-                        .encodeJSON(t.getUser(), rights, mediaType));
+                properties.set(JSONConstants.USER_KEY, userProvider.encodeJSON(t.getUser(), rights, mediaType));
             }
             if (t.hasModificationTime() && rights.canSeeModificationTimeOf(t)) {
-                properties.put(JSONConstants.MODIFIED_KEY, getDateTimeFormat()
-                        .print(t.getModificationTime()));
+                properties.put(JSONConstants.MODIFIED_KEY, getDateTimeFormat().print(t.getModificationTime()));
             }
             if (t.hasCreationTime() && rights.canSeeCreationTimeOf(t)) {
-                properties.put(JSONConstants.CREATED_KEY,
-                               getDateTimeFormat().print(t.getCreationTime()));
+                properties.put(JSONConstants.CREATED_KEY, getDateTimeFormat().print(t.getCreationTime()));
             }
             if (t.hasTrack() && rights.canSeeTracks()) {
-            	properties.put(JSONConstants.TRACK_KEY, t.getTrack().getIdentifier());
+                properties.put(JSONConstants.TRACK_KEY, t.getTrack().getIdentifier());
             }
         }
         if (mediaType.equals(MediaTypes.MEASUREMENT_TYPE) ||
@@ -109,12 +99,10 @@ public class MeasurementJSONEncoder extends AbstractJSONEntityEncoder<Measuremen
                 for (MeasurementValue mv : t.getValues()) {
                     if (mv.hasPhenomenon() && mv.hasValue()) {
                         ObjectNode phenomenon = values.objectNode();
-                        phenomenon.putPOJO(JSONConstants.VALUE_KEY,
-                                           mv.getValue());
-                        values.put(mv.getPhenomenon().getName(), phenomenon);
+                        phenomenon.putPOJO(JSONConstants.VALUE_KEY, mv.getValue());
+                        values.set(mv.getPhenomenon().getName(), phenomenon);
                         if (mv.getPhenomenon().hasUnit()) {
-                            phenomenon.put(JSONConstants.UNIT_KEY,
-                                           mv.getPhenomenon().getUnit());
+                            phenomenon.put(JSONConstants.UNIT_KEY, mv.getPhenomenon().getUnit());
                         }
                     }
                 }
