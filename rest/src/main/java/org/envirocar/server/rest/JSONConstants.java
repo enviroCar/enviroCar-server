@@ -91,6 +91,8 @@ public interface JSONConstants {
     String STARTPOSITION_KEY = "startPosition";
     String ENDPOSITION_KEY = "endPosition";
     String TRACKSUMMARY_KEY = "trackSummary";
+    String ACCEPTED_TERMS_OF_USE = "acceptedTerms";
+    String ACCEPTED_PRIVACY_STATEMENT = "acceptedPrivacy";
 
     /**
      * @deprecated use {@link #TOU_VERSION_KEY} instead. kept for backwards

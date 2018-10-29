@@ -40,6 +40,8 @@ public class UserValidator extends AbstractValidator<User> {
         isNotNullOrEmpty("token", user.getToken());
         isNull("created", user.getCreationTime());
         isNull("modified", user.getModificationTime());
+        isTrue("acceptedTermsOfUse", user.hasAcceptedTermsOfUse());
+        isTrue("acceptedPrivateStatement", user.hasAcceptedPrivacyStatement());
     }
 
     @Override
