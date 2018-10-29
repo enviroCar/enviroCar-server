@@ -44,6 +44,7 @@ import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBCollection;
 import com.mongodb.DBRef;
 import com.mongodb.MongoClient;
+import com.mongodb.MongoClientOptions;
 import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
 
@@ -77,8 +78,9 @@ public class MongoDB {
             if (username == null) {
                 mongo = new MongoClient(new ServerAddress(host, port));
             } else {
-                mongo = new MongoClient(new ServerAddress(host, port), Collections.singletonList(
-                                        MongoCredential.createMongoCRCredential(username, database, password)));
+                mongo = new MongoClient(new ServerAddress(host, port),
+                                        MongoCredential.createCredential(username, database, password),
+                                        MongoClientOptions.builder().build());
             }
 
             morphia = new Morphia();

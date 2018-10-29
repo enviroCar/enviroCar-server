@@ -215,8 +215,8 @@
                 <version>3.0.0</version>
             </dependency>
             <dependency>
-                <artifactId>morphia</artifactId>
                 <groupId>org.mongodb.morphia</groupId>
+                <artifactId>morphia</artifactId>
                 <version>${morphia-version}</version>
             </dependency>
             <dependency>
@@ -228,6 +228,11 @@
                 <groupId>org.mongodb.morphia</groupId>
                 <artifactId>morphia-logging-slf4j</artifactId>
                 <version>${morphia-version}</version>
+            </dependency>
+             <dependency>
+                <artifactId>mongo-java-driver</artifactId>
+                <groupId>org.mongodb</groupId>
+                <version>3.8.2</version>
             </dependency>
             <dependency>
                 <artifactId>slf4j-api</artifactId>
@@ -251,11 +256,6 @@
                 <artifactId>slf4j-simple</artifactId>
                 <version>${slf4j-version}</version>
                 <scope>runtime</scope>
-            </dependency>
-            <dependency>
-                <artifactId>mongo-java-driver</artifactId>
-                <groupId>org.mongodb</groupId>
-                <version>3.4.2</version>
             </dependency>
             <dependency>
                 <groupId>ch.qos.logback</groupId>

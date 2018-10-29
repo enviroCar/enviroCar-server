@@ -16,27 +16,26 @@
  */
 package org.envirocar.server.rest.decoding.json;
 
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.google.inject.Inject;
-import com.vividsolutions.jts.geom.Geometry;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.envirocar.server.core.dao.PhenomenonDao;
 import org.envirocar.server.core.dao.SensorDao;
-
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.MeasurementValue;
 import org.envirocar.server.core.entities.Phenomenon;
 import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.core.util.GeoJSONConstants;
 import org.envirocar.server.rest.JSONConstants;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.google.inject.Inject;
+import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * TODO JavaDoc
@@ -64,7 +63,7 @@ public class MeasurementDecoder extends AbstractJSONEntityDecoder<Measurement> {
     public Measurement decode(JsonNode j, MediaType mediaType) {
         return decode(j, mediaType, null);
     }
-    
+
     @Override
     public Measurement decode(JsonNode j, MediaType mediaType, ContextKnowledge knowledge) {
         Measurement measurement = getEntityFactory().createMeasurement();
@@ -117,7 +116,7 @@ public class MeasurementDecoder extends AbstractJSONEntityDecoder<Measurement> {
                 return (Sensor) knowledge.get(JSONConstants.SENSOR_KEY);
             }
         }
-        
+
         Sensor result = this.sensorDao.getByIdentifier(p.path(JSONConstants.SENSOR_KEY).textValue());
         if (knowledge != null) {
             knowledge.put(JSONConstants.SENSOR_KEY, result);
@@ -125,6 +124,7 @@ public class MeasurementDecoder extends AbstractJSONEntityDecoder<Measurement> {
         return result;
     }
 
+    @SuppressWarnings("unchecked")
     private Phenomenon resolvePhenomenon(Entry<String, JsonNode> field, ContextKnowledge knowledge) {
         String key = field.getKey();
         Map<String, Phenomenon> list = null;
@@ -140,7 +140,7 @@ public class MeasurementDecoder extends AbstractJSONEntityDecoder<Measurement> {
                 knowledge.put(JSONConstants.PHENOMENONS_KEY, list);
             }
         }
-        
+
         Phenomenon result = phenomenonDao.getByName(key);
         if (list != null) {
             list.put(key, result);

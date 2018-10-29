@@ -69,6 +69,7 @@ public class ContextKnowledgeTest {
     @Test
     public void testContextKnowledge() throws IOException {
         createDaos();
+        @SuppressWarnings("unchecked")
         JSONEntityDecoder<Geometry> geomDec = Mockito.mock(JSONEntityDecoder.class);
         MeasurementDecoder measDec = new MeasurementDecoder(geomDec, phenonmenonDao, sensorDao);
         measDec.setEntityFactory(ef);
