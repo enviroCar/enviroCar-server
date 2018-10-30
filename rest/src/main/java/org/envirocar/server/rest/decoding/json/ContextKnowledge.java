@@ -23,4 +23,9 @@ import java.util.HashMap;
  */
 public class ContextKnowledge extends HashMap<String, Object> {
     private static final long serialVersionUID = 5226102898144355903L;
+
+    @Override
+    public Object clone() {
+        return super.clone();
+    }
 }

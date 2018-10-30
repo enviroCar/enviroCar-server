@@ -29,6 +29,9 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import javax.imageio.ImageIO;
@@ -36,740 +39,619 @@ import javax.imageio.ImageIO;
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.MeasurementValue;
 import org.envirocar.server.core.entities.Measurements;
-import org.envirocar.server.core.entities.Track;
-import org.envirocar.server.core.exception.TrackNotFoundException;
-import org.envirocar.server.core.statistics.Statistic;
-import org.envirocar.server.core.statistics.Statistics;
-import org.joda.time.DateTime;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.vividsolutions.jts.geom.Coordinate;
 
-public class OSMTileRenderer {
+public class OSMTileRenderer implements TileRenderer {
+    //private static final String TILE_URL_TEMPLATE = "http://tile.openstreetmap.org/%d/%d/%d.png";
+    private static final String TILE_URL_TEMPLATE = "http://a.tile.stamen.com/terrain/%d/%d/%d.png";
+    private String saveFileDir;// "/tmp/envirocar/previews";//
+    private ResourceBundle config;
+    private int numberOfXTiles = 0;
+    private int numberOfYTiles = 0;
+    private int baseTileX = 0;
+    private int baseTileY = 0;
+    private int imagePadding = 1;
 
-	private String saveFileDir;// "/tmp/envirocar/previews";//
-	public static final String TIME = "time";
-	private ResourceBundle config;
-	public static final String MAXSPEED = "maxspeed";
-	public static final String AVGSPEED = "avgspeed";
-	public static final String CMAF = "Calculated MAF";
-	public static final String AVGRPM = "RPM";
-	public static final String IPRESSURE = "IntakePressure";
-	public static final String ITEMP = "IntakeTemperature";
-	public static final String CONSUMPTION = "Consumption";
-	public static final String CO2 = "CO2";
-	int numberOfXTiles = 0;
-	int numberOfYTiles = 0;
-	int baseTileX = 0;
-	int baseTileY = 0;
-	int imagePadding = 1;
+    public OSMTileRenderer() {
+        this.config = ResourceBundle.getBundle("OSMConfig");
+        this.saveFileDir = config.getString("tile_save_location");
+    }
 
-	OSMTileRenderer() {
-		super();
-		config = ResourceBundle.getBundle("OSMConfig");
-		saveFileDir = config.getString("tile_save_location");
-	}
+    /**
+     * @return the numberOfXTiles
+     */
+    @VisibleForTesting
+    int getNumberOfXTiles() {
+        return numberOfXTiles;
+    }
 
-	public static OSMTileRenderer create() {
-		return new OSMTileRenderer();
-	}
+    /**
+     * @return the numberOfYTiles
+     */
+    @VisibleForTesting
+    int getNumberOfYTiles() {
+        return numberOfYTiles;
+    }
 
-	/**
-	 * This method outputs a rendered image when the image measurements are given
-	 * @param measurements
-	 * @return BufferedImage output
-	 * @throws IOException
-	 */
-	public BufferedImage createImage(Measurements measurements)
-			throws IOException {
-		ArrayList<Coordinate> coords = getCoordinates(measurements);
-		HashMap<Coordinate, Color> colors = getColors(measurements);
-		int zoom = getZoomLevel(coords);
-		BufferedImage image = new BufferedImage(256 * (numberOfXTiles + 1 + 2*imagePadding),
-				256 * (numberOfYTiles + 1 + 2*imagePadding), BufferedImage.TYPE_INT_RGB);
-		Graphics2D g2d = appendImage(image, baseTileX + numberOfXTiles,
-				baseTileX, baseTileY + numberOfYTiles, baseTileY, zoom);
-		drawRoute(g2d, coords, colors, zoom,imagePadding);
-		g2d.dispose();
-		return image;
-	}
+    /**
+     * @return the baseTileX
+     */
+    @VisibleForTesting
+    int getBaseTileX() {
+        return baseTileX;
+    }
 
-	/**
-	 * This method outputs the preffered zoom level for given set of coordinates
-	 * @param coords
-	 * @return int zoom level
-	 */
-	public int getZoomLevel(ArrayList<Coordinate> coords) {
-		BoundingBox bbox = findBoundingBoxForGivenLocations(coords);
-		int leastZoomLevelX = 1;
-		int leastZoomLevelY = 1;
-		int finalZoom = 1;
+    /**
+     * @return the baseTileY
+     */
+    @VisibleForTesting
+    int getBaseTileY() {
+        return baseTileY;
+    }
 
-		for (int zoom = 19; zoom >= 1; zoom--) { // considering x
-			int xlength = (getTileDetails(bbox.west, bbox.north, zoom)[0] - getTileDetails(
-					bbox.east, bbox.north, zoom)[0]);
+    /**
+     * @return the imagePadding
+     */
+    @VisibleForTesting
+    int getImagePadding() {
+        return imagePadding;
+    }
 
-			if (xlength <= 2) {
-				leastZoomLevelX = zoom;
-				numberOfXTiles = (xlength);
-				break;
-			} else {
-				leastZoomLevelX = 0; // special case
-			}
-		}
-		for (int zoom = 19; zoom >= 1; zoom--) {// considering y
-			int ylength = (getTileDetails(bbox.west, bbox.south, zoom)[1] - getTileDetails(
-					bbox.west, bbox.north, zoom)[1]);
-			if (ylength <= 1) {
-				leastZoomLevelY = zoom;
-				numberOfYTiles = (ylength);
-				break;
-			} else {
-				leastZoomLevelY = 0; // special case
-			}
-		}
-		if (leastZoomLevelY > leastZoomLevelX) {
-			finalZoom = leastZoomLevelX;
-		} else if (leastZoomLevelX > leastZoomLevelY) {
-			finalZoom = leastZoomLevelY;
-		} else {
-			finalZoom = leastZoomLevelX;
-		}
-		int[] ar = getTileDetails(bbox.east, bbox.north, finalZoom);
-		baseTileX = ar[0];
-		baseTileY = ar[1];
-		if(finalZoom==1){
-			imagePadding=0;
-		}
-		return finalZoom;
-	}
+    /**
+     * This method outputs a rendered image when the image measurements are given
+     *
+     * @param measurements
+     *
+     * @return BufferedImage output
+     *
+     * @throws IOException
+     */
+    @Override
+    public BufferedImage createImage(Measurements measurements)
+            throws IOException {
+        List<Coordinate> coords = getCoordinates(measurements);
+        Map<Coordinate, Color> colors = getColors(measurements);
+        int zoom = getZoomLevel(coords);
+        BufferedImage image = new BufferedImage(256 * (getNumberOfXTiles() + 1 + 2 * getImagePadding()),
+                                                256 * (getNumberOfYTiles() + 1 + 2 * getImagePadding()), BufferedImage.TYPE_INT_RGB);
+        Graphics2D g2d = appendImage(image, getBaseTileX() + getNumberOfXTiles(), getBaseTileX(), getBaseTileY() +
+                                                                                                  getNumberOfYTiles(), getBaseTileY(), zoom);
+        drawRoute(g2d, coords, colors, zoom, getImagePadding());
+        g2d.dispose();
+        return image;
+    }
 
-	/**
-	 * This method draws the route when the map image and image stats are provided
-	 * @param g2d
-	 * @param coords
-	 * @param colors
-	 * @param zoom
-	 * @param padding
-	 * @return Graphics2D drawn route
-	 */
-	public Graphics2D drawRoute(Graphics2D g2d, ArrayList<Coordinate> coords,
-			HashMap<Coordinate, Color> colors, int zoom,int padding) {
-		g2d.setStroke(new BasicStroke(7));
-		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-				RenderingHints.VALUE_ANTIALIAS_ON);
-		g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
-				RenderingHints.VALUE_INTERPOLATION_BICUBIC);
-		
-		for (int i = 0; i < coords.size(); i++) {
-			if (i <= (coords.size() - 2)) {
-				if( colors==null || colors.isEmpty())g2d.setPaint(Color.BLUE);
-				else g2d.setPaint(colors.get(coords.get(i + 1)));
-				double oldX = coords.get(i).x;
-				double oldY = coords.get(i).y;
-				double newX = coords.get(i + 1).x;
-				double newY = coords.get(i + 1).y;
-				g2d.drawLine(getX(oldX, zoom, 256)+256*padding, getY(oldY, zoom, 256)+256*padding,
-						getX(newX, zoom, 256)+256*padding, getY(newY, zoom, 256)+256*padding);
-			}
-		}
-		return g2d;
-	}
+    /**
+     * This method outputs the preffered zoom level for given set of coordinates
+     *
+     * @param coords
+     *
+     * @return int zoom level
+     */
+    @VisibleForTesting
+    int getZoomLevel(List<Coordinate> coords) {
+        BoundingBox bbox = findBoundingBoxForGivenLocations(coords);
+        int leastZoomLevelX = 1;
+        int leastZoomLevelY = 1;
+        int finalZoom;
 
-	/**
-	 * This method converts the longitude of a geo location in to the X coordinate of the image
-	 * @param lon
-	 * @param zoom
-	 * @param pic
-	 * @return int X coordinate in the image
-	 */
-	public int getX(final double lon, final int zoom, int pic) {
-		double x = getFraction((lon + 180) / 360 * (1 << zoom), baseTileX);
-		// System.out.print(getXTile(lon, zoom) + " ++ ");
-		return (int) Math.floor((x * pic));
-	}
+        for (int zoom = 19; zoom >= 1; zoom--) { // considering x
+            int xlength = (getTileDetails(bbox.west, bbox.north, zoom)[0] - getTileDetails(
+                           bbox.east, bbox.north, zoom)[0]);
 
-	/**
-	 * This method converts the latitude of a geo location in to the Y coordinate of the image
-	 * @param lat
-	 * @param zoom
-	 * @param pic
-	 * @return int Y coordinate in the image
-	 */
-	public int getY(final double lat, final int zoom, int pic) {
-		double y = getFraction(
-				(1 - Math.log(Math.tan(Math.toRadians(lat)) + 1
-						/ Math.cos(Math.toRadians(lat)))
-						/ Math.PI)
-						/ 2 * (1 << zoom), baseTileY);
-		// System.out.print(getYTile(lat, zoom) + " ++ ");
-		return (int) Math.floor(y * pic);
-	}
+            if (xlength <= 2) {
+                leastZoomLevelX = zoom;
+                numberOfXTiles = xlength;
+                break;
+            } else {
+                leastZoomLevelX = 0; // special case
+            }
+        }
+        for (int zoom = 19; zoom >= 1; zoom--) {// considering y
+            int ylength = (getTileDetails(bbox.west, bbox.south, zoom)[1] -
+                           getTileDetails(bbox.west, bbox.north, zoom)[1]);
+            if (ylength <= 1) {
+                leastZoomLevelY = zoom;
+                this.numberOfYTiles = ylength;
+                break;
+            } else {
+                leastZoomLevelY = 0; // special case
+            }
+        }
+        if (leastZoomLevelY > leastZoomLevelX) {
+            finalZoom = leastZoomLevelX;
+        } else if (leastZoomLevelX > leastZoomLevelY) {
+            finalZoom = leastZoomLevelY;
+        } else {
+            finalZoom = leastZoomLevelX;
+        }
+        int[] ar = getTileDetails(bbox.east, bbox.north, finalZoom);
+        this.baseTileX = ar[0];
+        this.baseTileY = ar[1];
+        if (finalZoom == 1) {
+            this.imagePadding = 0;
+        }
+        return finalZoom;
+    }
 
-	/**
-	 * This method returns the fraction part of a given double number
-	 * @param num
-	 * @param baseTileValue
-	 * @return double fraction of a given number
-	 */
-	public double getFraction(double num, int baseTileValue) {
+    /**
+     * This method draws the route when the map image and image stats are provided
+     *
+     * @param g2d
+     * @param coords
+     * @param colors
+     * @param zoom
+     * @param padding
+     *
+     * @return Graphics2D drawn route
+     */
+    @VisibleForTesting
+    Graphics2D drawRoute(Graphics2D g2d, List<Coordinate> coords,
+                         Map<Coordinate, Color> colors, int zoom, int padding) {
+        g2d.setStroke(new BasicStroke(7));
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                             RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+                             RenderingHints.VALUE_INTERPOLATION_BICUBIC);
 
-		long iPart = (long) num;
-		// System.out.print(num + " -- ");
-		double fPart = num - baseTileValue; // num-baseTileNumFOr X or Y(36785)
-		return fPart;
-	}
+        for (int i = 0; i <= coords.size() - 2; i++) {
+            if (colors == null || colors.isEmpty()) {
+                g2d.setPaint(Color.BLUE);
+            } else {
+                g2d.setPaint(colors.get(coords.get(i + 1)));
+            }
+            double oldX = coords.get(i).x;
+            double oldY = coords.get(i).y;
+            double newX = coords.get(i + 1).x;
+            double newY = coords.get(i + 1).y;
+            g2d.drawLine(getX(oldX, zoom, 256) + 256 * padding, getY(oldY, zoom, 256) + 256 * padding,
+                         getX(newX, zoom, 256) + 256 * padding, getY(newY, zoom, 256) + 256 * padding);
+        }
+        return g2d;
+    }
 
-	/**
-	 * This method returns the integer part of a given double number
-	 * @param num
-	 * @return int Integer part of a number
-	 */
-	public int getInteger(double num) {
+    /**
+     * This method converts the longitude of a geo location in to the X coordinate of the image
+     *
+     * @param lon
+     * @param zoom
+     * @param pic
+     *
+     * @return int X coordinate in the image
+     */
+    private int getX(final double lon, final int zoom, int pic) {
+        double x = getFraction((lon + 180) / 360 * (1 << zoom), getBaseTileX());
+        return (int) Math.floor((x * pic));
+    }
 
-		int iPart = (int) num;
-		return iPart;
-	}
+    /**
+     * This method converts the latitude of a geo location in to the Y coordinate of the image
+     *
+     * @param lat
+     * @param zoom
+     * @param pic
+     *
+     * @return int Y coordinate in the image
+     */
+    private int getY(final double lat, final int zoom, int pic) {
+        double y = getFraction((1 - Math.log(Math.tan(Math.toRadians(lat)) + 1 /
+                                                                             Math.cos(Math.toRadians(lat))) /
+                                    Math.PI) /
+                               2 * (1 << zoom), getBaseTileY());
+        return (int) Math.floor(y * pic);
+    }
 
-	/**
-	 * This method returns the OSM tile number which contains a given location (in the format { xtile number, ytile number})
-	 * @param lon
-	 * @param lat
-	 * @param zoom
-	 * @return int[] containing { xtile, ytile } respectively
-	 */
-	public int[] getTileDetails(final double lon, final double lat,
-			final int zoom) {
-		int xtile = (int) Math.floor((lon + 180) / 360 * (1 << zoom));
-		int ytile = (int) Math
-				.floor((1 - Math.log(Math.tan(Math.toRadians(lat)) + 1
-						/ Math.cos(Math.toRadians(lat)))
-						/ Math.PI)
-						/ 2 * (1 << zoom));
-		if (xtile < 0)
-			xtile = 0;
-		if (xtile >= (1 << zoom))
-			xtile = ((1 << zoom) - 1);
-		if (ytile < 0)
-			ytile = 0;
-		if (ytile >= (1 << zoom))
-			ytile = ((1 << zoom) - 1);
-		// System.out.println("" + zoom + "/" + xtile + "/" + ytile);
-		return new int[] { xtile, ytile };
-	}
+    /**
+     * This method returns the fraction part of a given double number
+     *
+     * @param num
+     * @param baseTileValue
+     *
+     * @return double fraction of a given number
+     */
+    private double getFraction(double num, int baseTileValue) {
+        return num - baseTileValue; // num-baseTileNumFOr X or Y(36785)
+    }
 
-	/**
-	 * This method returns the bounding box of the tile when the tile numbers(xtile,ytile) and zoom level is given
-	 * @param x
-	 * @param y
-	 * @param zoom
-	 * @return BoundingBox bounding box of a given tile
-	 */
-	BoundingBox tile2boundingBox(final int x, final int y, final int zoom) {
-		BoundingBox bb = new BoundingBox();
-		bb.north = tile2lat(y, zoom);
-		bb.south = tile2lat(y + 1, zoom);
-		bb.west = tile2lon(x, zoom);
-		bb.east = tile2lon(x + 1, zoom);
-		return bb;
-	}
+    /**
+     * This method returns the integer part of a given double number
+     *
+     * @param num
+     *
+     * @return int Integer part of a number
+     */
+    private int getInteger(double num) {
+        return (int) num;
+    }
 
-	double tile2lon(int x, int z) {
-		return x / Math.pow(2.0, z) * 360.0 - 180;
-	}
+    /**
+     * This method returns the OSM tile number which contains a given location (in the format { xtile number, ytile
+     * number})
+     *
+     * @param lon
+     * @param lat
+     * @param zoom
+     *
+     * @return int[] containing { xtile, ytile } respectively
+     */
+    @VisibleForTesting
+    int[] getTileDetails(final double lon, final double lat,
+                         final int zoom) {
+        int xtile = (int) Math.floor((lon + 180) / 360 * (1 << zoom));
+        int ytile = (int) Math.floor((1 - Math.log(Math.tan(Math.toRadians(lat)) + 1 / Math.cos(Math.toRadians(lat))) /
+                                          Math.PI) / 2 * (1 << zoom));
+        if (xtile < 0) {
+            xtile = 0;
+        }
+        if (xtile >= (1 << zoom)) {
+            xtile = ((1 << zoom) - 1);
+        }
+        if (ytile < 0) {
+            ytile = 0;
+        }
+        if (ytile >= (1 << zoom)) {
+            ytile = ((1 << zoom) - 1);
+        }
+        return new int[] { xtile, ytile };
+    }
 
-	double tile2lat(int y, int z) {
-		double n = Math.PI - (2.0 * Math.PI * y) / Math.pow(2.0, z);
-		return Math.toDegrees(Math.atan(Math.sinh(n)));
-	}
+    private double tile2lon(int x, int z) {
+        return x / Math.pow(2.0, z) * 360.0 - 180;
+    }
 
-	/**
-	 * This method returns a bounding box object which contains a given set of coordinates
-	 * @param coordinates
-	 * @return BoundingBox Bounding box which contains a given set of coordinates
-	 */
-	public BoundingBox findBoundingBoxForGivenLocations(
-			ArrayList<Coordinate> coordinates) {
-		double west = 0.0;
-		double east = 0.0;
-		double north = 0.0;
-		double south = 0.0;
+    private double tile2lat(int y, int z) {
+        double n = Math.PI - (2.0 * Math.PI * y) / Math.pow(2.0, z);
+        return Math.toDegrees(Math.atan(Math.sinh(n)));
+    }
 
-		for (int lc = 0; lc < coordinates.size(); lc++) {
-			Coordinate loc = coordinates.get(lc);
-			// System.out.println(loc.y);
-			if (lc == 0) {
-				north = loc.y;
-				south = loc.y;
-				west = loc.x;
-				east = loc.x;
+    /**
+     * This method returns a bounding box object which contains a given set of coordinates
+     *
+     * @param coordinates
+     *
+     * @return BoundingBox Bounding box which contains a given set of coordinates
+     */
+    @VisibleForTesting
+    BoundingBox findBoundingBoxForGivenLocations(List<Coordinate> coordinates) {
+        double minx = 0.0;
+        double maxx = 0.0;
+        double maxy = 0.0;
+        double miny = 0.0;
+        Iterator<Coordinate> it = coordinates.iterator();
+        if (it.hasNext()) {
+            Coordinate coordinate = it.next();
+            maxy = coordinate.y;
+            miny = coordinate.y;
+            minx = coordinate.x;
+            maxx = coordinate.x;
+            while (it.hasNext()) {
+                coordinate = it.next();
+                if (coordinate.y > maxy) {
+                    maxy = coordinate.y;
+                } else if (coordinate.y < miny) {
+                    miny = coordinate.y;
+                }
+                if (coordinate.x < minx) {
+                    minx = coordinate.x;
+                } else if (coordinate.x > maxx) {
+                    maxx = coordinate.x;
+                }
+            }
+        }
 
-			} else {
-				if (loc.y > north) {
-					north = loc.y;
-				} else if (loc.y < south) {
-					south = loc.y;
-				}
-				if (loc.x < west) {
-					west = loc.x;
-				} else if (loc.x > east) {
-					east = loc.x;
-				}
-			}
-		}
-		/*
+        /*
 		 * double padding = 0.001; north = north + padding; south = south -
 		 * padding; west = west - padding; east = east + padding;
-		 */
-		return new BoundingBox(north, south, west, east);
-	}
+         */
+        return new BoundingBox(maxy, miny, minx, maxx);
+    }
 
-	/**
-	 * This method returns the base map image which is used then for route drawing and statistics integration.
-	 * @param newTile
-	 * @param highestX
-	 * @param lowestX
-	 * @param highestY
-	 * @param lowestY
-	 * @param zoom
-	 * @return Graphics2D Generates the base map image
-	 * @throws IOException
-	 */
-	public Graphics2D appendImage(BufferedImage newTile, int highestX,
-			int lowestX, int highestY, int lowestY, int zoom)
-			throws IOException {
-		//generalize
-		
-		if(zoom!=1){
-		highestX = lowestX+2;
-		highestY = lowestY+1;
-		lowestX--;highestX++;lowestY--;highestY++;
-		}
-		//
-		Graphics2D g2d = newTile.createGraphics();
-		System.out.println(lowestX + " : " + lowestY + " : " + highestX + " : "
-				+ highestY);
-		for (int i = lowestX; i <= highestX; i++) {
-			for (int j = lowestY; j <= highestY; j++) {
-				BufferedImage image = downloadTile(i, j, zoom);
-				System.out.println(" i :" + (i - lowestX) * 256 + " j : "
-						+ (j - lowestY) * 256);
-				g2d.drawImage(image, (i - lowestX) * 256, (j - lowestY) * 256,
-						null);
-				// g2d.drawImage(image1,256,0,null);
-				// temp.add(0,256,image.createGraphics());
-				// temp=composite image
-			}
-		}
-		ColorConvertOp op = new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY), null);
+    /**
+     * This method returns the base map image which is used then for route drawing and statistics integration.
+     *
+     * @param newTile
+     * @param highestX
+     * @param lowestX
+     * @param highestY
+     * @param lowestY
+     * @param zoom
+     *
+     * @return Graphics2D Generates the base map image
+     *
+     * @throws IOException
+     */
+    @VisibleForTesting
+    Graphics2D appendImage(BufferedImage newTile, int highestX,
+                           int lowestX, int highestY, int lowestY, int zoom)
+            throws IOException {
+        if (zoom != 1) {
+            highestX = lowestX + 2;
+            highestY = lowestY + 1;
+            lowestX--;
+            highestX++;
+            lowestY--;
+            highestY++;
+        }
+        Graphics2D g2d = newTile.createGraphics();
+        for (int i = lowestX; i <= highestX; i++) {
+            for (int j = lowestY; j <= highestY; j++) {
+                BufferedImage image = downloadTile(i, j, zoom);
+                g2d.drawImage(image, (i - lowestX) * 256, (j - lowestY) * 256, null);
+            }
+        }
+        ColorConvertOp op = new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY), null);
         op.filter(newTile, newTile);
-		return g2d;
-	}
+        return g2d;
+    }
 
-	/**
-	 * This method downloads a single tile from OSM tile service when xtile, ytile and zoom level is given.
-	 * @param x
-	 * @param y
-	 * @param zoom
-	 * @return BufferedImage BufferedImage for a single tile which is used to create base map
-	 * @throws IOException
-	 */
-	public BufferedImage downloadTile(int x, int y, int zoom)
-			throws IOException {
-		/*
-		 * String picUri = "http://tile.openstreetmap.org/" + zoom + "/" + x +
-		 * "/" + y + ".png";
-		 */
-		String picUri = "http://a.tile.stamen.com/terrain/" + zoom + "/"
-				+ x + "/" + y + ".png";
-		System.out.println(picUri);
-		URL url = new URL(picUri);
-		InputStream is = url.openStream();
-		BufferedImage image = ImageIO.read(is);
-		return image;
-	}
+    /**
+     * This method downloads a single tile from OSM tile service when xtile, ytile and zoom level is given.
+     *
+     * @param x
+     * @param y
+     * @param zoom
+     *
+     * @return BufferedImage BufferedImage for a single tile which is used to create base map
+     *
+     * @throws IOException
+     */
+    @VisibleForTesting
+    BufferedImage downloadTile(int x, int y, int zoom) throws IOException {
 
-	/**
-	 * This method reads an image from disk and return it as a BufferedImage
-	 * @param trackId
-	 * @return BufferedImage loadedImage
-	 * @throws IOException
-	 */
-	public synchronized BufferedImage loadImage(String trackId)
-			throws IOException {
-		String filePath = new StringBuilder(saveFileDir).append(File.separator)
-				.append(trackId).append(".png").toString();
-		File f = new File(filePath);
-		return ImageIO.read(f);
-	}
+        URL url = new URL(String.format(TILE_URL_TEMPLATE, zoom, x, y));
+        try (InputStream is = url.openStream()) {
+            return ImageIO.read(is);
+        }
 
-	/**
-	 * This method saves a bufferedImage to a disk
-	 * @param image
-	 * @param trackId
-	 * @throws IOException
-	 */
-	public synchronized void saveImage(BufferedImage image, String trackId)
-			throws IOException {
-		String filePath = new StringBuilder(saveFileDir).append(File.separator)
-				.append(trackId).append(".png").toString();
-		File f = new File(filePath);
-		if (!f.exists()) {
-			ImageIO.write(image, "PNG", f);
-		}
-	}
+    }
 
-	/**
-	 * This methos checks whether an image for a given track exists
-	 * @param trackId
-	 * @return boolean imageExists
-	 * @throws IOException
-	 */
-	public synchronized boolean imageExists(String trackId) throws IOException {
-		String filePath = new StringBuilder(saveFileDir).append(File.separator)
-				.append(trackId).append(".png").toString();
-		System.out.println(filePath);
-		File f = new File(filePath);
-		if (f.exists()) {
-			return true;
-		} else {
-			return false;
-		}
-	}
+    /**
+     * This method reads an image from disk and return it as a BufferedImage
+     *
+     * @param trackId
+     *
+     * @return BufferedImage loadedImage
+     *
+     * @throws IOException
+     */
+    @Override
+    public synchronized BufferedImage loadImage(String trackId) throws IOException {
+        return ImageIO.read(getImageFile(trackId));
+    }
 
-	// //////////////////////////////?Retrieval////////////////////////////////
+    @Override
+    public synchronized void saveImage(BufferedImage image, String trackId) throws IOException {
+        File f = getImageFile(trackId);
+        if (!f.exists()) {
+            ImageIO.write(image, "PNG", f);
+        }
+    }
 
-	/**
-	 * Returns a set of coordinates when the measurements of a track is given
-	 * @param measurements
-	 * @return ArrayList of coordinates
-	 */
-	public ArrayList<Coordinate> getCoordinates(Measurements measurements) {
-		ArrayList<Coordinate> coords = new ArrayList<Coordinate>();
-		for (Measurement m : measurements) {
-			coords.add(m.getGeometry().getCoordinate());
-		}
-		return coords;
-	}
+    @Override
+    public synchronized boolean imageExists(String trackId) throws IOException {
+        return getImageFile(trackId).exists();
+    }
 
-	/**
-	 * This method returns a hashmap which contains colorcode(color of the route based on speed) for each coordinate
-	 * @param measurements
-	 * @return HashMap which has coordinate as the key and color as the value
-	 */
-	public HashMap<Coordinate, Color> getColors(Measurements measurements) {
-		HashMap<Coordinate, Color> coords = new HashMap<Coordinate, Color>();
-		for (Measurement m : measurements) {
-			for (MeasurementValue mv : m.getValues()) {
-				if (mv.getPhenomenon().getName().equals("Speed")) {
-					coords.put(m.getGeometry().getCoordinate(),
-							getColorCode(Double.parseDouble(mv.getValue()
-									.toString())));
-				}
-			}
-		}
-		return coords;
-	}
+    // //////////////////////////////?Retrieval////////////////////////////////
+    /**
+     * Returns a set of coordinates when the measurements of a track is given
+     *
+     * @param measurements
+     *
+     * @return ArrayList of coordinates
+     */
+    private List<Coordinate> getCoordinates(Measurements measurements) {
+        List<Coordinate> coords = new ArrayList<>();
+        for (Measurement m : measurements) {
+            coords.add(m.getGeometry().getCoordinate());
+        }
+        return coords;
+    }
 
-	/**
-	 * This method returns the relevant color object for the given speed
-	 * @param speed
-	 * @return Color color of the speed
-	 */
-	public Color getColorCode(double speed) {
+    /**
+     * This method returns a hashmap which contains colorcode(color of the route based on speed) for each coordinate
+     *
+     * @param measurements
+     *
+     * @return HashMap which has coordinate as the key and color as the value
+     */
+    private Map<Coordinate, Color> getColors(Measurements measurements) {
+        Map<Coordinate, Color> coords = new HashMap<>();
+        for (Measurement m : measurements) {
+            for (MeasurementValue mv : m.getValues()) {
+                if (mv.getPhenomenon().getName().equals("Speed")) {
+                    coords.put(m.getGeometry().getCoordinate(),
+                               getColorCode(Double.parseDouble(mv.getValue().toString())));
+                }
+            }
+        }
+        return coords;
+    }
 
-		if (speed <= 30) {
-			return new Color(0, 102, 0);
-		} else if (speed > 30 && speed <= 50) {
-			return new Color(0, 153, 0);
-		} else if (speed > 50 && speed <= 70) {
-			return new Color(0, 204, 0);
-		} else if (speed > 70 && speed <= 90) {
-			return new Color(204, 204, 0);
-		} else if (speed > 90 && speed <= 110) {
-			return new Color(255, 255, 0);
-		} else if (speed > 110 && speed <= 130) {
-			return new Color(255, 128, 0);
-		} else if (speed > 130 && speed <= 160) {
-			return new Color(204, 0, 0);
-		} else if (speed > 160) {
-			return new Color(255, 0, 0);
-		} else {
-			return new Color(255, 7, 7);
-		}
+    /**
+     * This method returns the relevant color object for the given speed
+     *
+     * @param speed
+     *
+     * @return Color color of the speed
+     */
+    @VisibleForTesting
+    Color getColorCode(double speed) {
 
-	}
+        if (speed <= 30) {
+            return new Color(0, 102, 0);
+        } else if (speed > 30 && speed <= 50) {
+            return new Color(0, 153, 0);
+        } else if (speed > 50 && speed <= 70) {
+            return new Color(0, 204, 0);
+        } else if (speed > 70 && speed <= 90) {
+            return new Color(204, 204, 0);
+        } else if (speed > 90 && speed <= 110) {
+            return new Color(255, 255, 0);
+        } else if (speed > 110 && speed <= 130) {
+            return new Color(255, 128, 0);
+        } else if (speed > 130 && speed <= 160) {
+            return new Color(204, 0, 0);
+        } else if (speed > 160) {
+            return new Color(255, 0, 0);
+        } else {
+            return new Color(255, 7, 7);
+        }
 
-	/**
-	 * This method extracts statistics from statistics object into a HashMap
-	 * @param track
-	 * @param statistics
-	 * @return HashMap which contains statistic name as the key and statistics value as the value
-	 * @throws TrackNotFoundException
-	 */
-	public HashMap<String, String> getDetails(Track track, Statistics statistics)
-			throws TrackNotFoundException {
-		HashMap<String, String> hm = new HashMap<String, String>();
-		hm.put(TIME, calculateTime(track.getBegin(), track.getEnd()));
-		hm.put(MAXSPEED, new StringBuilder("N/A").toString());
-		hm.put(AVGSPEED, new StringBuilder("N/A").toString());
-		hm.put(CMAF, new StringBuilder("N/A").toString());
-		hm.put(AVGRPM, new StringBuilder("N/A").toString());
-		hm.put(IPRESSURE, new StringBuilder("N/A").toString());
-		hm.put(ITEMP, new StringBuilder("N/A").toString());
-		hm.put(CONSUMPTION, new StringBuilder("N/A").toString());
-		hm.put(CO2, new StringBuilder("N/A").toString());
+    }
 
-		for (Statistic statistic : statistics) {
-			if (statistic.getPhenomenon().getName().equalsIgnoreCase("Speed")) {
-				hm.put(MAXSPEED,
-						new StringBuilder(
-								Math.round(statistic.getMax() * 100.0) / 100.0
-										+ "").append(" ")
-								.append(statistic.getPhenomenon().getUnit())
-								.toString());
-				hm.put(AVGSPEED,
-						new StringBuilder(
-								Math.round(statistic.getMean() * 100.0) / 100.0
-										+ "").append(" ")
-								.append(statistic.getPhenomenon().getUnit())
-								.toString());
-			}
-			if (statistic.getPhenomenon().getName()
-					.equalsIgnoreCase("Calculated MAF")) {
-				hm.put(CMAF,
-						new StringBuilder(
-								Math.round(statistic.getMean() * 100.0) / 100.0
-										+ "").append(" ")
-								.append(statistic.getPhenomenon().getUnit())
-								.toString());
-			}
-			if (statistic.getPhenomenon().getName().equalsIgnoreCase("Rpm")) {
-				hm.put(AVGRPM,
-						new StringBuilder(
-								Math.round(statistic.getMean() * 100.0) / 100.0
-										+ "").append(" ")
-								.append(statistic.getPhenomenon().getUnit())
-								.toString());
-			}
-			if (statistic.getPhenomenon().getName()
-					.equalsIgnoreCase("Intake Temperature")) {
-				hm.put(IPRESSURE,
-						new StringBuilder(
-								Math.round(statistic.getMean() * 100.0) / 100.0
-										+ "").append(" ")
-								.append(statistic.getPhenomenon().getUnit())
-								.toString());
-			}
-			if (statistic.getPhenomenon().getName()
-					.equalsIgnoreCase("Intake Pressure")) {
-				hm.put(ITEMP,
-						new StringBuilder(
-								Math.round(statistic.getMean() * 100.0) / 100.0
-										+ "").append(" ")
-								.append(statistic.getPhenomenon().getUnit())
-								.toString());
-			}
-			if (statistic.getPhenomenon().getName()
-					.equalsIgnoreCase(CONSUMPTION)) {
-				hm.put(CONSUMPTION,
-						new StringBuilder(
-								Math.round(statistic.getMean() * 100.0) / 100.0
-										+ "").append(" ")
-								.append(statistic.getPhenomenon().getUnit())
-								.toString());
-			}
-			if (statistic.getPhenomenon().getName().equalsIgnoreCase(CO2)) {
-				hm.put(CO2,
-						new StringBuilder(
-								Math.round(statistic.getMean() * 100.0) / 100.0
-										+ "").append(" ")
-								.append(statistic.getPhenomenon().getUnit())
-								.toString());
-			}
+    /**
+     * This method calculates the distance between two given coordinates
+     *
+     * @param lat1
+     * @param lon1
+     * @param lat2
+     * @param lon2
+     * @param unit
+     *
+     * @return double Distance between two coordinates
+     */
+    private double calculateDistance(double lat1, double lon1, double lat2,
+                                     double lon2, char unit) {
+        double theta = lon1 - lon2;
+        double dist = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2)) +
+                      Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+                      Math.cos(deg2rad(theta));
+        dist = rad2deg(Math.acos(dist));
+        dist *= 60 * 1.1515;
+        dist *= 1.609344;
+        return (dist);
+    }
 
-		}
+    /**
+     * Convert degrees value to a radian value
+     *
+     * @param deg
+     *
+     * @return double radian value
+     */
+    private double deg2rad(double deg) {
+        return deg * Math.PI / 180.0;
+    }
 
-		return hm;
-	}
+    /**
+     * Converts radian value to a degree value
+     *
+     * @param rad
+     *
+     * @return double degree value
+     */
+    private double rad2deg(double rad) {
+        return rad * 180 / Math.PI;
+    }
 
-	public String calculateTime(DateTime begin, DateTime end) {
-		String time = "";
-		long spareTime = 0;
-		long diffInSecs = (end.getMillis() - begin.getMillis()) / 1000;
-		long diffInDays = diffInSecs / 86400;
-		spareTime = diffInSecs % 86400;
-		if (diffInDays != 0) {
-			time += diffInDays + "d ";
-		}
-		long diffInHours = spareTime / 3600;
-		spareTime = spareTime % 3600;
-		if (diffInHours != 0) {
-			time += diffInHours + "h ";
-		}
-		long diffInMins = spareTime / 60;
-		spareTime = spareTime % 60;
-		if (diffInMins != 0) {
-			time += diffInMins + "m ";
-		}
-		if (spareTime != 0) {
-			time += spareTime + "s ";
-		}
-		return time;
-	}
+    @Override
+    public BufferedImage clipImage(BufferedImage image,
+                                   Measurements measurements, int requiredwidth, int requiredHeight, int padding) {
+        List<Coordinate> coords = getCoordinates(measurements);
+        int zoom = getZoomLevel(coords);
+        BoundingBox bbox = findBoundingBoxForGivenLocations(coords);
+        int clipWidth = getX(bbox.west, zoom, 256) + 256 * padding - (getX(bbox.east, zoom, 256) + 256 * padding);
+        int clipHeight = getY(bbox.south, zoom, 256) + 256 * padding -
+                         (getY(bbox.north, zoom, 256) + 256 * padding);
+        int x = getX(bbox.east, zoom, 256) + 256 * padding;
+        int y = getY(bbox.north, zoom, 256) + 256 * padding;
+        int newx = (x + clipWidth / 2) - requiredwidth / 2;
+        int newy = (y + clipHeight / 2) - requiredHeight / 2;
+        // bound adjustments
+        if (newx <= 0) {
+            newx = 0;
+        }
+        if (newy <= 0) {
+            newy = 0;
+        }
+        if (newx + requiredwidth >= image.getWidth()) {
+            newx = image.getWidth() - requiredwidth;
+        }
+        if (newy + requiredHeight >= image.getHeight()) {
+            newy = image.getHeight() - requiredHeight;
+        }
+        return image.getSubimage(newx, newy, requiredwidth, requiredHeight);
+    }
 
-	/**
-	 * This method calculates the distance between two given coordinates
-	 * @param lat1
-	 * @param lon1
-	 * @param lat2
-	 * @param lon2
-	 * @param unit
-	 * @return double Distance between two coordinates
-	 */
-	private double calculateDistance(double lat1, double lon1, double lat2,
-			double lon2, char unit) {
-		double theta = lon1 - lon2;
-		double dist = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2))
-				+ Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2))
-				* Math.cos(deg2rad(theta));
-		dist = Math.acos(dist);
-		dist = rad2deg(dist);
-		dist = dist * 60 * 1.1515;
-		dist = dist * 1.609344;
-		return (dist);
-	}
+    /**
+     * Finds the center of a bounding box when bounding box is given
+     *
+     * @param bbox
+     *
+     * @return coordinate which represents the center of the bounding box
+     */
+    private Coordinate findBoundingBoxCenter(BoundingBox bbox) {
+        double x = (bbox.west + bbox.east) / 2;
+        double y = (bbox.north + bbox.south) / 2;
+        return new Coordinate(x, y);
+    }
 
-	/**
-	 * Convert degrees value to a radian value
-	 * @param deg
-	 * @return double radian value 
-	 */
-	private double deg2rad(double deg) {
-		return (deg * Math.PI / 180.0);
-	}
+    private Coordinate getSubImage(int centerX, int centerY, int x, int y, int subx, int suby) {
+        if ((centerX - (subx / 2)) >= x / 2 && (centerY - (suby / 2)) >= y / 2) {
+            return new Coordinate(0, 0);
+        } else if ((centerX - (subx / 2)) >= x / 2 && (centerY - (suby / 2)) < y / 2) {
+            return new Coordinate(0, 0);
+        } else if ((centerX - (subx / 2)) >= x / 2 && (centerY - (suby / 2)) >= y / 2) {
+            return new Coordinate(0, 0);
+        } else if ((centerX - (subx / 2)) >= x / 2 && (centerY - (suby / 2)) >= y / 2) {
+            return new Coordinate(0, 0);
+        } else {
+            return new Coordinate(0, 0);
+        }
 
-	/**
-	 * Converts radian value to a degree value
-	 * @param rad
-	 * @return double degree value
-	 */
-	private double rad2deg(double rad) {
-		return (rad * 180 / Math.PI);
-	}
+    }
 
-	/**
-	 * This method returns a clipped image which has a given resolution when a image of a higher size is given
-	 * @param image
-	 * @param measurements
-	 * @param requiredwidth
-	 * @param requiredHeight
-	 * @param padding
-	 * @return BufferedImage clippedImage to required resolution
-	 */
-	public BufferedImage clipImage(BufferedImage image,
-			Measurements measurements, int requiredwidth, int requiredHeight,int padding) {
-		ArrayList<Coordinate> coords = getCoordinates(measurements);
-		int zoom = getZoomLevel(coords);
-		BoundingBox bbox = findBoundingBoxForGivenLocations(coords);
-		Coordinate center = findBoundingBoxCenter(bbox);
-		int clipWidth = getX(bbox.west, zoom, 256)+256*padding - (getX(bbox.east, zoom, 256)+256*padding);
-		int clipHeight = getY(bbox.south, zoom, 256)+256*padding
-				- (getY(bbox.north, zoom, 256)+256*padding);
-		int x = getX(bbox.east, zoom, 256)+256*padding;
-		int y = getY(bbox.north, zoom, 256)+256*padding;
-		int newx = (x+clipWidth/2)-requiredwidth/2;
-		int newy = (y+clipHeight/2)-requiredHeight/2;
-		// bound adjustments
-		if(newx<=0){newx = 0;}
-		if(newy<=0){newy = 0;}
-		if(newx+requiredwidth>=image.getWidth()){newx = image.getWidth()-requiredwidth;}
-		if(newy+requiredHeight>=image.getHeight()){newy = image.getHeight()-requiredHeight;}
-		//
-		System.out.println("x : "+x);
-		System.out.println("y : "+y);
-		System.out.println("clipWidth : "+clipWidth);
-		System.out.println("clipHeight : "+clipHeight);
-		System.out.println("newx : "+newx);
-		System.out.println("newy : "+newy);
-		BufferedImage dbi = image.getSubimage(newx, newy, requiredwidth, requiredHeight);
-		/*
-		 * System.out.println(x+" : "+clipWidth);
-		 * System.out.println(y+" : "+clipHeight); Graphics2D
-		 * g2d=dbi.createGraphics(); g2d.setClip(new Rectangle(x, y, clipWidth,
-		 * clipHeight)); g2d.clipRect(x, y, clipWidth, clipHeight);
-		 * AffineTransform at =
-		 * AffineTransform.getScaleInstance(clipWidth,clipHeight);
-		 * g2d.drawImage(image,0, 0, clipWidth, clipHeight,null);
-		 */
-		return dbi;
-	}
-	
-	/**
-	 * Finds the center of a bounding box when bounding box is given
-	 * @param bbox
-	 * @return coordinate which represents the center of the bounding box
-	 */
-	public Coordinate findBoundingBoxCenter(BoundingBox bbox) {
-		double x = (bbox.west+bbox.east)/2;	
-		double y = (bbox.north+bbox.south)/2;	
-		return new Coordinate(x,y);
-	}
-	
-	public Coordinate getSubImage(int centerX,int centerY,int x,int y,int subx,int suby) {
-		if((centerX-(subx/2))>=x/2 && (centerY-(suby/2))>=y/2){
-			return new Coordinate(0,0);
-		}else if((centerX-(subx/2))>=x/2 && (centerY-(suby/2))<y/2){
-			return new Coordinate(0,0);
-		}else if((centerX-(subx/2))>=x/2 && (centerY-(suby/2))>=y/2){
-			return new Coordinate(0,0);
-		}else if((centerX-(subx/2))>=x/2 && (centerY-(suby/2))>=y/2){
-			return new Coordinate(0,0);
-		}else{
-			return new Coordinate(0,0);
-		}
-			
-		
-	}
-	
-	public BufferedImage addPaddingTiles(BufferedImage image,
-			Measurements measurements, int requiredwidth, int requiredHeight) {
-		ArrayList<Coordinate> coords = getCoordinates(measurements);
-		int zoom = getZoomLevel(coords);
-		BoundingBox bbox = findBoundingBoxForGivenLocations(coords);
-		Coordinate center = findBoundingBoxCenter(bbox);
-		int clipWidth = getX(bbox.west, zoom, 256) - getX(bbox.east, zoom, 256);
-		int clipHeight = getY(bbox.south, zoom, 256)
-				- getY(bbox.north, zoom, 256);
-		int x = getX(bbox.east, zoom, 256);
-		int y = getY(bbox.north, zoom, 256);
-		BufferedImage dbi = image.getSubimage(x, y, clipWidth, clipHeight);
-		return dbi;
-	}
-}
+    private BufferedImage addPaddingTiles(BufferedImage image,
+                                          Measurements measurements, int requiredwidth, int requiredHeight) {
+        List<Coordinate> coords = getCoordinates(measurements);
+        int zoom = getZoomLevel(coords);
+        BoundingBox bbox = findBoundingBoxForGivenLocations(coords);
+        Coordinate center = findBoundingBoxCenter(bbox);
+        int clipWidth = getX(bbox.west, zoom, 256) - getX(bbox.east, zoom, 256);
+        int clipHeight = getY(bbox.south, zoom, 256) -
+                         getY(bbox.north, zoom, 256);
+        int x = getX(bbox.east, zoom, 256);
+        int y = getY(bbox.north, zoom, 256);
+        BufferedImage dbi = image.getSubimage(x, y, clipWidth, clipHeight);
+        return dbi;
+    }
 
-class BoundingBox {
-	double north;
-	double south;
-	double east;
-	double west;
+    private File getImageFile(String trackId) {
+        String filePath = new StringBuilder(saveFileDir).append(File.separator).append(trackId).append(".png")
+                .toString();
+        File f = new File(filePath);
+        return f;
+    }
 
-	public BoundingBox() {
+    @VisibleForTesting
+    static class BoundingBox {
+        double north;
+        double south;
+        double east;
+        double west;
 
-	}
+        BoundingBox() {
+        }
 
-	/**
-	 * Creates a new bounding box object when north east west south coordinates are given.
-	 * @param north
-	 * @param south
-	 * @param east
-	 * @param west
-	 */
-	public BoundingBox(double north, double south, double east, double west) {
-		super();
-		this.north = north;
-		this.south = south;
-		this.east = east;
-		this.west = west;
-	}
+        /**
+         * Creates a new bounding box object when north east west south coordinates are given.
+         *
+         * @param north
+         * @param south
+         * @param east
+         * @param west
+         */
+        BoundingBox(double north, double south, double east, double west) {
+            super();
+            this.north = north;
+            this.south = south;
+            this.east = east;
+            this.west = west;
+        }
+
+    }
 
 }

@@ -49,7 +49,7 @@
         <slf4j-version>1.7.12</slf4j-version>
         <geotools.version>8.7</geotools.version>
         <wps.version>3.2.0</wps.version>
-        <jackson.version>2.1.4</jackson.version>
+        <jackson.version>2.9.7</jackson.version>
     </properties>
     <repositories>
         <repository>

@@ -98,7 +98,7 @@ public class ValidationRule implements TestRule {
                 ProcessingReport report = jsonSchema.validate(item);
                 if (!report.isSuccess()) {
                     ObjectNode objectNode = nodeFactory.objectNode();
-                    objectNode.put(JSONConstants.INSTANCE_KEY, item);
+                    objectNode.set(JSONConstants.INSTANCE_KEY, item);
                     ArrayNode errors = objectNode
                             .putArray(JSONConstants.ERRORS_KEY);
                     for (ProcessingMessage m : report) {

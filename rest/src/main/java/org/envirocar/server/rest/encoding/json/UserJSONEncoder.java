@@ -91,7 +91,7 @@ public class UserJSONEncoder extends AbstractJSONEntityEncoder<User> {
             j.put(JSONConstants.COUNTRY_KEY, t.getCountry());
         }
         if (t.hasLocation() && rights.canSeeLocationOf(t)) {
-            j.put(JSONConstants.LOCATION_KEY,
+            j.set(JSONConstants.LOCATION_KEY,
                   geometryEncoder.encodeJSON(t.getLocation(), rights, mediaType));
         }
         if (t.hasLanguage() && rights.canSeeLanguageOf(t)) {
@@ -105,7 +105,7 @@ public class UserJSONEncoder extends AbstractJSONEntityEncoder<User> {
         }
         if (t.getTermsOfUseVersion() != null) {
         	j.put(JSONConstants.TOU_VERSION_KEY, t.getTermsOfUseVersion());
-        	
+
         	// kept for backwards compatibility
         	j.put(JSONConstants.ACCEPTED_TERMS_OF_USE_VERSION_KEY, t.getTermsOfUseVersion());
         }

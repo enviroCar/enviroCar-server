@@ -25,7 +25,6 @@ import org.envirocar.server.core.entities.User;
 import org.envirocar.server.mongo.MongoDB;
 import org.envirocar.server.mongo.entity.MongoUser;
 import org.joda.time.DateTime;
-
 import org.mongodb.morphia.Key;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;

@@ -60,7 +60,7 @@ public class JerseyModule extends JerseyServletModule {
     }
 
     private String classList(Iterable<? extends Class<?>> classes) {
-        return StreamSupport.stream(classes.spliterator(), false).map(c -> c.getName()).collect(joining(","));
+        return StreamSupport.stream(classes.spliterator(), false).map(Class::getName).collect(joining(","));
     }
 
     protected List<Class<? extends ContainerResponseFilter>> responseFilters() {

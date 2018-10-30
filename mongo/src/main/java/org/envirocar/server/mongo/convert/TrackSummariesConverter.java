@@ -34,33 +34,32 @@ package org.envirocar.server.mongo.convert;
 
 import java.util.List;
 
-import org.envirocar.server.core.entities.DimensionedNumber;
+import org.bson.types.BasicBSONList;
 import org.envirocar.server.core.entities.TrackSummaries;
 import org.envirocar.server.core.entities.TrackSummary;
 import org.mongodb.morphia.converters.SimpleValueConverter;
 import org.mongodb.morphia.converters.TypeConverter;
 import org.mongodb.morphia.mapping.MappedField;
 import org.mongodb.morphia.mapping.MappingException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
-import com.mongodb.DBObject;
 import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.PrecisionModel;
 
 /**
- * MongoDB type converter for {@link DimensionedNumber}s.
+ * MongoDB type converter for {@link TrackSummaries}.
  *
  * @author Maurin Radtke <maurin.radtke@uni-muenster.de>
  */
-public class TrackSummariesConverter
-        extends TypeConverter implements SimpleValueConverter {
-
-    private static final Logger log = LoggerFactory.getLogger(TrackSummariesConverter.class);
+public class TrackSummariesConverter extends TypeConverter implements SimpleValueConverter {
+    private static final String START_POSITION_LAT = "startPositionLat";
+    private static final String START_POSITION_LNG = "startPositionLng";
+    private static final String END_POSITION_LAT = "endPositionLat";
+    private static final String END_POSITION_LNG = "endPositionLng";
+    private static final String ID = "id";
 
     public TrackSummariesConverter() {
         super(TrackSummaries.class);
@@ -90,11 +89,11 @@ public class TrackSummariesConverter
             double endLat = ts.getEndPosition().getCoordinate().x;
 
             Object bdbo = BasicDBObjectBuilder.start()
-                    .add("id", ts.getIdentifier())
-                    .add("startPositionLat", startLat)
-                    .add("startPositionLng", startLng)
-                    .add("endPositionLat", endLat)
-                    .add("endPositionLng", endLng).get();
+                    .add(ID, ts.getIdentifier())
+                    .add(START_POSITION_LAT, startLat)
+                    .add(START_POSITION_LNG, startLng)
+                    .add(END_POSITION_LAT, endLat)
+                    .add(END_POSITION_LNG, endLng).get();
             bdbl.add(bdbo);
         }
         return bdbl;
@@ -114,71 +113,48 @@ public class TrackSummariesConverter
     @Override
     public TrackSummaries decode(Class<?> c, Object o, MappedField i) throws
             MappingException {
-        TrackSummaries tsm = new TrackSummaries();
+
         if (o == null) {
             return null;
         }
 
-        if (o instanceof DBObject) {
+        TrackSummaries tsm = new TrackSummaries();
+        if (!(o instanceof BasicBSONList)) {
+            return tsm;
+        }
+        GeometryFactory geomFac = new GeometryFactory(new PrecisionModel(PrecisionModel.FLOATING), 4326);
 
-            DBObject dbObject = (DBObject) o;
-            BasicDBList trackSummaryList = (BasicDBList) dbObject;
-            for (int j = 0; j < trackSummaryList.size(); j++) {
-                BasicDBObject trackSummary = (BasicDBObject) trackSummaryList.get(j);
+        BasicBSONList list = (BasicBSONList) o;
 
-                Object b = trackSummary.get("id");
-                String id;
-                if (b instanceof String) {
-                    id = b.toString();
-                } else {
-                    throw new MappingException("Can not decode " + b);
-                }
-                Object sPlat = trackSummary.get("startPositionLat");
-                double value;
-                if (sPlat instanceof Number) {
-                    value = ((Number) sPlat).doubleValue();
-                } else {
-                    throw new MappingException("Can not decode " + b);
-                }
-                Object sPlng = trackSummary.get("startPositionLng");
-                double value2;
-                if (sPlng instanceof Number) {
-                    value2 = ((Number) sPlng).doubleValue();
-                } else {
-                    throw new MappingException("Can not decode " + b);
-                }
-                Object ePlat = trackSummary.get("endPositionLat");
-                double value3;
-                if (ePlat instanceof Number) {
-                    value3 = ((Number) ePlat).doubleValue();
-                } else {
-                    throw new MappingException("Can not decode " + b);
-                }
-                Object ePlng = trackSummary.get("endPositionLng");
-                double value4;
-                if (ePlng instanceof Number) {
-                    value4 = ((Number) ePlng).doubleValue();
-                } else {
-                    throw new MappingException("Can not decode " + b);
-                }
+        for (int j = 0; j < list.size(); j++) {
+            BasicDBObject trackSummary = (BasicDBObject) list.get(j);
 
-                TrackSummary ts = new TrackSummary();
-                ts.setIdentifier(id);
+            Object id = trackSummary.get(ID);
+            Object startLat = trackSummary.get(START_POSITION_LAT);
+            Object startLong = trackSummary.get(START_POSITION_LNG);
+            Object endLat = trackSummary.get(END_POSITION_LAT);
+            Object endLong = trackSummary.get(END_POSITION_LNG);
 
-                GeometryFactory geomFac = new GeometryFactory();
-                Coordinate startPt = new Coordinate(value, value2);
-                Coordinate endPt = new Coordinate(value3, value4);
-                Geometry startPos = geomFac.createPoint(startPt);
-                Geometry endPos = geomFac.createPoint(endPt);
-                ts.setStartPosition(startPos);
-                ts.setEndPosition(endPos);
-                tsm.addTrackSummary(ts);
+            if (!(id instanceof String) ||
+                !(startLat instanceof Number) ||
+                !(startLong instanceof Number) ||
+                !(endLat instanceof Number) ||
+                !(endLong instanceof Number)) {
+                throw new MappingException("Can not decode " + id);
             }
 
-            return tsm;
-        }// else {
-        // throw new MappingException("Can not decode " + o);
-        //}
+            TrackSummary ts = new TrackSummary();
+            ts.setIdentifier((String) id);
+
+            Coordinate start = new Coordinate(((Number) startLat).doubleValue(),
+                                              ((Number) startLong).doubleValue());
+            Coordinate end = new Coordinate(((Number) endLat).doubleValue(),
+                                            ((Number) endLong).doubleValue());
+            ts.setStartPosition(geomFac.createPoint(start));
+            ts.setEndPosition(geomFac.createPoint(end));
+
+            tsm.addTrackSummary(ts);
+        }
         return tsm;
     }
 }

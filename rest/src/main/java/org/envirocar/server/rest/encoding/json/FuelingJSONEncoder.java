@@ -63,22 +63,22 @@ public class FuelingJSONEncoder extends AbstractJSONEntityEncoder<Fueling> {
             fueling.put(JSONConstants.FUEL_TYPE, t.getFuelType());
         }
         if (t.hasCost()) {
-            fueling.put(JSONConstants.COST, encodeJSON(t.getCost()));
+            fueling.set(JSONConstants.COST, encodeJSON(t.getCost()));
         }
         if (t.hasMileage()) {
-            fueling.put(JSONConstants.MILEAGE, encodeJSON(t.getMileage()));
+            fueling.set(JSONConstants.MILEAGE, encodeJSON(t.getMileage()));
         }
         if (t.hasVolume()) {
-            fueling.put(JSONConstants.VOLUME, encodeJSON(t.getVolume()));
+            fueling.set(JSONConstants.VOLUME, encodeJSON(t.getVolume()));
         }
         if (t.hasTime()) {
             fueling.put(JSONConstants.TIME_KEY, getDateTimeFormat().print(t.getTime()));
         }
         if (t.hasCar()) {
-            fueling.put(JSONConstants.CAR_KEY, sensorEncoder.encodeJSON(t.getCar(), rights, mt));
+            fueling.set(JSONConstants.CAR_KEY, sensorEncoder.encodeJSON(t.getCar(), rights, mt));
         }
         if (t.hasUser()) {
-            fueling.put(JSONConstants.USER_KEY, userEncoder.encodeJSON(t.getUser(), rights, mt));
+            fueling.set(JSONConstants.USER_KEY, userEncoder.encodeJSON(t.getUser(), rights, mt));
         }
         if (t.hasCreationTime()) {
             fueling.put(JSONConstants.CREATED_KEY, getDateTimeFormat().print(t.getCreationTime()));

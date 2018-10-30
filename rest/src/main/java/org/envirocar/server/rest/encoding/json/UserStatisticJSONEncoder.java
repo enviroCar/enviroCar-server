@@ -16,21 +16,21 @@
  */
 package org.envirocar.server.rest.encoding.json;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
+import org.envirocar.server.core.entities.TrackSummaries;
+import org.envirocar.server.core.entities.TrackSummary;
+import org.envirocar.server.core.entities.UserStatistic;
+import org.envirocar.server.rest.JSONConstants;
+import org.envirocar.server.rest.encoding.JSONEntityEncoder;
+import org.envirocar.server.rest.rights.AccessRights;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 import com.vividsolutions.jts.geom.Geometry;
-import org.envirocar.server.core.entities.TrackSummaries;
-import org.envirocar.server.core.entities.TrackSummary;
-import org.envirocar.server.rest.JSONConstants;
-import org.envirocar.server.rest.encoding.JSONEntityEncoder;
-
-import org.envirocar.server.rest.rights.AccessRights;
-import org.envirocar.server.core.entities.UserStatistic;
 
 /**
  * TODO JavaDoc
@@ -50,53 +50,21 @@ public class UserStatisticJSONEncoder extends AbstractJSONEntityEncoder<UserStat
     }
 
     @Override
-    public ObjectNode encodeJSON(
-            UserStatistic t,
-            AccessRights rights,
-            MediaType mt) {
-
+    public ObjectNode encodeJSON(UserStatistic t, AccessRights rights, MediaType mt) {
         ObjectNode userStatistics = getJsonFactory().objectNode();
-
-        userStatistics.putPOJO(JSONConstants.DISTANCE_KEY,
-                t.getDistance());
-        userStatistics.putPOJO(JSONConstants.DURATION_KEY,
-                t.getDuration());
-
-        ObjectNode statistics = userStatistics
-                .putObject(JSONConstants.USERSTATISTIC_KEY);
-
-        ObjectNode below60kmh = statistics.
-                putObject(JSONConstants.BELOW60KMH_KEY);
-
-        below60kmh.putPOJO(JSONConstants.DISTANCE_KEY,
-                t.getDistanceBelow60kmh());
-
-        below60kmh.putPOJO(JSONConstants.DURATION_KEY,
-                t.getDurationBelow60kmh());
-
-        ObjectNode above130kmh = statistics.
-                putObject(JSONConstants.ABOVE130KMH_KEY);
-
-        above130kmh.putPOJO(JSONConstants.DISTANCE_KEY,
-                t.getDistanceAbove130kmh());
-
-        above130kmh.putPOJO(JSONConstants.DURATION_KEY,
-                t.getDurationAbove130kmh());
-
-        ObjectNode NaN = statistics.
-                putObject(JSONConstants.NAN_KEY);
-
-        NaN.putPOJO(JSONConstants.DISTANCE_KEY,
-                t.getDistanceNaN());
-
-        NaN.putPOJO(JSONConstants.DURATION_KEY,
-                t.getDurationNaN());
-
-        userStatistics
-                .put(
-                        JSONConstants.TRACKSUMMARIES_KEY,
-                        getTrackSummaries(t.getTrackSummaries(), rights, mt)
-                );
+        userStatistics.putPOJO(JSONConstants.DISTANCE_KEY, t.getDistance());
+        userStatistics.putPOJO(JSONConstants.DURATION_KEY, t.getDuration());
+        ObjectNode statistics = userStatistics.putObject(JSONConstants.USERSTATISTIC_KEY);
+        ObjectNode below60kmh = statistics.putObject(JSONConstants.BELOW60KMH_KEY);
+        below60kmh.putPOJO(JSONConstants.DISTANCE_KEY, t.getDistanceBelow60kmh());
+        below60kmh.putPOJO(JSONConstants.DURATION_KEY, t.getDurationBelow60kmh());
+        ObjectNode above130kmh = statistics.putObject(JSONConstants.ABOVE130KMH_KEY);
+        above130kmh.putPOJO(JSONConstants.DISTANCE_KEY, t.getDistanceAbove130kmh());
+        above130kmh.putPOJO(JSONConstants.DURATION_KEY, t.getDurationAbove130kmh());
+        ObjectNode NaN = statistics.putObject(JSONConstants.NAN_KEY);
+        NaN.putPOJO(JSONConstants.DISTANCE_KEY, t.getDistanceNaN());
+        NaN.putPOJO(JSONConstants.DURATION_KEY, t.getDurationNaN());
+        userStatistics.set(JSONConstants.TRACKSUMMARIES_KEY, getTrackSummaries(t.getTrackSummaries(), rights, mt));
         return userStatistics;
     }
 
@@ -109,18 +77,14 @@ public class UserStatisticJSONEncoder extends AbstractJSONEntityEncoder<UserStat
                     ts.putPOJO(JSONConstants.IDENTIFIER_KEY, item.getIdentifier());
                 }
                 if (item.hasStartPosition()) {
-                    ObjectNode startPos = ts
-                            .putObject(JSONConstants.STARTPOSITION_KEY);
-                    startPos.put(JSONConstants.GEOMETRY_KEY,
-                            geometryEncoder
-                                    .encodeJSON(item.getStartPosition(), rights, mediaType));
+                    ObjectNode startPos = ts.putObject(JSONConstants.STARTPOSITION_KEY);
+                    startPos.set(JSONConstants.GEOMETRY_KEY,
+                                 geometryEncoder.encodeJSON(item.getStartPosition(), rights, mediaType));
                 }
                 if (item.hasEndPosition()) {
-                    ObjectNode endPos = ts
-                            .putObject(JSONConstants.ENDPOSITION_KEY);
-                    endPos.put(JSONConstants.GEOMETRY_KEY,
-                            geometryEncoder
-                                    .encodeJSON(item.getEndPosition(), rights, mediaType));
+                    ObjectNode endPos = ts.putObject(JSONConstants.ENDPOSITION_KEY);
+                    endPos.set(JSONConstants.GEOMETRY_KEY,
+                               geometryEncoder.encodeJSON(item.getEndPosition(), rights, mediaType));
                 }
             }
         } else {

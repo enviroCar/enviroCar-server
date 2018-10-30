@@ -19,15 +19,14 @@ package org.envirocar.server.rest.encoding.json;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.inject.Inject;
-
 import org.envirocar.server.core.entities.Group;
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.rest.JSONConstants;
 import org.envirocar.server.rest.encoding.JSONEntityEncoder;
-
 import org.envirocar.server.rest.rights.AccessRights;
+
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.inject.Inject;
 
 /**
  * TODO JavaDoc
@@ -55,7 +54,7 @@ public class GroupJSONEncoder extends AbstractJSONEntityEncoder<Group> {
             group.put(JSONConstants.DESCRIPTION_KEY, t.getDescription());
         }
         if (t.hasOwner() && rights.canSeeOwnerOf(t)) {
-            group.put(JSONConstants.OWNER_KEY,
+            group.set(JSONConstants.OWNER_KEY,
                       userEncoder.encodeJSON(t.getOwner(), rights, mediaType));
         }
         if (t.hasCreationTime() && rights.canSeeCreationTimeOf(t)) {
