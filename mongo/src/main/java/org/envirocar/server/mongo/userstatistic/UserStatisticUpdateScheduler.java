@@ -31,9 +31,10 @@ import org.slf4j.LoggerFactory;
 import com.google.inject.Singleton;
 
 /**
- * TODO: This Scheduler manages updates on the UserStatistics while Tracks are added and others are deleted at same time, asynchronously.
- * TODO: The eventBus onTrackDeletion and onNewTrack is unfortunetly not managing the order of these events correctly. Fix this.
- * (errors occur if a certain created track gets deleted immediatly and the eventbus trigger deletion before creation.)
+ * TODO: This Scheduler manages updates on the UserStatistics while Tracks are added and others are deleted at same
+ * time, asynchronously. TODO: The eventBus onTrackDeletion and onNewTrack is unfortunetly not managing the order of
+ * these events correctly. Fix this. (errors occur if a certain created track gets deleted immediatly and the eventbus
+ * trigger deletion before creation.)
  */
 @Singleton
 public class UserStatisticUpdateScheduler {
@@ -43,7 +44,6 @@ public class UserStatisticUpdateScheduler {
     private final Object keyUserStatisticMutex = new Object();
     private final Set<MongoUserStatisticKey> currentKeyUserStatisticUpdates = new HashSet<>();
     private final Set<MongoUserStatisticKey> updatePendingForKey = new HashSet<>();
-
 
     public void updateUserStatistic(
             UserStatisticFilter filter,
@@ -55,7 +55,7 @@ public class UserStatisticUpdateScheduler {
             if (this.currentKeyUserStatisticUpdates.contains(key)) {
                 /*
                 schedule another update
-                */
+                 */
                 updatePendingForKey.add(key);
                 if (waitForResult) {
                     try {
@@ -65,8 +65,7 @@ public class UserStatisticUpdateScheduler {
                     }
                 }
                 return;
-            }
-            else {
+            } else {
                 this.currentKeyUserStatisticUpdates.add(key);
             }
         }
@@ -84,14 +83,15 @@ public class UserStatisticUpdateScheduler {
 
                 /*
                 another update is pending, start it
-                */
+                 */
                 if (waitForResult) {
                     /*
                     the thread is waiting, do not use it again and spawn a new
-                    */
-                    new Thread(() -> updateUserStatistic(filter, key, calculator, false)).start();
-                }
-                else {
+                     */
+                    new Thread(() -> {
+                        updateUserStatistic(filter, key, calculator, false);
+                    }).start();
+                } else {
                     updateUserStatistic(filter, key, calculator, false);
                 }
             }
@@ -109,7 +109,7 @@ public class UserStatisticUpdateScheduler {
             if (this.currentKeyUserStatisticUpdates.contains(key)) {
                 /*
                 schedule another update
-                */
+                 */
                 updatePendingForKey.add(key);
                 if (waitForResult) {
                     try {
@@ -119,8 +119,7 @@ public class UserStatisticUpdateScheduler {
                     }
                 }
                 return;
-            }
-            else {
+            } else {
                 this.currentKeyUserStatisticUpdates.add(key);
             }
         }
@@ -141,14 +140,15 @@ public class UserStatisticUpdateScheduler {
 
                 /*
                 another update is pending, start it
-                */
+                 */
                 if (waitForResult) {
                     /*
                     the thread is waiting, do not use it again and spawn a new
-                    */
-                    new Thread(() -> updateUserStatisticOnNewTrack(filter, key, calculator, false, track)).start();
-                }
-                else {
+                     */
+                    new Thread(() -> {
+                        updateUserStatisticOnNewTrack(filter, key, calculator, false, track);
+                    }).start();
+                } else {
                     updateUserStatisticOnNewTrack(filter, key, calculator, false, track);
                 }
             }
@@ -167,7 +167,7 @@ public class UserStatisticUpdateScheduler {
             if (this.currentKeyUserStatisticUpdates.contains(key)) {
                 /*
                 schedule another update
-                */
+                 */
                 updatePendingForKey.add(key);
                 if (waitForResult) {
                     try {
@@ -177,8 +177,7 @@ public class UserStatisticUpdateScheduler {
                     }
                 }
                 return;
-            }
-            else {
+            } else {
                 this.currentKeyUserStatisticUpdates.add(key);
             }
         }
@@ -200,17 +199,19 @@ public class UserStatisticUpdateScheduler {
 
                 /*
                 another update is pending, start it
-                */
+                 */
                 if (waitForResult) {
                     /*
                     the thread is waiting, do not use it again and spawn a new
-                    */
-                    new Thread(() -> updateUserStatisticOnTrackDeletion(filter, key, calculator, false, track, measurements)).start();
-                }
-                else {
+                     */
+                    new Thread(() -> {
+                        updateUserStatisticOnTrackDeletion(filter, key, calculator, false, track, measurements);
+                    }).start();
+                } else {
                     updateUserStatisticOnTrackDeletion(filter, key, calculator, false, track, measurements);
                 }
             }
         }
     }
+
 }

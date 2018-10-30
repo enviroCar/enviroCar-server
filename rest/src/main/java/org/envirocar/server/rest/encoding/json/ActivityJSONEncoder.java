@@ -65,25 +65,25 @@ public class ActivityJSONEncoder extends AbstractJSONEntityEncoder<Activity> {
             root.put(JSONConstants.TYPE_KEY, t.getType().toString());
         }
         if (t.hasUser()) {
-            root.put(JSONConstants.USER_KEY,
+            root.set(JSONConstants.USER_KEY,
                      userEncoder.encodeJSON(t.getUser(), rights, mt));
         }
         if (t instanceof GroupActivity) {
             GroupActivity groupActivity = (GroupActivity) t;
             if (groupActivity.hasGroup()) {
-                root.put(JSONConstants.GROUP_KEY, groupEncoder
+                root.set(JSONConstants.GROUP_KEY, groupEncoder
                         .encodeJSON(groupActivity.getGroup(), rights, mt));
             }
         } else if (t instanceof UserActivity) {
             UserActivity userActivity = (UserActivity) t;
             if (userActivity.hasOther()) {
-                root.put(JSONConstants.OTHER_KEY, userEncoder
+                root.set(JSONConstants.OTHER_KEY, userEncoder
                         .encodeJSON(userActivity.getOther(), rights, mt));
             }
         } else if (t instanceof TrackActivity) {
             TrackActivity trackActivity = (TrackActivity) t;
             if (trackActivity.hasTrack()) {
-                root.put(JSONConstants.TRACK_KEY, trackEncoder
+                root.set(JSONConstants.TRACK_KEY, trackEncoder
                         .encodeJSON(trackActivity.getTrack(), rights, mt));
             }
         }

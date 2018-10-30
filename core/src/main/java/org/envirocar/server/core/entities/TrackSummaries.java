@@ -27,7 +27,7 @@ public class TrackSummaries {
 
     private List<TrackSummary> tracklist;
 
-    public TrackSummaries(){
+    public TrackSummaries() {
         this.tracklist = new ArrayList<>();
     }
 
@@ -36,29 +36,20 @@ public class TrackSummaries {
     }
 
     public List<TrackSummary> getTrackSummaryList() {
-        if (this.tracklist == null){
-            this.tracklist = new ArrayList<>();
-        }
         return this.tracklist;
     }
 
     public void setTrackSummariesList(List<TrackSummary> trackSummaries) {
-        this.tracklist = trackSummaries;
+        this.tracklist = trackSummaries == null ? new ArrayList<>() : trackSummaries;
     }
 
     public void addTrackSummary(TrackSummary trackSummary) {
-        if (this.tracklist != null) {
-            this.tracklist.add(trackSummary);
-        } else {
-            this.tracklist = new ArrayList<>();
-            this.tracklist.add(trackSummary);
-        }
+        this.tracklist.add(trackSummary);
     }
 
     public boolean hasTrackSummaries() {
-        if (this.tracklist == null)
-            return false;
-        return (!this.tracklist.isEmpty());
+
+        return !this.tracklist.isEmpty();
     }
 
 }

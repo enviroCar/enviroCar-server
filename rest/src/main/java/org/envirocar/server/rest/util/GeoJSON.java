@@ -111,7 +111,7 @@ public class GeoJSON implements GeometryConverter<JsonNode> {
         Preconditions.checkNotNull(geometry);
         ObjectNode json = getJsonFactory().objectNode();
         json.put(TYPE_KEY, POINT_TYPE);
-        json.put(COORDINATES_KEY, encodeCoordinates(geometry));
+        json.set(COORDINATES_KEY, encodeCoordinates(geometry));
         return json;
     }
 
@@ -121,7 +121,7 @@ public class GeoJSON implements GeometryConverter<JsonNode> {
         Preconditions.checkNotNull(geometry);
         ObjectNode json = getJsonFactory().objectNode();
         json.put(TYPE_KEY, LINE_STRING_TYPE);
-        json.put(COORDINATES_KEY, encodeCoordinates(geometry));
+        json.set(COORDINATES_KEY, encodeCoordinates(geometry));
         return json;
     }
 
@@ -130,7 +130,7 @@ public class GeoJSON implements GeometryConverter<JsonNode> {
         Preconditions.checkNotNull(geometry);
         ObjectNode json = getJsonFactory().objectNode();
         json.put(TYPE_KEY, POLYGON_TYPE);
-        json.put(COORDINATES_KEY, encodeCoordinates(geometry));
+        json.set(COORDINATES_KEY, encodeCoordinates(geometry));
         return json;
     }
 
@@ -144,7 +144,7 @@ public class GeoJSON implements GeometryConverter<JsonNode> {
         for (int i = 0; i < geometry.getNumGeometries(); ++i) {
             list.add(encodeCoordinates((Point) geometry.getGeometryN(i)));
         }
-        json.put(COORDINATES_KEY, list);
+        json.set(COORDINATES_KEY, list);
         return json;
     }
 
@@ -158,7 +158,7 @@ public class GeoJSON implements GeometryConverter<JsonNode> {
         for (int i = 0; i < geometry.getNumGeometries(); ++i) {
             list.add(encodeCoordinates((LineString) geometry.getGeometryN(i)));
         }
-        json.put(COORDINATES_KEY, list);
+        json.set(COORDINATES_KEY, list);
         return json;
     }
 
@@ -172,7 +172,7 @@ public class GeoJSON implements GeometryConverter<JsonNode> {
         for (int i = 0; i < geometry.getNumGeometries(); ++i) {
             list.add(encodeCoordinates((Polygon) geometry.getGeometryN(i)));
         }
-        json.put(COORDINATES_KEY, list);
+        json.set(COORDINATES_KEY, list);
         return json;
     }
 
@@ -186,7 +186,7 @@ public class GeoJSON implements GeometryConverter<JsonNode> {
         for (int i = 0; i < geometry.getNumGeometries(); ++i) {
             geometries.add(encodeGeometry(geometry.getGeometryN(i)));
         }
-        json.put(GEOMETRIES_KEY, geometries);
+        json.set(GEOMETRIES_KEY, geometries);
         return json;
     }
 

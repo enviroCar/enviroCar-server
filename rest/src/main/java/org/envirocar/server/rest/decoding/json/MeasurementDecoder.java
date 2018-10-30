@@ -77,8 +77,7 @@ public class MeasurementDecoder extends AbstractJSONEntityDecoder<Measurement> {
                 measurement.setSensor(resolveSensor(p, knowledge));
             }
             if (p.has(JSONConstants.TIME_KEY)) {
-                measurement.setTime(getDateTimeFormat().parseDateTime(p
-                        .path(JSONConstants.TIME_KEY).textValue()));
+                measurement.setTime(getDateTimeFormat().parseDateTime(p.path(JSONConstants.TIME_KEY).textValue()));
             }
 
             if (p.has(JSONConstants.PHENOMENONS_KEY)) {
@@ -87,8 +86,7 @@ public class MeasurementDecoder extends AbstractJSONEntityDecoder<Measurement> {
                 while (fields.hasNext()) {
                     Entry<String, JsonNode> field = fields.next();
                     Phenomenon phenomenon = resolvePhenomenon(field, knowledge);
-                    JsonNode valueNode = field.getValue()
-                            .get(JSONConstants.VALUE_KEY);
+                    JsonNode valueNode = field.getValue().get(JSONConstants.VALUE_KEY);
                     if (valueNode.isValueNode()) {
                         Object value = null;
                         if (valueNode.isNumber()) {
@@ -98,8 +96,7 @@ public class MeasurementDecoder extends AbstractJSONEntityDecoder<Measurement> {
                         } else if (valueNode.isTextual()) {
                             value = valueNode.textValue();
                         }
-                        MeasurementValue v = getEntityFactory()
-                                .createMeasurementValue();
+                        MeasurementValue v = getEntityFactory().createMeasurementValue();
                         v.setValue(value);
                         v.setPhenomenon(phenomenon);
                         measurement.addValue(v);
@@ -127,23 +124,22 @@ public class MeasurementDecoder extends AbstractJSONEntityDecoder<Measurement> {
     @SuppressWarnings("unchecked")
     private Phenomenon resolvePhenomenon(Entry<String, JsonNode> field, ContextKnowledge knowledge) {
         String key = field.getKey();
-        Map<String, Phenomenon> list = null;
+        Map<String, Phenomenon> map = null;
         if (knowledge != null) {
             if (knowledge.containsKey(JSONConstants.PHENOMENONS_KEY)) {
-                list = (Map<String, Phenomenon>) knowledge.get(JSONConstants.PHENOMENONS_KEY);
-                if (list.containsKey(key)) {
-                    return list.get(key);
+                map = (Map<String, Phenomenon>) knowledge.get(JSONConstants.PHENOMENONS_KEY);
+                if (map.containsKey(key)) {
+                    return map.get(key);
                 }
-            }
-            else {
-                list = new HashMap<>();
-                knowledge.put(JSONConstants.PHENOMENONS_KEY, list);
+            } else {
+                map = new HashMap<>();
+                knowledge.put(JSONConstants.PHENOMENONS_KEY, map);
             }
         }
 
         Phenomenon result = phenomenonDao.getByName(key);
-        if (list != null) {
-            list.put(key, result);
+        if (map != null) {
+            map.put(key, result);
         }
         return result;
     }

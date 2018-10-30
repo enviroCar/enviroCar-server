@@ -39,11 +39,13 @@ public class CustomGuiceObjectFactory extends GuiceObjectFactory {
         String className = (String) dbObj.get(Mapper.CLASS_NAME_FIELDNAME);
         if (className != null) {
             try {
-                clazz = Class.forName(className);
+                return super.createInstance(Class.forName(className), dbObj);
             } catch (ClassNotFoundException ex) {
                 throw new RuntimeException(ex);
             }
+        } else {
+            return super.createInstance(clazz, dbObj);
         }
-        return super.createInstance(clazz, dbObj);
+
     }
 }

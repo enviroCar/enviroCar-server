@@ -42,7 +42,7 @@ import com.google.inject.Inject;
  */
 public class CarSimilarityServiceImpl implements CarSimilarityService {
 
-    private static final Logger log = LoggerFactory.getLogger(CarSimilarityServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CarSimilarityServiceImpl.class);
 
     private static final String FUEL_TYPE = "fuelType";
     private static final String CONSTRUCTION_YEAR = "constructionYear";
@@ -97,7 +97,7 @@ public class CarSimilarityServiceImpl implements CarSimilarityService {
                     this.staticIdMappings.putAll(mapper.convertValue(mappingsJson, Map.class));
                 }
             } catch (IOException ex) {
-                log.warn("Could not read Similarity Definition", ex);
+                LOG.warn("Could not read Similarity Definition", ex);
                 return false;
             }
             return true;

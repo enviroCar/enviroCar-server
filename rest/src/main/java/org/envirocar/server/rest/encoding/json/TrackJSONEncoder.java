@@ -90,11 +90,11 @@ public class TrackJSONEncoder extends AbstractJSONEntityEncoder<Track> {
                         .print(t.getModificationTime()));
             }
             if (t.hasSensor() && rights.canSeeSensorOf(t)) {
-                properties.put(JSONConstants.SENSOR_KEY, sensorEncoder
+                properties.set(JSONConstants.SENSOR_KEY, sensorEncoder
                         .encodeJSON(t.getSensor(), rights, mediaType));
             }
             if (t.hasUser() && rights.canSeeUserOf(t)) {
-                properties.put(JSONConstants.USER_KEY, userEncoder
+                properties.set(JSONConstants.USER_KEY, userEncoder
                         .encodeJSON(t.getUser(), rights, mediaType));
             }
             if (rights.canSeeLengthOf(t)) {
@@ -122,7 +122,7 @@ public class TrackJSONEncoder extends AbstractJSONEntityEncoder<Track> {
             } else {
                 features = track.arrayNode();
             }
-            track.put(GeoJSONConstants.FEATURES_KEY, features);
+            track.set(GeoJSONConstants.FEATURES_KEY, features);
         } else {
             if (t.hasIdentifier()) {
                 track.put(JSONConstants.IDENTIFIER_KEY, t.getIdentifier());
@@ -135,7 +135,7 @@ public class TrackJSONEncoder extends AbstractJSONEntityEncoder<Track> {
             if (t.hasName() && rights.canSeeNameOf(t)) {
                 track.put(JSONConstants.NAME_KEY, t.getName());
             }
-            
+
             //additional props
             if (t.hasLength() && rights.canSeeLengthOf(t)) {
                 track.put(JSONConstants.LENGTH_KEY, t.getLength());
@@ -150,7 +150,7 @@ public class TrackJSONEncoder extends AbstractJSONEntityEncoder<Track> {
                         .print(t.getEnd()));
             }
             if (rights.canSeeSensorOf(t)) {
-                track.put(JSONConstants.SENSOR_KEY,
+                track.set(JSONConstants.SENSOR_KEY,
                         this.sensorEncoder.encodeJSON(t.getSensor(), rights, mediaType));
             }
         }
