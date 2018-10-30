@@ -24,13 +24,13 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.Provider;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.google.inject.Inject;
-import com.vividsolutions.jts.geom.Geometry;
-
 import org.envirocar.server.core.entities.Gender;
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.rest.JSONConstants;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.google.inject.Inject;
+import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * TODO JavaDoc
@@ -60,6 +60,8 @@ public class UserDecoder extends AbstractJSONEntityDecoder<User> {
         user.setFirstName(j.path(JSONConstants.FIRST_NAME_KEY).textValue());
         user.setLastName(j.path(JSONConstants.LAST_NAME_KEY).textValue());
         user.setLanguage(j.path(JSONConstants.LANGUAGE_KEY).textValue());
+        user.setAcceptedTermsOfUse(j.path(JSONConstants.ACCEPTED_TERMS_OF_USE).booleanValue());
+        user.setAcceptedPrivacyStatement(j.path(JSONConstants.ACCEPTED_PRIVACY_STATEMENT).booleanValue());
 
         user.setTermsOfUseVersion(j.path(JSONConstants.TOU_VERSION_KEY).textValue());
 
@@ -68,7 +70,7 @@ public class UserDecoder extends AbstractJSONEntityDecoder<User> {
         	user.setTermsOfUseVersion(j.path(JSONConstants.ACCEPTED_TERMS_OF_USE_VERSION_KEY).textValue());
         }
 
-        
+
         JsonNode l = j.path(JSONConstants.LOCATION_KEY);
         if (!l.isMissingNode() && !l.isNull()) {
             user.setLocation(geometryDecoder.decode(l, mediaType));

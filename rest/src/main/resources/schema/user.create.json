@@ -5,7 +5,9 @@
     "required": [
         "name",
         "mail",
-        "token"
+        "token",
+        "acceptedTerms",
+        "acceptedPrivacy"
     ],
     "allOf": [
         {
@@ -21,6 +23,12 @@
                 },
                 "token": {
                     "type": "string"
+                },
+                "acceptedTerms": {
+                    "type": "boolean"
+                },
+                "acceptedPrivacy": {
+                    "type": "boolean"
                 }
             }
         }

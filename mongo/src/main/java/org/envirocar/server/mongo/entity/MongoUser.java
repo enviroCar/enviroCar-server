@@ -29,6 +29,7 @@ import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.IndexOptions;
 import org.mongodb.morphia.annotations.Indexed;
 import org.mongodb.morphia.annotations.Property;
+import org.mongodb.morphia.annotations.Transient;
 import org.mongodb.morphia.mapping.Mapper;
 
 import com.google.common.base.Objects;
@@ -112,6 +113,11 @@ public class MongoUser extends MongoEntityBase implements User {
     @Indexed(options = @IndexOptions(expireAfterSeconds = 0))
     @Property(MongoUser.EXPIRE_AT)
     private DateTime expireAt;
+
+    @Transient
+    private boolean hasAcceptedTermsOfUse;
+    @Transient
+    private boolean hasAccceptedPrivacyStatement;
 
     public MongoUser(String name) {
         this.name = name;
@@ -389,5 +395,25 @@ public class MongoUser extends MongoEntityBase implements User {
     @Override
     public DateTime getExpirationDate() {
         return this.expireAt;
+    }
+
+    @Override
+    public boolean hasAcceptedTermsOfUse() {
+        return this.hasAcceptedTermsOfUse;
+    }
+
+    @Override
+    public boolean hasAcceptedPrivacyStatement() {
+        return this.hasAccceptedPrivacyStatement;
+    }
+
+    @Override
+    public void setAcceptedTermsOfUse(boolean hasAcceptedTermsOfUse) {
+        this.hasAcceptedTermsOfUse = hasAcceptedTermsOfUse;
+    }
+
+    @Override
+    public void setAcceptedPrivacyStatement(boolean hasAccceptedPrivacyStatement) {
+        this.hasAccceptedPrivacyStatement = hasAccceptedPrivacyStatement;
     }
 }
