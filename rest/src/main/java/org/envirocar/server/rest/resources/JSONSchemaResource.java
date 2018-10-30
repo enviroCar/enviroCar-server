@@ -16,7 +16,6 @@
  */
 package org.envirocar.server.rest.resources;
 
-
 import java.net.URI;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
@@ -27,7 +26,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 
 import org.envirocar.server.core.exception.ResourceNotFoundException;
@@ -70,11 +68,12 @@ public class JSONSchemaResource extends AbstractResource {
     public JsonNode get() throws TrackNotFoundException {
         ObjectNode root = nodeFactory.objectNode();
         ArrayNode schemas = root.putArray(JSONConstants.SCHEMA);
-        UriBuilder builder
-                = getUriInfo().getRequestUriBuilder().path("{schema}");
-        for (String path : this.schemaPaths) {
-            schemas.add(builder.build(path.replaceFirst("/schema/", "")).toString());
-        }
+        UriBuilder builder = getUriInfo().getRequestUriBuilder().path("{schema}");
+        this.schemaPaths.stream()
+                .map(path -> path.replaceFirst("/schema/", ""))
+                .map(path -> builder.build(path))
+                .map(URI::toString)
+                .forEach(schemas::add);
         return root;
     }
 
@@ -82,12 +81,7 @@ public class JSONSchemaResource extends AbstractResource {
     @Path(SCHEMA)
     @Produces(MediaType.APPLICATION_JSON)
     public JsonNode get(@PathParam("schema") String schema) throws ResourceNotFoundException {
-        if (!schema.endsWith(".json")) {
-            String path = getUriInfo() .getPath() + ".json";
-            URI uri = getUriInfo().getBaseUriBuilder().path(path).build();
-            throw new WebApplicationException(Response.temporaryRedirect(uri).build());
-        }
-        String schemaPath = "/schema/" + schema;
+        String schemaPath = "/schema/" + (schema.endsWith(".json") ? schema : schema + ".json");
         if (!schemaPaths.contains(schemaPath)) {
             throw new ResourceNotFoundException("schema not found");
         }
