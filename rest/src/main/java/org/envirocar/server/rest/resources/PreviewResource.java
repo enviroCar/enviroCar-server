@@ -32,70 +32,45 @@ import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.filter.MeasurementFilter;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.util.OSMTileRenderer;
+import org.envirocar.server.rest.util.TileRenderer;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
 public class PreviewResource extends AbstractResource {
-	private final Track track;
+    private final Track track;
 
     @Inject
     public PreviewResource(@Assisted Track track) {
         this.track = track;
     }
-	@GET
-	@Produces(MediaTypes.PNG_IMAGE)
-	public Response getMapImage() {
-		ByteArrayOutputStream byteArrayOS = null;
-		
-		try {
-			OSMTileRenderer osm=OSMTileRenderer.create();
-			BufferedImage renderedImage = null;
-			if(osm.imageExists(track.getIdentifier())){
-				renderedImage = osm.loadImage(track.getIdentifier());
-			}else{
-				Measurements measurements = getDataService().getMeasurements(
-						new MeasurementFilter(track));
-				renderedImage = osm.createImage(measurements); 
-				BufferedImage clipImage=osm.clipImage(renderedImage,measurements, 768, 512,1);
-				renderedImage = clipImage; 
-				osm.saveImage(renderedImage, track.getIdentifier());
-			}
-			
-			byteArrayOS = new ByteArrayOutputStream();
-			ImageIO.write(renderedImage, "png", byteArrayOS);
-			byte[] imageData = byteArrayOS.toByteArray();
-			return Response.ok(imageData).build();
-		} catch (IOException e) {
-			throw new WebApplicationException(e, Status.INTERNAL_SERVER_ERROR);
-		}  catch (NullPointerException e) {
-			throw new WebApplicationException(e, Status.INTERNAL_SERVER_ERROR);
-		} 
-	}
-	
-	/*@GET
-	@Produces(MediaTypes.PNG_IMAGE)
-	public Response getMapImage() {
-		ByteArrayOutputStream byteArrayOS = null;
-		try {
-			OSMTileRenderer osm=OSMTileRenderer.create();
-			BufferedImage renderedImage = null;
-			if(osm.imageExists(track.getIdentifier())){
-				renderedImage = osm.loadImage(track.getIdentifier());
-			}else{
-				Measurements measurements = getDataService().getMeasurements(
-						new MeasurementFilter(track));
-				renderedImage = osm.createImage(measurements);
-				osm.saveImage(renderedImage, track.getIdentifier());
-			}
-			byteArrayOS = new ByteArrayOutputStream();
-			ImageIO.write(renderedImage, "png", byteArrayOS);
-			byte[] imageData = byteArrayOS.toByteArray();
-			return Response.ok(imageData).build();
-		} catch (IOException e) {
-			throw new WebApplicationException(e, Status.INTERNAL_SERVER_ERROR);
-		}  catch (NullPointerException e) {
-			throw new WebApplicationException(e, Status.INTERNAL_SERVER_ERROR);
-		} 
-	}*/
+
+    @GET
+    @Produces(MediaTypes.PNG_IMAGE)
+    public Response getMapImage() {
+        try {
+            TileRenderer renderer = new OSMTileRenderer();
+            BufferedImage image;
+            if (renderer.imageExists(track.getIdentifier())) {
+                image = renderer.loadImage(track.getIdentifier());
+            } else {
+                Measurements measurements = getMeasurements();
+                image = renderer.createImage(measurements);
+                image = renderer.clipImage(image, measurements, 768, 512, 1);
+                renderer.saveImage(image, track.getIdentifier());
+            }
+
+            try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {
+                ImageIO.write(image, "png", os);
+                byte[] imageData = os.toByteArray();
+                return Response.ok(imageData).build();
+            }
+        } catch (IOException e) {
+            throw new WebApplicationException(e, Status.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    private Measurements getMeasurements() {
+        return getDataService().getMeasurements(new MeasurementFilter(track));
+    }
 }
