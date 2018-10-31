@@ -4,19 +4,19 @@ module Jekyll
         LANG = "json"
         SCHEMA_PATH = "../rest/src/main/resources/schema"
         EXAMPLES_PATH = "_examples"
-        def initialize(tag_name, text, token)
+        def initialize(tag_name, markup, parse_context)
             super
             case tag_name
             when "include_schema"
                 @delegate = Jekyll::HighlightFileBlock.parse(
                     "highlight_file",
-                    "#{LANG} #{SCHEMA_PATH}/#{text.strip!}.json",
-                    token, {})
+                    "#{LANG} #{SCHEMA_PATH}/#{markup.strip!}.json",
+                    nil, parse_context)
             when "include_example"
                 @delegate = Jekyll::HighlightFileBlock.parse(
                     "highlight_file",
-                    "#{LANG} #{EXAMPLES_PATH}/#{text.strip!}.json",
-                    token, {})
+                    "#{LANG} #{EXAMPLES_PATH}/#{markup.strip!}.json",
+                    nil, parse_context)
             else
                 raise "Unrecognized tag name '#{tag_name}'"
             end

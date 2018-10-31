@@ -47,23 +47,23 @@ module Jekyll
     HostInfo = Struct.new(:repo_url, :file_url, :file_raw_url, :site_name, :site_url)
 
     public
-    def initialize(tag_name, text, token)
+    def initialize(tag_name, markup, parse_context)
       super
 
       case tag_name
       when 'highlight_file'
-        if parts = text.match(FILE_SYNTAX)
+        if parts = markup.match(FILE_SYNTAX)
           @language     = unquote parts[1]
           @file         = unquote parts[2]
           options_str  = parts[3]
 
           @options      = parse_options options_str
         else
-          raise SyntaxError, "Unrecognized argument '#{text}'.\n" +
+          raise SyntaxError, "Unrecognized argument '#{markup}'.\n" +
             "Usage: #{tag_name} <lang> <file> [option[=val]]*"
         end
       when 'highlight_git'
-        if parts = text.match(GIT_SYNTAX)
+        if parts = markup.match(GIT_SYNTAX)
           @language     = unquote parts[1]
           @repo_url     = unquote parts[2]
           @file         = unquote parts[3]
@@ -72,11 +72,11 @@ module Jekyll
           @options      = parse_options options_str
           @local_dir    = local_dir_for_repo @repo_url
         else
-          raise SyntaxError, "Unrecognized argument '#{text}'.\n" +
+          raise SyntaxError, "Unrecognized argument '#{markup}'.\n" +
             "Usage: #{tag_name} <lang> <repo> <file> [option[=val]]*"
         end
       when 'highlight_gist'
-        if parts = text.match(GIST_SYNTAX)
+        if parts = markup.match(GIST_SYNTAX)
           @language     = unquote parts[1]
           @gist_id      = unquote parts[2]
           @repo_url     = git_url_for_gist @gist_id
@@ -86,7 +86,7 @@ module Jekyll
           @options      = parse_options options_str
           @local_dir    = local_dir_for_repo @repo_url
         else
-          raise SyntaxError, "Unrecognized argument '#{text}'.\n" +
+          raise SyntaxError, "Unrecognized argument '#{markup}'.\n" +
             "Usage: #{tag_name} <lang> <gist> <file> [option[=val]]*"
         end
       else
@@ -152,11 +152,13 @@ BODY
         opt[1] ? opt.join('=') : opt[0]
       }.join ' '
 
+      tokenizer = Liquid::Tokenizer.new(content + "\n{% endhighlight %}")
+
       highlight_block = Jekyll::Tags::HighlightBlock.parse(
         'highlight',
         @language + (options_str.empty? ? '' : ' ' + options_str),
-        [ content, "{% endhighlight %}" ],
-        {}
+        tokenizer,
+        self.parse_context
       )
 
       highlight_block.render context
