@@ -1,13 +1,13 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "id": "http://schema.envirocar.org/user.json#",
+    "id": "https://envirocar.org/api/stable/schema/user.json#",
     "type": "object",
     "required": [
         "name"
     ],
     "allOf": [
         {
-            "$ref": "http://schema.envirocar.org/definitions.json#/optional-user-properties"
+            "$ref": "https://envirocar.org/api/stable/schema/definitions.json#/optional-user-properties"
         },
         {
             "properties": {
@@ -16,14 +16,14 @@
                     "format": "date-time"
                 },
                 "mail": {
-                    "$ref": "http://schema.envirocar.org/definitions.json#/mail"
+                    "$ref": "https://envirocar.org/api/stable/schema/definitions.json#/mail"
                 },
                 "modified": {
                     "type": "string",
                     "format": "date-time"
                 },
                 "name": {
-                    "$ref": "http://schema.envirocar.org/definitions.json#/username"
+                    "$ref": "https://envirocar.org/api/stable/schema/definitions.json#/username"
                 }
             }
         }

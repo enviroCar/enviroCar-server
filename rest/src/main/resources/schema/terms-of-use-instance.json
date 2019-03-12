@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "id": "http://schema.envirocar.org/terms-of-use-instance.json#",
+    "id": "https://envirocar.org/api/stable/schema/terms-of-use-instance.json#",
     "type": "object",
     "required": [
         "id",

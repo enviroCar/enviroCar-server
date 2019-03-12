@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "id": "http://schema.envirocar.org/activities.json#",
+    "id": "https://envirocar.org/api/stable/schema/activities.json#",
     "type": "object",
     "required": [
         "activities"
@@ -11,7 +11,7 @@
             "type": "array",
             "minItems": 0,
             "items": {
-                "$ref": "http://schema.envirocar.org/activity.json#"
+                "$ref": "https://envirocar.org/api/stable/schema/activity.json#"
             }
         }
     }

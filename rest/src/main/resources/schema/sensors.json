@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "id": "http://schema.envirocar.org/sensors.json#",
+    "id": "https://envirocar.org/api/stable/schema/sensors.json#",
     "type": "object",
     "additionalProperties": false,
     "required": [
@@ -11,7 +11,7 @@
             "type": "array",
             "minItems": 0,
             "items": {
-                "$ref": "http://schema.envirocar.org/sensor.json#"
+                "$ref": "https://envirocar.org/api/stable/schema/sensor.json#"
             }
         }
     }

@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "id": "http://schema.envirocar.org/sensor.json#",
+    "id": "https://envirocar.org/api/stable/schema/sensor.json#",
     "allOf": [
         {
             "$ref": "#/definitions/base"

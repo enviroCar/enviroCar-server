@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "id": "http://schema.envirocar.org/fueling.json#",
+    "id": "https://envirocar.org/api/stable/schema/fueling.json#",
     "type": "object",
     "properties": {
         "fuelType": {
@@ -10,10 +10,10 @@
             "type": "string"
         },
         "car": {
-            "$ref": "http://schema.envirocar.org/sensor.json#"
+            "$ref": "https://envirocar.org/api/stable/schema/sensor.json#"
         },
         "user": {
-            "$ref": "http://schema.envirocar.org/user.json#"
+            "$ref": "https://envirocar.org/api/stable/schema/user.json#"
         },
         "cost": {
             "$ref": "#/definitions/numberWithUnit"
