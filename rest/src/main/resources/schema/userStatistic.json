@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "id": "http://schema.envirocar.org/userstatistic.json#",
+    "id": "https://envirocar.org/api/stable/schema/userstatistic.json#",
     "type": "object",
     "additionalProperties": false,
     "required": [
@@ -52,12 +52,12 @@
                     },
                     "startPosition": {
                         "geometry": {
-                            "$ref": "http://schema.envirocar.org/geometry.json#"
+                            "$ref": "https://envirocar.org/api/stable/schema/geometry.json#"
                         }
                     },
                     "endPosition": {
                         "geometry": {
-                            "$ref": "http://schema.envirocar.org/geometry.json#"
+                            "$ref": "https://envirocar.org/api/stable/schema/geometry.json#"
                         }
                     }
                 }

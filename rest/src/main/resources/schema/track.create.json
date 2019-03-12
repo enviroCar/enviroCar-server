@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "id": "http://schema.envirocar.org/track.create.json#",
+    "id": "https://envirocar.org/api/stable/schema/track.create.json#",
     "type": "object",
     "additionalProperties": false,
     "required": [
@@ -48,7 +48,7 @@
             "type": "array",
             "minItems": 0,
             "items": {
-                "$ref": "http://schema.envirocar.org/measurement.create.json#"
+                "$ref": "https://envirocar.org/api/stable/schema/measurement.create.json#"
             }
         }
     }

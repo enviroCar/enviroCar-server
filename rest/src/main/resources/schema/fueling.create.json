@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "id": "http://schema.envirocar.org/fueling.create.json#",
+    "id": "https://envirocar.org/api/stable/schema/fueling.create.json#",
     "type": "object",
     "required": [
         "fuelType",

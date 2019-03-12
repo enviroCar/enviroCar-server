@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "id": "http://schema.envirocar.org/announcement.json#",
+    "id": "https://envirocar.org/api/stable/schema/announcement.json#",
     "type": "object",
     "required": [
         "id",

@@ -22,7 +22,7 @@ package org.envirocar.server.rest;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class Schemas {
-    private static final String PREFIX = "http://schema.envirocar.org/";
+    private static final String PREFIX = "https://envirocar.org/api/stable/schema/";
     public static final String ROOT = PREFIX + "root.json#";
     public static final String USERS = PREFIX + "users.json#";
     public static final String USER = PREFIX + "user.json#";

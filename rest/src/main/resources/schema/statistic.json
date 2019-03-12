@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "id": "http://schema.envirocar.org/statistic.json#",
+    "id": "https://envirocar.org/api/stable/schema/statistic.json#",
     "type": "object",
     "required": [
         "min",
@@ -13,7 +13,7 @@
     ],
     "properties": {
         "phenomenon": {
-            "$ref": "http://schema.envirocar.org/phenomenon.json#"
+            "$ref": "https://envirocar.org/api/stable/schema/phenomenon.json#"
         },
         "measurements": {
             "type": "integer",

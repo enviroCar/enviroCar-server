@@ -185,7 +185,7 @@ public class GeoJSONTest {
             Geometry parsed = conv.decode(json);
             assertThat(geom, is(equalTo(parsed)));
             assertThat(json, is(validate
-                    .validInstanceOf("http://schema.envirocar.org/geometry.json#")));
+                    .validInstanceOf("https://envirocar.org/api/stable/schema/geometry.json#")));
         } catch (GeometryConverterException ex) {
             errors.addError(ex);
         }

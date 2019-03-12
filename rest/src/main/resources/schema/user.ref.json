@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "id": "http://schema.envirocar.org/user.ref.json#",
+    "id": "https://envirocar.org/api/stable/schema/user.ref.json#",
     "type": "object",
     "additionalProperties": false,
     "required": [
@@ -8,7 +8,7 @@
     ],
     "properties": {
         "name": {
-            "$ref": "http://schema.envirocar.org/definitions.json#/username"
+            "$ref": "https://envirocar.org/api/stable/schema/definitions.json#/username"
         }
     }
 }

@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "id": "http://schema.envirocar.org/activity.json#",
+    "id": "https://envirocar.org/api/stable/schema/activity.json#",
     "type": "object",
     "required": [
         "time",
@@ -13,7 +13,7 @@
             "format": "date-time"
         },
         "user": {
-            "$ref": "http://schema.envirocar.org/user.json#"
+            "$ref": "https://envirocar.org/api/stable/schema/user.json#"
         },
         "type": {
             "type": "string"
@@ -37,7 +37,7 @@
         "group-activity": {
             "properties": {
                 "group": {
-                    "$ref": "http://schema.envirocar.org/group.json#"
+                    "$ref": "https://envirocar.org/api/stable/schema/group.json#"
                 },
                 "type": {
                     "enum": [
@@ -53,7 +53,7 @@
         "track-activity": {
             "properties": {
                 "track": {
-                    "$ref": "http://schema.envirocar.org/definitions.json#/track-ref"
+                    "$ref": "https://envirocar.org/api/stable/schema/definitions.json#/track-ref"
                 },
                 "type": {
                     "enum": [
@@ -65,7 +65,7 @@
         "user-activity": {
             "properties": {
                 "other": {
-                    "$ref": "http://schema.envirocar.org/user.json#"
+                    "$ref": "https://envirocar.org/api/stable/schema/user.json#"
                 },
                 "type": {
                     "enum": [

@@ -22,7 +22,7 @@ Every collection resource (e.g. `/measurements`) offers two query parameters: `l
 < Link: <https://envirocar.org/api/stable/measurements?limit=2&page=19>;rel=prev;type=application/json
 < Link: <https://envirocar.org/api/stable/measurements?limit=2&page=21>;rel=next;type=application/json
 < Link: <https://envirocar.org/api/stable/measurements?limit=2&page=4169>;rel=last;type=application/json
-< Content-Type: application/json; schema="http://schema.envirocar.org/measurements.json#"
+< Content-Type: application/json; schema="https://envirocar.org/api/stable/schema/measurements.json#"
 [...]
 
 ```
@@ -38,7 +38,7 @@ Note that `next` and `prev` will not be present if they are equal to `first`/`la
 < [...]
 < Link: <https://envirocar.org/api/stable/measurements?limit=100&page=84>;rel=last;type=application/json
 < Link: <https://envirocar.org/api/stable/measurements?limit=100&page=2>;rel=next;type=application/json
-< Content-Type: application/json; schema="http://schema.envirocar.org/measurements.json#"
+< Content-Type: application/json; schema="https://envirocar.org/api/stable/schema/measurements.json#"
 [...]
 ```
 
