@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.envirocar.server</groupId>
         <artifactId>server</artifactId>
-        <version>1.2.0-SNAPSHOT</version>
+        <version>2.0.0-SNAPSHOT</version>
     </parent>
     <artifactId>mongo</artifactId>
     <name>enviroCar server mongo backend</name>
