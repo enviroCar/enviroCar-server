@@ -93,6 +93,7 @@ public class FuelingJSONEncoder extends AbstractJSONEntityEncoder<Fueling> {
             fueling.put(JSONConstants.IDENTIFIER_KEY, t.getIdentifier());
         }
         fueling.put(JSONConstants.MISSED_FUEL_STOP, t.isMissedFuelStop());
+        fueling.put(JSONConstants.PARTIAL_FUELING, t.isPartialFueling());
         return fueling;
     }
 

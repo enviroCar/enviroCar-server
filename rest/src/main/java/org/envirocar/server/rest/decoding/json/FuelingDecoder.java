@@ -37,6 +37,7 @@ import com.google.inject.Inject;
 @Provider
 public class FuelingDecoder extends AbstractJSONEntityDecoder<Fueling> {
     public static final boolean MISSED_FUEL_STOP_DEFAULT_VALUE = true;
+    public static final boolean PARTIAL_FUELING_DEFAULT_VALUE = false;
     private final SensorDao sensorDao;
 
     /**
@@ -58,6 +59,7 @@ public class FuelingDecoder extends AbstractJSONEntityDecoder<Fueling> {
         fueling.setCost(decodeDimensionedNumber(j.path(JSONConstants.COST)));
         fueling.setMileage(decodeDimensionedNumber(j.path(JSONConstants.MILEAGE)));
         fueling.setMissedFuelStop(j.path(JSONConstants.MISSED_FUEL_STOP).asBoolean(MISSED_FUEL_STOP_DEFAULT_VALUE));
+        fueling.setPartialFueling(j.path(JSONConstants.PARTIAL_FUELING).asBoolean(PARTIAL_FUELING_DEFAULT_VALUE));
         fueling.setTime(getDateTimeFormat().parseDateTime(j.path(JSONConstants.TIME_KEY).textValue()));
         fueling.setVolume(decodeDimensionedNumber(j.path(JSONConstants.VOLUME)));
         fueling.setCar(sensorDao.getByIdentifier(j.path(JSONConstants.CAR_KEY).textValue()));
