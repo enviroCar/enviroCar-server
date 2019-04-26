@@ -74,8 +74,7 @@ public class FuelingsResource extends AbstractResource {
     public Response create(Fueling fueling) {
         fueling.setUser(getCurrentUser());
         Fueling f = getDataService().createFueling(fueling);
-        return Response.created(getUriInfo().getAbsolutePathBuilder().path(f
-                .getIdentifier()).build()).build();
+        return Response.created(getUriInfo().getAbsolutePathBuilder().path(f.getIdentifier()).build()).build();
     }
 
     @GET
