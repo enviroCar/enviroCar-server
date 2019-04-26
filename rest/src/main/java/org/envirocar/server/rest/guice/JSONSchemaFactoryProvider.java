@@ -23,16 +23,15 @@ import java.util.concurrent.ExecutionException;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.fge.jsonschema.SchemaVersion;
-import com.github.fge.jsonschema.cfg.LoadingConfiguration;
-import com.github.fge.jsonschema.cfg.LoadingConfigurationBuilder;
 import com.github.fge.jsonschema.cfg.ValidationConfiguration;
 import com.github.fge.jsonschema.cfg.ValidationConfigurationBuilder;
-import com.github.fge.jsonschema.exceptions.unchecked.ProcessingError;
+import com.github.fge.jsonschema.core.load.configuration.LoadingConfiguration;
+import com.github.fge.jsonschema.core.load.configuration.LoadingConfigurationBuilder;
+import com.github.fge.jsonschema.core.ref.JsonRef;
 import com.github.fge.jsonschema.format.draftv3.DateAttribute;
 import com.github.fge.jsonschema.library.DraftV4Library;
 import com.github.fge.jsonschema.library.Library;
 import com.github.fge.jsonschema.main.JsonSchemaFactory;
-import com.github.fge.jsonschema.ref.JsonRef;
 import com.google.common.cache.LoadingCache;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -69,9 +68,7 @@ public class JSONSchemaFactoryProvider implements Provider<JsonSchemaFactory> {
         for (String schema : schemas) {
             try {
                 cfgb.preloadSchema(cache.get(schema));
-            } catch (ProcessingError ex) {
-                throw new ProvisionException("Error loading " + schema, ex);
-            } catch (ExecutionException ex) {
+            } catch (Throwable ex) {
                 throw new ProvisionException("Error loading " + schema, ex);
             }
         }
