@@ -23,12 +23,14 @@ import java.lang.reflect.Type;
 
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.ext.MessageBodyWriter;
 
 import org.envirocar.server.rest.MediaTypes;
+import org.envirocar.server.rest.PrefixedUriInfo;
 import org.envirocar.server.rest.encoding.RDFEntityEncoder;
 
 import com.google.inject.Inject;
@@ -46,6 +48,8 @@ public abstract class AbstractRDFMessageBodyWriter<T>
     private final Class<T> classType;
     @Inject
     private Provider<UriInfo> uriInfo;
+    @Inject
+    private Provider<HttpHeaders> headers;
 
     public AbstractRDFMessageBodyWriter(Class<T> classType) {
         this.classType = classType;
@@ -73,7 +77,7 @@ public abstract class AbstractRDFMessageBodyWriter<T>
         m.setNsPrefix("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
         m.setNsPrefix("rdfs", "http://www.w3.org/2000/01/rdf-schema#");
         if (mt.isCompatible(MediaTypes.XML_RDF_TYPE)) {
-            String base = uriInfo.get().getAbsolutePath().toASCIIString();
+            String base = new PrefixedUriInfo(uriInfo.get(), headers.get()).getAbsolutePath().toASCIIString();
             m.write(out, "RDF/XML-ABBREV", base);
         } else if (mt.isCompatible(MediaTypes.TURTLE_TYPE) ||
                    mt.isCompatible(MediaTypes.TURTLE_ALT_TYPE)) {
