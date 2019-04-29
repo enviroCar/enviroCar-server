@@ -17,18 +17,16 @@
 package org.envirocar.server.rest.encoding.json;
 
 
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.ext.Provider;
-
-import org.envirocar.server.core.entities.TermsOfUseInstance;
-import org.envirocar.server.core.entities.TermsOfUse;
-import org.envirocar.server.rest.JSONConstants;
-import org.envirocar.server.rest.encoding.JSONEntityEncoder;
-import org.envirocar.server.rest.rights.AccessRights;
-
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
+import org.envirocar.server.core.entities.TermsOfUse;
+import org.envirocar.server.core.entities.TermsOfUseInstance;
+import org.envirocar.server.rest.JSONConstants;
+import org.envirocar.server.rest.encoding.JSONEntityEncoder;
+
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.Provider;
 
 /**
  * TODO JavaDoc
@@ -47,13 +45,12 @@ public class TermsOfUseJSONEncoder extends AbstractJSONEntityEncoder<TermsOfUse>
     }
 
     @Override
-    public ObjectNode encodeJSON(TermsOfUse t, AccessRights rights,
-                                 MediaType mediaType) {
+    public ObjectNode encodeJSON(TermsOfUse t,MediaType mediaType) {
         ObjectNode root = getJsonFactory().objectNode();
         ArrayNode termsOfUse = root.putArray(JSONConstants.TERMS_OF_USE_KEY);
         
         for (TermsOfUseInstance u : t) {
-            termsOfUse.add(termsOfUseEncoder.encodeJSON(u, rights, mediaType));
+            termsOfUse.add(termsOfUseEncoder.encodeJSON(u, mediaType));
         }
         return root;
     }

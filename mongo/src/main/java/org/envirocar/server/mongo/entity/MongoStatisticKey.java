@@ -19,7 +19,8 @@ package org.envirocar.server.mongo.entity;
 import org.mongodb.morphia.Key;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Property;
-import com.google.common.base.Objects;
+
+import java.util.Objects;
 
 /**
  * TODO JavaDoc
@@ -30,28 +31,23 @@ import com.google.common.base.Objects;
 public class MongoStatisticKey {
     public static final String ALL = "all";
     public static final String TRACK = "track";
-    public static final String USER = "user";
     public static final String SENSOR = "sensor";
     @Property(TRACK)
     private Key<MongoTrack> track;
-    @Property(USER)
-    private Key<MongoUser> user;
     @Property(SENSOR)
     private Key<MongoSensor> sensor;
     @Property(ALL)
     private boolean all = true;
 
     public MongoStatisticKey(Key<MongoTrack> track,
-                             Key<MongoUser> user,
                              Key<MongoSensor> sensor) {
         this.track = track;
-        this.user = user;
         this.sensor = sensor;
-        all = track == null && user == null && sensor == null;
+        all = track == null && sensor == null;
     }
 
     public MongoStatisticKey() {
-        this(null, null, null);
+        this(null, null);
     }
 
     public Key<MongoTrack> getTrack() {
@@ -60,16 +56,7 @@ public class MongoStatisticKey {
 
     public void setTrack(Key<MongoTrack> track) {
         this.track = track;
-        this.all = track == null && user == null && sensor == null;
-    }
-
-    public Key<MongoUser> getUser() {
-        return user;
-    }
-
-    public void setUser(Key<MongoUser> user) {
-        this.user = user;
-        this.all = track == null && user == null && sensor == null;
+        this.all = track == null && sensor == null;
     }
 
     public Key<MongoSensor> getSensor() {
@@ -78,12 +65,12 @@ public class MongoStatisticKey {
 
     public void setSensor(Key<MongoSensor> sensor) {
         this.sensor = sensor;
-        this.all = track == null && user == null && sensor == null;
+        this.all = track == null && sensor == null;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(this.track, this.user, this.sensor);
+        return Objects.hash(this.track, this.sensor);
     }
 
     @Override
@@ -95,9 +82,8 @@ public class MongoStatisticKey {
             return false;
         }
         final MongoStatisticKey other = (MongoStatisticKey) obj;
-        return Objects.equal(this.track, other.track) &&
-               Objects.equal(this.user, other.user) &&
-               Objects.equal(this.sensor, other.sensor);
+        return Objects.equals(this.track, other.track) &&
+                Objects.equals(this.sensor, other.sensor);
 
     }
 
@@ -108,7 +94,6 @@ public class MongoStatisticKey {
     public void setAll(boolean all) {
         this.all = all;
         if (all) {
-            this.user = null;
             this.track = null;
             this.sensor = null;
         }
@@ -116,8 +101,8 @@ public class MongoStatisticKey {
 
     @Override
     public String toString() {
-        return String.format("MongoStatisticKey [user=%s, track=%s, sensor=%s]", this.user, this.track, this.sensor);
+        return String.format("MongoStatisticKey [track=%s, sensor=%s]", this.track, this.sensor);
     }
-    
-    
+
+
 }

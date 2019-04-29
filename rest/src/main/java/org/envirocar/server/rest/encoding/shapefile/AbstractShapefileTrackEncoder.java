@@ -16,17 +16,13 @@
  */
 package org.envirocar.server.rest.encoding.shapefile;
 
-import java.io.File;
-
-import javax.ws.rs.core.MediaType;
-
+import com.google.inject.Inject;
 import org.envirocar.server.core.exception.TrackTooLongException;
 import org.envirocar.server.rest.encoding.ShapefileTrackEncoder;
-import org.envirocar.server.rest.rights.AccessRights;
 import org.joda.time.format.DateTimeFormatter;
 
-import com.google.inject.Inject;
-import com.google.inject.Provider;
+import javax.ws.rs.core.MediaType;
+import java.io.File;
 
 /**
  * TODO JavaDoc
@@ -37,7 +33,6 @@ public abstract class AbstractShapefileTrackEncoder<T>
         extends AbstractShapefileMessageBodyWriter<T>
         implements ShapefileTrackEncoder<T> {
     private DateTimeFormatter dateTimeFormat;
-    private Provider<AccessRights> rights;
 
     public AbstractShapefileTrackEncoder(Class<T> classType) {
         super(classType);
@@ -52,13 +47,8 @@ public abstract class AbstractShapefileTrackEncoder<T>
         this.dateTimeFormat = dateTimeFormat;
     }
 
-    @Inject
-    public void setRights(Provider<AccessRights> rights) {
-        this.rights = rights;
-    }
-
     @Override
-    public File encodeShapefile(T t, MediaType mt) throws TrackTooLongException{
-        return encodeShapefile(t, rights.get(), mt);
+    public File encodeShapefile(T t, MediaType mt) throws TrackTooLongException {
+        return encodeShapefile(t, mt);
     }
 }

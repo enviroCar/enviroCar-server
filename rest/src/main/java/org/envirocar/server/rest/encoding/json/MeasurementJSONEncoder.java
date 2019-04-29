@@ -16,22 +16,19 @@
  */
 package org.envirocar.server.rest.encoding.json;
 
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.ext.Provider;
-
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.inject.Inject;
+import com.vividsolutions.jts.geom.Geometry;
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.MeasurementValue;
 import org.envirocar.server.core.entities.Sensor;
-import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.util.GeoJSONConstants;
 import org.envirocar.server.rest.JSONConstants;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.encoding.JSONEntityEncoder;
-import org.envirocar.server.rest.rights.AccessRights;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.inject.Inject;
-import com.vividsolutions.jts.geom.Geometry;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.Provider;
 
 /**
  * TODO JavaDoc
@@ -42,68 +39,59 @@ import com.vividsolutions.jts.geom.Geometry;
 @Provider
 public class MeasurementJSONEncoder extends AbstractJSONEntityEncoder<Measurement> {
     private final JSONEntityEncoder<Geometry> geometryEncoder;
-    private final JSONEntityEncoder<User> userProvider;
     private final JSONEntityEncoder<Sensor> sensorProvider;
 
     @Inject
     public MeasurementJSONEncoder(JSONEntityEncoder<Geometry> geometryEncoder,
-                                  JSONEntityEncoder<User> userProvider,
                                   JSONEntityEncoder<Sensor> sensorProvider) {
         super(Measurement.class);
         this.geometryEncoder = geometryEncoder;
-        this.userProvider = userProvider;
         this.sensorProvider = sensorProvider;
     }
 
     @Override
-    public ObjectNode encodeJSON(Measurement t, AccessRights rights,
-                                 MediaType mediaType) {
+    public ObjectNode encodeJSON(Measurement t, MediaType mediaType) {
         ObjectNode measurement = getJsonFactory().objectNode();
         measurement.put(GeoJSONConstants.TYPE_KEY, GeoJSONConstants.FEATURE_TYPE);
-        if (t.hasGeometry() && rights.canSeeGeometryOf(t)) {
-            measurement.set(JSONConstants.GEOMETRY_KEY, geometryEncoder.encodeJSON(t.getGeometry(), rights, mediaType));
+        if (t.hasGeometry()) {
+            measurement.set(JSONConstants.GEOMETRY_KEY, geometryEncoder.encodeJSON(t.getGeometry(), mediaType));
         }
 
         ObjectNode properties = measurement.putObject(GeoJSONConstants.PROPERTIES_KEY);
         if (t.hasIdentifier()) {
             properties.put(JSONConstants.IDENTIFIER_KEY, t.getIdentifier());
         }
-        if (t.hasTime() && rights.canSeeTimeOf(t)) {
+        if (t.hasTime()) {
             properties.put(JSONConstants.TIME_KEY, getDateTimeFormat().print(t.getTime()));
         }
 
         if (!mediaType.equals(MediaTypes.TRACK_TYPE)) {
-            if (t.hasSensor() && rights.canSeeSensorOf(t)) {
-                properties.set(JSONConstants.SENSOR_KEY, sensorProvider.encodeJSON(t.getSensor(), rights, mediaType));
+            if (t.hasSensor()) {
+                properties.set(JSONConstants.SENSOR_KEY, sensorProvider.encodeJSON(t.getSensor(), mediaType));
             }
-            if (t.hasUser() && rights.canSeeUserOf(t)) {
-                properties.set(JSONConstants.USER_KEY, userProvider.encodeJSON(t.getUser(), rights, mediaType));
-            }
-            if (t.hasModificationTime() && rights.canSeeModificationTimeOf(t)) {
+            if (t.hasModificationTime()) {
                 properties.put(JSONConstants.MODIFIED_KEY, getDateTimeFormat().print(t.getModificationTime()));
             }
-            if (t.hasCreationTime() && rights.canSeeCreationTimeOf(t)) {
+            if (t.hasCreationTime()) {
                 properties.put(JSONConstants.CREATED_KEY, getDateTimeFormat().print(t.getCreationTime()));
             }
-            if (t.hasTrack() && rights.canSeeTracks()) {
+            if (t.hasTrack()) {
                 properties.put(JSONConstants.TRACK_KEY, t.getTrack().getIdentifier());
             }
         }
         if (mediaType.equals(MediaTypes.MEASUREMENT_TYPE) ||
-            mediaType.equals(MediaTypes.MEASUREMENTS_TYPE) ||
-            mediaType.equals(MediaTypes.TRACK_TYPE)) {
-            if (rights.canSeeValuesOf(t)) {
-                ObjectNode values = properties
-                        .putObject(JSONConstants.PHENOMENONS_KEY);
+                mediaType.equals(MediaTypes.MEASUREMENTS_TYPE) ||
+                mediaType.equals(MediaTypes.TRACK_TYPE)) {
+            ObjectNode values = properties
+                    .putObject(JSONConstants.PHENOMENONS_KEY);
 
-                for (MeasurementValue mv : t.getValues()) {
-                    if (mv.hasPhenomenon() && mv.hasValue()) {
-                        ObjectNode phenomenon = values.objectNode();
-                        phenomenon.putPOJO(JSONConstants.VALUE_KEY, mv.getValue());
-                        values.set(mv.getPhenomenon().getName(), phenomenon);
-                        if (mv.getPhenomenon().hasUnit()) {
-                            phenomenon.put(JSONConstants.UNIT_KEY, mv.getPhenomenon().getUnit());
-                        }
+            for (MeasurementValue mv : t.getValues()) {
+                if (mv.hasPhenomenon() && mv.hasValue()) {
+                    ObjectNode phenomenon = values.objectNode();
+                    phenomenon.putPOJO(JSONConstants.VALUE_KEY, mv.getValue());
+                    values.set(mv.getPhenomenon().getName(), phenomenon);
+                    if (mv.getPhenomenon().hasUnit()) {
+                        phenomenon.put(JSONConstants.UNIT_KEY, mv.getPhenomenon().getUnit());
                     }
                 }
             }

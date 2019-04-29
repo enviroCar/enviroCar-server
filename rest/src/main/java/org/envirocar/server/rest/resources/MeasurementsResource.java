@@ -16,46 +16,23 @@
  */
 package org.envirocar.server.rest.resources;
 
-import java.security.InvalidParameterException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import javax.annotation.Nullable;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Response;
-
-import org.envirocar.server.core.SpatialFilter;
-import org.envirocar.server.core.SpatialFilter.SpatialFilterOperator;
-import org.envirocar.server.core.entities.Measurement;
-import org.envirocar.server.core.entities.Measurements;
-import org.envirocar.server.core.entities.Track;
-import org.envirocar.server.core.entities.User;
-import org.envirocar.server.core.exception.BadRequestException;
-import org.envirocar.server.core.exception.MeasurementNotFoundException;
-import org.envirocar.server.core.exception.ResourceAlreadyExistException;
-import org.envirocar.server.core.exception.TrackNotFoundException;
-import org.envirocar.server.core.exception.UserNotFoundException;
-import org.envirocar.server.core.exception.ValidationException;
-import org.envirocar.server.core.filter.MeasurementFilter;
-import org.envirocar.server.rest.BoundingBox;
-import org.envirocar.server.rest.MediaTypes;
-import org.envirocar.server.rest.NearPoint;
-import org.envirocar.server.rest.RESTConstants;
-import org.envirocar.server.rest.Schemas;
-import org.envirocar.server.rest.auth.Authenticated;
-import org.envirocar.server.rest.validation.Schema;
-
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.vividsolutions.jts.geom.GeometryFactory;
+import org.envirocar.server.core.SpatialFilter;
+import org.envirocar.server.core.entities.Measurement;
+import org.envirocar.server.core.entities.Measurements;
+import org.envirocar.server.core.entities.Track;
+import org.envirocar.server.core.exception.*;
+import org.envirocar.server.core.filter.MeasurementFilter;
+import org.envirocar.server.rest.*;
+import org.envirocar.server.rest.auth.Authenticated;
+import org.envirocar.server.rest.validation.Schema;
+
+import javax.annotation.Nullable;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Response;
+import java.security.InvalidParameterException;
 
 /**
  * TODO JavaDoc
@@ -65,30 +42,24 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 public class MeasurementsResource extends AbstractResource {
     public static final String MEASUREMENT = "{measurement}";
     private final Track track;
-    private final User user;
     private final GeometryFactory geometryFactory;
 
     @Inject
     public MeasurementsResource(@Assisted @Nullable Track track,
-                                @Assisted @Nullable User user,
                                 GeometryFactory geometryFactory) {
         this.track = track;
-        this.user = user;
         this.geometryFactory = geometryFactory;
     }
 
     @GET
     @Schema(response = Schemas.MEASUREMENTS)
-    @Produces({ MediaTypes.MEASUREMENTS,
-                MediaTypes.XML_RDF,
-                MediaTypes.TURTLE,
-                MediaTypes.TURTLE_ALT })
+    @Produces({MediaTypes.MEASUREMENTS})
     public Measurements get(
             @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit,
             @QueryParam(RESTConstants.PAGE) @DefaultValue("0") int page,
             @QueryParam(RESTConstants.BBOX) BoundingBox bbox,
             @QueryParam(RESTConstants.NEAR_POINT) NearPoint nearPoint)
-            throws UserNotFoundException, TrackNotFoundException, BadRequestException {
+            throws TrackNotFoundException, BadRequestException {
     	
     	//check spatial filter
         SpatialFilter sf = null;
@@ -102,7 +73,7 @@ public class MeasurementsResource extends AbstractResource {
         }
 
         return getDataService()
-                .getMeasurements(new MeasurementFilter(track, user, sf,
+                .getMeasurements(new MeasurementFilter(track, sf,
                                                        parseTemporalFilterForInstant(),
                                                        getPagination()));
     }
@@ -112,15 +83,11 @@ public class MeasurementsResource extends AbstractResource {
     @Schema(request = Schemas.MEASUREMENT_CREATE)
     @Consumes({ MediaTypes.MEASUREMENT_CREATE })
     public Response create(Measurement measurement) throws
-            ResourceAlreadyExistException, ValidationException,
-            UserNotFoundException {
+            ResourceAlreadyExistException, ValidationException{
         Measurement m;
         if (track != null) {
-            checkRights(getRights().canModify(track));
-            measurement.setUser(getCurrentUser());
             m = getDataService().createMeasurement(track, measurement);
         } else {
-            measurement.setUser(getCurrentUser());
             m = getDataService().createMeasurement(measurement);
         }
         return Response.created(
@@ -132,15 +99,7 @@ public class MeasurementsResource extends AbstractResource {
     @Path(MEASUREMENT)
     public MeasurementResource measurement(@PathParam("measurement") String id)
             throws MeasurementNotFoundException {
-        if (user != null) {
-            checkRights(getRights().canSeeMeasurementsOf(user));
-        }
-        if (track != null) {
-            checkRights(getRights().canSeeMeasurementsOf(track));
-        }
-
         Measurement m = getDataService().getMeasurement(id);
-        checkRights(getRights().canSee(m));
-        return getResourceFactory().createMeasurementResource(m, user, track);
+        return getResourceFactory().createMeasurementResource(m, track);
     }
 }

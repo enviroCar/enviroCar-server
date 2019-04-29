@@ -16,15 +16,13 @@
  */
 package org.envirocar.server.rest.encoding.json;
 
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.ext.Provider;
-
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.envirocar.server.core.entities.TermsOfUseInstance;
 import org.envirocar.server.rest.JSONConstants;
 import org.envirocar.server.rest.MediaTypes;
-import org.envirocar.server.rest.rights.AccessRights;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.Provider;
 
 /**
  * TODO JavaDoc
@@ -39,8 +37,7 @@ public class TermsOfUseInstanceJSONEncoder extends AbstractJSONEntityEncoder<Ter
     }
 
     @Override
-    public ObjectNode encodeJSON(TermsOfUseInstance t, AccessRights rights,
-                                 MediaType mediaType) {
+    public ObjectNode encodeJSON(TermsOfUseInstance t, MediaType mediaType) {
         ObjectNode termsOfUse = getJsonFactory().objectNode();
         if (t.getIdentifier() != null) {
             termsOfUse.put(JSONConstants.IDENTIFIER_KEY, t.getIdentifier());

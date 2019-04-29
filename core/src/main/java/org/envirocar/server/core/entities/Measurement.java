@@ -50,12 +50,6 @@ public interface Measurement extends BaseEntity, Comparable<Measurement> {
 
     void removeValue(MeasurementValue value);
 
-    User getUser();
-
-    void setUser(User user);
-
-    boolean hasUser();
-
     Sensor getSensor();
 
     void setSensor(Sensor sensor);

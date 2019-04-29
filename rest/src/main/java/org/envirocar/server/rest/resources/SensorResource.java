@@ -44,17 +44,13 @@ public class SensorResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.SENSOR)
-    @Produces({ MediaTypes.SENSOR,
-                MediaTypes.XML_RDF,
-                MediaTypes.TURTLE,
-                MediaTypes.TURTLE_ALT })
+    @Produces({ MediaTypes.SENSOR })
     public Sensor get() {
         return this.sensor;
     }
 
     @Path(STATISTICS)
     public StatisticsResource statistics() {
-        getRights().canSeeStatisticsOf(this.sensor);
         return getResourceFactory().createStatisticsResource(this.sensor);
     }
 }

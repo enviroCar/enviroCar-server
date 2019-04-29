@@ -16,50 +16,12 @@
  */
 package org.envirocar.server.core;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.envirocar.server.core.dao.AnnouncementsDao;
-import org.envirocar.server.core.dao.BadgesDao;
-import org.envirocar.server.core.dao.FuelingDao;
-import org.envirocar.server.core.dao.MeasurementDao;
-import org.envirocar.server.core.dao.PhenomenonDao;
-import org.envirocar.server.core.dao.SensorDao;
-import org.envirocar.server.core.dao.TermsOfUseDao;
-import org.envirocar.server.core.dao.TrackDao;
-import org.envirocar.server.core.entities.Announcement;
-import org.envirocar.server.core.entities.Announcements;
-import org.envirocar.server.core.entities.Badges;
-import org.envirocar.server.core.entities.Fueling;
-import org.envirocar.server.core.entities.Fuelings;
-import org.envirocar.server.core.entities.Measurement;
-import org.envirocar.server.core.entities.Measurements;
-import org.envirocar.server.core.entities.Phenomenon;
-import org.envirocar.server.core.entities.Phenomenons;
-import org.envirocar.server.core.entities.Sensor;
-import org.envirocar.server.core.entities.Sensors;
-import org.envirocar.server.core.entities.TermsOfUse;
-import org.envirocar.server.core.entities.TermsOfUseInstance;
-import org.envirocar.server.core.entities.Track;
-import org.envirocar.server.core.entities.Tracks;
-import org.envirocar.server.core.entities.User;
-import org.envirocar.server.core.event.ChangedTrackEvent;
-import org.envirocar.server.core.event.CreatedFuelingEvent;
-import org.envirocar.server.core.event.CreatedMeasurementEvent;
-import org.envirocar.server.core.event.CreatedPhenomenonEvent;
-import org.envirocar.server.core.event.CreatedSensorEvent;
-import org.envirocar.server.core.event.CreatedTrackEvent;
-import org.envirocar.server.core.event.DeletedMeasurementEvent;
-import org.envirocar.server.core.event.DeletedTrackEvent;
-import org.envirocar.server.core.exception.FuelingNotFoundException;
-import org.envirocar.server.core.exception.IllegalModificationException;
-import org.envirocar.server.core.exception.MeasurementNotFoundException;
-import org.envirocar.server.core.exception.PhenomenonNotFoundException;
-import org.envirocar.server.core.exception.ResourceNotFoundException;
-import org.envirocar.server.core.exception.SensorNotFoundException;
-import org.envirocar.server.core.exception.TrackNotFoundException;
-import org.envirocar.server.core.exception.ValidationException;
-import org.envirocar.server.core.filter.FuelingFilter;
+import com.google.common.eventbus.EventBus;
+import com.google.inject.Inject;
+import org.envirocar.server.core.dao.*;
+import org.envirocar.server.core.entities.*;
+import org.envirocar.server.core.event.*;
+import org.envirocar.server.core.exception.*;
 import org.envirocar.server.core.filter.MeasurementFilter;
 import org.envirocar.server.core.filter.SensorFilter;
 import org.envirocar.server.core.filter.TrackFilter;
@@ -71,8 +33,8 @@ import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.eventbus.EventBus;
-import com.google.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * TODO JavaDoc
@@ -90,29 +52,22 @@ public class DataServiceImpl implements DataService {
     private final SensorDao sensorDao;
     private final PhenomenonDao phenomenonDao;
     private final TermsOfUseDao termsOfUseDao;
-    private final FuelingDao fuelingDao;
     private final EntityValidator<Track> trackValidator;
     private final EntityUpdater<Track> trackUpdater;
     private final EntityUpdater<Measurement> measurementUpdater;
     private final EntityValidator<Measurement> measurementValidator;
-    private final EntityValidator<Fueling> fuelingValidator;
     private final EventBus eventBus;
-	private final AnnouncementsDao announcementsDao;
-	private final BadgesDao badgesDao;
-	private final GeometryOperations geomOps;
+    private final GeometryOperations geomOps;
     private final CarSimilarityService carSimilarity;
 
     @Inject
     public DataServiceImpl(TrackDao trackDao, MeasurementDao measurementDao,
                            SensorDao sensorDao, PhenomenonDao phenomenonDao,
                            TermsOfUseDao termsOfUseDao,
-                           AnnouncementsDao announcementsDao,
-                           BadgesDao badgesDao, FuelingDao fuelingDao,
                            EntityValidator<Track> trackValidator,
                            EntityUpdater<Track> trackUpdater,
                            EntityUpdater<Measurement> measurementUpdater,
                            EntityValidator<Measurement> measurementValidator,
-                           EntityValidator<Fueling> fuelingValidator,
                            EventBus eventBus,
                            GeometryOperations geomOps,
                            CarSimilarityService carSimilarity) {
@@ -126,10 +81,6 @@ public class DataServiceImpl implements DataService {
         this.measurementValidator = measurementValidator;
         this.eventBus = eventBus;
         this.termsOfUseDao = termsOfUseDao;
-        this.announcementsDao = announcementsDao;
-        this.badgesDao = badgesDao;
-        this.fuelingValidator = fuelingValidator;
-        this.fuelingDao = fuelingDao;
         this.geomOps = geomOps;
         this.carSimilarity = carSimilarity;
     }
@@ -140,7 +91,7 @@ public class DataServiceImpl implements DataService {
         this.trackValidator.validateCreate(track);
         this.trackUpdater.update(changes, track);
         this.trackDao.save(track);
-        this.eventBus.post(new ChangedTrackEvent(track.getUser(), track));
+        this.eventBus.post(new ChangedTrackEvent(track));
         return track;
     }
 
@@ -157,7 +108,7 @@ public class DataServiceImpl implements DataService {
     public Track createTrack(Track track) throws ValidationException {
         this.trackValidator.validateCreate(track);
         this.trackDao.create(track);
-        this.eventBus.post(new CreatedTrackEvent(track.getUser(), track));
+        this.eventBus.post(new CreatedTrackEvent(track));
         return track;
     }
 
@@ -167,7 +118,6 @@ public class DataServiceImpl implements DataService {
         this.trackValidator.validateCreate(track);
         DateTime begin = null, end = null;
         for (Measurement m : measurements) {
-            m.setUser(track.getUser());
             this.measurementValidator.validateCreate(m);
             if (begin == null || m.getTime().isBefore(begin)) {
                 begin = m.getTime();
@@ -180,14 +130,14 @@ public class DataServiceImpl implements DataService {
         track.setEnd(end);
 
         if (!track.hasLength()) {
-        	track.setLength(geomOps.calculateLength(measurements));
+            track.setLength(geomOps.calculateLength(measurements));
         }
 
         this.trackDao.create(track);
         for (Measurement m : measurements) {
             this.measurementDao.create(m);
         }
-        this.eventBus.post(new CreatedTrackEvent(track.getUser(), track));
+        this.eventBus.post(new CreatedTrackEvent(track));
         return track;
     }
 
@@ -196,11 +146,11 @@ public class DataServiceImpl implements DataService {
         MeasurementFilter filter = new MeasurementFilter(track);
         Measurements measurements = getMeasurements(filter);
         Iterable<Measurement> measurementIterator = (Iterable<Measurement>) measurements;
-            List<Measurement> list = new ArrayList<>();
-            for (Measurement m : measurementIterator) {
-                list.add(m);
-            }
-        this.eventBus.post(new DeletedTrackEvent(track, track.getUser(), measurements));
+        List<Measurement> list = new ArrayList<>();
+        for (Measurement m : measurementIterator) {
+            list.add(m);
+        }
+        this.eventBus.post(new DeletedTrackEvent(track, measurements));
         this.trackDao.delete(track);
     }
 
@@ -208,7 +158,7 @@ public class DataServiceImpl implements DataService {
     public Measurement createMeasurement(Measurement m) {
         this.measurementValidator.validateCreate(m);
         this.measurementDao.create(m);
-        this.eventBus.post(new CreatedMeasurementEvent(m.getUser(), m));
+        this.eventBus.post(new CreatedMeasurementEvent(m));
         return m;
     }
 
@@ -224,7 +174,7 @@ public class DataServiceImpl implements DataService {
             track.setEnd(m.getTime());
         }
         this.trackDao.save(track);
-        this.eventBus.post(new CreatedMeasurementEvent(m.getUser(), m));
+        this.eventBus.post(new CreatedMeasurementEvent( m));
         return m;
     }
 
@@ -241,7 +191,7 @@ public class DataServiceImpl implements DataService {
     @Override
     public void deleteMeasurement(Measurement m) {
         this.measurementDao.delete(m);
-        this.eventBus.post(new DeletedMeasurementEvent(m, m.getUser()));
+        this.eventBus.post(new DeletedMeasurementEvent(m));
     }
 
     @Override
@@ -303,66 +253,18 @@ public class DataServiceImpl implements DataService {
         return this.sensorDao.get(request);
     }
 
-	@Override
-	public TermsOfUse getTermsOfUse(Pagination p) {
-		return this.termsOfUseDao.get(p);
-	}
-
-	@Override
-	public TermsOfUseInstance getTermsOfUseInstance(String id)
-			throws ResourceNotFoundException {
-		TermsOfUseInstance result = this.termsOfUseDao.getById(id);
-		if (result == null) {
-			throw new ResourceNotFoundException(String.format("TermsOfUse with id '%s' not found.", id));
-		}
-		return result;
-	}
-
-	@Override
-	public Announcements getAnnouncements(Pagination pagination) {
-		return this.announcementsDao.get(pagination);
-	}
-
-	@Override
-	public Announcement getAnnouncement(String id)
-			throws ResourceNotFoundException {
-		Announcement result = this.announcementsDao.getById(id);
-		if (result == null) {
-			throw new ResourceNotFoundException(String.format("Announcement with id '%s' not found.", id));
-		}
-		return result;
-	}
-
-	@Override
-	public Badges getBadges(Pagination pagination) {
-		return this.badgesDao.get(pagination);
-	}
-
     @Override
-    public Fueling createFueling(Fueling fueling) {
-        this.fuelingValidator.validateCreate(fueling);
-        Fueling f = this.fuelingDao.create(fueling);
-        this.eventBus.post(new CreatedFuelingEvent(f.getUser(), f));
-        return f;
+    public TermsOfUse getTermsOfUse(Pagination p) {
+        return this.termsOfUseDao.get(p);
     }
 
     @Override
-    public Fuelings getFuelings(FuelingFilter filter) {
-        return this.fuelingDao.get(filter);
-    }
-
-    @Override
-    public Fueling getFueling(User user, String id)
-            throws FuelingNotFoundException {
-        Fueling m = this.fuelingDao.getById(id);
-        if (m == null || !m.getUser().getName().equals(user.getName())) {
-            throw new FuelingNotFoundException(id);
+    public TermsOfUseInstance getTermsOfUseInstance(String id)
+            throws ResourceNotFoundException {
+        TermsOfUseInstance result = this.termsOfUseDao.getById(id);
+        if (result == null) {
+            throw new ResourceNotFoundException(String.format("TermsOfUse with id '%s' not found.", id));
         }
-        return m;
-    }
-
-    @Override
-    public void deleteFueling(Fueling fueling) {
-        this.fuelingDao.delete(fueling);
+        return result;
     }
 }

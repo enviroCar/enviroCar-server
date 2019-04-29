@@ -16,34 +16,21 @@
  */
 package org.envirocar.server.rest.encoding.csv;
 
-import java.io.BufferedWriter;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStreamWriter;
+import com.google.inject.Inject;
+import com.vividsolutions.jts.geom.Point;
+import org.envirocar.server.core.DataService;
+import org.envirocar.server.core.entities.*;
+import org.envirocar.server.core.filter.MeasurementFilter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.Provider;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.ext.Provider;
-
-import org.envirocar.server.core.DataService;
-import org.envirocar.server.core.entities.Measurement;
-import org.envirocar.server.core.entities.MeasurementValue;
-import org.envirocar.server.core.entities.MeasurementValues;
-import org.envirocar.server.core.entities.Measurements;
-import org.envirocar.server.core.entities.Phenomenon;
-import org.envirocar.server.core.entities.Track;
-import org.envirocar.server.core.filter.MeasurementFilter;
-import org.envirocar.server.rest.rights.AccessRights;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.google.inject.Inject;
-import com.vividsolutions.jts.geom.Point;
 
 /**
  * TODO: Javadoc
@@ -65,27 +52,22 @@ public class TrackCSVEncoder extends AbstractCSVTrackEncoder<Track> {
 	}
 
 	@Override
-	public InputStream encodeCSV(Track t, AccessRights rights,
-			MediaType mediaType) {
+	public InputStream encodeCSV(Track t, MediaType mediaType) {
 
 		InputStream resultInputStream = null;
 		try {
-			if (rights.canSeeMeasurementsOf(t)) {
-				Measurements measurements = dataService
-						.getMeasurements(new MeasurementFilter(t));
-				resultInputStream = convert(measurements);
-			}
+			Measurements measurements = dataService
+					.getMeasurements(new MeasurementFilter(t));
+			resultInputStream = convert(measurements);
 
-		} catch (IOException e) {
-			log.debug(e.getMessage());
 		} catch (Exception e) {
-			log.debug(e.getMessage());
+			log.error(e.getMessage());
 		}
 
 		return resultInputStream;
 	}
 
-	public InputStream convert(Measurements measurements) throws IOException {
+	private InputStream convert(Measurements measurements) throws IOException {
 
 		CharSequence header = null;
 
@@ -98,7 +80,7 @@ public class TrackCSVEncoder extends AbstractCSVTrackEncoder<Track> {
 
 			if (header == null) {
 				
-				List<String> spaceTimeProperties = new ArrayList<String>();				
+				List<String> spaceTimeProperties = new ArrayList<>(3);
 				spaceTimeProperties.add("longitude");
 				spaceTimeProperties.add("latitude");
 				spaceTimeProperties.add("time");
@@ -187,7 +169,7 @@ public class TrackCSVEncoder extends AbstractCSVTrackEncoder<Track> {
 
 	private Set<String> gatherPropertiesForHeader(Measurements measurements){
 		
-		Set<String> distinctPhenomenonNames = new HashSet<String>();
+		Set<String> distinctPhenomenonNames = new HashSet<>();
 		
 		for (Measurement measurement : measurements) {
 

@@ -16,19 +16,17 @@
  */
 package org.envirocar.server.rest.encoding.json;
 
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.ext.Provider;
-
-import org.envirocar.server.core.entities.Measurement;
-import org.envirocar.server.core.entities.Measurements;
-import org.envirocar.server.core.util.GeoJSONConstants;
-import org.envirocar.server.rest.encoding.JSONEntityEncoder;
-import org.envirocar.server.rest.rights.AccessRights;
-
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
+import org.envirocar.server.core.entities.Measurement;
+import org.envirocar.server.core.entities.Measurements;
+import org.envirocar.server.core.util.GeoJSONConstants;
+import org.envirocar.server.rest.encoding.JSONEntityEncoder;
+
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.Provider;
 
 /**
  * TODO JavaDoc
@@ -50,13 +48,11 @@ public class MeasurementsJSONEncoder extends AbstractJSONEntityEncoder<Measureme
     }
 
     @Override
-    public ObjectNode encodeJSON(Measurements t, AccessRights rights,
-                                 MediaType mediaType) {
+    public ObjectNode encodeJSON(Measurements t, MediaType mediaType) {
         ObjectNode on = factory.objectNode();
         ArrayNode an = on.putArray(GeoJSONConstants.FEATURES_KEY);
         for (Measurement measurement : t) {
-            an.add(measurementEncoder
-                    .encodeJSON(measurement, rights, mediaType));
+            an.add(measurementEncoder.encodeJSON(measurement, mediaType));
         }
         on.put(GeoJSONConstants.TYPE_KEY,
                GeoJSONConstants.FEATURE_COLLECTION_TYPE);

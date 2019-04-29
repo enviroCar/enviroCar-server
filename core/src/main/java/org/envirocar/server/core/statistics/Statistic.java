@@ -32,8 +32,6 @@ public interface Statistic {
 
     long getTracks();
 
-    long getUsers();
-
     long getMeasurements();
 
     long getSensors();

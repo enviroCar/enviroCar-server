@@ -23,6 +23,6 @@ import org.envirocar.server.core.entities.Track;
  *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public interface TrackEvent extends UserCausedEvent {
+public interface TrackEvent extends Event {
     Track getTrack();
 }

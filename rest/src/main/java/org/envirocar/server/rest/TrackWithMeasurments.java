@@ -16,18 +16,16 @@
  */
 package org.envirocar.server.rest;
 
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-
+import com.google.common.collect.Lists;
+import com.vividsolutions.jts.geom.Geometry;
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.core.entities.Track;
-import org.envirocar.server.core.entities.User;
 import org.joda.time.DateTime;
 
-import com.google.common.collect.Lists;
-import com.vividsolutions.jts.geom.Geometry;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * TODO JavaDoc
@@ -79,16 +77,6 @@ public class TrackWithMeasurments implements Track, Iterable<Measurement> {
     }
 
     @Override
-    public User getUser() {
-        return track.getUser();
-    }
-
-    @Override
-    public void setUser(User user) {
-        track.setUser(user);
-    }
-
-    @Override
     public Sensor getSensor() {
         return track.getSensor();
     }
@@ -137,11 +125,6 @@ public class TrackWithMeasurments implements Track, Iterable<Measurement> {
 
     public Track getTrack() {
         return track;
-    }
-
-    @Override
-    public boolean hasUser() {
-        return track.hasUser();
     }
 
     @Override

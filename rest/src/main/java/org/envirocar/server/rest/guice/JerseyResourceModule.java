@@ -16,39 +16,12 @@
  */
 package org.envirocar.server.rest.guice;
 
-import org.envirocar.server.rest.resources.ConfirmationLinkFactoryImpl;
-
-import java.util.Properties;
-import java.util.Set;
-
-import javax.ws.rs.core.SecurityContext;
-
-import org.envirocar.server.core.ConfirmationLinkFactory;
-import org.envirocar.server.core.FriendService;
-import org.envirocar.server.core.GroupService;
-import org.envirocar.server.core.entities.User;
-import org.envirocar.server.rest.auth.PrincipalImpl;
-import org.envirocar.server.rest.mapper.BadRequestExceptionMapper;
-import org.envirocar.server.rest.mapper.IllegalModificationExceptionMapper;
-import org.envirocar.server.rest.mapper.JsonValidationExceptionMapper;
-import org.envirocar.server.rest.mapper.ResourceAlreadyExistExceptionMapper;
-import org.envirocar.server.rest.mapper.ResourceNotFoundExceptionMapper;
-import org.envirocar.server.rest.mapper.ValidationExceptionMapper;
-import org.envirocar.server.rest.resources.AbstractResource;
+import com.google.inject.AbstractModule;
+import com.google.inject.Scopes;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
+import org.envirocar.server.rest.mapper.*;
 import org.envirocar.server.rest.resources.ResourceFactory;
 import org.envirocar.server.rest.resources.RootResource;
-import org.envirocar.server.rest.rights.AccessRights;
-import org.envirocar.server.rest.rights.AccessRightsImpl;
-import org.envirocar.server.rest.rights.ReadOnlyRights;
-
-import com.google.common.base.Optional;
-import com.google.inject.AbstractModule;
-import com.google.inject.Provides;
-import com.google.inject.Scopes;
-import com.google.inject.TypeLiteral;
-import com.google.inject.assistedinject.FactoryModuleBuilder;
-import com.google.inject.name.Names;
-import com.google.inject.servlet.RequestScoped;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>
@@ -56,9 +29,6 @@ import com.google.inject.servlet.RequestScoped;
 public class JerseyResourceModule extends AbstractModule {
     @Override
     protected void configure() {
-        bind(new TypeLiteral<Optional<Set<String>>>() {
-        }).annotatedWith(Names.named(AbstractResource.ALLOWED_MAIL_ADDRESSES))
-                .toProvider(AddressProvider.class);
         bind(IllegalModificationExceptionMapper.class).in(Scopes.SINGLETON);
         bind(ResourceNotFoundExceptionMapper.class).in(Scopes.SINGLETON);
         bind(ValidationExceptionMapper.class).in(Scopes.SINGLETON);
@@ -66,32 +36,6 @@ public class JerseyResourceModule extends AbstractModule {
         bind(JsonValidationExceptionMapper.class).in(Scopes.SINGLETON);
         bind(BadRequestExceptionMapper.class).in(Scopes.SINGLETON);
         install(new FactoryModuleBuilder().build(ResourceFactory.class));
-        bind(ConfirmationLinkFactory.class).to(ConfirmationLinkFactoryImpl.class);
         bind(RootResource.class);
-    }
-
-    @Provides
-    @RequestScoped
-    public AccessRights accessRights(SecurityContext ctx,
-                                     GroupService groupService,
-                                     FriendService friendService,
-                                     Properties properties) {
-        PrincipalImpl p = (PrincipalImpl) ctx.getUserPrincipal();
-        User user = p == null ? null : p.getUser();
-
-        if (isReadOnly(properties)) {
-            return new ReadOnlyRights(user, groupService, friendService);
-        } else {
-            return new AccessRightsImpl(user, groupService, friendService);
-        }
-    }
-
-    private static boolean isReadOnly(Properties properties) {
-        try {
-            return Boolean.parseBoolean(properties
-                    .getProperty("enviroCar.readOnly", "false"));
-        } catch (IllegalArgumentException e) {
-            return false;
-        }
     }
 }

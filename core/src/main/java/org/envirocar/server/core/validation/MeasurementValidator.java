@@ -18,7 +18,6 @@ package org.envirocar.server.core.validation;
 
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.MeasurementValue;
-
 import org.envirocar.server.core.exception.ValidationException;
 
 /**
@@ -30,7 +29,6 @@ public class MeasurementValidator extends AbstractValidator<Measurement> {
     @Override
     public void validateCreate(Measurement t) throws ValidationException {
         isNotNull("location", t.getGeometry());
-        isNotNull("user", t.getUser());
         isNotNull("sensor", t.getSensor());
         isNull("created", t.getCreationTime());
         isNull("modified", t.getModificationTime());
@@ -45,7 +43,6 @@ public class MeasurementValidator extends AbstractValidator<Measurement> {
         isNull("created", t.getCreationTime());
         isNull("modified", t.getModificationTime());
         isNull("location", t.getGeometry());
-        isNull("user", t.getUser());
         isNull("sensor", t.getSensor());
         for (MeasurementValue mv : t.getValues()) {
             isNotNull("phenomenon", mv.getPhenomenon());

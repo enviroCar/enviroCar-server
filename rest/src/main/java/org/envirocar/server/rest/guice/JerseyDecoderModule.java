@@ -16,32 +16,15 @@
  */
 package org.envirocar.server.rest.guice;
 
-import org.envirocar.server.core.entities.Fueling;
-import org.envirocar.server.core.entities.Group;
-import org.envirocar.server.core.entities.Measurement;
-import org.envirocar.server.core.entities.Phenomenon;
-import org.envirocar.server.core.entities.Sensor;
-import org.envirocar.server.core.entities.Track;
-import org.envirocar.server.core.entities.User;
-import org.envirocar.server.rest.decoding.json.FuelingDecoder;
-import org.envirocar.server.rest.decoding.json.GeoJSONDecoder;
-import org.envirocar.server.rest.decoding.json.GroupDecoder;
-import org.envirocar.server.rest.decoding.json.JSONEntityDecoder;
-import org.envirocar.server.rest.decoding.json.JsonNodeMessageBodyReader;
-import org.envirocar.server.rest.decoding.json.MeasurementDecoder;
-import org.envirocar.server.rest.decoding.json.PhenomenonDecoder;
-import org.envirocar.server.rest.decoding.json.ResetPasswordDecoder;
-import org.envirocar.server.rest.decoding.json.SensorDecoder;
-import org.envirocar.server.rest.decoding.json.TrackDecoder;
-import org.envirocar.server.rest.decoding.json.UserDecoder;
-import org.envirocar.server.rest.encoding.json.UserReferenceProvider;
-import org.envirocar.server.rest.entity.ResetPasswordRequest;
-
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
 import com.google.inject.TypeLiteral;
 import com.vividsolutions.jts.geom.Geometry;
-import org.envirocar.server.rest.decoding.json.ContextKnowledgeFactory;
+import org.envirocar.server.core.entities.Measurement;
+import org.envirocar.server.core.entities.Phenomenon;
+import org.envirocar.server.core.entities.Sensor;
+import org.envirocar.server.core.entities.Track;
+import org.envirocar.server.rest.decoding.json.*;
 
 /**
  * TODO JavaDoc
@@ -52,34 +35,15 @@ public class JerseyDecoderModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(JsonNodeMessageBodyReader.class).in(Scopes.SINGLETON);
-        bind(UserDecoder.class).in(Scopes.SINGLETON);
-        bind(new TypeLiteral<JSONEntityDecoder<User>>() {
-        }).to(UserDecoder.class);
-        bind(UserReferenceProvider.class).in(Scopes.SINGLETON);
-        bind(PhenomenonDecoder.class).in(Scopes.SINGLETON);
         bind(new TypeLiteral<JSONEntityDecoder<Phenomenon>>() {
-        }).to(PhenomenonDecoder.class);
-        bind(GroupDecoder.class).in(Scopes.SINGLETON);
-        bind(new TypeLiteral<JSONEntityDecoder<Group>>() {
-        }).to(GroupDecoder.class);
-        bind(GeoJSONDecoder.class).in(Scopes.SINGLETON);
+        }).to(PhenomenonDecoder.class).in(Scopes.SINGLETON);
         bind(new TypeLiteral<JSONEntityDecoder<Geometry>>() {
-        }).to(GeoJSONDecoder.class);
-        bind(MeasurementDecoder.class).in(Scopes.SINGLETON);
+        }).to(GeoJSONDecoder.class).in(Scopes.SINGLETON);
         bind(new TypeLiteral<JSONEntityDecoder<Measurement>>() {
-        }).to(MeasurementDecoder.class);
-        bind(TrackDecoder.class).in(Scopes.SINGLETON);
+        }).to(MeasurementDecoder.class).in(Scopes.SINGLETON);
         bind(new TypeLiteral<JSONEntityDecoder<Track>>() {
-        }).to(TrackDecoder.class);
-        bind(SensorDecoder.class).in(Scopes.SINGLETON);
+        }).to(TrackDecoder.class).in(Scopes.SINGLETON);
         bind(new TypeLiteral<JSONEntityDecoder<Sensor>>() {
-        }).to(SensorDecoder.class);
-        bind(ResetPasswordDecoder.class).in(Scopes.SINGLETON);
-        bind(new TypeLiteral<JSONEntityDecoder<ResetPasswordRequest>>() {
-        }).to(ResetPasswordDecoder.class);
-        bind(FuelingDecoder.class).in(Scopes.SINGLETON);
-        bind(new TypeLiteral<JSONEntityDecoder<Fueling>>() {
-        }).to(FuelingDecoder.class);
-        bind(ContextKnowledgeFactory.class).toInstance(new ContextKnowledgeFactory());
+        }).to(SensorDecoder.class).in(Scopes.SINGLETON);
     }
 }

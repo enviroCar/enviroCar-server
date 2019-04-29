@@ -16,22 +16,9 @@
  */
 package org.envirocar.server.rest.resources;
 
-import java.util.List;
-import java.util.Set;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.Response;
-
+import com.google.common.collect.Sets;
 import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.core.entities.Sensors;
-import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.exception.BadRequestException;
 import org.envirocar.server.core.exception.SensorNotFoundException;
 import org.envirocar.server.core.filter.PropertyFilter;
@@ -42,9 +29,11 @@ import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.auth.Authenticated;
 import org.envirocar.server.rest.validation.Schema;
 
-import com.google.common.collect.Sets;
-import com.google.inject.assistedinject.Assisted;
-import com.google.inject.assistedinject.AssistedInject;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.Response;
+import java.util.List;
+import java.util.Set;
 
 /**
  * TODO JavaDoc
@@ -55,24 +44,9 @@ import com.google.inject.assistedinject.AssistedInject;
 public class SensorsResource extends AbstractResource {
     public static final String SENSOR = "{sensor}";
 
-    private final User user;
-
-    @AssistedInject
-    public SensorsResource(@Assisted User user) {
-        this.user = user;
-    }
-
-    @AssistedInject
-    public SensorsResource() {
-        this(null);
-    }
-
     @GET
     @Schema(response = Schemas.SENSORS)
-    @Produces({ MediaTypes.SENSORS,
-                MediaTypes.XML_RDF,
-                MediaTypes.TURTLE,
-                MediaTypes.TURTLE_ALT })
+    @Produces(MediaTypes.SENSORS)
     public Sensors get(
             @QueryParam(RESTConstants.TYPE) String type) throws BadRequestException {
         MultivaluedMap<String, String> queryParameters =
@@ -89,7 +63,7 @@ public class SensorsResource extends AbstractResource {
                 filters.add(new PropertyFilter(key, value));
             }
         }
-        return getDataService().getSensors(new SensorFilter(type, user, filters, getPagination()));
+        return getDataService().getSensors(new SensorFilter(type, filters, getPagination()));
     }
 
     @POST
@@ -107,7 +81,6 @@ public class SensorsResource extends AbstractResource {
     public SensorResource sensor(@PathParam("sensor") String id)
             throws SensorNotFoundException {
         Sensor sensor = getDataService().getSensorByName(id);
-        checkRights(getRights().canSee(sensor));
         return getResourceFactory().createSensorResource(sensor);
     }
 }

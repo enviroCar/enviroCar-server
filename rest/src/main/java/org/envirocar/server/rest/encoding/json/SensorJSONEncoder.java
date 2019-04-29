@@ -16,18 +16,15 @@
  */
 package org.envirocar.server.rest.encoding.json;
 
-import java.util.Map;
-
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.ext.Provider;
-
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Maps;
-
 import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.rest.JSONConstants;
 import org.envirocar.server.rest.MediaTypes;
-import org.envirocar.server.rest.rights.AccessRights;
+
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.Provider;
+import java.util.Map;
 
 /**
  * TODO JavaDoc
@@ -41,8 +38,7 @@ public class SensorJSONEncoder extends AbstractJSONEntityEncoder<Sensor> {
     }
 
     @Override
-    public ObjectNode encodeJSON(Sensor t, AccessRights rights,
-                                 MediaType mediaType) {
+    public ObjectNode encodeJSON(Sensor t, MediaType mediaType) {
         ObjectNode sensor = getJsonFactory().objectNode();
         if (t.hasType()) {
             sensor.put(JSONConstants.TYPE_KEY, t.getType());

@@ -16,23 +16,19 @@
  */
 package org.envirocar.server.mongo.entity;
 
-import static org.envirocar.server.mongo.entity.MongoMeasurement.IDENTIFIER;
-
+import com.google.common.base.Objects;
+import com.vividsolutions.jts.geom.Geometry;
 import org.bson.types.ObjectId;
 import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.core.entities.Track;
-import org.envirocar.server.core.entities.User;
 import org.joda.time.DateTime;
-
-import org.mongodb.morphia.Key;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Property;
-import org.mongodb.morphia.annotations.Transient;
 import org.mongodb.morphia.mapping.Mapper;
-import com.google.common.base.Objects;
-import com.vividsolutions.jts.geom.Geometry;
+
+import static org.envirocar.server.mongo.entity.MongoMeasurement.IDENTIFIER;
 
 /**
  * TODO JavaDoc
@@ -55,10 +51,6 @@ public class MongoTrack extends MongoEntityBase implements Track {
 	public static final String LENGTH = "length";
     @Id
     private ObjectId id = new ObjectId();
-    @Property(USER)
-    private Key<MongoUser> user;
-    @Transient
-    private MongoUser _user;
     @Embedded(SENSOR)
     private MongoSensor sensor;
     @Property(NAME)
@@ -81,20 +73,6 @@ public class MongoTrack extends MongoEntityBase implements Track {
     private double length;
 
     @Override
-    public MongoUser getUser() {
-        if (this._user == null) {
-            this._user = getMongoDB().deref(MongoUser.class, this.user);
-        }
-        return this._user;
-    }
-
-    @Override
-    public void setUser(User user) {
-        this._user = (MongoUser) user;
-        this.user = getMongoDB().key(this._user);
-    }
-
-    @Override
     public MongoSensor getSensor() {
         return this.sensor;
     }
@@ -102,11 +80,6 @@ public class MongoTrack extends MongoEntityBase implements Track {
     @Override
     public void setSensor(Sensor sensor) {
         this.sensor = (MongoSensor) sensor;
-    }
-
-    @Override
-    public boolean hasUser() {
-        return getUser() != null;
     }
 
     @Override
@@ -188,7 +161,6 @@ public class MongoTrack extends MongoEntityBase implements Track {
                 .add(IDENTIFIER, id)
                 .add(NAME, name)
                 .add(DESCRIPTION, description)
-                .add(USER, user)
                 .add(SENSOR, sensor)
                 .add(BBOX, bbox)
                 .add(BEGIN, begin)

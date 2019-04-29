@@ -26,8 +26,6 @@ public class URIContentNegotiationFilter extends UriConnegFilter {
     public URIContentNegotiationFilter() {
         super(ImmutableMap.<String, MediaType>builder()
                 .put("json", MediaType.APPLICATION_JSON_TYPE)
-                .put("ttl", MediaTypes.TURTLE_TYPE)
-                .put("rdf", MediaTypes.XML_RDF_TYPE)
                 .put("shp", MediaTypes.APPLICATION_ZIPPED_SHP_TYPE)
                 .put("csv", MediaTypes.TEXT_CSV_TYPE)
                 .build());

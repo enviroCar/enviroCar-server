@@ -44,7 +44,6 @@ public class TermsOfUseResource extends AbstractResource {
     public TermsOfUseInstanceResource track(@PathParam("id") String id)
             throws ResourceNotFoundException {
         TermsOfUseInstance t = getDataService().getTermsOfUseInstance(id);
-        checkRights(getRights().canSee(t));
         return getResourceFactory().createTermsOfUseInstanceResource(t);
     }
 

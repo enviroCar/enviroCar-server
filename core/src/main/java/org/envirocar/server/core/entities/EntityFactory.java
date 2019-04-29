@@ -23,10 +23,6 @@ package org.envirocar.server.core.entities;
  * @author Arne de Wall <a.dewall@52north.org>
  */
 public interface EntityFactory {
-    User createUser();
-
-    Group createGroup();
-
     Track createTrack();
 
     Measurement createMeasurement();
@@ -36,6 +32,4 @@ public interface EntityFactory {
     Sensor createSensor();
 
     Phenomenon createPhenomenon();
-
-    Fueling createFueling();
 }

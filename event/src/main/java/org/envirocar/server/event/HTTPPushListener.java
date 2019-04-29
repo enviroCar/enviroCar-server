@@ -16,8 +16,11 @@
  */
 package org.envirocar.server.event;
 
-import java.io.IOException;
-
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.eventbus.Subscribe;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -29,18 +32,13 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.event.CreatedTrackEvent;
+import org.envirocar.server.core.event.DeletedTrackEvent;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.encoding.JSONEntityEncoder;
-import org.envirocar.server.rest.rights.AccessRightsImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.databind.ObjectWriter;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.common.eventbus.Subscribe;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-import org.envirocar.server.core.event.DeletedTrackEvent;
+import java.io.IOException;
 
 @Singleton
 public class HTTPPushListener {
@@ -49,8 +47,6 @@ public class HTTPPushListener {
             "http://ags.52north.org:8080/enviroCar-broker/";
     private static final Logger logger = LoggerFactory
             .getLogger(HTTPPushListener.class);
-    public static final AccessRightsImpl DEFAULT_ACCESS_RIGHTS =
-            new AccessRightsImpl();
     private final HttpClient client;
     private final JSONEntityEncoder<Track> encoder;
     private final ObjectWriter writer;
@@ -79,9 +75,7 @@ public class HTTPPushListener {
     private synchronized void pushNewTrack(Track track) {
         HttpResponse resp = null;
         try {
-            ObjectNode jsonTrack = encoder
-                    .encodeJSON(track, DEFAULT_ACCESS_RIGHTS,
-                                MediaTypes.TRACK_TYPE);
+            ObjectNode jsonTrack = encoder.encodeJSON(track, MediaTypes.TRACK_TYPE);
             String content = writer.writeValueAsString(jsonTrack);
             //logger.debug("Entity: {}", content);
             HttpEntity entity = new StringEntity(

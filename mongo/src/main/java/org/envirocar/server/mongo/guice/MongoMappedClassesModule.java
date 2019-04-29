@@ -16,31 +16,12 @@
  */
 package org.envirocar.server.mongo.guice;
 
-import org.envirocar.server.mongo.MongoDB;
-import org.envirocar.server.mongo.activities.MongoActivity;
-import org.envirocar.server.mongo.activities.MongoGroupActivity;
-import org.envirocar.server.mongo.activities.MongoTrackActivity;
-import org.envirocar.server.mongo.activities.MongoUserActivity;
-import org.envirocar.server.mongo.entity.MongoAnnouncement;
-import org.envirocar.server.mongo.entity.MongoBadge;
-import org.envirocar.server.mongo.entity.MongoFueling;
-import org.envirocar.server.mongo.entity.MongoGroup;
-import org.envirocar.server.mongo.entity.MongoMeasurement;
-import org.envirocar.server.mongo.entity.MongoPasswordReset;
-import org.envirocar.server.mongo.entity.MongoPhenomenon;
-import org.envirocar.server.mongo.entity.MongoSensor;
-import org.envirocar.server.mongo.entity.MongoStatistic;
-import org.envirocar.server.mongo.entity.MongoStatisticKey;
-import org.envirocar.server.mongo.entity.MongoStatistics;
-import org.envirocar.server.mongo.entity.MongoTermsOfUseInstance;
-import org.envirocar.server.mongo.entity.MongoTrack;
-import org.envirocar.server.mongo.entity.MongoUser;
-import org.envirocar.server.mongo.entity.MongoUserStatistic;
-
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
 import com.google.inject.multibindings.Multibinder;
 import com.google.inject.name.Names;
+import org.envirocar.server.mongo.MongoDB;
+import org.envirocar.server.mongo.entity.*;
 
 /**
  * TODO JavaDoc
@@ -53,24 +34,13 @@ public class MongoMappedClassesModule extends AbstractModule {
     protected void configure() {
         Multibinder<Class<?>> mb = Multibinder.newSetBinder(
                 binder(), new TypeLiteral<Class<?>>() {}, Names.named(MongoDB.MAPPED_CLASSES));
-        mb.addBinding().toInstance(MongoUser.class);
-        mb.addBinding().toInstance(MongoGroup.class);
         mb.addBinding().toInstance(MongoTrack.class);
         mb.addBinding().toInstance(MongoMeasurement.class);
         mb.addBinding().toInstance(MongoPhenomenon.class);
         mb.addBinding().toInstance(MongoSensor.class);
-        mb.addBinding().toInstance(MongoActivity.class);
-        mb.addBinding().toInstance(MongoGroupActivity.class);
-        mb.addBinding().toInstance(MongoTrackActivity.class);
-        mb.addBinding().toInstance(MongoUserActivity.class);
         mb.addBinding().toInstance(MongoStatistics.class);
         mb.addBinding().toInstance(MongoStatistic.class);
         mb.addBinding().toInstance(MongoStatisticKey.class);
         mb.addBinding().toInstance(MongoTermsOfUseInstance.class);
-        mb.addBinding().toInstance(MongoAnnouncement.class);
-        mb.addBinding().toInstance(MongoBadge.class);
-        mb.addBinding().toInstance(MongoPasswordReset.class);
-        mb.addBinding().toInstance(MongoFueling.class);
-        mb.addBinding().toInstance(MongoUserStatistic.class);
     }
 }

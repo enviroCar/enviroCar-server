@@ -16,22 +16,18 @@
  */
 package org.envirocar.server.rest.encoding.json;
 
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.ext.Provider;
-
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
-import java.util.Collection;
-import java.util.Set;
 import org.envirocar.server.core.CarSimilarityService;
-
 import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.core.entities.Sensors;
 import org.envirocar.server.rest.JSONConstants;
 import org.envirocar.server.rest.encoding.JSONEntityEncoder;
 
-import org.envirocar.server.rest.rights.AccessRights;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.Provider;
+import java.util.Set;
 
 /**
  * TODO JavaDoc
@@ -51,16 +47,15 @@ public class SensorsJSONEncoder extends AbstractJSONEntityEncoder<Sensors> {
     }
 
     @Override
-    public ObjectNode encodeJSON(Sensors t, AccessRights rights,
-                                 MediaType mediaType) {
+    public ObjectNode encodeJSON(Sensors t, MediaType mediaType) {
         ObjectNode root = getJsonFactory().objectNode();
         ArrayNode sensors = root.putArray(JSONConstants.SENSORS_KEY);
-        
+
         Set<String> filteredDuplicates = this.carSimilarity.getMappedSensorIds();
-        
+
         for (Sensor u : t) {
             if (filteredDuplicates == null || !filteredDuplicates.contains(u.getIdentifier())) {
-                sensors.add(sensorEncoder.encodeJSON(u, rights, mediaType));
+                sensors.add(sensorEncoder.encodeJSON(u, mediaType));
             }
         }
         return root;

@@ -16,21 +16,9 @@
  */
 package org.envirocar.server.rest.encoding.shapefile;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
+import com.vividsolutions.jts.geom.Coordinate;
 import org.bson.types.ObjectId;
-import org.envirocar.server.core.entities.Measurement;
-import org.envirocar.server.core.entities.MeasurementValue;
-import org.envirocar.server.core.entities.Phenomenon;
-import org.envirocar.server.core.entities.Sensor;
-import org.envirocar.server.core.entities.Track;
-import org.envirocar.server.core.entities.User;
+import org.envirocar.server.core.entities.*;
 import org.envirocar.server.core.exception.TrackTooLongException;
 import org.envirocar.server.core.exception.ValidationException;
 import org.envirocar.server.mongo.entity.MongoSensor;
@@ -43,7 +31,13 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import com.vividsolutions.jts.geom.Coordinate;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * TODO JavaDoc
@@ -60,7 +54,6 @@ public class ShapefileEncodingTest extends AbstractEncodingTest {
     private Track testTrack1;
     private Track testTrack2;
 
-    private User user;
     private Sensor sensor;
     private List<Phenomenon> phenomenons;
 
@@ -79,18 +72,18 @@ public class ShapefileEncodingTest extends AbstractEncodingTest {
 //			testTrack2 = getTestTrack(trackObjectId2);
             if (testTrack1 == null) {
 
-                testTrack1 = createTrack(getUser(), getSensor());
+                testTrack1 = createTrack(getSensor());
 
                 createTrackWithMeasurementsLessThanThreshold(
-                        testTrack1, getPhenomenons(), getUser(), getSensor());
+                        testTrack1, getPhenomenons(), getSensor());
 
             }
             if (testTrack2 == null) {
 
-                testTrack2 = createTrack(getUser(), getSensor());
+                testTrack2 = createTrack(getSensor());
 
                 createTrackWithMeasurementsMoreThanThreshold(
-                        testTrack2, getPhenomenons(), getUser(), getSensor());
+                        testTrack2, getPhenomenons(), getSensor());
             }
 
         } catch (ValidationException e) {
@@ -117,7 +110,7 @@ public class ShapefileEncodingTest extends AbstractEncodingTest {
         File shapeFile;
         try {
             shapeFile = trackShapefileEncoder.encodeShapefile(testTrack1,
-                                                              MediaTypes.APPLICATION_ZIPPED_SHP_TYPE);
+                    MediaTypes.APPLICATION_ZIPPED_SHP_TYPE);
             assertTrue(shapeFile.exists());
         } catch (TrackTooLongException e) {
             e.printStackTrace();
@@ -131,14 +124,7 @@ public class ShapefileEncodingTest extends AbstractEncodingTest {
             throws IOException {
         exception.expect(TrackTooLongException.class);
         trackShapefileEncoder.encodeShapefile(testTrack2,
-                                              MediaTypes.APPLICATION_ZIPPED_SHP_TYPE);
-    }
-
-    private User getUser() {
-        if (user == null) {
-            user = createUser(testUserName);
-        }
-        return user;
+                MediaTypes.APPLICATION_ZIPPED_SHP_TYPE);
     }
 
     private Sensor getSensor() {
@@ -158,11 +144,11 @@ public class ShapefileEncodingTest extends AbstractEncodingTest {
     }
 
     private void createTrackWithMeasurementsLessThanThreshold(
-            Track track, List<Phenomenon> phenomenons, User user, Sensor sensor) {
+            Track track, List<Phenomenon> phenomenons, Sensor sensor) {
 
         for (int i = 0; i < measurementThreshold - 1; i++) {
-            createMeasurement(track, new ObjectId().toString(), phenomenons, user,
-                              sensor, i);
+            createMeasurement(track, new ObjectId().toString(), phenomenons,
+                    sensor, i);
         }
 
         dataService.createTrack(track);
@@ -170,18 +156,18 @@ public class ShapefileEncodingTest extends AbstractEncodingTest {
     }
 
     private void createTrackWithMeasurementsMoreThanThreshold(
-            Track track, List<Phenomenon> phenomenons, User user, Sensor sensor) {
+            Track track, List<Phenomenon> phenomenons, Sensor sensor) {
 
         for (int i = 0; i <= measurementThreshold + 1; i++) {
-            createMeasurement(track, new ObjectId().toString(), phenomenons, user,
-                              sensor, i);
+            createMeasurement(track, new ObjectId().toString(), phenomenons,
+                    sensor, i);
         }
 
         dataService.createTrack(track);
     }
 
     private Measurement createMeasurement(Track testTrack, String objectId,
-                                          List<Phenomenon> phenomenons, User user, Sensor sensor,
+                                          List<Phenomenon> phenomenons, Sensor sensor,
                                           int basenumber) {
 
         Measurement measurement = entityFactory.createMeasurement();
@@ -190,8 +176,6 @@ public class ShapefileEncodingTest extends AbstractEncodingTest {
                 51.9, 7)));
 
         measurement.setSensor(sensor);
-
-        measurement.setUser(user);
 
         measurement.setIdentifier(objectId);
 
@@ -221,13 +205,11 @@ public class ShapefileEncodingTest extends AbstractEncodingTest {
 
     }
 
-    private Track createTrack(User user, Sensor sensor) {
+    private Track createTrack(Sensor sensor) {
 
         Track result = entityFactory.createTrack();
 
 //		result.setIdentifier(objectId);
-        result.setUser(user);
-
         result.setSensor(sensor);
 
         return result;
@@ -271,22 +253,6 @@ public class ShapefileEncodingTest extends AbstractEncodingTest {
         dataService.createPhenomenon(f);
 
         return f;
-    }
-
-    private User createUser(String testUserName) {
-
-        User user = entityFactory.createUser();
-
-        user.setName(testUserName);
-        user.setMail("info@52north.org");
-        user.setToken("pwd123");
-
-        if (userDao.getByName(testUserName) == null) {
-            userDao.create(user);
-        }
-
-        return user;
-
     }
 
 }

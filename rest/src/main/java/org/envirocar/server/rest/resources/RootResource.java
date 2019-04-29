@@ -38,159 +38,79 @@ import com.google.inject.Inject;
  */
 @Path("/")
 public class RootResource extends AbstractResource {
-    public static final String USERS = "users";
-    public static final String GROUPS = "groups";
     public static final String TRACKS = "tracks";
     public static final String PHENOMENONS = "phenomenons";
     public static final String SENSORS = "sensors";
     public static final String MEASUREMENTS = "measurements";
     public static final String STATISTICS = "statistics";
-	public static final String TERMS_OF_USE = "termsOfUse";
+    public static final String TERMS_OF_USE = "termsOfUse";
     public static final String SCHEMA = "schema";
-    public static final String ANNOUNCEMENTS = "announcements";
-    public static final String BADGES = "badges";
-    public static final String RESET_PASSWORD = "resetPassword";
-    public static final String CONFIRM = "confirm";
 
     @Inject
     private JsonNodeFactory factory;
 
     @GET
     @Schema(response = Schemas.ROOT)
-    @Produces({ MediaTypes.ROOT })
+    @Produces({MediaTypes.ROOT})
     public JsonNode get() {
         ObjectNode root = factory.objectNode();
-        if (getRights().canSeeUsers()) {
-            root.put(JSONConstants.USERS_KEY,
-                     getUriInfo().getAbsolutePathBuilder()
-                    .path(USERS).build().toString());
-        }
-        if (getRights().canSeeGroups()) {
-            root.put(JSONConstants.GROUPS_KEY, getUriInfo()
-                    .getAbsolutePathBuilder()
-                    .path(GROUPS).build().toString());
-        }
-        if (getRights().canSeeTracks()) {
-            root.put(JSONConstants.TRACKS_KEY, getUriInfo()
-                    .getAbsolutePathBuilder()
-                    .path(TRACKS).build().toString());
-        }
-        if (getRights().canSeeSensors()) {
-            root.put(JSONConstants.SENSORS_KEY, getUriInfo()
-                    .getAbsolutePathBuilder().path(SENSORS)
-                    .build().toString());
-        }
-        if (getRights().canSeePhenomenons()) {
-            root.put(JSONConstants.PHENOMENONS_KEY, getUriInfo()
-                    .getAbsolutePathBuilder()
-                    .path(PHENOMENONS).build().toString());
-        }
-        if (getRights().canSeeMeasurements()) {
-            root.put(JSONConstants.MEASUREMENTS_KEY, getUriInfo()
-                    .getAbsolutePathBuilder()
-                    .path(MEASUREMENTS).build().toString());
-        }
-        if (getRights().canSeeStatistics()) {
-            root.put(JSONConstants.STATISTICS_KEY, getUriInfo()
-                    .getAbsolutePathBuilder()
-                    .path(STATISTICS).build().toString());
-        }
-        if (getRights().canSeeTermsOfUse()) {
-            root.put(JSONConstants.TERMS_OF_USE_KEY, getUriInfo()
-                    .getAbsolutePathBuilder()
-                    .path(TERMS_OF_USE).build().toString());
-        }
-        if (getRights().canSeeSchema()) {
-            root.put(JSONConstants.SCHEMA, getUriInfo()
-                    .getAbsolutePathBuilder()
-                    .path(SCHEMA).build().toString());
-        }
-        if (getRights().canSeeAnnouncements()) {
-            root.put(JSONConstants.ANNOUNCEMENTS_KEY, getUriInfo()
-                    .getAbsolutePathBuilder()
-                    .path(ANNOUNCEMENTS).build().toString());
-        }
-        if (getRights().canSeeBadges()) {
-            root.put(JSONConstants.BADGES_KEY, getUriInfo()
-                    .getAbsolutePathBuilder()
-                    .path(BADGES).build().toString());
-        }
+        root.put(JSONConstants.TRACKS_KEY, getUriInfo()
+                .getAbsolutePathBuilder()
+                .path(TRACKS).build().toString());
+        root.put(JSONConstants.SENSORS_KEY, getUriInfo()
+                .getAbsolutePathBuilder().path(SENSORS)
+                .build().toString());
+        root.put(JSONConstants.PHENOMENONS_KEY, getUriInfo()
+                .getAbsolutePathBuilder()
+                .path(PHENOMENONS).build().toString());
+        root.put(JSONConstants.MEASUREMENTS_KEY, getUriInfo()
+                .getAbsolutePathBuilder()
+                .path(MEASUREMENTS).build().toString());
+        root.put(JSONConstants.STATISTICS_KEY, getUriInfo()
+                .getAbsolutePathBuilder()
+                .path(STATISTICS).build().toString());
+        root.put(JSONConstants.TERMS_OF_USE_KEY, getUriInfo()
+                .getAbsolutePathBuilder()
+                .path(TERMS_OF_USE).build().toString());
+        root.put(JSONConstants.SCHEMA, getUriInfo()
+                .getAbsolutePathBuilder()
+                .path(SCHEMA).build().toString());
         return root;
-    }
-
-    @Path(USERS)
-    public UsersResource users() {
-        return getResourceFactory().createUsersResource();
-    }
-
-    @Path(GROUPS)
-    public GroupsResource groups() {
-        checkRights(getRights().canSeeGroups());
-        return getResourceFactory().createGroupsResource(null);
     }
 
     @Path(TRACKS)
     public TracksResource tracks() {
-        checkRights(getRights().canSeeTracks());
-        return getResourceFactory().createTracksResource(null);
+        return getResourceFactory().createTracksResource();
     }
 
     @Path(PHENOMENONS)
     public PhenomenonsResource phenomenons() {
-        checkRights(getRights().canSeePhenomenons());
         return getResourceFactory().createPhenomenonsResource();
     }
 
     @Path(SENSORS)
     public SensorsResource sensors() {
-        checkRights(getRights().canSeeSensors());
         return getResourceFactory().createSensorsResource();
     }
 
     @Path(MEASUREMENTS)
     public MeasurementsResource measurements() {
-        checkRights(getRights().canSeeMeasurements());
-        return getResourceFactory().createMeasurementsResource(null, null);
+        return getResourceFactory().createMeasurementsResource(null);
     }
 
     @Path(STATISTICS)
     public StatisticsResource statistics() {
-        checkRights(getRights().canSeeStatistics());
         return getResourceFactory().createStatisticsResource();
     }
 
     @Path(TERMS_OF_USE)
     public TermsOfUseResource termsOfUse() {
-        checkRights(getRights().canSeeTermsOfUse());
         return getResourceFactory().createTermsOfUseResource();
     }
 
     @Path(SCHEMA)
     public JSONSchemaResource schemas() {
-        checkRights(getRights().canSeeSchema());
         return getResourceFactory().createSchemaResource();
-    }
-
-    @Path(ANNOUNCEMENTS)
-    public AnnouncementsResource announcements() {
-    	checkRights(getRights().canSeeAnnouncements());
-    	return getResourceFactory().createAnnouncementsResource();
-    }
-
-    @Path(BADGES)
-    public BadgesResource badges() {
-    	checkRights(getRights().canSeeBadges());
-    	return getResourceFactory().createBadgesResource();
-    }
-
-    @Path(RESET_PASSWORD)
-    public ResetPasswordResource resetPassword() {
-    	return getResourceFactory().createResetPasswordResource();
-    }
-
-    @Path(CONFIRM)
-    public ConfirmResource confirm() {
-        return getResourceFactory().createConfirmResource();
     }
 
     @Path("rest")

@@ -18,7 +18,6 @@ package org.envirocar.server.core.filter;
 
 import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.core.entities.Track;
-import org.envirocar.server.core.entities.User;
 
 /**
  * TODO JavaDoc
@@ -26,38 +25,24 @@ import org.envirocar.server.core.entities.User;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class StatisticsFilter {
-    private final User user;
     private final Track track;
     private final Sensor sensor;
 
-    public StatisticsFilter(User user, Track track, Sensor sensor) {
-        this.user = user;
+    public StatisticsFilter(Track track, Sensor sensor) {
         this.track = track;
         this.sensor = sensor;
     }
 
-    public StatisticsFilter(User user) {
-        this(user, null, null);
-    }
-
     public StatisticsFilter(Track track) {
-        this(null, track, null);
+        this(track, null);
     }
 
     public StatisticsFilter(Sensor sensor) {
-        this(null, null, sensor);
+        this(null, sensor);
     }
 
     public StatisticsFilter() {
-        this(null, null, null);
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public boolean hasUser() {
-        return this.user != null;
+        this(null, null);
     }
 
     public Track getTrack() {

@@ -85,7 +85,7 @@ public class CarSimilarityServiceImpl implements CarSimilarityService {
                 JsonNode mans = json.path("manufacturers");
 
                 if (!mans.isMissingNode()) {
-                    mans.forEach((JsonNode t) -> {
+                    mans.forEach(t -> {
                         Set<String> matches = mapper.convertValue(t.path("matches"), Set.class);
                         String name = t.path("name").asText();
                         this.similarManufactures.put(name, matches);
@@ -109,7 +109,6 @@ public class CarSimilarityServiceImpl implements CarSimilarityService {
     @Override
     public Sensor resolveEquivalent(final Sensor s) throws ResourceNotFoundException {
         Sensors candidates = this.sensorDao.get(new SensorFilter("car",
-                null,
                 createFilter(s),
                 new PageBasedPagination(PageBasedPagination.MAX_PAGE_SIZE, 0)));
 

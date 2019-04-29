@@ -16,32 +16,13 @@
  */
 package org.envirocar.server.rest.encoding.shapefile;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-import java.util.UUID;
-
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.ext.Provider;
-
+import com.google.common.io.Closeables;
+import com.google.inject.Inject;
+import com.vividsolutions.jts.geom.Point;
 import org.envirocar.server.core.DataService;
-import org.envirocar.server.core.entities.Measurement;
-import org.envirocar.server.core.entities.MeasurementValue;
-import org.envirocar.server.core.entities.MeasurementValues;
-import org.envirocar.server.core.entities.Measurements;
-import org.envirocar.server.core.entities.Phenomenon;
-import org.envirocar.server.core.entities.Track;
+import org.envirocar.server.core.entities.*;
 import org.envirocar.server.core.exception.TrackTooLongException;
 import org.envirocar.server.core.filter.MeasurementFilter;
-import org.envirocar.server.rest.rights.AccessRights;
 import org.geotools.data.DataStoreFactorySpi;
 import org.geotools.data.DefaultTransaction;
 import org.geotools.data.FeatureStore;
@@ -54,6 +35,7 @@ import org.geotools.feature.NameImpl;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.geotools.referencing.CRS;
+import org.n52.wps.io.IOUtils;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.Name;
@@ -63,11 +45,13 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.n52.wps.io.IOUtils;
-
-import com.google.common.io.Closeables;
-import com.google.inject.Inject;
-import com.vividsolutions.jts.geom.Point;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.Provider;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Serializable;
+import java.util.*;
 
 /**
  * TODO: Javadoc
@@ -126,16 +110,13 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder<Track> 
     }
 
     @Override
-    public File encodeShapefile(Track t, AccessRights rights,
-                                MediaType mediaType) throws TrackTooLongException {
+    public File encodeShapefile(Track t, MediaType mediaType) throws TrackTooLongException {
         this.track = t;
         File zippedShapeFile = null;
         try {
-            if (rights.canSeeMeasurementsOf(t)) {
-                Measurements measurements = dataService
-                        .getMeasurements(new MeasurementFilter(t));
-                zippedShapeFile = createZippedShapefile(createShapeFile(createFeatureCollection(measurements)));
-            }
+            Measurements measurements = dataService
+                    .getMeasurements(new MeasurementFilter(t));
+            zippedShapeFile = createZippedShapefile(createShapeFile(createFeatureCollection(measurements)));
         } catch (IOException e) {
             log.debug(e.getMessage());
         }

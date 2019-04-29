@@ -18,7 +18,6 @@ package org.envirocar.server.mongo.entity;
 
 import org.envirocar.server.core.entities.Phenomenon;
 import org.envirocar.server.core.statistics.Statistic;
-
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Property;
 
@@ -32,17 +31,14 @@ public class MongoStatistic implements Statistic {
     public static final String MIN = "min";
     public static final String MAX = "max";
     public static final String MEAN = "mean";
-    public static final String USERS = "users";
     public static final String MEASUREMENTS = "measurements";
     public static final String TRACKS = "tracks";
     public static final String PHENOMENON = "phenomenon";
     public static final String SENSORS = "sensors";
-    @Embedded
+    @Embedded(PHENOMENON)
     private MongoPhenomenon phenomenon;
     @Property(TRACKS)
     private long tracks;
-    @Property(USERS)
-    private long users;
     @Property(MEASUREMENTS)
     private long measurements;
     @Property(SENSORS)
@@ -70,15 +66,6 @@ public class MongoStatistic implements Statistic {
 
     public void setMeasurements(long measurements) {
         this.measurements = measurements;
-    }
-
-    @Override
-    public long getUsers() {
-        return users;
-    }
-
-    public void setUsers(long users) {
-        this.users = users;
     }
 
     @Override

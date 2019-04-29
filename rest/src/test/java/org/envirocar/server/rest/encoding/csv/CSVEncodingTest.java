@@ -16,22 +16,8 @@
  */
 package org.envirocar.server.rest.encoding.csv;
 
-import static org.junit.Assert.assertTrue;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.envirocar.server.core.entities.Measurement;
-import org.envirocar.server.core.entities.MeasurementValue;
-import org.envirocar.server.core.entities.Phenomenon;
-import org.envirocar.server.core.entities.Sensor;
-import org.envirocar.server.core.entities.Track;
-import org.envirocar.server.core.entities.User;
+import com.vividsolutions.jts.geom.Coordinate;
+import org.envirocar.server.core.entities.*;
 import org.envirocar.server.core.exception.TrackNotFoundException;
 import org.envirocar.server.core.exception.ValidationException;
 import org.envirocar.server.mongo.entity.MongoSensor;
@@ -41,7 +27,15 @@ import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.vividsolutions.jts.geom.Coordinate;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * TODO JavaDoc
@@ -67,7 +61,6 @@ public class CSVEncodingTest extends AbstractEncodingTest {
     private Track testTrack2;
     private Track testTrack3;
 
-    private User user;
     private Sensor sensor;
     private List<Phenomenon> phenomenons;
 
@@ -84,25 +77,25 @@ public class CSVEncodingTest extends AbstractEncodingTest {
 
             if (testTrack1 == null) {
 
-                testTrack1 = createTrack(trackObjectId1, getUser(), getSensor());
+                testTrack1 = createTrack(trackObjectId1, getSensor());
 
                 createTrackWithMeasurements_AllMeasurementsHaveAllPhenomenons(
-                        testTrack1, getPhenomenons(), getUser(), getSensor());
+                        testTrack1, getPhenomenons(), getSensor());
 
             }
             if (testTrack2 == null) {
 
-                testTrack2 = createTrack(trackObjectId2, getUser(), getSensor());
+                testTrack2 = createTrack(trackObjectId2, getSensor());
 
                 createTrackWithMeasurements_FirstMeasurementHasLessPhenomenons(
-                        testTrack2, getPhenomenons(), getUser(), getSensor());
+                        testTrack2, getPhenomenons(), getSensor());
             }
             if (testTrack3 == null) {
 
-                testTrack3 = createTrack(trackObjectId3, getUser(), getSensor());
+                testTrack3 = createTrack(trackObjectId3, getSensor());
 
                 createTrackWithMeasurements_FirstMeasurementHasMorePhenomenons(
-                        testTrack3, getPhenomenons(), getUser(), getSensor());
+                        testTrack3, getPhenomenons(), getSensor());
             }
 
         } catch (ValidationException e) {
@@ -117,7 +110,7 @@ public class CSVEncodingTest extends AbstractEncodingTest {
 
         BufferedReader bufferedReader = new BufferedReader(
                 new InputStreamReader(trackCSVEncoder.encodeCSV(testTrack1,
-                                                                MediaTypes.TEXT_CSV_TYPE)));
+                        MediaTypes.TEXT_CSV_TYPE)));
 
         String line = "";
 
@@ -178,7 +171,7 @@ public class CSVEncodingTest extends AbstractEncodingTest {
 
         BufferedReader bufferedReader = new BufferedReader(
                 new InputStreamReader(trackCSVEncoder.encodeCSV(testTrack2,
-                                                                MediaTypes.TEXT_CSV_TYPE)));
+                        MediaTypes.TEXT_CSV_TYPE)));
 
         String line = "";
 
@@ -239,7 +232,7 @@ public class CSVEncodingTest extends AbstractEncodingTest {
 
         BufferedReader bufferedReader = new BufferedReader(
                 new InputStreamReader(trackCSVEncoder.encodeCSV(testTrack3,
-                                                                MediaTypes.TEXT_CSV_TYPE)));
+                        MediaTypes.TEXT_CSV_TYPE)));
 
         String line = "";
 
@@ -292,13 +285,6 @@ public class CSVEncodingTest extends AbstractEncodingTest {
 
     }
 
-    private User getUser() {
-        if (user == null) {
-            user = createUser(testUserName);
-        }
-        return user;
-    }
-
     private Sensor getSensor() {
 
         if (sensor == null) {
@@ -321,27 +307,25 @@ public class CSVEncodingTest extends AbstractEncodingTest {
             testTrack = dataService.getTrack(trackId);
         } catch (TrackNotFoundException e) {
             /*
-			 * ignore
+             * ignore
              */
         }
         return testTrack;
     }
 
     private void createTrackWithMeasurements_AllMeasurementsHaveAllPhenomenons(
-            Track track, List<Phenomenon> phenomenons, User user, Sensor sensor) {
+            Track track, List<Phenomenon> phenomenons, Sensor sensor) {
 
         DateTime now = DateTime.now();
-        createMeasurement(track, measurementObjectId1, phenomenons, user,
-                          sensor, 1, now.minusSeconds(5));
-        createMeasurement(track, measurementObjectId2, phenomenons, user,
-                          sensor, 2, now);
+        createMeasurement(track, measurementObjectId1, phenomenons, sensor, 1, now.minusSeconds(5));
+        createMeasurement(track, measurementObjectId2, phenomenons, sensor, 2, now);
 
         dataService.createTrack(track);
 
     }
 
     private void createTrackWithMeasurements_FirstMeasurementHasLessPhenomenons(
-            Track track, List<Phenomenon> phenomenons, User user, Sensor sensor) {
+            Track track, List<Phenomenon> phenomenons, Sensor sensor) {
 
         List<Phenomenon> originalPhenomenons = new ArrayList<Phenomenon>(phenomenons.size());
 
@@ -352,32 +336,28 @@ public class CSVEncodingTest extends AbstractEncodingTest {
         phenomenons.remove(phenomenons.size() - 1);
 
         DateTime now = DateTime.now();
-        createMeasurement(track, measurementObjectId3, phenomenons, user,
-                          sensor, 1, now.minusSeconds(5));
+        createMeasurement(track, measurementObjectId3, phenomenons, sensor, 1, now.minusSeconds(5));
 
-        createMeasurement(track, measurementObjectId4, originalPhenomenons, user,
-                          sensor, 2, now);
+        createMeasurement(track, measurementObjectId4, originalPhenomenons, sensor, 2, now);
 
         dataService.createTrack(track);
     }
 
     private void createTrackWithMeasurements_FirstMeasurementHasMorePhenomenons(
-            Track track, List<Phenomenon> phenomenons, User user, Sensor sensor) {
+            Track track, List<Phenomenon> phenomenons, Sensor sensor) {
 
         DateTime now = DateTime.now();
-        createMeasurement(track, measurementObjectId5, phenomenons, user,
-                          sensor, 1, now.minusSeconds(5));
+        createMeasurement(track, measurementObjectId5, phenomenons, sensor, 1, now.minusSeconds(5));
 
         phenomenons.remove(phenomenons.size() - 1);
 
-        createMeasurement(track, measurementObjectId6, phenomenons, user,
-                          sensor, 2, now);
+        createMeasurement(track, measurementObjectId6, phenomenons, sensor, 2, now);
 
         dataService.createTrack(track);
     }
 
     private Measurement createMeasurement(Track testTrack, String objectId,
-                                          List<Phenomenon> phenomenons, User user, Sensor sensor,
+                                          List<Phenomenon> phenomenons, Sensor sensor,
                                           int basenumber, DateTime time) {
 
         Measurement measurement = entityFactory.createMeasurement();
@@ -386,8 +366,6 @@ public class CSVEncodingTest extends AbstractEncodingTest {
                 basenumber + 0.1, basenumber + 0.2)));
 
         measurement.setSensor(sensor);
-
-        measurement.setUser(user);
 
         measurement.setIdentifier(objectId);
 
@@ -417,13 +395,11 @@ public class CSVEncodingTest extends AbstractEncodingTest {
 
     }
 
-    private Track createTrack(String objectId, User user, Sensor sensor) {
+    private Track createTrack(String objectId, Sensor sensor) {
 
         Track result = entityFactory.createTrack();
 
         result.setIdentifier(objectId);
-
-        result.setUser(user);
 
         result.setSensor(sensor);
 
@@ -470,22 +446,6 @@ public class CSVEncodingTest extends AbstractEncodingTest {
         return f;
     }
 
-    private User createUser(String testUserName) {
-
-        User user = entityFactory.createUser();
-
-        user.setName(testUserName);
-        user.setMail("info@52north.org");
-        user.setToken("pwd123");
-
-        if (userDao.getByName(testUserName) == null) {
-            userDao.save(user);
-        }
-
-        return user;
-
-    }
-
     private void checkMeasurementValues(String[] propertyNames, String[] propertyValues,
                                         Map<String, String> expectedValues) {
 
@@ -501,8 +461,8 @@ public class CSVEncodingTest extends AbstractEncodingTest {
                 String propertyValue = propertyValues[i].trim();
 
                 assertTrue("Value for " + propertyName + " does not match expected. Got " + propertyValue + " expected " +
-                           expectedMeasurementValue + ".", expectedMeasurementValue
-                                   .equals(propertyValue));
+                        expectedMeasurementValue + ".", expectedMeasurementValue
+                        .equals(propertyValue));
             }
 
         }

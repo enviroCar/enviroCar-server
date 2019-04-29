@@ -16,24 +16,21 @@
  */
 package org.envirocar.server.rest.encoding.json;
 
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.ext.Provider;
-
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.inject.Inject;
 import org.envirocar.server.core.DataService;
 import org.envirocar.server.core.entities.Measurements;
 import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.core.entities.Track;
-import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.filter.MeasurementFilter;
 import org.envirocar.server.core.util.GeoJSONConstants;
 import org.envirocar.server.rest.JSONConstants;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.encoding.JSONEntityEncoder;
-import org.envirocar.server.rest.rights.AccessRights;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.inject.Inject;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.Provider;
 
 /**
  * TODO JavaDoc
@@ -44,64 +41,52 @@ import com.google.inject.Inject;
 public class TrackJSONEncoder extends AbstractJSONEntityEncoder<Track> {
     private final JSONEntityEncoder<Sensor> sensorEncoder;
     private final JSONEntityEncoder<Measurements> measurementsEncoder;
-    private final JSONEntityEncoder<User> userEncoder;
     private final DataService dataService;
 
     @Inject
     public TrackJSONEncoder(JSONEntityEncoder<Sensor> sensorEncoder,
                             JSONEntityEncoder<Measurements> measurementsEncoder,
-                            JSONEntityEncoder<User> userEncoder,
                             DataService dataService) {
         super(Track.class);
         this.sensorEncoder = sensorEncoder;
-        this.userEncoder = userEncoder;
         this.measurementsEncoder = measurementsEncoder;
         this.dataService = dataService;
     }
 
     @Override
-    public ObjectNode encodeJSON(Track t, AccessRights rights,
-                                 MediaType mediaType) {
+    public ObjectNode encodeJSON(Track t, MediaType mediaType) {
         ObjectNode track = getJsonFactory().objectNode();
 
         if (mediaType.equals(MediaTypes.TRACK_TYPE)) {
             track.put(GeoJSONConstants.TYPE_KEY,
-                      GeoJSONConstants.FEATURE_COLLECTION_TYPE);
+                    GeoJSONConstants.FEATURE_COLLECTION_TYPE);
             ObjectNode properties = track
                     .putObject(GeoJSONConstants.PROPERTIES_KEY);
             if (t.hasIdentifier()) {
                 properties.put(JSONConstants.IDENTIFIER_KEY, t.getIdentifier());
             }
-            if (t.hasName() && rights.canSeeNameOf(t)) {
+            if (t.hasName()) {
                 properties.put(JSONConstants.NAME_KEY, t.getName());
             }
-            if (t.hasDescription() && rights.canSeeDescriptionOf(t)) {
+            if (t.hasDescription()) {
                 properties
                         .put(JSONConstants.DESCRIPTION_KEY, t.getDescription());
             }
-            if (t.hasCreationTime() && rights.canSeeCreationTimeOf(t)) {
+            if (t.hasCreationTime()) {
                 properties.put(JSONConstants.CREATED_KEY,
-                               getDateTimeFormat().print(t.getCreationTime()));
+                        getDateTimeFormat().print(t.getCreationTime()));
             }
-            if (t.hasModificationTime() && rights
-                    .canSeeModificationTimeOf(t)) {
+            if (t.hasModificationTime()) {
                 properties.put(JSONConstants.MODIFIED_KEY,
-                               getDateTimeFormat()
-                        .print(t.getModificationTime()));
+                        getDateTimeFormat()
+                                .print(t.getModificationTime()));
             }
-            if (t.hasSensor() && rights.canSeeSensorOf(t)) {
+            if (t.hasSensor()) {
                 properties.set(JSONConstants.SENSOR_KEY, sensorEncoder
-                        .encodeJSON(t.getSensor(), rights, mediaType));
+                        .encodeJSON(t.getSensor(), mediaType));
             }
-            if (t.hasUser() && rights.canSeeUserOf(t)) {
-                properties.set(JSONConstants.USER_KEY, userEncoder
-                        .encodeJSON(t.getUser(), rights, mediaType));
-            }
-            if (rights.canSeeLengthOf(t)) {
-            	properties.put(JSONConstants.LENGTH_KEY, t.getLength());
-            }
-            if (t.hasAppVersion() && rights.canSeeAppVersionOf(t)) {
-            	properties.put(JSONConstants.APP_VERSION_KEY, t.getAppVersion());
+            if (t.hasAppVersion()) {
+                properties.put(JSONConstants.APP_VERSION_KEY, t.getAppVersion());
             }
             /*
              * do not serialize the OBD device for privacy's sake
@@ -109,50 +94,39 @@ public class TrackJSONEncoder extends AbstractJSONEntityEncoder<Track> {
 //            if (t.hasObdDevice() && rights.canSeeObdDeviceOf(t)) {
 //            	properties.put(JSONConstants.OBD_DEVICE_KEY, t.getObdDevice());
 //            }
-            if (t.hasTouVersion() && rights.canSeeTouVersionOf(t)) {
-            	properties.put(JSONConstants.TOU_VERSION_KEY, t.getTouVersion());
+            if (t.hasTouVersion()) {
+                properties.put(JSONConstants.TOU_VERSION_KEY, t.getTouVersion());
             }
-            JsonNode features;
-            if (rights.canSeeMeasurementsOf(t)) {
-                Measurements values = dataService
-                        .getMeasurements(new MeasurementFilter(t));
-                features = measurementsEncoder
-                        .encodeJSON(values, rights, mediaType)
-                        .path(GeoJSONConstants.FEATURES_KEY);
-            } else {
-                features = track.arrayNode();
-            }
+            Measurements values = dataService
+                    .getMeasurements(new MeasurementFilter(t));
+            JsonNode features = measurementsEncoder.encodeJSON(values, mediaType)
+                    .path(GeoJSONConstants.FEATURES_KEY);
             track.set(GeoJSONConstants.FEATURES_KEY, features);
         } else {
             if (t.hasIdentifier()) {
                 track.put(JSONConstants.IDENTIFIER_KEY, t.getIdentifier());
             }
-            if (t.hasModificationTime() && rights
-                    .canSeeModificationTimeOf(t)) {
+            if (t.hasModificationTime()) {
                 track.put(JSONConstants.MODIFIED_KEY, getDateTimeFormat()
                         .print(t.getModificationTime()));
             }
-            if (t.hasName() && rights.canSeeNameOf(t)) {
+            if (t.hasName()) {
                 track.put(JSONConstants.NAME_KEY, t.getName());
             }
 
             //additional props
-            if (t.hasLength() && rights.canSeeLengthOf(t)) {
+            if (t.hasLength()) {
                 track.put(JSONConstants.LENGTH_KEY, t.getLength());
             }
-            boolean canSeeTime = rights.canSeeCreationTimeOf(t);
-            if (t.hasBegin() && canSeeTime) {
+            if (t.hasBegin()) {
                 track.put(JSONConstants.BEGIN_KEY, getDateTimeFormat()
                         .print(t.getBegin()));
             }
-            if (t.hasBegin() && canSeeTime) {
+            if (t.hasBegin()) {
                 track.put(JSONConstants.END_KEY, getDateTimeFormat()
                         .print(t.getEnd()));
             }
-            if (rights.canSeeSensorOf(t)) {
-                track.set(JSONConstants.SENSOR_KEY,
-                        this.sensorEncoder.encodeJSON(t.getSensor(), rights, mediaType));
-            }
+            track.set(JSONConstants.SENSOR_KEY, this.sensorEncoder.encodeJSON(t.getSensor(), mediaType));
         }
         return track;
     }

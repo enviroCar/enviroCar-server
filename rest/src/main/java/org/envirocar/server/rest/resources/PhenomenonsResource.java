@@ -46,10 +46,7 @@ public class PhenomenonsResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.PHENOMENONS)
-    @Produces({ MediaTypes.PHENOMENONS,
-                MediaTypes.XML_RDF,
-                MediaTypes.TURTLE,
-                MediaTypes.TURTLE_ALT })
+    @Produces({ MediaTypes.PHENOMENONS })
     public Phenomenons get() throws BadRequestException {
         return getDataService().getPhenomenons(getPagination());
     }
@@ -68,7 +65,6 @@ public class PhenomenonsResource extends AbstractResource {
     public PhenomenonResource phenomenon(@PathParam("phenomenon") String id)
             throws PhenomenonNotFoundException {
         Phenomenon p = getDataService().getPhenomenonByName(id);
-        checkRights(getRights().canSee(p));
         return getResourceFactory().createPhenomenonResource(p);
     }
 }

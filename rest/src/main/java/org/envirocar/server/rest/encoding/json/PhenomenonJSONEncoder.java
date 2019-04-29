@@ -16,15 +16,13 @@
  */
 package org.envirocar.server.rest.encoding.json;
 
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.ext.Provider;
-
 import com.fasterxml.jackson.databind.node.ObjectNode;
-
 import org.envirocar.server.core.entities.Phenomenon;
 import org.envirocar.server.rest.JSONConstants;
 import org.envirocar.server.rest.MediaTypes;
-import org.envirocar.server.rest.rights.AccessRights;
+
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.Provider;
 
 /**
  * TODO JavaDoc
@@ -38,8 +36,7 @@ public class PhenomenonJSONEncoder extends AbstractJSONEntityEncoder<Phenomenon>
     }
 
     @Override
-    public ObjectNode encodeJSON(Phenomenon t, AccessRights rights,
-                                 MediaType mediaType) {
+    public ObjectNode encodeJSON(Phenomenon t, MediaType mediaType) {
         ObjectNode phenomenon = getJsonFactory().objectNode();
         if (t.hasName()) {
             phenomenon.put(JSONConstants.NAME_KEY, t.getName());

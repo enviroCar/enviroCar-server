@@ -16,11 +16,8 @@
  */
 package org.envirocar.server.rest.encoding;
 
-import java.io.InputStream;
-
 import javax.ws.rs.core.MediaType;
-
-import org.envirocar.server.rest.rights.AccessRights;
+import java.io.InputStream;
 
 /**
  * TODO JavaDoc
@@ -28,5 +25,5 @@ import org.envirocar.server.rest.rights.AccessRights;
  * @author Benjamin Pross
  */
 public interface CSVTrackEncoder<T> {
-    InputStream encodeCSV(T t, AccessRights rights, MediaType mt);
+    InputStream encodeCSV(T t, MediaType mt);
 }

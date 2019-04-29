@@ -17,7 +17,6 @@
 package org.envirocar.server.core.event;
 
 import org.envirocar.server.core.entities.Measurement;
-import org.envirocar.server.core.entities.User;
 
 /**
  * TODO JavaDoc
@@ -26,20 +25,13 @@ import org.envirocar.server.core.entities.User;
  */
 public class DeletedMeasurementEvent implements MeasurementEvent {
     private final Measurement measurement;
-    private final User user;
 
-    public DeletedMeasurementEvent(Measurement measurement, User user) {
+    public DeletedMeasurementEvent(Measurement measurement) {
         this.measurement = measurement;
-        this.user = user;
     }
 
     @Override
     public Measurement getMeasurement() {
         return measurement;
-    }
-
-    @Override
-    public User getUser() {
-        return user;
     }
 }

@@ -23,6 +23,6 @@ import org.envirocar.server.core.entities.Measurement;
  *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public interface MeasurementEvent extends UserCausedEvent {
+public interface MeasurementEvent extends Event {
     Measurement getMeasurement();
 }

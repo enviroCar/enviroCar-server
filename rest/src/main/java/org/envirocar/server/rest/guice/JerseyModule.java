@@ -16,20 +16,6 @@
  */
 package org.envirocar.server.rest.guice;
 
-import static java.util.stream.Collectors.joining;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.StreamSupport;
-
-import org.envirocar.server.rest.CachingFilter;
-import org.envirocar.server.rest.URIContentNegotiationFilter;
-import org.envirocar.server.rest.auth.AuthenticationFilter;
-import org.envirocar.server.rest.auth.AuthenticationResourceFilterFactory;
-import org.envirocar.server.rest.pagination.PaginationFilter;
-import org.envirocar.server.rest.validation.JSONSchemaResourceFilterFactory;
-
 import com.google.common.collect.ImmutableMap;
 import com.sun.jersey.api.container.filter.GZIPContentEncodingFilter;
 import com.sun.jersey.api.core.ResourceConfig;
@@ -38,6 +24,18 @@ import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 import com.sun.jersey.spi.container.ContainerRequestFilter;
 import com.sun.jersey.spi.container.ContainerResponseFilter;
 import com.sun.jersey.spi.container.ResourceFilterFactory;
+import org.envirocar.server.rest.CachingFilter;
+import org.envirocar.server.rest.URIContentNegotiationFilter;
+import org.envirocar.server.rest.auth.AuthenticationResourceFilterFactory;
+import org.envirocar.server.rest.pagination.PaginationFilter;
+import org.envirocar.server.rest.validation.JSONSchemaResourceFilterFactory;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.StreamSupport;
+
+import static java.util.stream.Collectors.joining;
 
 /**
  * TODO JavaDoc
@@ -71,8 +69,7 @@ public class JerseyModule extends JerseyServletModule {
 
     protected List<Class<? extends ContainerRequestFilter>> requestFilters() {
         return Arrays.asList(GZIPContentEncodingFilter.class,
-                             URIContentNegotiationFilter.class,
-                             AuthenticationFilter.class);
+                             URIContentNegotiationFilter.class);
     }
 
     protected List<Class<? extends ResourceFilterFactory>> filterFactories() {
