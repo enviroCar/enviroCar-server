@@ -16,28 +16,20 @@
  */
 package org.envirocar.server.mongo.entity;
 
-import org.mongodb.morphia.annotations.Embedded;
-import org.mongodb.morphia.annotations.Entity;
-import org.mongodb.morphia.annotations.Id;
-import org.mongodb.morphia.annotations.Indexed;
-import org.mongodb.morphia.annotations.Property;
-import org.mongodb.morphia.mapping.Mapper;
-
+import com.google.common.base.Objects;
 import org.envirocar.server.core.entities.TrackSummaries;
 import org.envirocar.server.core.entities.UserStatistic;
-
-import com.google.common.base.Objects;
-
 import org.joda.time.DateTime;
+import org.mongodb.morphia.annotations.*;
+import org.mongodb.morphia.mapping.Mapper;
 
 /**
- *
  * @author Maurin Radtke <maurin.radtke@uni-muenster.de>
  */
 @Entity("userstatistic")
 public class MongoUserStatistic implements UserStatistic {
 
-    public static final int METER_TOLERANCE = 1000;    
+    public static final int METER_TOLERANCE = 1000;
     public static final int SECOND_TOLERANCE = 10000;
 
     public static final String KEY = Mapper.ID_KEY;
@@ -121,7 +113,7 @@ public class MongoUserStatistic implements UserStatistic {
 
     @Override
     public void setDistance(double distance) {
-        this.distance = round_by_meters(distance);
+        this.distance = roundByMeters(distance);
     }
 
     @Override
@@ -131,7 +123,7 @@ public class MongoUserStatistic implements UserStatistic {
 
     @Override
     public void setDuration(double duration) {
-        this.duration = round_by_seconds(duration);
+        this.duration = roundBySeconds(duration);
     }
 
     @Override
@@ -141,7 +133,7 @@ public class MongoUserStatistic implements UserStatistic {
 
     @Override
     public void setDistanceBelow60kmh(double distanceBelow60kmh) {
-        this.distanceBelow60kmh = round_by_meters(distanceBelow60kmh);
+        this.distanceBelow60kmh = roundByMeters(distanceBelow60kmh);
     }
 
     @Override
@@ -151,7 +143,7 @@ public class MongoUserStatistic implements UserStatistic {
 
     @Override
     public void setDurationBelow60kmh(double durationBelow60kmh) {
-        this.durationBelow60kmh = round_by_seconds(durationBelow60kmh);
+        this.durationBelow60kmh = roundBySeconds(durationBelow60kmh);
     }
 
     @Override
@@ -161,7 +153,7 @@ public class MongoUserStatistic implements UserStatistic {
 
     @Override
     public void setDistanceAbove130kmh(double distanceAbove130kmh) {
-        this.distanceAbove130kmh = round_by_meters(distanceAbove130kmh);
+        this.distanceAbove130kmh = roundByMeters(distanceAbove130kmh);
     }
 
     @Override
@@ -171,7 +163,7 @@ public class MongoUserStatistic implements UserStatistic {
 
     @Override
     public void setDurationAbove130kmh(double durationAbove130kmh) {
-        this.durationAbove130kmh = round_by_seconds(durationAbove130kmh);
+        this.durationAbove130kmh = roundBySeconds(durationAbove130kmh);
     }
 
     @Override
@@ -181,7 +173,7 @@ public class MongoUserStatistic implements UserStatistic {
 
     @Override
     public void setDistanceNaN(double distance) {
-        this.distanceNaN = round_by_meters(distance);
+        this.distanceNaN = roundByMeters(distance);
     }
 
     @Override
@@ -191,7 +183,7 @@ public class MongoUserStatistic implements UserStatistic {
 
     @Override
     public void setDurationNaN(double duration) {
-        this.durationNaN = round_by_seconds(duration);
+        this.durationNaN = roundBySeconds(duration);
     }
 
     @Override
@@ -208,15 +200,13 @@ public class MongoUserStatistic implements UserStatistic {
     public boolean hasTrackSummaries() {
         return (this.trackSummaries != null);
     }
-    
-    private double round_by_meters(double distance){
-        double rounded = Math.round(distance * METER_TOLERANCE);
-        return rounded / METER_TOLERANCE;
+
+    private double roundByMeters(double distance) {
+        return Math.round(distance * METER_TOLERANCE) / METER_TOLERANCE;
     }
-    
-    private double round_by_seconds(double duration){
-        double rounded = Math.round(duration * SECOND_TOLERANCE);
-        return rounded / SECOND_TOLERANCE;
+
+    private double roundBySeconds(double duration) {
+        return Math.round(duration * SECOND_TOLERANCE) / SECOND_TOLERANCE;
     }
 
 }

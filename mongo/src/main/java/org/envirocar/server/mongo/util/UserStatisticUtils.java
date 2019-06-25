@@ -16,21 +16,15 @@
  */
 package org.envirocar.server.mongo.util;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.envirocar.server.core.entities.Measurement;
-import org.envirocar.server.core.entities.MeasurementValue;
-import org.envirocar.server.core.entities.MeasurementValues;
-import org.envirocar.server.core.entities.Measurements;
-import org.envirocar.server.core.entities.Track;
-import org.envirocar.server.core.entities.TrackSummaries;
-import org.envirocar.server.core.entities.TrackSummary;
+import org.envirocar.server.core.entities.*;
 import org.envirocar.server.core.util.GeodesicGeometryOperations;
 import org.envirocar.server.mongo.entity.MongoUserStatistic;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserStatisticUtils implements UserStatisticOperations {
 
@@ -163,9 +157,8 @@ public class UserStatisticUtils implements UserStatisticOperations {
         GeodesicGeometryOperations ggo = new GeodesicGeometryOperations();
 
         if (values instanceof Iterable) {
-            Iterable<Measurement> measurementIterator = (Iterable<Measurement>) values;
             List<Measurement> list = new ArrayList<>();
-            for (Measurement m : measurementIterator) {
+            for (Measurement m : values) {
                 list.add(m);
             }
 
@@ -183,33 +176,26 @@ public class UserStatisticUtils implements UserStatisticOperations {
                 Measurement m_next = list.get(i + 1);
 
                 // calculate dist:
-                double dist = ggo.calculateDistance(
-                        m_this,
-                        m_next);
+                double dist = ggo.calculateDistance(m_this, m_next);
 
                 // calculate dura:
                 double dura_millis = 0;
                 if ((m_this.hasTime()) && (m_next.hasTime())) {
                     DateTime t_start = m_this.getTime();
                     DateTime t_end = m_next.getTime();
-                    dura_millis
-                            = t_end.getMillis()
-                            - t_start.getMillis();
+                    dura_millis = t_end.getMillis() - t_start.getMillis();
                 }
 
                 // b. fill dist and dura according to intervals <60,>130,NaN:
                 Double speed = null;
                 MeasurementValues m_values = m_this.getValues();
                 for (MeasurementValue value : m_values) {
-                    if (value.hasPhenomenon()) {
-                        if (value.getPhenomenon().hasName()) {
-                            if (value.getPhenomenon().getName().equals("Speed")) {
-                                if (value.hasValue()) {
-                                    speed = (double) value.getValue();
-                                    break;
-                                }
-                            }
-                        }
+                    if (value.hasPhenomenon() &&
+                            value.getPhenomenon().hasName() &&
+                            value.getPhenomenon().getName().equals("Speed") &&
+                            value.hasValue()) {
+                        speed = (double) value.getValue();
+                        break;
                     }
                 }
                 if (speed == null) {
@@ -238,30 +224,14 @@ public class UserStatisticUtils implements UserStatisticOperations {
                 Measurement valuesStart = list.get(0);
                 Measurement valuesEnd = list.get(list.size() - 1);
 
-                previous.setDistance(
-                        previous.getDistance() - total_dist
-                );
-                previous.setDistanceAbove130kmh(
-                        previous.getDistanceAbove130kmh() - total_dist130
-                );
-                previous.setDistanceBelow60kmh(
-                        previous.getDistanceBelow60kmh() - total_dist60
-                );
-                previous.setDistanceNaN(
-                        previous.getDistanceNaN() - total_distNaN
-                );
-                previous.setDuration(
-                        previous.getDuration() - total_dura
-                );
-                previous.setDurationAbove130kmh(
-                        previous.getDurationAbove130kmh() - total_dura130
-                );
-                previous.setDurationBelow60kmh(
-                        previous.getDurationBelow60kmh() - total_dura60
-                );
-                previous.setDurationNaN(
-                        previous.getDurationNaN() - total_duraNaN
-                );
+                previous.setDistance(previous.getDistance() - total_dist);
+                previous.setDistanceAbove130kmh(previous.getDistanceAbove130kmh() - total_dist130);
+                previous.setDistanceBelow60kmh(previous.getDistanceBelow60kmh() - total_dist60);
+                previous.setDistanceNaN(previous.getDistanceNaN() - total_distNaN);
+                previous.setDuration(previous.getDuration() - total_dura);
+                previous.setDurationAbove130kmh(previous.getDurationAbove130kmh() - total_dura130);
+                previous.setDurationBelow60kmh(previous.getDurationBelow60kmh() - total_dura60);
+                previous.setDurationNaN(previous.getDurationNaN() - total_duraNaN);
 
                 TrackSummary trackSummary = new TrackSummary();
                 trackSummary.setStartPosition(valuesStart.getGeometry());
@@ -272,16 +242,13 @@ public class UserStatisticUtils implements UserStatisticOperations {
                 TrackSummaries resultSummaries = new TrackSummaries();
                 for (TrackSummary currTS : trackSummaries.getTrackSummaryList()) {
                     // if currTS !== DeletedTrack
-                    if (!currTS.getIdentifier()
-                            .equals(trackSummary.getIdentifier())) // add from result:
+                    if (!currTS.getIdentifier().equals(trackSummary.getIdentifier())) // add from result:
                     {
                         resultSummaries.addTrackSummary(currTS);
                     }
                 }
                 // update TrackSummaries:
                 previous.setTrackSummaries(resultSummaries);
-            } else {
-                // less than 2 measurements? skip this track.
             }
         } else {
             log.error("no measurements for track available...");

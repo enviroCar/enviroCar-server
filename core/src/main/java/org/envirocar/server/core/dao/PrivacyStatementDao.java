@@ -14,34 +14,16 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package org.envirocar.server.mongo;
+package org.envirocar.server.core.dao;
 
-import com.google.inject.Inject;
-import com.mongodb.Mongo;
-import org.envirocar.server.core.guice.ResourceShutdownListener;
+import org.envirocar.server.core.entities.PrivacyStatement;
+import org.envirocar.server.core.entities.PrivacyStatements;
+import org.envirocar.server.core.util.pagination.Pagination;
 
-/**
- * @author matthes
- */
-public class MongoShutdownListener implements ResourceShutdownListener {
+public interface PrivacyStatementDao {
 
-    private final Mongo mongo;
+    PrivacyStatements get(Pagination p);
 
-    @Inject
-    public MongoShutdownListener(Mongo mongo) {
-        this.mongo = mongo;
-    }
-
-    @Override
-    public void shutdownResources() {
-        if (mongo != null) {
-            mongo.close();
-        }
-    }
+    PrivacyStatement getById(String id);
 
 }

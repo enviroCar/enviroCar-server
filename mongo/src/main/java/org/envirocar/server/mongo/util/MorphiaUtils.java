@@ -18,7 +18,6 @@ package org.envirocar.server.mongo.util;
 
 import org.envirocar.server.core.TemporalFilter;
 import org.joda.time.DateTime;
-
 import org.mongodb.morphia.query.FieldEnd;
 
 /**
@@ -30,23 +29,20 @@ public class MorphiaUtils {
     private MorphiaUtils() {
     }
 
-    public static void temporalFilter(
-            FieldEnd<?> thisBegin,
-            FieldEnd<?> thisEnd,
-            TemporalFilter tf) {
-        final DateTime other = tf.getInstant();
-        final DateTime otherEnd = tf.getEnd();
-        final DateTime otherBegin = tf.getBegin();
-        switch (tf.getOperator()) {
+    public static void temporalFilter(FieldEnd<?> thisBegin, FieldEnd<?> thisEnd, TemporalFilter temporalFilter) {
+        final DateTime other = temporalFilter.getInstant();
+        final DateTime otherEnd = temporalFilter.getEnd();
+        final DateTime otherBegin = temporalFilter.getBegin();
+        switch (temporalFilter.getOperator()) {
             case after:
-                if (tf.isInstant()) {
+                if (temporalFilter.isInstant()) {
                     thisBegin.greaterThan(other);
                 } else {
                     thisBegin.greaterThan(otherEnd);
                 }
                 break;
             case before:
-                if (tf.isInstant()) {
+                if (temporalFilter.isInstant()) {
                     thisEnd.lessThan(other);
                 } else {
                     thisEnd.lessThan(otherBegin);
@@ -57,7 +53,7 @@ public class MorphiaUtils {
                 thisEnd.lessThan(otherEnd);
                 break;
             case begunBy:
-                if (tf.isInstant()) {
+                if (temporalFilter.isInstant()) {
                     thisBegin.equal(other);
                 } else {
                     thisBegin.equal(otherBegin);
@@ -65,7 +61,7 @@ public class MorphiaUtils {
                 }
                 break;
             case contains:
-                if (tf.isInstant()) {
+                if (temporalFilter.isInstant()) {
                     thisBegin.lessThan(other);
                     thisEnd.greaterThan(other);
                 } else {
@@ -78,7 +74,7 @@ public class MorphiaUtils {
                 thisEnd.lessThan(otherEnd);
                 break;
             case endedBy:
-                if (tf.isInstant()) {
+                if (temporalFilter.isInstant()) {
                     thisEnd.equal(other);
                 } else {
                     thisBegin.lessThan(otherBegin);
@@ -110,28 +106,24 @@ public class MorphiaUtils {
                 thisEnd.lessThan(otherEnd);
                 break;
             default:
-                throw new IllegalArgumentException(
-                        "unsupported temporal operator: " +
-                        tf.getOperator());
+                throw new IllegalArgumentException("unsupported temporal operator: " + temporalFilter.getOperator());
         }
     }
 
-    public static void temporalFilter(
-            FieldEnd<?> time,
-            TemporalFilter tf) {
-        final DateTime instant = tf.getInstant();
-        final DateTime otherEnd = tf.getEnd();
-        final DateTime otherBegin = tf.getBegin();
-        switch (tf.getOperator()) {
+    public static void temporalFilter(FieldEnd<?> time, TemporalFilter temporalFilter) {
+        final DateTime instant = temporalFilter.getInstant();
+        final DateTime otherEnd = temporalFilter.getEnd();
+        final DateTime otherBegin = temporalFilter.getBegin();
+        switch (temporalFilter.getOperator()) {
             case after:
-                if (tf.isInstant()) {
+                if (temporalFilter.isInstant()) {
                     time.greaterThan(instant);
                 } else {
                     time.greaterThan(otherEnd);
                 }
                 break;
             case before:
-                if (tf.isInstant()) {
+                if (temporalFilter.isInstant()) {
                     time.lessThan(instant);
                 } else {
                     time.lessThan(otherBegin);
@@ -151,9 +143,7 @@ public class MorphiaUtils {
                 time.equal(instant);
                 break;
             default:
-                throw new IllegalArgumentException(
-                        "unsupported temporal operator: " +
-                        tf.getOperator());
+                throw new IllegalArgumentException("unsupported temporal operator: " + temporalFilter.getOperator());
         }
     }
 }

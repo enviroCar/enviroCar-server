@@ -16,17 +16,10 @@
  */
 package org.envirocar.server.rest.resources;
 
-import javax.annotation.Nullable;
-
-import org.envirocar.server.core.entities.Group;
-import org.envirocar.server.core.entities.Measurement;
-import org.envirocar.server.core.entities.Phenomenon;
-import org.envirocar.server.core.entities.Sensor;
-import org.envirocar.server.core.entities.TermsOfUseInstance;
-import org.envirocar.server.core.entities.Track;
-import org.envirocar.server.core.entities.User;
-
 import com.google.inject.assistedinject.Assisted;
+import org.envirocar.server.core.entities.*;
+
+import javax.annotation.Nullable;
 
 /**
  * TODO JavaDoc
@@ -102,16 +95,21 @@ public interface ResourceFactory {
 
     TermsOfUseResource createTermsOfUseResource();
 
-    TermsOfUseInstanceResource createTermsOfUseInstanceResource(
-            TermsOfUseInstance t);
+    TermsOfUseInstanceResource createTermsOfUseInstanceResource(TermsOfUseInstance t);
 
     JSONSchemaResource createSchemaResource();
 
     AnnouncementsResource createAnnouncementsResource();
 
-	BadgesResource createBadgesResource();
+    AnnouncementResource createAnnouncementResource(Announcement announcement);
 
-	ResetPasswordResource createResetPasswordResource();
+    PrivacyStatementsResource createPrivacyStatementsResource();
+
+    PrivacyStatementResource createPrivacyStatementResource(Announcement announcement);
+
+    BadgesResource createBadgesResource();
+
+    ResetPasswordResource createResetPasswordResource();
 
     FuelingsResource createFuelingsResource(User user);
 
@@ -121,3 +119,4 @@ public interface ResourceFactory {
 
     ConfirmResource createConfirmResource();
 }
+

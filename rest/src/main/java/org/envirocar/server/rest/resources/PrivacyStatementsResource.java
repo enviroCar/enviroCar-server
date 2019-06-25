@@ -16,34 +16,35 @@
  */
 package org.envirocar.server.rest.resources;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Produces;
-
-import org.envirocar.server.core.entities.TermsOfUseInstance;
+import org.envirocar.server.core.entities.Announcement;
+import org.envirocar.server.core.entities.PrivacyStatements;
+import org.envirocar.server.core.exception.BadRequestException;
 import org.envirocar.server.core.exception.ResourceNotFoundException;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.validation.Schema;
 
-import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 
-/**
- * @author matthes rieke
- */
-public class TermsOfUseInstanceResource extends AbstractResource {
-    private final TermsOfUseInstance termsOfUseInstance;
+public class PrivacyStatementsResource extends AbstractResource {
 
-    @Inject
-    public TermsOfUseInstanceResource(@Assisted TermsOfUseInstance t) {
-        this.termsOfUseInstance = t;
-    }
+    public static final String PRIVACY_STATEMENT = "{id}";
 
     @GET
-    @Schema(response = Schemas.TERMS_OF_USE_INSTANCE)
-    @Produces({MediaTypes.TERMS_OF_USE_INSTANCE})
-    public TermsOfUseInstance get() {
-        return termsOfUseInstance;
+    @Schema(response = Schemas.PRIVACY_STATEMENT)
+    @Produces({MediaTypes.PRIVAVY_STATEMENTS})
+    public PrivacyStatements get() throws BadRequestException {
+        return getDataService().getPrivacyStatements(getPagination());
     }
+
+    @Path(PRIVACY_STATEMENT)
+    public AnnouncementResource privacyStatement(@PathParam("id") String id) throws ResourceNotFoundException {
+        Announcement announcement = getDataService().getAnnouncement(id);
+        return getResourceFactory().createAnnouncementResource(announcement);
+    }
+
 
 }

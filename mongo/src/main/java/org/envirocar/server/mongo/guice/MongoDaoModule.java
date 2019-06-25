@@ -16,36 +16,11 @@
  */
 package org.envirocar.server.mongo.guice;
 
-import org.envirocar.server.core.dao.ActivityDao;
-import org.envirocar.server.core.dao.AnnouncementsDao;
-import org.envirocar.server.core.dao.BadgesDao;
-import org.envirocar.server.core.dao.FuelingDao;
-import org.envirocar.server.core.dao.GroupDao;
-import org.envirocar.server.core.dao.MeasurementDao;
-import org.envirocar.server.core.dao.PhenomenonDao;
-import org.envirocar.server.core.dao.SensorDao;
-import org.envirocar.server.core.dao.StatisticsDao;
-import org.envirocar.server.core.dao.TermsOfUseDao;
-import org.envirocar.server.core.dao.TrackDao;
-import org.envirocar.server.core.dao.UserDao;
-import org.envirocar.server.core.dao.UserStatisticDao;
-import org.envirocar.server.mongo.dao.MongoActivityDao;
-import org.envirocar.server.mongo.dao.MongoAnnouncementsDao;
-import org.envirocar.server.mongo.dao.MongoBadgesDao;
-import org.envirocar.server.mongo.dao.MongoFuelingDao;
-import org.envirocar.server.mongo.dao.MongoGroupDao;
-import org.envirocar.server.mongo.dao.MongoMeasurementDao;
-import org.envirocar.server.mongo.dao.MongoPhenomenonDao;
-import org.envirocar.server.mongo.dao.MongoSensorDao;
-import org.envirocar.server.mongo.dao.MongoStatisticsDao;
-import org.envirocar.server.mongo.dao.MongoTermsOfUseDao;
-import org.envirocar.server.mongo.dao.MongoTrackDao;
-import org.envirocar.server.mongo.dao.MongoUserDao;
-import org.envirocar.server.mongo.dao.MongoUserStatisticDao;
+import com.google.inject.AbstractModule;
+import org.envirocar.server.core.dao.*;
+import org.envirocar.server.mongo.dao.*;
 import org.envirocar.server.mongo.dao.privates.MongoPasswordResetDAO;
 import org.envirocar.server.mongo.dao.privates.PasswordResetDAO;
-
-import com.google.inject.AbstractModule;
 
 /**
  * TODO JavaDoc
@@ -69,5 +44,6 @@ public class MongoDaoModule extends AbstractModule {
         bind(PasswordResetDAO.class).to(MongoPasswordResetDAO.class);
         bind(FuelingDao.class).to(MongoFuelingDao.class);
         bind(UserStatisticDao.class).to(MongoUserStatisticDao.class);
+        bind(PrivacyStatementDao.class).to(MongoPrivacyStatementDao.class);
     }
 }

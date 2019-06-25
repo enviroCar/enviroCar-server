@@ -21,15 +21,6 @@ import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.mongo.entity.MongoUserStatistic;
 
 public interface UserStatisticOperations {
-
-	public MongoUserStatistic addTrackStatistic(
-                MongoUserStatistic previous, 
-                Track track,
-                Measurements values);
-	
-        public MongoUserStatistic removeTrackStatistic(
-                MongoUserStatistic previous,
-                Track track,
-                Measurements values);
-	
+    MongoUserStatistic addTrackStatistic(MongoUserStatistic previous, Track track, Measurements values);
+    MongoUserStatistic removeTrackStatistic(MongoUserStatistic previous, Track track, Measurements values);
 }

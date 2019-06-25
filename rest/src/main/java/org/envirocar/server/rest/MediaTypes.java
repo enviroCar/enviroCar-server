@@ -98,15 +98,15 @@ public interface MediaTypes {
     MediaType IMAGE_JPEG_TYPE = MediaType.valueOf(IMAGE_JPEG);
     String TERMS_OF_USE = "application/json; schema=\"" + Schemas.TERMS_OF_USE + "\"";
     MediaType TERMS_OF_USE_TYPE = MediaType.valueOf(TERMS_OF_USE);
-	String TERMS_OF_USE_INSTANCE = "application/json; schema=\"" + Schemas.TERMS_OF_USE_INSTANCE + "\"";
-	MediaType TERMS_OF_USE_INSTANCE_TYPE = MediaType.valueOf(TERMS_OF_USE_INSTANCE);
-	String ANNOUNCEMENTS = "application/json; schema=\"" + Schemas.ANNOUNCEMENTS + "\"";
+    String TERMS_OF_USE_INSTANCE = "application/json; schema=\"" + Schemas.TERMS_OF_USE_INSTANCE + "\"";
+    MediaType TERMS_OF_USE_INSTANCE_TYPE = MediaType.valueOf(TERMS_OF_USE_INSTANCE);
+    String ANNOUNCEMENTS = "application/json; schema=\"" + Schemas.ANNOUNCEMENTS + "\"";
     MediaType ANNOUNCEMENTS_TYPE = MediaType.valueOf(ANNOUNCEMENTS);
     String ANNOUNCEMENT = "application/json; schema=\"" + Schemas.ANNOUNCEMENT + "\"";
     MediaType ANNOUNCEMENT_TYPE = MediaType.valueOf(ANNOUNCEMENT);
-	String BADGES = "application/json; schema=\"" + Schemas.BADGES + "\"";
+    String BADGES = "application/json; schema=\"" + Schemas.BADGES + "\"";
     MediaType BADGES_TYPE = MediaType.valueOf(BADGES);
-	String BADGE = "application/json; schema=\"" + Schemas.BADGE + "\"";
+    String BADGE = "application/json; schema=\"" + Schemas.BADGE + "\"";
     MediaType BADGE_TYPE = MediaType.valueOf(BADGE);
     String PASSWORD_RESET_REQUEST = "application/json; schema=\"" + Schemas.PASSWORD_RESET_REQUEST + "\"";
     MediaType PASSWORD_RESET_REQUEST_TYPE = MediaType.valueOf(PASSWORD_RESET_REQUEST);
@@ -114,13 +114,16 @@ public interface MediaTypes {
     MediaType PASSWORD_RESET_VERIFICATION_TYPE = MediaType.valueOf(PASSWORD_RESET_VERIFICATION);
     String FUELINGS = "application/json; schema=\"" + Schemas.FUELINGS + "\"";
     MediaType FUELINGS_TYPE = MediaType.valueOf(FUELINGS);
-	String FUELING = "application/json; schema=\"" + Schemas.FUELING + "\"";
+    String FUELING = "application/json; schema=\"" + Schemas.FUELING + "\"";
     MediaType FUELING_TYPE = MediaType.valueOf(FUELING);
     String FUELING_CREATE = "application/json; schema=\"" + Schemas.FUELING_CREATE + "\"";
     MediaType FUELING_CREATE_TYPE = MediaType.valueOf(FUELING_CREATE);
     String PNG_IMAGE = "image/png";
     MediaType PNG_IMAGE_TYPE = MediaType.valueOf(PNG_IMAGE);
-    
     String USERSTATISTIC = "application/json; schema=\"" + Schemas.USERSTATISTIC + "\"";
     MediaType USERSTATISTIC_TYPE = MediaType.valueOf(USERSTATISTIC);
+    String PRIVAVY_STATEMENTS = "application/json; schema=\"" + Schemas.PRIVACY_STATEMENTS + "\"";
+    MediaType PRIVAVY_STATEMENTS_TYPE = MediaType.valueOf(PRIVAVY_STATEMENTS);
+    String PRIVAVY_STATEMENT = "application/json; schema=\"" + Schemas.PRIVACY_STATEMENT + "\"";
+    MediaType PRIVAVY_STATEMENT_TYPE = MediaType.valueOf(PRIVAVY_STATEMENT);
 }

@@ -22,6 +22,7 @@ package org.envirocar.server.rest;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class Schemas {
+
     private static final String PREFIX = "https://envirocar.org/api/stable/schema/";
     public static final String ROOT = PREFIX + "root.json#";
     public static final String USERS = PREFIX + "users.json#";
@@ -40,20 +41,16 @@ public class Schemas {
     public static final String TRACK_MODIFY = PREFIX + "track.modify.json#";
     public static final String MEASUREMENT = PREFIX + "measurement.json#";
     public static final String MEASUREMENTS = PREFIX + "measurements.json#";
-    public static final String MEASUREMENT_CREATE = PREFIX +
-                                                    "measurement.create.json#";
-    public static final String MEASUREMENT_MODIFY = PREFIX +
-                                                    "measurement.modify.json#";
+    public static final String MEASUREMENT_CREATE = PREFIX + "measurement.create.json#";
+    public static final String MEASUREMENT_MODIFY = PREFIX + "measurement.modify.json#";
     public static final String SENSOR = PREFIX + "sensor.json#";
     public static final String SENSORS = PREFIX + "sensors.json#";
     public static final String SENSOR_CREATE = PREFIX + "sensor.create.json#";
     public static final String SENSOR_MODIFY = PREFIX + "sensor.modify.json#";
     public static final String PHENOMENON = PREFIX + "phenomenon.json#";
     public static final String PHENOMENONS = PREFIX + "phenomenons.json#";
-    public static final String PHENOMENON_CREATE = PREFIX +
-                                                   "phenomenon.create.json#";
-    public static final String PHENOMENON_MODIFY = PREFIX +
-                                                   "phenomenon.modify.json#";
+    public static final String PHENOMENON_CREATE = PREFIX + "phenomenon.create.json#";
+    public static final String PHENOMENON_MODIFY = PREFIX + "phenomenon.modify.json#";
     public static final String STATISTICS = PREFIX + "statistics.json#";
     public static final String STATISTIC = PREFIX + "statistic.json#";
     public static final String ACTIVITY = PREFIX + "activitiy.json#";
@@ -70,7 +67,9 @@ public class Schemas {
     public static final String PASSWORD_RESET_REQUEST = PREFIX + "passwordResetRequest.json#";
     public static final String PASSWORD_RESET_VERIFICATION = PREFIX + "passwordResetVerification.json#";
     public static final String USERSTATISTIC = PREFIX + "userstatistic.json#";
-    
+    public static final String PRIVACY_STATEMENT = PREFIX + "privacy-statement.json#";
+    public static final String PRIVACY_STATEMENTS = PREFIX + "privacy-statements.json#";
+
     private Schemas() {
     }
 }

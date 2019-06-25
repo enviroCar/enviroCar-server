@@ -34,10 +34,10 @@ public interface Ops {
     String GROUP = "$group";
     String PROJECT = "$project";
     String ADD_TO_SET = "$addToSet";
-    String GEOWITHIN = "$geoWithin";
-    String NEARSPHERE = "$nearSphere";
+    String GEO_WITHIN = "$geoWithin";
+    String NEAR_SPHERE = QueryOperators.NEAR_SPHERE;
     String GEOMETRY = "$geometry";
-    String GREATER_THAN = "$gt";
-    String LESS_THAN = "$lt";
+    String GREATER_THAN = QueryOperators.GT;
+    String LESS_THAN = QueryOperators.LT;
     String EQUALS = "$eq";
 }

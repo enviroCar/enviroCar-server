@@ -16,16 +16,9 @@
  */
 package org.envirocar.server.mongo.util;
 
-import static org.envirocar.server.core.TemporalFilterOperator.after;
-import static org.envirocar.server.core.TemporalFilterOperator.before;
-import static org.envirocar.server.core.TemporalFilterOperator.begins;
-import static org.envirocar.server.core.TemporalFilterOperator.during;
-import static org.envirocar.server.core.TemporalFilterOperator.ends;
-import static org.envirocar.server.core.TemporalFilterOperator.equals;
-
-import java.security.InvalidParameterException;
-import java.util.List;
-
+import com.google.common.base.Joiner;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
 import org.bson.BSONObject;
 import org.envirocar.server.core.SpatialFilter;
 import org.envirocar.server.core.SpatialFilter.SpatialFilterOperator;
@@ -33,9 +26,8 @@ import org.envirocar.server.core.TemporalFilter;
 import org.envirocar.server.core.exception.GeometryConverterException;
 import org.envirocar.server.core.util.GeometryConverter;
 
-import com.google.common.base.Joiner;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
+import java.security.InvalidParameterException;
+import java.util.List;
 
 /**
  * TODO JavaDoc
@@ -130,72 +122,68 @@ public class MongoUtils {
         return "-" + order;
     }
 
-    public static DBObject spatialFilter(SpatialFilter sf,
-                                         GeometryConverter<BSONObject> converter)
+    public static DBObject spatialFilter(SpatialFilter spatialFilter, GeometryConverter<BSONObject> converter)
             throws GeometryConverterException {
-        SpatialFilterOperator ops = sf.getOperator();
+        SpatialFilterOperator ops = spatialFilter.getOperator();
         switch (ops) {
             case BBOX:
-                return geoWithin(converter.encode(sf.getGeom()));
+                return geoWithin(converter.encode(spatialFilter.getGeom()));
             case NEARPOINT:
-                return geoNearSphere(converter.encode(sf.getGeom()),
-                                     sf.getParams().get(0));
+                return geoNearSphere(converter.encode(spatialFilter.getGeom()), spatialFilter.getParams().get(0));
             default:
-                throw new InvalidParameterException("Spatial operator" + sf
-                                                    .getOperator().toString() +
-                                                    "not supported!");
+                throw new InvalidParameterException(String.format("Spatial operator %s not supported!", spatialFilter
+                        .getOperator().toString()));
         }
     }
 
     public static DBObject geoWithin(BSONObject geometry) {
-        return new BasicDBObject(Ops.GEOWITHIN, geometry(geometry));
+        return new BasicDBObject(Ops.GEO_WITHIN, geometry(geometry));
     }
 
     public static DBObject geoNearSphere(BSONObject geometry, double distance) {
-    	BasicDBObject geom = geometry(geometry);
-    	geom.append("$maxDistance", distance);
-    	BasicDBObject nearSphereDBObj = new BasicDBObject(Ops.NEARSPHERE, geom);
-    	return nearSphereDBObj;
+        BasicDBObject geom = geometry(geometry);
+        geom.append("$maxDistance", distance);
+        return new BasicDBObject(Ops.NEAR_SPHERE, geom);
     }
 
     protected static BasicDBObject geometry(BSONObject geometry) {
         return new BasicDBObject(Ops.GEOMETRY, geometry);
     }
 
-    public static DBObject temporalFilter(TemporalFilter tf) {
+    public static DBObject temporalFilter(TemporalFilter temporalFilter) {
         BasicDBObject time = new BasicDBObject();
-        switch (tf.getOperator()) {
+        switch (temporalFilter.getOperator()) {
             case after:
-                if (tf.isInstant()) {
-                    time.put(Ops.GREATER_THAN, tf.getInstant().toDate());
+                if (temporalFilter.isInstant()) {
+                    time.put(Ops.GREATER_THAN, temporalFilter.getInstant().toDate());
                 } else {
-                    time.put(Ops.GREATER_THAN, tf.getEnd().toDate());
+                    time.put(Ops.GREATER_THAN, temporalFilter.getEnd().toDate());
                 }
                 break;
             case before:
-                if (tf.isInstant()) {
-                    time.put(Ops.LESS_THAN, tf.getInstant().toDate());
+                if (temporalFilter.isInstant()) {
+                    time.put(Ops.LESS_THAN, temporalFilter.getInstant().toDate());
                 } else {
-                    time.put(Ops.LESS_THAN, tf.getBegin().toDate());
+                    time.put(Ops.LESS_THAN, temporalFilter.getBegin().toDate());
                 }
                 break;
             case begins:
-                time.put(Ops.EQUALS, tf.getBegin().toDate());
+                time.put(Ops.EQUALS, temporalFilter.getBegin().toDate());
                 break;
             case ends:
-                time.put(Ops.EQUALS, tf.getEnd().toDate());
+                time.put(Ops.EQUALS, temporalFilter.getEnd().toDate());
                 break;
             case during:
-                time.put(Ops.LESS_THAN, tf.getEnd().toDate());
-                time.put(Ops.GREATER_THAN, tf.getBegin().toDate());
+                time.put(Ops.LESS_THAN, temporalFilter.getEnd().toDate());
+                time.put(Ops.GREATER_THAN, temporalFilter.getBegin().toDate());
                 break;
             case equals:
-                time.put(Ops.EQUALS, tf.getInstant().toDate());
+                time.put(Ops.EQUALS, temporalFilter.getInstant().toDate());
                 break;
             default:
                 throw new IllegalArgumentException(
                         "unsupported temporal operator: " +
-                        tf.getOperator());
+                                temporalFilter.getOperator());
         }
         return time;
     }
