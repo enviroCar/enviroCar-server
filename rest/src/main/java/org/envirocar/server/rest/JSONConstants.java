@@ -122,4 +122,5 @@ public interface JSONConstants {
     String MISSED_FUEL_STOP = "missedFuelStop";
     String FUEL_TYPE = "fuelType";
     String VOLUME = "volume";
+    String PRIVACY_STATEMENTS = "privacyStatements";
 }

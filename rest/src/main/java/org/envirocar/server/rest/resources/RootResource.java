@@ -51,6 +51,7 @@ public class RootResource extends AbstractResource {
     public static final String BADGES = "badges";
     public static final String RESET_PASSWORD = "resetPassword";
     public static final String CONFIRM = "confirm";
+    public static final String PRIVACY_STATEMENTS = "privacyStatements";
 
     @Inject
     private JsonNodeFactory factory;
@@ -115,6 +116,11 @@ public class RootResource extends AbstractResource {
                     .getAbsolutePathBuilder()
                     .path(BADGES).build().toString());
         }
+
+        root.put(JSONConstants.PRIVACY_STATEMENTS, getUriInfo()
+                .getAbsolutePathBuilder()
+                .path(BADGES).build().toString());
+
         return root;
     }
 
@@ -181,6 +187,11 @@ public class RootResource extends AbstractResource {
     public BadgesResource badges() {
     	checkRights(getRights().canSeeBadges());
     	return getResourceFactory().createBadgesResource();
+    }
+
+    @Path(PRIVACY_STATEMENTS)
+    public PrivacyStatementsResource privacyStatements() {
+        return getResourceFactory().createPrivacyStatementsResource();
     }
 
     @Path(RESET_PASSWORD)
