@@ -46,7 +46,7 @@ public class PrivacyStatementJSONEncoder extends AbstractJSONEntityEncoder<Priva
         if (t.getIssuedDate() != null) {
             termsOfUse.put(JSONConstants.ISSUED_DATE, t.getIssuedDate());
         }
-        if (mediaType.equals(MediaTypes.TERMS_OF_USE_INSTANCE_TYPE)) {
+        if (mediaType.equals(MediaTypes.PRIVAVY_STATEMENT_TYPE)) {
             if (t.hasCreationTime()) {
                 termsOfUse.put(JSONConstants.CREATED_KEY, getDateTimeFormat().print(t.getCreationTime()));
             }
