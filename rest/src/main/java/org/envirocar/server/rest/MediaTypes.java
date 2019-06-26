@@ -122,8 +122,8 @@ public interface MediaTypes {
     MediaType PNG_IMAGE_TYPE = MediaType.valueOf(PNG_IMAGE);
     String USERSTATISTIC = "application/json; schema=\"" + Schemas.USERSTATISTIC + "\"";
     MediaType USERSTATISTIC_TYPE = MediaType.valueOf(USERSTATISTIC);
-    String PRIVAVY_STATEMENTS = "application/json; schema=\"" + Schemas.PRIVACY_STATEMENTS + "\"";
-    MediaType PRIVAVY_STATEMENTS_TYPE = MediaType.valueOf(PRIVAVY_STATEMENTS);
-    String PRIVAVY_STATEMENT = "application/json; schema=\"" + Schemas.PRIVACY_STATEMENT + "\"";
-    MediaType PRIVAVY_STATEMENT_TYPE = MediaType.valueOf(PRIVAVY_STATEMENT);
+    String PRIVACY_STATEMENTS = "application/json; schema=\"" + Schemas.PRIVACY_STATEMENTS + "\"";
+    MediaType PRIVACY_STATEMENTS_TYPE = MediaType.valueOf(PRIVACY_STATEMENTS);
+    String PRIVACY_STATEMENT = "application/json; schema=\"" + Schemas.PRIVACY_STATEMENT + "\"";
+    MediaType PRIVACY_STATEMENT_TYPE = MediaType.valueOf(PRIVACY_STATEMENT);
 }

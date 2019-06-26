@@ -36,7 +36,7 @@ public class PrivacyStatementResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.PRIVACY_STATEMENT)
-    @Produces({MediaTypes.PRIVAVY_STATEMENT})
+    @Produces({MediaTypes.PRIVACY_STATEMENT})
     public PrivacyStatement get() {
         return privacyStatement;
     }
