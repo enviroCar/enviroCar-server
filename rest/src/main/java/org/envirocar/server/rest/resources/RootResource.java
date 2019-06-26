@@ -119,7 +119,7 @@ public class RootResource extends AbstractResource {
 
         root.put(JSONConstants.PRIVACY_STATEMENTS, getUriInfo()
                 .getAbsolutePathBuilder()
-                .path(BADGES).build().toString());
+                .path(PRIVACY_STATEMENTS).build().toString());
 
         return root;
     }
