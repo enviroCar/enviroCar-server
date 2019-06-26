@@ -16,7 +16,7 @@
  */
 package org.envirocar.server.rest.resources;
 
-import org.envirocar.server.core.entities.Announcement;
+import org.envirocar.server.core.entities.PrivacyStatement;
 import org.envirocar.server.core.entities.PrivacyStatements;
 import org.envirocar.server.core.exception.BadRequestException;
 import org.envirocar.server.core.exception.ResourceNotFoundException;
@@ -41,9 +41,9 @@ public class PrivacyStatementsResource extends AbstractResource {
     }
 
     @Path(PRIVACY_STATEMENT)
-    public AnnouncementResource privacyStatement(@PathParam("id") String id) throws ResourceNotFoundException {
-        Announcement announcement = getDataService().getAnnouncement(id);
-        return getResourceFactory().createAnnouncementResource(announcement);
+    public PrivacyStatementResource privacyStatement(@PathParam("id") String id) throws ResourceNotFoundException {
+        PrivacyStatement announcement = getDataService().getPrivacyStatement(id);
+        return getResourceFactory().createPrivacyStatementResource(announcement);
     }
 
 

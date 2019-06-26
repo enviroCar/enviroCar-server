@@ -105,7 +105,7 @@ public interface ResourceFactory {
 
     PrivacyStatementsResource createPrivacyStatementsResource();
 
-    PrivacyStatementResource createPrivacyStatementResource(Announcement announcement);
+    PrivacyStatementResource createPrivacyStatementResource(PrivacyStatement announcement);
 
     BadgesResource createBadgesResource();
 

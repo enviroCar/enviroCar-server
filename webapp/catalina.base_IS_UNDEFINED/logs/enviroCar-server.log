@@ -1,0 +1,147 @@
+2019-06-26 16:25:19,812 INFO [main] [SLF4JLogger.java:71] Cluster created with settings {hosts=[localhost:27017], mode=SINGLE, requiredClusterType=UNKNOWN, serverSelectionTimeout='30000 ms', maxWaitQueueSize=500}
+2019-06-26 16:25:19,857 INFO [main] [SLF4JLogger.java:69] LoggerImplFactory set to org.mongodb.morphia.logging.slf4j.SLF4JLoggerImplFactory
+2019-06-26 16:25:19,883 INFO [cluster-ClusterId{value='5d13804fc06eb950c4fc16f5', description='null'}-localhost:27017] [SLF4JLogger.java:71] Opened connection [connectionId{localValue:1, serverValue:5}] to localhost:27017
+2019-06-26 16:25:19,890 INFO [cluster-ClusterId{value='5d13804fc06eb950c4fc16f5', description='null'}-localhost:27017] [SLF4JLogger.java:71] Monitor thread successfully connected to server with description ServerDescription{address=localhost:27017, type=STANDALONE, state=CONNECTED, ok=true, version=ServerVersion{versionList=[4, 0, 10]}, minWireVersion=0, maxWireVersion=7, maxDocumentSize=16777216, logicalSessionTimeoutMinutes=30, roundTripTimeNanos=4577226}
+2019-06-26 16:25:19,966 WARN [main] [SLF4JLogger.java:89] Parameterized types are treated as untyped Objects. See field 'properties' on class org.envirocar.server.mongo.entity.MongoSensor
+2019-06-26 16:25:20,025 INFO [main] [SLF4JLogger.java:71] Opened connection [connectionId{localValue:2, serverValue:6}] to localhost:27017
+2019-06-26 16:25:20,045 WARN [main] [SLF4JLogger.java:89] Parameterized types are treated as untyped Objects. See field 'userData' on class com.vividsolutions.jts.geom.Geometry
+2019-06-26 16:25:20,151 WARN [main] [SLF4JLogger.java:89] Parameterized types are treated as untyped Objects. See field 'value' on class org.envirocar.server.mongo.entity.MongoMeasurementValue
+2019-06-26 16:25:20,499 INFO [main] [Server.java:269] jetty-7.6.10.v20130312
+2019-06-26 16:25:20,534 INFO [main] [ContextHandler.java:750] started o.e.j.s.ServletContextHandler{/,null}
+2019-06-26 16:25:20,615 INFO [main] [GuiceComponentProviderFactory.java:113] Registering org.envirocar.server.rest.mapper.IllegalModificationExceptionMapper as a provider class
+2019-06-26 16:25:20,615 INFO [main] [GuiceComponentProviderFactory.java:113] Registering org.envirocar.server.rest.mapper.ResourceNotFoundExceptionMapper as a provider class
+2019-06-26 16:25:20,616 INFO [main] [GuiceComponentProviderFactory.java:113] Registering org.envirocar.server.rest.mapper.ValidationExceptionMapper as a provider class
+2019-06-26 16:25:20,616 INFO [main] [GuiceComponentProviderFactory.java:113] Registering org.envirocar.server.rest.mapper.ResourceAlreadyExistExceptionMapper as a provider class
+2019-06-26 16:25:20,616 INFO [main] [GuiceComponentProviderFactory.java:113] Registering org.envirocar.server.rest.mapper.JsonValidationExceptionMapper as a provider class
+2019-06-26 16:25:20,617 INFO [main] [GuiceComponentProviderFactory.java:113] Registering org.envirocar.server.rest.mapper.BadRequestExceptionMapper as a provider class
+2019-06-26 16:25:20,617 INFO [main] [GuiceComponentProviderFactory.java:116] Registering org.envirocar.server.rest.resources.RootResource as a root resource class
+2019-06-26 16:25:20,618 INFO [main] [GuiceComponentProviderFactory.java:113] Registering org.envirocar.server.rest.decoding.json.JsonNodeMessageBodyReader as a provider class
+2019-06-26 16:25:20,618 INFO [main] [GuiceComponentProviderFactory.java:113] Registering org.envirocar.server.rest.decoding.json.UserDecoder as a provider class
+2019-06-26 16:25:20,618 INFO [main] [GuiceComponentProviderFactory.java:113] Registering org.envirocar.server.rest.encoding.json.UserReferenceProvider as a provider class
+2019-06-26 16:25:20,619 INFO [main] [GuiceComponentProviderFactory.java:113] Registering org.envirocar.server.rest.decoding.json.PhenomenonDecoder as a provider class
+2019-06-26 16:25:20,619 INFO [main] [GuiceComponentProviderFactory.java:113] Registering org.envirocar.server.rest.decoding.json.GroupDecoder as a provider class
+2019-06-26 16:25:20,619 INFO [main] [GuiceComponentProviderFactory.java:113] Registering org.envirocar.server.rest.decoding.json.GeoJSONDecoder as a provider class
+2019-06-26 16:25:20,620 INFO [main] [GuiceComponentProviderFactory.java:113] Registering org.envirocar.server.rest.decoding.json.MeasurementDecoder as a provider class
+2019-06-26 16:25:20,620 INFO [main] [GuiceComponentProviderFactory.java:113] Registering org.envirocar.server.rest.decoding.json.TrackDecoder as a provider class
+2019-06-26 16:25:20,620 INFO [main] [GuiceComponentProviderFactory.java:113] Registering org.envirocar.server.rest.decoding.json.SensorDecoder as a provider class
+2019-06-26 16:25:20,621 INFO [main] [GuiceComponentProviderFactory.java:113] Registering org.envirocar.server.rest.decoding.json.ResetPasswordDecoder as a provider class
+2019-06-26 16:25:20,621 INFO [main] [GuiceComponentProviderFactory.java:113] Registering org.envirocar.server.rest.decoding.json.FuelingDecoder as a provider class
+2019-06-26 16:25:20,621 INFO [main] [GuiceComponentProviderFactory.java:113] Registering org.envirocar.server.rest.encoding.json.JsonNodeMessageBodyWriter as a provider class
+2019-06-26 16:25:20,622 INFO [main] [GuiceComponentProviderFactory.java:113] Registering org.envirocar.server.rest.encoding.json.UserJSONEncoder as a provider class
+2019-06-26 16:25:20,622 INFO [main] [GuiceComponentProviderFactory.java:113] Registering org.envirocar.server.rest.encoding.json.UsersJSONEncoder as a provider class
+2019-06-26 16:25:20,622 INFO [main] [GuiceComponentProviderFactory.java:113] Registering org.envirocar.server.rest.encoding.json.SensorJSONEncoder as a provider class
+2019-06-26 16:25:20,623 INFO [main] [GuiceComponentProviderFactory.java:113] Registering org.envirocar.server.rest.encoding.json.SensorsJSONEncoder as a provider class
+2019-06-26 16:25:20,623 INFO [main] [GuiceComponentProviderFactory.java:113] Registering org.envirocar.server.rest.encoding.json.TrackJSONEncoder as a provider class
+2019-06-26 16:25:20,623 INFO [main] [GuiceComponentProviderFactory.java:113] Registering org.envirocar.server.rest.encoding.json.TracksJSONEncoder as a provider class
+2019-06-26 16:25:20,624 INFO [main] [GuiceComponentProviderFactory.java:113] Registering org.envirocar.server.rest.encoding.json.MeasurementJSONEncoder as a provider class
+2019-06-26 16:25:20,624 INFO [main] [GuiceComponentProviderFactory.java:113] Registering org.envirocar.server.rest.encoding.json.MeasurementsJSONEncoder as a provider class
+2019-06-26 16:25:20,624 INFO [main] [GuiceComponentProviderFactory.java:113] Registering org.envirocar.server.rest.encoding.json.PhenomenonJSONEncoder as a provider class
+2019-06-26 16:25:20,625 INFO [main] [GuiceComponentProviderFactory.java:113] Registering org.envirocar.server.rest.encoding.json.PhenomenonsJSONEncoder as a provider class
+2019-06-26 16:25:20,625 INFO [main] [GuiceComponentProviderFactory.java:113] Registering org.envirocar.server.rest.encoding.json.GroupJSONEncoder as a provider class
+2019-06-26 16:25:20,625 INFO [main] [GuiceComponentProviderFactory.java:113] Registering org.envirocar.server.rest.encoding.json.GroupsJSONEncoder as a provider class
+2019-06-26 16:25:20,626 INFO [main] [GuiceComponentProviderFactory.java:113] Registering org.envirocar.server.rest.encoding.json.StatisticJSONEncoder as a provider class
+2019-06-26 16:25:20,626 INFO [main] [GuiceComponentProviderFactory.java:113] Registering org.envirocar.server.rest.encoding.json.StatisticsJSONEncoder as a provider class
+2019-06-26 16:25:20,626 INFO [main] [GuiceComponentProviderFactory.java:113] Registering org.envirocar.server.rest.encoding.json.ActivityJSONEncoder as a provider class
+2019-06-26 16:25:20,627 INFO [main] [GuiceComponentProviderFactory.java:113] Registering org.envirocar.server.rest.encoding.json.ActivitiesJSONEncoder as a provider class
+2019-06-26 16:25:20,627 INFO [main] [GuiceComponentProviderFactory.java:113] Registering org.envirocar.server.rest.encoding.json.GeometryJSONEncoder as a provider class
+2019-06-26 16:25:20,627 INFO [main] [GuiceComponentProviderFactory.java:113] Registering org.envirocar.server.rest.encoding.json.TermsOfUseInstanceJSONEncoder as a provider class
+2019-06-26 16:25:20,628 INFO [main] [GuiceComponentProviderFactory.java:113] Registering org.envirocar.server.rest.encoding.json.TermsOfUseJSONEncoder as a provider class
+2019-06-26 16:25:20,628 INFO [main] [GuiceComponentProviderFactory.java:113] Registering org.envirocar.server.rest.encoding.json.AnnouncementJSONEncoder as a provider class
+2019-06-26 16:25:20,628 INFO [main] [GuiceComponentProviderFactory.java:113] Registering org.envirocar.server.rest.encoding.json.AnnouncementsJSONEncoder as a provider class
+2019-06-26 16:25:20,629 INFO [main] [GuiceComponentProviderFactory.java:113] Registering org.envirocar.server.rest.encoding.json.BadgeJSONEncoder as a provider class
+2019-06-26 16:25:20,629 INFO [main] [GuiceComponentProviderFactory.java:113] Registering org.envirocar.server.rest.encoding.json.BadgesJSONEncoder as a provider class
+2019-06-26 16:25:20,629 INFO [main] [GuiceComponentProviderFactory.java:113] Registering org.envirocar.server.rest.encoding.json.FuelingJSONEncoder as a provider class
+2019-06-26 16:25:20,629 INFO [main] [GuiceComponentProviderFactory.java:113] Registering org.envirocar.server.rest.encoding.json.FuelingsJSONEncoder as a provider class
+2019-06-26 16:25:20,630 INFO [main] [GuiceComponentProviderFactory.java:113] Registering org.envirocar.server.rest.encoding.json.UserStatisticJSONEncoder as a provider class
+2019-06-26 16:25:20,630 INFO [main] [GuiceComponentProviderFactory.java:113] Registering org.envirocar.server.rest.encoding.shapefile.TrackShapefileEncoder as a provider class
+2019-06-26 16:25:20,630 INFO [main] [GuiceComponentProviderFactory.java:113] Registering org.envirocar.server.rest.encoding.csv.TrackCSVEncoder as a provider class
+2019-06-26 16:25:20,631 INFO [main] [GuiceComponentProviderFactory.java:113] Registering org.envirocar.server.rest.encoding.rdf.ActivitiesRDFEncoder as a provider class
+2019-06-26 16:25:20,631 INFO [main] [GuiceComponentProviderFactory.java:113] Registering org.envirocar.server.rest.encoding.rdf.ActivityRDFEncoder as a provider class
+2019-06-26 16:25:20,631 INFO [main] [GuiceComponentProviderFactory.java:113] Registering org.envirocar.server.rest.encoding.rdf.GroupRDFEncoder as a provider class
+2019-06-26 16:25:20,632 INFO [main] [GuiceComponentProviderFactory.java:113] Registering org.envirocar.server.rest.encoding.rdf.GroupsRDFEncoder as a provider class
+2019-06-26 16:25:20,632 INFO [main] [GuiceComponentProviderFactory.java:113] Registering org.envirocar.server.rest.encoding.rdf.MeasurementRDFEncoder as a provider class
+2019-06-26 16:25:20,632 INFO [main] [GuiceComponentProviderFactory.java:113] Registering org.envirocar.server.rest.encoding.rdf.MeasurementsRDFEncoder as a provider class
+2019-06-26 16:25:20,633 INFO [main] [GuiceComponentProviderFactory.java:113] Registering org.envirocar.server.rest.encoding.rdf.PhenomenonRDFEncoder as a provider class
+2019-06-26 16:25:20,633 INFO [main] [GuiceComponentProviderFactory.java:113] Registering org.envirocar.server.rest.encoding.rdf.PhenomenonsRDFEncoder as a provider class
+2019-06-26 16:25:20,634 INFO [main] [GuiceComponentProviderFactory.java:113] Registering org.envirocar.server.rest.encoding.rdf.SensorRDFEncoder as a provider class
+2019-06-26 16:25:20,634 INFO [main] [GuiceComponentProviderFactory.java:113] Registering org.envirocar.server.rest.encoding.rdf.SensorsRDFEncoder as a provider class
+2019-06-26 16:25:20,634 INFO [main] [GuiceComponentProviderFactory.java:113] Registering org.envirocar.server.rest.encoding.rdf.StatisticRDFEncoder as a provider class
+2019-06-26 16:25:20,635 INFO [main] [GuiceComponentProviderFactory.java:113] Registering org.envirocar.server.rest.encoding.rdf.StatisticsRDFEncoder as a provider class
+2019-06-26 16:25:20,635 INFO [main] [GuiceComponentProviderFactory.java:113] Registering org.envirocar.server.rest.encoding.rdf.TrackRDFEncoder as a provider class
+2019-06-26 16:25:20,635 INFO [main] [GuiceComponentProviderFactory.java:113] Registering org.envirocar.server.rest.encoding.rdf.TracksRDFEncoder as a provider class
+2019-06-26 16:25:20,636 INFO [main] [GuiceComponentProviderFactory.java:113] Registering org.envirocar.server.rest.encoding.rdf.UserRDFEncoder as a provider class
+2019-06-26 16:25:20,636 INFO [main] [GuiceComponentProviderFactory.java:113] Registering org.envirocar.server.rest.encoding.rdf.UsersRDFEncoder as a provider class
+2019-06-26 16:25:20,636 INFO [main] [GuiceComponentProviderFactory.java:113] Registering org.envirocar.server.rest.encoding.rdf.FuelingsRDFEncoder as a provider class
+2019-06-26 16:25:20,639 INFO [main] [WebApplicationImpl.java:815] Initiating Jersey application, version 'Jersey: 1.19 02/11/2015 03:25 AM'
+2019-06-26 16:25:20,718 INFO [main] [GuiceComponentProviderFactory.java:146] Binding org.envirocar.server.rest.auth.AuthenticationFilter to GuiceInstantiatedComponentProvider
+2019-06-26 16:25:20,730 INFO [main] [GuiceComponentProviderFactory.java:146] Binding org.envirocar.server.rest.validation.JSONSchemaResourceFilterFactory to GuiceInstantiatedComponentProvider
+2019-06-26 16:25:20,894 INFO [main] [GuiceComponentProviderFactory.java:168] Binding org.envirocar.server.rest.mapper.IllegalModificationExceptionMapper to GuiceManagedComponentProvider with the scope "Singleton"
+2019-06-26 16:25:20,896 INFO [main] [GuiceComponentProviderFactory.java:168] Binding org.envirocar.server.rest.mapper.ResourceNotFoundExceptionMapper to GuiceManagedComponentProvider with the scope "Singleton"
+2019-06-26 16:25:20,897 INFO [main] [GuiceComponentProviderFactory.java:168] Binding org.envirocar.server.rest.mapper.ValidationExceptionMapper to GuiceManagedComponentProvider with the scope "Singleton"
+2019-06-26 16:25:20,898 INFO [main] [GuiceComponentProviderFactory.java:168] Binding org.envirocar.server.rest.mapper.ResourceAlreadyExistExceptionMapper to GuiceManagedComponentProvider with the scope "Singleton"
+2019-06-26 16:25:20,899 INFO [main] [GuiceComponentProviderFactory.java:168] Binding org.envirocar.server.rest.mapper.JsonValidationExceptionMapper to GuiceManagedComponentProvider with the scope "Singleton"
+2019-06-26 16:25:20,900 INFO [main] [GuiceComponentProviderFactory.java:168] Binding org.envirocar.server.rest.mapper.BadRequestExceptionMapper to GuiceManagedComponentProvider with the scope "Singleton"
+2019-06-26 16:25:20,901 INFO [main] [GuiceComponentProviderFactory.java:168] Binding org.envirocar.server.rest.decoding.json.JsonNodeMessageBodyReader to GuiceManagedComponentProvider with the scope "Singleton"
+2019-06-26 16:25:20,903 INFO [main] [GuiceComponentProviderFactory.java:168] Binding org.envirocar.server.rest.decoding.json.UserDecoder to GuiceManagedComponentProvider with the scope "Singleton"
+2019-06-26 16:25:20,904 INFO [main] [GuiceComponentProviderFactory.java:168] Binding org.envirocar.server.rest.encoding.json.UserReferenceProvider to GuiceManagedComponentProvider with the scope "Singleton"
+2019-06-26 16:25:20,905 INFO [main] [GuiceComponentProviderFactory.java:168] Binding org.envirocar.server.rest.decoding.json.PhenomenonDecoder to GuiceManagedComponentProvider with the scope "Singleton"
+2019-06-26 16:25:20,907 INFO [main] [GuiceComponentProviderFactory.java:168] Binding org.envirocar.server.rest.decoding.json.GroupDecoder to GuiceManagedComponentProvider with the scope "Singleton"
+2019-06-26 16:25:20,908 INFO [main] [GuiceComponentProviderFactory.java:168] Binding org.envirocar.server.rest.decoding.json.GeoJSONDecoder to GuiceManagedComponentProvider with the scope "Singleton"
+2019-06-26 16:25:20,909 INFO [main] [GuiceComponentProviderFactory.java:168] Binding org.envirocar.server.rest.decoding.json.MeasurementDecoder to GuiceManagedComponentProvider with the scope "Singleton"
+2019-06-26 16:25:20,915 INFO [main] [GuiceComponentProviderFactory.java:168] Binding org.envirocar.server.rest.decoding.json.TrackDecoder to GuiceManagedComponentProvider with the scope "Singleton"
+2019-06-26 16:25:20,921 INFO [main] [GuiceComponentProviderFactory.java:168] Binding org.envirocar.server.rest.decoding.json.SensorDecoder to GuiceManagedComponentProvider with the scope "Singleton"
+2019-06-26 16:25:20,922 INFO [main] [GuiceComponentProviderFactory.java:168] Binding org.envirocar.server.rest.decoding.json.ResetPasswordDecoder to GuiceManagedComponentProvider with the scope "Singleton"
+2019-06-26 16:25:20,924 INFO [main] [GuiceComponentProviderFactory.java:168] Binding org.envirocar.server.rest.decoding.json.FuelingDecoder to GuiceManagedComponentProvider with the scope "Singleton"
+2019-06-26 16:25:21,106 INFO [main] [GuiceComponentProviderFactory.java:168] Binding org.envirocar.server.rest.encoding.json.JsonNodeMessageBodyWriter to GuiceManagedComponentProvider with the scope "Singleton"
+2019-06-26 16:25:21,107 INFO [main] [GuiceComponentProviderFactory.java:168] Binding org.envirocar.server.rest.encoding.json.UserJSONEncoder to GuiceManagedComponentProvider with the scope "Singleton"
+2019-06-26 16:25:21,109 INFO [main] [GuiceComponentProviderFactory.java:168] Binding org.envirocar.server.rest.encoding.json.UsersJSONEncoder to GuiceManagedComponentProvider with the scope "Singleton"
+2019-06-26 16:25:21,110 INFO [main] [GuiceComponentProviderFactory.java:168] Binding org.envirocar.server.rest.encoding.json.SensorJSONEncoder to GuiceManagedComponentProvider with the scope "Singleton"
+2019-06-26 16:25:21,111 INFO [main] [GuiceComponentProviderFactory.java:168] Binding org.envirocar.server.rest.encoding.json.SensorsJSONEncoder to GuiceManagedComponentProvider with the scope "Singleton"
+2019-06-26 16:25:21,116 INFO [main] [GuiceComponentProviderFactory.java:168] Binding org.envirocar.server.rest.encoding.json.TrackJSONEncoder to GuiceManagedComponentProvider with the scope "Singleton"
+2019-06-26 16:25:21,117 INFO [main] [GuiceComponentProviderFactory.java:168] Binding org.envirocar.server.rest.encoding.json.TracksJSONEncoder to GuiceManagedComponentProvider with the scope "Singleton"
+2019-06-26 16:25:21,119 INFO [main] [GuiceComponentProviderFactory.java:168] Binding org.envirocar.server.rest.encoding.json.MeasurementJSONEncoder to GuiceManagedComponentProvider with the scope "Singleton"
+2019-06-26 16:25:21,120 INFO [main] [GuiceComponentProviderFactory.java:168] Binding org.envirocar.server.rest.encoding.json.MeasurementsJSONEncoder to GuiceManagedComponentProvider with the scope "Singleton"
+2019-06-26 16:25:21,121 INFO [main] [GuiceComponentProviderFactory.java:168] Binding org.envirocar.server.rest.encoding.json.PhenomenonJSONEncoder to GuiceManagedComponentProvider with the scope "Singleton"
+2019-06-26 16:25:21,122 INFO [main] [GuiceComponentProviderFactory.java:168] Binding org.envirocar.server.rest.encoding.json.PhenomenonsJSONEncoder to GuiceManagedComponentProvider with the scope "Singleton"
+2019-06-26 16:25:21,124 INFO [main] [GuiceComponentProviderFactory.java:168] Binding org.envirocar.server.rest.encoding.json.GroupJSONEncoder to GuiceManagedComponentProvider with the scope "Singleton"
+2019-06-26 16:25:21,125 INFO [main] [GuiceComponentProviderFactory.java:168] Binding org.envirocar.server.rest.encoding.json.GroupsJSONEncoder to GuiceManagedComponentProvider with the scope "Singleton"
+2019-06-26 16:25:21,127 INFO [main] [GuiceComponentProviderFactory.java:168] Binding org.envirocar.server.rest.encoding.json.StatisticJSONEncoder to GuiceManagedComponentProvider with the scope "Singleton"
+2019-06-26 16:25:21,128 INFO [main] [GuiceComponentProviderFactory.java:168] Binding org.envirocar.server.rest.encoding.json.StatisticsJSONEncoder to GuiceManagedComponentProvider with the scope "Singleton"
+2019-06-26 16:25:21,130 INFO [main] [GuiceComponentProviderFactory.java:168] Binding org.envirocar.server.rest.encoding.json.ActivityJSONEncoder to GuiceManagedComponentProvider with the scope "Singleton"
+2019-06-26 16:25:21,131 INFO [main] [GuiceComponentProviderFactory.java:168] Binding org.envirocar.server.rest.encoding.json.ActivitiesJSONEncoder to GuiceManagedComponentProvider with the scope "Singleton"
+2019-06-26 16:25:21,132 INFO [main] [GuiceComponentProviderFactory.java:168] Binding org.envirocar.server.rest.encoding.json.GeometryJSONEncoder to GuiceManagedComponentProvider with the scope "Singleton"
+2019-06-26 16:25:21,134 INFO [main] [GuiceComponentProviderFactory.java:168] Binding org.envirocar.server.rest.encoding.json.TermsOfUseInstanceJSONEncoder to GuiceManagedComponentProvider with the scope "Singleton"
+2019-06-26 16:25:21,135 INFO [main] [GuiceComponentProviderFactory.java:168] Binding org.envirocar.server.rest.encoding.json.TermsOfUseJSONEncoder to GuiceManagedComponentProvider with the scope "Singleton"
+2019-06-26 16:25:21,136 INFO [main] [GuiceComponentProviderFactory.java:168] Binding org.envirocar.server.rest.encoding.json.AnnouncementJSONEncoder to GuiceManagedComponentProvider with the scope "Singleton"
+2019-06-26 16:25:21,138 INFO [main] [GuiceComponentProviderFactory.java:168] Binding org.envirocar.server.rest.encoding.json.AnnouncementsJSONEncoder to GuiceManagedComponentProvider with the scope "Singleton"
+2019-06-26 16:25:21,139 INFO [main] [GuiceComponentProviderFactory.java:168] Binding org.envirocar.server.rest.encoding.json.BadgeJSONEncoder to GuiceManagedComponentProvider with the scope "Singleton"
+2019-06-26 16:25:21,141 INFO [main] [GuiceComponentProviderFactory.java:168] Binding org.envirocar.server.rest.encoding.json.BadgesJSONEncoder to GuiceManagedComponentProvider with the scope "Singleton"
+2019-06-26 16:25:21,142 INFO [main] [GuiceComponentProviderFactory.java:168] Binding org.envirocar.server.rest.encoding.json.FuelingJSONEncoder to GuiceManagedComponentProvider with the scope "Singleton"
+2019-06-26 16:25:21,144 INFO [main] [GuiceComponentProviderFactory.java:168] Binding org.envirocar.server.rest.encoding.json.FuelingsJSONEncoder to GuiceManagedComponentProvider with the scope "Singleton"
+2019-06-26 16:25:21,145 INFO [main] [GuiceComponentProviderFactory.java:168] Binding org.envirocar.server.rest.encoding.json.UserStatisticJSONEncoder to GuiceManagedComponentProvider with the scope "Singleton"
+2019-06-26 16:25:21,147 INFO [main] [GuiceComponentProviderFactory.java:168] Binding org.envirocar.server.rest.encoding.shapefile.TrackShapefileEncoder to GuiceManagedComponentProvider with the scope "Singleton"
+2019-06-26 16:25:21,154 INFO [main] [TrackShapefileEncoder.java:104] No /export.properties found, loading /export.default.properties.
+2019-06-26 16:25:21,156 INFO [main] [GuiceComponentProviderFactory.java:168] Binding org.envirocar.server.rest.encoding.csv.TrackCSVEncoder to GuiceManagedComponentProvider with the scope "Singleton"
+2019-06-26 16:25:21,164 INFO [main] [GuiceComponentProviderFactory.java:168] Binding org.envirocar.server.rest.encoding.rdf.ActivitiesRDFEncoder to GuiceManagedComponentProvider with the scope "Singleton"
+2019-06-26 16:25:21,166 INFO [main] [GuiceComponentProviderFactory.java:168] Binding org.envirocar.server.rest.encoding.rdf.ActivityRDFEncoder to GuiceManagedComponentProvider with the scope "Singleton"
+2019-06-26 16:25:21,167 INFO [main] [GuiceComponentProviderFactory.java:168] Binding org.envirocar.server.rest.encoding.rdf.GroupRDFEncoder to GuiceManagedComponentProvider with the scope "Singleton"
+2019-06-26 16:25:21,169 INFO [main] [GuiceComponentProviderFactory.java:168] Binding org.envirocar.server.rest.encoding.rdf.GroupsRDFEncoder to GuiceManagedComponentProvider with the scope "Singleton"
+2019-06-26 16:25:21,171 INFO [main] [GuiceComponentProviderFactory.java:168] Binding org.envirocar.server.rest.encoding.rdf.MeasurementRDFEncoder to GuiceManagedComponentProvider with the scope "Singleton"
+2019-06-26 16:25:21,173 INFO [main] [GuiceComponentProviderFactory.java:168] Binding org.envirocar.server.rest.encoding.rdf.MeasurementsRDFEncoder to GuiceManagedComponentProvider with the scope "Singleton"
+2019-06-26 16:25:21,175 INFO [main] [GuiceComponentProviderFactory.java:168] Binding org.envirocar.server.rest.encoding.rdf.PhenomenonRDFEncoder to GuiceManagedComponentProvider with the scope "Singleton"
+2019-06-26 16:25:21,178 INFO [main] [GuiceComponentProviderFactory.java:168] Binding org.envirocar.server.rest.encoding.rdf.PhenomenonsRDFEncoder to GuiceManagedComponentProvider with the scope "Singleton"
+2019-06-26 16:25:21,180 INFO [main] [GuiceComponentProviderFactory.java:168] Binding org.envirocar.server.rest.encoding.rdf.SensorRDFEncoder to GuiceManagedComponentProvider with the scope "Singleton"
+2019-06-26 16:25:21,181 INFO [main] [GuiceComponentProviderFactory.java:168] Binding org.envirocar.server.rest.encoding.rdf.SensorsRDFEncoder to GuiceManagedComponentProvider with the scope "Singleton"
+2019-06-26 16:25:21,183 INFO [main] [GuiceComponentProviderFactory.java:168] Binding org.envirocar.server.rest.encoding.rdf.StatisticRDFEncoder to GuiceManagedComponentProvider with the scope "Singleton"
+2019-06-26 16:25:21,185 INFO [main] [GuiceComponentProviderFactory.java:168] Binding org.envirocar.server.rest.encoding.rdf.StatisticsRDFEncoder to GuiceManagedComponentProvider with the scope "Singleton"
+2019-06-26 16:25:21,186 INFO [main] [GuiceComponentProviderFactory.java:168] Binding org.envirocar.server.rest.encoding.rdf.TrackRDFEncoder to GuiceManagedComponentProvider with the scope "Singleton"
+2019-06-26 16:25:21,194 INFO [main] [GuiceComponentProviderFactory.java:168] Binding org.envirocar.server.rest.encoding.rdf.TracksRDFEncoder to GuiceManagedComponentProvider with the scope "Singleton"
+2019-06-26 16:25:21,201 INFO [main] [GuiceComponentProviderFactory.java:168] Binding org.envirocar.server.rest.encoding.rdf.UserRDFEncoder to GuiceManagedComponentProvider with the scope "Singleton"
+2019-06-26 16:25:21,204 INFO [main] [GuiceComponentProviderFactory.java:168] Binding org.envirocar.server.rest.encoding.rdf.UsersRDFEncoder to GuiceManagedComponentProvider with the scope "Singleton"
+2019-06-26 16:25:21,206 INFO [main] [GuiceComponentProviderFactory.java:168] Binding org.envirocar.server.rest.encoding.rdf.FuelingsRDFEncoder to GuiceManagedComponentProvider with the scope "Singleton"
+2019-06-26 16:25:21,542 INFO [main] [GuiceComponentProviderFactory.java:168] Binding org.envirocar.server.rest.resources.RootResource to GuiceManagedComponentProvider with the scope "PerRequest"
+2019-06-26 16:25:21,587 INFO [main] [AbstractConnector.java:338] Started SelectChannelConnector@0.0.0.0:9998
+2019-06-26 16:25:22,124 INFO [Thread-1] [ShutdownManager.java:47] shutting down resources of 2 listeners
+2019-06-26 16:25:22,430 INFO [Thread-1] [SLF4JLogger.java:71] Closed connection [connectionId{localValue:2, serverValue:6}] to localhost:27017 because the pool has been closed.
+2019-06-26 16:25:22,432 INFO [Thread-1] [ShutdownManager.java:55] finished shutting down resources!
+2019-06-26 16:25:22,433 INFO [Thread-1] [ContextHandler.java:801] stopped o.e.j.s.ServletContextHandler{/,null}
