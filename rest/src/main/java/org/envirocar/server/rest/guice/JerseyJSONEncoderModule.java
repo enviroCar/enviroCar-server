@@ -18,57 +18,11 @@ package org.envirocar.server.rest.guice;
 
 import org.envirocar.server.core.activities.Activities;
 import org.envirocar.server.core.activities.Activity;
-import org.envirocar.server.core.entities.Announcement;
-import org.envirocar.server.core.entities.Announcements;
-import org.envirocar.server.core.entities.Badge;
-import org.envirocar.server.core.entities.Badges;
-import org.envirocar.server.core.entities.Fueling;
-import org.envirocar.server.core.entities.Fuelings;
-import org.envirocar.server.core.entities.Group;
-import org.envirocar.server.core.entities.Groups;
-import org.envirocar.server.core.entities.Measurement;
-import org.envirocar.server.core.entities.Measurements;
-import org.envirocar.server.core.entities.Phenomenon;
-import org.envirocar.server.core.entities.Phenomenons;
-import org.envirocar.server.core.entities.Sensor;
-import org.envirocar.server.core.entities.Sensors;
-import org.envirocar.server.core.entities.TermsOfUse;
-import org.envirocar.server.core.entities.TermsOfUseInstance;
-import org.envirocar.server.core.entities.Track;
-import org.envirocar.server.core.entities.Tracks;
-import org.envirocar.server.core.entities.User;
-import org.envirocar.server.core.entities.Users;
-import org.envirocar.server.core.entities.UserStatistic;
+import org.envirocar.server.core.entities.*;
 import org.envirocar.server.core.statistics.Statistic;
 import org.envirocar.server.core.statistics.Statistics;
 import org.envirocar.server.rest.encoding.JSONEntityEncoder;
-import org.envirocar.server.rest.encoding.json.ActivitiesJSONEncoder;
-import org.envirocar.server.rest.encoding.json.ActivityJSONEncoder;
-import org.envirocar.server.rest.encoding.json.AnnouncementJSONEncoder;
-import org.envirocar.server.rest.encoding.json.AnnouncementsJSONEncoder;
-import org.envirocar.server.rest.encoding.json.BadgeJSONEncoder;
-import org.envirocar.server.rest.encoding.json.BadgesJSONEncoder;
-import org.envirocar.server.rest.encoding.json.FuelingJSONEncoder;
-import org.envirocar.server.rest.encoding.json.FuelingsJSONEncoder;
-import org.envirocar.server.rest.encoding.json.GeometryJSONEncoder;
-import org.envirocar.server.rest.encoding.json.GroupJSONEncoder;
-import org.envirocar.server.rest.encoding.json.GroupsJSONEncoder;
-import org.envirocar.server.rest.encoding.json.JsonNodeMessageBodyWriter;
-import org.envirocar.server.rest.encoding.json.MeasurementJSONEncoder;
-import org.envirocar.server.rest.encoding.json.MeasurementsJSONEncoder;
-import org.envirocar.server.rest.encoding.json.PhenomenonJSONEncoder;
-import org.envirocar.server.rest.encoding.json.PhenomenonsJSONEncoder;
-import org.envirocar.server.rest.encoding.json.SensorJSONEncoder;
-import org.envirocar.server.rest.encoding.json.SensorsJSONEncoder;
-import org.envirocar.server.rest.encoding.json.StatisticJSONEncoder;
-import org.envirocar.server.rest.encoding.json.StatisticsJSONEncoder;
-import org.envirocar.server.rest.encoding.json.TermsOfUseInstanceJSONEncoder;
-import org.envirocar.server.rest.encoding.json.TermsOfUseJSONEncoder;
-import org.envirocar.server.rest.encoding.json.TrackJSONEncoder;
-import org.envirocar.server.rest.encoding.json.TracksJSONEncoder;
-import org.envirocar.server.rest.encoding.json.UserJSONEncoder;
-import org.envirocar.server.rest.encoding.json.UsersJSONEncoder;
-import org.envirocar.server.rest.encoding.json.UserStatisticJSONEncoder;
+import org.envirocar.server.rest.encoding.json.*;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
@@ -142,6 +96,13 @@ public class JerseyJSONEncoderModule extends AbstractModule {
         bind(TermsOfUseJSONEncoder.class).in(Scopes.SINGLETON);
         bind(new TypeLiteral<JSONEntityEncoder<TermsOfUse>>() {
         }).to(TermsOfUseJSONEncoder.class);
+
+        bind(PrivacyStatementJSONEncoder.class).in(Scopes.SINGLETON);
+        bind(new TypeLiteral<JSONEntityEncoder<PrivacyStatement>>() {
+        }).to(PrivacyStatementJSONEncoder.class);
+        bind(PrivacyStatementsJSONEncoder.class).in(Scopes.SINGLETON);
+        bind(new TypeLiteral<JSONEntityEncoder<PrivacyStatements>>() {
+        }).to(PrivacyStatementsJSONEncoder.class);
         
         bind(AnnouncementJSONEncoder.class).in(Scopes.SINGLETON);
         bind(new TypeLiteral<JSONEntityEncoder<Announcement>>() {
