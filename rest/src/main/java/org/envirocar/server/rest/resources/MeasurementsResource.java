@@ -30,6 +30,7 @@ import org.envirocar.server.core.exception.ValidationException;
 import org.envirocar.server.core.filter.MeasurementFilter;
 import org.envirocar.server.rest.*;
 import org.envirocar.server.rest.auth.Authenticated;
+import org.envirocar.server.rest.rights.HasAcceptedLatestLegalPolicies;
 import org.envirocar.server.rest.validation.Schema;
 
 import javax.annotation.Nullable;
@@ -84,6 +85,7 @@ public class MeasurementsResource extends AbstractResource {
 
     @POST
     @Authenticated
+    @HasAcceptedLatestLegalPolicies
     @Schema(request = Schemas.MEASUREMENT_CREATE)
     @Consumes({MediaTypes.MEASUREMENT_CREATE})
     public Response create(Measurement measurement) throws ValidationException {

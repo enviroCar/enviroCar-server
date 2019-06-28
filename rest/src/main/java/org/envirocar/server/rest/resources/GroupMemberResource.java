@@ -26,6 +26,7 @@ import org.envirocar.server.rest.auth.Authenticated;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
+import org.envirocar.server.rest.rights.HasAcceptedLatestLegalPolicies;
 
 /**
  * TODO JavaDoc
@@ -45,6 +46,7 @@ public class GroupMemberResource extends UserResource {
     @DELETE
     @Override
     @Authenticated
+    @HasAcceptedLatestLegalPolicies
     public void delete(boolean ignored) throws UserNotFoundException, GroupNotFoundException {
         checkRights(getRights().canLeaveGroup(group));
         getGroupService().removeGroupMember(group, getUser());

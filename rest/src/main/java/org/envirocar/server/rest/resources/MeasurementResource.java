@@ -23,6 +23,7 @@ import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.auth.Authenticated;
+import org.envirocar.server.rest.rights.HasAcceptedLatestLegalPolicies;
 import org.envirocar.server.rest.validation.Schema;
 
 import javax.ws.rs.DELETE;
@@ -53,6 +54,7 @@ public class MeasurementResource extends AbstractResource {
 
     @DELETE
     @Authenticated
+    @HasAcceptedLatestLegalPolicies
     public void delete() {
         checkRights(getRights().canDelete(measurement));
         getDataService().deleteMeasurement(measurement);

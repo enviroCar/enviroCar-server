@@ -29,6 +29,7 @@ import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.RESTConstants;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.auth.Authenticated;
+import org.envirocar.server.rest.rights.HasAcceptedLatestLegalPolicies;
 import org.envirocar.server.rest.validation.Schema;
 
 import javax.annotation.Nullable;
@@ -69,6 +70,7 @@ public class GroupsResource extends AbstractResource {
 
     @POST
     @Authenticated
+    @HasAcceptedLatestLegalPolicies
     @Schema(request = Schemas.GROUP_CREATE)
     @Consumes({MediaTypes.GROUP_CREATE})
     public Response createGroup(Group group) throws ResourceAlreadyExistException, ValidationException {

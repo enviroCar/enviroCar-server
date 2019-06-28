@@ -25,7 +25,7 @@ import org.envirocar.server.core.exception.ValidationException;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.auth.Authenticated;
-
+import org.envirocar.server.rest.rights.HasAcceptedLatestLegalPolicies;
 import org.envirocar.server.rest.validation.Schema;
 
 import javax.ws.rs.*;
@@ -59,6 +59,7 @@ public class GroupResource extends AbstractResource {
 
     @PUT
     @Authenticated
+    @HasAcceptedLatestLegalPolicies
     @Schema(request = Schemas.GROUP_MODIFY)
     @Consumes({MediaTypes.GROUP_MODIFY})
     public Response modify(Group changes) throws ValidationException, IllegalModificationException {
@@ -79,6 +80,7 @@ public class GroupResource extends AbstractResource {
 
     @DELETE
     @Authenticated
+    @HasAcceptedLatestLegalPolicies
     public void delete() throws GroupNotFoundException {
         checkRights(getRights().canDelete(group));
         getGroupService().deleteGroup(group);

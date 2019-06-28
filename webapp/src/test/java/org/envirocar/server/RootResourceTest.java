@@ -61,6 +61,22 @@ public class RootResourceTest extends ResourceTestBase {
     }
 
     @Test
+    public void testGetPrivacyStatements() {
+        ClientResponse response = resource().path("/privacyStatements/5d1388cdb1830bd004877c2b")
+                .accept(MediaType.APPLICATION_JSON).get(ClientResponse.class);
+
+        assertThat(response, hasStatus(Status.OK));
+        assertThat(response.getType(), isCompatible(MediaType.APPLICATION_JSON_TYPE));
+
+        JsonNode root = response.getEntity(JsonNode.class);
+        assertThat(root, is(notNullValue()));
+
+        assertThat(root, hasProperty(JSONConstants.CONTENTS));
+        assertThat(root.get(JSONConstants.CONTENTS).asText(), is("adsfasdf"));
+    }
+
+
+    @Test
     public void testPostRoot() {
         assertThat(resource().path("/").post(ClientResponse.class)
                 .getStatus(), is(405));

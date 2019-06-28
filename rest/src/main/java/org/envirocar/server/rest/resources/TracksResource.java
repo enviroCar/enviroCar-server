@@ -29,6 +29,7 @@ import org.envirocar.server.core.exception.ValidationException;
 import org.envirocar.server.core.filter.TrackFilter;
 import org.envirocar.server.rest.*;
 import org.envirocar.server.rest.auth.Authenticated;
+import org.envirocar.server.rest.rights.HasAcceptedLatestLegalPolicies;
 import org.envirocar.server.rest.validation.Schema;
 
 import javax.annotation.Nullable;
@@ -70,6 +71,7 @@ public class TracksResource extends AbstractResource {
     @Schema(request = Schemas.TRACK_CREATE)
     @Consumes({MediaTypes.TRACK_CREATE})
     @Authenticated
+    @HasAcceptedLatestLegalPolicies
     public Response create(Track track) throws ValidationException {
         if (user != null) {
             checkRights(getRights().isSelf(user));

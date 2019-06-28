@@ -29,6 +29,7 @@ import org.envirocar.server.core.filter.FuelingFilter;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.auth.Authenticated;
+import org.envirocar.server.rest.rights.HasAcceptedLatestLegalPolicies;
 import org.envirocar.server.rest.validation.Schema;
 
 import javax.ws.rs.*;
@@ -60,6 +61,7 @@ public class FuelingsResource extends AbstractResource {
     }
 
     @POST
+    @HasAcceptedLatestLegalPolicies
     @Schema(request = Schemas.FUELING_CREATE)
     @Consumes({MediaTypes.FUELING_CREATE})
     public Response create(Fueling fueling) {
@@ -82,6 +84,7 @@ public class FuelingsResource extends AbstractResource {
     }
 
     @DELETE
+    @HasAcceptedLatestLegalPolicies
     @Path(FUELING)
     public void delete(@PathParam("id") String id) throws FuelingNotFoundException, UserNotFoundException {
         Fueling fueling = getDataService().getFueling(user, id);

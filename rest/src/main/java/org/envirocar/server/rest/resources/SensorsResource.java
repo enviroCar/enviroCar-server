@@ -30,6 +30,7 @@ import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.RESTConstants;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.auth.Authenticated;
+import org.envirocar.server.rest.rights.HasAcceptedLatestLegalPolicies;
 import org.envirocar.server.rest.validation.Schema;
 
 import javax.ws.rs.*;
@@ -79,6 +80,7 @@ public class SensorsResource extends AbstractResource {
 
     @POST
     @Authenticated
+    @HasAcceptedLatestLegalPolicies
     @Schema(request = Schemas.SENSOR_CREATE)
     @Consumes({MediaTypes.SENSOR_CREATE})
     public Response create(Sensor sensor) {

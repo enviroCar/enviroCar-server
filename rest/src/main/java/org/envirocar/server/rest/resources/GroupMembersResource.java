@@ -28,7 +28,7 @@ import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.UserReference;
 import org.envirocar.server.rest.auth.Authenticated;
-
+import org.envirocar.server.rest.rights.HasAcceptedLatestLegalPolicies;
 import org.envirocar.server.rest.validation.Schema;
 
 import javax.ws.rs.*;
@@ -61,6 +61,7 @@ public class GroupMembersResource extends AbstractResource {
 
     @POST
     @Authenticated
+    @HasAcceptedLatestLegalPolicies
     @Schema(request = Schemas.USER_REF)
     @Consumes({MediaTypes.USER_REF})
     public void add(UserReference user) throws UserNotFoundException,

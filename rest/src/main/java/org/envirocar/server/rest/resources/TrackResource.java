@@ -24,6 +24,7 @@ import org.envirocar.server.core.exception.ValidationException;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.auth.Authenticated;
+import org.envirocar.server.rest.rights.HasAcceptedLatestLegalPolicies;
 import org.envirocar.server.rest.validation.Schema;
 
 import javax.ws.rs.*;
@@ -49,6 +50,7 @@ public class TrackResource extends AbstractResource {
 
     @PUT
     @Authenticated
+    @HasAcceptedLatestLegalPolicies
     @Schema(request = Schemas.TRACK_MODIFY)
     @Consumes({MediaTypes.TRACK_MODIFY})
     public Response modify(Track changes) throws IllegalModificationException, ValidationException {
@@ -66,6 +68,7 @@ public class TrackResource extends AbstractResource {
 
     @DELETE
     @Authenticated
+    @HasAcceptedLatestLegalPolicies
     public void delete() {
         checkRights(getRights().canDelete(track));
         getDataService().deleteTrack(track);

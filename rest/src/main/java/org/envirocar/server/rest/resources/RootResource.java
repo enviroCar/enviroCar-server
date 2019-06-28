@@ -95,10 +95,8 @@ public class RootResource extends AbstractResource {
             root.put(JSONConstants.BADGES_KEY, getUriBuilder().path(BADGES).build().toString());
         }
 
-        root.put(JSONConstants.PRIVACY_STATEMENTS, getUriInfo()
-                .getAbsolutePathBuilder()
-                .path(PRIVACY_STATEMENTS).build().toString());
-
+        root.put(JSONConstants.PRIVACY_STATEMENTS, getUriBuilder().path(PRIVACY_STATEMENTS).build().toString());
+        root.put(JSONConstants.TERMS_OF_USE_KEY, getUriBuilder().path(TERMS_OF_USE).build().toString());
         return root;
     }
 
