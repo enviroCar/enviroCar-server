@@ -25,6 +25,10 @@ import org.envirocar.server.core.util.pagination.Pagination;
 import org.envirocar.server.mongo.MongoDB;
 import org.envirocar.server.mongo.entity.MongoPrivacyStatement;
 import org.envirocar.server.mongo.util.MongoUtils;
+import org.mongodb.morphia.query.FindOptions;
+import org.mongodb.morphia.query.Sort;
+
+import java.util.Iterator;
 
 /**
  * @author Christian Autermann
@@ -57,6 +61,17 @@ public class MongoPrivacyStatementDao extends AbstractMongoDao<ObjectId, MongoPr
             return null;
         }
         return super.get(oid);
+    }
+
+    @Override
+    public PrivacyStatement getLatest() {
+        Sort order = Sort.descending(MongoPrivacyStatement.ISSUED_DATE);
+        FindOptions options = new FindOptions().limit(1);
+        Iterator<MongoPrivacyStatement> privacyStatements = fetch(q().order(order), options).iterator();
+        if (privacyStatements.hasNext()) {
+            return privacyStatements.next();
+        }
+        return null;
     }
 
 }

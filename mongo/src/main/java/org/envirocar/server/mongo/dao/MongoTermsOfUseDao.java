@@ -16,6 +16,7 @@
  */
 package org.envirocar.server.mongo.dao;
 
+import com.google.inject.Inject;
 import org.bson.types.ObjectId;
 import org.envirocar.server.core.dao.TermsOfUseDao;
 import org.envirocar.server.core.entities.TermsOfUse;
@@ -24,34 +25,35 @@ import org.envirocar.server.core.util.pagination.Pagination;
 import org.envirocar.server.mongo.MongoDB;
 import org.envirocar.server.mongo.entity.MongoTermsOfUseInstance;
 import org.envirocar.server.mongo.util.MongoUtils;
+import org.mongodb.morphia.query.FindOptions;
+import org.mongodb.morphia.query.Sort;
 
-import com.google.inject.Inject;
+import java.util.Iterator;
 
 /**
  * @author matthes rieke
- *
  */
-public class MongoTermsOfUseDao extends AbstractMongoDao<ObjectId, MongoTermsOfUseInstance, TermsOfUse> 
-	implements TermsOfUseDao {
+public class MongoTermsOfUseDao extends AbstractMongoDao<ObjectId, MongoTermsOfUseInstance, TermsOfUse>
+        implements TermsOfUseDao {
 
-	@Inject
-	public MongoTermsOfUseDao(MongoDB mongoDB) {
-		super(MongoTermsOfUseInstance.class, mongoDB);
-	}
+    @Inject
+    public MongoTermsOfUseDao(MongoDB mongoDB) {
+        super(MongoTermsOfUseInstance.class, mongoDB);
+    }
 
-	@Override
-	public TermsOfUse get(Pagination p) {
-		return fetch(q().order(MongoUtils.reverse(MongoTermsOfUseInstance.CREATION_DATE)), p);
-	}
+    @Override
+    public TermsOfUse get(Pagination p) {
+        return fetch(q().order(MongoUtils.reverse(MongoTermsOfUseInstance.CREATION_DATE)), p);
+    }
 
-	@Override
-	protected TermsOfUse createPaginatedIterable(
-			Iterable<MongoTermsOfUseInstance> i, Pagination p, long count) {
-		return TermsOfUse.from(i).withPagination(p).withElements(count).build();
-	}
+    @Override
+    protected TermsOfUse createPaginatedIterable(
+            Iterable<MongoTermsOfUseInstance> i, Pagination p, long count) {
+        return TermsOfUse.from(i).withPagination(p).withElements(count).build();
+    }
 
-	@Override
-	public TermsOfUseInstance getById(String id) {
+    @Override
+    public TermsOfUseInstance getById(String id) {
         ObjectId oid;
         try {
             oid = new ObjectId(id);
@@ -59,6 +61,17 @@ public class MongoTermsOfUseDao extends AbstractMongoDao<ObjectId, MongoTermsOfU
             return null;
         }
         return super.get(oid);
-	}
+    }
+
+    @Override
+    public TermsOfUseInstance getLatest() {
+        Sort order = Sort.descending(MongoTermsOfUseInstance.ISSUED_DATE);
+        FindOptions options = new FindOptions().limit(1);
+        Iterator<MongoTermsOfUseInstance> privacyStatements = fetch(q().order(order), options).iterator();
+        if (privacyStatements.hasNext()) {
+            return privacyStatements.next();
+        }
+        return null;
+    }
 
 }

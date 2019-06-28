@@ -18,12 +18,7 @@ package org.envirocar.server.core.dao;
 
 import org.envirocar.server.core.entities.PrivacyStatement;
 import org.envirocar.server.core.entities.PrivacyStatements;
-import org.envirocar.server.core.util.pagination.Pagination;
 
-public interface PrivacyStatementDao {
-
-    PrivacyStatements get(Pagination p);
-
-    PrivacyStatement getById(String id);
+public interface PrivacyStatementDao extends TermsDao<PrivacyStatement, PrivacyStatements> {
 
 }
