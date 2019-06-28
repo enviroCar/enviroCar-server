@@ -16,23 +16,6 @@
  */
 package org.envirocar.server.rest.resources;
 
-import java.net.URI;
-import java.util.Set;
-import java.util.concurrent.ExecutionException;
-
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriBuilder;
-
-import org.envirocar.server.core.exception.ResourceNotFoundException;
-import org.envirocar.server.core.exception.TrackNotFoundException;
-import org.envirocar.server.rest.JSONConstants;
-import org.envirocar.server.rest.guice.JSONSchemaFactoryProvider;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
@@ -41,6 +24,16 @@ import com.google.common.base.Preconditions;
 import com.google.common.cache.LoadingCache;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+import org.envirocar.server.core.exception.ResourceNotFoundException;
+import org.envirocar.server.rest.JSONConstants;
+import org.envirocar.server.rest.guice.JSONSchemaFactoryProvider;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriBuilder;
+import java.net.URI;
+import java.util.Set;
+import java.util.concurrent.ExecutionException;
 
 /**
  * TODO JavaDoc
@@ -65,7 +58,7 @@ public class JSONSchemaResource extends AbstractResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public JsonNode get() throws TrackNotFoundException {
+    public JsonNode get() {
         ObjectNode root = nodeFactory.objectNode();
         ArrayNode schemas = root.putArray(JSONConstants.SCHEMA);
         UriBuilder builder = getUriInfo().getRequestUriBuilder().path("{schema}");

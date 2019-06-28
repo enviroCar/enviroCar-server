@@ -16,22 +16,19 @@
  */
 package org.envirocar.server.rest.resources;
 
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.Sensor;
-import org.envirocar.server.core.exception.MeasurementNotFoundException;
-import org.envirocar.server.core.exception.UserNotFoundException;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.auth.Authenticated;
 import org.envirocar.server.rest.validation.Schema;
 
-import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 
 /**
  * TODO JavaDoc
@@ -49,24 +46,20 @@ public class MeasurementResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.MEASUREMENT)
-    @Produces({ MediaTypes.MEASUREMENT,
-                MediaTypes.XML_RDF,
-                MediaTypes.TURTLE,
-                MediaTypes.TURTLE_ALT })
-    public Measurement get() throws MeasurementNotFoundException {
+    @Produces({MediaTypes.MEASUREMENT, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
+    public Measurement get() {
         return measurement;
     }
 
     @DELETE
     @Authenticated
-    public void delete() throws MeasurementNotFoundException,
-                                UserNotFoundException {
+    public void delete() {
         checkRights(getRights().canDelete(measurement));
         getDataService().deleteMeasurement(measurement);
     }
 
     @Path(SENSOR)
-    public SensorResource sensor() throws MeasurementNotFoundException {
+    public SensorResource sensor() {
         checkRights(getRights().canSeeSensorOf(measurement));
         Sensor sensor = measurement.getSensor();
         checkRights(getRights().canSee(sensor));

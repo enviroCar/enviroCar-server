@@ -16,33 +16,24 @@
  */
 package org.envirocar.server.rest.resources;
 
-import java.util.Iterator;
-import java.util.List;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.PathSegment;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
-
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
-
 import org.envirocar.server.core.entities.Group;
-
 import org.envirocar.server.core.exception.GroupNotFoundException;
 import org.envirocar.server.core.exception.IllegalModificationException;
-import org.envirocar.server.core.exception.UserNotFoundException;
 import org.envirocar.server.core.exception.ValidationException;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.auth.Authenticated;
 
 import org.envirocar.server.rest.validation.Schema;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.PathSegment;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * TODO JavaDoc
@@ -61,10 +52,7 @@ public class GroupResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.GROUP)
-    @Produces({ MediaTypes.GROUP,
-                MediaTypes.XML_RDF,
-                MediaTypes.TURTLE,
-                MediaTypes.TURTLE_ALT })
+    @Produces({MediaTypes.GROUP, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
     public Group get() throws GroupNotFoundException {
         return group;
     }
@@ -72,11 +60,8 @@ public class GroupResource extends AbstractResource {
     @PUT
     @Authenticated
     @Schema(request = Schemas.GROUP_MODIFY)
-    @Consumes({ MediaTypes.GROUP_MODIFY })
-    public Response modify(Group changes) throws UserNotFoundException,
-                                                 ValidationException,
-                                                 IllegalModificationException,
-                                                 GroupNotFoundException {
+    @Consumes({MediaTypes.GROUP_MODIFY})
+    public Response modify(Group changes) throws ValidationException, IllegalModificationException {
         checkRights(getRights().canModify(group));
         Group modified = getGroupService().modifyGroup(group, changes);
         if (modified.getName().equals(group.getName())) {
@@ -94,7 +79,7 @@ public class GroupResource extends AbstractResource {
 
     @DELETE
     @Authenticated
-    public void delete() throws UserNotFoundException, GroupNotFoundException {
+    public void delete() throws GroupNotFoundException {
         checkRights(getRights().canDelete(group));
         getGroupService().deleteGroup(group);
     }

@@ -34,8 +34,7 @@ public interface ResourceFactory {
 
     FriendsResource createFriendsResource(User user);
 
-    FriendResource createFriendResource(@Assisted("user") User user,
-                                        @Assisted("friend") User friend);
+    FriendResource createFriendResource(@Assisted("user") User user, @Assisted("friend") User friend);
 
     GroupResource createGroupResource(Group group);
 
@@ -49,12 +48,9 @@ public interface ResourceFactory {
 
     TracksResource createTracksResource(@Nullable User user);
 
-    MeasurementResource createMeasurementResource(Measurement measurement,
-                                                  @Nullable User user,
-                                                  @Nullable Track track);
+    MeasurementResource createMeasurementResource(Measurement measurement, @Nullable User user, @Nullable Track track);
 
-    MeasurementsResource createMeasurementsResource(@Nullable User user,
-                                                    @Nullable Track track);
+    MeasurementsResource createMeasurementsResource(@Nullable User user, @Nullable Track track);
 
     PhenomenonResource createPhenomenonResource(Phenomenon phenomenon);
 
@@ -74,10 +70,7 @@ public interface ResourceFactory {
 
     StatisticsResource createStatisticsResource(Sensor sensor);
 
-    StatisticResource createStatisticResource(Phenomenon phenomenon,
-                                              @Nullable User user,
-                                              @Nullable Track track,
-                                              @Nullable Sensor sensor);
+    StatisticResource createStatisticResource(Phenomenon phenomenon, @Nullable User user, @Nullable Track track, @Nullable Sensor sensor);
 
     UserStatisticResource createUserStatisticsResource();
 

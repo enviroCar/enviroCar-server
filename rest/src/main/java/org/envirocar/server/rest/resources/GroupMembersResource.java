@@ -16,21 +16,12 @@
  */
 package org.envirocar.server.rest.resources;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
-
 import org.envirocar.server.core.entities.Group;
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.entities.Users;
 import org.envirocar.server.core.exception.BadRequestException;
-
 import org.envirocar.server.core.exception.GroupNotFoundException;
 import org.envirocar.server.core.exception.UserNotFoundException;
 import org.envirocar.server.rest.MediaTypes;
@@ -39,6 +30,8 @@ import org.envirocar.server.rest.UserReference;
 import org.envirocar.server.rest.auth.Authenticated;
 
 import org.envirocar.server.rest.validation.Schema;
+
+import javax.ws.rs.*;
 
 /**
  * TODO JavaDoc
@@ -56,10 +49,10 @@ public class GroupMembersResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.USERS)
-    @Produces({ MediaTypes.USERS,
-                MediaTypes.XML_RDF,
-                MediaTypes.TURTLE,
-                MediaTypes.TURTLE_ALT })
+    @Produces({MediaTypes.USERS,
+            MediaTypes.XML_RDF,
+            MediaTypes.TURTLE,
+            MediaTypes.TURTLE_ALT})
     public Users get() throws BadRequestException {
         checkRights(getRights().canSeeMembersOf(group));
         return getGroupService()
@@ -69,12 +62,12 @@ public class GroupMembersResource extends AbstractResource {
     @POST
     @Authenticated
     @Schema(request = Schemas.USER_REF)
-    @Consumes({ MediaTypes.USER_REF })
+    @Consumes({MediaTypes.USER_REF})
     public void add(UserReference user) throws UserNotFoundException,
-                                               GroupNotFoundException {
+            GroupNotFoundException {
         User u = getUserService().getUser(user.getName());
         checkRights(getRights().isSelf(u) &&
-                    getRights().canJoinGroup(group));
+                getRights().canJoinGroup(group));
         getGroupService().addGroupMember(group, u);
     }
 

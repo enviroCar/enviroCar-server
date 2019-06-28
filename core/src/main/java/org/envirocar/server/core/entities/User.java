@@ -16,12 +16,11 @@
  */
 package org.envirocar.server.core.entities;
 
-import java.net.URL;
-import java.util.Set;
-
+import com.vividsolutions.jts.geom.Geometry;
 import org.joda.time.DateTime;
 
-import com.vividsolutions.jts.geom.Geometry;
+import java.net.URL;
+import java.util.Set;
 
 /**
  * TODO JavaDoc
@@ -31,29 +30,40 @@ import com.vividsolutions.jts.geom.Geometry;
 public interface User extends BaseEntity {
     Set<String> getBadges();
 
-    boolean hasBadges();
+    default boolean hasBadges() {
+        Set<String> badges = getBadges();
+        return badges != null && !badges.isEmpty();
+    }
 
     String getName();
 
     void setName(String name);
 
-    boolean hasName();
+    default boolean hasName() {
+        return getName() != null && !getName().isEmpty();
+    }
 
     String getMail();
 
     void setMail(String mail);
 
-    boolean hasMail();
+    default boolean hasMail() {
+        return getMail() != null && !getMail().isEmpty();
+    }
 
     String getToken();
 
     void setToken(String token);
 
-    boolean hasToken();
+    default boolean hasToken() {
+        return getToken() != null && !getToken().isEmpty();
+    }
 
     boolean isAdmin();
 
-    boolean isConfirmed();
+    default boolean isConfirmed() {
+        return getConfirmationCode()== null || getConfirmationCode().isEmpty();
+    }
 
     String getConfirmationCode();
 
@@ -69,61 +79,81 @@ public interface User extends BaseEntity {
 
     void setCountry(String country);
 
-    boolean hasCountry();
+    default boolean hasCountry() {
+        return getCountry() != null && !getCountry().isEmpty();
+    }
 
     String getDayOfBirth();
 
     void setDayOfBirth(String dayOfBirth);
 
-    boolean hasDayOfBirth();
+    default boolean hasDayOfBirth() {
+        return getDayOfBirth() != null && !getDayOfBirth().isEmpty();
+    }
 
     String getFirstName();
 
     void setFirstName(String firstName);
 
-    boolean hasFirstName();
+    default boolean hasFirstName() {
+        return getFirstName() != null && !getFirstName().isEmpty();
+    }
 
     Gender getGender();
 
     void setGender(Gender gender);
 
-    boolean hasGender();
+    default boolean hasGender() {
+        return getGender() != null;
+    }
 
     String getLanguage();
 
     void setLanguage(String language);
 
-    boolean hasLanguage();
+    default boolean hasLanguage() {
+        return getLanguage() != null && !getLanguage().isEmpty();
+    }
 
     String getLastName();
 
     void setLastName(String lastName);
 
-    boolean hasLastName();
+    default boolean hasLastName() {
+        return getLastName() != null && !getLastName().isEmpty();
+    }
 
     Geometry getLocation();
 
     void setLocation(Geometry location);
 
-    boolean hasLocation();
+    default boolean hasLocation() {
+        return getLocation() != null && !getLocation().isEmpty();
+    }
 
     URL getUrl();
 
     void setUrl(URL url);
 
-    boolean hasUrl();
+    default boolean hasUrl() {
+        return getUrl() != null;
+    }
 
     String getAboutMe();
 
     void setAboutMe(String aboutMe);
 
-    boolean hasAboutMe();
+    default boolean hasAboutMe() {
+        return getAboutMe() != null && !getAboutMe().isEmpty();
+    }
 
     void setTermsOfUseVersion(String tou);
 
     String getTermsOfUseVersion();
 
-    boolean hasAcceptedTermsOfUseVersion();
+    default boolean hasAcceptedTermsOfUseVersion() {
+        return getTermsOfUseVersion() != null && !getTermsOfUseVersion().isEmpty();
+    }
 
     boolean hasAcceptedTermsOfUse();
 

@@ -16,31 +16,6 @@
  */
 package org.envirocar.server.rest.guice;
 
-import org.envirocar.server.rest.resources.ConfirmationLinkFactoryImpl;
-
-import java.util.Properties;
-import java.util.Set;
-
-import javax.ws.rs.core.SecurityContext;
-
-import org.envirocar.server.core.ConfirmationLinkFactory;
-import org.envirocar.server.core.FriendService;
-import org.envirocar.server.core.GroupService;
-import org.envirocar.server.core.entities.User;
-import org.envirocar.server.rest.auth.PrincipalImpl;
-import org.envirocar.server.rest.mapper.BadRequestExceptionMapper;
-import org.envirocar.server.rest.mapper.IllegalModificationExceptionMapper;
-import org.envirocar.server.rest.mapper.JsonValidationExceptionMapper;
-import org.envirocar.server.rest.mapper.ResourceAlreadyExistExceptionMapper;
-import org.envirocar.server.rest.mapper.ResourceNotFoundExceptionMapper;
-import org.envirocar.server.rest.mapper.ValidationExceptionMapper;
-import org.envirocar.server.rest.resources.AbstractResource;
-import org.envirocar.server.rest.resources.ResourceFactory;
-import org.envirocar.server.rest.resources.RootResource;
-import org.envirocar.server.rest.rights.AccessRights;
-import org.envirocar.server.rest.rights.AccessRightsImpl;
-import org.envirocar.server.rest.rights.ReadOnlyRights;
-
 import com.google.common.base.Optional;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
@@ -49,6 +24,23 @@ import com.google.inject.TypeLiteral;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.name.Names;
 import com.google.inject.servlet.RequestScoped;
+import org.envirocar.server.core.ConfirmationLinkFactory;
+import org.envirocar.server.core.FriendService;
+import org.envirocar.server.core.GroupService;
+import org.envirocar.server.core.entities.User;
+import org.envirocar.server.rest.auth.PrincipalImpl;
+import org.envirocar.server.rest.mapper.*;
+import org.envirocar.server.rest.resources.AbstractResource;
+import org.envirocar.server.rest.resources.ConfirmationLinkFactoryImpl;
+import org.envirocar.server.rest.resources.ResourceFactory;
+import org.envirocar.server.rest.resources.RootResource;
+import org.envirocar.server.rest.rights.AccessRights;
+import org.envirocar.server.rest.rights.AccessRightsImpl;
+import org.envirocar.server.rest.rights.ReadOnlyRights;
+
+import javax.ws.rs.core.SecurityContext;
+import java.util.Properties;
+import java.util.Set;
 
 /**
  * @author Christian Autermann <autermann@uni-muenster.de>

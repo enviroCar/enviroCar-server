@@ -322,18 +322,13 @@ public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
 
         protected void validate(byte[] bytes) throws IOException,
                                                      WebApplicationException {
-            String entity =
-                    new String(bytes, ReaderWriter.getCharset(mediaType));
+            String entity = new String(bytes, ReaderWriter.getCharset(mediaType));
             try {
-                JSONSchemaResourceFilterFactory.this.validate(reader
-                        .readTree(entity), schema);
+                JSONSchemaResourceFilterFactory.this.validate(reader.readTree(entity), schema);
             } catch (JSONValidationException v) {
-                log.error("Created invalid response: Error:\n" +
-                          writer.writeValueAsString(v.getError()), v);
+                log.error("Created invalid response: Error:\n" + writer.writeValueAsString(v.getError()), v);
             } catch (ValidationException v) {
-                log.error("Created invalid response: Error:\n" +
-                          v.getMessage() + "\nGenerated Response:\n" +
-                          entity + "\n", v);
+                log.error(String.format("Created invalid response: Error:\n%s\nGenerated Response:\n%s\n", v.getMessage(), entity), v);
                 throw new WebApplicationException(v, Status.INTERNAL_SERVER_ERROR);
             }
         }

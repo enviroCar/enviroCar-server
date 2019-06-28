@@ -16,19 +16,9 @@
  */
 package org.envirocar.server.rest.resources;
 
-import java.util.List;
-import java.util.Set;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.Response;
-
+import com.google.common.collect.Sets;
+import com.google.inject.assistedinject.Assisted;
+import com.google.inject.assistedinject.AssistedInject;
 import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.core.entities.Sensors;
 import org.envirocar.server.core.entities.User;
@@ -42,9 +32,11 @@ import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.auth.Authenticated;
 import org.envirocar.server.rest.validation.Schema;
 
-import com.google.common.collect.Sets;
-import com.google.inject.assistedinject.Assisted;
-import com.google.inject.assistedinject.AssistedInject;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.Response;
+import java.util.List;
+import java.util.Set;
 
 /**
  * TODO JavaDoc
@@ -69,19 +61,12 @@ public class SensorsResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.SENSORS)
-    @Produces({ MediaTypes.SENSORS,
-                MediaTypes.XML_RDF,
-                MediaTypes.TURTLE,
-                MediaTypes.TURTLE_ALT })
-    public Sensors get(
-            @QueryParam(RESTConstants.TYPE) String type) throws BadRequestException {
-        MultivaluedMap<String, String> queryParameters =
-                getUriInfo().getQueryParameters();
+    @Produces({MediaTypes.SENSORS, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
+    public Sensors get(@QueryParam(RESTConstants.TYPE) String type) throws BadRequestException {
+        MultivaluedMap<String, String> queryParameters = getUriInfo().getQueryParameters();
         Set<PropertyFilter> filters = Sets.newHashSet();
         for (String key : queryParameters.keySet()) {
-            if (key.equals(RESTConstants.LIMIT) ||
-                key.equals(RESTConstants.PAGE) ||
-                key.equals(RESTConstants.TYPE)) {
+            if (key.equals(RESTConstants.LIMIT) || key.equals(RESTConstants.PAGE) || key.equals(RESTConstants.TYPE)) {
                 continue;
             }
             List<String> list = queryParameters.get(key);
@@ -95,17 +80,16 @@ public class SensorsResource extends AbstractResource {
     @POST
     @Authenticated
     @Schema(request = Schemas.SENSOR_CREATE)
-    @Consumes({ MediaTypes.SENSOR_CREATE })
+    @Consumes({MediaTypes.SENSOR_CREATE})
     public Response create(Sensor sensor) {
         return Response.created(
                 getUriInfo().getAbsolutePathBuilder()
-                .path(getDataService().createSensor(sensor).getIdentifier())
-                .build()).build();
+                        .path(getDataService().createSensor(sensor).getIdentifier())
+                        .build()).build();
     }
 
     @Path(SENSOR)
-    public SensorResource sensor(@PathParam("sensor") String id)
-            throws SensorNotFoundException {
+    public SensorResource sensor(@PathParam("sensor") String id) throws SensorNotFoundException {
         Sensor sensor = getDataService().getSensorByName(id);
         checkRights(getRights().canSee(sensor));
         return getResourceFactory().createSensorResource(sensor);

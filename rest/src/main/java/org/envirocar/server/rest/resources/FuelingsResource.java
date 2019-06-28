@@ -16,38 +16,32 @@
  */
 package org.envirocar.server.rest.resources;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Response;
-
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 import org.envirocar.server.core.TemporalFilter;
 import org.envirocar.server.core.entities.Fueling;
 import org.envirocar.server.core.entities.Fuelings;
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.exception.BadRequestException;
 import org.envirocar.server.core.exception.FuelingNotFoundException;
+import org.envirocar.server.core.exception.UserNotFoundException;
 import org.envirocar.server.core.filter.FuelingFilter;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
+import org.envirocar.server.rest.auth.Authenticated;
 import org.envirocar.server.rest.validation.Schema;
 
-import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
-import javax.ws.rs.DELETE;
-import org.envirocar.server.core.exception.UserNotFoundException;
-import org.envirocar.server.rest.auth.Authenticated;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Response;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * TODO JavaDoc
  *
  * @author Christian Autermann
  */
+@Authenticated
 public class FuelingsResource extends AbstractResource {
     public static final String FUELING = "{id}";
     private final User user;
@@ -59,10 +53,7 @@ public class FuelingsResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.FUELINGS)
-    @Produces({ MediaTypes.FUELINGS,
-                MediaTypes.XML_RDF,
-                MediaTypes.TURTLE,
-                MediaTypes.TURTLE_ALT })
+    @Produces({MediaTypes.FUELINGS, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
     public Fuelings getAll() throws BadRequestException {
         TemporalFilter tf = parseTemporalFilterForInstant();
         return getDataService().getFuelings(new FuelingFilter(user, tf, getPagination()));
@@ -70,7 +61,7 @@ public class FuelingsResource extends AbstractResource {
 
     @POST
     @Schema(request = Schemas.FUELING_CREATE)
-    @Consumes({ MediaTypes.FUELING_CREATE })
+    @Consumes({MediaTypes.FUELING_CREATE})
     public Response create(Fueling fueling) {
         fueling.setUser(getCurrentUser());
         Fueling f = getDataService().createFueling(fueling);
@@ -81,18 +72,17 @@ public class FuelingsResource extends AbstractResource {
     @GET
     @Path(FUELING)
     @Schema(response = Schemas.FUELING)
-    @Produces({ MediaTypes.FUELING,
-                MediaTypes.XML_RDF,
-                MediaTypes.TURTLE,
-                MediaTypes.TURTLE_ALT })
+    @Produces({MediaTypes.FUELING,
+            MediaTypes.XML_RDF,
+            MediaTypes.TURTLE,
+            MediaTypes.TURTLE_ALT})
     public Fueling getFueling(@PathParam("id") String id)
             throws FuelingNotFoundException {
         return getDataService().getFueling(user, id);
     }
-    
+
     @DELETE
     @Path(FUELING)
-    @Authenticated
     public void delete(@PathParam("id") String id) throws FuelingNotFoundException, UserNotFoundException {
         Fueling fueling = getDataService().getFueling(user, id);
         checkRights(getRights().canDelete(fueling));

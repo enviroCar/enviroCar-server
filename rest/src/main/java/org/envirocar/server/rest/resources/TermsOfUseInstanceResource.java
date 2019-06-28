@@ -16,17 +16,15 @@
  */
 package org.envirocar.server.rest.resources;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Produces;
-
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 import org.envirocar.server.core.entities.TermsOfUseInstance;
-import org.envirocar.server.core.exception.ResourceNotFoundException;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.validation.Schema;
 
-import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
+import javax.ws.rs.GET;
+import javax.ws.rs.Produces;
 
 /**
  * @author matthes rieke

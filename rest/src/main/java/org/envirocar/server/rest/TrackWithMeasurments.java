@@ -186,7 +186,7 @@ public class TrackWithMeasurments implements Track, Iterable<Measurement> {
 
     @Override
     public void setBegin(DateTime begin) {
-        setBegin(begin);
+        track.setBegin(begin);
     }
 
     @Override

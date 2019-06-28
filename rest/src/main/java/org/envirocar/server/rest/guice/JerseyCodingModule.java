@@ -16,20 +16,11 @@
  */
 package org.envirocar.server.rest.guice;
 
+import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.google.inject.*;
 import org.envirocar.server.core.util.GeometryConverter;
 import org.envirocar.server.rest.util.GeoJSON;
-
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectReader;
-import com.fasterxml.jackson.databind.ObjectWriter;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.google.inject.AbstractModule;
-import com.google.inject.Provides;
-import com.google.inject.Scopes;
-import com.google.inject.Singleton;
-import com.google.inject.TypeLiteral;
 
 /**
  * TODO JavaDoc

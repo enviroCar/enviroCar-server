@@ -16,24 +16,18 @@
  */
 package org.envirocar.server.mongo.entity;
 
-import java.net.URL;
-import java.util.Collections;
-import java.util.Set;
-
+import com.google.common.base.Objects;
+import com.vividsolutions.jts.geom.Geometry;
 import org.envirocar.server.core.entities.Gender;
 import org.envirocar.server.core.entities.User;
 import org.joda.time.DateTime;
 import org.mongodb.morphia.Key;
-import org.mongodb.morphia.annotations.Entity;
-import org.mongodb.morphia.annotations.Id;
-import org.mongodb.morphia.annotations.IndexOptions;
-import org.mongodb.morphia.annotations.Indexed;
-import org.mongodb.morphia.annotations.Property;
-import org.mongodb.morphia.annotations.Transient;
+import org.mongodb.morphia.annotations.*;
 import org.mongodb.morphia.mapping.Mapper;
 
-import com.google.common.base.Objects;
-import com.vividsolutions.jts.geom.Geometry;
+import java.net.URL;
+import java.util.Collections;
+import java.util.Set;
 
 /**
  * TODO JavaDoc
@@ -115,9 +109,9 @@ public class MongoUser extends MongoEntityBase implements User {
     private DateTime expireAt;
 
     @Transient
-    private boolean hasAcceptedTermsOfUse;
+    private boolean hasAcceptedTermsOfUse = true;
     @Transient
-    private boolean hasAccceptedPrivacyStatement;
+    private boolean hasAcceptedPrivacyStatement = true;
 
     public MongoUser(String name) {
         this.name = name;
@@ -147,16 +141,6 @@ public class MongoUser extends MongoEntityBase implements User {
     }
 
     @Override
-    public boolean hasName() {
-        return getName() != null && !getName().isEmpty();
-    }
-
-    @Override
-    public boolean hasMail() {
-        return getMail() != null && !getMail().isEmpty();
-    }
-
-    @Override
     public String getToken() {
         return this.token;
     }
@@ -174,11 +158,6 @@ public class MongoUser extends MongoEntityBase implements User {
     @Override
     public void setAdmin(boolean isAdmin) {
         this.isAdmin = isAdmin;
-    }
-
-    @Override
-    public boolean hasToken() {
-        return getToken() != null && !getToken().isEmpty();
     }
 
     public Set<Key<MongoUser>> getFriends() {
@@ -302,58 +281,8 @@ public class MongoUser extends MongoEntityBase implements User {
     }
 
     @Override
-    public boolean hasCountry() {
-        return getCountry() != null && !getCountry().isEmpty();
-    }
-
-    @Override
-    public boolean hasDayOfBirth() {
-        return getDayOfBirth() != null && !getDayOfBirth().isEmpty();
-    }
-
-    @Override
-    public boolean hasFirstName() {
-        return getFirstName() != null && !getFirstName().isEmpty();
-    }
-
-    @Override
-    public boolean hasGender() {
-        return getGender() != null;
-    }
-
-    @Override
-    public boolean hasLanguage() {
-        return getLanguage() != null && !getLanguage().isEmpty();
-    }
-
-    @Override
-    public boolean hasLastName() {
-        return getLastName() != null && !getLastName().isEmpty();
-    }
-
-    @Override
-    public boolean hasLocation() {
-        return getLocation() != null && !getLocation().isEmpty();
-    }
-
-    @Override
-    public boolean hasUrl() {
-        return getUrl() != null;
-    }
-
-    @Override
-    public boolean hasAboutMe() {
-        return getAboutMe() != null && !getAboutMe().isEmpty();
-    }
-
-    @Override
     public Set<String> getBadges() {
         return this.badges == null ? null : Collections.unmodifiableSet(this.badges);
-    }
-
-    @Override
-    public boolean hasBadges() {
-        return this.badges != null && !this.badges.isEmpty();
     }
 
     @Override
@@ -365,16 +294,6 @@ public class MongoUser extends MongoEntityBase implements User {
     @Override
     public void setTermsOfUseVersion(String tou) {
         this.termsOfUseVersion = tou;
-    }
-
-    @Override
-    public boolean hasAcceptedTermsOfUseVersion() {
-        return getTermsOfUseVersion() != null && !getTermsOfUseVersion().isEmpty();
-    }
-
-    @Override
-    public boolean isConfirmed() {
-        return this.confirmationCode == null || this.confirmationCode.isEmpty();
     }
 
     @Override
@@ -404,7 +323,7 @@ public class MongoUser extends MongoEntityBase implements User {
 
     @Override
     public boolean hasAcceptedPrivacyStatement() {
-        return this.hasAccceptedPrivacyStatement;
+        return this.hasAcceptedPrivacyStatement;
     }
 
     @Override
@@ -414,6 +333,6 @@ public class MongoUser extends MongoEntityBase implements User {
 
     @Override
     public void setAcceptedPrivacyStatement(boolean hasAccceptedPrivacyStatement) {
-        this.hasAccceptedPrivacyStatement = hasAccceptedPrivacyStatement;
+        this.hasAcceptedPrivacyStatement = hasAccceptedPrivacyStatement;
     }
 }

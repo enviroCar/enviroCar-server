@@ -16,26 +16,25 @@
  */
 package org.envirocar.server.rest.resources;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Produces;
-
-import org.envirocar.server.core.entities.User;
-import org.envirocar.server.core.filter.UserStatisticFilter;
-
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
-import javax.annotation.Nullable;
+import org.envirocar.server.core.entities.User;
+import org.envirocar.server.core.entities.UserStatistic;
+import org.envirocar.server.core.filter.UserStatisticFilter;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.validation.Schema;
-import org.envirocar.server.core.entities.UserStatistic;
+
+import javax.annotation.Nullable;
+import javax.ws.rs.GET;
+import javax.ws.rs.Produces;
 
 /**
  * TODO JavaDoc
  *
  * @author Maurin Radtke <maurin.radtke@uni-muenster.de>
  */
-public class UserStatisticResource  extends AbstractResource{
+public class UserStatisticResource extends AbstractResource {
     private final User user;
 
     @AssistedInject
@@ -50,10 +49,7 @@ public class UserStatisticResource  extends AbstractResource{
 
     @GET
     @Schema(response = Schemas.USERSTATISTIC)
-    @Produces({ MediaTypes.USERSTATISTIC,
-                MediaTypes.XML_RDF,
-                MediaTypes.TURTLE,
-                MediaTypes.TURTLE_ALT })
+    @Produces({MediaTypes.USERSTATISTIC, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
     public UserStatistic UserStatistics() {
         return getUserStatisticService()
                 .getUserStatistic(new UserStatisticFilter(user));

@@ -16,10 +16,8 @@
  */
 package org.envirocar.server.rest.resources;
 
-import javax.annotation.Nullable;
-import javax.ws.rs.GET;
-import javax.ws.rs.Produces;
-
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 import org.envirocar.server.core.entities.Phenomenon;
 import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.core.entities.Track;
@@ -30,8 +28,9 @@ import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.validation.Schema;
 
-import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
+import javax.annotation.Nullable;
+import javax.ws.rs.GET;
+import javax.ws.rs.Produces;
 
 /**
  * TODO JavaDoc
@@ -57,14 +56,9 @@ public class StatisticResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.STATISTIC)
-    @Produces({ MediaTypes.STATISTIC,
-                MediaTypes.XML_RDF,
-                MediaTypes.TURTLE,
-                MediaTypes.TURTLE_ALT })
+    @Produces({MediaTypes.STATISTIC, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
     public Statistic get() {
-        return getStatisticsService().getStatistic(
-                new StatisticsFilter(getUser(), getTrack(), getSensor()),
-                getPhenomenon());
+        return getStatisticsService().getStatistic(new StatisticsFilter(getUser(), getTrack(), getSensor()), getPhenomenon());
     }
 
     public Track getTrack() {

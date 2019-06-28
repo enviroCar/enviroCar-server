@@ -28,12 +28,12 @@ import org.mongodb.morphia.mapping.Mapper;
 public class MongoPrivacyStatement extends MongoEntityBase implements PrivacyStatement {
     public static final String NAME = Mapper.ID_KEY;
     public static final String CONTENTS = "contents";
-    public static final String DATE_STRING = "issuedDate";
+    public static final String ISSUED_DATE = "issuedDate";
 
     @Id
     private ObjectId id = new ObjectId();
 
-    @Property(DATE_STRING)
+    @Property(ISSUED_DATE)
     private String issuedDate;
 
     @Property(CONTENTS)

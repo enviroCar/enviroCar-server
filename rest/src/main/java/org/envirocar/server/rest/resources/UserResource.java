@@ -16,35 +16,22 @@
  */
 package org.envirocar.server.rest.resources;
 
-import java.util.Iterator;
-import java.util.List;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.PathSegment;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
-
+import com.google.common.base.Preconditions;
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 import org.envirocar.server.core.entities.User;
-import org.envirocar.server.core.exception.IllegalModificationException;
-import org.envirocar.server.core.exception.ResourceAlreadyExistException;
-import org.envirocar.server.core.exception.ResourceNotFoundException;
-import org.envirocar.server.core.exception.UserNotFoundException;
-import org.envirocar.server.core.exception.ValidationException;
+import org.envirocar.server.core.exception.*;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.auth.Authenticated;
 import org.envirocar.server.rest.validation.Schema;
 
-import com.google.common.base.Preconditions;
-import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
+import javax.ws.rs.*;
+import javax.ws.rs.core.PathSegment;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * TODO JavaDoc
@@ -78,11 +65,10 @@ public class UserResource extends AbstractResource {
 
     @PUT
     @Schema(request = Schemas.USER_MODIFY)
-    @Consumes({ MediaTypes.USER_MODIFY })
+    @Consumes({MediaTypes.USER_MODIFY})
     @Authenticated
-    public Response modify(User changes) throws
-            UserNotFoundException, IllegalModificationException,
-            ValidationException, ResourceAlreadyExistException {
+    public Response modify(User changes)
+            throws UserNotFoundException, IllegalModificationException, ValidationException, ResourceAlreadyExistException {
         checkRights(getRights().canModify(user));
 //        checkMail(user);
         User modified = getUserService().modifyUser(user, changes);
@@ -101,17 +87,15 @@ public class UserResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.USER)
-    @Produces({ MediaTypes.USER,
-                MediaTypes.XML_RDF,
-                MediaTypes.TURTLE,
-                MediaTypes.TURTLE_ALT })
-    public User get() throws UserNotFoundException {
+    @Produces({MediaTypes.USER, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
+    public User get() {
         return user;
     }
 
     @DELETE
     @Authenticated
-    public void delete(@QueryParam(DELETE_CONTENT) @DefaultValue("false") boolean deleteContent) throws ResourceNotFoundException {
+    public void delete(@QueryParam(DELETE_CONTENT) @DefaultValue("false") boolean deleteContent)
+            throws ResourceNotFoundException {
         checkRights(getRights().canDelete(user));
         getUserService().deleteUser(this.user, deleteContent);
     }
@@ -144,12 +128,12 @@ public class UserResource extends AbstractResource {
         checkRights(getRights().canSeeStatisticsOf(user));
         return getResourceFactory().createStatisticsResource(this.user);
     }
-    
+
     @Path(USERSTATISTIC)
     public UserStatisticResource userstatistic() {
         checkRights(getRights().canSeeUserStatisticsOf(user));
         return getResourceFactory().createUserStatisticsResource(this.user);
-    	
+
     }
 
     @Path(ACTIVITIES)

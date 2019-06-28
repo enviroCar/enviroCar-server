@@ -16,25 +16,11 @@
  */
 package org.envirocar.server.rest.resources;
 
-import static org.envirocar.server.rest.resources.AbstractResource.NOT_ALLOWED_MAIL_ADDRESS;
-
-import java.util.Set;
-
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-import javax.ws.rs.core.SecurityContext;
-import javax.ws.rs.core.UriInfo;
-
-import org.envirocar.server.core.DataService;
-import org.envirocar.server.core.FriendService;
-import org.envirocar.server.core.GroupService;
-import org.envirocar.server.core.StatisticsService;
-import org.envirocar.server.core.TemporalFilter;
-import org.envirocar.server.core.TemporalFilterOperator;
-import org.envirocar.server.core.UserService;
-import org.envirocar.server.core.UserStatisticService;
+import com.google.common.base.Optional;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+import com.google.inject.name.Named;
+import org.envirocar.server.core.*;
 import org.envirocar.server.core.entities.EntityFactory;
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.exception.BadRequestException;
@@ -43,10 +29,13 @@ import org.envirocar.server.rest.auth.PrincipalImpl;
 import org.envirocar.server.rest.pagination.PaginationProvider;
 import org.envirocar.server.rest.rights.AccessRights;
 
-import com.google.common.base.Optional;
-import com.google.inject.Inject;
-import com.google.inject.Provider;
-import com.google.inject.name.Named;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.SecurityContext;
+import javax.ws.rs.core.UriInfo;
+import java.util.Set;
 
 /**
  * TODO JavaDoc
@@ -125,8 +114,7 @@ public abstract class AbstractResource {
     }
 
     protected User getCurrentUser() {
-        PrincipalImpl p = (PrincipalImpl) securityContext.get()
-                .getUserPrincipal();
+        PrincipalImpl p = (PrincipalImpl) securityContext.get().getUserPrincipal();
         return p == null ? null : p.getUser();
     }
 
@@ -176,14 +164,12 @@ public abstract class AbstractResource {
     }
 
     @Inject
-    public void setStatisticsService(
-            Provider<StatisticsService> statisticsService) {
+    public void setStatisticsService(Provider<StatisticsService> statisticsService) {
         this.statisticsService = statisticsService;
     }
 
     @Inject
-    public void setUserStatisticService(
-            Provider<UserStatisticService> userStatisticsService) {
+    public void setUserStatisticService(Provider<UserStatisticService> userStatisticsService) {
         this.userStatisticService = userStatisticsService;
     }
 

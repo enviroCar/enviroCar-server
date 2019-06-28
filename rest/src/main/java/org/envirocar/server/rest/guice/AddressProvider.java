@@ -16,16 +16,6 @@
  */
 package org.envirocar.server.rest.guice;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Collections;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
-
-import org.envirocar.server.core.validation.UserValidator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.common.base.Charsets;
 import com.google.common.base.Optional;
 import com.google.common.base.Supplier;
@@ -35,6 +25,15 @@ import com.google.common.io.Files;
 import com.google.common.io.LineProcessor;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
+import org.envirocar.server.core.validation.UserValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 /**
  * TODO JavaDoc
@@ -49,8 +48,7 @@ public class AddressProvider implements Provider<Optional<Set<String>>> {
     private final Supplier<Optional<Set<String>>> addresses;
 
     public AddressProvider() {
-        this.addresses = Suppliers.memoizeWithExpiration(
-                new AddressSupplier(), 30, TimeUnit.SECONDS);
+        this.addresses = Suppliers.memoizeWithExpiration(new AddressSupplier(), 30, TimeUnit.SECONDS);
     }
 
     @Override
@@ -69,8 +67,7 @@ public class AddressProvider implements Provider<Optional<Set<String>>> {
                     return Optional.absent();
                 } else {
                     log.debug("{} exists. Loading mail addresses.", FILE);
-                    return Optional.of(Files.readLines(
-                            f, Charsets.UTF_8, new AddressProcessor()));
+                    return Optional.of(Files.readLines(f, Charsets.UTF_8, new AddressProcessor()));
                 }
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
@@ -87,7 +84,6 @@ public class AddressProvider implements Provider<Optional<Set<String>>> {
             if (UserValidator.EMAIL_PATTERN.matcher(address).matches()) {
                 log.debug("Allowed address: {}", address);
                 addresses.add(address);
-            } else {
             }
             return true;
         }

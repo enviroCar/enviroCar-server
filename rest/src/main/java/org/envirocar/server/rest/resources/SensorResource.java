@@ -16,17 +16,16 @@
  */
 package org.envirocar.server.rest.resources;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
-
 import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.validation.Schema;
+
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 
 /**
  * TODO JavaDoc
@@ -44,10 +43,7 @@ public class SensorResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.SENSOR)
-    @Produces({ MediaTypes.SENSOR,
-                MediaTypes.XML_RDF,
-                MediaTypes.TURTLE,
-                MediaTypes.TURTLE_ALT })
+    @Produces({MediaTypes.SENSOR, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
     public Sensor get() {
         return this.sensor;
     }

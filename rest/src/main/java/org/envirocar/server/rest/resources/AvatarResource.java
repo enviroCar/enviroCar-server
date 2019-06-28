@@ -16,7 +16,11 @@
  */
 package org.envirocar.server.rest.resources;
 
-import java.net.URI;
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.envirocar.server.core.entities.User;
+import org.envirocar.server.rest.MediaTypes;
 
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -24,14 +28,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
-
-import org.apache.commons.codec.digest.DigestUtils;
-
-import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
-
-import org.envirocar.server.core.entities.User;
-import org.envirocar.server.rest.MediaTypes;
+import java.net.URI;
 
 /**
  * TODO JavaDoc
@@ -39,8 +36,7 @@ import org.envirocar.server.rest.MediaTypes;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class AvatarResource extends AbstractResource {
-    private static final String GRAVATAR_BASE_URL =
-            "https://secure.gravatar.com/avatar/";
+    private static final String GRAVATAR_BASE_URL = "https://secure.gravatar.com/avatar/";
     public static final String SIZE = "size";
     public static final String DEFAULT_SIZE = "80";
     private final User user;
@@ -51,7 +47,7 @@ public class AvatarResource extends AbstractResource {
     }
 
     @GET
-    @Produces({ MediaTypes.IMAGE_JPEG })
+    @Produces({MediaTypes.IMAGE_JPEG})
     public Response get(@QueryParam(SIZE) @DefaultValue(DEFAULT_SIZE) int size) {
         return Response.temporaryRedirect(getURI(user, size)).build();
     }
@@ -59,7 +55,6 @@ public class AvatarResource extends AbstractResource {
     protected URI getURI(User user, int size) {
         String mail = user.hasMail() ? user.getMail() : "";
         String hash = DigestUtils.md5Hex(mail.trim().toLowerCase());
-        return UriBuilder.fromUri(GRAVATAR_BASE_URL)
-                .path(hash).queryParam(SIZE, size).build();
+        return UriBuilder.fromUri(GRAVATAR_BASE_URL).path(hash).queryParam(SIZE, size).build();
     }
 }
