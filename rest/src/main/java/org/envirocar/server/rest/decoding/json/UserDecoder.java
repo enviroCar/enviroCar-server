@@ -60,10 +60,12 @@ public class UserDecoder extends AbstractJSONEntityDecoder<User> {
         user.setFirstName(j.path(JSONConstants.FIRST_NAME_KEY).textValue());
         user.setLastName(j.path(JSONConstants.LAST_NAME_KEY).textValue());
         user.setLanguage(j.path(JSONConstants.LANGUAGE_KEY).textValue());
+
         user.setAcceptedTermsOfUse(j.path(JSONConstants.ACCEPTED_TERMS_OF_USE).booleanValue());
         user.setAcceptedPrivacyStatement(j.path(JSONConstants.ACCEPTED_PRIVACY_STATEMENT).booleanValue());
 
         user.setTermsOfUseVersion(j.path(JSONConstants.TOU_VERSION_KEY).textValue());
+        user.setPrivacyStatementVersion(j.path(JSONConstants.PRIVACY_STATEMENT_VERSION_KEY).textValue());
 
         if (!user.hasAcceptedTermsOfUseVersion()) {
             // kept for backwards compatibility
