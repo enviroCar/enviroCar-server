@@ -123,4 +123,8 @@ public interface JSONConstants {
     String FUEL_TYPE = "fuelType";
     String VOLUME = "volume";
     String PRIVACY_STATEMENTS = "privacyStatements";
+    String MESSAGE = "message";
+    String STATUS_CODE = "statusCode";
+    String REASON_PHRASE = "reasonPhrase";
+    String DETAILS = "details";
 }

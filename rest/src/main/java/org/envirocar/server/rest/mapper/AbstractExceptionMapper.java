@@ -16,36 +16,54 @@
  */
 package org.envirocar.server.rest.mapper;
 
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-import javax.ws.rs.ext.ExceptionMapper;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.ExceptionMapper;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 /**
  * TODO JavaDoc
  *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class AbstractExceptionMapper<T extends Throwable> implements
-        ExceptionMapper<T> {
-    private static final Logger log = LoggerFactory
-            .getLogger(AbstractExceptionMapper.class);
-    private final Status status;
+public class AbstractExceptionMapper<T extends Throwable> implements ExceptionMapper<T> {
+    private static final Logger log = LoggerFactory.getLogger(AbstractExceptionMapper.class);
+    private final Response.StatusType status;
 
-    public AbstractExceptionMapper(Status status) {
+    public AbstractExceptionMapper(Response.StatusType status) {
         this.status = status;
     }
 
     @Override
     public Response toResponse(T exception) {
         log.info("Mapping exception", exception);
-        return Response
-                .status(status)
-                .type(MediaType.TEXT_PLAIN)
-                .entity(exception.getMessage())
+
+        String stackTrace = getStackTrace(exception);
+        String message = getMessage(exception);
+
+        return Response.status(status)
+                .type(MediaType.APPLICATION_JSON)
+                .entity(new ErrorMessage(status, message, stackTrace))
                 .build();
     }
+
+    private String getMessage(T exception) {
+        String message = null;
+        for (Throwable t = exception; t != null && (message == null || message.isEmpty()); t = t.getCause()) {
+            message = t.getMessage();
+        }
+        return message;
+    }
+
+    private String getStackTrace(T exception) {
+        StringWriter stringWriter = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(stringWriter);
+        exception.printStackTrace(printWriter);
+        return stringWriter.toString();
+    }
+
 }

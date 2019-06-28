@@ -28,6 +28,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
 import com.google.inject.TypeLiteral;
 import com.vividsolutions.jts.geom.Geometry;
+import org.envirocar.server.rest.mapper.ErrorMessage;
 
 /**
  * TODO JavaDoc
@@ -128,5 +129,9 @@ public class JerseyJSONEncoderModule extends AbstractModule {
         bind(UserStatisticJSONEncoder.class).in(Scopes.SINGLETON);
         bind(new TypeLiteral<JSONEntityEncoder<UserStatistic>>() {
         }).to(UserStatisticJSONEncoder.class);
+
+        bind(ErrorMessageJSONEncoder.class).in(Scopes.SINGLETON);
+        bind(new TypeLiteral<JSONEntityEncoder<ErrorMessage>>() {
+        }).to(ErrorMessageJSONEncoder.class);
     }
 }
