@@ -57,6 +57,7 @@ public class JerseyResourceModule extends AbstractModule {
         bind(ResourceAlreadyExistExceptionMapper.class).in(Scopes.SINGLETON);
         bind(JsonValidationExceptionMapper.class).in(Scopes.SINGLETON);
         bind(BadRequestExceptionMapper.class).in(Scopes.SINGLETON);
+        bind(LegalPolicyExceptionMapper.class).in(Scopes.SINGLETON);
         install(new FactoryModuleBuilder().build(ResourceFactory.class));
         bind(ConfirmationLinkFactory.class).to(ConfirmationLinkFactoryImpl.class);
         bind(RootResource.class);

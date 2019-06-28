@@ -40,5 +40,7 @@ public class ValidatorModule extends AbstractModule {
         }).to(MeasurementValidator.class);
         bind(new TypeLiteral<EntityValidator<Fueling>>() {
         }).to(FuelingValidator.class);
+
+        bind(LegalPolicyValidator.class).to(LegalPolicyValidatorImpl.class);
     }
 }
