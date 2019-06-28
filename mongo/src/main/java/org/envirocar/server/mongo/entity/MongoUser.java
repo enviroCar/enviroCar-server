@@ -60,6 +60,7 @@ public class MongoUser extends MongoEntityBase implements User {
     @Deprecated
     public static final String ACCEPTED_TERMS_OF_USE = "acceptedTermsOfUseVersion";
     public static final String TERMS_OF_USE_VERSION = "touVersion";
+    public static final String PRIVACY_STATEMENT_VERSION = "privacyStatementVersion";
 
     @Property(MongoUser.TOKEN)
     private String token;
@@ -100,8 +101,15 @@ public class MongoUser extends MongoEntityBase implements User {
     private String acceptedTermsOfUseVersion;
     @Property(MongoUser.TERMS_OF_USE_VERSION)
     private String termsOfUseVersion;
-    @Indexed(options = @IndexOptions(unique = true,
-                                     partialFilter = "{confirmationCode:{$type: \"string\"}}"))
+    @Property(MongoUser.PRIVACY_STATEMENT_VERSION)
+    private String privacyStatementVersion;
+
+    @Indexed(
+            options = @IndexOptions(
+                    unique = true,
+                    partialFilter = "{confirmationCode:{$type: \"string\"}}"
+            )
+    )
     @Property(MongoUser.CONFIRMATION_CODE)
     private String confirmationCode;
     @Indexed(options = @IndexOptions(expireAfterSeconds = 0))
@@ -334,5 +342,15 @@ public class MongoUser extends MongoEntityBase implements User {
     @Override
     public void setAcceptedPrivacyStatement(boolean hasAccceptedPrivacyStatement) {
         this.hasAcceptedPrivacyStatement = hasAccceptedPrivacyStatement;
+    }
+
+    @Override
+    public void setPrivacyStatementVersion(String privacyStatementVersion) {
+        this.privacyStatementVersion = privacyStatementVersion;
+    }
+
+    @Override
+    public String getPrivacyStatementVersion() {
+        return this.privacyStatementVersion;
     }
 }

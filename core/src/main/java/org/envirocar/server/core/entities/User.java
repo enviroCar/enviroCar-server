@@ -162,4 +162,13 @@ public interface User extends BaseEntity {
     boolean hasAcceptedPrivacyStatement();
 
     void setAcceptedPrivacyStatement(boolean hasAcceptedPrivacyStatement);
+
+    void setPrivacyStatementVersion(String privacyStatementVersion);
+
+    String getPrivacyStatementVersion();
+
+    default boolean hasPrivacyStatementVersion() {
+        String version = getPrivacyStatementVersion();
+        return version != null && !version.isEmpty();
+    }
 }
