@@ -160,7 +160,7 @@ public class DataServiceImpl implements DataService {
     public void deleteTrack(Track track) {
         MeasurementFilter filter = new MeasurementFilter(track);
         Measurements measurements = getMeasurements(filter);
-        Iterable<Measurement> measurementIterator = (Iterable<Measurement>) measurements;
+        Iterable<Measurement> measurementIterator = measurements;
         List<Measurement> list = new ArrayList<>();
         for (Measurement m : measurementIterator) {
             list.add(m);

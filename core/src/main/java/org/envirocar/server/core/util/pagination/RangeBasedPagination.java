@@ -133,6 +133,6 @@ public class RangeBasedPagination implements Pagination {
     }
 
     protected static Optional<Pagination> optionalRange(long begin, long end) {
-        return Optional.<Pagination>of(new RangeBasedPagination(begin, end));
+        return Optional.of(new RangeBasedPagination(begin, end));
     }
 }

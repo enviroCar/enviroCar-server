@@ -16,10 +16,8 @@
  */
 package org.envirocar.server.core;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+
 import org.envirocar.server.core.dao.SensorDao;
 import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.core.entities.Sensors;
@@ -99,7 +97,7 @@ public class CarSimilarityServiceTest {
         
         SensorDao dao = Mockito.mock(SensorDao.class);
         Mockito.when(dao.get(Mockito.any(SensorFilter.class))).thenReturn(
-                Sensors.from(Arrays.asList(new Sensor[] {oldSensor})).build());
+                Sensors.from(Collections.singletonList(oldSensor)).build());
         Mockito.when(dao.getByIdentifier(id)).thenReturn(oldSensor);
         
         return dao;

@@ -28,7 +28,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.event.CreatedTrackEvent;
@@ -83,8 +83,6 @@ public class HTTPPushListener {
             HttpPost hp = new HttpPost(host);
             hp.setEntity(entity);
             resp = this.client.execute(hp);
-        } catch (ClientProtocolException e) {
-            logger.warn(e.getMessage(), e);
         } catch (IOException e) {
             logger.warn(e.getMessage(), e);
         } finally {
@@ -99,6 +97,6 @@ public class HTTPPushListener {
     }
 
     private HttpClient createClient() {
-        return new DefaultHttpClient();
+        return HttpClientBuilder.create().build();
     }
 }

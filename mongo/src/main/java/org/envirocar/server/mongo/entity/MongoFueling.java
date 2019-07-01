@@ -232,7 +232,7 @@ public class MongoFueling extends MongoEntityBase implements Fueling {
 
     @Override
     public boolean hasIdentifier() {
-        return true;
+        return this.id != null;
     }
 
     /**

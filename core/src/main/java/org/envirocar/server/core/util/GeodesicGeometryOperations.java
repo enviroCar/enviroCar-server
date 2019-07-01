@@ -29,7 +29,7 @@ import com.vividsolutions.jts.geom.Coordinate;
 
 public class GeodesicGeometryOperations implements GeometryOperations {
 	
-	private GeodeticCalculator geoCalc = new GeodeticCalculator();
+	private final GeodeticCalculator geoCalc = new GeodeticCalculator();
 
 	@Override
 	public double calculateDistance(Measurement m1, Measurement m2) {

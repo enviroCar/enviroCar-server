@@ -28,7 +28,7 @@ import com.google.inject.Inject;
 @Provider
 public class ResetPasswordDecoder extends AbstractJSONEntityDecoder<ResetPasswordRequest>{
 
-	private JSONEntityDecoder<User> userDecoder;
+	private final JSONEntityDecoder<User> userDecoder;
 
 	@Inject
 	public ResetPasswordDecoder(JSONEntityDecoder<User> userDec) {

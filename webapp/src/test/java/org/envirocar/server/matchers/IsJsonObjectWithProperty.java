@@ -27,7 +27,7 @@ import com.fasterxml.jackson.databind.JsonNode;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class IsJsonObjectWithProperty extends BaseMatcher<JsonNode> {
-    private String key;
+    private final String key;
 
     public IsJsonObjectWithProperty(String key) {
         this.key = key;

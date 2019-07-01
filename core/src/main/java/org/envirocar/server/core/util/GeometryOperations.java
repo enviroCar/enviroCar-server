@@ -16,14 +16,14 @@
  */
 package org.envirocar.server.core.util;
 
-import java.util.List;
-
 import org.envirocar.server.core.entities.Measurement;
+
+import java.util.List;
 
 public interface GeometryOperations {
 
-	public double calculateDistance(Measurement m1, Measurement m2);
-	
-	public double calculateLength(List<Measurement> measurements);
-	
+    double calculateDistance(Measurement m1, Measurement m2);
+
+    double calculateLength(List<Measurement> measurements);
+
 }

@@ -51,8 +51,7 @@ public class MeasurementsValidationTest {
 	private String loadMeasurementsInstance(String res) {
 		StringBuilder sb = new StringBuilder();
 		
-		Scanner sc = null;
-		sc = new Scanner(getClass().getResourceAsStream(res));
+		Scanner sc = new Scanner(getClass().getResourceAsStream(res));
 		while (sc.hasNext()) {
 			sb.append(sc.nextLine());
 		}

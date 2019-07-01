@@ -16,10 +16,14 @@
  */
 package org.envirocar.server.rest.util;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
+import com.google.common.annotations.VisibleForTesting;
+import com.vividsolutions.jts.geom.Coordinate;
+import org.envirocar.server.core.entities.Measurement;
+import org.envirocar.server.core.entities.MeasurementValue;
+import org.envirocar.server.core.entities.Measurements;
+
+import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.color.ColorSpace;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorConvertOp;
@@ -27,27 +31,13 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
-
-import javax.imageio.ImageIO;
-
-import org.envirocar.server.core.entities.Measurement;
-import org.envirocar.server.core.entities.MeasurementValue;
-import org.envirocar.server.core.entities.Measurements;
-
-import com.google.common.annotations.VisibleForTesting;
-import com.vividsolutions.jts.geom.Coordinate;
+import java.util.*;
 
 public class OSMTileRenderer implements TileRenderer {
     //private static final String TILE_URL_TEMPLATE = "http://tile.openstreetmap.org/%d/%d/%d.png";
     private static final String TILE_URL_TEMPLATE = "http://a.tile.stamen.com/terrain/%d/%d/%d.png";
-    private String saveFileDir;// "/tmp/envirocar/previews";//
-    private ResourceBundle config;
+    private final String saveFileDir;// "/tmp/envirocar/previews";//
     private int numberOfXTiles = 0;
     private int numberOfYTiles = 0;
     private int baseTileX = 0;
@@ -55,7 +45,7 @@ public class OSMTileRenderer implements TileRenderer {
     private int imagePadding = 1;
 
     public OSMTileRenderer() {
-        this.config = ResourceBundle.getBundle("OSMConfig");
+        ResourceBundle config = ResourceBundle.getBundle("OSMConfig");
         this.saveFileDir = config.getString("tile_save_location");
     }
 
@@ -103,9 +93,7 @@ public class OSMTileRenderer implements TileRenderer {
      * This method outputs a rendered image when the image measurements are given
      *
      * @param measurements
-     *
      * @return BufferedImage output
-     *
      * @throws IOException
      */
     @Override
@@ -115,9 +103,9 @@ public class OSMTileRenderer implements TileRenderer {
         Map<Coordinate, Color> colors = getColors(measurements);
         int zoom = getZoomLevel(coords);
         BufferedImage image = new BufferedImage(256 * (getNumberOfXTiles() + 1 + 2 * getImagePadding()),
-                                                256 * (getNumberOfYTiles() + 1 + 2 * getImagePadding()), BufferedImage.TYPE_INT_RGB);
+                256 * (getNumberOfYTiles() + 1 + 2 * getImagePadding()), BufferedImage.TYPE_INT_RGB);
         Graphics2D g2d = appendImage(image, getBaseTileX() + getNumberOfXTiles(), getBaseTileX(), getBaseTileY() +
-                                                                                                  getNumberOfYTiles(), getBaseTileY(), zoom);
+                getNumberOfYTiles(), getBaseTileY(), zoom);
         drawRoute(g2d, coords, colors, zoom, getImagePadding());
         g2d.dispose();
         return image;
@@ -127,7 +115,6 @@ public class OSMTileRenderer implements TileRenderer {
      * This method outputs the preffered zoom level for given set of coordinates
      *
      * @param coords
-     *
      * @return int zoom level
      */
     @VisibleForTesting
@@ -139,7 +126,7 @@ public class OSMTileRenderer implements TileRenderer {
 
         for (int zoom = 19; zoom >= 1; zoom--) { // considering x
             int xlength = (getTileDetails(bbox.west, bbox.north, zoom)[0] - getTileDetails(
-                           bbox.east, bbox.north, zoom)[0]);
+                    bbox.east, bbox.north, zoom)[0]);
 
             if (xlength <= 2) {
                 leastZoomLevelX = zoom;
@@ -151,7 +138,7 @@ public class OSMTileRenderer implements TileRenderer {
         }
         for (int zoom = 19; zoom >= 1; zoom--) {// considering y
             int ylength = (getTileDetails(bbox.west, bbox.south, zoom)[1] -
-                           getTileDetails(bbox.west, bbox.north, zoom)[1]);
+                    getTileDetails(bbox.west, bbox.north, zoom)[1]);
             if (ylength <= 1) {
                 leastZoomLevelY = zoom;
                 this.numberOfYTiles = ylength;
@@ -184,7 +171,6 @@ public class OSMTileRenderer implements TileRenderer {
      * @param colors
      * @param zoom
      * @param padding
-     *
      * @return Graphics2D drawn route
      */
     @VisibleForTesting
@@ -192,9 +178,9 @@ public class OSMTileRenderer implements TileRenderer {
                          Map<Coordinate, Color> colors, int zoom, int padding) {
         g2d.setStroke(new BasicStroke(7));
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                             RenderingHints.VALUE_ANTIALIAS_ON);
+                RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
-                             RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+                RenderingHints.VALUE_INTERPOLATION_BICUBIC);
 
         for (int i = 0; i <= coords.size() - 2; i++) {
             if (colors == null || colors.isEmpty()) {
@@ -207,7 +193,7 @@ public class OSMTileRenderer implements TileRenderer {
             double newX = coords.get(i + 1).x;
             double newY = coords.get(i + 1).y;
             g2d.drawLine(getX(oldX, zoom, 256) + 256 * padding, getY(oldY, zoom, 256) + 256 * padding,
-                         getX(newX, zoom, 256) + 256 * padding, getY(newY, zoom, 256) + 256 * padding);
+                    getX(newX, zoom, 256) + 256 * padding, getY(newY, zoom, 256) + 256 * padding);
         }
         return g2d;
     }
@@ -218,7 +204,6 @@ public class OSMTileRenderer implements TileRenderer {
      * @param lon
      * @param zoom
      * @param pic
-     *
      * @return int X coordinate in the image
      */
     private int getX(final double lon, final int zoom, int pic) {
@@ -232,14 +217,13 @@ public class OSMTileRenderer implements TileRenderer {
      * @param lat
      * @param zoom
      * @param pic
-     *
      * @return int Y coordinate in the image
      */
     private int getY(final double lat, final int zoom, int pic) {
         double y = getFraction((1 - Math.log(Math.tan(Math.toRadians(lat)) + 1 /
-                                                                             Math.cos(Math.toRadians(lat))) /
-                                    Math.PI) /
-                               2 * (1 << zoom), getBaseTileY());
+                Math.cos(Math.toRadians(lat))) /
+                Math.PI) /
+                2 * (1 << zoom), getBaseTileY());
         return (int) Math.floor(y * pic);
     }
 
@@ -248,7 +232,6 @@ public class OSMTileRenderer implements TileRenderer {
      *
      * @param num
      * @param baseTileValue
-     *
      * @return double fraction of a given number
      */
     private double getFraction(double num, int baseTileValue) {
@@ -259,7 +242,6 @@ public class OSMTileRenderer implements TileRenderer {
      * This method returns the integer part of a given double number
      *
      * @param num
-     *
      * @return int Integer part of a number
      */
     private int getInteger(double num) {
@@ -273,7 +255,6 @@ public class OSMTileRenderer implements TileRenderer {
      * @param lon
      * @param lat
      * @param zoom
-     *
      * @return int[] containing { xtile, ytile } respectively
      */
     @VisibleForTesting
@@ -281,7 +262,7 @@ public class OSMTileRenderer implements TileRenderer {
                          final int zoom) {
         int xtile = (int) Math.floor((lon + 180) / 360 * (1 << zoom));
         int ytile = (int) Math.floor((1 - Math.log(Math.tan(Math.toRadians(lat)) + 1 / Math.cos(Math.toRadians(lat))) /
-                                          Math.PI) / 2 * (1 << zoom));
+                Math.PI) / 2 * (1 << zoom));
         if (xtile < 0) {
             xtile = 0;
         }
@@ -294,7 +275,7 @@ public class OSMTileRenderer implements TileRenderer {
         if (ytile >= (1 << zoom)) {
             ytile = ((1 << zoom) - 1);
         }
-        return new int[] { xtile, ytile };
+        return new int[]{xtile, ytile};
     }
 
     private double tile2lon(int x, int z) {
@@ -310,7 +291,6 @@ public class OSMTileRenderer implements TileRenderer {
      * This method returns a bounding box object which contains a given set of coordinates
      *
      * @param coordinates
-     *
      * @return BoundingBox Bounding box which contains a given set of coordinates
      */
     @VisibleForTesting
@@ -342,8 +322,8 @@ public class OSMTileRenderer implements TileRenderer {
         }
 
         /*
-		 * double padding = 0.001; north = north + padding; south = south -
-		 * padding; west = west - padding; east = east + padding;
+         * double padding = 0.001; north = north + padding; south = south -
+         * padding; west = west - padding; east = east + padding;
          */
         return new BoundingBox(maxy, miny, minx, maxx);
     }
@@ -357,9 +337,7 @@ public class OSMTileRenderer implements TileRenderer {
      * @param highestY
      * @param lowestY
      * @param zoom
-     *
      * @return Graphics2D Generates the base map image
-     *
      * @throws IOException
      */
     @VisibleForTesting
@@ -392,9 +370,7 @@ public class OSMTileRenderer implements TileRenderer {
      * @param x
      * @param y
      * @param zoom
-     *
      * @return BufferedImage BufferedImage for a single tile which is used to create base map
-     *
      * @throws IOException
      */
     @VisibleForTesting
@@ -411,9 +387,7 @@ public class OSMTileRenderer implements TileRenderer {
      * This method reads an image from disk and return it as a BufferedImage
      *
      * @param trackId
-     *
      * @return BufferedImage loadedImage
-     *
      * @throws IOException
      */
     @Override
@@ -435,11 +409,11 @@ public class OSMTileRenderer implements TileRenderer {
     }
 
     // //////////////////////////////?Retrieval////////////////////////////////
+
     /**
      * Returns a set of coordinates when the measurements of a track is given
      *
      * @param measurements
-     *
      * @return ArrayList of coordinates
      */
     private List<Coordinate> getCoordinates(Measurements measurements) {
@@ -454,7 +428,6 @@ public class OSMTileRenderer implements TileRenderer {
      * This method returns a hashmap which contains colorcode(color of the route based on speed) for each coordinate
      *
      * @param measurements
-     *
      * @return HashMap which has coordinate as the key and color as the value
      */
     private Map<Coordinate, Color> getColors(Measurements measurements) {
@@ -463,7 +436,7 @@ public class OSMTileRenderer implements TileRenderer {
             for (MeasurementValue mv : m.getValues()) {
                 if (mv.getPhenomenon().getName().equals("Speed")) {
                     coords.put(m.getGeometry().getCoordinate(),
-                               getColorCode(Double.parseDouble(mv.getValue().toString())));
+                            getColorCode(Double.parseDouble(mv.getValue().toString())));
                 }
             }
         }
@@ -474,7 +447,6 @@ public class OSMTileRenderer implements TileRenderer {
      * This method returns the relevant color object for the given speed
      *
      * @param speed
-     *
      * @return Color color of the speed
      */
     @VisibleForTesting
@@ -510,15 +482,14 @@ public class OSMTileRenderer implements TileRenderer {
      * @param lat2
      * @param lon2
      * @param unit
-     *
      * @return double Distance between two coordinates
      */
     private double calculateDistance(double lat1, double lon1, double lat2,
                                      double lon2, char unit) {
         double theta = lon1 - lon2;
         double dist = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2)) +
-                      Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
-                      Math.cos(deg2rad(theta));
+                Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+                        Math.cos(deg2rad(theta));
         dist = rad2deg(Math.acos(dist));
         dist *= 60 * 1.1515;
         dist *= 1.609344;
@@ -529,7 +500,6 @@ public class OSMTileRenderer implements TileRenderer {
      * Convert degrees value to a radian value
      *
      * @param deg
-     *
      * @return double radian value
      */
     private double deg2rad(double deg) {
@@ -540,7 +510,6 @@ public class OSMTileRenderer implements TileRenderer {
      * Converts radian value to a degree value
      *
      * @param rad
-     *
      * @return double degree value
      */
     private double rad2deg(double rad) {
@@ -555,7 +524,7 @@ public class OSMTileRenderer implements TileRenderer {
         BoundingBox bbox = findBoundingBoxForGivenLocations(coords);
         int clipWidth = getX(bbox.west, zoom, 256) + 256 * padding - (getX(bbox.east, zoom, 256) + 256 * padding);
         int clipHeight = getY(bbox.south, zoom, 256) + 256 * padding -
-                         (getY(bbox.north, zoom, 256) + 256 * padding);
+                (getY(bbox.north, zoom, 256) + 256 * padding);
         int x = getX(bbox.east, zoom, 256) + 256 * padding;
         int y = getY(bbox.north, zoom, 256) + 256 * padding;
         int newx = (x + clipWidth / 2) - requiredwidth / 2;
@@ -580,28 +549,12 @@ public class OSMTileRenderer implements TileRenderer {
      * Finds the center of a bounding box when bounding box is given
      *
      * @param bbox
-     *
      * @return coordinate which represents the center of the bounding box
      */
     private Coordinate findBoundingBoxCenter(BoundingBox bbox) {
         double x = (bbox.west + bbox.east) / 2;
         double y = (bbox.north + bbox.south) / 2;
         return new Coordinate(x, y);
-    }
-
-    private Coordinate getSubImage(int centerX, int centerY, int x, int y, int subx, int suby) {
-        if ((centerX - (subx / 2)) >= x / 2 && (centerY - (suby / 2)) >= y / 2) {
-            return new Coordinate(0, 0);
-        } else if ((centerX - (subx / 2)) >= x / 2 && (centerY - (suby / 2)) < y / 2) {
-            return new Coordinate(0, 0);
-        } else if ((centerX - (subx / 2)) >= x / 2 && (centerY - (suby / 2)) >= y / 2) {
-            return new Coordinate(0, 0);
-        } else if ((centerX - (subx / 2)) >= x / 2 && (centerY - (suby / 2)) >= y / 2) {
-            return new Coordinate(0, 0);
-        } else {
-            return new Coordinate(0, 0);
-        }
-
     }
 
     private BufferedImage addPaddingTiles(BufferedImage image,
@@ -612,7 +565,7 @@ public class OSMTileRenderer implements TileRenderer {
         Coordinate center = findBoundingBoxCenter(bbox);
         int clipWidth = getX(bbox.west, zoom, 256) - getX(bbox.east, zoom, 256);
         int clipHeight = getY(bbox.south, zoom, 256) -
-                         getY(bbox.north, zoom, 256);
+                getY(bbox.north, zoom, 256);
         int x = getX(bbox.east, zoom, 256);
         int y = getY(bbox.north, zoom, 256);
         BufferedImage dbi = image.getSubimage(x, y, clipWidth, clipHeight);
@@ -620,8 +573,7 @@ public class OSMTileRenderer implements TileRenderer {
     }
 
     private File getImageFile(String trackId) {
-        String filePath = new StringBuilder(saveFileDir).append(File.separator).append(trackId).append(".png")
-                .toString();
+        String filePath = saveFileDir + File.separator + trackId + ".png";
         File f = new File(filePath);
         return f;
     }

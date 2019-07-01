@@ -16,9 +16,8 @@
  */
 package org.envirocar.server.rest.validation;
 
-import org.envirocar.server.core.exception.ValidationException;
-
 import com.fasterxml.jackson.databind.JsonNode;
+import org.envirocar.server.core.exception.ValidationException;
 
 /**
  * TODO JavaDoc
@@ -27,7 +26,7 @@ import com.fasterxml.jackson.databind.JsonNode;
  */
 public class JSONValidationException extends ValidationException {
     private static final long serialVersionUID = -235700358046047325L;
-    private JsonNode error = null;
+    private JsonNode error;
 
     public JSONValidationException(JsonNode error) {
         this.error = error;

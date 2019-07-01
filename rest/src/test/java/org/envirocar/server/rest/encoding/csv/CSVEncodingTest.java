@@ -16,6 +16,7 @@
  */
 package org.envirocar.server.rest.encoding.csv;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.BufferedReader;
@@ -50,18 +51,18 @@ import com.vividsolutions.jts.geom.Coordinate;
  */
 public class CSVEncodingTest extends AbstractEncodingTest {
 
-    private String dateTime = "2014-05-20T08:42:06Z";
+    private final String dateTime = "2014-05-20T08:42:06Z";
 
-    String trackObjectId1 = "537a0d68b7c39b56ef230942";
-    String trackObjectId2 = "537b0ef874c965606f093b0d";
-    String trackObjectId3 = "537b0ef874c965606f093b0e";
+    final String trackObjectId1 = "537a0d68b7c39b56ef230942";
+    final String trackObjectId2 = "537b0ef874c965606f093b0d";
+    final String trackObjectId3 = "537b0ef874c965606f093b0e";
 
-    private String measurementObjectId1 = "537b0ef874c965606f093b0f";
-    private String measurementObjectId2 = "537b0ef874c965606f093b10";
-    private String measurementObjectId3 = "537b0ef874c965606f093b11";
-    private String measurementObjectId4 = "537b0ef874c965606f093b12";
-    private String measurementObjectId5 = "537b0ef874c965606f093b13";
-    private String measurementObjectId6 = "537b0ef874c965606f093b14";
+    private final String measurementObjectId1 = "537b0ef874c965606f093b0f";
+    private final String measurementObjectId2 = "537b0ef874c965606f093b10";
+    private final String measurementObjectId3 = "537b0ef874c965606f093b11";
+    private final String measurementObjectId4 = "537b0ef874c965606f093b12";
+    private final String measurementObjectId5 = "537b0ef874c965606f093b13";
+    private final String measurementObjectId6 = "537b0ef874c965606f093b14";
 
     private Track testTrack1;
     private Track testTrack2;
@@ -71,7 +72,7 @@ public class CSVEncodingTest extends AbstractEncodingTest {
     private Sensor sensor;
     private List<Phenomenon> phenomenons;
 
-    String testUserName = "TestUser";
+    final String testUserName = "TestUser";
 
     @Before
     public void setup() {
@@ -119,7 +120,7 @@ public class CSVEncodingTest extends AbstractEncodingTest {
                 new InputStreamReader(trackCSVEncoder.encodeCSV(testTrack1,
                                                                 MediaTypes.TEXT_CSV_TYPE)));
 
-        String line = "";
+        String line;
 
         String[] propertyNames = new String[0];
         String[] propertyValues1 = new String[0];
@@ -146,7 +147,7 @@ public class CSVEncodingTest extends AbstractEncodingTest {
 
         }
 
-        Map<String, String> expectedValues = new HashMap<String, String>();
+        Map<String, String> expectedValues = new HashMap<>();
 
         expectedValues.put("id", "537b0ef874c965606f093b0f");
         expectedValues.put("RPM(u/min)", "1");
@@ -158,7 +159,7 @@ public class CSVEncodingTest extends AbstractEncodingTest {
 
         checkMeasurementValues(propertyNames, propertyValues1, expectedValues);
 
-        expectedValues = new HashMap<String, String>();
+        expectedValues = new HashMap<>();
 
         expectedValues.put("id", "537b0ef874c965606f093b10");
         expectedValues.put("RPM(u/min)", "2");
@@ -180,7 +181,7 @@ public class CSVEncodingTest extends AbstractEncodingTest {
                 new InputStreamReader(trackCSVEncoder.encodeCSV(testTrack2,
                                                                 MediaTypes.TEXT_CSV_TYPE)));
 
-        String line = "";
+        String line;
 
         String[] propertyNames = new String[0];
         String[] propertyValues1 = new String[0];
@@ -207,7 +208,7 @@ public class CSVEncodingTest extends AbstractEncodingTest {
 
         }
 
-        Map<String, String> expectedValues = new HashMap<String, String>();
+        Map<String, String> expectedValues = new HashMap<>();
 
         expectedValues.put("id", "537b0ef874c965606f093b11");
         expectedValues.put("RPM(u/min)", "1");
@@ -219,7 +220,7 @@ public class CSVEncodingTest extends AbstractEncodingTest {
 
         checkMeasurementValues(propertyNames, propertyValues1, expectedValues);
 
-        expectedValues = new HashMap<String, String>();
+        expectedValues = new HashMap<>();
 
         expectedValues.put("id", "537b0ef874c965606f093b12");
         expectedValues.put("RPM(u/min)", "2");
@@ -241,7 +242,7 @@ public class CSVEncodingTest extends AbstractEncodingTest {
                 new InputStreamReader(trackCSVEncoder.encodeCSV(testTrack3,
                                                                 MediaTypes.TEXT_CSV_TYPE)));
 
-        String line = "";
+        String line;
 
         String[] propertyNames = new String[0];
         String[] propertyValues1 = new String[0];
@@ -268,7 +269,7 @@ public class CSVEncodingTest extends AbstractEncodingTest {
 
         }
 
-        Map<String, String> expectedValues = new HashMap<String, String>();
+        Map<String, String> expectedValues = new HashMap<>();
 
         expectedValues.put("id", "537b0ef874c965606f093b13");
         expectedValues.put("RPM(u/min)", "1");
@@ -279,7 +280,7 @@ public class CSVEncodingTest extends AbstractEncodingTest {
 
         checkMeasurementValues(propertyNames, propertyValues1, expectedValues);
 
-        expectedValues = new HashMap<String, String>();
+        expectedValues = new HashMap<>();
 
         expectedValues.put("id", "537b0ef874c965606f093b14");
         expectedValues.put("RPM(u/min)", "2");
@@ -343,7 +344,7 @@ public class CSVEncodingTest extends AbstractEncodingTest {
     private void createTrackWithMeasurements_FirstMeasurementHasLessPhenomenons(
             Track track, List<Phenomenon> phenomenons, User user, Sensor sensor) {
 
-        List<Phenomenon> originalPhenomenons = new ArrayList<Phenomenon>(phenomenons.size());
+        List<Phenomenon> originalPhenomenons = new ArrayList<>(phenomenons.size());
 
         for (Phenomenon phenomenon : phenomenons) {
             originalPhenomenons.add(phenomenon);
@@ -448,7 +449,7 @@ public class CSVEncodingTest extends AbstractEncodingTest {
 
     private List<Phenomenon> createPhenomenoms() {
 
-        List<Phenomenon> result = new ArrayList<Phenomenon>();
+        List<Phenomenon> result = new ArrayList<>();
 
         result.add(createPhenomenom("RPM", "u/min"));
         result.add(createPhenomenom("Intake Temperature", "C"));
@@ -500,9 +501,8 @@ public class CSVEncodingTest extends AbstractEncodingTest {
 
                 String propertyValue = propertyValues[i].trim();
 
-                assertTrue("Value for " + propertyName + " does not match expected. Got " + propertyValue + " expected " +
-                           expectedMeasurementValue + ".", expectedMeasurementValue
-                                   .equals(propertyValue));
+                assertEquals("Value for " + propertyName + " does not match expected. Got " + propertyValue + " expected " +
+                        expectedMeasurementValue + ".", expectedMeasurementValue, propertyValue);
             }
 
         }

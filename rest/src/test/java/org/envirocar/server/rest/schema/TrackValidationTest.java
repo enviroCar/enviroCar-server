@@ -52,8 +52,7 @@ public class TrackValidationTest {
 	private String loadTrackInstance(String resourceName) {
 		StringBuilder sb = new StringBuilder();
 		
-		Scanner sc = null;
-		sc = new Scanner(getClass().getResourceAsStream(resourceName));
+		Scanner sc = new Scanner(getClass().getResourceAsStream(resourceName));
 		while (sc.hasNext()) {
 			sb.append(sc.nextLine());
 		}

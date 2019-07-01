@@ -101,7 +101,7 @@ public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
         }
         if (requestSchema != null || responseSchema != null) {
             JSONSchemaResourceFilter filter = new JSONSchemaResourceFilter(requestSchema, responseSchema);
-            return Collections.<ResourceFilter>singletonList(filter);
+            return Collections.singletonList(filter);
         } else {
             return Collections.emptyList();
         }
@@ -160,7 +160,7 @@ public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
     }
 
     private class JSONSchemaRequestFilter implements ContainerRequestFilter {
-        private String schema;
+        private final String schema;
 
         JSONSchemaRequestFilter(String schema) {
             this.schema = schema;

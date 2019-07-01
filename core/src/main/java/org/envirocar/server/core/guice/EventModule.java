@@ -60,7 +60,7 @@ public class EventModule extends AbstractModule {
         @Override
         public <I> void hear(TypeLiteral<I> typeLiteral,
                              TypeEncounter<I> typeEncounter) {
-            typeEncounter.register(new EventBusInjectionListener<I>(eventBus));
+            typeEncounter.register(new EventBusInjectionListener<>(eventBus));
         }
     }
 

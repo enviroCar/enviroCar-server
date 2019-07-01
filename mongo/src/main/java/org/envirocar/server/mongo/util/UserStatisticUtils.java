@@ -39,7 +39,7 @@ public class UserStatisticUtils implements UserStatisticOperations {
 
         if (values instanceof Iterable) {
 
-            Iterable<Measurement> measurementIterator = (Iterable<Measurement>) values;
+            Iterable<Measurement> measurementIterator = values;
             List<Measurement> list = new ArrayList<>();
             for (Measurement m : measurementIterator) {
                 list.add(m);
@@ -121,27 +121,17 @@ public class UserStatisticUtils implements UserStatisticOperations {
                 TrackSummaries trackSummaries = previous.getTrackSummaries();
                 trackSummaries.addTrackSummary(ts);
 
-                previous.setDistance(
-                        previous.getDistance() + total_dist);
-                previous.setDistanceBelow60kmh(
-                        previous.getDistanceBelow60kmh() + total_dist60);
-                previous.setDistanceAbove130kmh(
-                        previous.getDistanceAbove130kmh() + total_dist130);
-                previous.setDistanceNaN(
-                        previous.getDistanceNaN() + total_distNaN);
-                previous.setDuration(
-                        previous.getDuration() + total_dura);
-                previous.setDurationBelow60kmh(
-                        previous.getDurationBelow60kmh() + total_dura60);
-                previous.setDurationAbove130kmh(
-                        previous.getDurationAbove130kmh() + total_dura130);
-                previous.setDurationNaN(
-                        previous.getDurationNaN() + total_duraNaN);
+                previous.setDistance(previous.getDistance() + total_dist);
+                previous.setDistanceBelow60kmh(previous.getDistanceBelow60kmh() + total_dist60);
+                previous.setDistanceAbove130kmh(previous.getDistanceAbove130kmh() + total_dist130);
+                previous.setDistanceNaN(previous.getDistanceNaN() + total_distNaN);
+                previous.setDuration(previous.getDuration() + total_dura);
+                previous.setDurationBelow60kmh(previous.getDurationBelow60kmh() + total_dura60);
+                previous.setDurationAbove130kmh(previous.getDurationAbove130kmh() + total_dura130);
+                previous.setDurationNaN(previous.getDurationNaN() + total_duraNaN);
 
                 // update TrackSummaries:
                 previous.setTrackSummaries(trackSummaries);
-            } else {
-                // less than 2 measurements? skip this track.
             }
         } else {
             log.error("no measurements for track available...");

@@ -54,5 +54,5 @@ public interface FuelingDao {
      */
     Fuelings get(FuelingFilter request);
 
-    public void delete(Fueling fueling);
+    void delete(Fueling fueling);
 }

@@ -45,7 +45,7 @@ public class ShutdownManager {
 
     void shutdownListeners() {
         LOG.info(String.format("shutting down resources of %s listeners", listeners.size()));
-        listeners.stream().forEach(listener -> {
+        listeners.forEach(listener -> {
             try {
                 listener.shutdownResources();
             } catch (Throwable e) {

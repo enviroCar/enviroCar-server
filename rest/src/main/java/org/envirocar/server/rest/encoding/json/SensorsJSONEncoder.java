@@ -22,7 +22,7 @@ import javax.ws.rs.ext.Provider;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
-import java.util.Collection;
+
 import java.util.Set;
 import org.envirocar.server.core.CarSimilarityService;
 

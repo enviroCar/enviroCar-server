@@ -16,14 +16,10 @@
  */
 package org.envirocar.server.mongo.dao;
 
-import static org.envirocar.server.mongo.dao.MongoMeasurementDao.ID;
-
-import java.text.DecimalFormatSymbols;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-
+import com.google.common.collect.LinkedListMultimap;
+import com.google.common.collect.Multimap;
+import com.google.inject.Inject;
+import com.mongodb.*;
 import org.bson.types.ObjectId;
 import org.envirocar.server.core.CarSimilarityService;
 import org.envirocar.server.core.dao.SensorDao;
@@ -42,14 +38,13 @@ import org.mongodb.morphia.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.collect.LinkedListMultimap;
-import com.google.common.collect.Multimap;
-import com.google.inject.Inject;
-import com.mongodb.AggregationOptions;
-import com.mongodb.BasicDBObject;
-import com.mongodb.Cursor;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
+import java.text.DecimalFormatSymbols;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+
+import static org.envirocar.server.mongo.dao.MongoMeasurementDao.ID;
 
 /**
  * TODO JavaDoc
@@ -62,19 +57,17 @@ public class MongoSensorDao extends AbstractMongoDao<ObjectId, MongoSensor, Sens
     private static final Logger log = LoggerFactory.getLogger(MongoSensorDao.class);
     private final CarSimilarityService carSimilarity;
 
-    private final MongoMeasurementDao measurementDao;
 
     @Inject
-    public MongoSensorDao(MongoDB mongoDB, CarSimilarityService carSimilarity, MongoMeasurementDao measurementDao) {
+    public MongoSensorDao(MongoDB mongoDB, CarSimilarityService carSimilarity) {
         super(MongoSensor.class, mongoDB);
         this.carSimilarity = carSimilarity;
-        this.measurementDao = measurementDao;
     }
 
     @Override
     public Sensor getByIdentifier(String id) {
         try {
-            /**
+            /*
              * this is a backwards-compatibility solution for
              * client that use old (removed/mapped) sensor ids
              * that were duplicates. --> DB related, thats why
@@ -111,7 +104,6 @@ public class MongoSensorDao extends AbstractMongoDao<ObjectId, MongoSensor, Sens
         Sensors result = fetch(q, request.getPagination());
         return result;
     }
-
 
 
     public List<ObjectId> getIds(User user) {
@@ -168,9 +160,7 @@ public class MongoSensorDao extends AbstractMongoDao<ObjectId, MongoSensor, Sens
             }
         }
         q.disableValidation();
-        map.keySet().stream().forEach((field) -> {
-            q.field(field).in(map.get(field));
-        });
+        map.keySet().forEach(field -> q.field(field).in(map.get(field)));
         return q.enableValidation();
     }
 
@@ -187,7 +177,7 @@ public class MongoSensorDao extends AbstractMongoDao<ObjectId, MongoSensor, Sens
         char localeMinusSign = symbols.getMinusSign();
 
         if (!Character.isDigit(str.charAt(0)) &&
-            str.charAt(0) != localeMinusSign) {
+                str.charAt(0) != localeMinusSign) {
             return false;
         }
 

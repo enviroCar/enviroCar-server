@@ -293,27 +293,24 @@ public class GeoJSON implements GeometryConverter<JsonNode> {
         if (!json.has(TYPE_KEY)) {
             throw new GeometryConverterException("Can not determine geometry type (missing 'type' field)");
         }
-        Object to = json.path(TYPE_KEY).textValue();
-        if (!(to instanceof String)) {
-            throw new GeometryConverterException("'type' field has to be a string");
-        }
-        String type = (String) to;
-        if (type.equals(POINT_TYPE)) {
-            return decodePoint(json);
-        } else if (type.equals(MULTI_POINT_TYPE)) {
-            return decodeMultiPoint(json);
-        } else if (type.equals(LINE_STRING_TYPE)) {
-            return decodeLineString(json);
-        } else if (type.equals(MULTI_LINE_STRING_TYPE)) {
-            return decodeMultiLineString(json);
-        } else if (type.equals(POLYGON_TYPE)) {
-            return decodePolygon(json);
-        } else if (type.equals(MULTI_POLYGON_TYPE)) {
-            return decodeMultiPolygon(json);
-        } else if (type.equals(GEOMETRY_COLLECTION_TYPE)) {
-            return decodeGeometryCollection(json);
-        } else {
-            throw new GeometryConverterException("Unkown geometry type: " + type);
+        String type = json.path(TYPE_KEY).textValue();
+        switch (type) {
+            case POINT_TYPE:
+                return decodePoint(json);
+            case MULTI_POINT_TYPE:
+                return decodeMultiPoint(json);
+            case LINE_STRING_TYPE:
+                return decodeLineString(json);
+            case MULTI_LINE_STRING_TYPE:
+                return decodeMultiLineString(json);
+            case POLYGON_TYPE:
+                return decodePolygon(json);
+            case MULTI_POLYGON_TYPE:
+                return decodeMultiPolygon(json);
+            case GEOMETRY_COLLECTION_TYPE:
+                return decodeGeometryCollection(json);
+            default:
+                throw new GeometryConverterException("Unknown geometry type: " + type);
         }
     }
 

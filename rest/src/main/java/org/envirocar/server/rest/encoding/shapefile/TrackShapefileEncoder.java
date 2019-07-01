@@ -84,9 +84,8 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder<Track> 
     private final DataService dataService;
     private CoordinateReferenceSystem crs_wgs84;
     public static int shapeFileExportThreshold = 2;
-    private final String shapefileExportThresholdPropertyName = "shapefile.export.measurement.threshold";
+    private  static final String shapefileExportThresholdPropertyName = "shapefile.export.measurement.threshold";
     private Track track;
-    private Properties properties;
     private static final String PROPERTIES = "/export.properties";
     private static final String DEFAULT_PROPERTIES = "/export.default.properties";
 
@@ -94,7 +93,7 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder<Track> 
     public TrackShapefileEncoder(DataService dataService) {
         super(Track.class);
         this.dataService = dataService;
-        this.properties = new Properties();
+        Properties properties = new Properties();
         InputStream in = null;
         try {
             in = TrackShapefileEncoder.class.getResourceAsStream(PROPERTIES);
@@ -156,10 +155,6 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder<Track> 
         String geometryAttributeName = "geometry";
         String timeAttributeName = "time";
 
-        SimpleFeatureType sft = null;
-
-        SimpleFeatureBuilder sfb = null;
-
         typeBuilder = new SimpleFeatureTypeBuilder();
 
         typeBuilder.setCRS(getCRS_WGS84());
@@ -172,11 +167,8 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder<Track> 
         typeBuilder.add(idAttributeName, String.class);
         typeBuilder.add(timeAttributeName, String.class);
 
-        if (sft == null) {
-            sft = buildFeatureType(measurements);
-        }
-
-        sfb = new SimpleFeatureBuilder(sft);
+        SimpleFeatureType sft = buildFeatureType(measurements);
+        SimpleFeatureBuilder sfb = new SimpleFeatureBuilder(sft);
 
         for (Measurement measurement : measurements) {
 
@@ -242,8 +234,7 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder<Track> 
             throw new TrackTooLongException(track.getIdentifier(), shapeFileExportThreshold, count);
         }
 
-        distinctPhenomenonNames.stream()
-                .forEach(name -> typeBuilder.add(name, String.class));
+        distinctPhenomenonNames.forEach(name -> typeBuilder.add(name, String.class));
 
         return typeBuilder.buildFeatureType();
     }
@@ -334,8 +325,6 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder<Track> 
 
             try {
                 crs_wgs84 = CRS.decode("EPSG:4326");
-            } catch (NoSuchAuthorityCodeException e) {
-                log.debug(e.getMessage());
             } catch (FactoryException e) {
                 log.debug(e.getMessage());
             }

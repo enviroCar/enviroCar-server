@@ -30,7 +30,6 @@ import org.envirocar.server.rest.rights.HasAcceptedLatestLegalPolicies;
 import org.envirocar.server.rest.validation.Schema;
 
 import javax.ws.rs.*;
-import javax.ws.rs.core.Response;
 
 /**
  * TODO JavaDoc

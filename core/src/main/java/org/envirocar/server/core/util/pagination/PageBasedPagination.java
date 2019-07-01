@@ -62,7 +62,7 @@ public class PageBasedPagination implements Pagination {
         if (page == 1 || page > lastPage(elements)) {
             return Optional.absent();
         } else {
-            return Optional.<Pagination>of(new PageBasedPagination(size, 0));
+            return Optional.of(new PageBasedPagination(size, 0));
         }
     }
 
@@ -71,7 +71,7 @@ public class PageBasedPagination implements Pagination {
         if (page <= 2 || page > lastPage(elements)) {
             return Optional.absent();
         } else {
-            return Optional.<Pagination>of(new PageBasedPagination(size, page -
+            return Optional.of(new PageBasedPagination(size, page -
                                                                          1));
         }
     }
@@ -82,7 +82,7 @@ public class PageBasedPagination implements Pagination {
         if (page >= (lastPage - 1)) {
             return Optional.absent();
         } else {
-            return Optional.<Pagination>of(new PageBasedPagination(size, page +
+            return Optional.of(new PageBasedPagination(size, page +
                                                                          1));
         }
     }
@@ -93,7 +93,7 @@ public class PageBasedPagination implements Pagination {
         if (page == lastPage) {
             return Optional.absent();
         } else {
-            return Optional.<Pagination>of(new PageBasedPagination(size, lastPage));
+            return Optional.of(new PageBasedPagination(size, lastPage));
         }
     }
 

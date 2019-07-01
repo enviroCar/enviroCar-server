@@ -34,6 +34,7 @@ package org.envirocar.server.mongo.convert;
 
 import java.util.List;
 
+import com.mongodb.DBObject;
 import org.bson.types.BasicBSONList;
 import org.envirocar.server.core.entities.TrackSummaries;
 import org.envirocar.server.core.entities.TrackSummary;
@@ -81,21 +82,19 @@ public class TrackSummariesConverter extends TypeConverter implements SimpleValu
         TrackSummaries dn = (TrackSummaries) trackSummaries;
         List<TrackSummary> trackSummaryList = dn.getTrackSummaryList();
         BasicDBList bdbl = new BasicDBList();
-        for (int i = 0; i < trackSummaryList.size(); i++) {
-            TrackSummary ts = trackSummaryList.get(i);
+        trackSummaryList.forEach(ts -> {
             double startLng = ts.getStartPosition().getCoordinate().y;
             double startLat = ts.getStartPosition().getCoordinate().x;
             double endLng = ts.getEndPosition().getCoordinate().y;
             double endLat = ts.getEndPosition().getCoordinate().x;
-
-            Object bdbo = BasicDBObjectBuilder.start()
+            DBObject bdbo = BasicDBObjectBuilder.start()
                     .add(ID, ts.getIdentifier())
                     .add(START_POSITION_LAT, startLat)
                     .add(START_POSITION_LNG, startLng)
                     .add(END_POSITION_LAT, endLat)
                     .add(END_POSITION_LNG, endLng).get();
             bdbl.add(bdbo);
-        }
+        });
         return bdbl;
     }
 
@@ -126,8 +125,8 @@ public class TrackSummariesConverter extends TypeConverter implements SimpleValu
 
         BasicBSONList list = (BasicBSONList) o;
 
-        for (int j = 0; j < list.size(); j++) {
-            BasicDBObject trackSummary = (BasicDBObject) list.get(j);
+        for (Object value : list) {
+            BasicDBObject trackSummary = (BasicDBObject) value;
 
             Object id = trackSummary.get(ID);
             Object startLat = trackSummary.get(START_POSITION_LAT);
@@ -136,10 +135,10 @@ public class TrackSummariesConverter extends TypeConverter implements SimpleValu
             Object endLong = trackSummary.get(END_POSITION_LNG);
 
             if (!(id instanceof String) ||
-                !(startLat instanceof Number) ||
-                !(startLong instanceof Number) ||
-                !(endLat instanceof Number) ||
-                !(endLong instanceof Number)) {
+                    !(startLat instanceof Number) ||
+                    !(startLong instanceof Number) ||
+                    !(endLat instanceof Number) ||
+                    !(endLong instanceof Number)) {
                 throw new MappingException("Can not decode " + id);
             }
 
@@ -147,9 +146,9 @@ public class TrackSummariesConverter extends TypeConverter implements SimpleValu
             ts.setIdentifier((String) id);
 
             Coordinate start = new Coordinate(((Number) startLat).doubleValue(),
-                                              ((Number) startLong).doubleValue());
+                    ((Number) startLong).doubleValue());
             Coordinate end = new Coordinate(((Number) endLat).doubleValue(),
-                                            ((Number) endLong).doubleValue());
+                    ((Number) endLong).doubleValue());
             ts.setStartPosition(geomFac.createPoint(start));
             ts.setEndPosition(geomFac.createPoint(end));
 

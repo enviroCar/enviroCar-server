@@ -27,7 +27,7 @@ import org.hamcrest.Description;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class IsCompatibleMediaType extends BaseMatcher<MediaType> {
-    private MediaType type;
+    private final MediaType type;
 
     public IsCompatibleMediaType(MediaType type) {
         this.type = type;
@@ -35,7 +35,7 @@ public class IsCompatibleMediaType extends BaseMatcher<MediaType> {
 
     @Override
     public boolean matches(Object item) {
-        if (item == null || !(item instanceof MediaType)) {
+        if (!(item instanceof MediaType)) {
             return false;
         }
         return ((MediaType) item).isCompatible(this.type);

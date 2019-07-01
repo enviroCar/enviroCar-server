@@ -76,8 +76,6 @@ public class TrackCSVEncoder extends AbstractCSVTrackEncoder<Track> {
 				resultInputStream = convert(measurements);
 			}
 
-		} catch (IOException e) {
-			log.debug(e.getMessage());
 		} catch (Exception e) {
 			log.debug(e.getMessage());
 		}
@@ -98,7 +96,7 @@ public class TrackCSVEncoder extends AbstractCSVTrackEncoder<Track> {
 
 			if (header == null) {
 				
-				List<String> spaceTimeProperties = new ArrayList<String>();				
+				List<String> spaceTimeProperties = new ArrayList<>();
 				spaceTimeProperties.add("longitude");
 				spaceTimeProperties.add("latitude");
 				spaceTimeProperties.add("time");
@@ -187,7 +185,7 @@ public class TrackCSVEncoder extends AbstractCSVTrackEncoder<Track> {
 
 	private Set<String> gatherPropertiesForHeader(Measurements measurements){
 		
-		Set<String> distinctPhenomenonNames = new HashSet<String>();
+		Set<String> distinctPhenomenonNames = new HashSet<>();
 		
 		for (Measurement measurement : measurements) {
 

@@ -53,9 +53,9 @@ import com.vividsolutions.jts.geom.Coordinate;
 public class ShapefileEncodingTest extends AbstractEncodingTest {
 
     @Rule
-    public ExpectedException exception = ExpectedException.none();
+    public final ExpectedException exception = ExpectedException.none();
 
-    private String dateTime = "2014-05-20T08:42:06Z";
+    private final String dateTime = "2014-05-20T08:42:06Z";
 
     private Track testTrack1;
     private Track testTrack2;
@@ -64,7 +64,7 @@ public class ShapefileEncodingTest extends AbstractEncodingTest {
     private Sensor sensor;
     private List<Phenomenon> phenomenons;
 
-    private String testUserName = "TestUser";
+    private final String testUserName = "TestUser";
 
     private int measurementThreshold = 500;//temp value
 
@@ -251,7 +251,7 @@ public class ShapefileEncodingTest extends AbstractEncodingTest {
 
     private List<Phenomenon> createPhenomenoms() {
 
-        List<Phenomenon> result = new ArrayList<Phenomenon>();
+        List<Phenomenon> result = new ArrayList<>();
 
         result.add(createPhenomenom("RPM", "u/min"));
         result.add(createPhenomenom("Intake Temperature", "C"));

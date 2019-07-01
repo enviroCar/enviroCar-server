@@ -28,7 +28,7 @@ import org.envirocar.server.core.exception.ValidationException;
  */
 public class UserValidator extends AbstractValidator<User> {
     public static final Pattern EMAIL_PATTERN = Pattern
-            .compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" +
+            .compile("^[_A-Za-z0-9-+]+(\\.[_A-Za-z0-9-]+)*@" +
                      "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
     private static final Pattern NAME_PATTERN = Pattern
             .compile("^[_A-Za-z0-9-]{4,}$");

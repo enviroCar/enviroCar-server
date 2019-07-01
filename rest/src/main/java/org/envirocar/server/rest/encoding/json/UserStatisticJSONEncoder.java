@@ -87,8 +87,6 @@ public class UserStatisticJSONEncoder extends AbstractJSONEntityEncoder<UserStat
                                geometryEncoder.encodeJSON(item.getEndPosition(), rights, mediaType));
                 }
             }
-        } else {
-            // keep result as an empty jsonarray:   [  ]
         }
         return result;
     }

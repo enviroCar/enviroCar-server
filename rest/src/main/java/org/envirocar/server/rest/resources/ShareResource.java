@@ -26,7 +26,6 @@ import org.envirocar.server.core.statistics.Statistic;
 import org.envirocar.server.core.statistics.Statistics;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.mapper.InternalServerError;
-import org.envirocar.server.rest.resources.AbstractResource;
 import org.envirocar.server.rest.util.OSMTileRenderer;
 import org.envirocar.server.rest.util.TileRenderer;
 import org.joda.time.Period;
@@ -38,9 +37,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
@@ -162,7 +159,7 @@ public class ShareResource extends AbstractResource {
 
         FontMetrics fm = g2d.getFontMetrics();
 
-        int x1 = 0 + ((w / 3 - fm.stringWidth(bundle.getString(DETAIL_MAX_SPEED))) / 2);
+        int x1 = ((w / 3 - fm.stringWidth(bundle.getString(DETAIL_MAX_SPEED))) / 2);
         int x2 = w / 3 + ((w / 3 - fm.stringWidth(bundle.getString(DETAIL_TIME))) / 2);
         int x3 = 2 * w / 3 + ((w / 3 - fm.stringWidth(bundle.getString(PHENOMENON_CONSUMPTION))) / 2);
         int y = h - (h / 4) + ((((h / 4) - fm.getHeight()) / 2) + fm.getAscent()) - fm.getHeight() / 2;
@@ -172,7 +169,7 @@ public class ShareResource extends AbstractResource {
 
         g2d.setFont(FONT);
         FontMetrics fm2 = g2d.getFontMetrics();
-        int maxspeedX = 0 + ((w / 3 - fm2.stringWidth(details.get(DETAIL_MAX_SPEED))) / 2);
+        int maxspeedX = ((w / 3 - fm2.stringWidth(details.get(DETAIL_MAX_SPEED))) / 2);
         int timeX = w / 3 + ((w / 3 - fm2.stringWidth(details.get(DETAIL_TIME))) / 2);
         int consumptionX = 2 * w / 3 + ((w / 3 - fm2.stringWidth(details.get(PHENOMENON_CONSUMPTION))) / 2);
         int textY = h - (h / 4) + ((((h / 4) - fm2.getHeight()) / 2) + fm2.getAscent()) + fm.getHeight() / 2;
@@ -187,8 +184,8 @@ public class ShareResource extends AbstractResource {
     /**
      * This method extracts statistics from statistics object into a HashMap
      *
-     * @param track
-     * @param statistics
+     * @param track      The track
+     * @param statistics The statistics
      * @return HashMap which contains statistic name as the key and statistics value as the value
      */
     private Map<String, String> getDetails(Track track, Statistics statistics) {

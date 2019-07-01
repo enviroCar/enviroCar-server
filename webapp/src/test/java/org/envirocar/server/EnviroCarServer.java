@@ -16,13 +16,12 @@
  */
 package org.envirocar.server;
 
+import com.google.inject.Injector;
+import com.google.inject.servlet.GuiceFilter;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.envirocar.server.core.mail.NoopMailerModule;
-
-import com.google.inject.Injector;
-import com.google.inject.servlet.GuiceFilter;
 
 /**
  * TODO JavaDoc
@@ -31,8 +30,8 @@ import com.google.inject.servlet.GuiceFilter;
  */
 public class EnviroCarServer {
     private static EnviroCarServer instance;
-    private Server server;
-    private Injector injector;
+    private final Server server;
+    private final Injector injector;
 
     public EnviroCarServer() throws Exception {
         server = new Server(9998);

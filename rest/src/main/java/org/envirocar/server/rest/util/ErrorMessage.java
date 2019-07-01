@@ -24,7 +24,7 @@ public class ErrorMessage {
     private final Response.StatusType code;
     private final String message;
     private final JsonNode details;
-    private Throwable exception;
+    private final Throwable exception;
 
     public ErrorMessage(Response.StatusType code, String message, JsonNode details, Throwable exception) {
         this.code = code;

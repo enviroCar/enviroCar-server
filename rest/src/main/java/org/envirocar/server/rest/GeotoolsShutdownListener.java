@@ -21,41 +21,42 @@
  */
 package org.envirocar.server.rest;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.envirocar.server.core.guice.ResourceShutdownListener;
 import org.geotools.referencing.factory.AbstractAuthorityFactory;
 import org.geotools.referencing.factory.DeferredAuthorityFactory;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.crs.CRSAuthorityFactory;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 /**
  *
  */
 public class GeotoolsShutdownListener implements ResourceShutdownListener {
-    
-    private static final org.slf4j.Logger logger = LoggerFactory
-        .getLogger(GeotoolsShutdownListener.class);
+
+    private static final Logger LOG = LoggerFactory.getLogger(GeotoolsShutdownListener.class);
 
     @Override
     public void shutdownResources() {
         List<CRSAuthorityFactory> candidates = new ArrayList<>(2);
         candidates.add(org.geotools.referencing.CRS.getAuthorityFactory(true));
         candidates.add(org.geotools.referencing.CRS.getAuthorityFactory(false));
-        
-        candidates.stream().filter((factory) -> (factory != null)).map((factory) -> {
+
+        candidates.stream().filter(Objects::nonNull).peek(factory -> {
             if (factory instanceof DeferredAuthorityFactory) {
                 DeferredAuthorityFactory.exit();
             }
-            return factory;
-        }).filter((factory) -> (factory instanceof AbstractAuthorityFactory)).forEach((factory) -> {
+        }).filter(factory -> factory instanceof AbstractAuthorityFactory).forEach(factory -> {
             try {
                 ((AbstractAuthorityFactory) factory).dispose();
             } catch (FactoryException fe) {
-                logger.error("Error while GeometryHandler clean up", fe);
+                LOG.error("Error while GeometryHandler clean up", fe);
             }
         });
     }
-    
+
 }

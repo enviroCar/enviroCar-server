@@ -35,12 +35,12 @@ public class AuthenticationResourceFilterFactory implements ResourceFilterFactor
         Authenticated authenticated = am.getAnnotation(Authenticated.class);
         if (authenticated != null) {
             return Collections
-                    .<ResourceFilter>singletonList(new AuthenticatedResourceFilter());
+                    .singletonList(new AuthenticatedResourceFilter());
         }
         Anonymous anonymous = am.getAnnotation(Anonymous.class);
         if (anonymous != null) {
             return Collections
-                    .<ResourceFilter>singletonList(new AnonymousResourceFilter());
+                    .singletonList(new AnonymousResourceFilter());
         }
         return null;
     }

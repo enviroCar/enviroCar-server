@@ -51,8 +51,8 @@ public class UserStatisticsTest {
     Track track;
     UserStatistic userStatistic;
     TrackWithMeasurments twm;
-    double TOLERANCE_KM = 0.01;        // 1 meter
-    double TOLERANCE_HOUR = 0.000276;  // 1 second
+    final double TOLERANCE_KM = 0.01;        // 1 meter
+    final double TOLERANCE_HOUR = 0.000276;  // 1 second
 
     @Before
     public void initialize() {

@@ -16,21 +16,19 @@
  */
 package org.envirocar.server.core;
 
-import java.util.Collections;
-import java.util.List;
-
-import org.envirocar.server.core.exception.ValidationException;
-
 import com.google.common.base.Preconditions;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
+import org.envirocar.server.core.exception.ValidationException;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * class for representing spatial filter
  *
  * @author staschc
- *
  */
 public class SpatialFilter {
 
@@ -52,9 +50,9 @@ public class SpatialFilter {
     /**
      * generic constructor for spatial filters
      *
-     * @param operator
-     * @param geom
-     * @param params
+     * @param operator the {@link SpatialFilterOperator}
+     * @param geom     The {@link Geometry}
+     * @param params   The parameters
      */
     public SpatialFilter(SpatialFilterOperator operator,
                          Geometry geom,
@@ -91,7 +89,6 @@ public class SpatialFilter {
 
     /**
      * enum for keeping the operator that is used in the spatial filter
-     *
      */
     public enum SpatialFilterOperator {
         BBOX,

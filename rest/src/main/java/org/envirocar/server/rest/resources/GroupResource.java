@@ -46,7 +46,7 @@ import java.util.List;
 public class GroupResource extends AbstractResource {
     public static final String MEMBERS = "members";
     public static final String ACTIVITIES = "activities";
-    private Group group;
+    private final Group group;
 
     @Inject
     public GroupResource(@Assisted Group group) {

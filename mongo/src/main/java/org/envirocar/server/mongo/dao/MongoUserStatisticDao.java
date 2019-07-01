@@ -54,9 +54,7 @@ public class MongoUserStatisticDao implements UserStatisticDao {
     private final UserStatisticUpdateScheduler scheduler;
 
     // calculate on get() calculation function, if UserStatistics have not been created yet
-    private final Function<UserStatisticFilter, MongoUserStatistic> calculateAllFunction = (UserStatisticFilter t) -> {
-        return calculateAndSaveUserStatistic(t, key(t));
-    };
+    private final Function<UserStatisticFilter, MongoUserStatistic> calculateAllFunction = (UserStatisticFilter t) -> calculateAndSaveUserStatistic(t, key(t));
 
     // update on New Track calculation function
     private final Function<Object[], MongoUserStatistic> calculateOnNewTrackFunction = (Object[] params) -> {

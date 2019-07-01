@@ -16,8 +16,6 @@
  */
 package org.envirocar.server.rest.rights;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.envirocar.server.core.entities.User;
 
 /**

@@ -126,15 +126,7 @@ public class GuiceRunner extends BlockJUnit4ClassRunner {
         try {
 
             return (Module) defConstructor.newInstance();
-        } catch (InstantiationException ex) {
-            throw new InitializationError(ex);
-        } catch (IllegalAccessException ex) {
-            throw new InitializationError(ex);
-        } catch (IllegalArgumentException ex) {
-            throw new InitializationError(ex);
-        } catch (InvocationTargetException ex) {
-            throw new InitializationError(ex);
-        } catch (SecurityException ex) {
+        } catch (InstantiationException | SecurityException | InvocationTargetException | IllegalArgumentException | IllegalAccessException ex) {
             throw new InitializationError(ex);
         }
     }

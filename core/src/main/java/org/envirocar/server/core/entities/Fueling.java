@@ -141,16 +141,14 @@ public interface Fueling extends BaseEntity {
      * @param missedFuelStop if {@code Fueling} is is a missed fuel stop
      */
     void setMissedFuelStop(boolean missedFuelStop);
-    
+
     /**
-     * 
-     * @return 
+     * @return if this is a partial fueling
      */
     boolean isPartialFueling();
-    
+
     /**
-     * 
-     * @param partialFueling 
+     * @param partialFueling if this is a partial fueling
      */
     void setPartialFueling(boolean partialFueling);
 

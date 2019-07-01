@@ -47,10 +47,6 @@ public class UsersResourceTest extends ResourceTestBase {
     }
 
     @Test
-    public void testPostUsers() {
-    }
-
-    @Test
     public void testPutUsers() {
         assertThat(resource().path("/users").put(ClientResponse.class).getStatus(), is(405));
     }

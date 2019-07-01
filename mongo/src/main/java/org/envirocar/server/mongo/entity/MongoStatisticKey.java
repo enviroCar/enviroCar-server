@@ -39,7 +39,7 @@ public class MongoStatisticKey {
     @Property(SENSOR)
     private Key<MongoSensor> sensor;
     @Property(ALL)
-    private boolean all = true;
+    private boolean all;
 
     public MongoStatisticKey(Key<MongoTrack> track,
                              Key<MongoUser> user,

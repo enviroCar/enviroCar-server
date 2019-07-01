@@ -18,8 +18,6 @@ package org.envirocar.server.rest.encoding.rdf;
 
 import java.util.Set;
 
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
@@ -54,9 +52,9 @@ public class StatisticRDFEncoder extends AbstractLinkerRDFEntityEncoder<Statisti
     protected String getURI(Statistic t, Provider<UriBuilder> builder) {
         Object resource = uriInfo.get().getMatchedResources().get(0);
 
-        User user = null;
-        Track track = null;
-        Sensor sensor = null;
+        User user;
+        Track track;
+        Sensor sensor;
 
         if (resource instanceof StatisticResource) {
             StatisticResource sr = (StatisticResource) resource;

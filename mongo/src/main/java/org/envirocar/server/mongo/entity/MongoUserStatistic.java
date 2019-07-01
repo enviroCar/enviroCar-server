@@ -49,7 +49,7 @@ public class MongoUserStatistic implements UserStatistic {
     private MongoUserStatisticKey key;
     @Indexed
     @Embedded(CREATED)
-    private DateTime created = new DateTime();
+    private final DateTime created = new DateTime();
     @Property(DIST_TOTAL)
     private double distance;
     @Property(DURA_TOTAL)

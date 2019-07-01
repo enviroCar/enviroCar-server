@@ -32,5 +32,5 @@ public interface StatisticsDao {
 
     Statistic getStatistic(StatisticsFilter request, Phenomenon phenomenon);
 
-    public void updateStatisticsOnNewTrack(Track e);
+    void updateStatisticsOnNewTrack(Track e);
 }

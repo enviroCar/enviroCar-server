@@ -22,8 +22,6 @@ import org.envirocar.server.core.activities.Activity;
 import org.envirocar.server.rest.mapper.InternalServerError;
 import org.envirocar.server.rest.resources.*;
 
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import java.util.Set;

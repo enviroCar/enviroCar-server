@@ -95,7 +95,7 @@ public class PaginationProviderImpl implements PaginationProvider {
             if (begin > end) {
                 throw newInvalidRangeException();
             }
-            return Optional.<Pagination>of(new RangeBasedPagination(begin, end));
+            return Optional.of(new RangeBasedPagination(begin, end));
         } catch (IllegalArgumentException e) {
             throw newInvalidRangeException();
         }
@@ -110,7 +110,7 @@ public class PaginationProviderImpl implements PaginationProvider {
                 = getQueryParameterValue(RESTConstants.PAGE)
                 .or(getQueryParameterValue("p"));
         if (limit.isPresent() || page.isPresent()) {
-            return Optional.<Pagination>of(new PageBasedPagination(limit.or(DEFAULT_LIMIT), page.or(DEFAULT_PAGE)));
+            return Optional.of(new PageBasedPagination(limit.or(DEFAULT_LIMIT), page.or(DEFAULT_PAGE)));
         }
         return Optional.absent();
     }
@@ -120,7 +120,7 @@ public class PaginationProviderImpl implements PaginationProvider {
         if (list != null && !list.isEmpty()) {
             try {
                 return Optional.of(Integer.valueOf(list.get(0), DECIMAL_RADIX));
-            } catch (NumberFormatException e) {
+            } catch (NumberFormatException ignored) {
             }
         }
         return Optional.absent();

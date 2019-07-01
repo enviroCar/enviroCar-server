@@ -35,7 +35,7 @@ import com.google.inject.Inject;
  */
 @Provider
 public class GroupJSONEncoder extends AbstractJSONEntityEncoder<Group> {
-    private JSONEntityEncoder<User> userEncoder;
+    private final JSONEntityEncoder<User> userEncoder;
 
     @Inject
     public GroupJSONEncoder(JSONEntityEncoder<User> userProvider) {

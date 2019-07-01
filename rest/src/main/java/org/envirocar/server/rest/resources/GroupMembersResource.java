@@ -39,7 +39,7 @@ import javax.ws.rs.*;
  */
 public class GroupMembersResource extends AbstractResource {
     public static final String MEMBER = "{member}";
-    private Group group;
+    private final Group group;
 
     @Inject
     public GroupMembersResource(@Assisted Group group) {

@@ -88,9 +88,7 @@ public class UserStatisticUpdateScheduler {
                     /*
                     the thread is waiting, do not use it again and spawn a new
                      */
-                    new Thread(() -> {
-                        updateUserStatistic(filter, key, calculator, false);
-                    }).start();
+                    new Thread(() -> updateUserStatistic(filter, key, calculator, false)).start();
                 } else {
                     updateUserStatistic(filter, key, calculator, false);
                 }
@@ -145,9 +143,7 @@ public class UserStatisticUpdateScheduler {
                     /*
                     the thread is waiting, do not use it again and spawn a new
                      */
-                    new Thread(() -> {
-                        updateUserStatisticOnNewTrack(filter, key, calculator, false, track);
-                    }).start();
+                    new Thread(() -> updateUserStatisticOnNewTrack(filter, key, calculator, false, track)).start();
                 } else {
                     updateUserStatisticOnNewTrack(filter, key, calculator, false, track);
                 }
@@ -204,9 +200,7 @@ public class UserStatisticUpdateScheduler {
                     /*
                     the thread is waiting, do not use it again and spawn a new
                      */
-                    new Thread(() -> {
-                        updateUserStatisticOnTrackDeletion(filter, key, calculator, false, track, measurements);
-                    }).start();
+                    new Thread(() -> updateUserStatisticOnTrackDeletion(filter, key, calculator, false, track, measurements)).start();
                 } else {
                     updateUserStatisticOnTrackDeletion(filter, key, calculator, false, track, measurements);
                 }
