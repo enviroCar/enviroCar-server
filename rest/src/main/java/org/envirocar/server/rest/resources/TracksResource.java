@@ -68,10 +68,10 @@ public class TracksResource extends AbstractResource {
     }
 
     @POST
-    @Schema(request = Schemas.TRACK_CREATE)
-    @Consumes({MediaTypes.TRACK_CREATE})
     @Authenticated
     @HasAcceptedLatestLegalPolicies
+    @Schema(request = Schemas.TRACK_CREATE)
+    @Consumes({MediaTypes.TRACK_CREATE})
     public Response create(Track track) throws ValidationException {
         if (user != null) {
             checkRights(getRights().isSelf(user));

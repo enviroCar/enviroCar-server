@@ -112,10 +112,10 @@ public interface JSONConstants {
     String CONTENTS = "contents";
     String VERSIONS = "versions";
     String CONTENT = "content";
-    String PRIORITY  = "priority";
+    String PRIORITY = "priority";
     String CATEGORY = "category";
     String BADGES_KEY = "badges";
-	String DISPLAY_NAME_KEY = "displayName";
+    String DISPLAY_NAME_KEY = "displayName";
     String FUELINGS = "fuelings";
     String MILEAGE = "mileage";
     String COST = "cost";

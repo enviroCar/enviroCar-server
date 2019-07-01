@@ -21,6 +21,7 @@ import com.google.inject.assistedinject.Assisted;
 import org.envirocar.server.core.entities.Announcement;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
+import org.envirocar.server.rest.resources.AbstractResource;
 import org.envirocar.server.rest.validation.Schema;
 
 import javax.ws.rs.GET;
@@ -35,9 +36,9 @@ public class AnnouncementResource extends AbstractResource {
     }
 
     @GET
-    @Schema(response = Schemas.TERMS_OF_USE_INSTANCE)
     @Produces({MediaTypes.TERMS_OF_USE_INSTANCE})
-    public Announcement get() {
+    @Schema(response = Schemas.TERMS_OF_USE_INSTANCE)
+    public Announcement announcement() {
         return announcement;
     }
 

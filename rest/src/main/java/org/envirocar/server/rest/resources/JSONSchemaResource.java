@@ -27,8 +27,12 @@ import com.google.inject.name.Named;
 import org.envirocar.server.core.exception.ResourceNotFoundException;
 import org.envirocar.server.rest.JSONConstants;
 import org.envirocar.server.rest.guice.JSONSchemaFactoryProvider;
+import org.envirocar.server.rest.mapper.InternalServerError;
 
-import javax.ws.rs.*;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
@@ -61,10 +65,10 @@ public class JSONSchemaResource extends AbstractResource {
     public JsonNode get() {
         ObjectNode root = nodeFactory.objectNode();
         ArrayNode schemas = root.putArray(JSONConstants.SCHEMA);
-        UriBuilder builder = getUriInfo().getRequestUriBuilder().path("{schema}");
+        UriBuilder builder = getUriInfo().getRequestUriBuilder().path(SCHEMA);
         this.schemaPaths.stream()
                 .map(path -> path.replaceFirst("/schema/", ""))
-                .map(path -> builder.build(path))
+                .map(builder::build)
                 .map(URI::toString)
                 .forEach(schemas::add);
         return root;

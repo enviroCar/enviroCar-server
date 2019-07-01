@@ -25,6 +25,9 @@ import org.envirocar.server.core.exception.ValidationException;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.auth.Authenticated;
+import org.envirocar.server.rest.resources.AbstractResource;
+import org.envirocar.server.rest.resources.ActivitiesResource;
+import org.envirocar.server.rest.resources.GroupMembersResource;
 import org.envirocar.server.rest.rights.HasAcceptedLatestLegalPolicies;
 import org.envirocar.server.rest.validation.Schema;
 
@@ -53,15 +56,17 @@ public class GroupResource extends AbstractResource {
     @GET
     @Schema(response = Schemas.GROUP)
     @Produces({MediaTypes.GROUP, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
-    public Group get() throws GroupNotFoundException {
+
+
+    public Group get() {
         return group;
     }
 
     @PUT
     @Authenticated
     @HasAcceptedLatestLegalPolicies
-    @Schema(request = Schemas.GROUP_MODIFY)
     @Consumes({MediaTypes.GROUP_MODIFY})
+    @Schema(request = Schemas.GROUP_MODIFY)
     public Response modify(Group changes) throws ValidationException, IllegalModificationException {
         checkRights(getRights().canModify(group));
         Group modified = getGroupService().modifyGroup(group, changes);

@@ -23,6 +23,7 @@ import org.envirocar.server.core.entities.UserStatistic;
 import org.envirocar.server.core.filter.UserStatisticFilter;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
+import org.envirocar.server.rest.resources.AbstractResource;
 import org.envirocar.server.rest.validation.Schema;
 
 import javax.annotation.Nullable;

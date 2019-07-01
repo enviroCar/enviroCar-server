@@ -16,12 +16,8 @@
  */
 package org.envirocar.server.rest.resources;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-
+import com.google.inject.assistedinject.Assisted;
+import com.google.inject.assistedinject.AssistedInject;
 import org.envirocar.server.core.activities.Activities;
 import org.envirocar.server.core.activities.Activity;
 import org.envirocar.server.core.activities.ActivityType;
@@ -31,10 +27,10 @@ import org.envirocar.server.core.filter.ActivityFilter;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.RESTConstants;
 import org.envirocar.server.rest.Schemas;
+import org.envirocar.server.rest.resources.AbstractResource;
 import org.envirocar.server.rest.validation.Schema;
 
-import com.google.inject.assistedinject.Assisted;
-import com.google.inject.assistedinject.AssistedInject;
+import javax.ws.rs.*;
 
 /**
  * TODO JavaDoc
@@ -52,26 +48,17 @@ public class FriendsActivitiesResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.ACTIVITIES)
-    @Produces({ MediaTypes.ACTIVITIES,
-                MediaTypes.XML_RDF,
-                MediaTypes.TURTLE,
-                MediaTypes.TURTLE_ALT })
-    public Activities activities(
-            @QueryParam(RESTConstants.TYPE) ActivityType type) throws BadRequestException {
-        return getUserService()
-                .getActivities(new ActivityFilter(user, getPagination()));
+    @Produces({MediaTypes.ACTIVITIES, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
+    public Activities activities(@QueryParam(RESTConstants.TYPE) ActivityType type) throws BadRequestException {
+        return getUserService().getActivities(new ActivityFilter(user, getPagination()));
     }
 
     @GET
     @Path(ACTIVITY)
     @Schema(response = Schemas.ACTIVITY)
-    @Produces({ MediaTypes.ACTIVITIES,
-                MediaTypes.XML_RDF,
-                MediaTypes.TURTLE,
-                MediaTypes.TURTLE_ALT })
+    @Produces({MediaTypes.ACTIVITIES, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
     public Activity activity(@PathParam("id") String id) {
-        return getUserService()
-                .getActivity(new ActivityFilter(user, null), id);
+        return getUserService().getActivity(new ActivityFilter(user, null), id);
     }
 
     public User getUser() {

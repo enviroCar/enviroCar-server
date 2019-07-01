@@ -16,28 +16,6 @@
  */
 package org.envirocar.server.rest.validation;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Collections;
-import java.util.List;
-import java.util.zip.GZIPInputStream;
-
-import javax.ws.rs.HttpMethod;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.Response.Status;
-
-import org.envirocar.server.core.exception.ValidationException;
-import org.envirocar.server.rest.JSONConstants;
-import org.envirocar.server.rest.MediaTypes;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectReader;
@@ -56,13 +34,25 @@ import com.google.inject.name.Named;
 import com.sun.jersey.api.container.ContainerException;
 import com.sun.jersey.api.model.AbstractMethod;
 import com.sun.jersey.core.util.ReaderWriter;
-import com.sun.jersey.spi.container.ContainerRequest;
-import com.sun.jersey.spi.container.ContainerRequestFilter;
-import com.sun.jersey.spi.container.ContainerResponse;
-import com.sun.jersey.spi.container.ContainerResponseFilter;
-import com.sun.jersey.spi.container.ContainerResponseWriter;
-import com.sun.jersey.spi.container.ResourceFilter;
-import com.sun.jersey.spi.container.ResourceFilterFactory;
+import com.sun.jersey.spi.container.*;
+import org.envirocar.server.core.exception.BadRequestException;
+import org.envirocar.server.core.exception.ValidationException;
+import org.envirocar.server.rest.JSONConstants;
+import org.envirocar.server.rest.MediaTypes;
+import org.envirocar.server.rest.mapper.InternalServerError;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.ws.rs.HttpMethod;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
+import java.io.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.zip.GZIPInputStream;
 
 /**
  * TODO JavaDoc
@@ -159,13 +149,13 @@ public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
         @Override
         public ContainerRequestFilter getRequestFilter() {
             return request == null || !validateRequests ? null
-                   : new JSONSchemaRequestFilter(request);
+                    : new JSONSchemaRequestFilter(request);
         }
 
         @Override
         public ContainerResponseFilter getResponseFilter() {
             return response == null || !validateResponses ? null
-                   : new JSONSchemaResponseFilter(response);
+                    : new JSONSchemaResponseFilter(response);
         }
     }
 
@@ -179,8 +169,8 @@ public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
         @Override
         public ContainerRequest filter(ContainerRequest request) {
             if (request.getMediaType() != null &&
-                request.getMediaType()
-                    .isCompatible(MediaType.APPLICATION_JSON_TYPE)) {
+                    request.getMediaType()
+                            .isCompatible(MediaType.APPLICATION_JSON_TYPE)) {
                 adjustContentType(request);
                 validate(request);
             }
@@ -195,8 +185,7 @@ public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
             // container request caches the header......
             request.getRequestHeaders().remove(HttpHeaders.CONTENT_TYPE);
             request.getMediaType();
-            request.getRequestHeaders()
-                    .putSingle(HttpHeaders.CONTENT_TYPE, newMt.toString());
+            request.getRequestHeaders().putSingle(HttpHeaders.CONTENT_TYPE, newMt.toString());
         }
 
         private void validate(ContainerRequest request) {
@@ -208,16 +197,15 @@ public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
                 ByteArrayInputStream bais =
                         new ByteArrayInputStream(requestEntity);
                 request.setEntityInputStream(bais);
-                String entity = new String(requestEntity, ReaderWriter
-                        .getCharset(request.getMediaType()));
+                String entity = new String(requestEntity, ReaderWriter.getCharset(request.getMediaType()));
                 if (entity.isEmpty()) {
-                    throw new WebApplicationException(Status.BAD_REQUEST);
+                    throw new BadRequestException("empty entity");
                 }
                 JsonNode tree;
                 try {
                     tree = reader.readTree(entity);
                 } catch (JsonParseException e) {
-                    throw new WebApplicationException(e, Status.BAD_REQUEST);
+                    throw new BadRequestException(e);
                 }
                 JSONSchemaResourceFilterFactory.this.validate(tree, schema);
             } catch (IOException ex) {
@@ -240,10 +228,8 @@ public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
             if (mt != null && mt.isCompatible(MediaType.APPLICATION_JSON_TYPE)) {
                 adjustContentType(response);
                 if (!request.getMethod().equals(HttpMethod.HEAD)) {
-                    ContainerResponseWriter crw = response
-                            .getContainerResponseWriter();
-                    ContainerResponseWriter vcrw =
-                            new ValidatingWriter(crw, schema);
+                    ContainerResponseWriter crw = response.getContainerResponseWriter();
+                    ContainerResponseWriter vcrw = new ValidatingWriter(crw, schema);
                     response.setContainerResponseWriter(vcrw);
                 }
             }
@@ -252,16 +238,13 @@ public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
 
         protected void adjustContentType(ContainerResponse response) {
             MediaType mediaType = response.getMediaType();
-            if (!mediaType.getParameters()
-                    .containsKey(MediaTypes.SCHEMA_ATTRIBUTE)) {
-                MediaType newMt =
-                        new MediaType("application", "json", ImmutableMap
-                        .<String, String>builder()
-                        .putAll(mediaType.getParameters())
-                        .put(MediaTypes.SCHEMA_ATTRIBUTE, schema)
-                        .build());
-                response.getHttpHeaders()
-                        .putSingle(HttpHeaders.CONTENT_TYPE, newMt);
+            if (!mediaType.getParameters().containsKey(MediaTypes.SCHEMA_ATTRIBUTE)) {
+                MediaType newMt = new MediaType("application", "json",
+                        ImmutableMap.<String, String>builder()
+                                .putAll(mediaType.getParameters())
+                                .put(MediaTypes.SCHEMA_ATTRIBUTE, schema)
+                                .build());
+                response.getHttpHeaders().putSingle(HttpHeaders.CONTENT_TYPE, newMt);
             }
         }
     }
@@ -320,17 +303,21 @@ public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
             }
         }
 
-        protected void validate(byte[] bytes) throws IOException,
-                                                     WebApplicationException {
+        protected void validate(byte[] bytes) throws IOException, WebApplicationException {
             String entity = new String(bytes, ReaderWriter.getCharset(mediaType));
             try {
-                JSONSchemaResourceFilterFactory.this.validate(reader.readTree(entity), schema);
+                JSONSchemaResourceFilterFactory.this.validate(reader.readTree(entity), getSchema());
             } catch (JSONValidationException v) {
                 log.error("Created invalid response: Error:\n" + writer.writeValueAsString(v.getError()), v);
             } catch (ValidationException v) {
                 log.error(String.format("Created invalid response: Error:\n%s\nGenerated Response:\n%s\n", v.getMessage(), entity), v);
-                throw new WebApplicationException(v, Status.INTERNAL_SERVER_ERROR);
+                throw new InternalServerError(v);
             }
+        }
+
+        private String getSchema() {
+            return Optional.ofNullable(this.mediaType.getParameters().get(MediaTypes.SCHEMA_ATTRIBUTE))
+                    .filter(x -> !x.isEmpty()).orElse(this.schema);
         }
     }
 }

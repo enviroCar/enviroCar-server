@@ -28,6 +28,7 @@ import org.envirocar.server.core.filter.ActivityFilter;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.RESTConstants;
 import org.envirocar.server.rest.Schemas;
+import org.envirocar.server.rest.resources.AbstractResource;
 import org.envirocar.server.rest.validation.Schema;
 
 import javax.annotation.Nullable;
@@ -57,24 +58,18 @@ public class ActivitiesResource extends AbstractResource {
     public ActivitiesResource() {
     }
 
+
     @GET
     @Schema(response = Schemas.ACTIVITIES)
-    @Produces({MediaTypes.ACTIVITIES,
-            MediaTypes.XML_RDF,
-            MediaTypes.TURTLE,
-            MediaTypes.TURTLE_ALT})
-    public Activities activities(
-            @QueryParam(RESTConstants.TYPE) ActivityType type) throws BadRequestException {
+    @Produces({MediaTypes.ACTIVITIES, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
+    public Activities activities(@QueryParam(RESTConstants.TYPE) ActivityType type) throws BadRequestException {
         return getUserService().getActivities(new ActivityFilter(group, user, type, getPagination()));
     }
 
     @GET
     @Path(ACTIVITY)
     @Schema(response = Schemas.ACTIVITY)
-    @Produces({MediaTypes.ACTIVITIES,
-            MediaTypes.XML_RDF,
-            MediaTypes.TURTLE,
-            MediaTypes.TURTLE_ALT})
+    @Produces({MediaTypes.ACTIVITIES, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
     public Activity activity(@PathParam("id") String id) {
         return getUserService().getActivity(new ActivityFilter(group, user, null, null), id);
     }

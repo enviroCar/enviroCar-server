@@ -22,10 +22,10 @@ import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.ext.Provider;
 
 import org.envirocar.server.core.entities.Group;
-import org.envirocar.server.rest.resources.GroupsResource;
-import org.envirocar.server.rest.resources.RootResource;
 
 import com.google.inject.Inject;
+import org.envirocar.server.rest.resources.GroupsResource;
+import org.envirocar.server.rest.resources.RootResource;
 
 /**
  * TODO JavaDoc

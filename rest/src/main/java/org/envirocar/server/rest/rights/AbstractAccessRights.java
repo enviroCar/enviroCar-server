@@ -16,14 +16,13 @@
  */
 package org.envirocar.server.rest.rights;
 
-import java.util.Map;
-
 import com.google.common.collect.Maps;
-
 import org.envirocar.server.core.FriendService;
 import org.envirocar.server.core.GroupService;
 import org.envirocar.server.core.entities.Group;
 import org.envirocar.server.core.entities.User;
+
+import java.util.Map;
 
 /**
  * TODO JavaDoc
@@ -59,6 +58,11 @@ public abstract class AbstractAccessRights implements AccessRights {
         return user.equals(this.user);
     }
 
+    @Override
+    public boolean isAuthenticated() {
+        return this.user != null;
+    }
+
     protected boolean isFriend(User user) {
         if (this.user == null || user == null || friendService == null) {
             return false;
@@ -66,7 +70,7 @@ public abstract class AbstractAccessRights implements AccessRights {
         if (!isFriend.containsKey(user)) {
             isFriend.put(user, friendService.isFriend(this.user, user));
         }
-        return isFriend.get(user).booleanValue();
+        return isFriend.get(user);
     }
 
     protected boolean isFriendOf(User user) {
@@ -76,7 +80,7 @@ public abstract class AbstractAccessRights implements AccessRights {
         if (!isFriendOf.containsKey(user)) {
             isFriendOf.put(user, friendService.isFriend(user, this.user));
         }
-        return isFriendOf.get(user).booleanValue();
+        return isFriendOf.get(user);
     }
 
     protected boolean shareGroup(User user) {
@@ -86,7 +90,7 @@ public abstract class AbstractAccessRights implements AccessRights {
         if (!shareGroup.containsKey(user)) {
             shareGroup.put(user, groupService.shareGroup(this.user, user));
         }
-        return shareGroup.get(user).booleanValue();
+        return shareGroup.get(user);
     }
 
     protected boolean isMember(Group group) {
@@ -96,14 +100,12 @@ public abstract class AbstractAccessRights implements AccessRights {
         if (!isMember.containsKey(group)) {
             isMember.put(group, groupService.isGroupMember(group, this.user));
         }
-        return isMember.get(group).booleanValue();
+        return isMember.get(group);
     }
 
     protected boolean isSelfFriendOfOrShareGroup(User user) {
         return isSelf(user) || isFriendOf(user) || shareGroup(user);
     }
 
-    protected boolean isAuthenticated() {
-        return this.user != null;
-    }
+
 }

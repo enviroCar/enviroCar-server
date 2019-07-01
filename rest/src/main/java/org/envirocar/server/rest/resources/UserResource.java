@@ -64,11 +64,12 @@ public class UserResource extends AbstractResource {
     }
 
     @PUT
+    @Authenticated
     @Schema(request = Schemas.USER_MODIFY)
     @Consumes({MediaTypes.USER_MODIFY})
-    @Authenticated
     public Response modify(User changes)
-            throws UserNotFoundException, IllegalModificationException, ValidationException, ResourceAlreadyExistException {
+            throws UserNotFoundException, IllegalModificationException,
+            ValidationException, ResourceAlreadyExistException {
         checkRights(getRights().canModify(user));
 //        checkMail(user);
         User modified = getUserService().modifyUser(user, changes);
@@ -130,10 +131,9 @@ public class UserResource extends AbstractResource {
     }
 
     @Path(USERSTATISTIC)
-    public UserStatisticResource userstatistic() {
+    public UserStatisticResource userStatistic() {
         checkRights(getRights().canSeeUserStatisticsOf(user));
         return getResourceFactory().createUserStatisticsResource(this.user);
-
     }
 
     @Path(ACTIVITIES)
@@ -161,7 +161,7 @@ public class UserResource extends AbstractResource {
     }
 
     @Path(SENSORS)
-    public SensorsResource cars() {
+    public SensorsResource sensors() {
         checkRights(getRights().canSee(user));
         return getResourceFactory().createSensorsResource(this.user);
     }

@@ -49,10 +49,10 @@ public class TrackResource extends AbstractResource {
     }
 
     @PUT
-    @Authenticated
-    @HasAcceptedLatestLegalPolicies
     @Schema(request = Schemas.TRACK_MODIFY)
     @Consumes({MediaTypes.TRACK_MODIFY})
+    @Authenticated
+    @HasAcceptedLatestLegalPolicies
     public Response modify(Track changes) throws IllegalModificationException, ValidationException {
         checkRights(getRights().canModify(track));
         getDataService().modifyTrack(track, changes);

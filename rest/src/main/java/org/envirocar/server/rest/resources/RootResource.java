@@ -38,6 +38,7 @@ import javax.ws.rs.core.UriBuilder;
  */
 @Path("/")
 public class RootResource extends AbstractResource {
+
     public static final String USERS = "users";
     public static final String GROUPS = "groups";
     public static final String TRACKS = "tracks";
@@ -52,9 +53,12 @@ public class RootResource extends AbstractResource {
     public static final String RESET_PASSWORD = "resetPassword";
     public static final String CONFIRM = "confirm";
     public static final String PRIVACY_STATEMENTS = "privacyStatements";
+    private final JsonNodeFactory factory;
 
     @Inject
-    private JsonNodeFactory factory;
+    public RootResource(JsonNodeFactory factory) {
+        this.factory = factory;
+    }
 
     @GET
     @Schema(response = Schemas.ROOT)
@@ -82,12 +86,6 @@ public class RootResource extends AbstractResource {
         if (getRights().canSeeStatistics()) {
             root.put(JSONConstants.STATISTICS_KEY, getUriBuilder().path(STATISTICS).build().toString());
         }
-        if (getRights().canSeeTermsOfUse()) {
-            root.put(JSONConstants.TERMS_OF_USE_KEY, getUriBuilder().path(TERMS_OF_USE).build().toString());
-        }
-        if (getRights().canSeeSchema()) {
-            root.put(JSONConstants.SCHEMA, getUriBuilder().path(SCHEMA).build().toString());
-        }
         if (getRights().canSeeAnnouncements()) {
             root.put(JSONConstants.ANNOUNCEMENTS_KEY, getUriBuilder().path(ANNOUNCEMENTS).build().toString());
         }
@@ -95,6 +93,7 @@ public class RootResource extends AbstractResource {
             root.put(JSONConstants.BADGES_KEY, getUriBuilder().path(BADGES).build().toString());
         }
 
+        root.put(JSONConstants.SCHEMA, getUriBuilder().path(SCHEMA).build().toString());
         root.put(JSONConstants.PRIVACY_STATEMENTS, getUriBuilder().path(PRIVACY_STATEMENTS).build().toString());
         root.put(JSONConstants.TERMS_OF_USE_KEY, getUriBuilder().path(TERMS_OF_USE).build().toString());
         return root;
@@ -147,13 +146,11 @@ public class RootResource extends AbstractResource {
 
     @Path(TERMS_OF_USE)
     public TermsOfUseResource termsOfUse() {
-        checkRights(getRights().canSeeTermsOfUse());
         return getResourceFactory().createTermsOfUseResource();
     }
 
     @Path(SCHEMA)
     public JSONSchemaResource schemas() {
-        checkRights(getRights().canSeeSchema());
         return getResourceFactory().createSchemaResource();
     }
 

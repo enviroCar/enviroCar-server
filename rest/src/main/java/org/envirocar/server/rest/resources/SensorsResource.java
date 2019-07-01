@@ -46,8 +46,8 @@ import java.util.Set;
  * @author Jan Wirwahn <jan.wirwahn@wwu.de>
  */
 public class SensorsResource extends AbstractResource {
-    public static final String SENSOR = "{sensor}";
 
+    public static final String SENSOR = "{sensor}";
     private final User user;
 
     @AssistedInject
@@ -79,15 +79,13 @@ public class SensorsResource extends AbstractResource {
     }
 
     @POST
+    @Consumes({MediaTypes.SENSOR_CREATE})
+    @Schema(request = Schemas.SENSOR_CREATE)
     @Authenticated
     @HasAcceptedLatestLegalPolicies
-    @Schema(request = Schemas.SENSOR_CREATE)
-    @Consumes({MediaTypes.SENSOR_CREATE})
     public Response create(Sensor sensor) {
-        return Response.created(
-                getUriInfo().getAbsolutePathBuilder()
-                        .path(getDataService().createSensor(sensor).getIdentifier())
-                        .build()).build();
+        sensor = getDataService().createSensor(sensor);
+        return Response.created(getUriInfo().getAbsolutePathBuilder().path(sensor.getIdentifier()).build()).build();
     }
 
     @Path(SENSOR)

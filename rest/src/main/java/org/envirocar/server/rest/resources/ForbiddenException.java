@@ -14,14 +14,25 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.rest.rights;
+package org.envirocar.server.rest.resources;
 
-import org.envirocar.server.core.entities.TermsOfUseInstance;
+public class ForbiddenException extends RuntimeException {
+    public ForbiddenException() {
+    }
 
-public interface TermsOfUseRights {
+    public ForbiddenException(String message) {
+        super(message);
+    }
 
-	boolean canSeeTermsOfUse();
-	
-	boolean canSee(TermsOfUseInstance t);
-	
+    public ForbiddenException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public ForbiddenException(Throwable cause) {
+        super(cause);
+    }
+
+    protected ForbiddenException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
+    }
 }

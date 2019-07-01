@@ -23,10 +23,10 @@ import javax.ws.rs.ext.Provider;
 
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.entities.Tracks;
-import org.envirocar.server.rest.resources.RootResource;
-import org.envirocar.server.rest.resources.TracksResource;
 
 import com.google.inject.Inject;
+import org.envirocar.server.rest.resources.RootResource;
+import org.envirocar.server.rest.resources.TracksResource;
 
 /**
  * TODO JavaDoc

@@ -61,13 +61,8 @@ public class MeasurementsResource extends AbstractResource {
     @GET
     @Schema(response = Schemas.MEASUREMENTS)
     @Produces({MediaTypes.MEASUREMENTS, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
-    public Measurements get(
-            @QueryParam(RESTConstants.LIMIT) @DefaultValue("0") int limit,
-            @QueryParam(RESTConstants.PAGE) @DefaultValue("0") int page,
-            @QueryParam(RESTConstants.BBOX) BoundingBox bbox,
-            @QueryParam(RESTConstants.NEAR_POINT) NearPoint nearPoint)
-            throws BadRequestException {
-
+    public Measurements get(@QueryParam(RESTConstants.BBOX) BoundingBox bbox,
+                            @QueryParam(RESTConstants.NEAR_POINT) NearPoint nearPoint) throws BadRequestException {
         //check spatial filter
         SpatialFilter sf = null;
         if (bbox != null && nearPoint != null) {
@@ -75,8 +70,7 @@ public class MeasurementsResource extends AbstractResource {
         } else if (bbox != null) {
             sf = SpatialFilter.bbox(bbox.asPolygon(geometryFactory));
         } else if (nearPoint != null) {
-            sf = SpatialFilter.nearPoint(nearPoint.getPoint(),
-                    nearPoint.getDistance());
+            sf = SpatialFilter.nearPoint(nearPoint.getPoint(), nearPoint.getDistance());
         }
 
         return getDataService()
@@ -102,7 +96,7 @@ public class MeasurementsResource extends AbstractResource {
     }
 
     @Path(MEASUREMENT)
-    public MeasurementResource measurement(@PathParam("measurement") String id)
+    public MeasurementResource measurement(@javax.ws.rs.PathParam("measurement") String id)
             throws MeasurementNotFoundException {
         if (user != null) {
             checkRights(getRights().canSeeMeasurementsOf(user));

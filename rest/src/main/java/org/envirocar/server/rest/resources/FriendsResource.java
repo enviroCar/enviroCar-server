@@ -20,6 +20,7 @@ import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.entities.Users;
+import org.envirocar.server.core.exception.BadRequestException;
 import org.envirocar.server.core.exception.UserNotFoundException;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
@@ -29,7 +30,7 @@ import org.envirocar.server.rest.rights.HasAcceptedLatestLegalPolicies;
 import org.envirocar.server.rest.validation.Schema;
 
 import javax.ws.rs.*;
-import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.Response;
 
 /**
  * TODO JavaDoc
@@ -59,12 +60,11 @@ public class FriendsResource extends AbstractResource {
     @POST
     @Authenticated
     @HasAcceptedLatestLegalPolicies
-    @Schema(request = Schemas.USER_REF)
     @Consumes({MediaTypes.USER_REF})
+    @Schema(request = Schemas.USER_REF)
     public void add(UserReference friend) throws UserNotFoundException {
-        if (friend.getName() == null ||
-                friend.getName().equals(getCurrentUser().getName())) {
-            throw new WebApplicationException(Status.BAD_REQUEST);
+        if (friend.getName() == null || friend.getName().equals(getCurrentUser().getName())) {
+            throw new BadRequestException();
         }
         User f = getUserService().getUser(friend.getName());
         checkRights(getRights().canFriend(user, f));
@@ -96,10 +96,10 @@ public class FriendsResource extends AbstractResource {
 
     @POST
     @Path(DECLINE_FRIEND_REQUEST)
-    @Authenticated
-    @HasAcceptedLatestLegalPolicies
     @Schema(request = Schemas.USER_REF)
     @Consumes({MediaTypes.USER_REF})
+    @Authenticated
+    @HasAcceptedLatestLegalPolicies
     public void decline(UserReference friend) throws UserNotFoundException {
         User f = getUserService().getUser(friend.getName());
 

@@ -24,11 +24,11 @@ import org.envirocar.server.core.entities.Fuelings;
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.exception.BadRequestException;
 import org.envirocar.server.core.exception.FuelingNotFoundException;
-import org.envirocar.server.core.exception.UserNotFoundException;
 import org.envirocar.server.core.filter.FuelingFilter;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.auth.Authenticated;
+import org.envirocar.server.rest.resources.AbstractResource;
 import org.envirocar.server.rest.rights.HasAcceptedLatestLegalPolicies;
 import org.envirocar.server.rest.validation.Schema;
 
@@ -74,19 +74,15 @@ public class FuelingsResource extends AbstractResource {
     @GET
     @Path(FUELING)
     @Schema(response = Schemas.FUELING)
-    @Produces({MediaTypes.FUELING,
-            MediaTypes.XML_RDF,
-            MediaTypes.TURTLE,
-            MediaTypes.TURTLE_ALT})
-    public Fueling getFueling(@PathParam("id") String id)
-            throws FuelingNotFoundException {
+    @Produces({MediaTypes.FUELING, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
+    public Fueling getFueling(@PathParam("id") String id) throws FuelingNotFoundException {
         return getDataService().getFueling(user, id);
     }
 
     @DELETE
-    @HasAcceptedLatestLegalPolicies
     @Path(FUELING)
-    public void delete(@PathParam("id") String id) throws FuelingNotFoundException, UserNotFoundException {
+    @HasAcceptedLatestLegalPolicies
+    public void delete(@PathParam("id") String id) throws FuelingNotFoundException {
         Fueling fueling = getDataService().getFueling(user, id);
         checkRights(getRights().canDelete(fueling));
         getDataService().deleteFueling(fueling);

@@ -21,6 +21,7 @@ import com.google.inject.assistedinject.Assisted;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.rest.MediaTypes;
+import org.envirocar.server.rest.resources.AbstractResource;
 
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -36,9 +37,9 @@ import java.net.URI;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class AvatarResource extends AbstractResource {
-    private static final String GRAVATAR_BASE_URL = "https://secure.gravatar.com/avatar/";
     public static final String SIZE = "size";
     public static final String DEFAULT_SIZE = "80";
+    private static final String GRAVATAR_BASE_URL = "https://secure.gravatar.com/avatar/";
     private final User user;
 
     @Inject
@@ -48,7 +49,7 @@ public class AvatarResource extends AbstractResource {
 
     @GET
     @Produces({MediaTypes.IMAGE_JPEG})
-    public Response get(@QueryParam(SIZE) @DefaultValue(DEFAULT_SIZE) int size) {
+    public Response get(@DefaultValue(DEFAULT_SIZE) @QueryParam(SIZE) int size) {
         return Response.temporaryRedirect(getURI(user, size)).build();
     }
 

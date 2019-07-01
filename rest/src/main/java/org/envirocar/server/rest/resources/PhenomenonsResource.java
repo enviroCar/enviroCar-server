@@ -36,6 +36,7 @@ import javax.ws.rs.core.Response;
  * @author Jan Wirwahn <jan.wirwahn@wwu.de>
  */
 public class PhenomenonsResource extends AbstractResource {
+
     public static final String PHENOMENON = "{phenomenon}";
 
     @GET

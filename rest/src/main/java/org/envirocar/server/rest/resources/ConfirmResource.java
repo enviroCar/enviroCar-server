@@ -16,21 +16,21 @@
  */
 package org.envirocar.server.rest.resources;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
+import org.envirocar.server.core.entities.User;
+import org.envirocar.server.core.exception.BadRequestException;
+import org.envirocar.server.core.exception.ResourceNotFoundException;
+import org.envirocar.server.rest.auth.Anonymous;
+import org.envirocar.server.rest.resources.AbstractResource;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
-
-import org.envirocar.server.core.entities.User;
-import org.envirocar.server.core.exception.BadRequestException;
-import org.envirocar.server.core.exception.ResourceNotFoundException;
-import org.envirocar.server.rest.auth.Anonymous;
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 /**
  * TODO JavaDoc
@@ -44,7 +44,7 @@ public class ConfirmResource extends AbstractResource {
 
     @GET
     @Anonymous
-    @Path(ConfirmResource.CODE)
+    @Path(CODE)
     public Response confirm(@PathParam("code") String confirmationCode)
             throws BadRequestException, ResourceNotFoundException {
         User confirmed = getUserService().confirmUser(confirmationCode);
@@ -52,11 +52,10 @@ public class ConfirmResource extends AbstractResource {
         if (confirmed == null) {
             throw new ResourceNotFoundException(String.format("confirmation code %s not found", confirmationCode));
         }
-
         try {
             URI uri = UriBuilder.fromUri(APP)
                     .fragment("#!/login?username=" + URLEncoder
-                              .encode(confirmed.getName(), StandardCharsets.UTF_8.name()))
+                            .encode(confirmed.getName(), StandardCharsets.UTF_8.name()))
                     .build();
             return Response.seeOther(uri).build();
         } catch (UnsupportedEncodingException ex) {

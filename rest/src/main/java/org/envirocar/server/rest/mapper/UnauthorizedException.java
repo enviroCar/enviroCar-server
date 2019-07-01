@@ -14,23 +14,25 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.rest.resources;
+package org.envirocar.server.rest.mapper;
 
-import org.envirocar.server.core.entities.Badges;
-import org.envirocar.server.core.exception.BadRequestException;
-import org.envirocar.server.rest.MediaTypes;
-import org.envirocar.server.rest.Schemas;
-import org.envirocar.server.rest.resources.AbstractResource;
-import org.envirocar.server.rest.validation.Schema;
+public class UnauthorizedException extends RuntimeException {
+    public UnauthorizedException() {
+    }
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Produces;
+    public UnauthorizedException(String message) {
+        super(message);
+    }
 
-public class BadgesResource extends AbstractResource {
-    @GET
-    @Produces({MediaTypes.BADGES})
-    @Schema(response = Schemas.BADGES)
-    public Badges get() throws BadRequestException {
-        return getDataService().getBadges(getPagination());
+    public UnauthorizedException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public UnauthorizedException(Throwable cause) {
+        super(cause);
+    }
+
+    protected UnauthorizedException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
     }
 }

@@ -16,18 +16,22 @@
  */
 package org.envirocar.server.rest.resources;
 
-import java.awt.AlphaComposite;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.ResourceBundle;
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
+import org.envirocar.server.core.entities.Measurements;
+import org.envirocar.server.core.entities.Track;
+import org.envirocar.server.core.filter.MeasurementFilter;
+import org.envirocar.server.core.filter.StatisticsFilter;
+import org.envirocar.server.core.statistics.Statistic;
+import org.envirocar.server.core.statistics.Statistics;
+import org.envirocar.server.rest.MediaTypes;
+import org.envirocar.server.rest.mapper.InternalServerError;
+import org.envirocar.server.rest.resources.AbstractResource;
+import org.envirocar.server.rest.util.OSMTileRenderer;
+import org.envirocar.server.rest.util.TileRenderer;
+import org.joda.time.Period;
+import org.joda.time.format.PeriodFormatter;
+import org.joda.time.format.PeriodFormatterBuilder;
 
 import javax.imageio.ImageIO;
 import javax.ws.rs.GET;
@@ -37,24 +41,17 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-
-import org.envirocar.server.core.entities.Measurements;
-import org.envirocar.server.core.entities.Track;
-import org.envirocar.server.core.filter.MeasurementFilter;
-import org.envirocar.server.core.filter.StatisticsFilter;
-import org.envirocar.server.core.statistics.Statistic;
-import org.envirocar.server.core.statistics.Statistics;
-import org.envirocar.server.rest.MediaTypes;
-import org.envirocar.server.rest.util.OSMTileRenderer;
-import org.envirocar.server.rest.util.TileRenderer;
-import org.joda.time.Period;
-import org.joda.time.format.PeriodFormatter;
-import org.joda.time.format.PeriodFormatterBuilder;
-
-import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.ResourceBundle;
 
 public class ShareResource extends AbstractResource {
+    public static final String LOCALE = "{locale}";
     private static final String DETAIL_TIME = "time";
     private static final String DETAIL_MAX_SPEED = "maxspeed";
     private static final String DETAIL_AVG_SPEED = "avgspeed";
@@ -72,8 +69,6 @@ public class ShareResource extends AbstractResource {
     private static final String PHENOMENON_CALCULATED_MAF = "Calculated MAF";
     private static final String PHENOMENON_SPEED = "Speed";
     private static final String NA = "N/A";
-    public static final String TRACK = "{track}";
-    public static final String LOCALE = "{locale}";
     private static final String DEFAULT_LOCALE = "EN";
     private static final float ALPHA = 0.7f;
     private static final Font BOLD_FONT = new Font("Segoe UI Bold", Font.BOLD, 26);
@@ -135,7 +130,7 @@ public class ShareResource extends AbstractResource {
             }
 
         } catch (IOException e) {
-            throw new WebApplicationException(e, Status.INTERNAL_SERVER_ERROR);
+            throw new InternalServerError(e);
         }
     }
 
@@ -145,7 +140,6 @@ public class ShareResource extends AbstractResource {
      * @param old     The original image.
      * @param details The track details.
      * @param locale  The locale.
-     *
      * @return BufferedImage statistics drawn image
      */
     private BufferedImage process(BufferedImage old, Map<String, String> details, String locale) {
@@ -190,13 +184,11 @@ public class ShareResource extends AbstractResource {
     }
 
 
-
     /**
      * This method extracts statistics from statistics object into a HashMap
      *
      * @param track
      * @param statistics
-     *
      * @return HashMap which contains statistic name as the key and statistics value as the value
      */
     private Map<String, String> getDetails(Track track, Statistics statistics) {

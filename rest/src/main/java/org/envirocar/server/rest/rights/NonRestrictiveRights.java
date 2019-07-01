@@ -16,23 +16,22 @@
  */
 package org.envirocar.server.rest.rights;
 
-import javax.servlet.http.HttpServletRequest;
-import org.envirocar.server.core.entities.Fueling;
-
-import org.envirocar.server.core.entities.Group;
-import org.envirocar.server.core.entities.Measurement;
-import org.envirocar.server.core.entities.Phenomenon;
-import org.envirocar.server.core.entities.Sensor;
-import org.envirocar.server.core.entities.TermsOfUseInstance;
-import org.envirocar.server.core.entities.Track;
-import org.envirocar.server.core.entities.User;
+import org.envirocar.server.core.FriendService;
+import org.envirocar.server.core.GroupService;
+import org.envirocar.server.core.entities.*;
 
 /**
  * TODO JavaDoc
  *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class NonRestrictiveRights implements AccessRights {
+public class NonRestrictiveRights extends AbstractAccessRights {
+    public NonRestrictiveRights() {
+    }
+
+    public NonRestrictiveRights(User user, GroupService groupService, FriendService friendService) {
+        super(user, groupService, friendService);
+    }
 
     @Override
     public boolean isSelf(User user) {
@@ -425,21 +424,6 @@ public class NonRestrictiveRights implements AccessRights {
     }
 
     @Override
-    public boolean canSeeTermsOfUse() {
-        return true;
-    }
-
-    @Override
-    public boolean canSee(TermsOfUseInstance t) {
-        return true;
-    }
-
-    @Override
-    public boolean canSeeSchema() {
-        return true;
-    }
-
-    @Override
     public boolean canSeeAppVersionOf(Track track) {
         return true;
     }
@@ -465,7 +449,7 @@ public class NonRestrictiveRights implements AccessRights {
     }
 
     @Override
-    public boolean canAccessPasswordReset(HttpServletRequest request) {
+    public boolean canAccessPasswordReset() {
         return true;
     }
 

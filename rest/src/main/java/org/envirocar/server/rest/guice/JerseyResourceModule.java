@@ -46,11 +46,15 @@ import java.util.Set;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class JerseyResourceModule extends AbstractModule {
+
+    private static final String READ_ONLY_PROPERTY = "enviroCar.readOnly";
+
     @Override
     protected void configure() {
         bind(new TypeLiteral<Optional<Set<String>>>() {
         }).annotatedWith(Names.named(AbstractResource.ALLOWED_MAIL_ADDRESSES))
                 .toProvider(AddressProvider.class);
+
         bind(IllegalModificationExceptionMapper.class).in(Scopes.SINGLETON);
         bind(ResourceNotFoundExceptionMapper.class).in(Scopes.SINGLETON);
         bind(ValidationExceptionMapper.class).in(Scopes.SINGLETON);
@@ -81,8 +85,7 @@ public class JerseyResourceModule extends AbstractModule {
 
     private static boolean isReadOnly(Properties properties) {
         try {
-            return Boolean.parseBoolean(properties
-                    .getProperty("enviroCar.readOnly", "false"));
+            return Boolean.parseBoolean(properties.getProperty(READ_ONLY_PROPERTY, "false"));
         } catch (IllegalArgumentException e) {
             return false;
         }

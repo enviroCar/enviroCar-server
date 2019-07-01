@@ -34,7 +34,7 @@ public class PrivacyStatementsResource extends AbstractResource {
     public static final String PRIVACY_STATEMENT = "{id}";
 
     @GET
-    @Schema(response = Schemas.PRIVACY_STATEMENT)
+    @Schema(response = Schemas.PRIVACY_STATEMENTS)
     @Produces({MediaTypes.PRIVACY_STATEMENTS})
     public PrivacyStatements get() throws BadRequestException {
         return getDataService().getPrivacyStatements(getPagination());
@@ -42,9 +42,11 @@ public class PrivacyStatementsResource extends AbstractResource {
 
     @Path(PRIVACY_STATEMENT)
     public PrivacyStatementResource privacyStatement(@PathParam("id") String id) throws ResourceNotFoundException {
-        PrivacyStatement announcement = getDataService().getPrivacyStatement(id);
-        return getResourceFactory().createPrivacyStatementResource(announcement);
+        try {
+            PrivacyStatement privacyStatement = getDataService().getPrivacyStatement(id);
+            return getResourceFactory().createPrivacyStatementResource(privacyStatement);
+        } catch (ResourceNotFoundException ex) {
+            throw new RuntimeException("asdf", ex);
+        }
     }
-
-
 }

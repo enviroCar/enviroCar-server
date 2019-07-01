@@ -36,6 +36,7 @@ import javax.ws.rs.core.Response;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class UsersResource extends AbstractResource {
+
     public static final String USER = "{username}";
 
     @GET
@@ -52,10 +53,8 @@ public class UsersResource extends AbstractResource {
     @Consumes({MediaTypes.USER_CREATE})
     public Response create(User user) throws ValidationException, ResourceAlreadyExistException {
 //        checkMail(user);
-        return Response.created(
-                getUriInfo().getAbsolutePathBuilder()
-                        .path(getUserService().createUser(user).getName())
-                        .build()).build();
+        user = getUserService().createUser(user);
+        return Response.created(getUriInfo().getAbsolutePathBuilder().path(user.getName()).build()).build();
     }
 
     @Path(USER)

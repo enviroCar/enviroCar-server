@@ -40,7 +40,7 @@ import com.hp.hpl.jena.rdf.model.Model;
  *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-@Produces({ MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT })
+@Produces({MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
 public abstract class AbstractRDFMessageBodyWriter<T>
         implements MessageBodyWriter<T>, RDFEntityEncoder<T> {
     private final Class<T> classType;
@@ -56,8 +56,8 @@ public abstract class AbstractRDFMessageBodyWriter<T>
                                Annotation[] annotations, MediaType mediaType) {
         if (this.classType.isAssignableFrom(type)) {
             return mediaType.isCompatible(MediaTypes.XML_RDF_TYPE) ||
-                   mediaType.isCompatible(MediaTypes.TURTLE_TYPE) ||
-                   mediaType.isCompatible(MediaTypes.TURTLE_ALT_TYPE);
+                    mediaType.isCompatible(MediaTypes.TURTLE_TYPE) ||
+                    mediaType.isCompatible(MediaTypes.TURTLE_ALT_TYPE);
         } else {
             return false;
         }
@@ -66,8 +66,7 @@ public abstract class AbstractRDFMessageBodyWriter<T>
     @Override
     public void writeTo(T t, Class<?> c, Type gt, Annotation[] a, MediaType mt,
                         MultivaluedMap<String, Object> h,
-                        OutputStream out) throws IOException,
-                                                 WebApplicationException {
+                        OutputStream out) throws IOException {
         Model m = encodeRDF(t);
         m.setNsPrefix("xsd", "http://www.w3.org/2001/XMLSchema#");
         m.setNsPrefix("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
@@ -75,10 +74,8 @@ public abstract class AbstractRDFMessageBodyWriter<T>
         if (mt.isCompatible(MediaTypes.XML_RDF_TYPE)) {
             String base = uriInfo.get().getAbsolutePath().toASCIIString();
             m.write(out, "RDF/XML-ABBREV", base);
-        } else if (mt.isCompatible(MediaTypes.TURTLE_TYPE) ||
-                   mt.isCompatible(MediaTypes.TURTLE_ALT_TYPE)) {
-            String base = uriInfo.get().getBaseUri().toASCIIString();
-            m.write(out, "TTL", base);
+        } else if (mt.isCompatible(MediaTypes.TURTLE_TYPE) || mt.isCompatible(MediaTypes.TURTLE_ALT_TYPE)) {
+            m.write(out, "TTL", uriInfo.get().getBaseUri().toASCIIString());
         }
         out.flush();
     }

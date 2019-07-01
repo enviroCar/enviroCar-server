@@ -22,7 +22,6 @@ import org.envirocar.server.core.entities.Group;
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.entities.Users;
 import org.envirocar.server.core.exception.BadRequestException;
-import org.envirocar.server.core.exception.GroupNotFoundException;
 import org.envirocar.server.core.exception.UserNotFoundException;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
@@ -49,32 +48,25 @@ public class GroupMembersResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.USERS)
-    @Produces({MediaTypes.USERS,
-            MediaTypes.XML_RDF,
-            MediaTypes.TURTLE,
-            MediaTypes.TURTLE_ALT})
+    @Produces({MediaTypes.USERS, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
     public Users get() throws BadRequestException {
         checkRights(getRights().canSeeMembersOf(group));
-        return getGroupService()
-                .getGroupMembers(group, getPagination());
+        return getGroupService().getGroupMembers(group, getPagination());
     }
 
     @POST
     @Authenticated
     @HasAcceptedLatestLegalPolicies
-    @Schema(request = Schemas.USER_REF)
     @Consumes({MediaTypes.USER_REF})
-    public void add(UserReference user) throws UserNotFoundException,
-            GroupNotFoundException {
+    @Schema(request = Schemas.USER_REF)
+    public void add(UserReference user) throws UserNotFoundException {
         User u = getUserService().getUser(user.getName());
-        checkRights(getRights().isSelf(u) &&
-                getRights().canJoinGroup(group));
+        checkRights(getRights().isSelf(u) && getRights().canJoinGroup(group));
         getGroupService().addGroupMember(group, u);
     }
 
     @Path(MEMBER)
-    public GroupMemberResource member(@PathParam("member") String username)
-            throws UserNotFoundException {
+    public GroupMemberResource member(@PathParam("member") String username) throws UserNotFoundException {
         checkRights(getRights().canSeeMembersOf(group));
         User user = getGroupService().getGroupMember(group, username);
         checkRights(getRights().canSee(user));

@@ -16,15 +16,13 @@
  */
 package org.envirocar.server.rest.resources;
 
-import javax.ws.rs.DELETE;
-
-import org.envirocar.server.core.entities.User;
-import org.envirocar.server.core.exception.ResourceNotFoundException;
-import org.envirocar.server.rest.auth.Authenticated;
-
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
+import org.envirocar.server.core.entities.User;
+import org.envirocar.server.core.exception.ResourceNotFoundException;
 import org.envirocar.server.rest.rights.HasAcceptedLatestLegalPolicies;
+
+import javax.ws.rs.DELETE;
 
 /**
  * TODO JavaDoc
@@ -32,6 +30,7 @@ import org.envirocar.server.rest.rights.HasAcceptedLatestLegalPolicies;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class FriendResource extends UserResource {
+    public static final String DELETE_CONTENT = "deleteContent";
     private final User user;
 
     @Inject
@@ -42,9 +41,8 @@ public class FriendResource extends UserResource {
     }
 
     @DELETE
-    @Override
-    @Authenticated
     @HasAcceptedLatestLegalPolicies
+    @Override
     public void delete(boolean ignored) throws ResourceNotFoundException {
         checkRights(getRights().canUnfriend(user, getUser()));
         getFriendService().removeFriend(user, getUser());

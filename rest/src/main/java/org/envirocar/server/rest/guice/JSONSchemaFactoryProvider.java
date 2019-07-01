@@ -69,9 +69,7 @@ public class JSONSchemaFactoryProvider implements Provider<JsonSchemaFactory> {
         for (String schema : schemas) {
             try {
                 cfgb.preloadSchema(cache.get(schema));
-            } catch (ProcessingError ex) {
-                throw new ProvisionException("Error loading " + schema, ex);
-            } catch (ExecutionException ex) {
+            } catch (ProcessingError | ExecutionException ex) {
                 throw new ProvisionException("Error loading " + schema, ex);
             }
         }
@@ -82,8 +80,7 @@ public class JSONSchemaFactoryProvider implements Provider<JsonSchemaFactory> {
         Library modifiedV4 = DraftV4Library.get().thaw()
                 .addFormatAttribute("date", DateAttribute.getInstance())
                 .freeze();
-        ValidationConfigurationBuilder vcb = ValidationConfiguration
-                .newBuilder();
+        ValidationConfigurationBuilder vcb = ValidationConfiguration.newBuilder();
         JsonRef ref = JsonRef.fromURI(SchemaVersion.DRAFTV4.getLocation());
         /*
          * FIXME ugliest hack ever. consider to duplicate the v4 schema under a
@@ -98,20 +95,12 @@ public class JSONSchemaFactoryProvider implements Provider<JsonSchemaFactory> {
     protected void setLibrary(ValidationConfigurationBuilder vcb,
                               JsonRef ref, Library lib) {
         try {
-            Field librariesField = ValidationConfigurationBuilder.class
-                    .getDeclaredField("libraries");
+            Field librariesField = ValidationConfigurationBuilder.class.getDeclaredField("libraries");
             librariesField.setAccessible(true);
-            final Map<JsonRef, Library> libraries =
-                    (Map<JsonRef, Library>) librariesField.get(vcb);
+            final Map<JsonRef, Library> libraries = (Map<JsonRef, Library>) librariesField.get(vcb);
             libraries.put(ref, lib);
             librariesField.setAccessible(false);
-        } catch (NoSuchFieldException ex) {
-            throw new RuntimeException(ex);
-        } catch (SecurityException ex) {
-            throw new RuntimeException(ex);
-        } catch (IllegalArgumentException ex) {
-            throw new RuntimeException(ex);
-        } catch (IllegalAccessException ex) {
+        } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex) {
             throw new RuntimeException(ex);
         }
     }
@@ -119,18 +108,11 @@ public class JSONSchemaFactoryProvider implements Provider<JsonSchemaFactory> {
     protected void setDefaultLibrary(ValidationConfigurationBuilder vcb,
                                      Library lib) {
         try {
-            Field defaultLibraryField = ValidationConfigurationBuilder.class
-                    .getDeclaredField("defaultLibrary");
+            Field defaultLibraryField = ValidationConfigurationBuilder.class.getDeclaredField("defaultLibrary");
             defaultLibraryField.setAccessible(true);
             defaultLibraryField.set(vcb, lib);
             defaultLibraryField.setAccessible(false);
-        } catch (NoSuchFieldException ex) {
-            throw new RuntimeException(ex);
-        } catch (SecurityException ex) {
-            throw new RuntimeException(ex);
-        } catch (IllegalArgumentException ex) {
-            throw new RuntimeException(ex);
-        } catch (IllegalAccessException ex) {
+        } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex) {
             throw new RuntimeException(ex);
         }
     }

@@ -52,31 +52,26 @@ public class GroupsResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.GROUPS)
-    @Produces({MediaTypes.GROUPS,
-            MediaTypes.XML_RDF,
-            MediaTypes.TURTLE,
-            MediaTypes.TURTLE_ALT})
+    @Produces({MediaTypes.GROUPS, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
     public Groups get(@QueryParam(RESTConstants.SEARCH) String search) throws BadRequestException {
         if (user != null) {
             return getGroupService().getGroups(user, getPagination());
+        } else if (search != null && !search.trim().isEmpty()) {
+            return getGroupService().searchGroups(search, getPagination());
         } else {
-            if (search != null && !search.trim().isEmpty()) {
-                return getGroupService().searchGroups(search, getPagination());
-            } else {
-                return getGroupService().getGroups(getPagination());
-            }
+            return getGroupService().getGroups(getPagination());
         }
+
     }
 
     @POST
     @Authenticated
     @HasAcceptedLatestLegalPolicies
-    @Schema(request = Schemas.GROUP_CREATE)
     @Consumes({MediaTypes.GROUP_CREATE})
+    @Schema(request = Schemas.GROUP_CREATE)
     public Response createGroup(Group group) throws ResourceAlreadyExistException, ValidationException {
         Group g = getGroupService().createGroup(getCurrentUser(), group);
-        return Response.created(getUriInfo().getAbsolutePathBuilder().path(g
-                .getName()).build()).build();
+        return Response.created(getUriInfo().getAbsolutePathBuilder().path(g.getName()).build()).build();
     }
 
     @Path(GROUP)

@@ -431,21 +431,6 @@ public class AccessRightsImpl extends AbstractAccessRights {
     }
 
 	@Override
-	public boolean canSeeTermsOfUse() {
-		return true;
-	}
-
-	@Override
-	public boolean canSee(TermsOfUseInstance t) {
-		return true;
-	}
-
-    @Override
-    public boolean canSeeSchema() {
-        return true;
-    }
-
-	@Override
 	public boolean canSeeAppVersionOf(Track track) {
 		return true;
 	}
@@ -473,11 +458,7 @@ public class AccessRightsImpl extends AbstractAccessRights {
 	}
 
 	@Override
-	public boolean canAccessPasswordReset(HttpServletRequest request) {
-		/*
-		 * TODO: password reset requests should only be valid from enviroCar-www,
-		 * could be implemented via a shared secret (could scale on a cascaded setup)
-		 */
+	public boolean canAccessPasswordReset() {
 		return !isAuthenticated();
 	}
 

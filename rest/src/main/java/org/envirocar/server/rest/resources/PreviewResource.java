@@ -16,9 +16,16 @@
  */
 package org.envirocar.server.rest.resources;
 
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
+import org.envirocar.server.core.entities.Measurements;
+import org.envirocar.server.core.entities.Track;
+import org.envirocar.server.core.filter.MeasurementFilter;
+import org.envirocar.server.rest.MediaTypes;
+import org.envirocar.server.rest.mapper.InternalServerError;
+import org.envirocar.server.rest.resources.AbstractResource;
+import org.envirocar.server.rest.util.OSMTileRenderer;
+import org.envirocar.server.rest.util.TileRenderer;
 
 import javax.imageio.ImageIO;
 import javax.ws.rs.GET;
@@ -26,16 +33,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-
-import org.envirocar.server.core.entities.Measurements;
-import org.envirocar.server.core.entities.Track;
-import org.envirocar.server.core.filter.MeasurementFilter;
-import org.envirocar.server.rest.MediaTypes;
-import org.envirocar.server.rest.util.OSMTileRenderer;
-import org.envirocar.server.rest.util.TileRenderer;
-
-import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 public class PreviewResource extends AbstractResource {
     private final Track track;
@@ -66,7 +66,7 @@ public class PreviewResource extends AbstractResource {
                 return Response.ok(imageData).build();
             }
         } catch (IOException e) {
-            throw new WebApplicationException(e, Status.INTERNAL_SERVER_ERROR);
+            throw new InternalServerError(e);
         }
     }
 
