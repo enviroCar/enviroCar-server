@@ -16,21 +16,17 @@
  */
 package org.envirocar.server.rest.mapper;
 
-import org.envirocar.server.core.exception.ValidationException;
+import org.envirocar.server.rest.resources.ForbiddenException;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.Provider;
 
-/**
- * TODO JavaDoc
- *
- * @author Christian Autermann <autermann@uni-muenster.de>
- */
 @Provider
-public class ValidationExceptionMapper extends AbstractExceptionMapper<ValidationException> {
+public class ForbiddenExceptionMapper extends AbstractExceptionMapper<ForbiddenException> {
     @Override
-    protected Response.StatusType getStatus(ValidationException exception) {
-        return Status.BAD_REQUEST;
+    protected Response.StatusType getStatus(ForbiddenException exception) {
+        return Status.FORBIDDEN;
     }
 }
+

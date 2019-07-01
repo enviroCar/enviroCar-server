@@ -16,14 +16,12 @@
  */
 package org.envirocar.server.rest;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response.Status;
-
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Polygon;
+import org.envirocar.server.core.exception.BadRequestException;
+
+import static com.google.common.base.Preconditions.checkArgument;
 
 /**
  * TODO JavaDoc
@@ -49,12 +47,12 @@ public class BoundingBox {
     }
 
     public Coordinate[] asCoordinates() {
-        return new Coordinate[] {
-            lowerLeft(),
-            lowerRight(),
-            upperRight(),
-            upperLeft(),
-            lowerLeft()
+        return new Coordinate[]{
+                lowerLeft(),
+                lowerRight(),
+                upperRight(),
+                upperLeft(),
+                lowerLeft()
         };
     }
 
@@ -81,7 +79,7 @@ public class BoundingBox {
     public static BoundingBox valueOf(String bbox) {
         final String[] coords = bbox.split(",");
         if (coords.length != 4) {
-            throw new WebApplicationException(Status.BAD_REQUEST);
+            throw new BadRequestException("invalid number of coordinates");
         }
         try {
             double minx = Double.parseDouble(coords[0]);
@@ -89,26 +87,20 @@ public class BoundingBox {
             double maxx = Double.parseDouble(coords[2]);
             double maxy = Double.parseDouble(coords[3]);
             return new BoundingBox(minx, miny, maxx, maxy);
-        } catch (NumberFormatException e) {
-            throw new WebApplicationException(e, Status.BAD_REQUEST);
         } catch (IllegalArgumentException e) {
-            throw new WebApplicationException(e, Status.BAD_REQUEST);
+            throw new BadRequestException(e);
         }
     }
 
     private void validate(double miny, double maxy, double minx, double maxx) {
-        checkArgument(Double.compare(miny, MAX_Y) <= 0 &&
-                      Double.compare(miny, MIN_Y) >= 0,
-                      "Not in bounds (%s <= val <= %s)", MIN_Y, MAX_Y);
-        checkArgument(Double.compare(maxy, MAX_Y) <= 0 &&
-                      Double.compare(maxy, MIN_Y) >= 0,
-                      "Not in bounds (%s <= val <= %s)", MIN_Y, MAX_Y);
-        checkArgument(Double.compare(minx, MAX_X) <= 0 &&
-                      Double.compare(minx, MIN_X) >= 0,
-                      "Not in bounds (%s <= val <= %s)", MIN_X, MAX_X);
-        checkArgument(Double.compare(maxx, MAX_X) <= 0 &&
-                      Double.compare(maxx, MIN_X) >= 0,
-                      "Not in bounds (%s <= val <= %s)", MIN_X, MAX_X);
+        checkArgument(Double.compare(miny, MAX_Y) <= 0 && Double.compare(miny, MIN_Y) >= 0,
+                "Not in bounds (%s <= val <= %s)", MIN_Y, MAX_Y);
+        checkArgument(Double.compare(maxy, MAX_Y) <= 0 && Double.compare(maxy, MIN_Y) >= 0,
+                "Not in bounds (%s <= val <= %s)", MIN_Y, MAX_Y);
+        checkArgument(Double.compare(minx, MAX_X) <= 0 && Double.compare(minx, MIN_X) >= 0,
+                "Not in bounds (%s <= val <= %s)", MIN_X, MAX_X);
+        checkArgument(Double.compare(maxx, MAX_X) <= 0 && Double.compare(maxx, MIN_X) >= 0,
+                "Not in bounds (%s <= val <= %s)", MIN_X, MAX_X);
         checkArgument(Double.compare(minx, maxx) < 0, "maxx <= minx");
         checkArgument(Double.compare(miny, maxy) < 0, "maxy <= miny");
     }

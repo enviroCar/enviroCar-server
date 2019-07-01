@@ -85,7 +85,7 @@ public class JSONSchemaResource extends AbstractResource {
         try {
             return cache.get(schemaPath);
         } catch (ExecutionException ex) {
-            throw new WebApplicationException(ex);
+            throw new InternalServerError(ex);
         }
     }
 

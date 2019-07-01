@@ -23,12 +23,9 @@ import javax.ws.rs.ext.Provider;
 
 import org.envirocar.server.core.entities.Fueling;
 import org.envirocar.server.core.entities.Fuelings;
-import org.envirocar.server.rest.resources.FuelingsResource;
-import org.envirocar.server.rest.resources.RootResource;
-import org.envirocar.server.rest.resources.UserResource;
-import org.envirocar.server.rest.resources.UsersResource;
 
 import com.google.inject.Inject;
+import org.envirocar.server.rest.resources.*;
 
 /**
  * RDF encoder for {@link Fuelings}.

@@ -16,13 +16,16 @@
  */
 package org.envirocar.server.rest.encoding.json;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.envirocar.server.rest.JSONConstants;
-import org.envirocar.server.rest.mapper.ErrorMessage;
 import org.envirocar.server.rest.rights.AccessRights;
+import org.envirocar.server.rest.util.ErrorMessage;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
+import java.util.*;
 
 @Provider
 public class ErrorMessageJSONEncoder extends AbstractJSONEntityEncoder<ErrorMessage> {
@@ -33,10 +36,100 @@ public class ErrorMessageJSONEncoder extends AbstractJSONEntityEncoder<ErrorMess
 
     @Override
     public ObjectNode encodeJSON(ErrorMessage errorMessage, AccessRights rights, MediaType mt) {
-        return getJsonFactory().objectNode()
-                .put(JSONConstants.STATUS_CODE, errorMessage.getStatus().getStatusCode())
-                .put(JSONConstants.REASON_PHRASE, errorMessage.getStatus().getReasonPhrase())
-                .put(JSONConstants.MESSAGE, errorMessage.getMessage())
-                .put(JSONConstants.DETAILS, errorMessage.getDetails());
+        ObjectNode node = getJsonFactory().objectNode();
+        node.put(JSONConstants.STATUS_CODE, errorMessage.getStatus().getStatusCode());
+        node.put(JSONConstants.REASON_PHRASE, errorMessage.getStatus().getReasonPhrase());
+        if (errorMessage.getMessage() != null) {
+            node.put(JSONConstants.MESSAGE, errorMessage.getMessage());
+        }
+        if (errorMessage.getDetails() != null) {
+            node.set(JSONConstants.DETAILS, errorMessage.getDetails());
+        }
+        if (errorMessage.getThrowable() != null) {
+            node.set(JSONConstants.STACK_TRACE, encodeStackTrace(errorMessage.getThrowable()));
+        }
+        return node;
     }
+
+    private ObjectNode encodeStackTrace(Throwable t) {
+        Set<Throwable> dejaVu = Collections.newSetFromMap(new IdentityHashMap<>());
+        dejaVu.add(t);
+        ObjectNode throwableNode = getJsonFactory().objectNode();
+
+        throwableNode.put(JSONConstants.TYPE_KEY, t.getClass().getName());
+        if (t.getMessage() != null) {
+            throwableNode.put(JSONConstants.MESSAGE, t.getMessage());
+        }
+
+        StackTraceElement[] trace = t.getStackTrace();
+        if (trace.length > 0) {
+            ArrayNode at = throwableNode.putArray(JSONConstants.AT);
+            Arrays.stream(trace)
+                    .map(this::encodeStackTraceElement)
+                    .forEach(at::add);
+        }
+
+        Throwable[] suppressed = t.getSuppressed();
+        if (suppressed.length > 0) {
+            ArrayNode suppressedNode = throwableNode.putArray(JSONConstants.SUPPRESSED);
+            Arrays.stream(suppressed)
+                    .map(se -> encodeEnclosedStackTrace(se, trace, dejaVu))
+                    .forEach(suppressedNode::add);
+        }
+        Optional.ofNullable(t.getCause())
+                .map(cause -> encodeEnclosedStackTrace(cause, trace, dejaVu))
+                .ifPresent(cause -> throwableNode.set(JSONConstants.CAUSED_BY, cause));
+        return throwableNode;
+    }
+
+    /**
+     * Print our stack trace as an enclosed exception for the specified
+     * stack trace.
+     */
+    private JsonNode encodeEnclosedStackTrace(Throwable t, StackTraceElement[] enclosingTrace, Set<Throwable> dejaVu) {
+
+        ObjectNode throwableNode = getJsonFactory().objectNode();
+        throwableNode.put(JSONConstants.TYPE_KEY, t.getClass().getName());
+        if (t.getMessage() != null) {
+            throwableNode.put(JSONConstants.MESSAGE, t.getMessage());
+        }
+
+        if (dejaVu.contains(t)) {
+            ObjectNode circularNode = getJsonFactory().objectNode();
+            circularNode.set(JSONConstants.CIRCULAR_REFERENCE, throwableNode);
+            return circularNode;
+        }
+        dejaVu.add(t);
+
+        StackTraceElement[] trace = t.getStackTrace();
+        int m = trace.length - 1;
+        int n = enclosingTrace.length - 1;
+        while (m >= 0 && n >= 0 && trace[m].equals(enclosingTrace[n])) {
+            m--;
+            n--;
+        }
+        int common = trace.length - 1 - m;
+        ArrayNode at = throwableNode.putArray(JSONConstants.AT);
+        Arrays.stream(trace, 0, m + 1).map(this::encodeStackTraceElement).forEach(at::add);
+        if (common > 0) {
+            at.add(String.format("... %d more", common));
+        }
+
+        Throwable[] suppressed = t.getSuppressed();
+        if (suppressed.length > 0) {
+            ArrayNode suppressedNode = throwableNode.putArray(JSONConstants.SUPPRESSED);
+            Arrays.stream(suppressed).map(se -> encodeEnclosedStackTrace(se, trace, dejaVu))
+                    .forEach(suppressedNode::add);
+        }
+        Optional.ofNullable(t.getCause())
+                .map(cause -> encodeEnclosedStackTrace(cause, trace, dejaVu))
+                .ifPresent(cause -> throwableNode.set(JSONConstants.CAUSED_BY, cause));
+        return throwableNode;
+    }
+
+    private JsonNode encodeStackTraceElement(StackTraceElement element) {
+        return getJsonFactory().textNode(element.toString());
+    }
+
+
 }

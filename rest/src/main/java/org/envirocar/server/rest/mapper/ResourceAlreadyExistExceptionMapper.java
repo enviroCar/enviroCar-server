@@ -16,10 +16,11 @@
  */
 package org.envirocar.server.rest.mapper;
 
+import org.envirocar.server.core.exception.ResourceAlreadyExistException;
+
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.Provider;
-
-import org.envirocar.server.core.exception.ResourceAlreadyExistException;
 
 /**
  * TODO JavaDoc
@@ -28,7 +29,9 @@ import org.envirocar.server.core.exception.ResourceAlreadyExistException;
  */
 @Provider
 public class ResourceAlreadyExistExceptionMapper extends AbstractExceptionMapper<ResourceAlreadyExistException> {
-    public ResourceAlreadyExistExceptionMapper() {
-        super(Status.CONFLICT);
+
+    @Override
+    protected Response.StatusType getStatus(ResourceAlreadyExistException exception) {
+        return Status.CONFLICT;
     }
 }

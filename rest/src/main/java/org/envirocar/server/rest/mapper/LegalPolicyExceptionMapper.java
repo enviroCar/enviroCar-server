@@ -17,6 +17,7 @@
 package org.envirocar.server.rest.mapper;
 
 import org.envirocar.server.core.validation.LegalPolicyException;
+import org.envirocar.server.rest.util.CustomStatus;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
@@ -32,7 +33,8 @@ public class LegalPolicyExceptionMapper extends AbstractExceptionMapper<LegalPol
     private static final Response.StatusType UNAVAILABLE_FOR_LEGAL_REASONS
             = new CustomStatus(451, "Unavailable For Legal Reasons");
 
-    public LegalPolicyExceptionMapper() {
-        super(UNAVAILABLE_FOR_LEGAL_REASONS);
+    @Override
+    protected Response.StatusType getStatus(LegalPolicyException exception) {
+        return UNAVAILABLE_FOR_LEGAL_REASONS;
     }
 }

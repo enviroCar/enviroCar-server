@@ -14,30 +14,38 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.rest.mapper;
+package org.envirocar.server.rest.util;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import org.envirocar.server.rest.validation.JSONValidationException;
 
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-import javax.ws.rs.ext.Provider;
 
-/**
- * TODO JavaDoc
- *
- * @author Christian Autermann <autermann@uni-muenster.de>
- */
-@Provider
-public class JsonValidationExceptionMapper extends AbstractExceptionMapper<JSONValidationException> {
+public class ErrorMessage {
+    private final Response.StatusType code;
+    private final String message;
+    private final JsonNode details;
+    private Throwable exception;
 
-    @Override
-    protected Response.StatusType getStatus(JSONValidationException exception) {
-        return Status.BAD_REQUEST;
+    public ErrorMessage(Response.StatusType code, String message, JsonNode details, Throwable exception) {
+        this.code = code;
+        this.message = message;
+        this.details = details;
+        this.exception = exception;
     }
 
-    @Override
-    protected JsonNode getDetails(JSONValidationException exception) {
-        return exception.getError();
+    public Response.StatusType getStatus() {
+        return code;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public JsonNode getDetails() {
+        return details;
+    }
+
+    public Throwable getThrowable() {
+        return exception;
     }
 }

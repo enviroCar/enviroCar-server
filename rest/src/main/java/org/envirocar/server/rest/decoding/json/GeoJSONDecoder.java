@@ -25,6 +25,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
 import com.vividsolutions.jts.geom.Geometry;
 
+import org.envirocar.server.core.exception.BadRequestException;
 import org.envirocar.server.core.exception.GeometryConverterException;
 import org.envirocar.server.rest.util.GeoJSON;
 
@@ -48,7 +49,7 @@ public class GeoJSONDecoder extends AbstractJSONEntityDecoder<Geometry> {
         try {
             return geoJSON.decode(j);
         } catch (GeometryConverterException ex) {
-            throw new WebApplicationException(ex, Status.BAD_REQUEST);
+            throw new BadRequestException(ex);
         }
     }
 }

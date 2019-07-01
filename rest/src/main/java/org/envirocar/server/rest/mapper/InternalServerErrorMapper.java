@@ -16,21 +16,15 @@
  */
 package org.envirocar.server.rest.mapper;
 
-import org.envirocar.server.core.exception.ValidationException;
-
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.Provider;
 
-/**
- * TODO JavaDoc
- *
- * @author Christian Autermann <autermann@uni-muenster.de>
- */
 @Provider
-public class ValidationExceptionMapper extends AbstractExceptionMapper<ValidationException> {
+public class InternalServerErrorMapper extends AbstractExceptionMapper<InternalServerError> {
     @Override
-    protected Response.StatusType getStatus(ValidationException exception) {
-        return Status.BAD_REQUEST;
+    protected Response.StatusType getStatus(InternalServerError exception) {
+        return Status.INTERNAL_SERVER_ERROR;
     }
 }
+

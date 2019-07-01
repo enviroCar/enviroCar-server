@@ -16,19 +16,18 @@
  */
 package org.envirocar.server.rest.auth;
 
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.Response.Status;
-
-import org.envirocar.server.core.UserService;
-import org.envirocar.server.core.entities.User;
-import org.envirocar.server.core.exception.UserNotFoundException;
-import org.envirocar.server.core.util.PasswordEncoder;
-
 import com.google.inject.Inject;
 import com.sun.jersey.core.util.Base64;
 import com.sun.jersey.spi.container.ContainerRequest;
 import com.sun.jersey.spi.container.ContainerRequestFilter;
+import org.envirocar.server.core.UserService;
+import org.envirocar.server.core.entities.User;
+import org.envirocar.server.core.exception.BadRequestException;
+import org.envirocar.server.core.exception.UserNotFoundException;
+import org.envirocar.server.core.util.PasswordEncoder;
+import org.envirocar.server.rest.resources.ForbiddenException;
+
+import javax.ws.rs.core.HttpHeaders;
 
 /**
  * TODO JavaDoc
@@ -55,7 +54,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         if (username == null) {
             if (auth != null) {
                 if (!auth.startsWith("Basic ")) {
-                    throw new WebApplicationException(Status.BAD_REQUEST);
+                    throw new BadRequestException("unsupported authorization scheme");
                 }
                 String decoded = new String(Base64.decode(auth
                         .replaceFirst("Basic ", "")));
@@ -64,25 +63,25 @@ public class AuthenticationFilter implements ContainerRequestFilter {
                     username = decoded.substring(0, sep);
                     token = decoded.substring(sep + 1);
                 } else {
-                    throw new WebApplicationException(Status.BAD_REQUEST);
+                    throw new BadRequestException("invalid HTTP basic token");
                 }
             }
         }
         if (username != null) {
             if (username.isEmpty() || token == null || token.isEmpty()) {
-                throw new WebApplicationException(Status.BAD_REQUEST);
+                throw new BadRequestException("invalid username or password");
             }
             try {
                 User user = service.getUser(username);
                 if (passwordEncoder.verify(token, user.getToken())) {
-                    request.setSecurityContext(
-                            new SecurityContextImpl(user, request.isSecure()));
-                } else {
-                    throw new WebApplicationException(Status.FORBIDDEN);
+                    request.setSecurityContext(new SecurityContextImpl(user, request.isSecure()));
                 }
-            } catch (UserNotFoundException ex) {
-                throw new WebApplicationException(ex, Status.FORBIDDEN);
+            } catch (UserNotFoundException ignored) {
             }
+            if (request.getUserPrincipal() == null) {
+                throw new ForbiddenException("invalid username or password");
+            }
+
         }
         return request;
     }

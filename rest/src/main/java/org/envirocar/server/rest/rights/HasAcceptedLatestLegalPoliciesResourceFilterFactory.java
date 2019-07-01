@@ -52,10 +52,9 @@ public class HasAcceptedLatestLegalPoliciesResourceFilterFactory implements Reso
         if (annotation != null) {
             PolicyType[] policyTypes = annotation.value();
             if (policyTypes.length > 0) {
-                LOG.warn("No policies given for method {}", am);
+                return Collections.singletonList(new LegalPolicyResourceFilter(this.validator, policyTypes));
             } else {
-                ResourceFilter filter = new LegalPolicyResourceFilter(this.validator, policyTypes);
-                return Collections.singletonList(filter);
+                LOG.warn("No policies given for method {}", am);
             }
         }
         return Collections.emptyList();

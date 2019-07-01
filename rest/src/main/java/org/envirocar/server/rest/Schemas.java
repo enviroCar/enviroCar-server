@@ -69,6 +69,7 @@ public class Schemas {
     public static final String USERSTATISTIC = PREFIX + "userstatistic.json#";
     public static final String PRIVACY_STATEMENT = PREFIX + "privacy-statement.json#";
     public static final String PRIVACY_STATEMENTS = PREFIX + "privacy-statements.json#";
+    public static final String EXCEPTION = PREFIX + "exception.json#";
 
     private Schemas() {
     }

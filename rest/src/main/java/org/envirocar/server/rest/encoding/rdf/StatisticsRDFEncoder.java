@@ -16,22 +16,19 @@
  */
 package org.envirocar.server.rest.encoding.rdf;
 
-import java.util.Set;
-
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response.Status;
-import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
-
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.statistics.Statistic;
 import org.envirocar.server.core.statistics.Statistics;
+import org.envirocar.server.rest.mapper.InternalServerError;
 import org.envirocar.server.rest.resources.StatisticsResource;
 
-import com.google.inject.Inject;
-import com.google.inject.Provider;
+import javax.ws.rs.core.UriBuilder;
+import javax.ws.rs.core.UriInfo;
+import java.util.Set;
 
 /**
  * TODO JavaDoc
@@ -53,20 +50,13 @@ public class StatisticsRDFEncoder extends AbstractCollectionRDFEntityEncoder<Sta
     protected String getURI(Statistic t,
                             com.google.inject.Provider<UriBuilder> builder) {
         Object resource = uriInfo.get().getMatchedResources().get(0);
-
-        User user = null;
-        Track track = null;
-        Sensor sensor = null;
-
-        if (resource instanceof StatisticsResource) {
-            StatisticsResource sr = (StatisticsResource) resource;
-            user = sr.getUser();
-            track = sr.getTrack();
-            sensor = sr.getSensor();
-        } else {
-            throw new WebApplicationException(Status.INTERNAL_SERVER_ERROR);
+        if (!(resource instanceof StatisticsResource)) {
+            throw new InternalServerError();
         }
-        return StatisticRDFEncoder
-                .build(track, user, sensor, t.getPhenomenon(), builder);
+        StatisticsResource sr = (StatisticsResource) resource;
+        User user = sr.getUser();
+        Track track = sr.getTrack();
+        Sensor sensor = sr.getSensor();
+        return StatisticRDFEncoder.build(track, user, sensor, t.getPhenomenon(), builder);
     }
 }

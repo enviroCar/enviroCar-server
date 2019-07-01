@@ -42,11 +42,7 @@ public class PrivacyStatementsResource extends AbstractResource {
 
     @Path(PRIVACY_STATEMENT)
     public PrivacyStatementResource privacyStatement(@PathParam("id") String id) throws ResourceNotFoundException {
-        try {
-            PrivacyStatement privacyStatement = getDataService().getPrivacyStatement(id);
-            return getResourceFactory().createPrivacyStatementResource(privacyStatement);
-        } catch (ResourceNotFoundException ex) {
-            throw new RuntimeException("asdf", ex);
-        }
+        PrivacyStatement privacyStatement = getDataService().getPrivacyStatement(id);
+        return getResourceFactory().createPrivacyStatementResource(privacyStatement);
     }
 }

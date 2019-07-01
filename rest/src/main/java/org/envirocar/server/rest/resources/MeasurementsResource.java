@@ -96,7 +96,7 @@ public class MeasurementsResource extends AbstractResource {
     }
 
     @Path(MEASUREMENT)
-    public MeasurementResource measurement(@javax.ws.rs.PathParam("measurement") String id)
+    public MeasurementResource measurement(@PathParam("measurement") String id)
             throws MeasurementNotFoundException {
         if (user != null) {
             checkRights(getRights().canSeeMeasurementsOf(user));

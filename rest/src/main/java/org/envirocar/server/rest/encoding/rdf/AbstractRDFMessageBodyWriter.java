@@ -16,24 +16,21 @@
  */
 package org.envirocar.server.rest.encoding.rdf;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Type;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+import com.hp.hpl.jena.rdf.model.Model;
+import org.envirocar.server.rest.MediaTypes;
+import org.envirocar.server.rest.encoding.RDFEntityEncoder;
 
 import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.ext.MessageBodyWriter;
-
-import org.envirocar.server.rest.MediaTypes;
-import org.envirocar.server.rest.encoding.RDFEntityEncoder;
-
-import com.google.inject.Inject;
-import com.google.inject.Provider;
-import com.hp.hpl.jena.rdf.model.Model;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
 
 /**
  * TODO JavaDoc

@@ -25,10 +25,7 @@ import org.envirocar.server.core.entities.Groups;
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.entities.Users;
 import org.envirocar.server.rest.encoding.rdf.RDFLinker;
-import org.envirocar.server.rest.resources.GroupsResource;
-import org.envirocar.server.rest.resources.RootResource;
-import org.envirocar.server.rest.resources.UserResource;
-import org.envirocar.server.rest.resources.UsersResource;
+import org.envirocar.server.rest.resources.*;
 import org.envirocar.server.rest.rights.AccessRights;
 
 import com.google.inject.Inject;
@@ -92,10 +89,8 @@ public class UserFOAFLinker implements RDFLinker<User> {
                     .path(RootResource.USERS)
                     .path(UsersResource.USER);
             for (User f : friends) {
-                String friendURI = userURIBuilder
-                        .build(f.getName()).toASCIIString();
-                p.addProperty(FOAF.knows, m
-                        .createResource(friendURI, FOAF.Person));
+                String friendURI = userURIBuilder.build(f.getName()).toASCIIString();
+                p.addProperty(FOAF.knows, m.createResource(friendURI, FOAF.Person));
             }
         }
         if (rights.canSeeGroupsOf(t)) {

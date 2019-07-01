@@ -16,20 +16,17 @@
  */
 package org.envirocar.server.rest.encoding.json;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response.Status;
-import javax.ws.rs.ext.Provider;
-
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 import com.vividsolutions.jts.geom.Geometry;
-
 import org.envirocar.server.core.exception.GeometryConverterException;
+import org.envirocar.server.rest.mapper.InternalServerError;
 import org.envirocar.server.rest.rights.AccessRights;
-
 import org.envirocar.server.rest.util.GeoJSON;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.Provider;
 
 /**
  * TODO JavaDoc
@@ -52,7 +49,7 @@ public class GeometryJSONEncoder extends AbstractJSONEntityEncoder<Geometry> {
         try {
             return geoJSON.encode(t);
         } catch (GeometryConverterException ex) {
-            throw new WebApplicationException(ex, Status.INTERNAL_SERVER_ERROR);
+            throw new InternalServerError(ex);
         }
     }
 }

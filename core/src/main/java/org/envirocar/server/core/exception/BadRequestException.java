@@ -16,15 +16,23 @@
  */
 package org.envirocar.server.core.exception;
 
-public class BadRequestException extends Exception {
+public class BadRequestException extends RuntimeException {
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    public BadRequestException() {
+    }
 
-	public BadRequestException(String string) {
-		super(string);
-	}
+    public BadRequestException(String message) {
+        super(message);
+    }
+
+    public BadRequestException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public BadRequestException(Throwable cause) {
+        super(cause);
+    }
+
 
 }

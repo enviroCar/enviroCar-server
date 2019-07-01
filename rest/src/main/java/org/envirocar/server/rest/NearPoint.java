@@ -16,21 +16,14 @@
  */
 package org.envirocar.server.rest;
 
-import java.util.Objects;
-
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response.Status;
-
 import com.google.common.base.Preconditions;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Point;
+import org.envirocar.server.core.exception.BadRequestException;
 
 /**
- *
- *
  * @author staschc
- *
  */
 public class NearPoint {
 
@@ -39,7 +32,7 @@ public class NearPoint {
 
     public NearPoint(Point point, double distance) {
         Preconditions.checkNotNull(point);
-        Preconditions.checkArgument(distance>0);
+        Preconditions.checkArgument(distance > 0);
         this.point = point;
         this.distance = distance;
     }
@@ -55,7 +48,7 @@ public class NearPoint {
     public static NearPoint valueOf(String string) {
         final String[] values = string.split(",");
         if (values.length != 3) {
-            throw new WebApplicationException(Status.BAD_REQUEST);
+            throw new BadRequestException("syntax: x,y,distance");
         }
         try {
             double x = Double.parseDouble(values[0]);
@@ -63,10 +56,8 @@ public class NearPoint {
             double distance = Double.parseDouble(values[2]);
             Point p = new GeometryFactory().createPoint(new Coordinate(x, y));
             return new NearPoint(p, distance);
-        } catch (NumberFormatException e) {
-            throw new WebApplicationException(e, Status.BAD_REQUEST);
         } catch (IllegalArgumentException e) {
-            throw new WebApplicationException(e, Status.BAD_REQUEST);
+            throw new BadRequestException(e);
         }
     }
 

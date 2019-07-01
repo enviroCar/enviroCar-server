@@ -16,22 +16,21 @@
  */
 package org.envirocar.server;
 
-import static org.envirocar.server.matchers.JerseyMatchers.hasProperty;
-import static org.envirocar.server.matchers.JerseyMatchers.hasStatus;
-import static org.envirocar.server.matchers.JerseyMatchers.isCompatible;
-import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.Assert.assertThat;
-
-import javax.ws.rs.core.MediaType;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.ClientResponse.Status;
 import org.envirocar.server.rest.JSONConstants;
 import org.junit.Test;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.ClientResponse.Status;
+import javax.ws.rs.core.MediaType;
+
+import static org.envirocar.server.matchers.JerseyMatchers.hasProperty;
+import static org.envirocar.server.matchers.JerseyMatchers.*;
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.assertThat;
 
 /**
  * TODO JavaDoc

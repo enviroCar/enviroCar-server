@@ -126,4 +126,6 @@ public interface MediaTypes {
     MediaType PRIVACY_STATEMENTS_TYPE = MediaType.valueOf(PRIVACY_STATEMENTS);
     String PRIVACY_STATEMENT = "application/json; schema=\"" + Schemas.PRIVACY_STATEMENT + "\"";
     MediaType PRIVACY_STATEMENT_TYPE = MediaType.valueOf(PRIVACY_STATEMENT);
+    String EXCEPTION = "application/json; schema=\"" + Schemas.EXCEPTION + "\"";
+    MediaType EXCEPTION_TYPE = MediaType.valueOf(EXCEPTION);
 }

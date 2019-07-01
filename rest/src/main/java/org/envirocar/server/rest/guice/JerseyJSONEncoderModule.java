@@ -28,7 +28,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
 import com.google.inject.TypeLiteral;
 import com.vividsolutions.jts.geom.Geometry;
-import org.envirocar.server.rest.mapper.ErrorMessage;
+import org.envirocar.server.rest.util.ErrorMessage;
 
 /**
  * TODO JavaDoc

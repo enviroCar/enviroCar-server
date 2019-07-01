@@ -16,21 +16,24 @@
  */
 package org.envirocar.server.rest.mapper;
 
-import org.envirocar.server.core.exception.ValidationException;
 
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.Provider;
+import java.util.Collections;
+import java.util.Map;
 
-/**
- * TODO JavaDoc
- *
- * @author Christian Autermann <autermann@uni-muenster.de>
- */
 @Provider
-public class ValidationExceptionMapper extends AbstractExceptionMapper<ValidationException> {
+public class UnauthorizedExceptionMapper extends AbstractExceptionMapper<UnauthorizedException> {
+
     @Override
-    protected Response.StatusType getStatus(ValidationException exception) {
-        return Status.BAD_REQUEST;
+    protected Map<String, String> getAdditionalHeaders() {
+        return Collections.singletonMap(HttpHeaders.WWW_AUTHENTICATE, "Basic");
+    }
+
+    @Override
+    protected Response.StatusType getStatus(UnauthorizedException exception) {
+        return Status.UNAUTHORIZED;
     }
 }

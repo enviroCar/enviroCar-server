@@ -16,21 +16,18 @@
  */
 package org.envirocar.server.rest.decoding.json;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response.Status;
-import javax.ws.rs.ext.Provider;
-
-import org.envirocar.server.core.entities.Gender;
-import org.envirocar.server.core.entities.User;
-import org.envirocar.server.rest.JSONConstants;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
 import com.vividsolutions.jts.geom.Geometry;
+import org.envirocar.server.core.entities.Gender;
+import org.envirocar.server.core.entities.User;
+import org.envirocar.server.core.exception.BadRequestException;
+import org.envirocar.server.rest.JSONConstants;
+
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.Provider;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * TODO JavaDoc
@@ -69,7 +66,7 @@ public class UserDecoder extends AbstractJSONEntityDecoder<User> {
 
         if (!user.hasAcceptedTermsOfUseVersion()) {
             // kept for backwards compatibility
-        	user.setTermsOfUseVersion(j.path(JSONConstants.ACCEPTED_TERMS_OF_USE_VERSION_KEY).textValue());
+            user.setTermsOfUseVersion(j.path(JSONConstants.ACCEPTED_TERMS_OF_USE_VERSION_KEY).textValue());
         }
 
 
@@ -84,7 +81,7 @@ public class UserDecoder extends AbstractJSONEntityDecoder<User> {
             } else if (g.equalsIgnoreCase(JSONConstants.FEMALE)) {
                 user.setGender(Gender.FEMALE);
             } else {
-                throw new WebApplicationException(Status.BAD_REQUEST);
+                throw new BadRequestException();
             }
         }
         String u = j.path(JSONConstants.URL_KEY).textValue();
@@ -92,7 +89,7 @@ public class UserDecoder extends AbstractJSONEntityDecoder<User> {
             try {
                 user.setUrl(new URL(u));
             } catch (MalformedURLException ex) {
-                throw new WebApplicationException(ex, Status.BAD_REQUEST);
+                throw new BadRequestException(ex);
             }
         }
         return user;

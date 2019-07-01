@@ -23,10 +23,7 @@ import javax.ws.rs.core.UriBuilder;
 import org.envirocar.server.core.entities.Fueling;
 
 import com.google.inject.Inject;
-import org.envirocar.server.rest.resources.FriendResource;
-import org.envirocar.server.rest.resources.FuelingsResource;
-import org.envirocar.server.rest.resources.RootResource;
-import org.envirocar.server.rest.resources.UsersResource;
+import org.envirocar.server.rest.resources.*;
 
 /**
  * RDF Encoder for {@link Fueling}s.

@@ -30,6 +30,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 import org.envirocar.server.core.entities.Sensor;
+import org.envirocar.server.core.exception.BadRequestException;
 import org.envirocar.server.rest.JSONConstants;
 
 /**
@@ -50,7 +51,7 @@ public class SensorDecoder extends AbstractJSONEntityDecoder<Sensor> {
         JsonNode properties = j.path(JSONConstants.PROPERTIES_KEY);
         // do not allow a property called id...
         if (!properties.path(JSONConstants.IDENTIFIER_KEY).isMissingNode()) {
-            throw new WebApplicationException(Status.BAD_REQUEST);
+            throw new BadRequestException("missing identifier");
         }
         Iterator<String> iter = properties.fieldNames();
         while (iter.hasNext()) {

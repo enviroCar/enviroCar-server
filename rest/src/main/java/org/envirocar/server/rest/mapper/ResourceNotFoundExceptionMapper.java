@@ -16,6 +16,7 @@
  */
 package org.envirocar.server.rest.mapper;
 
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.Provider;
 
@@ -28,7 +29,8 @@ import org.envirocar.server.core.exception.ResourceNotFoundException;
  */
 @Provider
 public class ResourceNotFoundExceptionMapper extends AbstractExceptionMapper<ResourceNotFoundException> {
-    public ResourceNotFoundExceptionMapper() {
-        super(Status.NOT_FOUND);
+    @Override
+    protected Response.StatusType getStatus(ResourceNotFoundException exception) {
+        return Status.NOT_FOUND;
     }
 }

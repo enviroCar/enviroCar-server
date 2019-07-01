@@ -16,39 +16,46 @@
  */
 package org.envirocar.server.rest.mapper;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import org.envirocar.server.rest.MediaTypes;
+import org.envirocar.server.rest.util.ErrorMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import java.util.Collections;
+import java.util.Map;
 
 /**
  * TODO JavaDoc
  *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class AbstractExceptionMapper<T extends Throwable> implements ExceptionMapper<T> {
+public abstract class AbstractExceptionMapper<T extends Throwable> implements ExceptionMapper<T> {
     private static final Logger log = LoggerFactory.getLogger(AbstractExceptionMapper.class);
-    private final Response.StatusType status;
 
-    public AbstractExceptionMapper(Response.StatusType status) {
-        this.status = status;
-    }
 
     @Override
     public Response toResponse(T exception) {
         log.info("Mapping exception", exception);
-
-        String stackTrace = getStackTrace(exception);
         String message = getMessage(exception);
-
+        Response.StatusType status = getStatus(exception);
+        JsonNode details = getDetails(exception);
         return Response.status(status)
-                .type(MediaType.APPLICATION_JSON)
-                .entity(new ErrorMessage(status, message, stackTrace))
+                .type(MediaTypes.EXCEPTION_TYPE)
+                .entity(new ErrorMessage(status, message, details, exception))
                 .build();
+    }
+
+    protected abstract Response.StatusType getStatus(T exception);
+
+    protected JsonNode getDetails(T exception) {
+        return null;
+    }
+
+    protected Map<String, String> getAdditionalHeaders() {
+        return Collections.emptyMap();
     }
 
     private String getMessage(T exception) {
@@ -57,13 +64,6 @@ public class AbstractExceptionMapper<T extends Throwable> implements ExceptionMa
             message = t.getMessage();
         }
         return message;
-    }
-
-    private String getStackTrace(T exception) {
-        StringWriter stringWriter = new StringWriter();
-        PrintWriter printWriter = new PrintWriter(stringWriter);
-        exception.printStackTrace(printWriter);
-        return stringWriter.toString();
     }
 
 }

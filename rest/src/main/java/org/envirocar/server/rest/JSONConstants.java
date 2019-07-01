@@ -128,4 +128,9 @@ public interface JSONConstants {
     String STATUS_CODE = "statusCode";
     String REASON_PHRASE = "reasonPhrase";
     String DETAILS = "details";
+    String STACK_TRACE = "stackTrace";
+    String CAUSED_BY = "causedBy";
+    String SUPPRESSED = "suppressed";
+    String AT = "at";
+    String CIRCULAR_REFERENCE = "circularReference";
 }
