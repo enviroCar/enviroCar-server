@@ -16,32 +16,20 @@
  */
 package org.envirocar.server.core;
 
-import static java.util.stream.Collectors.joining;
-
-import java.io.IOException;
-import java.net.URI;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
-
+import com.google.common.eventbus.EventBus;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 import org.envirocar.server.core.activities.Activities;
 import org.envirocar.server.core.activities.Activity;
 import org.envirocar.server.core.dao.ActivityDao;
+import org.envirocar.server.core.dao.PrivacyStatementDao;
+import org.envirocar.server.core.dao.TermsOfUseDao;
 import org.envirocar.server.core.dao.UserDao;
-import org.envirocar.server.core.entities.PasswordReset;
-import org.envirocar.server.core.entities.User;
-import org.envirocar.server.core.entities.Users;
+import org.envirocar.server.core.entities.*;
 import org.envirocar.server.core.event.ChangedProfileEvent;
 import org.envirocar.server.core.event.DeletedUserEvent;
 import org.envirocar.server.core.event.PasswordResetEvent;
-import org.envirocar.server.core.exception.BadRequestException;
-import org.envirocar.server.core.exception.IllegalModificationException;
-import org.envirocar.server.core.exception.InvalidUserMailCombinationException;
-import org.envirocar.server.core.exception.ResourceAlreadyExistException;
-import org.envirocar.server.core.exception.UserNotFoundException;
-import org.envirocar.server.core.exception.ValidationException;
+import org.envirocar.server.core.exception.*;
 import org.envirocar.server.core.filter.ActivityFilter;
 import org.envirocar.server.core.mail.Mailer;
 import org.envirocar.server.core.mail.MailerException;
@@ -54,9 +42,16 @@ import org.joda.time.format.ISODateTimeFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.eventbus.EventBus;
-import com.google.inject.Inject;
-import com.google.inject.Provider;
+import java.io.IOException;
+import java.net.URI;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.Optional;
+
+import static java.util.stream.Collectors.joining;
 
 /**
  * TODO JavaDoc
@@ -79,6 +74,9 @@ public class UserServiceImpl implements UserService {
     private final Mailer mailer;
     private final Provider<ConfirmationLinkFactory> confirmationLinkFactory;
 
+    private final PrivacyStatementDao privacyStatementDao;
+    private final TermsOfUseDao termsOfUseDao;
+
     @Inject
     public UserServiceImpl(ActivityDao activityDao,
                            UserDao userDao,
@@ -87,7 +85,9 @@ public class UserServiceImpl implements UserService {
                            EntityUpdater<User> userUpdater,
                            EventBus eventBus,
                            Mailer mailer,
-                           Provider<ConfirmationLinkFactory> confirmationLinkFactory) {
+                           Provider<ConfirmationLinkFactory> confirmationLinkFactory,
+                           PrivacyStatementDao privacyStatementDao,
+                           TermsOfUseDao termsOfUseDao) {
         this.activityDao = activityDao;
         this.passwordEncoder = passwordEncoder;
         this.userDao = userDao;
@@ -96,11 +96,13 @@ public class UserServiceImpl implements UserService {
         this.eventBus = eventBus;
         this.mailer = mailer;
         this.confirmationLinkFactory = confirmationLinkFactory;
+        this.privacyStatementDao = privacyStatementDao;
+        this.termsOfUseDao = termsOfUseDao;
     }
 
     @Override
     public User createUser(User user) throws ValidationException,
-                                             ResourceAlreadyExistException {
+            ResourceAlreadyExistException {
         userValidator.validateCreate(user);
         if (userDao.getByName(user.getName(), true) != null) {
             throw new ResourceAlreadyExistException();
@@ -111,6 +113,16 @@ public class UserServiceImpl implements UserService {
         }
         // set the hashed password
         user.setToken(passwordEncoder.encode(user.getToken()));
+
+
+        if (user.hasAcceptedTermsOfUse() && !user.hasAcceptedTermsOfUseVersion()) {
+            Optional.ofNullable(this.termsOfUseDao.getLatest())
+                    .map(Terms::getIssuedDate).ifPresent(user::setTermsOfUseVersion);
+        }
+        if (user.hasAcceptedPrivacyStatement() && !user.hasPrivacyStatementVersion()) {
+            Optional.ofNullable(this.privacyStatementDao.getLatest())
+                    .map(Terms::getIssuedDate).ifPresent(user::setPrivacyStatementVersion);
+        }
 
         User created = this.userDao.create(user);
 
@@ -163,9 +175,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User modifyUser(User user, User changes) throws UserNotFoundException,
-                                                           IllegalModificationException,
-                                                           ValidationException,
-                                                           ResourceAlreadyExistException {
+            IllegalModificationException,
+            ValidationException,
+            ResourceAlreadyExistException {
         this.userValidator.validateUpdate(changes);
         if (changes.hasMail() && !changes.getMail().equals(user.getMail())) {
             if (this.userDao.getByMail(changes.getMail()) != null) {
@@ -205,7 +217,7 @@ public class UserServiceImpl implements UserService {
         PasswordReset code = this.userDao.requestPasswordReset(dbUser);
 
         /*
-		 * we got here without exception, fire an event
+         * we got here without exception, fire an event
          */
         eventBus.post(new PasswordResetEvent(code.getCode(), user, code.getExpires()));
     }
