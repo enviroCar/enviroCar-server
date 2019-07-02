@@ -1,18 +1,18 @@
 {
-    "$schema": "http://json-schema.org/draft-04/schema#",
-    "id": "https://envirocar.org/api/stable/schema/sensors.json#",
-    "type": "object",
-    "additionalProperties": false,
-    "required": [
-        "sensors"
-    ],
-    "properties": {
-        "sensors": {
-            "type": "array",
-            "minItems": 0,
-            "items": {
-                "$ref": "https://envirocar.org/api/stable/schema/sensor.json#"
-            }
-        }
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "https://envirocar.org/api/stable/schema/sensors.json#",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "sensors"
+  ],
+  "properties": {
+    "sensors": {
+      "type": "array",
+      "minItems": 0,
+      "items": {
+        "$ref": "https://envirocar.org/api/stable/schema/sensor.json#"
+      }
     }
+  }
 }

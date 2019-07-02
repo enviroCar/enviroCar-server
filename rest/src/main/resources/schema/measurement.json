@@ -1,83 +1,81 @@
 {
-    "$schema": "http://json-schema.org/draft-04/schema#",
-    "id": "https://envirocar.org/api/stable/schema/measurement.json#",
-    "type": "object",
-    "additionalProperties": false,
-    "required": [
-        "type",
-        "geometry",
-        "properties"
-    ],
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "https://envirocar.org/api/stable/schema/measurement.json#",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "type",
+    "geometry",
+    "properties"
+  ],
+  "properties": {
+    "type": {
+      "type": "string",
+      "enum": [
+        "Feature"
+      ]
+    },
+    "geometry": {
+      "$ref": "https://envirocar.org/api/stable/schema/geometry.json#"
+    },
     "properties": {
-        "type": {
-            "type": "string",
-            "enum": [
-                "Feature"
-            ]
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "time",
+        "phenomenons"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
         },
-        "geometry": {
-            "$ref": "https://envirocar.org/api/stable/schema/geometry.json#"
+        "created": {
+          "type": "string",
+          "format": "date-time"
         },
-        "properties": {
+        "modified": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "sensor": {
+          "$ref": "https://envirocar.org/api/stable/schema/sensor.json#"
+        },
+        "time": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "user": {
+          "$ref": "https://envirocar.org/api/stable/schema/user.json#"
+        },
+        "track": {
+          "type": "string"
+        },
+        "phenomenons": {
+          "type": "object",
+          "additionalItems": {
             "type": "object",
             "additionalProperties": false,
-            "required": [
-                "id",
-                "time",
-                "phenomenons"
-            ],
-            "properties": {
-                "id": {
-                    "type": "string"
-                },
-                "created": {
-                    "type": "string",
-                    "format": "date-time"
-
-                },
-                "modified": {
-                    "type": "string",
-                    "format": "date-time"
-
-                },
-                "sensor": {
-                    "$ref": "https://envirocar.org/api/stable/schema/sensor.json#"
-                },
-                "time": {
-                    "type": "string",
-                    "format": "date-time"
-                },
-                "user": {
-                    "$ref": "https://envirocar.org/api/stable/schema/user.json#"
-                },
-                "track": {
-                    "type": "string"
-                },
-                "phenomenons": {
-                    "type": "object",
-                    "additionalItems": {
-                        "type": "object",
-                        "additionalProperties": false,
-                        "allOf": [
-                            {
-                                "$ref": "https://envirocar.org/api/stable/schema/phenomenon.json"
-                            },
-                            {
-                                "type": "object",
-                                "properties": {
-                                    "value": {
-                                        "type": [
-                                            "string",
-                                            "number",
-                                            "boolean"
-                                        ]
-                                    }
-                                }
-                            }
-                        ]
-                    }
+            "allOf": [
+              {
+                "$ref": "https://envirocar.org/api/stable/schema/phenomenon.json"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "type": [
+                      "string",
+                      "number",
+                      "boolean"
+                    ]
+                  }
                 }
-            }
+              }
+            ]
+          }
         }
+      }
     }
+  }
 }

@@ -1,88 +1,88 @@
 {
-    "$schema": "http://json-schema.org/draft-04/schema#",
-    "id": "https://envirocar.org/api/stable/schema/activity.json#",
-    "type": "object",
-    "required": [
-        "time",
-        "user",
-        "type"
-    ],
-    "properties": {
-        "time": {
-            "type": "string",
-            "format": "date-time"
-        },
-        "user": {
-            "$ref": "https://envirocar.org/api/stable/schema/user.json#"
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "https://envirocar.org/api/stable/schema/activity.json#",
+  "type": "object",
+  "required": [
+    "time",
+    "user",
+    "type"
+  ],
+  "properties": {
+    "time": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "user": {
+      "$ref": "https://envirocar.org/api/stable/schema/user.json#"
+    },
+    "type": {
+      "type": "string"
+    }
+  },
+  "oneOf": [
+    {
+      "$ref": "#/definitions/self-activity"
+    },
+    {
+      "$ref": "#/definitions/group-activity"
+    },
+    {
+      "$ref": "#/definitions/track-activity"
+    },
+    {
+      "$ref": "#/definitions/user-activity"
+    }
+  ],
+  "definitions": {
+    "group-activity": {
+      "properties": {
+        "group": {
+          "$ref": "https://envirocar.org/api/stable/schema/group.json#"
         },
         "type": {
-            "type": "string"
+          "enum": [
+            "CREATED_GROUP",
+            "CHANGED_GROUP",
+            "JOINED_GROUP",
+            "LEFT_GROUP",
+            "DELETED_GROUP"
+          ]
         }
+      }
     },
-    "oneOf": [
-        {
-            "$ref": "#/definitions/self-activity"
+    "track-activity": {
+      "properties": {
+        "track": {
+          "$ref": "https://envirocar.org/api/stable/schema/definitions.json#/track-ref"
         },
-        {
-            "$ref": "#/definitions/group-activity"
-        },
-        {
-            "$ref": "#/definitions/track-activity"
-        },
-        {
-            "$ref": "#/definitions/user-activity"
+        "type": {
+          "enum": [
+            "CREATED_TRACK"
+          ]
         }
-    ],
-    "definitions": {
-        "group-activity": {
-            "properties": {
-                "group": {
-                    "$ref": "https://envirocar.org/api/stable/schema/group.json#"
-                },
-                "type": {
-                    "enum": [
-                        "CREATED_GROUP",
-                        "CHANGED_GROUP",
-                        "JOINED_GROUP",
-                        "LEFT_GROUP",
-                        "DELETED_GROUP"
-                    ]
-                }
-            }
+      }
+    },
+    "user-activity": {
+      "properties": {
+        "other": {
+          "$ref": "https://envirocar.org/api/stable/schema/user.json#"
         },
-        "track-activity": {
-            "properties": {
-                "track": {
-                    "$ref": "https://envirocar.org/api/stable/schema/definitions.json#/track-ref"
-                },
-                "type": {
-                    "enum": [
-                        "CREATED_TRACK"
-                    ]
-                }
-            }
-        },
-        "user-activity": {
-            "properties": {
-                "other": {
-                    "$ref": "https://envirocar.org/api/stable/schema/user.json#"
-                },
-                "type": {
-                    "enum": [
-                        "FRIENDED_USER",
-                        "UNFRIENDED_USER"
-                    ]
-                }
-            }
-        },
-        "self-activity": {
-            "properties": {
-                "type": {
-                    "enum": [
-                        "CHANGED_PROFILE"
-                    ]
-                }
-            }
+        "type": {
+          "enum": [
+            "FRIENDED_USER",
+            "UNFRIENDED_USER"
+          ]
         }
+      }
+    },
+    "self-activity": {
+      "properties": {
+        "type": {
+          "enum": [
+            "CHANGED_PROFILE"
+          ]
+        }
+      }
     }
+  }
 }

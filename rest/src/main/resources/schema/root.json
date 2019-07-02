@@ -1,35 +1,35 @@
 {
-    "$schema": "http://json-schema.org/draft-04/schema#",
-    "id": "https://envirocar.org/api/stable/schema/root.json#",
-    "type": "object",
-    "properties": {
-        "users": {
-            "type": "string",
-            "format": "uri"
-        },
-        "tracks": {
-            "type": "string",
-            "format": "uri"
-        },
-        "groups": {
-            "type": "string",
-            "format": "uri"
-        },
-        "sensors": {
-            "type": "string",
-            "format": "uri"
-        },
-        "phenomenons": {
-            "type": "string",
-            "format": "uri"
-        },
-        "measurements": {
-            "type": "string",
-            "format": "uri"
-        },
-        "statistics": {
-            "type": "string",
-            "format": "uri"
-        }
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "https://envirocar.org/api/stable/schema/root.json#",
+  "type": "object",
+  "properties": {
+    "users": {
+      "type": "string",
+      "format": "uri"
+    },
+    "tracks": {
+      "type": "string",
+      "format": "uri"
+    },
+    "groups": {
+      "type": "string",
+      "format": "uri"
+    },
+    "sensors": {
+      "type": "string",
+      "format": "uri"
+    },
+    "phenomenons": {
+      "type": "string",
+      "format": "uri"
+    },
+    "measurements": {
+      "type": "string",
+      "format": "uri"
+    },
+    "statistics": {
+      "type": "string",
+      "format": "uri"
     }
+  }
 }

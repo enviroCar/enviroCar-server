@@ -1,18 +1,18 @@
 {
-    "$schema": "http://json-schema.org/draft-04/schema#",
-    "id": "https://envirocar.org/api/stable/schema/phenomenon.create.json#",
-    "type": "object",
-    "additionalProperties": false,
-    "required": [
-        "name",
-        "unit"
-    ],
-    "properties": {
-        "name": {
-            "type": "string"
-        },
-        "unit": {
-            "type": "string"
-        }
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "https://envirocar.org/api/stable/schema/phenomenon.create.json#",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "name",
+    "unit"
+  ],
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "unit": {
+      "type": "string"
     }
+  }
 }

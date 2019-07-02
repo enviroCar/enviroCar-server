@@ -1,14 +1,14 @@
 {
-    "$schema": "http://json-schema.org/draft-04/schema#",
-    "id": "https://envirocar.org/api/stable/schema/user.ref.json#",
-    "type": "object",
-    "additionalProperties": false,
-    "required": [
-        "name"
-    ],
-    "properties": {
-        "name": {
-            "$ref": "https://envirocar.org/api/stable/schema/definitions.json#/username"
-        }
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "https://envirocar.org/api/stable/schema/user.ref.json#",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "name"
+  ],
+  "properties": {
+    "name": {
+      "$ref": "https://envirocar.org/api/stable/schema/definitions.json#/username"
     }
+  }
 }

@@ -1,55 +1,55 @@
 {
-    "$schema": "http://json-schema.org/draft-04/schema#",
-    "id": "https://envirocar.org/api/stable/schema/track.create.json#",
-    "type": "object",
-    "additionalProperties": false,
-    "required": [
-        "properties"
-    ],
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "https://envirocar.org/api/stable/schema/track.create.json#",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "properties"
+  ],
+  "properties": {
+    "type": {
+      "type": "string",
+      "enum": [
+        "FeatureCollection"
+      ]
+    },
     "properties": {
-        "type": {
-            "type": "string",
-            "enum": [
-                "FeatureCollection"
-            ]
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sensor"
+      ],
+      "properties": {
+        "sensor": {
+          "type": "string",
+          "description": "the name of an existing sensor resource"
         },
-        "properties": {
-            "type": "object",
-            "additionalProperties": false,
-            "required": [
-                "sensor"
-            ],
-            "properties": {
-                "sensor": {
-                    "type": "string",
-                    "description": "the name of an existing sensor resource"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "description": {
-                    "type": "string"
-                },
-                "appVersion": {
-                	"type": "string"
-                },
-                "obdDevice": {
-                	"type": "string"
-                },
-                "touVersion": {
-                	"type": "string"
-                },
-                "length": {
-                	"type": "number"
-                }
-            }
+        "name": {
+          "type": "string"
         },
-        "features": {
-            "type": "array",
-            "minItems": 0,
-            "items": {
-                "$ref": "https://envirocar.org/api/stable/schema/measurement.create.json#"
-            }
+        "description": {
+          "type": "string"
+        },
+        "appVersion": {
+          "type": "string"
+        },
+        "obdDevice": {
+          "type": "string"
+        },
+        "touVersion": {
+          "type": "string"
+        },
+        "length": {
+          "type": "number"
         }
+      }
+    },
+    "features": {
+      "type": "array",
+      "minItems": 0,
+      "items": {
+        "$ref": "https://envirocar.org/api/stable/schema/measurement.create.json#"
+      }
     }
+  }
 }

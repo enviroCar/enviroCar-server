@@ -1,18 +1,18 @@
 {
-    "$schema": "http://json-schema.org/draft-04/schema#",
-    "id": "https://envirocar.org/api/stable/schema/badges.json#",
-    "type": "object",
-    "additionalProperties": false,
-    "required": [
-        "badges"
-    ],
-    "properties": {
-        "badges": {
-            "type": "array",
-            "minItems": 0,
-            "items": {
-                "$ref": "https://envirocar.org/api/stable/schema/badge.json#"
-            }
-        }
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "https://envirocar.org/api/stable/schema/badges.json#",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "badges"
+  ],
+  "properties": {
+    "badges": {
+      "type": "array",
+      "minItems": 0,
+      "items": {
+        "$ref": "https://envirocar.org/api/stable/schema/badge.json#"
+      }
     }
+  }
 }

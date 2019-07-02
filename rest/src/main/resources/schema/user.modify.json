@@ -1,20 +1,20 @@
 {
-    "$schema": "http://json-schema.org/draft-04/schema#",
-    "id": "https://envirocar.org/api/stable/schema/user.modify.json#",
-    "type": "object",
-    "allOf": [
-        {
-            "$ref": "https://envirocar.org/api/stable/schema/definitions.json#/optional-user-properties"
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "https://envirocar.org/api/stable/schema/user.modify.json#",
+  "type": "object",
+  "allOf": [
+    {
+      "$ref": "https://envirocar.org/api/stable/schema/definitions.json#/optional-user-properties"
+    },
+    {
+      "properties": {
+        "mail": {
+          "$ref": "https://envirocar.org/api/stable/schema/definitions.json#/mail"
         },
-        {
-            "properties": {
-                "mail": {
-                    "$ref": "https://envirocar.org/api/stable/schema/definitions.json#/mail"
-                },
-                "token": {
-                    "type": "string"
-                }
-            }
+        "token": {
+          "type": "string"
         }
-    ]
+      }
+    }
+  ]
 }

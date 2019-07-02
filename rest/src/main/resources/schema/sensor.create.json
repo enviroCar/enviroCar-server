@@ -1,49 +1,49 @@
 {
-    "$schema": "http://json-schema.org/draft-04/schema#",
-    "id": "https://envirocar.org/api/stable/schema/sensor.create.json#",
-    "allOf": [
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "https://envirocar.org/api/stable/schema/sensor.create.json#",
+  "allOf": [
+    {
+      "$ref": "https://envirocar.org/api/stable/schema/sensor.json#/definitions/base"
+    },
+    {
+      "oneOf": [
         {
-            "$ref": "https://envirocar.org/api/stable/schema/sensor.json#/definitions/base"
+          "not": {
+            "$ref": "https://envirocar.org/api/stable/schema/sensor.json#/definitions/car-type"
+          }
         },
         {
-            "oneOf": [
-                {
-                    "not": {
-                        "$ref": "https://envirocar.org/api/stable/schema/sensor.json#/definitions/car-type"
-                    }
-                },
-                {
-                    "allOf": [
-                        {
-                            "$ref": "https://envirocar.org/api/stable/schema/sensor.json#/definitions/car-type"
-                        },
-                        {
-                            "$ref": "#/definitions/car-properties"
-                        }
-                    ]
-                }
-            ]
+          "allOf": [
+            {
+              "$ref": "https://envirocar.org/api/stable/schema/sensor.json#/definitions/car-type"
+            },
+            {
+              "$ref": "#/definitions/car-properties"
+            }
+          ]
         }
-    ],
-    "definitions": {
-        "car-properties": {
-            "allOf": [
-                {
-                    "$ref": "https://envirocar.org/api/stable/schema/sensor.json#/definitions/car-properties"
-                },
-                {
-                    "properties": {
-                        "properties": {
-                            "required": [
-                                "manufacturer",
-                                "model",
-                                "fuelType",
-                                "constructionYear"
-                            ]
-                        }
-                    }
-                }
-            ]
-        }
+      ]
     }
+  ],
+  "definitions": {
+    "car-properties": {
+      "allOf": [
+        {
+          "$ref": "https://envirocar.org/api/stable/schema/sensor.json#/definitions/car-properties"
+        },
+        {
+          "properties": {
+            "properties": {
+              "required": [
+                "manufacturer",
+                "model",
+                "fuelType",
+                "constructionYear"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  }
 }

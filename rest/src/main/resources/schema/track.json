@@ -1,82 +1,80 @@
 {
-    "$schema": "http://json-schema.org/draft-04/schema#",
-    "id": "https://envirocar.org/api/stable/schema/track.json#",
-    "type": "object",
-    "additionalProperties": false,
-    "required": [
-        "properties",
-        "features",
-        "type"
-    ],
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "https://envirocar.org/api/stable/schema/track.json#",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "properties",
+    "features",
+    "type"
+  ],
+  "properties": {
+    "type": {
+      "type": "string",
+      "enum": [
+        "FeatureCollection"
+      ]
+    },
+    "features": {
+      "type": "array",
+      "minItems": 0,
+      "items": {
+        "$ref": "https://envirocar.org/api/stable/schema/measurement.json#"
+      }
+    },
     "properties": {
-        "type": {
-            "type": "string",
-            "enum": [
-                "FeatureCollection"
-            ]
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "sensor"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
         },
-        "features": {
-            "type": "array",
-            "minItems": 0,
-            "items": {
-                "$ref": "https://envirocar.org/api/stable/schema/measurement.json#"
-            }
+        "created": {
+          "type": "string",
+          "format": "date-time"
         },
-        "properties": {
-            "type": "object",
-            "additionalProperties": false,
-            "required": [
-                "id",
-                "sensor"
-            ],
-            "properties": {
-                "id": {
-                    "type": "string"
-                },
-                "created": {
-                    "type": "string",
-                    "format": "date-time"
-
-                },
-                "modified": {
-                    "type": "string",
-                    "format": "date-time"
-                },
-                "sensor": {
-                    "$ref": "https://envirocar.org/api/stable/schema/sensor.json#"
-                },
-                "user": {
-                    "$ref": "https://envirocar.org/api/stable/schema/user.json#"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "description": {
-                    "type": "string"
-                },
-                "appVersion": {
-                	"type": "string"
-                },
-                "obdDevice": {
-                	"type": "string"
-                },
-                "touVersion": {
-                	"type": "string",
-                    "format": "date"
-                },
-                "length": {
-                	"type": "number"
-                },
-                "begin": {
-                    "type": "string",
-                    "format": "date-time"
-                },
-                "end": {
-                    "type": "string",
-                    "format": "date-time"
-                }
-            }
-
+        "modified": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "sensor": {
+          "$ref": "https://envirocar.org/api/stable/schema/sensor.json#"
+        },
+        "user": {
+          "$ref": "https://envirocar.org/api/stable/schema/user.json#"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "appVersion": {
+          "type": "string"
+        },
+        "obdDevice": {
+          "type": "string"
+        },
+        "touVersion": {
+          "type": "string",
+          "format": "date"
+        },
+        "length": {
+          "type": "number"
+        },
+        "begin": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "end": {
+          "type": "string",
+          "format": "date-time"
         }
+      }
     }
+  }
 }
