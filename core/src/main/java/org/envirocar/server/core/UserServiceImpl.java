@@ -105,11 +105,10 @@ public class UserServiceImpl implements UserService {
             ResourceAlreadyExistException {
         userValidator.validateCreate(user);
         if (userDao.getByName(user.getName(), true) != null) {
-            throw new ResourceAlreadyExistException();
+            throw new ResourceAlreadyExistException("name already exists");
         }
-        // fixme this won't find the user if not
         if (userDao.getByMail(user.getMail(), true) != null) {
-            throw new ResourceAlreadyExistException();
+            throw new ResourceAlreadyExistException("mail already exists");
         }
         // set the hashed password
         user.setToken(passwordEncoder.encode(user.getToken()));
