@@ -94,18 +94,10 @@ public interface JSONConstants {
     String TRACKSUMMARY_KEY = "trackSummary";
     String ACCEPTED_TERMS_OF_USE = "acceptedTerms";
     String ACCEPTED_PRIVACY_STATEMENT = "acceptedPrivacy";
-
-    /**
-     * @deprecated use {@link #TOU_VERSION_KEY} instead. kept for backwards
-     * compatibility
-     */
-    @Deprecated
     String ACCEPTED_TERMS_OF_USE_VERSION_KEY = "acceptedTermsOfUseVersion";
-
     String APP_VERSION_KEY = "appVersion";
     String OBD_DEVICE_KEY = "obdDevice";
-    String TOU_VERSION_KEY = "touVersion";
-    String PRIVACY_STATEMENT_VERSION_KEY = "privacyStatementVersion";
+    String ACCEPTED_PRIVACY_STATEMENT_VERSION = "acceptedPrivacyStatementVersion";
     String SCHEMA = "schema";
     String ANNOUNCEMENTS_KEY = "announcements";
     String ISSUED_DATE = "issuedDate";
@@ -133,4 +125,5 @@ public interface JSONConstants {
     String SUPPRESSED = "suppressed";
     String AT = "at";
     String CIRCULAR_REFERENCE = "circularReference";
+    String TOU_VERSION_KEY = "touVersion";
 }

@@ -16,21 +16,17 @@
  */
 package org.envirocar.server.rest.encoding.json;
 
-import static org.envirocar.server.core.entities.Gender.FEMALE;
-import static org.envirocar.server.core.entities.Gender.MALE;
-
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.ext.Provider;
-
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.inject.Inject;
+import com.vividsolutions.jts.geom.Geometry;
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.rest.JSONConstants;
 import org.envirocar.server.rest.encoding.JSONEntityEncoder;
 import org.envirocar.server.rest.rights.AccessRights;
 
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.inject.Inject;
-import com.vividsolutions.jts.geom.Geometry;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.Provider;
 
 /**
  * TODO JavaDoc
@@ -48,8 +44,7 @@ public class UserJSONEncoder extends AbstractJSONEntityEncoder<User> {
     }
 
     @Override
-    public ObjectNode encodeJSON(User t, AccessRights rights,
-                                 MediaType mediaType) {
+    public ObjectNode encodeJSON(User t, AccessRights rights, MediaType mediaType) {
         ObjectNode j = getJsonFactory().objectNode();
         if (t.hasName() && rights.canSeeNameOf(t)) {
             j.put(JSONConstants.NAME_KEY, t.getName());
@@ -59,11 +54,11 @@ public class UserJSONEncoder extends AbstractJSONEntityEncoder<User> {
         }
         if (t.hasCreationTime() && rights.canSeeCreationTimeOf(t)) {
             j.put(JSONConstants.CREATED_KEY,
-                  getDateTimeFormat().print(t.getCreationTime()));
+                    getDateTimeFormat().print(t.getCreationTime()));
         }
         if (t.hasModificationTime() && rights.canSeeModificationTimeOf(t)) {
             j.put(JSONConstants.MODIFIED_KEY,
-                  getDateTimeFormat().print(t.getModificationTime()));
+                    getDateTimeFormat().print(t.getModificationTime()));
         }
         if (t.hasFirstName() && rights.canSeeFirstNameOf(t)) {
             j.put(JSONConstants.FIRST_NAME_KEY, t.getFirstName());
@@ -91,8 +86,7 @@ public class UserJSONEncoder extends AbstractJSONEntityEncoder<User> {
             j.put(JSONConstants.COUNTRY_KEY, t.getCountry());
         }
         if (t.hasLocation() && rights.canSeeLocationOf(t)) {
-            j.set(JSONConstants.LOCATION_KEY,
-                  geometryEncoder.encodeJSON(t.getLocation(), rights, mediaType));
+            j.set(JSONConstants.LOCATION_KEY, geometryEncoder.encodeJSON(t.getLocation(), rights, mediaType));
         }
         if (t.hasLanguage() && rights.canSeeLanguageOf(t)) {
             j.put(JSONConstants.LANGUAGE_KEY, t.getLanguage());
@@ -103,11 +97,11 @@ public class UserJSONEncoder extends AbstractJSONEntityEncoder<User> {
                 badges.add(badge);
             }
         }
-        if (t.getTermsOfUseVersion() != null) {
-        	j.put(JSONConstants.TOU_VERSION_KEY, t.getTermsOfUseVersion());
-
-        	// kept for backwards compatibility
-        	j.put(JSONConstants.ACCEPTED_TERMS_OF_USE_VERSION_KEY, t.getTermsOfUseVersion());
+        if (t.hasAcceptedTermsOfUseVersion() && rights.canSeeAcceptedTermsOfUseVersionOf(t)) {
+            j.put(JSONConstants.ACCEPTED_TERMS_OF_USE_VERSION_KEY, t.getTermsOfUseVersion());
+        }
+        if (t.hasPrivacyStatementVersion() && rights.canSeeAcceptedPrivacyStatementVersionOf(t)) {
+            j.put(JSONConstants.ACCEPTED_PRIVACY_STATEMENT_VERSION, t.getPrivacyStatementVersion());
         }
         return j;
     }

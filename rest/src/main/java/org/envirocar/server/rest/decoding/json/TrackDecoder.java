@@ -59,21 +59,15 @@ public class TrackDecoder extends AbstractJSONEntityDecoder<Track> {
         if (j.has(GeoJSONConstants.PROPERTIES_KEY)) {
             JsonNode p = j.path(GeoJSONConstants.PROPERTIES_KEY);
             if (p.has(JSONConstants.SENSOR_KEY)) {
-                trackSensor = sensorDao.getByIdentifier(p
-                        .get(JSONConstants.SENSOR_KEY).asText());
+                trackSensor = sensorDao.getByIdentifier(p.get(JSONConstants.SENSOR_KEY).asText());
                 track.setSensor(trackSensor);
             }
             track.setName(p.path(JSONConstants.NAME_KEY).textValue());
-            track.setDescription(p.path(JSONConstants.DESCRIPTION_KEY)
-                    .textValue());
-            track.setAppVersion(p.path(JSONConstants.APP_VERSION_KEY)
-                    .textValue());
-            track.setObdDevice(p.path(JSONConstants.OBD_DEVICE_KEY)
-                    .textValue());
-            track.setTouVersion(p.path(JSONConstants.TOU_VERSION_KEY)
-                    .textValue());
-            track.setLength(p.path(JSONConstants.LENGTH_KEY)
-            		.asDouble());
+            track.setDescription(p.path(JSONConstants.DESCRIPTION_KEY).textValue());
+            track.setAppVersion(p.path(JSONConstants.APP_VERSION_KEY).textValue());
+            track.setObdDevice(p.path(JSONConstants.OBD_DEVICE_KEY).textValue());
+            track.setTouVersion(p.path(JSONConstants.TOU_VERSION_KEY).textValue());
+            track.setLength(p.path(JSONConstants.LENGTH_KEY).asDouble());
         }
 
         if (!j.path(GeoJSONConstants.FEATURES_KEY).isMissingNode()) {

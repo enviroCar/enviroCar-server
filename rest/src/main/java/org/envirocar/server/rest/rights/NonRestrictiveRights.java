@@ -459,6 +459,16 @@ public class NonRestrictiveRights extends AbstractAccessRights {
     }
 
     @Override
+    public boolean canSeeAcceptedTermsOfUseVersionOf(User user) {
+        return true;
+    }
+
+    @Override
+    public boolean canSeeAcceptedPrivacyStatementVersionOf(User user) {
+        return true;
+    }
+
+    @Override
     public boolean canSeeLengthOf(Track t) {
         return true;
     }

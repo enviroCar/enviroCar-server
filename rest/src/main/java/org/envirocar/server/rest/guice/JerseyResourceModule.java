@@ -36,6 +36,7 @@ import org.envirocar.server.rest.resources.ResourceFactory;
 import org.envirocar.server.rest.resources.RootResource;
 import org.envirocar.server.rest.rights.AccessRights;
 import org.envirocar.server.rest.rights.AccessRightsImpl;
+import org.envirocar.server.rest.rights.NonRestrictiveRights;
 import org.envirocar.server.rest.rights.ReadOnlyRights;
 
 import javax.ws.rs.core.SecurityContext;
@@ -82,7 +83,9 @@ public class JerseyResourceModule extends AbstractModule {
         PrincipalImpl p = (PrincipalImpl) ctx.getUserPrincipal();
         User user = p == null ? null : p.getUser();
 
-        if (isReadOnly(properties)) {
+        if (user != null && user.isAdmin()) {
+            return new NonRestrictiveRights();
+        } else if (isReadOnly(properties)) {
             return new ReadOnlyRights(user, groupService, friendService);
         } else {
             return new AccessRightsImpl(user, groupService, friendService);

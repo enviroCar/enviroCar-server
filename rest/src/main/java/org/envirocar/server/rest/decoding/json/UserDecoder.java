@@ -61,18 +61,12 @@ public class UserDecoder extends AbstractJSONEntityDecoder<User> {
         user.setAcceptedTermsOfUse(j.path(JSONConstants.ACCEPTED_TERMS_OF_USE).booleanValue());
         user.setAcceptedPrivacyStatement(j.path(JSONConstants.ACCEPTED_PRIVACY_STATEMENT).booleanValue());
 
-        user.setTermsOfUseVersion(j.path(JSONConstants.TOU_VERSION_KEY).textValue());
-        user.setPrivacyStatementVersion(j.path(JSONConstants.PRIVACY_STATEMENT_VERSION_KEY).textValue());
+        user.setTermsOfUseVersion(j.path(JSONConstants.ACCEPTED_TERMS_OF_USE_VERSION_KEY).textValue());
+        user.setPrivacyStatementVersion(j.path(JSONConstants.ACCEPTED_PRIVACY_STATEMENT_VERSION).textValue());
 
-        if (!user.hasAcceptedTermsOfUseVersion()) {
-            // kept for backwards compatibility
-            user.setTermsOfUseVersion(j.path(JSONConstants.ACCEPTED_TERMS_OF_USE_VERSION_KEY).textValue());
-        }
-
-
-        JsonNode l = j.path(JSONConstants.LOCATION_KEY);
-        if (!l.isMissingNode() && !l.isNull()) {
-            user.setLocation(geometryDecoder.decode(l, mediaType));
+        JsonNode location = j.path(JSONConstants.LOCATION_KEY);
+        if (!location.isMissingNode() && !location.isNull()) {
+            user.setLocation(geometryDecoder.decode(location, mediaType));
         }
         String g = j.path(JSONConstants.GENDER_KEY).textValue();
         if (g != null) {

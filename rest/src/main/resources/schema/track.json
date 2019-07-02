@@ -61,7 +61,8 @@
                 	"type": "string"
                 },
                 "touVersion": {
-                	"type": "string"
+                	"type": "string",
+                    "format": "date"
                 },
                 "length": {
                 	"type": "number"
