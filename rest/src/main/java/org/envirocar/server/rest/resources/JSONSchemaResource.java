@@ -17,6 +17,7 @@
 package org.envirocar.server.rest.resources;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -38,6 +39,7 @@ import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.IntStream;
 
 /**
  * TODO JavaDoc
@@ -46,18 +48,21 @@ import java.util.concurrent.ExecutionException;
  */
 public class JSONSchemaResource extends AbstractResource {
     public static final String SCHEMA = "{schema}";
+    private static final String DEFAULT_SCHEMA_PATH = "https://envirocar.org/api/stable/schema";
     private final Set<String> schemaPaths;
     private final JsonNodeFactory nodeFactory;
     private final LoadingCache<String, JsonNode> cache;
+    private final ObjectMapper objectMapper;
 
     @Inject
     public JSONSchemaResource(
             @Named(JSONSchemaFactoryProvider.SCHEMAS) Set<String> schemaIds,
             JsonNodeFactory nodeFactory,
-            LoadingCache<String, JsonNode> cache) {
+            LoadingCache<String, JsonNode> cache, ObjectMapper objectMapper) {
         this.schemaPaths = Preconditions.checkNotNull(schemaIds);
         this.nodeFactory = Preconditions.checkNotNull(nodeFactory);
         this.cache = Preconditions.checkNotNull(cache);
+        this.objectMapper = objectMapper;
     }
 
     @GET
@@ -83,10 +88,42 @@ public class JSONSchemaResource extends AbstractResource {
             throw new ResourceNotFoundException("schema not found");
         }
         try {
-            return cache.get(schemaPath);
+            return replaceSchemaLinks(cache.get(schemaPath));
         } catch (ExecutionException ex) {
             throw new InternalServerError(ex);
         }
+    }
+
+
+    private JsonNode replaceSchemaLinks(JsonNode node) {
+        if (node.isObject()) {
+            ObjectNode objectNode = nodeFactory.objectNode();
+            node.fieldNames().forEachRemaining(name -> objectNode.set(name, replaceSchemaLinks(node.path(name))));
+            return objectNode;
+        } else if (node.isArray()) {
+            ArrayNode arrayNode = nodeFactory.arrayNode();
+            IntStream.range(0, node.size())
+                    .mapToObj(node::path)
+                    .map(this::replaceSchemaLinks)
+                    .forEachOrdered(arrayNode::add);
+            return arrayNode;
+        } else if (node.isTextual() && isSchemaRef(node)) {
+            return nodeFactory.textNode(getNewSchemaRef(node));
+        } else {
+            return node;
+        }
+    }
+
+    private String getNewSchemaRef(JsonNode n) {
+        return n.textValue().replaceFirst(DEFAULT_SCHEMA_PATH, getCurrentSchemaPath());
+    }
+
+    private boolean isSchemaRef(JsonNode n) {
+        return n.textValue().startsWith(DEFAULT_SCHEMA_PATH);
+    }
+
+    private String getCurrentSchemaPath() {
+        return getUriInfo().getBaseUriBuilder().path(RootResource.SCHEMA).build().toASCIIString();
     }
 
 }
