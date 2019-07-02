@@ -72,9 +72,13 @@ public class AuthenticationFilter implements ContainerRequestFilter {
                 throw new BadRequestException("invalid username or password");
             }
             try {
-                User user = service.getUser(username);
+                User user = service.getUser(username, true);
                 if (passwordEncoder.verify(token, user.getToken())) {
-                    request.setSecurityContext(new SecurityContextImpl(user, request.isSecure()));
+                    if (!user.isConfirmed()) {
+                        throw new ForbiddenException("mail not confirmed");
+                    } else {
+                        request.setSecurityContext(new SecurityContextImpl(user, request.isSecure()));
+                    }
                 }
             } catch (UserNotFoundException ignored) {
             }

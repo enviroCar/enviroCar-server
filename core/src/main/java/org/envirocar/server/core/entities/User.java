@@ -62,7 +62,7 @@ public interface User extends BaseEntity {
     boolean isAdmin();
 
     default boolean isConfirmed() {
-        return getConfirmationCode()== null || getConfirmationCode().isEmpty();
+        return getConfirmationCode() == null || getConfirmationCode().isEmpty();
     }
 
     String getConfirmationCode();

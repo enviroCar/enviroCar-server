@@ -25,7 +25,10 @@ import org.envirocar.server.core.dao.ActivityDao;
 import org.envirocar.server.core.dao.PrivacyStatementDao;
 import org.envirocar.server.core.dao.TermsOfUseDao;
 import org.envirocar.server.core.dao.UserDao;
-import org.envirocar.server.core.entities.*;
+import org.envirocar.server.core.entities.PasswordReset;
+import org.envirocar.server.core.entities.Terms;
+import org.envirocar.server.core.entities.User;
+import org.envirocar.server.core.entities.Users;
 import org.envirocar.server.core.event.ChangedProfileEvent;
 import org.envirocar.server.core.event.DeletedUserEvent;
 import org.envirocar.server.core.event.PasswordResetEvent;
@@ -160,7 +163,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUser(String name) throws UserNotFoundException {
-        User user = this.userDao.getByName(name);
+        return getUser(name, false);
+    }
+
+    @Override
+    public User getUser(String name, boolean includeUnconfirmed) throws UserNotFoundException {
+        User user = this.userDao.getByName(name, includeUnconfirmed);
         if (user == null) {
             throw new UserNotFoundException(name);
         }
