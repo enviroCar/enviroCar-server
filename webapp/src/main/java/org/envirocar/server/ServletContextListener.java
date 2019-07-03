@@ -69,7 +69,7 @@ public class ServletContextListener extends GuiceServletContextListener {
 
     }
 
-    protected void configureLogging() {
+    private void configureLogging() {
         java.util.logging.Logger rootLogger = java.util.logging.LogManager.getLogManager().getLogger("");
         Arrays.stream(rootLogger.getHandlers()).forEach(rootLogger::removeHandler);
         SLF4JBridgeHandler.install();

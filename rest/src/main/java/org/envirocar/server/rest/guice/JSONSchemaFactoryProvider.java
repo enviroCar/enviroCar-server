@@ -16,28 +16,27 @@
  */
 package org.envirocar.server.rest.guice;
 
-import java.lang.reflect.Field;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ExecutionException;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.fge.jsonschema.SchemaVersion;
-import com.github.fge.jsonschema.cfg.LoadingConfiguration;
-import com.github.fge.jsonschema.cfg.LoadingConfigurationBuilder;
 import com.github.fge.jsonschema.cfg.ValidationConfiguration;
 import com.github.fge.jsonschema.cfg.ValidationConfigurationBuilder;
-import com.github.fge.jsonschema.exceptions.unchecked.ProcessingError;
+import com.github.fge.jsonschema.core.load.configuration.LoadingConfiguration;
+import com.github.fge.jsonschema.core.load.configuration.LoadingConfigurationBuilder;
+import com.github.fge.jsonschema.core.ref.JsonRef;
 import com.github.fge.jsonschema.format.draftv3.DateAttribute;
 import com.github.fge.jsonschema.library.DraftV4Library;
 import com.github.fge.jsonschema.library.Library;
 import com.github.fge.jsonschema.main.JsonSchemaFactory;
-import com.github.fge.jsonschema.ref.JsonRef;
 import com.google.common.cache.LoadingCache;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.ProvisionException;
 import com.google.inject.name.Named;
+
+import java.lang.reflect.Field;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ExecutionException;
 
 /**
  * TODO JavaDoc
@@ -69,14 +68,14 @@ public class JSONSchemaFactoryProvider implements Provider<JsonSchemaFactory> {
         for (String schema : schemas) {
             try {
                 cfgb.preloadSchema(cache.get(schema));
-            } catch (ProcessingError | ExecutionException ex) {
+            } catch (IllegalArgumentException | ExecutionException ex) {
                 throw new ProvisionException("Error loading " + schema, ex);
             }
         }
         return cfgb.freeze();
     }
 
-    protected ValidationConfiguration validationConfiguration() {
+    private ValidationConfiguration validationConfiguration() {
         Library modifiedV4 = DraftV4Library.get().thaw()
                 .addFormatAttribute("date", DateAttribute.getInstance())
                 .freeze();
@@ -92,8 +91,7 @@ public class JSONSchemaFactoryProvider implements Provider<JsonSchemaFactory> {
     }
 
     @SuppressWarnings("unchecked")
-    protected void setLibrary(ValidationConfigurationBuilder vcb,
-                              JsonRef ref, Library lib) {
+    private void setLibrary(ValidationConfigurationBuilder vcb, JsonRef ref, Library lib) {
         try {
             Field librariesField = ValidationConfigurationBuilder.class.getDeclaredField("libraries");
             librariesField.setAccessible(true);
@@ -105,10 +103,10 @@ public class JSONSchemaFactoryProvider implements Provider<JsonSchemaFactory> {
         }
     }
 
-    protected void setDefaultLibrary(ValidationConfigurationBuilder vcb,
-                                     Library lib) {
+    private void setDefaultLibrary(ValidationConfigurationBuilder vcb, Library lib) {
         try {
             Field defaultLibraryField = ValidationConfigurationBuilder.class.getDeclaredField("defaultLibrary");
+
             defaultLibraryField.setAccessible(true);
             defaultLibraryField.set(vcb, lib);
             defaultLibraryField.setAccessible(false);

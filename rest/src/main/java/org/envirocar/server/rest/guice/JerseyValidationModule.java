@@ -16,14 +16,9 @@
  */
 package org.envirocar.server.rest.guice;
 
-import static org.envirocar.server.rest.validation.JSONSchemaResourceFilterFactory.VALIDATE_REQUESTS;
-import static org.envirocar.server.rest.validation.JSONSchemaResourceFilterFactory.VALIDATE_RESPONSES;
-
-import java.io.IOException;
-
 import com.fasterxml.jackson.databind.JsonNode;
+import com.github.fge.jackson.JsonLoader;
 import com.github.fge.jsonschema.main.JsonSchemaFactory;
-import com.github.fge.jsonschema.util.JsonLoader;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -32,6 +27,11 @@ import com.google.inject.Provides;
 import com.google.inject.Scopes;
 import com.google.inject.multibindings.Multibinder;
 import com.google.inject.name.Names;
+
+import java.io.IOException;
+
+import static org.envirocar.server.rest.validation.JSONSchemaResourceFilterFactory.VALIDATE_REQUESTS;
+import static org.envirocar.server.rest.validation.JSONSchemaResourceFilterFactory.VALIDATE_RESPONSES;
 
 /**
  * TODO JavaDoc
@@ -43,7 +43,7 @@ public class JerseyValidationModule extends AbstractModule {
     protected void configure() {
         Multibinder<String> mb = Multibinder
                 .newSetBinder(binder(), String.class,
-                              Names.named(JSONSchemaFactoryProvider.SCHEMAS));
+                        Names.named(JSONSchemaFactoryProvider.SCHEMAS));
         mb.addBinding().toInstance("/schema/definitions.json");
         mb.addBinding().toInstance("/schema/geometry.json");
         mb.addBinding().toInstance("/schema/group.create.json");

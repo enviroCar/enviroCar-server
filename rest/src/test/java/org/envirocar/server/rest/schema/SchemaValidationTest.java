@@ -16,20 +16,17 @@
  */
 package org.envirocar.server.rest.schema;
 
-import java.io.IOException;
-import java.util.Set;
-
+import com.github.fge.jackson.JsonLoader;
+import com.github.fge.jsonschema.SchemaVersion;
 import org.envirocar.server.rest.guice.JSONSchemaFactoryProvider;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
 import org.junit.runner.RunWith;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.github.fge.jsonschema.SchemaVersion;
-import com.github.fge.jsonschema.util.JsonLoader;
-import com.google.inject.Inject;
-import com.google.inject.name.Named;
+import javax.inject.Inject;
+import javax.inject.Named;
+import java.util.Set;
 
 /**
  * TODO JavaDoc
@@ -38,8 +35,7 @@ import com.google.inject.name.Named;
  */
 @RunWith(GuiceRunner.class)
 public class SchemaValidationTest {
-    public static final String SCHEMA_URI =
-            SchemaVersion.DRAFTV4.getLocation().toASCIIString();
+    private static final String SCHEMA_URI = SchemaVersion.DRAFTV4.getLocation().toASCIIString();
     @Inject
     @Named(JSONSchemaFactoryProvider.SCHEMAS)
     private Set<String> schemas;
@@ -50,13 +46,6 @@ public class SchemaValidationTest {
 
     @Test
     public void validate() {
-        for (String schema : schemas) {
-            try {
-                JsonNode json = JsonLoader.fromResource(schema);
-                errors.checkThat(json, validation.validInstanceOf(SCHEMA_URI));
-            } catch (IOException ex) {
-                errors.addError(ex);
-            }
-        }
+        schemas.forEach(schema -> errors.checkThat(errors.checkSucceeds(() -> JsonLoader.fromResource(schema)), validation.validInstanceOf(SCHEMA_URI)));
     }
 }

@@ -16,10 +16,19 @@
  */
 package org.envirocar.server.rest.schema;
 
-import java.io.IOException;
-
-import javax.ws.rs.core.MediaType;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectReader;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.github.fge.jsonschema.core.exceptions.ProcessingException;
+import com.github.fge.jsonschema.core.report.ProcessingMessage;
+import com.github.fge.jsonschema.core.report.ProcessingReport;
+import com.github.fge.jsonschema.main.JsonSchema;
+import com.github.fge.jsonschema.main.JsonSchemaFactory;
+import com.google.inject.Inject;
 import org.envirocar.server.rest.JSONConstants;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.guice.JerseyCodingModule;
@@ -30,26 +39,15 @@ import org.hamcrest.TypeSafeDiagnosingMatcher;
 import org.junit.rules.TestRule;
 import org.junit.runners.model.Statement;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectReader;
-import com.fasterxml.jackson.databind.ObjectWriter;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.github.fge.jsonschema.exceptions.ProcessingException;
-import com.github.fge.jsonschema.main.JsonSchema;
-import com.github.fge.jsonschema.main.JsonSchemaFactory;
-import com.github.fge.jsonschema.report.ProcessingMessage;
-import com.github.fge.jsonschema.report.ProcessingReport;
-import com.google.inject.Inject;
+import javax.ws.rs.core.MediaType;
+import java.io.IOException;
 
 /**
  * TODO JavaDoc
  *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-@Modules({ JerseyCodingModule.class, JerseyValidationModule.class })
+@Modules({JerseyCodingModule.class, JerseyValidationModule.class})
 public class ValidationRule implements TestRule {
     @Inject
     private ObjectReader reader;
@@ -69,8 +67,7 @@ public class ValidationRule implements TestRule {
     }
 
     public Matcher<JsonNode> validInstanceOf(MediaType mt) {
-        return new IsValidInstanceOf(mt.getParameters()
-                .get(MediaTypes.SCHEMA_ATTRIBUTE));
+        return new IsValidInstanceOf(mt.getParameters().get(MediaTypes.SCHEMA_ATTRIBUTE));
     }
 
     public Matcher<JsonNode> validInstanceOf(String uri) {
@@ -78,8 +75,7 @@ public class ValidationRule implements TestRule {
     }
 
     @Override
-    public Statement apply(Statement base,
-                           org.junit.runner.Description description) {
+    public Statement apply(Statement base, org.junit.runner.Description description) {
         return base;
     }
 
@@ -109,9 +105,7 @@ public class ValidationRule implements TestRule {
                             .writeValueAsString(objectNode));
                 }
                 return report.isSuccess();
-            } catch (ProcessingException ex) {
-                mismatchDescription.appendText(ex.getMessage());
-            } catch (JsonProcessingException ex) {
+            } catch (ProcessingException | JsonProcessingException ex) {
                 mismatchDescription.appendText(ex.getMessage());
             }
             return false;

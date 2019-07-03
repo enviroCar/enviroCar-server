@@ -23,11 +23,11 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.github.fge.jsonschema.exceptions.ProcessingException;
+import com.github.fge.jsonschema.core.exceptions.ProcessingException;
+import com.github.fge.jsonschema.core.report.ProcessingMessage;
+import com.github.fge.jsonschema.core.report.ProcessingReport;
 import com.github.fge.jsonschema.main.JsonSchema;
 import com.github.fge.jsonschema.main.JsonSchemaFactory;
-import com.github.fge.jsonschema.report.ProcessingMessage;
-import com.github.fge.jsonschema.report.ProcessingReport;
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
@@ -60,8 +60,7 @@ import java.util.zip.GZIPInputStream;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
-    private static final Logger log = LoggerFactory
-            .getLogger(JSONSchemaResourceFilterFactory.class);
+    private static final Logger log = LoggerFactory.getLogger(JSONSchemaResourceFilterFactory.class);
     public static final String VALIDATE_REQUESTS = "validate_requests";
     public static final String VALIDATE_RESPONSES = "validate_responses";
     private final boolean validateRequests;
@@ -107,16 +106,7 @@ public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
         }
     }
 
-    protected String getRequestType(AbstractMethod am) throws
-            IllegalArgumentException {
-        Schema schema = am.getAnnotation(Schema.class);
-        if (schema != null && !schema.request().isEmpty()) {
-            return schema.request();
-        }
-        return null;
-    }
-
-    protected void validate(JsonNode entity, String schema) throws ValidationException, IOException {
+    private void validate(JsonNode entity, String schema) throws ValidationException {
         try {
             validate(entity, schemaFactory.getJsonSchema(schema));
         } catch (ProcessingException ex) {
@@ -124,7 +114,7 @@ public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
         }
     }
 
-    protected void validate(JsonNode instance, JsonSchema schema) throws ValidationException, ProcessingException {
+    private void validate(JsonNode instance, JsonSchema schema) throws ValidationException, ProcessingException {
         ProcessingReport report = schema.validate(instance);
         if (!report.isSuccess()) {
             ObjectNode error = factory.objectNode();
@@ -177,7 +167,7 @@ public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
             return request;
         }
 
-        protected void adjustContentType(ContainerRequest request) {
+        private void adjustContentType(ContainerRequest request) {
             MediaType newMt = new MediaType("application", "json", ImmutableMap
                     .<String, String>builder()
                     .putAll(request.getMediaType().getParameters())
@@ -236,7 +226,7 @@ public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
             return response;
         }
 
-        protected void adjustContentType(ContainerResponse response) {
+        private void adjustContentType(ContainerResponse response) {
             MediaType mediaType = response.getMediaType();
             if (!mediaType.getParameters().containsKey(MediaTypes.SCHEMA_ATTRIBUTE)) {
                 MediaType newMt = new MediaType("application", "json",
@@ -289,7 +279,7 @@ public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
             }
         }
 
-        protected byte[] gunzip(byte[] bytes) throws IOException {
+        private byte[] gunzip(byte[] bytes) throws IOException {
             try (ByteArrayInputStream bain = new ByteArrayInputStream(bytes);
                  ByteArrayOutputStream out = new ByteArrayOutputStream();
                  GZIPInputStream gzin = new GZIPInputStream(bain)) {
@@ -303,7 +293,7 @@ public class JSONSchemaResourceFilterFactory implements ResourceFilterFactory {
             }
         }
 
-        protected void validate(byte[] bytes) throws IOException, WebApplicationException {
+        private void validate(byte[] bytes) throws IOException, WebApplicationException {
             String entity = new String(bytes, ReaderWriter.getCharset(mediaType));
             try {
                 JSONSchemaResourceFilterFactory.this.validate(reader.readTree(entity), getSchema());
