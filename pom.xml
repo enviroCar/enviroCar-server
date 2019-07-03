@@ -47,10 +47,10 @@
         <morphia-version>1.3.2</morphia-version>
         <jersey-version>1.19.4</jersey-version>
         <slf4j-version>1.7.25</slf4j-version>
-        <geotools.version>8.7</geotools.version>
-        <wps.version>3.2.0</wps.version>
-        <guice-version>4.2.2</guice.version>
-        <jackson.version>2.9.9</jackson.version>
+        <geotools-version>8.7</geotools-version>
+        <wps-version>3.2.0</wps-version>
+        <guice-version>4.2.2</guice-version>
+        <jackson-version>2.9.9</jackson-version>
     </properties>
     <repositories>
         <repository>
@@ -113,35 +113,36 @@
             <dependency>
                 <groupId>org.n52.wps</groupId>
                 <artifactId>52n-wps-io</artifactId>
-                <version>${wps.version}</version>
+                <version>${wps-
+                         version}</version>
             </dependency>
             <!-- START import geotools dependencies -->
             <dependency>
                 <groupId>org.geotools</groupId>
                 <artifactId>geotools</artifactId>
-                <version>${geotools.version}</version>
+                <version>${geotools-version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
             <dependency>
                 <groupId>org.geotools</groupId>
                 <artifactId>gt-main</artifactId>
-                <version>${geotools.version}</version>
+                <version>${geotools-version}</version>
             </dependency>
             <dependency>
                 <groupId>org.geotools</groupId>
                 <artifactId>gt-referencing</artifactId>
-                <version>${geotools.version}</version>
+                <version>${geotools-version}</version>
             </dependency>
             <dependency>
                 <groupId>org.geotools</groupId>
                 <artifactId>gt-epsg-wkt</artifactId>
-                <version>${geotools.version}</version>
+                <version>${geotools-version}</version>
             </dependency>
             <dependency>
                 <groupId>org.geotools</groupId>
                 <artifactId>gt-shapefile</artifactId>
-                <version>${geotools.version}</version>
+                <version>${geotools-version}</version>
             </dependency>
             <!-- END import geotools dependencies -->
             <dependency>
@@ -360,7 +361,7 @@
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-core</artifactId>
-                <version>${jackson.version}</version>
+                <version>${jackson-version}</version>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
@@ -370,7 +371,7 @@
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-annotations</artifactId>
-                <version>${jackson.version}</version>
+                <version>${jackson-version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.httpcomponents</groupId>
