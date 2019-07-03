@@ -18,7 +18,6 @@ package org.envirocar.server.core.filter;
 
 import org.envirocar.server.core.SpatialFilter;
 import org.envirocar.server.core.TemporalFilter;
-import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.util.pagination.Pagination;
 
 /**
@@ -27,44 +26,28 @@ import org.envirocar.server.core.util.pagination.Pagination;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class TrackFilter {
-    private final User user;
     private final SpatialFilter spatialFilter;
     private final TemporalFilter temporalFilter;
     private final Pagination pagination;
 
-    public TrackFilter(User u, SpatialFilter sf, TemporalFilter tf, Pagination p) {
-        this.user = u;
+    public TrackFilter(SpatialFilter sf, TemporalFilter tf, Pagination p) {
         this.spatialFilter = sf;
         this.pagination = p;
         this.temporalFilter = tf;
     }
 
-    public TrackFilter(User u, SpatialFilter g, Pagination p) {
-        this(u, g, null, p);
-    }
 
     public TrackFilter(SpatialFilter g, Pagination p) {
-        this(null, g, null, p);
+        this(g, null, p);
     }
 
-    public TrackFilter(User u, Pagination p) {
-        this(u, null, null, p);
-    }
 
     public TrackFilter(Pagination p) {
-        this(null, null, null, p);
+        this(null, null, p);
     }
 
     public TrackFilter() {
-        this(null, null, null, null);
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public boolean hasUser() {
-        return user != null;
+        this(null, null, null);
     }
 
     public SpatialFilter getSpatialFilter() {

@@ -18,7 +18,6 @@ package org.envirocar.server.core.event;
 
 import org.envirocar.server.core.entities.Measurements;
 import org.envirocar.server.core.entities.Track;
-import org.envirocar.server.core.entities.User;
 
 /**
  * TODO JavaDoc
@@ -27,16 +26,14 @@ import org.envirocar.server.core.entities.User;
  */
 public class DeletedTrackEvent implements TrackEvent {
     private final Track track;
-    private final User user;
     private final Measurements measurements;
 
-    public DeletedTrackEvent(Track track, User user) {
-        this(track, user, null);
+    public DeletedTrackEvent(Track track) {
+        this(track, null);
     }
 
-    public DeletedTrackEvent(Track track, User user, Measurements measurements) {
+    public DeletedTrackEvent(Track track, Measurements measurements) {
         this.track = track;
-        this.user = user;
         this.measurements = measurements;
     }
 
@@ -45,12 +42,7 @@ public class DeletedTrackEvent implements TrackEvent {
         return track;
     }
 
-    @Override
-    public User getUser() {
-        return user;
-    }
-    
-    public Measurements getMeasurements(){
+    public Measurements getMeasurements() {
         return measurements;
     }
 }

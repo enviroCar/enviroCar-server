@@ -18,8 +18,11 @@ package org.envirocar.server.core.guice;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
-import org.envirocar.server.core.entities.*;
-import org.envirocar.server.core.validation.*;
+import org.envirocar.server.core.entities.Measurement;
+import org.envirocar.server.core.entities.Track;
+import org.envirocar.server.core.validation.EntityValidator;
+import org.envirocar.server.core.validation.MeasurementValidator;
+import org.envirocar.server.core.validation.TrackValidator;
 
 /**
  * TODO JavaDoc
@@ -30,17 +33,9 @@ public class ValidatorModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(new TypeLiteral<EntityValidator<User>>() {
-        }).to(UserValidator.class);
-        bind(new TypeLiteral<EntityValidator<Group>>() {
-        }).to(GroupValidator.class);
         bind(new TypeLiteral<EntityValidator<Track>>() {
         }).to(TrackValidator.class);
         bind(new TypeLiteral<EntityValidator<Measurement>>() {
         }).to(MeasurementValidator.class);
-        bind(new TypeLiteral<EntityValidator<Fueling>>() {
-        }).to(FuelingValidator.class);
-
-        bind(LegalPolicyValidator.class).to(LegalPolicyValidatorImpl.class);
     }
 }

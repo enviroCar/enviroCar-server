@@ -17,7 +17,6 @@
 package org.envirocar.server.core.event;
 
 import org.envirocar.server.core.entities.Track;
-import org.envirocar.server.core.entities.User;
 
 /**
  * TODO JavaDoc
@@ -25,11 +24,9 @@ import org.envirocar.server.core.entities.User;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class ChangedTrackEvent implements TrackEvent {
-    private final User user;
     private final Track track;
 
-    public ChangedTrackEvent(User user, Track track) {
-        this.user = user;
+    public ChangedTrackEvent(Track track) {
         this.track = track;
     }
 
@@ -38,8 +35,4 @@ public class ChangedTrackEvent implements TrackEvent {
         return this.track;
     }
 
-    @Override
-    public User getUser() {
-        return this.user;
-    }
 }

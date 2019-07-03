@@ -16,13 +16,12 @@
  */
 package org.envirocar.server.core;
 
+import com.google.inject.Inject;
 import org.envirocar.server.core.dao.StatisticsDao;
 import org.envirocar.server.core.entities.Phenomenon;
 import org.envirocar.server.core.filter.StatisticsFilter;
 import org.envirocar.server.core.statistics.Statistic;
 import org.envirocar.server.core.statistics.Statistics;
-
-import com.google.inject.Inject;
 
 /**
  * TODO JavaDoc
@@ -43,8 +42,7 @@ public class StatisticsServiceImpl implements StatisticsService {
     }
 
     @Override
-    public Statistic getStatistic(StatisticsFilter request,
-                                  Phenomenon phenomenon) {
+    public Statistic getStatistic(StatisticsFilter request, Phenomenon phenomenon) {
         return this.dao.getStatistic(request, phenomenon);
     }
 }

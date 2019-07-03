@@ -50,12 +50,6 @@ public interface Track extends BaseEntity {
 
     boolean hasBoundingBox();
 
-    User getUser();
-
-    void setUser(User user);
-
-    boolean hasUser();
-
     Sensor getSensor();
 
     void setSensor(Sensor track);

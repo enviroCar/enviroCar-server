@@ -16,11 +16,10 @@
  */
 package org.envirocar.server.core.filter;
 
+import org.envirocar.server.core.util.pagination.Pagination;
+
 import java.util.Collections;
 import java.util.Set;
-
-import org.envirocar.server.core.entities.User;
-import org.envirocar.server.core.util.pagination.Pagination;
 
 /**
  * TODO JavaDoc
@@ -31,24 +30,13 @@ public class SensorFilter {
     private final String type;
     private final Set<PropertyFilter> filter;
     private final Pagination pagination;
-    private final User user;
 
     public SensorFilter(String type,
-                        User user,
                         Set<PropertyFilter> filter,
                         Pagination pagination) {
         this.type = type;
         this.filter = filter;
         this.pagination = pagination;
-        this.user = user;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public boolean hasUser() {
-        return this.user != null;
     }
 
     public String getType() {

@@ -25,6 +25,4 @@ import org.envirocar.server.core.exception.ValidationException;
  */
 public interface EntityValidator<T> {
     void validateCreate(T t) throws ValidationException;
-
-    void validateUpdate(T t) throws ValidationException;
 }
