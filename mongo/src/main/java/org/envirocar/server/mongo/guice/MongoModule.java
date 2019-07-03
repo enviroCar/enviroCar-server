@@ -23,15 +23,10 @@ import com.google.inject.multibindings.Multibinder;
 import com.mongodb.DB;
 import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
-import org.envirocar.server.core.activities.*;
 import org.envirocar.server.core.entities.*;
 import org.envirocar.server.core.guice.ResourceShutdownListener;
 import org.envirocar.server.mongo.MongoDB;
 import org.envirocar.server.mongo.MongoShutdownListener;
-import org.envirocar.server.mongo.activities.MongoActivity;
-import org.envirocar.server.mongo.activities.MongoGroupActivity;
-import org.envirocar.server.mongo.activities.MongoTrackActivity;
-import org.envirocar.server.mongo.activities.MongoUserActivity;
 import org.envirocar.server.mongo.entity.*;
 import org.envirocar.server.mongo.statistics.NewTrackListener;
 import org.envirocar.server.mongo.statistics.StatisticsUpdateScheduler;
@@ -48,21 +43,12 @@ public class MongoModule extends AbstractModule {
     @Override
     protected void configure() {
         install(new FactoryModuleBuilder()
-                .implement(User.class, MongoUser.class)
-                .implement(Group.class, MongoGroup.class)
                 .implement(Track.class, MongoTrack.class)
                 .implement(Measurement.class, MongoMeasurement.class)
                 .implement(MeasurementValue.class, MongoMeasurementValue.class)
                 .implement(Phenomenon.class, MongoPhenomenon.class)
                 .implement(Sensor.class, MongoSensor.class)
-                .implement(Fueling.class, MongoFueling.class)
                 .build(EntityFactory.class));
-        install(new FactoryModuleBuilder()
-                .implement(Activity.class, MongoActivity.class)
-                .implement(GroupActivity.class, MongoGroupActivity.class)
-                .implement(TrackActivity.class, MongoTrackActivity.class)
-                .implement(UserActivity.class, MongoUserActivity.class)
-                .build(ActivityFactory.class));
         bind(MongoDB.class);
         bind(StatisticsUpdateScheduler.class).asEagerSingleton();
         bind(NewTrackListener.class).asEagerSingleton();

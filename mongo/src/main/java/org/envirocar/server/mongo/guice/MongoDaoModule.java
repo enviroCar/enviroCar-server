@@ -19,8 +19,6 @@ package org.envirocar.server.mongo.guice;
 import com.google.inject.AbstractModule;
 import org.envirocar.server.core.dao.*;
 import org.envirocar.server.mongo.dao.*;
-import org.envirocar.server.mongo.dao.privates.MongoPasswordResetDAO;
-import org.envirocar.server.mongo.dao.privates.PasswordResetDAO;
 
 /**
  * TODO JavaDoc
@@ -30,20 +28,12 @@ import org.envirocar.server.mongo.dao.privates.PasswordResetDAO;
 public class MongoDaoModule extends AbstractModule {
     @Override
     protected void configure() {
-        bind(UserDao.class).to(MongoUserDao.class);
-        bind(GroupDao.class).to(MongoGroupDao.class);
         bind(TrackDao.class).to(MongoTrackDao.class);
         bind(MeasurementDao.class).to(MongoMeasurementDao.class);
         bind(SensorDao.class).to(MongoSensorDao.class);
         bind(StatisticsDao.class).to(MongoStatisticsDao.class);
         bind(PhenomenonDao.class).to(MongoPhenomenonDao.class);
-        bind(ActivityDao.class).to(MongoActivityDao.class);
         bind(TermsOfUseDao.class).to(MongoTermsOfUseDao.class);
-        bind(AnnouncementsDao.class).to(MongoAnnouncementsDao.class);
-        bind(BadgesDao.class).to(MongoBadgesDao.class);
-        bind(PasswordResetDAO.class).to(MongoPasswordResetDAO.class);
-        bind(FuelingDao.class).to(MongoFuelingDao.class);
-        bind(UserStatisticDao.class).to(MongoUserStatisticDao.class);
         bind(PrivacyStatementDao.class).to(MongoPrivacyStatementDao.class);
     }
 }

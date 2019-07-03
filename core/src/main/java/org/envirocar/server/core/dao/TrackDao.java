@@ -30,10 +30,6 @@ public interface TrackDao {
 
     Track save(Track track);
 
-    void update(Track track);
-
-    void delete(Track track);
-
     Track getById(String id);
 
     Tracks get(TrackFilter request);

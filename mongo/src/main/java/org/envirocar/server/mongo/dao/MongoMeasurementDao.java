@@ -16,14 +16,9 @@
  */
 package org.envirocar.server.mongo.dao;
 
-import static java.util.stream.Collectors.toList;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.stream.StreamSupport;
-
+import com.google.inject.Inject;
+import com.mongodb.*;
+import com.vividsolutions.jts.geom.Geometry;
 import org.bson.BSONObject;
 import org.bson.types.ObjectId;
 import org.envirocar.server.core.SpatialFilter;
@@ -33,7 +28,6 @@ import org.envirocar.server.core.dao.MeasurementDao;
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.Measurements;
 import org.envirocar.server.core.entities.Track;
-import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.exception.GeometryConverterException;
 import org.envirocar.server.core.filter.MeasurementFilter;
 import org.envirocar.server.core.util.GeometryConverter;
@@ -41,7 +35,6 @@ import org.envirocar.server.core.util.pagination.Pagination;
 import org.envirocar.server.mongo.MongoDB;
 import org.envirocar.server.mongo.entity.MongoMeasurement;
 import org.envirocar.server.mongo.entity.MongoTrack;
-import org.envirocar.server.mongo.entity.MongoUser;
 import org.envirocar.server.mongo.util.MongoUtils;
 import org.envirocar.server.mongo.util.MorphiaUtils;
 import org.mongodb.morphia.Datastore;
@@ -51,23 +44,16 @@ import org.mongodb.morphia.query.FindOptions;
 import org.mongodb.morphia.query.MorphiaIterator;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.QueryImpl;
-import org.mongodb.morphia.query.UpdateResults;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.inject.Inject;
-import com.mongodb.AggregationOptions;
-import com.mongodb.BasicDBList;
-import com.mongodb.BasicDBObject;
-import com.mongodb.BasicDBObjectBuilder;
-import com.mongodb.Cursor;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBDecoderFactory;
-import com.mongodb.DBObject;
-import com.mongodb.DBRef;
-import com.mongodb.WriteResult;
-import com.vividsolutions.jts.geom.Geometry;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.StreamSupport;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * TODO JavaDoc
@@ -98,22 +84,9 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
 
     @Override
     public MongoMeasurement create(Measurement measurement) {
-        return save(measurement);
-    }
-
-    @Override
-    public MongoMeasurement save(Measurement measurement) {
         MongoMeasurement mongoMeasurement = (MongoMeasurement) measurement;
         save(mongoMeasurement);
         return mongoMeasurement;
-    }
-
-    @Override
-    public void delete(Measurement m) {
-        delete(((MongoMeasurement) m).getId());
-        if (m.hasTrack()) {
-            updateTrackTimeForDeletedMeasurement(m);
-        }
     }
 
     public void updateTrackTimeForDeletedMeasurement(Measurement m) {
@@ -157,9 +130,6 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
         if (request.hasTrack()) {
             q.field(MongoMeasurement.TRACK).equal(key(request.getTrack()));
         }
-        if (request.hasUser()) {
-            q.field(MongoMeasurement.USER).equal(key(request.getUser()));
-        }
         if (request.hasTemporalFilter()) {
             MorphiaUtils.temporalFilter(q.field(MongoMeasurement.TIME), request.getTemporalFilter());
         }
@@ -179,9 +149,6 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
         if (request.hasTrack()) {
             q.add(MongoMeasurement.TRACK, ref(request.getTrack()));
         }
-        if (request.hasUser()) {
-            q.add(MongoMeasurement.USER, ref(request.getUser()));
-        }
         if (request.hasTemporalFilter()) {
             q.add(MongoMeasurement.TIME, MongoUtils.temporalFilter(request.getTemporalFilter()));
         }
@@ -197,26 +164,6 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
             return null;
         }
         return get(oid);
-    }
-
-    void removeUser(MongoUser user) {
-        UpdateResults result = update(
-                q().field(MongoMeasurement.USER).equal(key(user)),
-                up().unset(MongoMeasurement.USER));
-        if (result.getWriteResult() != null && !result.getWriteResult().wasAcknowledged()) {
-            log.error("Error removing user {} from measurement: {}", user, result.getWriteResult());
-        } else {
-            log.debug("Removed user {} from {} measurements", user, result.getUpdatedCount());
-        }
-    }
-
-    void deleteUser(MongoUser user) {
-        WriteResult result = delete(q().field(MongoTrack.USER).equal(key(user)));
-        if (result.wasAcknowledged()) {
-            log.debug("Removed user {} from {} measurement", user, result.getN());
-        } else {
-            log.error("Error removing user {} from measurement: {}", user, result);
-        }
     }
 
     @Override
@@ -241,9 +188,6 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
                 ops.add(matchGeometry(filter.getSpatialFilter().getGeom()));
             }
             //TODO add further spatial filters
-        }
-        if (filter.hasUser()) {
-            ops.add(matchUser(filter.getUser()));
         }
         if (filter.hasTrack()) {
             ops.add(matchTrack(filter.getTrack()));
@@ -270,10 +214,6 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
 
     private DBObject matchGeometry(Geometry polygon) {
         return MongoUtils.match(MongoMeasurement.GEOMETRY, withinGeometry(polygon));
-    }
-
-    private DBObject matchUser(User user) {
-        return MongoUtils.match(MongoMeasurement.USER, ref(user));
     }
 
     private DBObject matchTrack(Track track) {
@@ -338,11 +278,11 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
             }
         }
         cursor.sort(QueryImpl.parseFieldsString(MongoMeasurement.TIME,
-                                                MongoMeasurement.class,
-                                                mapper, true));
+                MongoMeasurement.class,
+                mapper, true));
         Iterable<MongoMeasurement> i = new MorphiaIterator<>(ds,
-                                                             cursor, mapper, MongoMeasurement.class, coll.getName(),
-                                                             mapper.createEntityCache());
+                cursor, mapper, MongoMeasurement.class, coll.getName(),
+                mapper.createEntityCache());
         return createPaginatedIterable(i, p, count);
     }
 }

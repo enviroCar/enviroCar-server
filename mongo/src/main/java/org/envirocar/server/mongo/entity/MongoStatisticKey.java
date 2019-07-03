@@ -16,10 +16,11 @@
  */
 package org.envirocar.server.mongo.entity;
 
+import com.google.common.base.Objects;
+import com.mongodb.DBRef;
 import org.mongodb.morphia.Key;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Property;
-import com.google.common.base.Objects;
 
 /**
  * TODO JavaDoc
@@ -30,19 +31,19 @@ import com.google.common.base.Objects;
 public class MongoStatisticKey {
     public static final String ALL = "all";
     public static final String TRACK = "track";
-    public static final String USER = "user";
     public static final String SENSOR = "sensor";
+    public static final String USER = "user";
     @Property(TRACK)
     private Key<MongoTrack> track;
     @Property(USER)
-    private Key<MongoUser> user;
+    private DBRef user;
     @Property(SENSOR)
     private Key<MongoSensor> sensor;
     @Property(ALL)
     private boolean all;
 
     public MongoStatisticKey(Key<MongoTrack> track,
-                             Key<MongoUser> user,
+                             DBRef user,
                              Key<MongoSensor> sensor) {
         this.track = track;
         this.user = user;
@@ -63,11 +64,11 @@ public class MongoStatisticKey {
         this.all = track == null && user == null && sensor == null;
     }
 
-    public Key<MongoUser> getUser() {
+    public DBRef getUser() {
         return user;
     }
 
-    public void setUser(Key<MongoUser> user) {
+    public void setUser(DBRef user) {
         this.user = user;
         this.all = track == null && user == null && sensor == null;
     }
@@ -96,8 +97,8 @@ public class MongoStatisticKey {
         }
         final MongoStatisticKey other = (MongoStatisticKey) obj;
         return Objects.equal(this.track, other.track) &&
-               Objects.equal(this.user, other.user) &&
-               Objects.equal(this.sensor, other.sensor);
+                Objects.equal(this.user, other.user) &&
+                Objects.equal(this.sensor, other.sensor);
 
     }
 
@@ -118,6 +119,4 @@ public class MongoStatisticKey {
     public String toString() {
         return String.format("MongoStatisticKey [user=%s, track=%s, sensor=%s]", this.user, this.track, this.sensor);
     }
-    
-    
 }

@@ -28,10 +28,6 @@ import org.envirocar.server.core.filter.MeasurementFilter;
 public interface MeasurementDao {
     Measurement create(Measurement measurement);
 
-    Measurement save(Measurement measurement);
-
-    void delete(Measurement measurement);
-
     Measurement getById(String id);
 
     Measurements get(MeasurementFilter request);

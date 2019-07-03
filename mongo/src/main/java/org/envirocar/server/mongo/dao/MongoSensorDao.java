@@ -19,19 +19,16 @@ package org.envirocar.server.mongo.dao;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
-import com.mongodb.*;
 import org.bson.types.ObjectId;
 import org.envirocar.server.core.CarSimilarityService;
 import org.envirocar.server.core.dao.SensorDao;
 import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.core.entities.Sensors;
-import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.exception.ResourceNotFoundException;
 import org.envirocar.server.core.filter.PropertyFilter;
 import org.envirocar.server.core.filter.SensorFilter;
 import org.envirocar.server.core.util.pagination.Pagination;
 import org.envirocar.server.mongo.MongoDB;
-import org.envirocar.server.mongo.entity.MongoMeasurement;
 import org.envirocar.server.mongo.entity.MongoSensor;
 import org.envirocar.server.mongo.util.MongoUtils;
 import org.mongodb.morphia.query.Query;
@@ -39,12 +36,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.DecimalFormatSymbols;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
-
-import static org.envirocar.server.mongo.dao.MongoMeasurementDao.ID;
 
 /**
  * TODO JavaDoc
@@ -94,33 +86,11 @@ public class MongoSensorDao extends AbstractMongoDao<ObjectId, MongoSensor, Sens
             q.field(MongoSensor.TYPE).equal(request.getType());
         }
 
-        if (request.hasUser()) {
-            q.field(MongoSensor.ID).in(getIds(request.getUser()));
-        }
-
         if (request.hasFilters()) {
             applyFilters(q, request.getFilters());
         }
         Sensors result = fetch(q, request.getPagination());
         return result;
-    }
-
-
-    public List<ObjectId> getIds(User user) {
-        DBObject group = MongoUtils.group(new BasicDBObject(ID, MongoUtils.valueOf(MongoMeasurement.SENSOR, ID)));
-        DBObject match = MongoUtils.match(MongoMeasurement.USER, ref(user));
-        DBCollection collection = getMongoDB().getDatastore().getCollection(MongoMeasurement.class);
-        List<DBObject> ops = Arrays.asList(match, group);
-        AggregationOptions options = AggregationOptions.builder().build();
-        try (Cursor result = collection.aggregate(ops, options)) {
-            List<ObjectId> ids = new LinkedList<>();
-            result.forEachRemaining(x -> {
-                //ids.add(new Key<>(MongoSensor.class, collection.getName(), x.get(ID)));
-                ids.add((ObjectId) x.get(ID));
-            });
-            return ids;
-        }
-
     }
 
     @Override

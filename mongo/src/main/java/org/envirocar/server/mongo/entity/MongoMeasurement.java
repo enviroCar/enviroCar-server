@@ -16,31 +16,18 @@
  */
 package org.envirocar.server.mongo.entity;
 
-import java.util.Set;
-
-import org.bson.types.ObjectId;
-import org.joda.time.DateTime;
-
-import org.mongodb.morphia.Key;
-import org.mongodb.morphia.annotations.Embedded;
-import org.mongodb.morphia.annotations.Entity;
-import org.mongodb.morphia.annotations.Id;
-import org.mongodb.morphia.annotations.Indexed;
-import org.mongodb.morphia.annotations.Property;
-import org.mongodb.morphia.annotations.Transient;
-import org.mongodb.morphia.mapping.Mapper;
-import org.mongodb.morphia.utils.IndexDirection;
-
 import com.google.common.base.Objects;
 import com.google.common.collect.Sets;
 import com.vividsolutions.jts.geom.Geometry;
+import org.bson.types.ObjectId;
+import org.envirocar.server.core.entities.*;
+import org.joda.time.DateTime;
+import org.mongodb.morphia.Key;
+import org.mongodb.morphia.annotations.*;
+import org.mongodb.morphia.mapping.Mapper;
+import org.mongodb.morphia.utils.IndexDirection;
 
-import org.envirocar.server.core.entities.Measurement;
-import org.envirocar.server.core.entities.MeasurementValue;
-import org.envirocar.server.core.entities.MeasurementValues;
-import org.envirocar.server.core.entities.Sensor;
-import org.envirocar.server.core.entities.Track;
-import org.envirocar.server.core.entities.User;
+import java.util.Set;
 
 /**
  * TODO JavaDoc
@@ -64,9 +51,6 @@ public class MongoMeasurement extends MongoEntityBase implements Measurement {
     @Indexed(IndexDirection.ASC)
     @Property(TIME)
     private DateTime time;
-    @Indexed
-    @Property(USER)
-    private Key<MongoUser> user;
     @Embedded(SENSOR)
     private MongoSensor sensor;
     @Indexed
@@ -76,8 +60,6 @@ public class MongoMeasurement extends MongoEntityBase implements Measurement {
     private final Set<MongoMeasurementValue> values = Sets.newHashSet();
     @Transient
     private MongoTrack _track;
-    @Transient
-    private MongoUser _user;
 
     @Override
     public Geometry getGeometry() {
@@ -135,20 +117,6 @@ public class MongoMeasurement extends MongoEntityBase implements Measurement {
     }
 
     @Override
-    public MongoUser getUser() {
-        if (this._user == null) {
-            this._user = getMongoDB().deref(MongoUser.class, this.user);
-        }
-        return this._user;
-    }
-
-    @Override
-    public void setUser(User user) {
-        this._user = (MongoUser) user;
-        this.user = getMongoDB().key(this._user);
-    }
-
-    @Override
     public void addValue(MeasurementValue value) {
         this.values.add((MongoMeasurementValue) value);
     }
@@ -183,11 +151,6 @@ public class MongoMeasurement extends MongoEntityBase implements Measurement {
     }
 
     @Override
-    public boolean hasUser() {
-        return getUser() != null;
-    }
-
-    @Override
     public boolean hasSensor() {
         return getSensor() != null;
     }
@@ -211,7 +174,6 @@ public class MongoMeasurement extends MongoEntityBase implements Measurement {
                 .add(IDENTIFIER, id)
                 .add(TIME, time)
                 .add(GEOMETRY, geometry)
-                .add(USER, user)
                 .add(SENSOR, sensor)
                 .add(TRACK, track)
                 .add(PHENOMENONS, values)
