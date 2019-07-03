@@ -25,9 +25,9 @@ import se.jiderhamn.classloader.leak.prevention.ClassLoaderLeakPreventor;
  *
  * @author matthes
  */
-public class EnvirocarLeakPreventor extends ClassLoaderLeakPreventor {
+public class EnviroCarLeakPreventor extends ClassLoaderLeakPreventor {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(EnvirocarLeakPreventor.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(EnviroCarLeakPreventor.class);
 
     @Override
     protected void error(Throwable t) {
