@@ -50,8 +50,6 @@ public class PhenomenonResource extends AbstractResource {
 
     @Path(STATISTIC)
     public StatisticResource getStatistic() {
-        checkRights(getRights().canSeeStatisticsOf(phenomenon));
-        return getResourceFactory()
-                .createStatisticResource(phenomenon, null, null, null);
+        return getResourceFactory().createStatisticResource(phenomenon, null, null);
     }
 }

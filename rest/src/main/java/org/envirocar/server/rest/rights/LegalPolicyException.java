@@ -16,29 +16,12 @@
  */
 package org.envirocar.server.rest.rights;
 
-import org.envirocar.server.core.entities.User;
+import org.envirocar.server.core.exception.ValidationException;
 
-/**
- * TODO JavaDoc
- *
- * @author Christian Autermann <autermann@uni-muenster.de>
- */
-public interface AccessRights extends UserRights,
-                                      TrackRights,
-                                      MeasurementRights,
-                                      GroupRights,
-                                      SensorRights,
-                                      PhenomenonRights,
-                                      FuelingRights {
-    boolean isSelf(User user);
+public abstract class LegalPolicyException extends ValidationException {
 
-    boolean canSeeStatistics();
+    public LegalPolicyException(String message) {
+        super(message);
+    }
 
-    boolean canSeeBadges();
-
-	boolean canSeeAnnouncements();
-
-	boolean canAccessPasswordReset();
-
-    boolean isAuthenticated();
 }

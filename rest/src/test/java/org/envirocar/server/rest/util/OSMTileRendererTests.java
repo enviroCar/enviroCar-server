@@ -16,12 +16,13 @@
  */
 package org.envirocar.server.rest.util;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import com.vividsolutions.jts.geom.Coordinate;
+import org.envirocar.server.rest.schema.GuiceRunner;
+import org.envirocar.server.rest.util.OSMTileRenderer.BoundingBox;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -30,12 +31,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.envirocar.server.rest.schema.GuiceRunner;
-import org.envirocar.server.rest.util.OSMTileRenderer.BoundingBox;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import com.vividsolutions.jts.geom.Coordinate;
+import static org.junit.Assert.*;
 
 @RunWith(GuiceRunner.class)
 public class OSMTileRendererTests {
@@ -172,7 +168,7 @@ public class OSMTileRendererTests {
         while ((strLine = br.readLine()) != null) {
             String[] ar = strLine.split(",");
             coords.add(new Coordinate(Double.parseDouble(ar[1]),
-                                      Double.parseDouble(ar[0])));
+                    Double.parseDouble(ar[0])));
         }
         br.close();
         return coords;
@@ -181,13 +177,13 @@ public class OSMTileRendererTests {
     public BufferedImage createImageTest(ArrayList<Coordinate> coords) throws IOException {
         int zoom = osmt.getZoomLevel(coords);
         BufferedImage image = new BufferedImage(256 * (osmt.getNumberOfXTiles() + 1 + 2 * osmt.getImagePadding()),
-                                                256 * (osmt.getNumberOfYTiles() + 1 + 2 * osmt.getImagePadding()),
-                                                BufferedImage.TYPE_INT_RGB);
+                256 * (osmt.getNumberOfYTiles() + 1 + 2 * osmt.getImagePadding()),
+                BufferedImage.TYPE_INT_RGB);
         Graphics2D g2d = osmt.appendImage(image,
-                                          osmt.getBaseTileX() + osmt.getNumberOfXTiles(),
-                                          osmt.getBaseTileX(),
-                                          osmt.getBaseTileY() + osmt.getNumberOfYTiles(),
-                                          osmt.getBaseTileY(), zoom);
+                osmt.getBaseTileX() + osmt.getNumberOfXTiles(),
+                osmt.getBaseTileX(),
+                osmt.getBaseTileY() + osmt.getNumberOfYTiles(),
+                osmt.getBaseTileY(), zoom);
         osmt.drawRoute(g2d, coords, null, zoom, osmt.getImagePadding());
         g2d.dispose();
         return image;

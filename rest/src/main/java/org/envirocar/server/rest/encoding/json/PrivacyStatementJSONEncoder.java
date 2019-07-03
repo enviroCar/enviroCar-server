@@ -20,7 +20,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.envirocar.server.core.entities.PrivacyStatement;
 import org.envirocar.server.rest.JSONConstants;
 import org.envirocar.server.rest.MediaTypes;
-import org.envirocar.server.rest.rights.AccessRights;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
@@ -38,7 +37,7 @@ public class PrivacyStatementJSONEncoder extends AbstractJSONEntityEncoder<Priva
     }
 
     @Override
-    public ObjectNode encodeJSON(PrivacyStatement t, AccessRights rights, MediaType mediaType) {
+    public ObjectNode encodeJSON(PrivacyStatement t, MediaType mediaType) {
         ObjectNode termsOfUse = getJsonFactory().objectNode();
         if (t.getIdentifier() != null) {
             termsOfUse.put(JSONConstants.IDENTIFIER_KEY, t.getIdentifier());

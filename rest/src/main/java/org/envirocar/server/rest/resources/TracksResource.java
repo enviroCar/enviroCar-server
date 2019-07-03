@@ -17,22 +17,18 @@
 package org.envirocar.server.rest.resources;
 
 import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import org.envirocar.server.core.SpatialFilter;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.entities.Tracks;
-import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.exception.BadRequestException;
 import org.envirocar.server.core.exception.TrackNotFoundException;
 import org.envirocar.server.core.exception.ValidationException;
 import org.envirocar.server.core.filter.TrackFilter;
 import org.envirocar.server.rest.*;
-import org.envirocar.server.rest.auth.Authenticated;
 import org.envirocar.server.rest.rights.HasAcceptedLatestLegalPolicies;
 import org.envirocar.server.rest.validation.Schema;
 
-import javax.annotation.Nullable;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 
@@ -43,13 +39,10 @@ import javax.ws.rs.core.Response;
  */
 public class TracksResource extends AbstractResource {
     public static final String TRACK = "{track}";
-    private final User user;
     private final GeometryFactory factory;
 
     @Inject
-    public TracksResource(@Assisted @Nullable User user,
-                          GeometryFactory factory) {
-        this.user = user;
+    public TracksResource(GeometryFactory factory) {
         this.factory = factory;
     }
 
@@ -62,22 +55,14 @@ public class TracksResource extends AbstractResource {
             spatialFilter = SpatialFilter.bbox(bbox.asPolygon(factory));
         }
         return getDataService()
-                .getTracks(new TrackFilter(user, spatialFilter,
-                        parseTemporalFilterForInterval(),
-                        getPagination()));
+                .getTracks(new TrackFilter(spatialFilter, parseTemporalFilterForInterval(), getPagination()));
     }
 
     @POST
-    @Authenticated
     @HasAcceptedLatestLegalPolicies
     @Schema(request = Schemas.TRACK_CREATE)
     @Consumes({MediaTypes.TRACK_CREATE})
     public Response create(Track track) throws ValidationException {
-        if (user != null) {
-            checkRights(getRights().isSelf(user));
-        }
-        track.setUser(getCurrentUser());
-
         if (track instanceof TrackWithMeasurments) {
             TrackWithMeasurments twm = (TrackWithMeasurments) track;
             track = getDataService().createTrack(twm.getTrack(), twm.getMeasurements());
@@ -90,8 +75,6 @@ public class TracksResource extends AbstractResource {
 
     @Path(TRACK)
     public TrackResource track(@PathParam("track") String id) throws TrackNotFoundException {
-        Track track = getDataService().getTrack(id);
-        checkRights(getRights().canSee(track));
-        return getResourceFactory().createTrackResource(track);
+        return getResourceFactory().createTrackResource(getDataService().getTrack(id));
     }
 }

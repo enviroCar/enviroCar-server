@@ -16,18 +16,13 @@
  */
 package org.envirocar.server.rest.encoding.json;
 
-import javax.ws.rs.core.MediaType;
-
-import org.joda.time.format.DateTimeFormatter;
-
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
-
 import org.envirocar.server.rest.encoding.JSONEntityEncoder;
+import org.joda.time.format.DateTimeFormatter;
 
-import org.envirocar.server.rest.rights.AccessRights;
+import javax.ws.rs.core.MediaType;
 
 /**
  * TODO JavaDoc
@@ -39,7 +34,6 @@ public abstract class AbstractJSONEntityEncoder<T>
         implements JSONEntityEncoder<T> {
     private JsonNodeFactory jsonFactory;
     private DateTimeFormatter dateTimeFormat;
-    private Provider<AccessRights> rights;
 
     public AbstractJSONEntityEncoder(Class<T> classType) {
         super(classType);
@@ -63,13 +57,8 @@ public abstract class AbstractJSONEntityEncoder<T>
         this.dateTimeFormat = dateTimeFormat;
     }
 
-    @Inject
-    public void setRights(Provider<AccessRights> rights) {
-        this.rights = rights;
-    }
-
     @Override
     public ObjectNode encodeJSON(T t, MediaType mt) {
-        return encodeJSON(t, rights.get(), mt);
+        return encodeJSON(t, mt);
     }
 }

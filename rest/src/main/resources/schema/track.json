@@ -44,9 +44,6 @@
         "sensor": {
           "$ref": "https://envirocar.org/api/stable/schema/sensor.json#"
         },
-        "user": {
-          "$ref": "https://envirocar.org/api/stable/schema/user.json#"
-        },
         "name": {
           "type": "string"
         },

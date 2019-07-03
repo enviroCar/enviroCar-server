@@ -16,33 +16,8 @@
  */
 package org.envirocar.server.rest.rights;
 
-import org.envirocar.server.core.entities.Measurement;
-
-/**
- * TODO JavaDoc
- *
- * @author Christian Autermann <autermann@uni-muenster.de>
- */
-public interface MeasurementRights {
-    boolean canSeeMeasurements();
-
-    boolean canSee(Measurement measurement);
-
-    boolean canSeeUserOf(Measurement measurement);
-
-    boolean canSeeSensorOf(Measurement measurement);
-
-    boolean canSeeTimeOf(Measurement measurement);
-
-    boolean canSeeCreationTimeOf(Measurement measurement);
-
-    boolean canSeeModificationTimeOf(Measurement measurement);
-
-    boolean canModify(Measurement measurement);
-
-    boolean canDelete(Measurement measurement);
-
-    boolean canSeeValuesOf(Measurement measurement);
-
-    boolean canSeeGeometryOf(Measurement t);
+public class TermsOfUseException extends LegalPolicyException {
+    public TermsOfUseException(String message) {
+        super(message);
+    }
 }

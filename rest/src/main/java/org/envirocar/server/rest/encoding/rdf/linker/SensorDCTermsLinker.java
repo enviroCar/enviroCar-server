@@ -16,22 +16,19 @@
  */
 package org.envirocar.server.rest.encoding.rdf.linker;
 
-import javax.ws.rs.core.UriBuilder;
-
-import org.envirocar.server.core.entities.Sensor;
-import org.envirocar.server.rest.rights.AccessRights;
-
 import com.google.inject.Provider;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
+import org.envirocar.server.core.entities.Sensor;
+
+import javax.ws.rs.core.UriBuilder;
 
 /**
- *
  * @author Jan Wirwahn
  */
 public class SensorDCTermsLinker extends DCTermsLinker<Sensor> {
     @Override
-    public void linkRest(Model m, Sensor t, AccessRights rights,
+    public void linkRest(Model m, Sensor t,
                          Resource r, Provider<UriBuilder> uriBuilder) {
     }
 }

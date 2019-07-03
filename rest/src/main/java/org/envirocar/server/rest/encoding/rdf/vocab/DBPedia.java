@@ -29,14 +29,10 @@ public class DBPedia {
     public static final String URI = "http://dbpedia.org/resource/";
     public static final String PREFIX = "dbpedia";
     private static final Model m = ModelFactory.createDefaultModel();
-    public static final Resource DBPEDIA_GASOLINE =
-            m.createResource(URI + "Gasoline");
-    public static final Resource DBPEDIA_DIESEL =
-            m.createResource(URI + "Diesel");
-    public static final Resource DBPEDIA_BIODIESEL =
-            m.createResource(URI + "Biodiesel");
-    public static final Resource DBPEDIA_KEROSENE =
-            m.createResource(URI + "Kerosene");
+    public static final Resource DBPEDIA_GASOLINE = m.createResource(URI + "Gasoline");
+    public static final Resource DBPEDIA_DIESEL = m.createResource(URI + "Diesel");
+    public static final Resource DBPEDIA_BIODIESEL = m.createResource(URI + "Biodiesel");
+    public static final Resource DBPEDIA_KEROSENE = m.createResource(URI + "Kerosene");
 
     private DBPedia() {
     }

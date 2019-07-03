@@ -16,16 +16,12 @@
  */
 package org.envirocar.server.rest.encoding.csv;
 
-import java.io.InputStream;
-
-import javax.ws.rs.core.MediaType;
-
+import com.google.inject.Inject;
 import org.envirocar.server.rest.encoding.CSVTrackEncoder;
-import org.envirocar.server.rest.rights.AccessRights;
 import org.joda.time.format.DateTimeFormatter;
 
-import com.google.inject.Inject;
-import com.google.inject.Provider;
+import javax.ws.rs.core.MediaType;
+import java.io.InputStream;
 
 /**
  * TODO JavaDoc
@@ -36,7 +32,6 @@ public abstract class AbstractCSVTrackEncoder<T>
         extends AbstractCSVMessageBodyWriter<T>
         implements CSVTrackEncoder<T> {
     private DateTimeFormatter dateTimeFormat;
-    private Provider<AccessRights> rights;
 
     public AbstractCSVTrackEncoder(Class<T> classType) {
         super(classType);
@@ -51,13 +46,8 @@ public abstract class AbstractCSVTrackEncoder<T>
         this.dateTimeFormat = dateTimeFormat;
     }
 
-    @Inject
-    public void setRights(Provider<AccessRights> rights) {
-        this.rights = rights;
-    }
-
     @Override
     public InputStream encodeCSV(T t, MediaType mt) {
-        return encodeCSV(t, rights.get(), mt);
+        return encodeCSV(t, mt);
     }
 }

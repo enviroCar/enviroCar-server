@@ -16,11 +16,10 @@
  */
 package org.envirocar.server.rest.encoding.rdf.linker;
 
-import java.net.URI;
-import java.util.Set;
-
-import javax.ws.rs.core.UriBuilder;
-
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.Resource;
 import org.envirocar.server.core.DataService;
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.Track;
@@ -28,12 +27,10 @@ import org.envirocar.server.core.filter.MeasurementFilter;
 import org.envirocar.server.rest.encoding.rdf.RDFLinker;
 import org.envirocar.server.rest.resources.MeasurementsResource;
 import org.envirocar.server.rest.resources.RootResource;
-import org.envirocar.server.rest.rights.AccessRights;
 
-import com.google.inject.Inject;
-import com.google.inject.Provider;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.Resource;
+import javax.ws.rs.core.UriBuilder;
+import java.net.URI;
+import java.util.Set;
 
 /**
  * @author Jan Wirwahn
@@ -51,7 +48,7 @@ public class TrackMeasurementsLinker extends DCTermsLinker<Track> {
     }
 
     @Override
-    public void linkRest(Model m, Track t, AccessRights rights,
+    public void linkRest(Model m, Track t,
                          Resource r, Provider<UriBuilder> uriBuilder) {
         UriBuilder mBuilder = uriBuilder.get()
                 .path(RootResource.class)
@@ -62,7 +59,7 @@ public class TrackMeasurementsLinker extends DCTermsLinker<Track> {
             URI uri = mBuilder.build(measurement.getIdentifier());
             Resource mr = m.createResource(uri.toASCIIString());
             for (RDFLinker<Measurement> l : linker) {
-                l.link(m, measurement, rights, mr, uriBuilder);
+                l.link(m, measurement, mr, uriBuilder);
             }
         }
     }

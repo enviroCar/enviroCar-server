@@ -21,12 +21,10 @@ import com.google.inject.assistedinject.Assisted;
 import org.envirocar.server.core.entities.Phenomenon;
 import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.core.entities.Track;
-import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.filter.StatisticsFilter;
 import org.envirocar.server.core.statistics.Statistic;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
-import org.envirocar.server.rest.resources.AbstractResource;
 import org.envirocar.server.rest.validation.Schema;
 
 import javax.annotation.Nullable;
@@ -40,17 +38,14 @@ import javax.ws.rs.Produces;
  */
 public class StatisticResource extends AbstractResource {
     private final Track track;
-    private final User user;
     private final Sensor sensor;
     private final Phenomenon phenomenon;
 
     @Inject
     public StatisticResource(@Nullable @Assisted Track track,
-                             @Nullable @Assisted User user,
                              @Nullable @Assisted Sensor sensor,
                              @Assisted Phenomenon phenomenon) {
         this.track = track;
-        this.user = user;
         this.sensor = sensor;
         this.phenomenon = phenomenon;
     }
@@ -59,15 +54,11 @@ public class StatisticResource extends AbstractResource {
     @Schema(response = Schemas.STATISTIC)
     @Produces({MediaTypes.STATISTIC, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
     public Statistic get() {
-        return getStatisticsService().getStatistic(new StatisticsFilter(user, track, sensor), phenomenon);
+        return getStatisticsService().getStatistic(new StatisticsFilter(track, sensor), phenomenon);
     }
 
     public Track getTrack() {
         return track;
-    }
-
-    public User getUser() {
-        return user;
     }
 
     public Sensor getSensor() {

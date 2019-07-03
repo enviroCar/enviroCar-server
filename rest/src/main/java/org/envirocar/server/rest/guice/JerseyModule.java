@@ -26,8 +26,6 @@ import com.sun.jersey.spi.container.ContainerResponseFilter;
 import com.sun.jersey.spi.container.ResourceFilterFactory;
 import org.envirocar.server.rest.CachingFilter;
 import org.envirocar.server.rest.URIContentNegotiationFilter;
-import org.envirocar.server.rest.auth.AuthenticationFilter;
-import org.envirocar.server.rest.auth.AuthenticationResourceFilterFactory;
 import org.envirocar.server.rest.pagination.PaginationFilter;
 import org.envirocar.server.rest.rights.HasAcceptedLatestLegalPoliciesResourceFilterFactory;
 import org.envirocar.server.rest.validation.JSONSchemaResourceFilterFactory;
@@ -64,20 +62,14 @@ public class JerseyModule extends JerseyServletModule {
     }
 
     protected List<Class<? extends ContainerResponseFilter>> responseFilters() {
-        return Arrays.asList(CachingFilter.class,
-                PaginationFilter.class,
-                GZIPContentEncodingFilter.class);
+        return Arrays.asList(CachingFilter.class, PaginationFilter.class, GZIPContentEncodingFilter.class);
     }
 
     protected List<Class<? extends ContainerRequestFilter>> requestFilters() {
-        return Arrays.asList(GZIPContentEncodingFilter.class,
-                URIContentNegotiationFilter.class,
-                AuthenticationFilter.class);
+        return Arrays.asList(GZIPContentEncodingFilter.class, URIContentNegotiationFilter.class);
     }
 
     protected List<Class<? extends ResourceFilterFactory>> filterFactories() {
-        return Arrays.asList(AuthenticationResourceFilterFactory.class,
-                HasAcceptedLatestLegalPoliciesResourceFilterFactory.class,
-                JSONSchemaResourceFilterFactory.class);
+        return Arrays.asList(HasAcceptedLatestLegalPoliciesResourceFilterFactory.class, JSONSchemaResourceFilterFactory.class);
     }
 }

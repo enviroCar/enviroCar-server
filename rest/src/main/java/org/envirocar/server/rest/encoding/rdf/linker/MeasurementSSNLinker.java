@@ -16,20 +16,6 @@
  */
 package org.envirocar.server.rest.encoding.rdf.linker;
 
-import org.envirocar.server.rest.encoding.rdf.vocab.SSN;
-import org.envirocar.server.rest.encoding.rdf.vocab.DUL;
-import javax.ws.rs.core.UriBuilder;
-
-import org.envirocar.server.core.entities.Measurement;
-import org.envirocar.server.core.entities.MeasurementValue;
-import org.envirocar.server.core.entities.MeasurementValues;
-import org.envirocar.server.rest.encoding.rdf.vocab.W3CGeo;
-import org.envirocar.server.rest.resources.PhenomenonsResource;
-import org.envirocar.server.rest.resources.RootResource;
-import org.envirocar.server.rest.resources.SensorsResource;
-import org.envirocar.server.rest.rights.AccessRights;
-import org.joda.time.format.DateTimeFormatter;
-
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
@@ -38,6 +24,18 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
 import com.vividsolutions.jts.geom.Point;
+import org.envirocar.server.core.entities.Measurement;
+import org.envirocar.server.core.entities.MeasurementValue;
+import org.envirocar.server.core.entities.MeasurementValues;
+import org.envirocar.server.rest.encoding.rdf.vocab.DUL;
+import org.envirocar.server.rest.encoding.rdf.vocab.SSN;
+import org.envirocar.server.rest.encoding.rdf.vocab.W3CGeo;
+import org.envirocar.server.rest.resources.PhenomenonsResource;
+import org.envirocar.server.rest.resources.RootResource;
+import org.envirocar.server.rest.resources.SensorsResource;
+import org.joda.time.format.DateTimeFormatter;
+
+import javax.ws.rs.core.UriBuilder;
 
 /**
  * TODO JavaDoc
@@ -61,8 +59,8 @@ public class MeasurementSSNLinker extends AbstractSSNLinker<Measurement> {
     }
 
     @Override
-    protected void linkInternal(Model m, Measurement t, AccessRights rights,
-                         Resource measurement, Provider<UriBuilder> uriBuilder) {
+    protected void linkInternal(Model m, Measurement t,
+                                Resource measurement, Provider<UriBuilder> uriBuilder) {
         MeasurementValues values = t.getValues();
 
         Resource samplingTime = createSamplingTime(m, measurement, t);
@@ -101,8 +99,8 @@ public class MeasurementSSNLinker extends AbstractSSNLinker<Measurement> {
                 .createResource(fragment(r, CREATIONTIME_FRAGMENT));
         creationTime.addProperty(RDF.type, DUL.TimeInterval);
         creationTime.addProperty(DUL.hasDataValue,
-                                 formatter.print(t.getCreationTime()),
-                                 XSDDatatype.XSDdateTime);
+                formatter.print(t.getCreationTime()),
+                XSDDatatype.XSDdateTime);
         return creationTime;
     }
 
@@ -110,8 +108,8 @@ public class MeasurementSSNLinker extends AbstractSSNLinker<Measurement> {
         Resource time = m.createResource(fragment(r, TIME_FRAGMENT));
         time.addProperty(RDF.type, DUL.TimeInterval);
         time.addProperty(DUL.hasDataValue,
-                         formatter.print(t.getTime()),
-                         XSDDatatype.XSDdateTime);
+                formatter.print(t.getTime()),
+                XSDDatatype.XSDdateTime);
         return time;
     }
 
@@ -158,24 +156,24 @@ public class MeasurementSSNLinker extends AbstractSSNLinker<Measurement> {
                                     MeasurementValue v, Resource unit) {
         Resource amount = m.createResource(
                 fragment(measurement, v.getPhenomenon().getName() +
-                                      VALUE_FRAGMENT_POSTFIX));
+                        VALUE_FRAGMENT_POSTFIX));
         amount.addProperty(RDF.type, DUL.Amount);
         amount.addProperty(DUL.isClassifiedBy, unit);
 
         if (v.getValue() instanceof Number) {
             amount.addLiteral(DUL.hasDataValue,
-                              ((Number) v.getValue()).doubleValue());
+                    ((Number) v.getValue()).doubleValue());
         } else if (v.getValue() instanceof Boolean) {
             amount.addLiteral(DUL.hasDataValue,
-                              ((Boolean) v.getValue()).booleanValue());
+                    ((Boolean) v.getValue()).booleanValue());
         } else if (v.getValue() instanceof String) {
             amount.addProperty(DUL.hasDataValue,
-                               (String) v.getValue(),
-                               XSDDatatype.XSDstring);
+                    (String) v.getValue(),
+                    XSDDatatype.XSDstring);
         } else {
             amount.addProperty(DUL.hasDataValue,
-                               v.getValue().toString(),
-                               XSDDatatype.XSDstring);
+                    v.getValue().toString(),
+                    XSDDatatype.XSDstring);
         }
         return amount;
     }
@@ -185,7 +183,7 @@ public class MeasurementSSNLinker extends AbstractSSNLinker<Measurement> {
                                           Resource unit) {
         Resource sensorOutput = m.createResource(
                 fragment(measurement, v.getPhenomenon().getName() +
-                                      OUT_FRAGMENT_POSTFIX));
+                        OUT_FRAGMENT_POSTFIX));
         sensorOutput.addProperty(RDF.type, SSN.SensorOutput);
         sensorOutput.addProperty(SSN.isProducedBy, sensor);
         Resource amount = createAmount(m, measurement, v, unit);

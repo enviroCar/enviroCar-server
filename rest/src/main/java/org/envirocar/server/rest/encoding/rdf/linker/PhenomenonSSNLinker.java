@@ -16,20 +16,18 @@
  */
 package org.envirocar.server.rest.encoding.rdf.linker;
 
-import javax.ws.rs.core.UriBuilder;
-
-import org.envirocar.server.core.entities.Phenomenon;
-import org.envirocar.server.rest.encoding.rdf.vocab.DUL;
-import org.envirocar.server.rest.encoding.rdf.vocab.SSN;
-import org.envirocar.server.rest.resources.PhenomenonsResource;
-import org.envirocar.server.rest.resources.RootResource;
-import org.envirocar.server.rest.rights.AccessRights;
-
 import com.google.inject.Provider;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
+import org.envirocar.server.core.entities.Phenomenon;
+import org.envirocar.server.rest.encoding.rdf.vocab.DUL;
+import org.envirocar.server.rest.encoding.rdf.vocab.SSN;
+import org.envirocar.server.rest.resources.PhenomenonsResource;
+import org.envirocar.server.rest.resources.RootResource;
+
+import javax.ws.rs.core.UriBuilder;
 
 /**
  * TODO JavaDoc
@@ -38,15 +36,14 @@ import com.hp.hpl.jena.vocabulary.RDFS;
  */
 public class PhenomenonSSNLinker extends AbstractSSNLinker<Phenomenon> {
     @Override
-    protected void linkInternal(Model m, Phenomenon t, AccessRights rights,
-            Resource uri, Provider<UriBuilder> uriBuilder) {
+    protected void linkInternal(Model m, Phenomenon t,
+                                Resource uri, Provider<UriBuilder> uriBuilder) {
         Resource phenomenon = m.createResource(uriBuilder.get()
                 .path(RootResource.class).path(RootResource.PHENOMENONS)
                 .path(PhenomenonsResource.PHENOMENON).build(t.getName())
                 .toASCIIString());
         phenomenon.addProperty(RDF.type, SSN.Property);
-        Resource unit = m.createResource(fragment(phenomenon,
-                MeasurementSSNLinker.UNIT_FRAGMENT));
+        Resource unit = m.createResource(fragment(phenomenon, MeasurementSSNLinker.UNIT_FRAGMENT));
         unit.addProperty(RDF.type, DUL.UnitOfMeasure);
         unit.addLiteral(RDFS.comment, t.getUnit());
     }

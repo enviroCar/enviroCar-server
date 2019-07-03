@@ -16,14 +16,12 @@
  */
 package org.envirocar.server.rest.encoding.rdf.linker;
 
-import javax.ws.rs.core.UriBuilder;
-
-import org.envirocar.server.rest.encoding.rdf.RDFLinker;
-import org.envirocar.server.rest.rights.AccessRights;
-
 import com.google.inject.Provider;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
+import org.envirocar.server.rest.encoding.rdf.RDFLinker;
+
+import javax.ws.rs.core.UriBuilder;
 
 /**
  * TODO JavaDoc
@@ -33,18 +31,13 @@ import com.hp.hpl.jena.rdf.model.Resource;
 public abstract class AbstractLinker<T> implements RDFLinker<T> {
 
     @Override
-    public final void link(Model m, T t, AccessRights rights, Resource uri,
-                           Provider<UriBuilder> uriBuilder) {
+    public final void link(Model m, T t, Resource uri, Provider<UriBuilder> uriBuilder) {
         addNamespaces(m);
-        linkInternal(m, t, rights, uri, uriBuilder);
+        linkInternal(m, t, uri, uriBuilder);
     }
 
     protected abstract void addNamespaces(Model m);
 
-    protected abstract void linkInternal(Model model,
-                                         T entity,
-                                         AccessRights rights,
-                                         Resource uri,
-                                         Provider<UriBuilder> uriBuilder);
+    protected abstract void linkInternal(Model model, T entity, Resource uri, Provider<UriBuilder> uriBuilder);
 
 }

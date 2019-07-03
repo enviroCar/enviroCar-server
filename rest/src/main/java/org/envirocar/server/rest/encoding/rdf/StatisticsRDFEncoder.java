@@ -20,7 +20,6 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.core.entities.Track;
-import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.statistics.Statistic;
 import org.envirocar.server.core.statistics.Statistics;
 import org.envirocar.server.rest.mapper.InternalServerError;
@@ -54,9 +53,8 @@ public class StatisticsRDFEncoder extends AbstractCollectionRDFEntityEncoder<Sta
             throw new InternalServerError();
         }
         StatisticsResource sr = (StatisticsResource) resource;
-        User user = sr.getUser();
         Track track = sr.getTrack();
         Sensor sensor = sr.getSensor();
-        return StatisticRDFEncoder.build(track, user, sensor, t.getPhenomenon(), builder);
+        return StatisticRDFEncoder.build(track, sensor, t.getPhenomenon(), builder);
     }
 }

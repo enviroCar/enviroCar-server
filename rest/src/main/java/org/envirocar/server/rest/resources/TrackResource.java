@@ -19,16 +19,13 @@ package org.envirocar.server.rest.resources;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import org.envirocar.server.core.entities.Track;
-import org.envirocar.server.core.exception.IllegalModificationException;
-import org.envirocar.server.core.exception.ValidationException;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
-import org.envirocar.server.rest.auth.Authenticated;
-import org.envirocar.server.rest.rights.HasAcceptedLatestLegalPolicies;
 import org.envirocar.server.rest.validation.Schema;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.Response;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 
 /**
  * TODO JavaDoc
@@ -48,17 +45,6 @@ public class TrackResource extends AbstractResource {
         this.track = track;
     }
 
-    @PUT
-    @Schema(request = Schemas.TRACK_MODIFY)
-    @Consumes({MediaTypes.TRACK_MODIFY})
-    @Authenticated
-    @HasAcceptedLatestLegalPolicies
-    public Response modify(Track changes) throws IllegalModificationException, ValidationException {
-        checkRights(getRights().canModify(track));
-        getDataService().modifyTrack(track, changes);
-        return Response.ok().build();
-    }
-
     @GET
     @Schema(response = Schemas.TRACK)
     @Produces({MediaTypes.TRACK, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT, MediaTypes.TEXT_CSV, MediaTypes.APPLICATION_ZIPPED_SHP})
@@ -66,29 +52,18 @@ public class TrackResource extends AbstractResource {
         return track;
     }
 
-    @DELETE
-    @Authenticated
-    @HasAcceptedLatestLegalPolicies
-    public void delete() {
-        checkRights(getRights().canDelete(track));
-        getDataService().deleteTrack(track);
-    }
-
     @Path(MEASUREMENTS)
     public MeasurementsResource measurements() {
-        checkRights(getRights().canSeeMeasurementsOf(track));
-        return getResourceFactory().createMeasurementsResource(null, track);
+        return getResourceFactory().createMeasurementsResource(track);
     }
 
     @Path(SENSOR)
     public SensorResource sensor() {
-        checkRights(getRights().canSeeSensorOf(track));
         return getResourceFactory().createSensorResource(track.getSensor());
     }
 
     @Path(STATISTICS)
     public StatisticsResource statistics() {
-        checkRights(getRights().canSeeStatisticsOf(track));
         return getResourceFactory().createStatisticsResource(track);
     }
 

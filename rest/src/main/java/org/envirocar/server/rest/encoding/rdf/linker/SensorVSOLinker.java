@@ -16,22 +16,19 @@
  */
 package org.envirocar.server.rest.encoding.rdf.linker;
 
-import java.util.Map;
-
-import javax.ws.rs.core.UriBuilder;
-
-import org.envirocar.server.core.entities.Sensor;
-import org.envirocar.server.rest.encoding.rdf.RDFLinker;
-import org.envirocar.server.rest.encoding.rdf.vocab.DBPedia;
-import org.envirocar.server.rest.encoding.rdf.vocab.GoodRelations;
-import org.envirocar.server.rest.encoding.rdf.vocab.VSO;
-import org.envirocar.server.rest.rights.AccessRights;
-
 import com.google.inject.Provider;
 import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.vocabulary.RDF;
+import org.envirocar.server.core.entities.Sensor;
+import org.envirocar.server.rest.encoding.rdf.RDFLinker;
+import org.envirocar.server.rest.encoding.rdf.vocab.DBPedia;
+import org.envirocar.server.rest.encoding.rdf.vocab.GoodRelations;
+import org.envirocar.server.rest.encoding.rdf.vocab.VSO;
+
+import javax.ws.rs.core.UriBuilder;
+import java.util.Map;
 
 /**
  * @author Jan Wirwahn
@@ -48,7 +45,7 @@ public class SensorVSOLinker implements RDFLinker<Sensor> {
     public static final String CAR_TYPE = "car";
 
     @Override
-    public void link(Model m, Sensor t, AccessRights rights,
+    public void link(Model m, Sensor t,
                      Resource sensor, Provider<UriBuilder> uriBuilder) {
 
         if (t.hasType() && t.getType().equals(CAR_TYPE)) {
@@ -66,13 +63,13 @@ public class SensorVSOLinker implements RDFLinker<Sensor> {
                         .get(MANUFACTURER_PROPERTY);
                 if (manufacturer != null) {
                     sensor.addLiteral(GoodRelations.hasManufacturer,
-                                      manufacturer);
+                            manufacturer);
                     String model = (String) p.get(MODEL_PROPERTY);
                     if (model != null) {
                         final String hasMakeAndModel =
                                 manufacturer + "_" + model;
                         sensor.addLiteral(GoodRelations.hasMakeAndModel,
-                                          hasMakeAndModel);
+                                hasMakeAndModel);
                     }
                 }
             }

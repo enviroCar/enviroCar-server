@@ -24,7 +24,6 @@ import org.envirocar.server.core.entities.PrivacyStatement;
 import org.envirocar.server.core.entities.PrivacyStatements;
 import org.envirocar.server.rest.JSONConstants;
 import org.envirocar.server.rest.encoding.JSONEntityEncoder;
-import org.envirocar.server.rest.rights.AccessRights;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
@@ -46,12 +45,12 @@ public class PrivacyStatementsJSONEncoder extends AbstractJSONEntityEncoder<Priv
     }
 
     @Override
-    public ObjectNode encodeJSON(PrivacyStatements statements, AccessRights rights, MediaType mediaType) {
+    public ObjectNode encodeJSON(PrivacyStatements statements, MediaType mediaType) {
         ObjectNode root = getJsonFactory().objectNode();
         ArrayNode PrivacyStatements = root.putArray(JSONConstants.PRIVACY_STATEMENTS);
 
         for (PrivacyStatement statement : statements) {
-            PrivacyStatements.add(this.privacyStatementEncoder.encodeJSON(statement, rights, mediaType));
+            PrivacyStatements.add(this.privacyStatementEncoder.encodeJSON(statement, mediaType));
         }
         return root;
     }

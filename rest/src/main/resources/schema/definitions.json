@@ -13,58 +13,6 @@
     "pattern": "^[_A-Za-z0-9-+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$",
     "type": "string"
   },
-  "optional-user-properties": {
-    "properties": {
-      "firstName": {
-        "type": "string"
-      },
-      "lastName": {
-        "type": "string"
-      },
-      "country": {
-        "type": "string"
-      },
-      "location": {
-        "$ref": "https://envirocar.org/api/stable/schema/geometry.json#"
-      },
-      "aboutMe": {
-        "type": "string"
-      },
-      "url": {
-        "type": "string",
-        "format": "uri"
-      },
-      "dayOfBirth": {
-        "type": "string",
-        "format": "date"
-      },
-      "gender": {
-        "type": "string",
-        "enum": [
-          "m",
-          "f"
-        ]
-      },
-      "language": {
-        "type": "string",
-        "pattern": "^[a-z]{2}[-_][A-Z]{2}$"
-      },
-      "badges": {
-        "type": "array",
-        "items": {
-          "type": "string"
-        }
-      },
-      "acceptedTermsOfUseVersion": {
-        "type": "string",
-        "format": "date"
-      },
-      "acceptedPrivacyStatementVersion": {
-        "type": "string",
-        "format": "date"
-      }
-    }
-  },
   "track-ref": {
     "type": "object",
     "required": [

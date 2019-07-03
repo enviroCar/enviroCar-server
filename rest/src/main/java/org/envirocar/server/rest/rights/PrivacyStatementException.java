@@ -14,23 +14,11 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.rest.resources;
+package org.envirocar.server.rest.rights;
 
-import org.envirocar.server.core.entities.Badges;
-import org.envirocar.server.core.exception.BadRequestException;
-import org.envirocar.server.rest.MediaTypes;
-import org.envirocar.server.rest.Schemas;
-import org.envirocar.server.rest.resources.AbstractResource;
-import org.envirocar.server.rest.validation.Schema;
+public class PrivacyStatementException extends LegalPolicyException {
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Produces;
-
-public class BadgesResource extends AbstractResource {
-    @GET
-    @Produces({MediaTypes.BADGES})
-    @Schema(response = Schemas.BADGES)
-    public Badges get() throws BadRequestException {
-        return getDataService().getBadges(getPagination());
+    public PrivacyStatementException(String message) {
+        super(message);
     }
 }

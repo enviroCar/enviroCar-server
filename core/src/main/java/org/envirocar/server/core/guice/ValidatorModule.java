@@ -33,9 +33,7 @@ public class ValidatorModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(new TypeLiteral<EntityValidator<Track>>() {
-        }).to(TrackValidator.class);
-        bind(new TypeLiteral<EntityValidator<Measurement>>() {
-        }).to(MeasurementValidator.class);
+        bind(new TypeLiteral<EntityValidator<Track>>() {}).to(TrackValidator.class);
+        bind(new TypeLiteral<EntityValidator<Measurement>>() {}).to(MeasurementValidator.class);
     }
 }

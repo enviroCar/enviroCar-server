@@ -16,17 +16,28 @@
  */
 package org.envirocar.server.core.guice;
 
+import com.google.common.base.Suppliers;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.PrecisionModel;
 import org.envirocar.server.core.*;
+import org.envirocar.server.core.dao.PrivacyStatementDao;
+import org.envirocar.server.core.dao.TermsDao;
+import org.envirocar.server.core.dao.TermsOfUseDao;
+import org.envirocar.server.core.entities.PrivacyStatement;
+import org.envirocar.server.core.entities.Terms;
+import org.envirocar.server.core.entities.TermsOfUseInstance;
 import org.envirocar.server.core.util.GeodesicGeometryOperations;
 import org.envirocar.server.core.util.GeometryOperations;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
+
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 
 /**
  * TODO JavaDoc
@@ -60,5 +71,21 @@ public class CoreModule extends AbstractModule {
     @Singleton
     public DateTimeFormatter formatter() {
         return ISODateTimeFormat.dateTimeNoMillis();
+    }
+
+    @Provides
+    @Singleton
+    public Supplier<Optional<PrivacyStatement>> privacyStatement(PrivacyStatementDao dao) {
+        return getLatestTermsSupplier(dao);
+    }
+
+    @Provides
+    @Singleton
+    public Supplier<Optional<TermsOfUseInstance>> latestTermsOfUse(TermsOfUseDao dao) {
+        return getLatestTermsSupplier(dao);
+    }
+
+    private static <T extends Terms> Supplier<Optional<T>> getLatestTermsSupplier(TermsDao<T, ?> dao) {
+        return Suppliers.memoizeWithExpiration(() -> Optional.ofNullable(dao.getLatest()), 1, TimeUnit.DAYS)::get;
     }
 }

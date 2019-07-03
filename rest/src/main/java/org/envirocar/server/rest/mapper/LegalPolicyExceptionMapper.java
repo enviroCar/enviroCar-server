@@ -16,7 +16,7 @@
  */
 package org.envirocar.server.rest.mapper;
 
-import org.envirocar.server.core.validation.LegalPolicyException;
+import org.envirocar.server.rest.rights.LegalPolicyException;
 import org.envirocar.server.rest.util.CustomStatus;
 
 import javax.ws.rs.core.Response;

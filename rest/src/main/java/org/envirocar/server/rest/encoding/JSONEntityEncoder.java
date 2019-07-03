@@ -16,11 +16,9 @@
  */
 package org.envirocar.server.rest.encoding;
 
-import javax.ws.rs.core.MediaType;
-
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import org.envirocar.server.rest.rights.AccessRights;
+import javax.ws.rs.core.MediaType;
 
 /**
  * TODO JavaDoc
@@ -28,5 +26,5 @@ import org.envirocar.server.rest.rights.AccessRights;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface JSONEntityEncoder<T> {
-    ObjectNode encodeJSON(T t, AccessRights rights, MediaType mt);
+    ObjectNode encodeJSON(T t, MediaType mt);
 }

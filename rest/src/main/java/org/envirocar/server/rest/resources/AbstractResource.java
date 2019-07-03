@@ -16,23 +16,18 @@
  */
 package org.envirocar.server.rest.resources;
 
-import com.google.common.base.Optional;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-import com.google.inject.name.Named;
-import org.envirocar.server.core.*;
+import org.envirocar.server.core.DataService;
+import org.envirocar.server.core.StatisticsService;
+import org.envirocar.server.core.TemporalFilter;
+import org.envirocar.server.core.TemporalFilterOperator;
 import org.envirocar.server.core.entities.EntityFactory;
-import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.exception.BadRequestException;
 import org.envirocar.server.core.util.pagination.Pagination;
-import org.envirocar.server.rest.auth.PrincipalImpl;
-import org.envirocar.server.rest.mapper.UnauthorizedException;
 import org.envirocar.server.rest.pagination.PaginationProvider;
-import org.envirocar.server.rest.rights.AccessRights;
 
-import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
-import java.util.Set;
 
 /**
  * TODO JavaDoc
@@ -40,29 +35,12 @@ import java.util.Set;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public abstract class AbstractResource {
-
-    public static final String ALLOWED_MAIL_ADDRESSES = "allowedMailAddresses";
-    public static final String NOT_ALLOWED_MAIL_ADDRESS
-            = "enviroCar is currently in a closed beta phase. Please "
-            + "contact envirocar@52north.org if you want to join the beta "
-            + "testers or with any other inquiries.";
-    private Provider<SecurityContext> securityContext;
-    private Provider<AccessRights> rights;
     private Provider<DataService> dataService;
-    private Provider<FriendService> friendService;
-    private Provider<GroupService> groupService;
-    private Provider<UserService> userService;
     private Provider<StatisticsService> statisticsService;
-    private Provider<UserStatisticService> userStatisticService;
     private Provider<UriInfo> uriInfo;
     private Provider<ResourceFactory> resourceFactory;
     private Provider<EntityFactory> entityFactory;
-    private Provider<Optional<Set<String>>> allowedMailAddresses;
     private PaginationProvider pagination;
-
-    protected AccessRights getRights() {
-        return rights.get();
-    }
 
     protected Pagination getPagination() throws BadRequestException {
         return pagination.get();
@@ -76,24 +54,8 @@ public abstract class AbstractResource {
         return dataService.get();
     }
 
-    protected FriendService getFriendService() {
-        return friendService.get();
-    }
-
-    protected GroupService getGroupService() {
-        return groupService.get();
-    }
-
-    protected UserService getUserService() {
-        return userService.get();
-    }
-
     protected StatisticsService getStatisticsService() {
         return statisticsService.get();
-    }
-
-    protected UserStatisticService getUserStatisticService() {
-        return userStatisticService.get();
     }
 
     protected ResourceFactory getResourceFactory() {
@@ -102,29 +64,6 @@ public abstract class AbstractResource {
 
     protected EntityFactory getEntityFactory() {
         return entityFactory.get();
-    }
-
-    protected void checkRights(boolean right) {
-        if (!right) {
-            throw getRights().isAuthenticated()
-                    ? new ForbiddenException("forbidden")
-                    : new UnauthorizedException("unauthorized");
-        }
-    }
-
-    protected User getCurrentUser() {
-        PrincipalImpl p = (PrincipalImpl) securityContext.get().getUserPrincipal();
-        return p == null ? null : p.getUser();
-    }
-
-    @Inject
-    public void setRights(Provider<AccessRights> accessRights) {
-        this.rights = accessRights;
-    }
-
-    @Inject
-    public void setSecurityContext(Provider<SecurityContext> securityContext) {
-        this.securityContext = securityContext;
     }
 
     @Inject
@@ -147,20 +86,6 @@ public abstract class AbstractResource {
         this.dataService = dataService;
     }
 
-    @Inject
-    public void setFriendService(Provider<FriendService> friendService) {
-        this.friendService = friendService;
-    }
-
-    @Inject
-    public void setGroupService(Provider<GroupService> groupService) {
-        this.groupService = groupService;
-    }
-
-    @Inject
-    public void setUserService(Provider<UserService> userService) {
-        this.userService = userService;
-    }
 
     @Inject
     public void setStatisticsService(Provider<StatisticsService> statisticsService) {
@@ -168,26 +93,8 @@ public abstract class AbstractResource {
     }
 
     @Inject
-    public void setUserStatisticService(Provider<UserStatisticService> userStatisticsService) {
-        this.userStatisticService = userStatisticsService;
-    }
-
-    @Inject
     public void setPagination(PaginationProvider pagination) {
         this.pagination = pagination;
-    }
-
-    protected void checkMail(User user) {
-        if (user.hasMail() && allowedMailAddresses.get().isPresent()
-                && !allowedMailAddresses.get().get().contains(user.getMail())) {
-            throw new ForbiddenException(NOT_ALLOWED_MAIL_ADDRESS);
-        }
-    }
-
-    @Inject
-    public void setAllowedMailAddresses(
-            @Named(ALLOWED_MAIL_ADDRESSES) Provider<Optional<Set<String>>> allowedMailAddresses) {
-        this.allowedMailAddresses = allowedMailAddresses;
     }
 
     protected TemporalFilter parseTemporalFilterForInstant() {

@@ -21,7 +21,6 @@ import com.google.inject.Inject;
 import com.vividsolutions.jts.geom.Geometry;
 import org.envirocar.server.core.exception.GeometryConverterException;
 import org.envirocar.server.rest.mapper.InternalServerError;
-import org.envirocar.server.rest.rights.AccessRights;
 import org.envirocar.server.rest.util.GeoJSON;
 
 import javax.ws.rs.Consumes;
@@ -45,7 +44,7 @@ public class GeometryJSONEncoder extends AbstractJSONEntityEncoder<Geometry> {
     }
 
     @Override
-    public ObjectNode encodeJSON(Geometry t, AccessRights rights, MediaType mt) {
+    public ObjectNode encodeJSON(Geometry t, MediaType mt) {
         try {
             return geoJSON.encode(t);
         } catch (GeometryConverterException ex) {

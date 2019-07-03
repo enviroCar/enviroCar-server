@@ -16,12 +16,10 @@
  */
 package org.envirocar.server.rest.encoding;
 
-import javax.ws.rs.core.UriBuilder;
-
 import com.google.inject.Provider;
 import com.hp.hpl.jena.rdf.model.Model;
 
-import org.envirocar.server.rest.rights.AccessRights;
+import javax.ws.rs.core.UriBuilder;
 
 /**
  * TODO JavaDoc
@@ -29,7 +27,7 @@ import org.envirocar.server.rest.rights.AccessRights;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface RDFEntityEncoder<T> {
-    Model encodeRDF(T t, AccessRights rights);
+    Model encodeRDF(T t);
 
-    Model encodeRDF(T t, AccessRights rights, Provider<UriBuilder> uri);
+    Model encodeRDF(T t, Provider<UriBuilder> uri);
 }

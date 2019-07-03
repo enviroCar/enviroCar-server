@@ -23,7 +23,6 @@ import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.filter.MeasurementFilter;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.mapper.InternalServerError;
-import org.envirocar.server.rest.resources.AbstractResource;
 import org.envirocar.server.rest.util.OSMTileRenderer;
 import org.envirocar.server.rest.util.TileRenderer;
 

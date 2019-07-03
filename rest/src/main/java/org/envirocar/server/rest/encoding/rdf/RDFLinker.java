@@ -16,22 +16,19 @@
  */
 package org.envirocar.server.rest.encoding.rdf;
 
-import javax.ws.rs.core.UriBuilder;
-
-import org.envirocar.server.rest.rights.AccessRights;
-
 import com.google.inject.Provider;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
+
+import javax.ws.rs.core.UriBuilder;
 
 /**
  * TODO JavaDoc
  *
  * @param <T> the entity type
- *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface RDFLinker<T> {
-    void link(Model m, T t, AccessRights rights,
+    void link(Model m, T t,
               Resource uri, Provider<UriBuilder> uriBuilder);
 }

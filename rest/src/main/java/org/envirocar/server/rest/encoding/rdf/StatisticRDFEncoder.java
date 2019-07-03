@@ -16,21 +16,18 @@
  */
 package org.envirocar.server.rest.encoding.rdf;
 
-import java.util.Set;
-
-import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
-
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 import org.envirocar.server.core.entities.Phenomenon;
 import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.core.entities.Track;
-import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.statistics.Statistic;
-
-import com.google.inject.Inject;
-import com.google.inject.Provider;
 import org.envirocar.server.rest.mapper.InternalServerError;
 import org.envirocar.server.rest.resources.*;
+
+import javax.ws.rs.core.UriBuilder;
+import javax.ws.rs.core.UriInfo;
+import java.util.Set;
 
 /**
  * TODO JavaDoc
@@ -52,27 +49,24 @@ public class StatisticRDFEncoder extends AbstractLinkerRDFEntityEncoder<Statisti
     protected String getURI(Statistic t, Provider<UriBuilder> builder) {
         Object resource = uriInfo.get().getMatchedResources().get(0);
 
-        User user;
         Track track;
         Sensor sensor;
 
         if (resource instanceof StatisticResource) {
             StatisticResource sr = (StatisticResource) resource;
-            user = sr.getUser();
             track = sr.getTrack();
             sensor = sr.getSensor();
         } else if (resource instanceof StatisticsResource) {
             StatisticsResource sr = (StatisticsResource) resource;
-            user = sr.getUser();
             track = sr.getTrack();
             sensor = sr.getSensor();
         } else {
             throw new InternalServerError();
         }
-        return build(track, user, sensor, t.getPhenomenon(), builder);
+        return build(track, sensor, t.getPhenomenon(), builder);
     }
 
-    protected static String build(Track t, User u, Sensor s, Phenomenon p,
+    protected static String build(Track t, Sensor s, Phenomenon p,
                                   Provider<UriBuilder> builder) {
         if (t != null) {
             return builder.get()
@@ -82,17 +76,7 @@ public class StatisticRDFEncoder extends AbstractLinkerRDFEntityEncoder<Statisti
                     .path(TrackResource.STATISTICS)
                     .path(StatisticsResource.PHENOMENON)
                     .build(t.getIdentifier(),
-                           p.getName())
-                    .toASCIIString();
-        } else if (u != null) {
-            return builder.get()
-                    .path(RootResource.class)
-                    .path(RootResource.USERS)
-                    .path(UsersResource.USER)
-                    .path(UserResource.STATISTICS)
-                    .path(StatisticsResource.PHENOMENON)
-                    .build(u.getName(),
-                           p.getName())
+                            p.getName())
                     .toASCIIString();
         } else if (s != null) {
             return builder.get()
@@ -102,7 +86,7 @@ public class StatisticRDFEncoder extends AbstractLinkerRDFEntityEncoder<Statisti
                     .path(SensorResource.STATISTICS)
                     .path(StatisticsResource.PHENOMENON)
                     .build(s.getIdentifier(),
-                           p.getName())
+                            p.getName())
                     .toASCIIString();
         } else {
             return builder.get()

@@ -50,7 +50,6 @@ public class SensorResource extends AbstractResource {
 
     @Path(STATISTICS)
     public StatisticsResource statistics() {
-        getRights().canSeeStatisticsOf(this.sensor);
         return getResourceFactory().createStatisticsResource(this.sensor);
     }
 }

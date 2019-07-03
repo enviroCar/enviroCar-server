@@ -16,15 +16,13 @@
  */
 package org.envirocar.server.rest.encoding.rdf.linker;
 
-import javax.ws.rs.core.UriBuilder;
-
-import org.envirocar.server.rest.encoding.rdf.RDFLinker;
-import org.envirocar.server.rest.encoding.rdf.vocab.DCTerms;
-import org.envirocar.server.rest.rights.AccessRights;
-
 import com.google.inject.Provider;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
+import org.envirocar.server.rest.encoding.rdf.RDFLinker;
+import org.envirocar.server.rest.encoding.rdf.vocab.DCTerms;
+
+import javax.ws.rs.core.UriBuilder;
 
 /**
  * TODO JavaDoc
@@ -36,17 +34,17 @@ public abstract class DCTermsLinker<T> implements RDFLinker<T> {
             "http://opendatacommons.org/licenses/odbl/";
 
     @Override
-    public void link(Model m, T t, AccessRights rights,
+    public void link(Model m, T t,
                      Resource r, Provider<UriBuilder> uriBuilder) {
         m.setNsPrefix(DCTerms.PREFIX, DCTerms.URI);
         linkLicense(m, r);
-        linkRest(m, t, rights, r, uriBuilder);
+        linkRest(m, t, r, uriBuilder);
     }
 
     public void linkLicense(Model m, Resource r) {
         r.addProperty(DCTerms.rights, ODBL_URL);
     }
 
-    public abstract void linkRest(Model m, T t, AccessRights rights,
+    public abstract void linkRest(Model m, T t,
                                   Resource r, Provider<UriBuilder> uriBuilder);
 }

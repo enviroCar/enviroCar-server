@@ -16,12 +16,11 @@
  */
 package org.envirocar.server.rest.encoding;
 
+import com.google.inject.Inject;
+import com.vividsolutions.jts.geom.GeometryFactory;
 import org.envirocar.server.core.DataService;
-import org.envirocar.server.core.dao.UserDao;
 import org.envirocar.server.core.entities.EntityFactory;
-import org.envirocar.server.core.guice.UpdaterModule;
 import org.envirocar.server.core.guice.ValidatorModule;
-import org.envirocar.server.core.mail.NoopMailerModule;
 import org.envirocar.server.mongo.guice.MongoConnectionModule;
 import org.envirocar.server.mongo.guice.MongoConverterModule;
 import org.envirocar.server.mongo.guice.MongoMappedClassesModule;
@@ -33,28 +32,19 @@ import org.envirocar.server.rest.schema.Modules;
 import org.junit.runner.RunWith;
 import org.mongodb.morphia.logging.MorphiaLoggerFactory;
 
-import com.google.inject.Inject;
-import com.vividsolutions.jts.geom.GeometryFactory;
-
 @Modules({
-    MongoConverterModule.class,
-    JerseyCodingModule.class,
-    MongoMappedClassesModule.class,
-    MongoConnectionModule.class,
-    EncodingTestModule.class,
-    UpdaterModule.class,
-    ValidatorModule.class,
-    NoopMailerModule.class,
-    DummyConfirmationLinkFactoryModule.class
+        MongoConverterModule.class,
+        JerseyCodingModule.class,
+        MongoMappedClassesModule.class,
+        MongoConnectionModule.class,
+        EncodingTestModule.class,
+        ValidatorModule.class
 })
 @RunWith(GuiceRunner.class)
 public abstract class AbstractEncodingTest {
-    
-    @Inject
-    protected DataService dataService;
 
     @Inject
-    protected UserDao userDao;
+    protected DataService dataService;
 
     @Inject
     protected TrackCSVEncoder trackCSVEncoder;

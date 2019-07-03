@@ -16,83 +16,40 @@
  */
 package org.envirocar.server.rest.guice;
 
-import org.envirocar.server.core.activities.Activity;
-import org.envirocar.server.core.entities.Fueling;
-import org.envirocar.server.core.entities.Group;
-import org.envirocar.server.core.entities.Measurement;
-import org.envirocar.server.core.entities.Phenomenon;
-import org.envirocar.server.core.entities.Sensor;
-import org.envirocar.server.core.entities.Track;
-import org.envirocar.server.core.entities.User;
-import org.envirocar.server.core.statistics.Statistic;
-import org.envirocar.server.rest.encoding.rdf.RDFLinker;
-import org.envirocar.server.rest.encoding.rdf.linker.ActivityDCTermsLinker;
-import org.envirocar.server.rest.encoding.rdf.linker.DBPediaPhenomenonLinker;
-import org.envirocar.server.rest.encoding.rdf.linker.EEAPhenomenonLinker;
-import org.envirocar.server.rest.encoding.rdf.linker.FuelingDCTermsLinker;
-import org.envirocar.server.rest.encoding.rdf.linker.GroupDCTermsLinker;
-import org.envirocar.server.rest.encoding.rdf.linker.GroupFOAFLinker;
-import org.envirocar.server.rest.encoding.rdf.linker.MeasurementDCTermsLinker;
-import org.envirocar.server.rest.encoding.rdf.linker.MeasurementDULLinker;
-import org.envirocar.server.rest.encoding.rdf.linker.MeasurementSSNLinker;
-import org.envirocar.server.rest.encoding.rdf.linker.PhenomenonDCTermsLinker;
-import org.envirocar.server.rest.encoding.rdf.linker.PhenomenonSSNLinker;
-import org.envirocar.server.rest.encoding.rdf.linker.SensorDCTermsLinker;
-import org.envirocar.server.rest.encoding.rdf.linker.SensorSSNLinker;
-import org.envirocar.server.rest.encoding.rdf.linker.SensorVSOLinker;
-import org.envirocar.server.rest.encoding.rdf.linker.StatisticDCTermsLinker;
-import org.envirocar.server.rest.encoding.rdf.linker.TrackDCTermsLinker;
-import org.envirocar.server.rest.encoding.rdf.linker.TrackDULLinker;
-import org.envirocar.server.rest.encoding.rdf.linker.UserDCTermsLinker;
-import org.envirocar.server.rest.encoding.rdf.linker.UserFOAFLinker;
-import org.envirocar.server.rest.encoding.rdf.linker.UserVCardLinker;
-import org.envirocar.server.rest.encoding.rdf.linker.W3CGeoMeasurementLinker;
-
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
 import com.google.inject.multibindings.Multibinder;
 import com.vividsolutions.jts.geom.Geometry;
+import org.envirocar.server.core.entities.Measurement;
+import org.envirocar.server.core.entities.Phenomenon;
+import org.envirocar.server.core.entities.Sensor;
+import org.envirocar.server.core.entities.Track;
+import org.envirocar.server.core.statistics.Statistic;
+import org.envirocar.server.rest.encoding.rdf.RDFLinker;
+import org.envirocar.server.rest.encoding.rdf.linker.*;
 
 public class DefaultRDFLinkerModule extends AbstractModule {
     @Override
     protected void configure() {
-        bindActivityLinker();
         bindGeometryLinker();
-        bindGroupLinker();
         bindMeasurementLinker();
         bindPhenomenonLinker();
         bindSensorLinker();
         bindStatisticLinker();
         bindTrackLinker();
-        bindUserLinker();
-        bindFuelingLinker();
-    }
-
-    protected void bindActivityLinker() {
-        Multibinder<RDFLinker<Activity>> b = Multibinder.newSetBinder(
-                binder(), new TypeLiteral<RDFLinker<Activity>>() {
-        });
-        b.addBinding().to(ActivityDCTermsLinker.class);
     }
 
     protected void bindGeometryLinker() {
         Multibinder<RDFLinker<Geometry>> b = Multibinder.newSetBinder(
                 binder(), new TypeLiteral<RDFLinker<Geometry>>() {
-        });
+                });
     }
 
-    protected void bindGroupLinker() {
-        Multibinder<RDFLinker<Group>> b = Multibinder.newSetBinder(
-                binder(), new TypeLiteral<RDFLinker<Group>>() {
-        });
-        b.addBinding().to(GroupDCTermsLinker.class);
-        b.addBinding().to(GroupFOAFLinker.class);
-    }
 
     protected void bindMeasurementLinker() {
         Multibinder<RDFLinker<Measurement>> b = Multibinder.newSetBinder(
                 binder(), new TypeLiteral<RDFLinker<Measurement>>() {
-        });
+                });
         b.addBinding().to(W3CGeoMeasurementLinker.class);
         b.addBinding().to(MeasurementDCTermsLinker.class);
         b.addBinding().to(MeasurementSSNLinker.class);
@@ -102,7 +59,7 @@ public class DefaultRDFLinkerModule extends AbstractModule {
     protected void bindPhenomenonLinker() {
         Multibinder<RDFLinker<Phenomenon>> b = Multibinder.newSetBinder(
                 binder(), new TypeLiteral<RDFLinker<Phenomenon>>() {
-        });
+                });
         b.addBinding().to(PhenomenonDCTermsLinker.class);
         b.addBinding().to(EEAPhenomenonLinker.class);
         b.addBinding().to(PhenomenonSSNLinker.class);
@@ -112,7 +69,7 @@ public class DefaultRDFLinkerModule extends AbstractModule {
     protected void bindSensorLinker() {
         Multibinder<RDFLinker<Sensor>> b = Multibinder.newSetBinder(
                 binder(), new TypeLiteral<RDFLinker<Sensor>>() {
-        });
+                });
         b.addBinding().to(SensorVSOLinker.class);
         b.addBinding().to(SensorDCTermsLinker.class);
         b.addBinding().to(SensorSSNLinker.class);
@@ -121,33 +78,17 @@ public class DefaultRDFLinkerModule extends AbstractModule {
     protected void bindStatisticLinker() {
         Multibinder<RDFLinker<Statistic>> b = Multibinder.newSetBinder(
                 binder(), new TypeLiteral<RDFLinker<Statistic>>() {
-        });
+                });
         b.addBinding().to(StatisticDCTermsLinker.class);
     }
 
     protected void bindTrackLinker() {
         Multibinder<RDFLinker<Track>> b = Multibinder.newSetBinder(
                 binder(), new TypeLiteral<RDFLinker<Track>>() {
-        });
+                });
 //        b.addBinding().to(TrackMeasurementsLinker.class);
         b.addBinding().to(TrackDULLinker.class);
         b.addBinding().to(TrackDCTermsLinker.class);
-    }
-
-    protected void bindUserLinker() {
-        Multibinder<RDFLinker<User>> b = Multibinder.newSetBinder(
-                binder(), new TypeLiteral<RDFLinker<User>>() {
-        });
-        b.addBinding().to(UserVCardLinker.class);
-        b.addBinding().to(UserFOAFLinker.class);
-        b.addBinding().to(UserDCTermsLinker.class);
-    }
-
-    protected void bindFuelingLinker() {
-        Multibinder<RDFLinker<Fueling>> b = Multibinder.newSetBinder(
-                binder(), new TypeLiteral<RDFLinker<Fueling>>() {
-        });
-        b.addBinding().to(FuelingDCTermsLinker.class);
     }
 
 }

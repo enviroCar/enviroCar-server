@@ -23,13 +23,11 @@ import org.envirocar.server.core.SpatialFilter;
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.Measurements;
 import org.envirocar.server.core.entities.Track;
-import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.exception.BadRequestException;
 import org.envirocar.server.core.exception.MeasurementNotFoundException;
 import org.envirocar.server.core.exception.ValidationException;
 import org.envirocar.server.core.filter.MeasurementFilter;
 import org.envirocar.server.rest.*;
-import org.envirocar.server.rest.auth.Authenticated;
 import org.envirocar.server.rest.rights.HasAcceptedLatestLegalPolicies;
 import org.envirocar.server.rest.validation.Schema;
 
@@ -46,15 +44,12 @@ import java.security.InvalidParameterException;
 public class MeasurementsResource extends AbstractResource {
     public static final String MEASUREMENT = "{measurement}";
     private final Track track;
-    private final User user;
     private final GeometryFactory geometryFactory;
 
     @Inject
     public MeasurementsResource(@Assisted @Nullable Track track,
-                                @Assisted @Nullable User user,
                                 GeometryFactory geometryFactory) {
         this.track = track;
-        this.user = user;
         this.geometryFactory = geometryFactory;
     }
 
@@ -74,39 +69,26 @@ public class MeasurementsResource extends AbstractResource {
         }
 
         return getDataService()
-                .getMeasurements(new MeasurementFilter(track, user, sf, parseTemporalFilterForInstant(), getPagination()));
+                .getMeasurements(new MeasurementFilter(track, sf, parseTemporalFilterForInstant(), getPagination()));
     }
 
     @POST
-    @Authenticated
     @HasAcceptedLatestLegalPolicies
     @Schema(request = Schemas.MEASUREMENT_CREATE)
     @Consumes({MediaTypes.MEASUREMENT_CREATE})
     public Response create(Measurement measurement) throws ValidationException {
         Measurement m;
         if (track != null) {
-            checkRights(getRights().canModify(track));
-            measurement.setUser(getCurrentUser());
-            m = getDataService().createMeasurement(track, measurement);
-        } else {
-            measurement.setUser(getCurrentUser());
-            m = getDataService().createMeasurement(measurement);
+            throw new WebApplicationException(405);
         }
+        m = getDataService().createMeasurement(measurement);
         return Response.created(getUriInfo().getAbsolutePathBuilder().path(m.getIdentifier()).build()).build();
     }
 
     @Path(MEASUREMENT)
     public MeasurementResource measurement(@PathParam("measurement") String id)
             throws MeasurementNotFoundException {
-        if (user != null) {
-            checkRights(getRights().canSeeMeasurementsOf(user));
-        }
-        if (track != null) {
-            checkRights(getRights().canSeeMeasurementsOf(track));
-        }
-
         Measurement m = getDataService().getMeasurement(id);
-        checkRights(getRights().canSee(m));
-        return getResourceFactory().createMeasurementResource(m, user, track);
+        return getResourceFactory().createMeasurementResource(m, track);
     }
 }

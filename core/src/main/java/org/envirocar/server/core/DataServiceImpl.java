@@ -95,6 +95,14 @@ public class DataServiceImpl implements DataService {
     @Override
     public Track createTrack(Track track) throws ValidationException {
         this.trackValidator.validateCreate(track);
+
+        if (!track.hasTouVersion()) {
+            TermsOfUseInstance latest = termsOfUseDao.getLatest();
+            if (latest != null) {
+                track.setTouVersion(latest.getIssuedDate());
+            }
+        }
+
         this.trackDao.create(track);
         this.eventBus.post(new CreatedTrackEvent(track));
         return track;
@@ -116,6 +124,13 @@ public class DataServiceImpl implements DataService {
         }
         track.setBegin(begin);
         track.setEnd(end);
+
+        if (!track.hasTouVersion()) {
+            TermsOfUseInstance latest = termsOfUseDao.getLatest();
+            if (latest != null) {
+                track.setTouVersion(latest.getIssuedDate());
+            }
+        }
 
         if (!track.hasLength()) {
             track.setLength(geomOps.calculateLength(measurements));

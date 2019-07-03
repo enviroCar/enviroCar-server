@@ -16,18 +16,16 @@
  */
 package org.envirocar.server.rest;
 
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-
+import com.google.common.collect.Lists;
+import com.vividsolutions.jts.geom.Geometry;
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.core.entities.Track;
-import org.envirocar.server.core.entities.User;
 import org.joda.time.DateTime;
 
-import com.google.common.collect.Lists;
-import com.vividsolutions.jts.geom.Geometry;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * TODO JavaDoc
@@ -79,16 +77,6 @@ public class TrackWithMeasurments implements Track, Iterable<Measurement> {
     }
 
     @Override
-    public User getUser() {
-        return track.getUser();
-    }
-
-    @Override
-    public void setUser(User user) {
-        track.setUser(user);
-    }
-
-    @Override
     public Sensor getSensor() {
         return track.getSensor();
     }
@@ -137,11 +125,6 @@ public class TrackWithMeasurments implements Track, Iterable<Measurement> {
 
     public Track getTrack() {
         return track;
-    }
-
-    @Override
-    public boolean hasUser() {
-        return track.hasUser();
     }
 
     @Override
@@ -209,63 +192,63 @@ public class TrackWithMeasurments implements Track, Iterable<Measurement> {
         return track.hasEnd();
     }
 
-	@Override
-	public void setTouVersion(String touVersion) {
-		track.setTouVersion(touVersion);
-	}
+    @Override
+    public void setTouVersion(String touVersion) {
+        track.setTouVersion(touVersion);
+    }
 
-	@Override
-	public String getTouVersion() {
-		return track.getTouVersion();
-	}
+    @Override
+    public String getTouVersion() {
+        return track.getTouVersion();
+    }
 
-	@Override
-	public void setObdDevice(String obdDevice) {
-		track.setObdDevice(obdDevice);
-	}
+    @Override
+    public void setObdDevice(String obdDevice) {
+        track.setObdDevice(obdDevice);
+    }
 
-	@Override
-	public String getObdDevice() {
-		return track.getObdDevice();
-	}
+    @Override
+    public String getObdDevice() {
+        return track.getObdDevice();
+    }
 
-	@Override
-	public void setAppVersion(String appVersion) {
-		track.setAppVersion(appVersion);
-	}
+    @Override
+    public void setAppVersion(String appVersion) {
+        track.setAppVersion(appVersion);
+    }
 
-	@Override
-	public String getAppVersion() {
-		return track.getAppVersion();
-	}
+    @Override
+    public String getAppVersion() {
+        return track.getAppVersion();
+    }
 
-	@Override
-	public boolean hasAppVersion() {
-		return track.hasAppVersion();
-	}
+    @Override
+    public boolean hasAppVersion() {
+        return track.hasAppVersion();
+    }
 
-	@Override
-	public boolean hasObdDevice() {
-		return track.hasObdDevice();
-	}
+    @Override
+    public boolean hasObdDevice() {
+        return track.hasObdDevice();
+    }
 
-	@Override
-	public boolean hasTouVersion() {
-		return track.hasTouVersion();
-	}
+    @Override
+    public boolean hasTouVersion() {
+        return track.hasTouVersion();
+    }
 
-	@Override
-	public double getLength() {
-		return track.getLength();
-	}
+    @Override
+    public double getLength() {
+        return track.getLength();
+    }
 
-	@Override
-	public void setLength(double length) {
-		track.setLength(length);		
-	}
+    @Override
+    public void setLength(double length) {
+        track.setLength(length);
+    }
 
-	@Override
-	public boolean hasLength() {
-		return track.hasLength();
-	}
+    @Override
+    public boolean hasLength() {
+        return track.hasLength();
+    }
 }

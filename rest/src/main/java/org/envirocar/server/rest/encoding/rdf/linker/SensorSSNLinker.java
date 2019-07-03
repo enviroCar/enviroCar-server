@@ -16,16 +16,14 @@
  */
 package org.envirocar.server.rest.encoding.rdf.linker;
 
-import javax.ws.rs.core.UriBuilder;
-
-import org.envirocar.server.core.entities.Sensor;
-import org.envirocar.server.rest.encoding.rdf.vocab.SSN;
-import org.envirocar.server.rest.rights.AccessRights;
-
 import com.google.inject.Provider;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.vocabulary.RDF;
+import org.envirocar.server.core.entities.Sensor;
+import org.envirocar.server.rest.encoding.rdf.vocab.SSN;
+
+import javax.ws.rs.core.UriBuilder;
 
 /**
  * TODO JavaDoc
@@ -38,8 +36,8 @@ public class SensorSSNLinker extends AbstractSSNLinker<Sensor> {
     private static final String SENSOR_FRAGMENT = "sensor";
 
     @Override
-    protected void linkInternal(Model m, Sensor t, AccessRights rights, Resource uri,
-            Provider<UriBuilder> uriBuilder) {
+    protected void linkInternal(Model m, Sensor t, Resource uri,
+                                Provider<UriBuilder> uriBuilder) {
         Resource sensor = m.createResource(fragment(uri, SENSOR_FRAGMENT));
         sensor.addProperty(RDF.type, SSN.Sensor);
     }

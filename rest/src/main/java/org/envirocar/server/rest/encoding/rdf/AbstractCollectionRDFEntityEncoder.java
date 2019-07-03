@@ -16,35 +16,30 @@
  */
 package org.envirocar.server.rest.encoding.rdf;
 
-import java.util.Set;
-
-import javax.ws.rs.core.UriBuilder;
-
-import org.envirocar.server.rest.rights.AccessRights;
-
 import com.google.inject.Provider;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 
+import javax.ws.rs.core.UriBuilder;
+import java.util.Set;
+
 public abstract class AbstractCollectionRDFEntityEncoder<V, T extends Iterable<V>>
         extends AbstractRDFEntityEncoder<T> {
     private final Set<RDFLinker<V>> linkers;
 
-    public AbstractCollectionRDFEntityEncoder(Class<T> classType,
-                                              Set<RDFLinker<V>> linkers) {
+    public AbstractCollectionRDFEntityEncoder(Class<T> classType, Set<RDFLinker<V>> linkers) {
         super(classType);
         this.linkers = linkers;
     }
 
     @Override
-    public Model encodeRDF(T t, AccessRights rights,
-                           Provider<UriBuilder> uriBuilder) {
+    public Model encodeRDF(T t, Provider<UriBuilder> uriBuilder) {
         Model m = ModelFactory.createDefaultModel();
         for (V v : t) {
             Resource r = m.createResource(getURI(v, uriBuilder));
             for (RDFLinker<V> linker : linkers) {
-                linker.link(m, v, rights, r, uriBuilder);
+                linker.link(m, v, r, uriBuilder);
             }
         }
         return m;

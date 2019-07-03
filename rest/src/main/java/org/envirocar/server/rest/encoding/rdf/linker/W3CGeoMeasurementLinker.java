@@ -16,26 +16,22 @@
  */
 package org.envirocar.server.rest.encoding.rdf.linker;
 
-import javax.ws.rs.core.UriBuilder;
-
-import org.envirocar.server.core.entities.Measurement;
-import org.envirocar.server.rest.encoding.rdf.RDFLinker;
-import org.envirocar.server.rest.encoding.rdf.vocab.W3CGeo;
-import org.envirocar.server.rest.rights.AccessRights;
-
 import com.google.inject.Provider;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.vividsolutions.jts.geom.Point;
+import org.envirocar.server.core.entities.Measurement;
+import org.envirocar.server.rest.encoding.rdf.RDFLinker;
+import org.envirocar.server.rest.encoding.rdf.vocab.W3CGeo;
+
+import javax.ws.rs.core.UriBuilder;
 
 /**
- *
  * @author Arne de Wall
- *
  */
 public class W3CGeoMeasurementLinker implements RDFLinker<Measurement> {
     @Override
-    public void link(Model m, Measurement t, AccessRights rights,
+    public void link(Model m, Measurement t,
                      Resource r, Provider<UriBuilder> uriBuilder) {
         if (t.getGeometry() instanceof Point) {
             m.setNsPrefix(W3CGeo.PREFIX, W3CGeo.URI);

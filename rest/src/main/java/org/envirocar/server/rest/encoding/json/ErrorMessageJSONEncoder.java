@@ -20,7 +20,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.envirocar.server.rest.JSONConstants;
-import org.envirocar.server.rest.rights.AccessRights;
 import org.envirocar.server.rest.util.ErrorMessage;
 
 import javax.ws.rs.core.MediaType;
@@ -35,7 +34,7 @@ public class ErrorMessageJSONEncoder extends AbstractJSONEntityEncoder<ErrorMess
     }
 
     @Override
-    public ObjectNode encodeJSON(ErrorMessage errorMessage, AccessRights rights, MediaType mt) {
+    public ObjectNode encodeJSON(ErrorMessage errorMessage, MediaType mt) {
         ObjectNode node = getJsonFactory().objectNode();
         node.put(JSONConstants.STATUS_CODE, errorMessage.getStatus().getStatusCode());
         node.put(JSONConstants.REASON_PHRASE, errorMessage.getStatus().getReasonPhrase());

@@ -17,11 +17,8 @@
 package org.envirocar.server.rest.resources;
 
 import com.google.common.collect.Sets;
-import com.google.inject.assistedinject.Assisted;
-import com.google.inject.assistedinject.AssistedInject;
 import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.core.entities.Sensors;
-import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.exception.BadRequestException;
 import org.envirocar.server.core.exception.SensorNotFoundException;
 import org.envirocar.server.core.filter.PropertyFilter;
@@ -29,7 +26,6 @@ import org.envirocar.server.core.filter.SensorFilter;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.RESTConstants;
 import org.envirocar.server.rest.Schemas;
-import org.envirocar.server.rest.auth.Authenticated;
 import org.envirocar.server.rest.rights.HasAcceptedLatestLegalPolicies;
 import org.envirocar.server.rest.validation.Schema;
 
@@ -48,17 +44,6 @@ import java.util.Set;
 public class SensorsResource extends AbstractResource {
 
     public static final String SENSOR = "{sensor}";
-    private final User user;
-
-    @AssistedInject
-    public SensorsResource(@Assisted User user) {
-        this.user = user;
-    }
-
-    @AssistedInject
-    public SensorsResource() {
-        this(null);
-    }
 
     @GET
     @Schema(response = Schemas.SENSORS)
@@ -75,13 +60,12 @@ public class SensorsResource extends AbstractResource {
                 filters.add(new PropertyFilter(key, value));
             }
         }
-        return getDataService().getSensors(new SensorFilter(type, user, filters, getPagination()));
+        return getDataService().getSensors(new SensorFilter(type, filters, getPagination()));
     }
 
     @POST
     @Consumes({MediaTypes.SENSOR_CREATE})
     @Schema(request = Schemas.SENSOR_CREATE)
-    @Authenticated
     @HasAcceptedLatestLegalPolicies
     public Response create(Sensor sensor) {
         sensor = getDataService().createSensor(sensor);
@@ -90,8 +74,6 @@ public class SensorsResource extends AbstractResource {
 
     @Path(SENSOR)
     public SensorResource sensor(@PathParam("sensor") String id) throws SensorNotFoundException {
-        Sensor sensor = getDataService().getSensorByName(id);
-        checkRights(getRights().canSee(sensor));
-        return getResourceFactory().createSensorResource(sensor);
+        return getResourceFactory().createSensorResource(getDataService().getSensorByName(id));
     }
 }

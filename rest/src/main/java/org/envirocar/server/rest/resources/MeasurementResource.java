@@ -19,14 +19,10 @@ package org.envirocar.server.rest.resources;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import org.envirocar.server.core.entities.Measurement;
-import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
-import org.envirocar.server.rest.auth.Authenticated;
-import org.envirocar.server.rest.rights.HasAcceptedLatestLegalPolicies;
 import org.envirocar.server.rest.validation.Schema;
 
-import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -52,19 +48,8 @@ public class MeasurementResource extends AbstractResource {
         return measurement;
     }
 
-    @DELETE
-    @Authenticated
-    @HasAcceptedLatestLegalPolicies
-    public void delete() {
-        checkRights(getRights().canDelete(measurement));
-        getDataService().deleteMeasurement(measurement);
-    }
-
     @Path(SENSOR)
     public SensorResource sensor() {
-        checkRights(getRights().canSeeSensorOf(measurement));
-        Sensor sensor = measurement.getSensor();
-        checkRights(getRights().canSee(sensor));
-        return getResourceFactory().createSensorResource(sensor);
+        return getResourceFactory().createSensorResource(measurement.getSensor());
     }
 }

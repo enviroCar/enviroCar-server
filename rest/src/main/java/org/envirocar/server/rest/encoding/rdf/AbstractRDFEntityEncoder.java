@@ -16,16 +16,13 @@
  */
 package org.envirocar.server.rest.encoding.rdf;
 
-import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
-
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.hp.hpl.jena.rdf.model.Model;
-
 import org.envirocar.server.rest.encoding.RDFEntityEncoder;
 
-import org.envirocar.server.rest.rights.AccessRights;
+import javax.ws.rs.core.UriBuilder;
+import javax.ws.rs.core.UriInfo;
 
 /**
  * TODO JavaDoc
@@ -35,16 +32,10 @@ import org.envirocar.server.rest.rights.AccessRights;
 public abstract class AbstractRDFEntityEncoder<T>
         extends AbstractRDFMessageBodyWriter<T>
         implements RDFEntityEncoder<T> {
-    private Provider<AccessRights> rights;
     private Provider<UriInfo> uriInfo;
 
     public AbstractRDFEntityEncoder(Class<T> classType) {
         super(classType);
-    }
-
-    @Inject
-    public void setRights(Provider<AccessRights> rights) {
-        this.rights = rights;
     }
 
     @Inject
@@ -54,12 +45,7 @@ public abstract class AbstractRDFEntityEncoder<T>
 
     @Override
     public Model encodeRDF(T t) {
-        return encodeRDF(t, rights.get());
-    }
-
-    @Override
-    public Model encodeRDF(T t, AccessRights rights) {
-        return encodeRDF(t, rights, new RequestUriBuilderProvider());
+        return encodeRDF(t, new RequestUriBuilderProvider());
     }
 
     private class RequestUriBuilderProvider implements Provider<UriBuilder> {

@@ -16,18 +16,16 @@
  */
 package org.envirocar.server.rest.encoding.rdf.linker;
 
-import javax.ws.rs.core.UriBuilder;
-
+import com.google.inject.Provider;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.Resource;
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.rest.encoding.rdf.vocab.DUL;
 import org.envirocar.server.rest.resources.RootResource;
 import org.envirocar.server.rest.resources.TracksResource;
-import org.envirocar.server.rest.rights.AccessRights;
 
-import com.google.inject.Provider;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.Resource;
+import javax.ws.rs.core.UriBuilder;
 
 /**
  * TODO JavaDoc
@@ -38,7 +36,7 @@ public class MeasurementDULLinker extends AbstractDULLinker<Measurement> {
 
     @Override
     protected void linkInternal(Model model, Measurement entity,
-                                AccessRights rights, Resource resource,
+                                Resource resource,
                                 Provider<UriBuilder> uriBuilder) {
         if (entity.hasTrack()) {
             String uri = getTrackURI(uriBuilder, entity.getTrack());

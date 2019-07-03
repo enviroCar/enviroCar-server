@@ -22,7 +22,6 @@ import org.envirocar.server.core.exception.BadRequestException;
 import org.envirocar.server.core.exception.PhenomenonNotFoundException;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
-import org.envirocar.server.rest.auth.Authenticated;
 import org.envirocar.server.rest.rights.HasAcceptedLatestLegalPolicies;
 import org.envirocar.server.rest.validation.Schema;
 
@@ -47,7 +46,6 @@ public class PhenomenonsResource extends AbstractResource {
     }
 
     @POST
-    @Authenticated
     @HasAcceptedLatestLegalPolicies
     @Schema(request = Schemas.PHENOMENON_CREATE)
     @Consumes({MediaTypes.PHENOMENON_CREATE})
@@ -59,8 +57,6 @@ public class PhenomenonsResource extends AbstractResource {
 
     @Path(PHENOMENON)
     public PhenomenonResource phenomenon(@PathParam("phenomenon") String id) throws PhenomenonNotFoundException {
-        Phenomenon p = getDataService().getPhenomenonByName(id);
-        checkRights(getRights().canSee(p));
-        return getResourceFactory().createPhenomenonResource(p);
+        return getResourceFactory().createPhenomenonResource(getDataService().getPhenomenonByName(id));
     }
 }

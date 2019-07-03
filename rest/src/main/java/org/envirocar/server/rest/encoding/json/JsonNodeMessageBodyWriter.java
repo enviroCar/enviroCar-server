@@ -16,14 +16,12 @@
  */
 package org.envirocar.server.rest.encoding.json;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
-
-import org.envirocar.server.rest.rights.AccessRights;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
  * TODO JavaDoc
@@ -42,8 +40,4 @@ public class JsonNodeMessageBodyWriter extends AbstractJSONMessageBodyWriter<Jso
         return (ObjectNode) t;
     }
 
-    @Override
-    public ObjectNode encodeJSON(JsonNode t, AccessRights rights, MediaType mt) {
-        return (ObjectNode) t;
-    }
 }

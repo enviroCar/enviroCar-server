@@ -16,17 +16,15 @@
  */
 package org.envirocar.server.rest.encoding.json;
 
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.ext.Provider;
-
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.inject.Inject;
 import org.envirocar.server.core.entities.Phenomenon;
 import org.envirocar.server.core.statistics.Statistic;
 import org.envirocar.server.rest.JSONConstants;
 import org.envirocar.server.rest.encoding.JSONEntityEncoder;
-import org.envirocar.server.rest.rights.AccessRights;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.inject.Inject;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.Provider;
 
 /**
  * TODO JavaDoc
@@ -44,7 +42,7 @@ public class StatisticJSONEncoder extends AbstractJSONEntityEncoder<Statistic> {
     }
 
     @Override
-    public ObjectNode encodeJSON(Statistic t, AccessRights rights, MediaType mt) {
+    public ObjectNode encodeJSON(Statistic t, MediaType mt) {
         ObjectNode statistic = getJsonFactory().objectNode();
         statistic.put(JSONConstants.MAX_KEY, t.getMax());
         statistic.put(JSONConstants.AVG_KEY, t.getMean());
@@ -53,7 +51,7 @@ public class StatisticJSONEncoder extends AbstractJSONEntityEncoder<Statistic> {
         statistic.put(JSONConstants.TRACKS_KEY, t.getTracks());
         statistic.put(JSONConstants.USERS_KEY, t.getUsers());
         statistic.put(JSONConstants.SENSORS_KEY, t.getSensors());
-        statistic.set(JSONConstants.PHENOMENON_KEY, phenomenonEncoder.encodeJSON(t.getPhenomenon(), rights, mt));
+        statistic.set(JSONConstants.PHENOMENON_KEY, phenomenonEncoder.encodeJSON(t.getPhenomenon(), mt));
         return statistic;
     }
 }

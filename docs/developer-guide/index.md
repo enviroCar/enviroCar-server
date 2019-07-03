@@ -93,7 +93,7 @@ import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
 
 public interface RDFLinker<T> {
-    void link(Model m, T t, AccessRights rights,
+    void link(Model m, T t, 
               Resource r, Provider<UriBuilder> uriBuilder);
 }
 ```
@@ -114,7 +114,7 @@ import com.vividsolutions.jts.geom.Point;
 
 public class W3CGeoMeasurementLinker implements RDFLinker<Measurement> {
     @Override
-    public void link(Model m, Measurement t, AccessRights rights,
+    public void link(Model m, Measurement t, 
                      Resource r, Provider<UriBuilder> uriBuilder) {
         if (t.getGeometry() instanceof Point) {
             m.setNsPrefix(W3CGeo.PREFIX, W3CGeo.URI);

@@ -39,8 +39,6 @@ import javax.ws.rs.core.UriBuilder;
 @Path("/")
 public class RootResource extends AbstractResource {
 
-    public static final String USERS = "users";
-    public static final String GROUPS = "groups";
     public static final String TRACKS = "tracks";
     public static final String PHENOMENONS = "phenomenons";
     public static final String SENSORS = "sensors";
@@ -48,10 +46,6 @@ public class RootResource extends AbstractResource {
     public static final String STATISTICS = "statistics";
     public static final String TERMS_OF_USE = "termsOfUse";
     public static final String SCHEMA = "schema";
-    public static final String ANNOUNCEMENTS = "announcements";
-    public static final String BADGES = "badges";
-    public static final String RESET_PASSWORD = "resetPassword";
-    public static final String CONFIRM = "confirm";
     public static final String PRIVACY_STATEMENTS = "privacyStatements";
     private final JsonNodeFactory factory;
 
@@ -65,34 +59,11 @@ public class RootResource extends AbstractResource {
     @Produces({MediaTypes.ROOT})
     public JsonNode get() {
         ObjectNode root = factory.objectNode();
-        if (getRights().canSeeUsers()) {
-            root.put(JSONConstants.USERS_KEY, getUriBuilder().path(USERS).build().toString());
-        }
-        if (getRights().canSeeGroups()) {
-            root.put(JSONConstants.GROUPS_KEY, getUriBuilder().path(GROUPS).build().toString());
-        }
-        if (getRights().canSeeTracks()) {
-            root.put(JSONConstants.TRACKS_KEY, getUriBuilder().path(TRACKS).build().toString());
-        }
-        if (getRights().canSeeSensors()) {
-            root.put(JSONConstants.SENSORS_KEY, getUriBuilder().path(SENSORS).build().toString());
-        }
-        if (getRights().canSeePhenomenons()) {
-            root.put(JSONConstants.PHENOMENONS_KEY, getUriBuilder().path(PHENOMENONS).build().toString());
-        }
-        if (getRights().canSeeMeasurements()) {
-            root.put(JSONConstants.MEASUREMENTS_KEY, getUriBuilder().path(MEASUREMENTS).build().toString());
-        }
-        if (getRights().canSeeStatistics()) {
-            root.put(JSONConstants.STATISTICS_KEY, getUriBuilder().path(STATISTICS).build().toString());
-        }
-        if (getRights().canSeeAnnouncements()) {
-            root.put(JSONConstants.ANNOUNCEMENTS_KEY, getUriBuilder().path(ANNOUNCEMENTS).build().toString());
-        }
-        if (getRights().canSeeBadges()) {
-            root.put(JSONConstants.BADGES_KEY, getUriBuilder().path(BADGES).build().toString());
-        }
-
+        root.put(JSONConstants.TRACKS_KEY, getUriBuilder().path(TRACKS).build().toString());
+        root.put(JSONConstants.SENSORS_KEY, getUriBuilder().path(SENSORS).build().toString());
+        root.put(JSONConstants.PHENOMENONS_KEY, getUriBuilder().path(PHENOMENONS).build().toString());
+        root.put(JSONConstants.MEASUREMENTS_KEY, getUriBuilder().path(MEASUREMENTS).build().toString());
+        root.put(JSONConstants.STATISTICS_KEY, getUriBuilder().path(STATISTICS).build().toString());
         root.put(JSONConstants.SCHEMA, getUriBuilder().path(SCHEMA).build().toString());
         root.put(JSONConstants.PRIVACY_STATEMENTS, getUriBuilder().path(PRIVACY_STATEMENTS).build().toString());
         root.put(JSONConstants.TERMS_OF_USE_KEY, getUriBuilder().path(TERMS_OF_USE).build().toString());
@@ -103,44 +74,28 @@ public class RootResource extends AbstractResource {
         return getUriInfo().getAbsolutePathBuilder();
     }
 
-    @Path(USERS)
-    public UsersResource users() {
-        return getResourceFactory().createUsersResource();
-    }
-
-    @Path(GROUPS)
-    public GroupsResource groups() {
-        checkRights(getRights().canSeeGroups());
-        return getResourceFactory().createGroupsResource(null);
-    }
-
     @Path(TRACKS)
     public TracksResource tracks() {
-        checkRights(getRights().canSeeTracks());
-        return getResourceFactory().createTracksResource(null);
+        return getResourceFactory().createTracksResource();
     }
 
     @Path(PHENOMENONS)
     public PhenomenonsResource phenomenons() {
-        checkRights(getRights().canSeePhenomenons());
         return getResourceFactory().createPhenomenonsResource();
     }
 
     @Path(SENSORS)
     public SensorsResource sensors() {
-        checkRights(getRights().canSeeSensors());
         return getResourceFactory().createSensorsResource();
     }
 
     @Path(MEASUREMENTS)
     public MeasurementsResource measurements() {
-        checkRights(getRights().canSeeMeasurements());
-        return getResourceFactory().createMeasurementsResource(null, null);
+        return getResourceFactory().createMeasurementsResource(null);
     }
 
     @Path(STATISTICS)
     public StatisticsResource statistics() {
-        checkRights(getRights().canSeeStatistics());
         return getResourceFactory().createStatisticsResource();
     }
 
@@ -154,31 +109,10 @@ public class RootResource extends AbstractResource {
         return getResourceFactory().createSchemaResource();
     }
 
-    @Path(ANNOUNCEMENTS)
-    public AnnouncementsResource announcements() {
-        checkRights(getRights().canSeeAnnouncements());
-        return getResourceFactory().createAnnouncementsResource();
-    }
-
-    @Path(BADGES)
-    public BadgesResource badges() {
-        checkRights(getRights().canSeeBadges());
-        return getResourceFactory().createBadgesResource();
-    }
 
     @Path(PRIVACY_STATEMENTS)
     public PrivacyStatementsResource privacyStatements() {
         return getResourceFactory().createPrivacyStatementsResource();
-    }
-
-    @Path(RESET_PASSWORD)
-    public ResetPasswordResource resetPassword() {
-        return getResourceFactory().createResetPasswordResource();
-    }
-
-    @Path(CONFIRM)
-    public ConfirmResource confirm() {
-        return getResourceFactory().createConfirmResource();
     }
 
     @Path("rest")

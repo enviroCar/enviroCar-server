@@ -16,7 +16,6 @@
  */
 package org.envirocar.server.rest.resources;
 
-import com.google.inject.assistedinject.Assisted;
 import org.envirocar.server.core.entities.*;
 
 import javax.annotation.Nullable;
@@ -28,29 +27,14 @@ import javax.annotation.Nullable;
  * @author Arne de Wall <a.dewall@52north.org>
  */
 public interface ResourceFactory {
-    UserResource createUserResource(User user);
-
-    UsersResource createUsersResource();
-
-    FriendsResource createFriendsResource(User user);
-
-    FriendResource createFriendResource(@Assisted("user") User user, @Assisted("friend") User friend);
-
-    GroupResource createGroupResource(Group group);
-
-    GroupsResource createGroupsResource(User user);
-
-    GroupMemberResource createGroupMemberResource(Group group, User member);
-
-    GroupMembersResource createGroupMembersResource(Group group);
 
     TrackResource createTrackResource(Track track);
 
-    TracksResource createTracksResource(@Nullable User user);
+    TracksResource createTracksResource();
 
-    MeasurementResource createMeasurementResource(Measurement measurement, @Nullable User user, @Nullable Track track);
+    MeasurementResource createMeasurementResource(Measurement measurement, @Nullable Track track);
 
-    MeasurementsResource createMeasurementsResource(@Nullable User user, @Nullable Track track);
+    MeasurementsResource createMeasurementsResource(@Nullable Track track);
 
     PhenomenonResource createPhenomenonResource(Phenomenon phenomenon);
 
@@ -60,31 +44,13 @@ public interface ResourceFactory {
 
     SensorsResource createSensorsResource();
 
-    SensorsResource createSensorsResource(User user);
-
     StatisticsResource createStatisticsResource();
-
-    StatisticsResource createStatisticsResource(User user);
 
     StatisticsResource createStatisticsResource(Track track);
 
     StatisticsResource createStatisticsResource(Sensor sensor);
 
-    StatisticResource createStatisticResource(Phenomenon phenomenon, @Nullable User user, @Nullable Track track, @Nullable Sensor sensor);
-
-    UserStatisticResource createUserStatisticsResource();
-
-    UserStatisticResource createUserStatisticsResource(@Nullable User user);
-
-    ActivitiesResource createActivitiesResource();
-
-    ActivitiesResource createActivitiesResource(@Nullable User user);
-
-    ActivitiesResource createActivitiesResource(@Nullable Group group);
-
-    AvatarResource createAvatarResource(User user);
-
-    FriendsActivitiesResource createFriendActivitiesResource(User user);
+    StatisticResource createStatisticResource(Phenomenon phenomenon, @Nullable Track track, @Nullable Sensor sensor);
 
     TermsOfUseResource createTermsOfUseResource();
 
@@ -92,24 +58,13 @@ public interface ResourceFactory {
 
     JSONSchemaResource createSchemaResource();
 
-    AnnouncementsResource createAnnouncementsResource();
-
-    AnnouncementResource createAnnouncementResource(Announcement announcement);
-
     PrivacyStatementsResource createPrivacyStatementsResource();
 
     PrivacyStatementResource createPrivacyStatementResource(PrivacyStatement announcement);
-
-    BadgesResource createBadgesResource();
-
-    ResetPasswordResource createResetPasswordResource();
-
-    FuelingsResource createFuelingsResource(User user);
 
     ShareResource createShareResource(Track track);
 
     PreviewResource createPreviewResource(Track track);
 
-    ConfirmResource createConfirmResource();
 }
 

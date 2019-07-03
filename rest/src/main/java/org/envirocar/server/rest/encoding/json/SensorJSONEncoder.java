@@ -16,18 +16,15 @@
  */
 package org.envirocar.server.rest.encoding.json;
 
-import java.util.Map;
-
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.ext.Provider;
-
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Maps;
-
 import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.rest.JSONConstants;
 import org.envirocar.server.rest.MediaTypes;
-import org.envirocar.server.rest.rights.AccessRights;
+
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.Provider;
+import java.util.Map;
 
 /**
  * TODO JavaDoc
@@ -41,7 +38,7 @@ public class SensorJSONEncoder extends AbstractJSONEntityEncoder<Sensor> {
     }
 
     @Override
-    public ObjectNode encodeJSON(Sensor t, AccessRights rights,
+    public ObjectNode encodeJSON(Sensor t,
                                  MediaType mediaType) {
         ObjectNode sensor = getJsonFactory().objectNode();
         if (t.hasType()) {
@@ -55,13 +52,10 @@ public class SensorJSONEncoder extends AbstractJSONEntityEncoder<Sensor> {
         properties.put(JSONConstants.IDENTIFIER_KEY, t.getIdentifier());
         if (mediaType.equals(MediaTypes.SENSOR_TYPE)) {
             if (t.hasCreationTime()) {
-                properties.put(JSONConstants.CREATED_KEY,
-                               getDateTimeFormat().print(t.getCreationTime()));
+                properties.put(JSONConstants.CREATED_KEY, getDateTimeFormat().print(t.getCreationTime()));
             }
             if (t.hasModificationTime()) {
-                properties.put(JSONConstants.MODIFIED_KEY,
-                               getDateTimeFormat()
-                        .print(t.getModificationTime()));
+                properties.put(JSONConstants.MODIFIED_KEY, getDateTimeFormat().print(t.getModificationTime()));
             }
         }
 

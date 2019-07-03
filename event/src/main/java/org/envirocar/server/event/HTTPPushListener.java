@@ -34,7 +34,6 @@ import org.envirocar.server.core.event.CreatedTrackEvent;
 import org.envirocar.server.core.event.DeletedTrackEvent;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.encoding.JSONEntityEncoder;
-import org.envirocar.server.rest.rights.AccessRightsImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,7 +44,6 @@ public class HTTPPushListener {
     //TODO make configurable
     private static final String host = "http://ags.52north.org:8080/enviroCar-broker/";
     private static final Logger logger = LoggerFactory.getLogger(HTTPPushListener.class);
-    public static final AccessRightsImpl DEFAULT_ACCESS_RIGHTS = new AccessRightsImpl();
     private final HttpClient client;
     private final JSONEntityEncoder<Track> encoder;
     private final ObjectWriter writer;
@@ -75,7 +73,7 @@ public class HTTPPushListener {
     private synchronized void pushNewTrack(Track track) {
         HttpResponse resp = null;
         try {
-            ObjectNode jsonTrack = encoder.encodeJSON(track, DEFAULT_ACCESS_RIGHTS, MediaTypes.TRACK_TYPE);
+            ObjectNode jsonTrack = encoder.encodeJSON(track, MediaTypes.TRACK_TYPE);
             String content = writer.writeValueAsString(jsonTrack);
             //logger.debug("Entity: {}", content);
             HttpEntity entity = new StringEntity(content, ContentType.create(MediaTypes.TRACK));

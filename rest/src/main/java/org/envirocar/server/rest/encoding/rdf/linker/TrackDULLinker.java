@@ -16,10 +16,11 @@
  */
 package org.envirocar.server.rest.encoding.rdf.linker;
 
-import java.net.URI;
-
-import javax.ws.rs.core.UriBuilder;
-
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.vocabulary.RDF;
 import org.envirocar.server.core.DataService;
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.Measurements;
@@ -28,13 +29,9 @@ import org.envirocar.server.core.filter.MeasurementFilter;
 import org.envirocar.server.rest.encoding.rdf.vocab.DUL;
 import org.envirocar.server.rest.resources.MeasurementsResource;
 import org.envirocar.server.rest.resources.RootResource;
-import org.envirocar.server.rest.rights.AccessRights;
 
-import com.google.inject.Inject;
-import com.google.inject.Provider;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.vocabulary.RDF;
+import javax.ws.rs.core.UriBuilder;
+import java.net.URI;
 
 /**
  * TODO JavaDoc
@@ -50,17 +47,15 @@ public class TrackDULLinker extends AbstractDULLinker<Track> {
     }
 
     @Override
-    protected void linkInternal(Model model, Track track, AccessRights rights,
+    protected void linkInternal(Model model, Track track,
                                 Resource trackResource,
                                 Provider<UriBuilder> uriBuilder) {
         UriBuilder measurementURIBuilder = getMeasurementURIBuilder(uriBuilder);
         trackResource.addProperty(RDF.type, DUL.Collection);
-        if (rights.canSeeMeasurementsOf(track)) {
-            for (Measurement measurement : getMeasurements(track)) {
-                URI uri = measurementURIBuilder.build(measurement.getIdentifier());
-                Resource measurementResource = model.createResource(uri.toASCIIString());
-                trackResource.addProperty(DUL.hasMember, measurementResource);
-            }
+        for (Measurement measurement : getMeasurements(track)) {
+            URI uri = measurementURIBuilder.build(measurement.getIdentifier());
+            Resource measurementResource = model.createResource(uri.toASCIIString());
+            trackResource.addProperty(DUL.hasMember, measurementResource);
         }
     }
 

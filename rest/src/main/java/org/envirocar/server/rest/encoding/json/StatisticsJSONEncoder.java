@@ -16,19 +16,16 @@
  */
 package org.envirocar.server.rest.encoding.json;
 
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.ext.Provider;
-
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
-
 import org.envirocar.server.core.statistics.Statistic;
 import org.envirocar.server.core.statistics.Statistics;
 import org.envirocar.server.rest.JSONConstants;
 import org.envirocar.server.rest.encoding.JSONEntityEncoder;
 
-import org.envirocar.server.rest.rights.AccessRights;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.Provider;
 
 /**
  * TODO JavaDoc
@@ -46,11 +43,11 @@ public class StatisticsJSONEncoder extends AbstractJSONEntityEncoder<Statistics>
     }
 
     @Override
-    public ObjectNode encodeJSON(Statistics t, AccessRights rights, MediaType mt) {
+    public ObjectNode encodeJSON(Statistics t, MediaType mt) {
         ObjectNode root = getJsonFactory().objectNode();
         ArrayNode statistics = root.putArray(JSONConstants.STATISTICS_KEY);
         for (Statistic s : t) {
-            statistics.add(statisticEncoder.encodeJSON(s, rights, mt));
+            statistics.add(statisticEncoder.encodeJSON(s, mt));
         }
         return root;
     }

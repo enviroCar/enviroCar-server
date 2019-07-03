@@ -17,20 +17,25 @@
 package org.envirocar.server.rest.rights;
 
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.sun.jersey.api.model.AbstractMethod;
 import com.sun.jersey.spi.container.*;
 import org.envirocar.server.core.entities.PolicyType;
-import org.envirocar.server.core.entities.User;
-import org.envirocar.server.core.validation.LegalPolicyValidator;
-import org.envirocar.server.rest.auth.PrincipalImpl;
+import org.envirocar.server.core.entities.PrivacyStatement;
+import org.envirocar.server.core.entities.TermsOfUseInstance;
+import org.envirocar.server.rest.resources.PrivacyStatementsResource;
+import org.envirocar.server.rest.resources.RootResource;
+import org.envirocar.server.rest.resources.TermsOfUseResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ws.rs.core.SecurityContext;
+import javax.ws.rs.core.UriInfo;
+import java.net.URI;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 /**
  * ResourceFilterFactory for resources annotated with {@link HasAcceptedLatestLegalPolicies}.
@@ -39,11 +44,18 @@ import java.util.Optional;
  */
 public class HasAcceptedLatestLegalPoliciesResourceFilterFactory implements ResourceFilterFactory {
     private static final Logger LOG = LoggerFactory.getLogger(HasAcceptedLatestLegalPoliciesResourceFilterFactory.class);
-    private final LegalPolicyValidator validator;
+    private final Supplier<Optional<TermsOfUseInstance>> termsOfUseSupplier;
+    private final Supplier<Optional<PrivacyStatement>> privacyStatementSupplier;
+    private final Provider<UriInfo> uriInfo;
 
     @Inject
-    public HasAcceptedLatestLegalPoliciesResourceFilterFactory(LegalPolicyValidator validator) {
-        this.validator = Objects.requireNonNull(validator);
+    public HasAcceptedLatestLegalPoliciesResourceFilterFactory(
+            Supplier<Optional<TermsOfUseInstance>> termsOfUseSupplier,
+            Supplier<Optional<PrivacyStatement>> privacyStatementSupplier,
+            Provider<UriInfo> uriInfo) {
+        this.termsOfUseSupplier = Objects.requireNonNull(termsOfUseSupplier);
+        this.privacyStatementSupplier = Objects.requireNonNull(privacyStatementSupplier);
+        this.uriInfo = Objects.requireNonNull(uriInfo);
     }
 
     @Override
@@ -52,7 +64,7 @@ public class HasAcceptedLatestLegalPoliciesResourceFilterFactory implements Reso
         if (annotation != null) {
             PolicyType[] policyTypes = annotation.value();
             if (policyTypes.length > 0) {
-                return Collections.singletonList(new LegalPolicyResourceFilter(this.validator, policyTypes));
+                return Collections.singletonList(new LegalPolicyResourceFilter(termsOfUseSupplier, privacyStatementSupplier, policyTypes));
             } else {
                 LOG.warn("No policies given for method {}", am);
             }
@@ -60,51 +72,130 @@ public class HasAcceptedLatestLegalPoliciesResourceFilterFactory implements Reso
         return Collections.emptyList();
     }
 
-    private static class LegalPolicyRequestFilter implements ContainerRequestFilter {
-        private final LegalPolicyValidator validator;
+    private class LegalPolicyResourceFilter implements ResourceFilter, ContainerRequestFilter, ContainerResponseFilter {
+        private static final String PRIVACY_STATEMENT_HEADER = "Privacy-Statement";
+        private static final String TERMS_OF_USE_HEADER = "Terms-Of-Use";
+        private static final String ACCEPT_TERMS_OF_USE_HEADER = "Accept-Terms-Of-Use";
+        private static final String ACCEPT_PRIVACY_STATEMENT = "Accept-Privacy-Statement";
+        private final Supplier<Optional<TermsOfUseInstance>> termsOfUseSupplier;
+        private final Supplier<Optional<PrivacyStatement>> privacyStatementSupplier;
         private final PolicyType[] policyTypes;
 
-        private LegalPolicyRequestFilter(LegalPolicyValidator validator, PolicyType[] policyTypes) {
-            this.validator = validator;
-            this.policyTypes = policyTypes;
-        }
-
-        @Override
-        public ContainerRequest filter(ContainerRequest request) {
-            getUser(request).ifPresent(this::validate);
-            return request;
-        }
-
-        public void validate(User user) {
-            this.validator.validate(this.policyTypes, user);
-        }
-
-        public Optional<User> getUser(ContainerRequest request) {
-            return Optional.ofNullable(request)
-                    .map(ContainerRequest::getSecurityContext)
-                    .map(SecurityContext::getUserPrincipal)
-                    .map(PrincipalImpl.class::cast)
-                    .map(PrincipalImpl::getUser);
-        }
-    }
-
-    private class LegalPolicyResourceFilter implements ResourceFilter {
-        private final LegalPolicyValidator validator;
-        private final PolicyType[] policyTypes;
-
-        private LegalPolicyResourceFilter(LegalPolicyValidator validator, PolicyType[] policyTypes) {
-            this.validator = validator;
+        private LegalPolicyResourceFilter(Supplier<Optional<TermsOfUseInstance>> termsOfUseSupplier,
+                                          Supplier<Optional<PrivacyStatement>> privacyStatementSupplier,
+                                          PolicyType[] policyTypes) {
+            this.termsOfUseSupplier = termsOfUseSupplier;
+            this.privacyStatementSupplier = privacyStatementSupplier;
             this.policyTypes = policyTypes;
         }
 
         @Override
         public ContainerRequestFilter getRequestFilter() {
-            return new LegalPolicyRequestFilter(this.validator, this.policyTypes);
+            return this;
         }
 
         @Override
         public ContainerResponseFilter getResponseFilter() {
-            return null;
+            return this;
         }
+
+        @Override
+        public ContainerRequest filter(ContainerRequest request) {
+            for (PolicyType policyType : this.policyTypes) {
+                switch (policyType) {
+                    case PRIVACY_STATEMENT:
+                        checkPrivacyStatementHeader(request);
+                        break;
+                    case TERMS_OF_USE:
+                        checkTermsOfUseHeader(request);
+                        break;
+                    default:
+                        throw new IllegalArgumentException("unsupported policy type: " + policyType);
+                }
+            }
+            return request;
+        }
+
+        @Override
+        public ContainerResponse filter(ContainerRequest request, ContainerResponse response) {
+            for (PolicyType policyType : this.policyTypes) {
+                switch (policyType) {
+                    case PRIVACY_STATEMENT:
+                        addPrivacyStatementHeader(response);
+                        break;
+                    case TERMS_OF_USE:
+                        addTermsOfUseHeader(response);
+                        break;
+                    default:
+                        throw new IllegalArgumentException("unsupported policy type: " + policyType);
+                }
+            }
+            return response;
+        }
+
+        private void checkTermsOfUseHeader(ContainerRequest request) throws TermsOfUseException {
+            String headerValue = request.getHeaderValue(ACCEPT_TERMS_OF_USE_HEADER);
+            if (!Boolean.parseBoolean(headerValue)) {
+                this.termsOfUseSupplier.get().ifPresent(terms -> {
+                    throw createTermsOfUseException(terms);
+                });
+            }
+        }
+
+        private void checkPrivacyStatementHeader(ContainerRequest request) throws PrivacyStatementException {
+            String headerValue = request.getHeaderValue(ACCEPT_PRIVACY_STATEMENT);
+            if (!Boolean.parseBoolean(headerValue)) {
+                this.privacyStatementSupplier.get().ifPresent(terms -> {
+                    throw createPrivacyStatementException(terms);
+                });
+            }
+        }
+
+        private TermsOfUseException createTermsOfUseException(TermsOfUseInstance terms) {
+            return new TermsOfUseException(String.format(
+                    "not accepting terms of use in version %s, available under %s",
+                    terms.getIssuedDate(), getTermsOfUseUri(terms)));
+        }
+
+        private PrivacyStatementException createPrivacyStatementException(PrivacyStatement terms) {
+            return new PrivacyStatementException(String.format(
+                    "not accepting privacy statement in version %s, available under %s",
+                    terms.getIssuedDate(), getPrivacyStatementUri(terms)));
+        }
+
+        private void addTermsOfUseHeader(ContainerResponse response) {
+            getTermsOfUseUri().ifPresent(uri -> response.getHttpHeaders().add(TERMS_OF_USE_HEADER, uri));
+        }
+
+        private void addPrivacyStatementHeader(ContainerResponse response) {
+            getPrivacyStatementUri().ifPresent(uri -> response.getHttpHeaders().add(PRIVACY_STATEMENT_HEADER, uri));
+        }
+
+        private Optional<URI> getTermsOfUseUri() {
+            return termsOfUseSupplier.get().map(this::getTermsOfUseUri);
+        }
+
+        private Optional<URI> getPrivacyStatementUri() {
+            return privacyStatementSupplier.get().map(this::getPrivacyStatementUri);
+        }
+
+        private URI getTermsOfUseUri(TermsOfUseInstance terms) {
+            return uriInfo.get().getBaseUriBuilder()
+                    .path(RootResource.TERMS_OF_USE)
+                    .path(TermsOfUseResource.TERMS_OF_USE_INSTANCE)
+                    .build(terms.getIdentifier());
+        }
+
+
+        private URI getPrivacyStatementUri(PrivacyStatement terms) {
+            return uriInfo.get().getBaseUriBuilder()
+                    .path(RootResource.PRIVACY_STATEMENTS)
+                    .path(PrivacyStatementsResource.PRIVACY_STATEMENT)
+                    .build(terms.getIdentifier());
+        }
+
+
     }
+
+
 }

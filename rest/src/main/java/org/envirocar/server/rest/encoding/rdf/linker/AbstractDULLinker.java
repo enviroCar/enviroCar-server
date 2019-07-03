@@ -16,12 +16,11 @@
  */
 package org.envirocar.server.rest.encoding.rdf.linker;
 
-import javax.ws.rs.core.UriBuilder;
-
-import org.envirocar.server.rest.encoding.rdf.vocab.DUL;
-
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
+import org.envirocar.server.rest.encoding.rdf.vocab.DUL;
+
+import javax.ws.rs.core.UriBuilder;
 
 /**
  * TODO JavaDoc
@@ -40,9 +39,6 @@ public abstract class AbstractDULLinker<T> extends AbstractLinker<T> {
     }
 
     protected String fragment(Resource resource, String fragment) {
-        return UriBuilder.fromUri(resource.getURI())
-                .fragment(fragment)
-                .build()
-                .toASCIIString();
+        return UriBuilder.fromUri(resource.getURI()).fragment(fragment).build().toASCIIString();
     }
 }

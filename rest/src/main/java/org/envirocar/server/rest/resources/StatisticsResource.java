@@ -21,7 +21,6 @@ import com.google.inject.assistedinject.AssistedInject;
 import org.envirocar.server.core.entities.Phenomenon;
 import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.core.entities.Track;
-import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.exception.PhenomenonNotFoundException;
 import org.envirocar.server.core.filter.StatisticsFilter;
 import org.envirocar.server.core.statistics.Statistics;
@@ -43,35 +42,27 @@ import javax.ws.rs.Produces;
 public class StatisticsResource extends AbstractResource {
     public static final String PHENOMENON = "{phen}";
     private final Track track;
-    private final User user;
     private final Sensor sensor;
 
     @AssistedInject
     public StatisticsResource() {
-        this(null, null, null);
-    }
-
-    @AssistedInject
-    public StatisticsResource(@Assisted User user) {
-        this(null, user, null);
+        this(null, null);
     }
 
     @AssistedInject
     public StatisticsResource(@Assisted @Nullable Track track) {
-        this(track, null, null);
+        this(track, null);
     }
 
     @AssistedInject
     public StatisticsResource(@Assisted Sensor sensor) {
-        this(null, null, sensor);
+        this(null, sensor);
     }
 
     @AssistedInject
     public StatisticsResource(@Nullable @Assisted Track track,
-                              @Nullable @Assisted User user,
                               @Nullable @Assisted Sensor sensor) {
         this.track = track;
-        this.user = user;
         this.sensor = sensor;
     }
 
@@ -79,21 +70,17 @@ public class StatisticsResource extends AbstractResource {
     @Schema(response = Schemas.STATISTICS)
     @Produces({MediaTypes.STATISTICS, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
     public Statistics statistics() {
-        return getStatisticsService().getStatistics(new StatisticsFilter(user, track, sensor));
+        return getStatisticsService().getStatistics(new StatisticsFilter(track, sensor));
     }
 
     @Path(PHENOMENON)
     public StatisticResource statistics(@PathParam("phen") String phenomenon) throws PhenomenonNotFoundException {
         Phenomenon p = getDataService().getPhenomenonByName(phenomenon);
-        return getResourceFactory().createStatisticResource(p, user, track, sensor);
+        return getResourceFactory().createStatisticResource(p, track, sensor);
     }
 
     public Track getTrack() {
         return track;
-    }
-
-    public User getUser() {
-        return user;
     }
 
     public Sensor getSensor() {
