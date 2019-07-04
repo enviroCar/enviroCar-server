@@ -16,35 +16,18 @@
  */
 package org.envirocar.server;
 
-import com.google.inject.Inject;
-import com.mongodb.DB;
-import com.sun.jersey.api.client.WebResource;
-import org.junit.Before;
-import org.junit.ClassRule;
+import com.google.common.base.Strings;
+import org.testcontainers.containers.GenericContainer;
 
-/**
- * TODO JavaDoc
- *
- * @author Christian Autermann <autermann@uni-muenster.de>
- */
-public class ResourceTestBase {
-    @Inject
-    private DB db;
-    @ClassRule
-    public static EnviroCarServer server = new EnviroCarServer();
+import java.util.Objects;
 
-    @Before
-    public void inject() {
-        server.getInjector().injectMembers(this);
+public class MongoDatabase extends GenericContainer<MongoDatabase> {
+    public MongoDatabase(String version) {
+        super(String.format("mongo:%s", Objects.requireNonNull(Strings.emptyToNull(version))));
     }
 
-    protected WebResource resource() {
-        return server.resource();
+    public MongoDatabase() {
+        this("latest");
     }
 
-    protected void clearDatabase() {
-        for (String name : db.getCollectionNames()) {
-            db.getCollection(name).drop();
-        }
-    }
 }
