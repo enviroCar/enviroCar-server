@@ -16,199 +16,172 @@
  */
 package org.envirocar.server.rest.encoding.csv;
 
-import java.io.BufferedWriter;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStreamWriter;
+import com.google.inject.Inject;
+import com.vividsolutions.jts.geom.Point;
+import org.envirocar.server.core.DataService;
+import org.envirocar.server.core.entities.*;
+import org.envirocar.server.core.filter.MeasurementFilter;
+import org.envirocar.server.rest.mapper.InternalServerError;
+import org.envirocar.server.rest.resources.ForbiddenException;
+import org.envirocar.server.rest.rights.AccessRights;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.Provider;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.ext.Provider;
-
-import org.envirocar.server.core.DataService;
-import org.envirocar.server.core.entities.Measurement;
-import org.envirocar.server.core.entities.MeasurementValue;
-import org.envirocar.server.core.entities.MeasurementValues;
-import org.envirocar.server.core.entities.Measurements;
-import org.envirocar.server.core.entities.Phenomenon;
-import org.envirocar.server.core.entities.Track;
-import org.envirocar.server.core.filter.MeasurementFilter;
-import org.envirocar.server.rest.rights.AccessRights;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.google.inject.Inject;
-import com.vividsolutions.jts.geom.Point;
-
 /**
  * TODO: Javadoc
- * 
+ *
  * @author Benjamin Pross
  */
 @Provider
 public class TrackCSVEncoder extends AbstractCSVTrackEncoder<Track> {
 
-	private static final Logger log = LoggerFactory
-			.getLogger(TrackCSVEncoder.class);
-	private final DataService dataService;
-	private static final String delimiter = "; ";
+    private static final Logger log = LoggerFactory
+            .getLogger(TrackCSVEncoder.class);
+    private final DataService dataService;
+    private static final String delimiter = "; ";
 
-	@Inject
-	public TrackCSVEncoder(DataService dataService) {
-		super(Track.class);
-		this.dataService = dataService;
-	}
+    @Inject
+    public TrackCSVEncoder(DataService dataService) {
+        super(Track.class);
+        this.dataService = dataService;
+    }
 
-	@Override
-	public InputStream encodeCSV(Track t, AccessRights rights,
-			MediaType mediaType) {
+    @Override
+    public InputStream encodeCSV(Track t, AccessRights rights, MediaType mediaType) {
+        try {
+            if (rights.canSeeMeasurementsOf(t)) {
+                return convert(dataService.getMeasurements(new MeasurementFilter(t)));
+            } else {
+                throw new ForbiddenException();
+            }
+        } catch (Exception e) {
+            throw new InternalServerError(e);
+        }
+    }
 
-		InputStream resultInputStream = null;
-		try {
-			if (rights.canSeeMeasurementsOf(t)) {
-				Measurements measurements = dataService
-						.getMeasurements(new MeasurementFilter(t));
-				resultInputStream = convert(measurements);
-			}
+    public InputStream convert(Measurements measurements) throws IOException {
 
-		} catch (Exception e) {
-			log.debug(e.getMessage());
-		}
+        CharSequence header = null;
 
-		return resultInputStream;
-	}
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(out));
 
-	public InputStream convert(Measurements measurements) throws IOException {
+        Set<String> properties = gatherPropertiesForHeader(measurements);
 
-		CharSequence header = null;
+        for (Measurement measurement : measurements) {
 
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(out));
+            if (header == null) {
 
-		Set<String> properties = gatherPropertiesForHeader(measurements);
+                List<String> spaceTimeProperties = new ArrayList<>();
+                spaceTimeProperties.add("longitude");
+                spaceTimeProperties.add("latitude");
+                spaceTimeProperties.add("time");
 
-		for (Measurement measurement : measurements) {
+                header = createCSVHeader(properties, spaceTimeProperties);
 
-			if (header == null) {
-				
-				List<String> spaceTimeProperties = new ArrayList<>();
-				spaceTimeProperties.add("longitude");
-				spaceTimeProperties.add("latitude");
-				spaceTimeProperties.add("time");
+                bw.append(header);
+                bw.newLine();
 
-				header = createCSVHeader(properties, spaceTimeProperties);
+            }
 
-				bw.append(header);
-				bw.newLine();
+            bw.append(measurement.getIdentifier());
+            bw.append(delimiter);
 
-			}
-			
-			bw.append(measurement.getIdentifier());
-			bw.append(delimiter);
-			
-			for (String key : properties) {
-				
-				Object value = getValue(key, measurement.getValues());
+            for (String key : properties) {
 
-				bw.append(value != null ? value.toString() : Double
-						.toString(Double.NaN));
-				bw.append(delimiter);
-			}
+                Object value = getValue(key, measurement.getValues());
 
-			Point coord = (Point) measurement.getGeometry();
-			bw.append(Double.toString(coord.getCoordinate().x));
-			bw.append(delimiter);
-			bw.append(Double.toString(coord.getCoordinate().y));
-			bw.append(delimiter);
-			bw.append(getDateTimeFormat().print(measurement.getTime()));
+                bw.append(value != null ? value.toString() : Double.toString(Double.NaN));
+                bw.append(delimiter);
+            }
 
-			bw.newLine();
-		}
+            Point coord = (Point) measurement.getGeometry();
+            bw.append(Double.toString(coord.getCoordinate().x));
+            bw.append(delimiter);
+            bw.append(Double.toString(coord.getCoordinate().y));
+            bw.append(delimiter);
+            bw.append(getDateTimeFormat().print(measurement.getTime()));
 
-		bw.flush();
-		bw.close();
+            bw.newLine();
+        }
 
-		return new ByteArrayInputStream(out.toByteArray());
-	}
+        bw.flush();
+        bw.close();
 
-	private String createCompundPropertyName(String propertyName, String unit) {
+        return new ByteArrayInputStream(out.toByteArray());
+    }
 
-		return propertyName + "(" + unit + ")";
-	}
+    private String createCompundPropertyName(String propertyName, String unit) {
 
-	private String[] dissolvePropertyName(String propertyName) {
+        return propertyName + "(" + unit + ")";
+    }
 
-		return propertyName.replace(")", "").split("\\(");
-	}
+    private String[] dissolvePropertyName(String propertyName) {
 
-	private CharSequence createCSVHeader(Set<String> properties,
-			List<String> spaceTimeproperties) {
-		StringBuilder sb = new StringBuilder();
+        return propertyName.replace(")", "").split("\\(");
+    }
 
-		sb.append("id");
-		sb.append(delimiter);
-		
-		for (String key : properties) {
-			sb.append(key);
-			sb.append(delimiter);
-		}
+    private CharSequence createCSVHeader(Set<String> properties,
+                                         List<String> spaceTimeproperties) {
+        StringBuilder sb = new StringBuilder();
 
-		for (String key : spaceTimeproperties) {
-			sb.append(key);
-			sb.append(delimiter);
-		}
+        sb.append("id");
+        sb.append(delimiter);
 
-		return sb.delete(sb.length() - delimiter.length(), sb.length());
-	}
-	
-	private String getValue(String phenomenonName, MeasurementValues values){
-		
-		String[] nameAndUnit = dissolvePropertyName(phenomenonName);
-			
-		for (MeasurementValue measurementValue : values) {
+        for (String key : properties) {
+            sb.append(key);
+            sb.append(delimiter);
+        }
 
-			Phenomenon phenomenon = measurementValue.getPhenomenon();
-			
-			if(phenomenon.getName().equals(nameAndUnit[0])){
-				return String.valueOf(measurementValue.getValue());
-			}
-		}
-		
-		return "";
-	}
-	
+        for (String key : spaceTimeproperties) {
+            sb.append(key);
+            sb.append(delimiter);
+        }
 
-	private Set<String> gatherPropertiesForHeader(Measurements measurements){
-		
-		Set<String> distinctPhenomenonNames = new HashSet<>();
-		
-		for (Measurement measurement : measurements) {
+        return sb.delete(sb.length() - delimiter.length(), sb.length());
+    }
 
-			MeasurementValues values = measurement.getValues();
+    private String getValue(String phenomenonName, MeasurementValues values) {
 
-			for (MeasurementValue measurementValue : values) {
+        String[] nameAndUnit = dissolvePropertyName(phenomenonName);
 
-				Phenomenon phenomenon = measurementValue.getPhenomenon();
+        for (MeasurementValue measurementValue : values) {
 
-				String unit = phenomenon.getUnit();
+            Phenomenon phenomenon = measurementValue.getPhenomenon();
 
-				/*
-				 * create property name
-				 */
-				String propertyName = createCompundPropertyName(phenomenon.getName(),
-						unit);
+            if (phenomenon.getName().equals(nameAndUnit[0])) {
+                return String.valueOf(measurementValue.getValue());
+            }
+        }
 
-				distinctPhenomenonNames.add(propertyName);
-			}
+        return "";
+    }
 
-		}
-		
-		return distinctPhenomenonNames;
-	}	
-	
+
+    private Set<String> gatherPropertiesForHeader(Measurements measurements) {
+        Set<String> distinctPhenomenonNames = new HashSet<>();
+        for (Measurement measurement : measurements) {
+            MeasurementValues values = measurement.getValues();
+            for (MeasurementValue measurementValue : values) {
+                Phenomenon phenomenon = measurementValue.getPhenomenon();
+                String unit = phenomenon.getUnit();
+
+                /*
+                 * create property name
+                 */
+                String propertyName = createCompundPropertyName(phenomenon.getName(), unit);
+                distinctPhenomenonNames.add(propertyName);
+            }
+        }
+        return distinctPhenomenonNames;
+    }
+
 }

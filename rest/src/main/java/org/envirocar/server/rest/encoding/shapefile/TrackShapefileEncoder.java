@@ -16,31 +16,14 @@
  */
 package org.envirocar.server.rest.encoding.shapefile;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-import java.util.UUID;
-
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.ext.Provider;
-
+import com.google.common.io.Closeables;
+import com.google.inject.Inject;
+import com.vividsolutions.jts.geom.Point;
 import org.envirocar.server.core.DataService;
-import org.envirocar.server.core.entities.Measurement;
-import org.envirocar.server.core.entities.MeasurementValue;
-import org.envirocar.server.core.entities.MeasurementValues;
-import org.envirocar.server.core.entities.Measurements;
-import org.envirocar.server.core.entities.Phenomenon;
-import org.envirocar.server.core.entities.Track;
+import org.envirocar.server.core.entities.*;
 import org.envirocar.server.core.exception.TrackTooLongException;
 import org.envirocar.server.core.filter.MeasurementFilter;
+import org.envirocar.server.rest.mapper.InternalServerError;
 import org.envirocar.server.rest.rights.AccessRights;
 import org.geotools.data.DataStoreFactorySpi;
 import org.geotools.data.DefaultTransaction;
@@ -54,20 +37,22 @@ import org.geotools.feature.NameImpl;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.geotools.referencing.CRS;
+import org.n52.wps.io.IOUtils;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.Name;
 import org.opengis.referencing.FactoryException;
-import org.opengis.referencing.NoSuchAuthorityCodeException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.n52.wps.io.IOUtils;
-
-import com.google.common.io.Closeables;
-import com.google.inject.Inject;
-import com.vividsolutions.jts.geom.Point;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.Provider;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Serializable;
+import java.util.*;
 
 /**
  * TODO: Javadoc
@@ -77,22 +62,19 @@ import com.vividsolutions.jts.geom.Point;
 @Provider
 public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder<Track> {
 
-    private static final Logger log = LoggerFactory
-            .getLogger(TrackShapefileEncoder.class);
+    private static final Logger log = LoggerFactory.getLogger(TrackShapefileEncoder.class);
 
     private SimpleFeatureTypeBuilder typeBuilder;
     private final DataService dataService;
     private CoordinateReferenceSystem crs_wgs84;
-    public static int shapeFileExportThreshold = 2;
-    private  static final String shapefileExportThresholdPropertyName = "shapefile.export.measurement.threshold";
+    public static final int shapeFileExportThreshold;
+    private static final String shapefileExportThresholdPropertyName = "shapefile.export.measurement.threshold";
     private Track track;
     private static final String PROPERTIES = "/export.properties";
     private static final String DEFAULT_PROPERTIES = "/export.default.properties";
 
-    @Inject
-    public TrackShapefileEncoder(DataService dataService) {
-        super(Track.class);
-        this.dataService = dataService;
+
+    static {
         Properties properties = new Properties();
         InputStream in = null;
         try {
@@ -115,13 +97,18 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder<Track> 
             Closeables.closeQuietly(in);
         }
 
-        if (properties != null) {
-            String property = properties
-                    .getProperty(shapefileExportThresholdPropertyName);
-            if (property != null) {
-                shapeFileExportThreshold = Integer.parseInt(property);
-            }
+        String property = properties.getProperty(shapefileExportThresholdPropertyName);
+        if (property != null) {
+            shapeFileExportThreshold = Integer.parseInt(property);
+        } else {
+            shapeFileExportThreshold = 1000;
         }
+    }
+
+    @Inject
+    public TrackShapefileEncoder(DataService dataService) {
+        super(Track.class);
+        this.dataService = dataService;
     }
 
     @Override
@@ -131,12 +118,11 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder<Track> 
         File zippedShapeFile = null;
         try {
             if (rights.canSeeMeasurementsOf(t)) {
-                Measurements measurements = dataService
-                        .getMeasurements(new MeasurementFilter(t));
+                Measurements measurements = dataService.getMeasurements(new MeasurementFilter(t));
                 zippedShapeFile = createZippedShapefile(createShapeFile(createFeatureCollection(measurements)));
             }
         } catch (IOException e) {
-            log.debug(e.getMessage());
+            throw new InternalServerError(e);
         }
 
         return zippedShapeFile;
@@ -188,7 +174,7 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder<Track> 
                 String unit = phenomenon.getUnit();
 
                 /*
-				 * create property name
+                 * create property name
                  */
                 String propertyName = getPropertyName(phenomenon.getName(), unit);
 
@@ -221,7 +207,7 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder<Track> 
                 String unit = phenomenon.getUnit();
 
                 /*
-				 * create property name
+                 * create property name
                  */
 
 
@@ -277,7 +263,7 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder<Track> 
         @SuppressWarnings("unchecked")
         FeatureStore<SimpleFeatureType, SimpleFeature> featureStore
                 = (FeatureStore<SimpleFeatureType, SimpleFeature>) newDataStore
-                        .getFeatureSource(typeName);
+                .getFeatureSource(typeName);
         featureStore.setTransaction(transaction);
         try {
             featureStore.addFeatures(collection);

@@ -16,277 +16,140 @@
  */
 package org.envirocar.server.rest.encoding.shapefile;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.bson.types.ObjectId;
-import org.envirocar.server.core.entities.Measurement;
-import org.envirocar.server.core.entities.MeasurementValue;
-import org.envirocar.server.core.entities.Phenomenon;
-import org.envirocar.server.core.entities.Sensor;
-import org.envirocar.server.core.entities.Track;
-import org.envirocar.server.core.entities.User;
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.PrecisionModel;
+import org.envirocar.server.core.DataService;
+import org.envirocar.server.core.entities.*;
 import org.envirocar.server.core.exception.TrackTooLongException;
-import org.envirocar.server.core.exception.ValidationException;
-import org.envirocar.server.mongo.entity.MongoSensor;
+import org.envirocar.server.mongo.entity.*;
 import org.envirocar.server.rest.MediaTypes;
-import org.envirocar.server.rest.encoding.AbstractEncodingTest;
+import org.envirocar.server.rest.rights.NonRestrictiveRights;
 import org.joda.time.DateTime;
-import org.junit.After;
+import org.joda.time.format.ISODateTimeFormat;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
 
-import com.vividsolutions.jts.geom.Coordinate;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.IntStream;
+
+import static java.util.stream.Collectors.toList;
+import static org.junit.Assert.assertTrue;
 
 /**
  * TODO JavaDoc
  *
  * @author Benjamin Pross
  */
-public class ShapefileEncodingTest extends AbstractEncodingTest {
-
+public class ShapefileEncodingTest {
     @Rule
     public final ExpectedException exception = ExpectedException.none();
+    @Rule
+    public final MockitoRule mockitoRule = MockitoJUnit.rule();
+    private GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(PrecisionModel.FLOATING), 4326);
+    private final Track track = createTrack();
+    private final Sensor sensor = createSensor();
+    private final List<Phenomenon> phenomenons = createPhenomenoms();
 
-    private final String dateTime = "2014-05-20T08:42:06Z";
+    @Mock
+    private DataService dataService;
 
-    private Track testTrack1;
-    private Track testTrack2;
-
-    private User user;
-    private Sensor sensor;
-    private List<Phenomenon> phenomenons;
-
-    private final String testUserName = "TestUser";
-
-    private int measurementThreshold = 500;//temp value
+    private TrackShapefileEncoder trackShapefileEncoder;
 
     @Before
     public void setup() {
-
-        try {
-
-            measurementThreshold = TrackShapefileEncoder.shapeFileExportThreshold;
-
-//			testTrack1 = getTestTrack(trackObjectId1);
-//			testTrack2 = getTestTrack(trackObjectId2);
-            if (testTrack1 == null) {
-
-                testTrack1 = createTrack(getUser(), getSensor());
-
-                createTrackWithMeasurementsLessThanThreshold(
-                        testTrack1, getPhenomenons(), getUser(), getSensor());
-
-            }
-            if (testTrack2 == null) {
-
-                testTrack2 = createTrack(getUser(), getSensor());
-
-                createTrackWithMeasurementsMoreThanThreshold(
-                        testTrack2, getPhenomenons(), getUser(), getSensor());
-            }
-
-        } catch (ValidationException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    @After
-    public void removeTracks() {
-        if (testTrack1 != null) {
-            dataService.deleteTrack(testTrack1);
-        }
-
-        if (testTrack2 != null) {
-            dataService.deleteTrack(testTrack2);
-        }
+        this.trackShapefileEncoder = new TrackShapefileEncoder(dataService);
+        this.trackShapefileEncoder.setDateTimeFormat(ISODateTimeFormat.dateTimeNoMillis());
+        this.trackShapefileEncoder.setRights(NonRestrictiveRights::new);
     }
 
     @Test
-    public void testShapefileEncoding()
-            throws IOException {
-
-        File shapeFile;
-        try {
-            shapeFile = trackShapefileEncoder.encodeShapefile(testTrack1,
-                                                              MediaTypes.APPLICATION_ZIPPED_SHP_TYPE);
-            assertTrue(shapeFile.exists());
-        } catch (TrackTooLongException e) {
-            e.printStackTrace();
-            fail();
-        }
-
+    public void testShapefileEncoding() {
+        Measurements measurements = createTrackWithMeasurementsLessThanThreshold();
+        Mockito.when(dataService.getMeasurements(Mockito.anyObject())).thenReturn(measurements);
+        File shapeFile = trackShapefileEncoder.encodeShapefile(track, MediaTypes.APPLICATION_ZIPPED_SHP_TYPE);
+        assertTrue(shapeFile.exists());
     }
 
     @Test
-    public void testShapefileEncodingMoreMeasurementsThanAllowed()
-            throws IOException {
+    public void testShapefileEncodingMoreMeasurementsThanAllowed() {
         exception.expect(TrackTooLongException.class);
-        trackShapefileEncoder.encodeShapefile(testTrack2,
-                                              MediaTypes.APPLICATION_ZIPPED_SHP_TYPE);
+        Measurements measurements = createTrackWithMeasurementsMoreThanThreshold();
+        Mockito.when(dataService.getMeasurements(Mockito.anyObject())).thenReturn(measurements);
+        trackShapefileEncoder.encodeShapefile(track, MediaTypes.APPLICATION_ZIPPED_SHP_TYPE);
     }
 
-    private User getUser() {
-        if (user == null) {
-            user = createUser(testUserName);
-        }
-        return user;
+    private Measurements createTrackWithMeasurementsLessThanThreshold() {
+        return Measurements.from(IntStream.range(0, TrackShapefileEncoder.shapeFileExportThreshold - 1)
+                .mapToObj(this::createMeasurement)
+                .collect(toList())).build();
     }
 
-    private Sensor getSensor() {
-
-        if (sensor == null) {
-            sensor = createSensor();
-        }
-        return sensor;
+    private Measurements createTrackWithMeasurementsMoreThanThreshold() {
+        return Measurements.from(IntStream.range(0, TrackShapefileEncoder.shapeFileExportThreshold)
+                .mapToObj(this::createMeasurement)
+                .collect(toList())).build();
     }
 
-    private List<Phenomenon> getPhenomenons() {
+    private Measurement createMeasurement(int basenumber) {
 
-        if (phenomenons == null) {
-            phenomenons = createPhenomenoms();
-        }
-        return phenomenons;
-    }
-
-    private void createTrackWithMeasurementsLessThanThreshold(
-            Track track, List<Phenomenon> phenomenons, User user, Sensor sensor) {
-
-        for (int i = 0; i < measurementThreshold - 1; i++) {
-            createMeasurement(track, new ObjectId().toString(), phenomenons, user,
-                              sensor, i);
-        }
-
-        dataService.createTrack(track);
-
-    }
-
-    private void createTrackWithMeasurementsMoreThanThreshold(
-            Track track, List<Phenomenon> phenomenons, User user, Sensor sensor) {
-
-        for (int i = 0; i <= measurementThreshold + 1; i++) {
-            createMeasurement(track, new ObjectId().toString(), phenomenons, user,
-                              sensor, i);
-        }
-
-        dataService.createTrack(track);
-    }
-
-    private Measurement createMeasurement(Track testTrack, String objectId,
-                                          List<Phenomenon> phenomenons, User user, Sensor sensor,
-                                          int basenumber) {
-
-        Measurement measurement = entityFactory.createMeasurement();
-
-        measurement.setGeometry(geometryFactory.createPoint(new Coordinate(
-                51.9, 7)));
-
+        Measurement measurement = new MongoMeasurement();
+        measurement.setGeometry(geometryFactory.createPoint(new Coordinate(51.9, 7)));
         measurement.setSensor(sensor);
-
-        measurement.setUser(user);
-
-        measurement.setIdentifier(objectId);
-
         int value = basenumber;
-
         for (Phenomenon phenomenon : phenomenons) {
-
-            MeasurementValue measurementValue = entityFactory
-                    .createMeasurementValue();
-
+            MeasurementValue measurementValue = new MongoMeasurementValue();
             measurementValue.setPhenomenon(phenomenon);
-
             measurementValue.setValue(value);
-
             measurement.addValue(measurementValue);
-
             value++;
         }
-
         measurement.setTime(DateTime.now());
-
-        measurement.setTrack(testTrack);
-
         dataService.createMeasurement(measurement);
-
         return measurement;
 
     }
 
-    private Track createTrack(User user, Sensor sensor) {
-
-        Track result = entityFactory.createTrack();
-
-//		result.setIdentifier(objectId);
-        result.setUser(user);
-
+    private Track createTrack() {
+        MongoTrack result = new MongoTrack();
         result.setSensor(sensor);
-
+        result.setCreationTime(DateTime.now());
+        result.setModificationTime(DateTime.now());
         return result;
+    }
+
+
+    private List<Phenomenon> createPhenomenoms() {
+        List<Phenomenon> phenomena = new ArrayList<>();
+        phenomena.add(createPhenomenom("RPM", "u/min"));
+        phenomena.add(createPhenomenom("Intake Temperature", "C"));
+        phenomena.add(createPhenomenom("Speed", "km/h"));
+        phenomena.add(createPhenomenom("MAF", "l/s"));
+        return phenomena;
     }
 
     private Sensor createSensor() {
-        Sensor s = entityFactory.createSensor();
-
-        s.setIdentifier("51bc53ab5064ba7f336ef920");
-
-        s.setType("Car");
-
-        MongoSensor ms = (MongoSensor) s;
-
-        ms.setCreationTime(DateTime.parse(dateTime));
-        ms.setModificationTime(DateTime.parse(dateTime));
-
-        dataService.createSensor(ms);
-        return s;
-    }
-
-    private List<Phenomenon> createPhenomenoms() {
-
-        List<Phenomenon> result = new ArrayList<>();
-
-        result.add(createPhenomenom("RPM", "u/min"));
-        result.add(createPhenomenom("Intake Temperature", "C"));
-        result.add(createPhenomenom("Speed", "km/h"));
-        result.add(createPhenomenom("MAF", "l/s"));
-
-        return result;
+        MongoSensor sensor = new MongoSensor();
+        sensor.setType("Car");
+        sensor.setCreationTime(DateTime.now());
+        sensor.setModificationTime(DateTime.now());
+        return sensor;
     }
 
     private Phenomenon createPhenomenom(String name, String unit) {
-
-        Phenomenon f = entityFactory.createPhenomenon();
-
-        f.setName(name);
-        f.setUnit(unit);
-
-        dataService.createPhenomenon(f);
-
-        return f;
+        MongoPhenomenon phenomenon = new MongoPhenomenon();
+        phenomenon.setName(name);
+        phenomenon.setUnit(unit);
+        phenomenon.setCreationTime(DateTime.now());
+        phenomenon.setModificationTime(DateTime.now());
+        return phenomenon;
     }
-
-    private User createUser(String testUserName) {
-
-        User user = entityFactory.createUser();
-
-        user.setName(testUserName);
-        user.setMail("info@52north.org");
-        user.setToken("pwd123");
-
-        if (userDao.getByName(testUserName) == null) {
-            userDao.create(user);
-        }
-
-        return user;
-
-    }
-
 }
