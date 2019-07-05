@@ -1,6 +1,5 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "id": "https://envirocar.org/api/stable/schema/user.create.json#",
   "type": "object",
   "required": [
     "name",
@@ -11,15 +10,15 @@
   ],
   "allOf": [
     {
-      "$ref": "https://envirocar.org/api/stable/schema/definitions.json#/optional-user-properties"
+      "$ref": "definitions.json#/optional-user-properties"
     },
     {
       "properties": {
         "name": {
-          "$ref": "https://envirocar.org/api/stable/schema/definitions.json#/username"
+          "$ref": "definitions.json#/username"
         },
         "mail": {
-          "$ref": "https://envirocar.org/api/stable/schema/definitions.json#/mail"
+          "$ref": "definitions.json#/mail"
         },
         "token": {
           "type": "string"

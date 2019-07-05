@@ -18,6 +18,7 @@ package org.envirocar.server.rest.encoding.rdf;
 
 import java.util.Set;
 
+import javax.inject.Singleton;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
@@ -29,7 +30,7 @@ import org.envirocar.server.core.statistics.Statistic;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-import org.envirocar.server.rest.mapper.InternalServerError;
+import org.envirocar.server.rest.InternalServerError;
 import org.envirocar.server.rest.resources.*;
 
 /**
@@ -38,6 +39,7 @@ import org.envirocar.server.rest.resources.*;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @javax.ws.rs.ext.Provider
+@Singleton
 public class StatisticRDFEncoder extends AbstractLinkerRDFEntityEncoder<Statistic> {
     private final Provider<UriInfo> uriInfo;
 

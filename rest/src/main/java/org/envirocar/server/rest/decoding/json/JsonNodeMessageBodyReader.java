@@ -16,6 +16,7 @@
  */
 package org.envirocar.server.rest.decoding.json;
 
+import javax.inject.Singleton;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
@@ -27,13 +28,14 @@ import com.fasterxml.jackson.databind.JsonNode;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
+@Singleton
 public class JsonNodeMessageBodyReader extends AbstractJSONMessageBodyReader<JsonNode> {
     public JsonNodeMessageBodyReader() {
         super(JsonNode.class);
     }
 
     @Override
-    public JsonNode decode(JsonNode j, MediaType mt) {
-        return j;
+    public JsonNode decode(JsonNode node, MediaType mediaType) {
+        return node;
     }
 }

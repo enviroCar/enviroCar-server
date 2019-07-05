@@ -18,6 +18,7 @@ package org.envirocar.server.rest.encoding.rdf;
 
 import java.util.Set;
 
+import javax.inject.Singleton;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.ext.Provider;
 
@@ -33,6 +34,7 @@ import org.envirocar.server.rest.resources.SensorsResource;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
+@Singleton
 public class SensorRDFEncoder extends AbstractLinkerRDFEntityEncoder<Sensor> {
     @Inject
     public SensorRDFEncoder(Set<RDFLinker<Sensor>> linkers) {

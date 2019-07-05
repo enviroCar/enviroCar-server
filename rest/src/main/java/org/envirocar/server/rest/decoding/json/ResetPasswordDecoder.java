@@ -16,6 +16,7 @@
  */
 package org.envirocar.server.rest.decoding.json;
 
+import javax.inject.Singleton;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
@@ -26,6 +27,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
 
 @Provider
+@Singleton
 public class ResetPasswordDecoder extends AbstractJSONEntityDecoder<ResetPasswordRequest>{
 
 	private final JSONEntityDecoder<User> userDecoder;
@@ -37,11 +39,11 @@ public class ResetPasswordDecoder extends AbstractJSONEntityDecoder<ResetPasswor
 	}
 
 	@Override
-	public ResetPasswordRequest decode(JsonNode j, MediaType mt) {
+	public ResetPasswordRequest decode(JsonNode node, MediaType mediaType) {
 		ResetPasswordRequest result = new ResetPasswordRequest();
-		result.setUser(this.userDecoder.decode(j.path("user"), mt));
-		if (j.has("code")) {
-			result.setCode(j.path("code").asText());
+		result.setUser(this.userDecoder.decode(node.path("user"), mediaType));
+		if (node.has("code")) {
+			result.setCode(node.path("code").asText());
 		}
 		return result;
 	}

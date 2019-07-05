@@ -23,9 +23,10 @@ import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.statistics.Statistic;
 import org.envirocar.server.core.statistics.Statistics;
-import org.envirocar.server.rest.mapper.InternalServerError;
+import org.envirocar.server.rest.InternalServerError;
 import org.envirocar.server.rest.resources.StatisticsResource;
 
+import javax.inject.Singleton;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import java.util.Set;
@@ -36,6 +37,7 @@ import java.util.Set;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @javax.ws.rs.ext.Provider
+@Singleton
 public class StatisticsRDFEncoder extends AbstractCollectionRDFEntityEncoder<Statistic, Statistics> {
     private final Provider<UriInfo> uriInfo;
 

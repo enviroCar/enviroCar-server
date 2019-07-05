@@ -16,22 +16,23 @@
  */
 package org.envirocar.server.rest.resources;
 
-import com.google.common.base.Optional;
-import com.google.inject.Inject;
-import com.google.inject.Provider;
-import com.google.inject.name.Named;
 import org.envirocar.server.core.*;
 import org.envirocar.server.core.entities.EntityFactory;
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.exception.BadRequestException;
 import org.envirocar.server.core.util.pagination.Pagination;
+import org.envirocar.server.rest.ForbiddenException;
 import org.envirocar.server.rest.auth.PrincipalImpl;
-import org.envirocar.server.rest.mapper.UnauthorizedException;
+import org.envirocar.server.rest.UnauthorizedException;
 import org.envirocar.server.rest.pagination.PaginationProvider;
 import org.envirocar.server.rest.rights.AccessRights;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Provider;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
+import java.util.Optional;
 import java.util.Set;
 
 /**

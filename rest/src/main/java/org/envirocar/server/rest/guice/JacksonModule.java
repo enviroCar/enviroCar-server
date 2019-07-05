@@ -17,8 +17,12 @@
 package org.envirocar.server.rest.guice;
 
 import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.databind.node.JsonNodeCreator;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.google.inject.*;
+import com.google.inject.AbstractModule;
+import com.google.inject.Provides;
+import com.google.inject.Scopes;
+import com.google.inject.TypeLiteral;
 import org.envirocar.server.core.util.GeometryConverter;
 import org.envirocar.server.rest.util.GeoJSON;
 
@@ -27,36 +31,29 @@ import org.envirocar.server.rest.util.GeoJSON;
  *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class JerseyCodingModule extends AbstractModule {
+public class JacksonModule extends AbstractModule {
     @Override
     protected void configure() {
-        bind(GeoJSON.class).in(Scopes.SINGLETON);
-        bind(new TypeLiteral<GeometryConverter<JsonNode>>() {
-        }).to(GeoJSON.class);
+        bind(new TypeLiteral<GeometryConverter<JsonNode>>() {}).to(GeoJSON.class).in(Scopes.SINGLETON);
     }
 
     @Provides
-    @Singleton
-    public JsonNodeFactory jsonNodeFactory() {
+    public JsonNodeCreator jsonNodeFactory() {
         return JsonNodeFactory.withExactBigDecimals(false);
     }
 
     @Provides
-    @Singleton
     public ObjectReader objectReader(ObjectMapper mapper) {
         return mapper.reader();
     }
 
     @Provides
-    @Singleton
     public ObjectWriter objectWriter(ObjectMapper mapper) {
         return mapper.writer();
     }
 
     @Provides
-    @Singleton
     public ObjectMapper objectMapper(JsonNodeFactory factory) {
-        return new ObjectMapper().setNodeFactory(factory)
-                .disable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS);
+        return new ObjectMapper().setNodeFactory(factory).disable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS);
     }
 }

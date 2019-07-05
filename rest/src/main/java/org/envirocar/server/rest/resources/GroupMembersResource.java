@@ -28,7 +28,7 @@ import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.UserReference;
 import org.envirocar.server.rest.auth.Authenticated;
 import org.envirocar.server.rest.rights.HasAcceptedLatestLegalPolicies;
-import org.envirocar.server.rest.validation.Schema;
+import org.envirocar.server.rest.schema.Schema;
 
 import javax.ws.rs.*;
 
@@ -48,7 +48,7 @@ public class GroupMembersResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.USERS)
-    @Produces({MediaTypes.USERS, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
+    @Produces({MediaTypes.JSON, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
     public Users get() throws BadRequestException {
         checkRights(getRights().canSeeMembersOf(group));
         return getGroupService().getGroupMembers(group, getPagination());
@@ -57,7 +57,7 @@ public class GroupMembersResource extends AbstractResource {
     @POST
     @Authenticated
     @HasAcceptedLatestLegalPolicies
-    @Consumes({MediaTypes.USER_REF})
+    @Consumes({MediaTypes.JSON})
     @Schema(request = Schemas.USER_REF)
     public void add(UserReference user) throws UserNotFoundException {
         User u = getUserService().getUser(user.getName());

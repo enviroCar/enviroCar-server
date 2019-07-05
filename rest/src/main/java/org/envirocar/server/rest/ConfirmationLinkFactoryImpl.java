@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.rest.resources;
+package org.envirocar.server.rest;
 
 import java.net.URI;
 
@@ -25,6 +25,8 @@ import org.envirocar.server.core.entities.User;
 
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
+import org.envirocar.server.rest.resources.ConfirmResource;
+import org.envirocar.server.rest.resources.RootResource;
 
 /**
  * TODO JavaDoc

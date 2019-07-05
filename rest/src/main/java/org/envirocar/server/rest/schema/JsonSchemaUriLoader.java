@@ -14,25 +14,14 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.rest.mapper;
+package org.envirocar.server.rest.schema;
 
-public class InternalServerError extends RuntimeException {
-    public InternalServerError() {
-    }
+import com.fasterxml.jackson.databind.JsonNode;
 
-    public InternalServerError(String message) {
-        super(message);
-    }
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
 
-    public InternalServerError(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public InternalServerError(Throwable cause) {
-        super(cause);
-    }
-
-    protected InternalServerError(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
-    }
+public interface JsonSchemaUriLoader {
+    JsonNode load(URI uri) throws IOException;
 }

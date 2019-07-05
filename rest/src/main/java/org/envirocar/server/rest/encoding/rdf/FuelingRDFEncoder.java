@@ -18,6 +18,7 @@ package org.envirocar.server.rest.encoding.rdf;
 
 import java.util.Set;
 
+import javax.inject.Singleton;
 import javax.ws.rs.core.UriBuilder;
 
 import org.envirocar.server.core.entities.Fueling;
@@ -30,6 +31,7 @@ import org.envirocar.server.rest.resources.*;
  *
  * @author Christian Autermann
  */
+@Singleton
 public class FuelingRDFEncoder extends AbstractLinkerRDFEntityEncoder<Fueling> {
     /**
      * Creates a new {@code FuelingRDFEncoder} using the supplied

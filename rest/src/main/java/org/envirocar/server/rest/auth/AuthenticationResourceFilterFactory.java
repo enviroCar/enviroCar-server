@@ -18,8 +18,8 @@ package org.envirocar.server.rest.auth;
 
 import com.sun.jersey.api.model.AbstractMethod;
 import com.sun.jersey.spi.container.*;
-import org.envirocar.server.rest.mapper.UnauthorizedException;
-import org.envirocar.server.rest.resources.ForbiddenException;
+import org.envirocar.server.rest.UnauthorizedException;
+import org.envirocar.server.rest.ForbiddenException;
 
 import java.util.Collections;
 import java.util.List;

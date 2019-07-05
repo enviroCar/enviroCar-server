@@ -16,13 +16,11 @@
  */
 package org.envirocar.server.rest.guice;
 
+import com.google.inject.AbstractModule;
+import com.google.inject.TypeLiteral;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.rest.encoding.CSVTrackEncoder;
 import org.envirocar.server.rest.encoding.csv.TrackCSVEncoder;
-
-import com.google.inject.AbstractModule;
-import com.google.inject.Scopes;
-import com.google.inject.TypeLiteral;
 
 /**
  * TODO JavaDoc
@@ -32,8 +30,7 @@ import com.google.inject.TypeLiteral;
 public class JerseyCSVEncoderModule extends AbstractModule {
     @Override
     protected void configure() {
-        bind(TrackCSVEncoder.class).in(Scopes.SINGLETON);
-        bind(new TypeLiteral<CSVTrackEncoder<Track>>() {
-        }).to(TrackCSVEncoder.class);
+        bind(TrackCSVEncoder.class);
+        bind(new TypeLiteral<CSVTrackEncoder<Track>>() {}).to(TrackCSVEncoder.class);
     }
 }

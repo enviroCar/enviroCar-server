@@ -24,6 +24,7 @@ import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.exception.BadRequestException;
 import org.envirocar.server.rest.JSONConstants;
 
+import javax.inject.Singleton;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 import java.net.MalformedURLException;
@@ -35,6 +36,7 @@ import java.net.URL;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
+@Singleton
 public class UserDecoder extends AbstractJSONEntityDecoder<User> {
     private final JSONEntityDecoder<Geometry> geometryDecoder;
 
@@ -45,30 +47,30 @@ public class UserDecoder extends AbstractJSONEntityDecoder<User> {
     }
 
     @Override
-    public User decode(JsonNode j, MediaType mediaType) {
+    public User decode(JsonNode node, MediaType mediaType) {
         User user = getEntityFactory().createUser();
-        user.setName(j.path(JSONConstants.NAME_KEY).textValue());
-        user.setMail(j.path(JSONConstants.MAIL_KEY).textValue());
-        user.setToken(j.path(JSONConstants.TOKEN_KEY).textValue());
+        user.setName(node.path(JSONConstants.NAME_KEY).textValue());
+        user.setMail(node.path(JSONConstants.MAIL_KEY).textValue());
+        user.setToken(node.path(JSONConstants.TOKEN_KEY).textValue());
 
-        user.setAboutMe(j.path(JSONConstants.ABOUT_ME_KEY).textValue());
-        user.setCountry(j.path(JSONConstants.COUNTRY_KEY).textValue());
-        user.setDayOfBirth(j.path(JSONConstants.DAY_OF_BIRTH_KEY).textValue());
-        user.setFirstName(j.path(JSONConstants.FIRST_NAME_KEY).textValue());
-        user.setLastName(j.path(JSONConstants.LAST_NAME_KEY).textValue());
-        user.setLanguage(j.path(JSONConstants.LANGUAGE_KEY).textValue());
+        user.setAboutMe(node.path(JSONConstants.ABOUT_ME_KEY).textValue());
+        user.setCountry(node.path(JSONConstants.COUNTRY_KEY).textValue());
+        user.setDayOfBirth(node.path(JSONConstants.DAY_OF_BIRTH_KEY).textValue());
+        user.setFirstName(node.path(JSONConstants.FIRST_NAME_KEY).textValue());
+        user.setLastName(node.path(JSONConstants.LAST_NAME_KEY).textValue());
+        user.setLanguage(node.path(JSONConstants.LANGUAGE_KEY).textValue());
 
-        user.setAcceptedTermsOfUse(j.path(JSONConstants.ACCEPTED_TERMS_OF_USE).booleanValue());
-        user.setAcceptedPrivacyStatement(j.path(JSONConstants.ACCEPTED_PRIVACY_STATEMENT).booleanValue());
+        user.setAcceptedTermsOfUse(node.path(JSONConstants.ACCEPTED_TERMS_OF_USE).booleanValue());
+        user.setAcceptedPrivacyStatement(node.path(JSONConstants.ACCEPTED_PRIVACY_STATEMENT).booleanValue());
 
-        user.setTermsOfUseVersion(j.path(JSONConstants.ACCEPTED_TERMS_OF_USE_VERSION_KEY).textValue());
-        user.setPrivacyStatementVersion(j.path(JSONConstants.ACCEPTED_PRIVACY_STATEMENT_VERSION).textValue());
+        user.setTermsOfUseVersion(node.path(JSONConstants.ACCEPTED_TERMS_OF_USE_VERSION_KEY).textValue());
+        user.setPrivacyStatementVersion(node.path(JSONConstants.ACCEPTED_PRIVACY_STATEMENT_VERSION).textValue());
 
-        JsonNode location = j.path(JSONConstants.LOCATION_KEY);
+        JsonNode location = node.path(JSONConstants.LOCATION_KEY);
         if (!location.isMissingNode() && !location.isNull()) {
             user.setLocation(geometryDecoder.decode(location, mediaType));
         }
-        String g = j.path(JSONConstants.GENDER_KEY).textValue();
+        String g = node.path(JSONConstants.GENDER_KEY).textValue();
         if (g != null) {
             if (g.equalsIgnoreCase(JSONConstants.MALE)) {
                 user.setGender(Gender.MALE);
@@ -78,7 +80,7 @@ public class UserDecoder extends AbstractJSONEntityDecoder<User> {
                 throw new BadRequestException();
             }
         }
-        String u = j.path(JSONConstants.URL_KEY).textValue();
+        String u = node.path(JSONConstants.URL_KEY).textValue();
         if (u != null) {
             try {
                 user.setUrl(new URL(u));

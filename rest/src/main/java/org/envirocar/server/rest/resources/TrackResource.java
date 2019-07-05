@@ -25,7 +25,7 @@ import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.auth.Authenticated;
 import org.envirocar.server.rest.rights.HasAcceptedLatestLegalPolicies;
-import org.envirocar.server.rest.validation.Schema;
+import org.envirocar.server.rest.schema.Schema;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
@@ -50,7 +50,7 @@ public class TrackResource extends AbstractResource {
 
     @PUT
     @Schema(request = Schemas.TRACK_MODIFY)
-    @Consumes({MediaTypes.TRACK_MODIFY})
+    @Consumes({MediaTypes.JSON})
     @Authenticated
     @HasAcceptedLatestLegalPolicies
     public Response modify(Track changes) throws IllegalModificationException, ValidationException {
@@ -61,7 +61,7 @@ public class TrackResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.TRACK)
-    @Produces({MediaTypes.TRACK, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT, MediaTypes.TEXT_CSV, MediaTypes.APPLICATION_ZIPPED_SHP})
+    @Produces({MediaTypes.JSON, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT, MediaTypes.TEXT_CSV, MediaTypes.APPLICATION_ZIPPED_SHP})
     public Track get() {
         return track;
     }

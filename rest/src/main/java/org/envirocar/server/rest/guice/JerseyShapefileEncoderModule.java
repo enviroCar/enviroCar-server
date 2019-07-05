@@ -16,16 +16,14 @@
  */
 package org.envirocar.server.rest.guice;
 
-import org.envirocar.server.core.entities.Track;
-import org.envirocar.server.rest.encoding.ShapefileTrackEncoder;
-import org.envirocar.server.rest.encoding.shapefile.TrackShapefileEncoder;
-
 import com.google.inject.AbstractModule;
-import com.google.inject.Scopes;
 import com.google.inject.TypeLiteral;
 import com.google.inject.multibindings.Multibinder;
+import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.guice.ResourceShutdownListener;
 import org.envirocar.server.rest.GeotoolsShutdownListener;
+import org.envirocar.server.rest.encoding.ShapefileTrackEncoder;
+import org.envirocar.server.rest.encoding.shapefile.TrackShapefileEncoder;
 
 /**
  * TODO JavaDoc
@@ -35,12 +33,9 @@ import org.envirocar.server.rest.GeotoolsShutdownListener;
 public class JerseyShapefileEncoderModule extends AbstractModule {
     @Override
     protected void configure() {
-        bind(TrackShapefileEncoder.class).in(Scopes.SINGLETON);
-        bind(new TypeLiteral<ShapefileTrackEncoder<Track>>() {
-        }).to(TrackShapefileEncoder.class);
-        
-        Multibinder<ResourceShutdownListener> binder = Multibinder.newSetBinder(binder(),
-					ResourceShutdownListener.class);
-        binder.addBinding().to(GeotoolsShutdownListener.class);
+        bind(TrackShapefileEncoder.class);
+        bind(new TypeLiteral<ShapefileTrackEncoder<Track>>() {}).to(TrackShapefileEncoder.class);
+        Multibinder.newSetBinder(binder(), ResourceShutdownListener.class)
+                .addBinding().to(GeotoolsShutdownListener.class);
     }
 }

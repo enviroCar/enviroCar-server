@@ -17,6 +17,9 @@
 package org.envirocar.server.rest.mapper;
 
 
+import org.envirocar.server.rest.UnauthorizedException;
+
+import javax.inject.Singleton;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -25,6 +28,7 @@ import java.util.Collections;
 import java.util.Map;
 
 @Provider
+@Singleton
 public class UnauthorizedExceptionMapper extends AbstractExceptionMapper<UnauthorizedException> {
 
     @Override

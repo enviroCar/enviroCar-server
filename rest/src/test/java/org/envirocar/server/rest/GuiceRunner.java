@@ -14,25 +14,22 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.rest.schema;
+package org.envirocar.server.rest;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Modifier;
-import java.util.Collections;
-import java.util.List;
-
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.Module;
+import com.google.inject.Stage;
 import org.junit.Rule;
 import org.junit.rules.TestRule;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.FrameworkField;
 import org.junit.runners.model.InitializationError;
 
-import com.google.common.collect.Lists;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.google.inject.Module;
-import com.google.inject.Stage;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Modifier;
+import java.util.*;
 
 /**
  * TODO JavaDoc
@@ -50,8 +47,7 @@ public class GuiceRunner extends BlockJUnit4ClassRunner {
     @Override
     protected Object createTest() throws Exception {
         if (injector != null) {
-            Object instance =
-                    injector.getInstance(getTestClass().getJavaClass());
+            Object instance = injector.getInstance(getTestClass().getJavaClass());
             List<TestRule> testRules = getTestRules(instance);
             for (TestRule rule : testRules) {
                 injector.injectMembers(rule);
@@ -71,63 +67,58 @@ public class GuiceRunner extends BlockJUnit4ClassRunner {
         }
     }
 
-    protected List<Module> getModules(Class<?> clazz) throws InitializationError {
-        List<Module> modules = Lists.newLinkedList();
-        List<FrameworkField> annotatedFields =
-                getTestClass().getAnnotatedFields(Rule.class);
+    private List<Module> getModules(Class<?> clazz) throws InitializationError {
+        Set<Class<? extends Module>> moduleClasses = new HashSet<>();
+        List<FrameworkField> annotatedFields = getTestClass().getAnnotatedFields(Rule.class);
         for (FrameworkField frameworkField : annotatedFields) {
-            modules.addAll(getModulesFromAnnotation(frameworkField.getField()
-                    .getType()));
+            moduleClasses.addAll(getModulesFromAnnotation(frameworkField.getField().getType()));
         }
-        modules.addAll(getModulesFromAnnotation(clazz));
+        moduleClasses.addAll(getModulesFromAnnotation(clazz));
+
+        List<Module> modules = new ArrayList<>(moduleClasses.size());
+        for (Class<? extends Module> moduleClass : moduleClasses) {
+            modules.add(instantiate(moduleClass));
+        }
         return modules;
     }
 
-    protected List<Module> getModulesFromAnnotation(Class<?> clazz) throws
-            InitializationError {
+    private Collection<Class<? extends Module>> getModulesFromAnnotation(Class<?> clazz) {
         Modules annotation = clazz.getAnnotation(Modules.class);
         if (annotation != null) {
-            Class<? extends Module>[] classes = annotation.value();
-            List<Module> modules = Lists
-                    .newArrayListWithExpectedSize(classes.length);
-            for (Class<? extends Module> c : classes) {
-                modules.add(instantiate(c));
-            }
-            return modules;
+            return Arrays.asList(annotation.value());
         } else {
             return Collections.emptyList();
         }
     }
 
-    protected Module instantiate(Class<? extends Module> c) throws
-            InitializationError {
+    private static <T> T instantiate(Class<? extends T> c) throws InitializationError {
         int modifiers = c.getModifiers();
-        if (Modifier.isAbstract(modifiers) ||
-            Modifier.isInterface(modifiers) ||
-            !Modifier.isPublic(modifiers)) {
-            throw new InitializationError(String
-                    .format("Module %s is not a public class", c));
+        if (Modifier.isAbstract(modifiers) || Modifier.isInterface(modifiers) || !Modifier.isPublic(modifiers)) {
+            throw new InitializationError(String.format("Class %s is not a public class", c));
         }
-        Constructor<?> defConstructor = null;
-        for (Constructor<?> constructor : c.getConstructors()) {
-            if (constructor.getParameterTypes().length == 0) {
-                defConstructor = constructor;
-                break;
-            }
-        }
+        Constructor<? extends T> defConstructor = getDefaultConstructor(c);
         if (defConstructor == null) {
-            throw new InitializationError(String
-                    .format("Module %s has no zero-argument constructor", c));
+            throw new InitializationError(String.format("Class %s has no zero-argument constructor", c));
         }
         if (!Modifier.isPublic(defConstructor.getModifiers())) {
-            throw new InitializationError(String
-                    .format("Zero-argument constructor of Module %s is not public", c));
+            throw new InitializationError(String.format("Zero-argument constructor of class %s is not public", c));
         }
         try {
-
-            return (Module) defConstructor.newInstance();
+            return defConstructor.newInstance();
         } catch (InstantiationException | SecurityException | InvocationTargetException | IllegalArgumentException | IllegalAccessException ex) {
             throw new InitializationError(ex);
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T> Constructor<T> getDefaultConstructor(Class<T> c) {
+        Constructor<T> defConstructor = null;
+        for (Constructor<?> constructor : c.getConstructors()) {
+            if (constructor.getParameterTypes().length == 0) {
+                defConstructor = (Constructor<T>) constructor;
+                break;
+            }
+        }
+        return defConstructor;
     }
 }

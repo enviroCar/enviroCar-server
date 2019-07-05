@@ -16,10 +16,8 @@
  */
 package org.envirocar.server.rest.guice;
 
-import com.google.common.base.Optional;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
-import com.google.inject.Scopes;
 import com.google.inject.TypeLiteral;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.name.Names;
@@ -31,7 +29,7 @@ import org.envirocar.server.core.entities.User;
 import org.envirocar.server.rest.auth.PrincipalImpl;
 import org.envirocar.server.rest.mapper.*;
 import org.envirocar.server.rest.resources.AbstractResource;
-import org.envirocar.server.rest.resources.ConfirmationLinkFactoryImpl;
+import org.envirocar.server.rest.ConfirmationLinkFactoryImpl;
 import org.envirocar.server.rest.resources.ResourceFactory;
 import org.envirocar.server.rest.resources.RootResource;
 import org.envirocar.server.rest.rights.AccessRights;
@@ -40,6 +38,7 @@ import org.envirocar.server.rest.rights.NonRestrictiveRights;
 import org.envirocar.server.rest.rights.ReadOnlyRights;
 
 import javax.ws.rs.core.SecurityContext;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 
@@ -52,22 +51,22 @@ public class JerseyResourceModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(new TypeLiteral<Optional<Set<String>>>() {
-        }).annotatedWith(Names.named(AbstractResource.ALLOWED_MAIL_ADDRESSES))
+        bind(new TypeLiteral<Optional<Set<String>>>() {})
+                .annotatedWith(Names.named(AbstractResource.ALLOWED_MAIL_ADDRESSES))
                 .toProvider(AddressProvider.class);
 
-        bind(IllegalModificationExceptionMapper.class).in(Scopes.SINGLETON);
-        bind(ResourceNotFoundExceptionMapper.class).in(Scopes.SINGLETON);
-        bind(ValidationExceptionMapper.class).in(Scopes.SINGLETON);
-        bind(ResourceAlreadyExistExceptionMapper.class).in(Scopes.SINGLETON);
-        bind(JsonValidationExceptionMapper.class).in(Scopes.SINGLETON);
-        bind(BadRequestExceptionMapper.class).in(Scopes.SINGLETON);
-        bind(LegalPolicyExceptionMapper.class).in(Scopes.SINGLETON);
-        bind(ForbiddenExceptionMapper.class).in(Scopes.SINGLETON);
-        bind(InternalServerErrorMapper.class).in(Scopes.SINGLETON);
-        bind(UnauthorizedExceptionMapper.class).in(Scopes.SINGLETON);
-        bind(ThrowableExceptionMapper.class).in(Scopes.SINGLETON);
-        bind(WebApplicationExceptionMapper.class).in(Scopes.SINGLETON);
+        bind(IllegalModificationExceptionMapper.class);
+        bind(ResourceNotFoundExceptionMapper.class);
+        bind(ValidationExceptionMapper.class);
+        bind(ResourceAlreadyExistExceptionMapper.class);
+        bind(JsonValidationExceptionMapper.class);
+        bind(BadRequestExceptionMapper.class);
+        bind(LegalPolicyExceptionMapper.class);
+        bind(ForbiddenExceptionMapper.class);
+        bind(InternalServerErrorMapper.class);
+        bind(UnauthorizedExceptionMapper.class);
+        bind(ThrowableExceptionMapper.class);
+        bind(WebApplicationExceptionMapper.class);
 
         install(new FactoryModuleBuilder().build(ResourceFactory.class));
         bind(ConfirmationLinkFactory.class).to(ConfirmationLinkFactoryImpl.class);

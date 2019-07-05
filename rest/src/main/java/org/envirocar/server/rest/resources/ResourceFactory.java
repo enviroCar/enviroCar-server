@@ -90,7 +90,7 @@ public interface ResourceFactory {
 
     TermsOfUseInstanceResource createTermsOfUseInstanceResource(TermsOfUseInstance t);
 
-    JSONSchemaResource createSchemaResource();
+    JsonSchemaResource createSchemaResource();
 
     AnnouncementsResource createAnnouncementsResource();
 

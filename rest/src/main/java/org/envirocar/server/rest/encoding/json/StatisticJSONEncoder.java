@@ -16,6 +16,7 @@
  */
 package org.envirocar.server.rest.encoding.json;
 
+import javax.inject.Singleton;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
@@ -34,6 +35,7 @@ import com.google.inject.Inject;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
+@Singleton
 public class StatisticJSONEncoder extends AbstractJSONEntityEncoder<Statistic> {
     private final JSONEntityEncoder<Phenomenon> phenomenonEncoder;
 
@@ -44,16 +46,16 @@ public class StatisticJSONEncoder extends AbstractJSONEntityEncoder<Statistic> {
     }
 
     @Override
-    public ObjectNode encodeJSON(Statistic t, AccessRights rights, MediaType mt) {
+    public ObjectNode encodeJSON(Statistic entity, AccessRights rights, MediaType mediaType) {
         ObjectNode statistic = getJsonFactory().objectNode();
-        statistic.put(JSONConstants.MAX_KEY, t.getMax());
-        statistic.put(JSONConstants.AVG_KEY, t.getMean());
-        statistic.put(JSONConstants.MIN_KEY, t.getMin());
-        statistic.put(JSONConstants.MEASUREMENTS_KEY, t.getMeasurements());
-        statistic.put(JSONConstants.TRACKS_KEY, t.getTracks());
-        statistic.put(JSONConstants.USERS_KEY, t.getUsers());
-        statistic.put(JSONConstants.SENSORS_KEY, t.getSensors());
-        statistic.set(JSONConstants.PHENOMENON_KEY, phenomenonEncoder.encodeJSON(t.getPhenomenon(), rights, mt));
+        statistic.put(JSONConstants.MAX_KEY, entity.getMax());
+        statistic.put(JSONConstants.AVG_KEY, entity.getMean());
+        statistic.put(JSONConstants.MIN_KEY, entity.getMin());
+        statistic.put(JSONConstants.MEASUREMENTS_KEY, entity.getMeasurements());
+        statistic.put(JSONConstants.TRACKS_KEY, entity.getTracks());
+        statistic.put(JSONConstants.USERS_KEY, entity.getUsers());
+        statistic.put(JSONConstants.SENSORS_KEY, entity.getSensors());
+        statistic.set(JSONConstants.PHENOMENON_KEY, phenomenonEncoder.encodeJSON(entity.getPhenomenon(), rights, mediaType));
         return statistic;
     }
 }

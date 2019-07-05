@@ -23,7 +23,7 @@ import org.envirocar.server.core.DataService;
 import org.envirocar.server.core.entities.*;
 import org.envirocar.server.core.exception.TrackTooLongException;
 import org.envirocar.server.core.filter.MeasurementFilter;
-import org.envirocar.server.rest.mapper.InternalServerError;
+import org.envirocar.server.rest.InternalServerError;
 import org.envirocar.server.rest.rights.AccessRights;
 import org.geotools.data.DataStoreFactorySpi;
 import org.geotools.data.DefaultTransaction;
@@ -46,6 +46,7 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Singleton;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 import java.io.File;
@@ -60,6 +61,7 @@ import java.util.*;
  * @author Benjamin Pross
  */
 @Provider
+@Singleton
 public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder<Track> {
 
     private static final Logger log = LoggerFactory.getLogger(TrackShapefileEncoder.class);

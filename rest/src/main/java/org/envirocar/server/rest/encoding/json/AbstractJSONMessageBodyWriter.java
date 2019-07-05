@@ -16,22 +16,20 @@
  */
 package org.envirocar.server.rest.encoding.json;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Type;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.inject.Inject;
+import org.envirocar.server.rest.encoding.JSONEntityEncoder;
 
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.MessageBodyWriter;
-
-import com.fasterxml.jackson.databind.ObjectWriter;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.inject.Inject;
-
-import org.envirocar.server.rest.encoding.JSONEntityEncoder;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
 
 /**
  * TODO JavaDoc
@@ -39,8 +37,7 @@ import org.envirocar.server.rest.encoding.JSONEntityEncoder;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Produces(MediaType.APPLICATION_JSON)
-public abstract class AbstractJSONMessageBodyWriter<T>
-        implements MessageBodyWriter<T>, JSONEntityEncoder<T> {
+public abstract class AbstractJSONMessageBodyWriter<T> implements MessageBodyWriter<T>, JSONEntityEncoder<T> {
     @Inject
     private ObjectWriter writer;
     private final Class<T> classType;
@@ -50,26 +47,22 @@ public abstract class AbstractJSONMessageBodyWriter<T>
     }
 
     @Override
-    public boolean isWriteable(Class<?> type, Type genericType,
-                               Annotation[] annotations, MediaType mediaType) {
-        return this.classType.isAssignableFrom(type) &&
-               mediaType.isCompatible(MediaType.APPLICATION_JSON_TYPE);
+    public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
+        return this.classType.isAssignableFrom(type) && mediaType.isCompatible(MediaType.APPLICATION_JSON_TYPE);
     }
 
     @Override
-    public void writeTo(T t, Class<?> c, Type gt, Annotation[] a, MediaType mt,
-                        MultivaluedMap<String, Object> h,
-                        OutputStream out) throws IOException,
-                                                 WebApplicationException {
-        writer.writeValue(out, encodeJSON(t, mt));
+    public void writeTo(T entity, Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType,
+                        MultivaluedMap<String, Object> httpHeaders, OutputStream out)
+            throws IOException, WebApplicationException {
+        writer.writeValue(out, encodeJSON(entity, mediaType));
         out.flush();
     }
 
     @Override
-    public long getSize(T t, Class<?> type, Type genericType,
-                        Annotation[] annotations, MediaType mediaType) {
+    public long getSize(T t, Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
         return -1;
     }
 
-    public abstract ObjectNode encodeJSON(T t, MediaType mt);
+    public abstract ObjectNode encodeJSON(T entity, MediaType mediaType);
 }

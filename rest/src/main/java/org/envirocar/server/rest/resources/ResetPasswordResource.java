@@ -20,7 +20,7 @@ import org.envirocar.server.core.exception.BadRequestException;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.entity.ResetPasswordRequest;
-import org.envirocar.server.rest.validation.Schema;
+import org.envirocar.server.rest.schema.Schema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +37,7 @@ public class ResetPasswordResource extends AbstractResource {
 
     @POST
     @Schema(request = Schemas.PASSWORD_RESET_REQUEST)
-    @Consumes({MediaTypes.PASSWORD_RESET_REQUEST})
+    @Consumes({MediaTypes.JSON})
     public Response get(ResetPasswordRequest resetPassword) throws BadRequestException {
         checkRights(getRights().canAccessPasswordReset());
 
@@ -49,7 +49,7 @@ public class ResetPasswordResource extends AbstractResource {
 
     @PUT
     @Schema(request = Schemas.PASSWORD_RESET_VERIFICATION)
-    @Consumes({MediaTypes.PASSWORD_RESET_VERIFICATION})
+    @Consumes({MediaTypes.JSON})
     public Response resetPassword(ResetPasswordRequest resetPassword) throws BadRequestException {
         checkRights(getRights().canAccessPasswordReset());
 

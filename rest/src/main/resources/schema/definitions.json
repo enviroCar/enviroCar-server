@@ -1,6 +1,5 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "id": "https://envirocar.org/api/stable/schema/definitions.json#",
   "username": {
     "pattern": "^[_A-Za-z0-9-]{4,}$",
     "type": "string"
@@ -25,7 +24,7 @@
         "type": "string"
       },
       "location": {
-        "$ref": "https://envirocar.org/api/stable/schema/geometry.json#"
+        "$ref": "geometry.json#"
       },
       "aboutMe": {
         "type": "string"

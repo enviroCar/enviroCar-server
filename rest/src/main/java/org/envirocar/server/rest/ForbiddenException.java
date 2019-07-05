@@ -14,25 +14,25 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.rest.mapper;
+package org.envirocar.server.rest;
 
-public class UnauthorizedException extends RuntimeException {
-    public UnauthorizedException() {
+public class ForbiddenException extends RuntimeException {
+    public ForbiddenException() {
     }
 
-    public UnauthorizedException(String message) {
+    public ForbiddenException(String message) {
         super(message);
     }
 
-    public UnauthorizedException(String message, Throwable cause) {
+    public ForbiddenException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public UnauthorizedException(Throwable cause) {
+    public ForbiddenException(Throwable cause) {
         super(cause);
     }
 
-    protected UnauthorizedException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    protected ForbiddenException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 }

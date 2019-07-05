@@ -30,7 +30,7 @@ import org.envirocar.server.rest.RESTConstants;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.auth.Authenticated;
 import org.envirocar.server.rest.rights.HasAcceptedLatestLegalPolicies;
-import org.envirocar.server.rest.validation.Schema;
+import org.envirocar.server.rest.schema.Schema;
 
 import javax.annotation.Nullable;
 import javax.ws.rs.*;
@@ -52,7 +52,7 @@ public class GroupsResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.GROUPS)
-    @Produces({MediaTypes.GROUPS, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
+    @Produces({MediaTypes.JSON, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
     public Groups get(@QueryParam(RESTConstants.SEARCH) String search) throws BadRequestException {
         if (user != null) {
             return getGroupService().getGroups(user, getPagination());
@@ -67,7 +67,7 @@ public class GroupsResource extends AbstractResource {
     @POST
     @Authenticated
     @HasAcceptedLatestLegalPolicies
-    @Consumes({MediaTypes.GROUP_CREATE})
+    @Consumes({MediaTypes.JSON})
     @Schema(request = Schemas.GROUP_CREATE)
     public Response createGroup(Group group) throws ResourceAlreadyExistException, ValidationException {
         Group g = getGroupService().createGroup(getCurrentUser(), group);

@@ -22,7 +22,7 @@ import org.envirocar.server.core.exception.BadRequestException;
 import org.envirocar.server.core.exception.ResourceNotFoundException;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
-import org.envirocar.server.rest.validation.Schema;
+import org.envirocar.server.rest.schema.Schema;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -34,7 +34,7 @@ public class AnnouncementsResource extends AbstractResource {
     public static final String ANNOUNCEMENT = "{id}";
 
     @GET
-    @Produces({MediaTypes.ANNOUNCEMENTS})
+    @Produces({MediaTypes.JSON})
     @Schema(response = Schemas.ANNOUNCEMENTS)
     public Announcements announcements() throws BadRequestException {
         return getDataService().getAnnouncements(getPagination());

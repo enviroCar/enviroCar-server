@@ -17,8 +17,9 @@
 package org.envirocar.server.rest.mapper;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import org.envirocar.server.rest.validation.JSONValidationException;
+import org.envirocar.server.rest.schema.JsonValidationException;
 
+import javax.inject.Singleton;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.Provider;
@@ -29,15 +30,16 @@ import javax.ws.rs.ext.Provider;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
-public class JsonValidationExceptionMapper extends AbstractExceptionMapper<JSONValidationException> {
+@Singleton
+public class JsonValidationExceptionMapper extends AbstractExceptionMapper<JsonValidationException> {
 
     @Override
-    protected Response.StatusType getStatus(JSONValidationException exception) {
+    protected Response.StatusType getStatus(JsonValidationException exception) {
         return Status.BAD_REQUEST;
     }
 
     @Override
-    protected JsonNode getDetails(JSONValidationException exception) {
+    protected JsonNode getDetails(JsonValidationException exception) {
         return exception.getError();
     }
 }

@@ -16,14 +16,14 @@
  */
 package org.envirocar.server.rest.encoding.json;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.envirocar.server.rest.rights.AccessRights;
+
+import javax.inject.Singleton;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
-
-import org.envirocar.server.rest.rights.AccessRights;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
  * TODO JavaDoc
@@ -31,6 +31,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
+@Singleton
 @Produces(MediaType.APPLICATION_JSON)
 public class JsonNodeMessageBodyWriter extends AbstractJSONMessageBodyWriter<JsonNode> {
     public JsonNodeMessageBodyWriter() {
@@ -38,12 +39,12 @@ public class JsonNodeMessageBodyWriter extends AbstractJSONMessageBodyWriter<Jso
     }
 
     @Override
-    public ObjectNode encodeJSON(JsonNode t, MediaType mt) {
-        return (ObjectNode) t;
+    public ObjectNode encodeJSON(JsonNode entity, MediaType mediaType) {
+        return (ObjectNode) entity;
     }
 
     @Override
-    public ObjectNode encodeJSON(JsonNode t, AccessRights rights, MediaType mt) {
-        return (ObjectNode) t;
+    public ObjectNode encodeJSON(JsonNode entity, AccessRights rights, MediaType mediaType) {
+        return (ObjectNode) entity;
     }
 }

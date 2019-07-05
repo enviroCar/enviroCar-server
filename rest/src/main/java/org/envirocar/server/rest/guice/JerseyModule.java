@@ -30,7 +30,7 @@ import org.envirocar.server.rest.auth.AuthenticationFilter;
 import org.envirocar.server.rest.auth.AuthenticationResourceFilterFactory;
 import org.envirocar.server.rest.pagination.PaginationFilter;
 import org.envirocar.server.rest.rights.HasAcceptedLatestLegalPoliciesResourceFilterFactory;
-import org.envirocar.server.rest.validation.JSONSchemaResourceFilterFactory;
+import org.envirocar.server.rest.schema.JsonSchemaResourceFilterFactory;
 
 import java.util.Arrays;
 import java.util.List;
@@ -64,20 +64,24 @@ public class JerseyModule extends JerseyServletModule {
     }
 
     protected List<Class<? extends ContainerResponseFilter>> responseFilters() {
-        return Arrays.asList(CachingFilter.class,
+        return Arrays.asList(
+                CachingFilter.class,
                 PaginationFilter.class,
                 GZIPContentEncodingFilter.class);
     }
 
     protected List<Class<? extends ContainerRequestFilter>> requestFilters() {
-        return Arrays.asList(GZIPContentEncodingFilter.class,
+        return Arrays.asList(
+                GZIPContentEncodingFilter.class,
                 URIContentNegotiationFilter.class,
                 AuthenticationFilter.class);
     }
 
     protected List<Class<? extends ResourceFilterFactory>> filterFactories() {
-        return Arrays.asList(AuthenticationResourceFilterFactory.class,
+        return Arrays.asList(
+                AuthenticationResourceFilterFactory.class,
                 HasAcceptedLatestLegalPoliciesResourceFilterFactory.class,
-                JSONSchemaResourceFilterFactory.class);
+                JsonSchemaResourceFilterFactory.class);
     }
+
 }

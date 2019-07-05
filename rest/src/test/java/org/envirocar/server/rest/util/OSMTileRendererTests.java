@@ -30,7 +30,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.envirocar.server.rest.schema.GuiceRunner;
+import org.envirocar.server.rest.GuiceRunner;
 import org.envirocar.server.rest.util.OSMTileRenderer.BoundingBox;
 import org.junit.Test;
 import org.junit.runner.RunWith;

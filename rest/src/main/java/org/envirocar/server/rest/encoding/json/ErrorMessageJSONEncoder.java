@@ -23,10 +23,12 @@ import org.envirocar.server.rest.JSONConstants;
 import org.envirocar.server.rest.rights.AccessRights;
 import org.envirocar.server.rest.util.ErrorMessage;
 
+import javax.inject.Singleton;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 import java.util.*;
 
+@Singleton
 @Provider
 public class ErrorMessageJSONEncoder extends AbstractJSONEntityEncoder<ErrorMessage> {
 
@@ -35,7 +37,7 @@ public class ErrorMessageJSONEncoder extends AbstractJSONEntityEncoder<ErrorMess
     }
 
     @Override
-    public ObjectNode encodeJSON(ErrorMessage errorMessage, AccessRights rights, MediaType mt) {
+    public ObjectNode encodeJSON(ErrorMessage errorMessage, AccessRights rights, MediaType mediaType) {
         ObjectNode node = getJsonFactory().objectNode();
         node.put(JSONConstants.STATUS_CODE, errorMessage.getStatus().getStatusCode());
         node.put(JSONConstants.REASON_PHRASE, errorMessage.getStatus().getReasonPhrase());

@@ -16,17 +16,17 @@
  */
 package org.envirocar.server.rest.encoding.json;
 
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.ext.Provider;
-
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.inject.Inject;
 import org.envirocar.server.core.entities.Group;
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.rest.JSONConstants;
 import org.envirocar.server.rest.encoding.JSONEntityEncoder;
 import org.envirocar.server.rest.rights.AccessRights;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.inject.Inject;
+import javax.inject.Singleton;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.Provider;
 
 /**
  * TODO JavaDoc
@@ -34,6 +34,7 @@ import com.google.inject.Inject;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
+@Singleton
 public class GroupJSONEncoder extends AbstractJSONEntityEncoder<Group> {
     private final JSONEntityEncoder<User> userEncoder;
 
@@ -44,27 +45,22 @@ public class GroupJSONEncoder extends AbstractJSONEntityEncoder<Group> {
     }
 
     @Override
-    public ObjectNode encodeJSON(Group t, AccessRights rights,
-                                 MediaType mediaType) {
+    public ObjectNode encodeJSON(Group entity, AccessRights rights, MediaType mediaType) {
         ObjectNode group = getJsonFactory().objectNode();
-        if (t.hasName() && rights.canSeeNameOf(t)) {
-            group.put(JSONConstants.NAME_KEY, t.getName());
+        if (entity.hasName() && rights.canSeeNameOf(entity)) {
+            group.put(JSONConstants.NAME_KEY, entity.getName());
         }
-        if (t.hasDescription() && rights.canSeeDescriptionOf(t)) {
-            group.put(JSONConstants.DESCRIPTION_KEY, t.getDescription());
+        if (entity.hasDescription() && rights.canSeeDescriptionOf(entity)) {
+            group.put(JSONConstants.DESCRIPTION_KEY, entity.getDescription());
         }
-        if (t.hasOwner() && rights.canSeeOwnerOf(t)) {
-            group.set(JSONConstants.OWNER_KEY,
-                      userEncoder.encodeJSON(t.getOwner(), rights, mediaType));
+        if (entity.hasOwner() && rights.canSeeOwnerOf(entity)) {
+            group.set(JSONConstants.OWNER_KEY, userEncoder.encodeJSON(entity.getOwner(), rights, mediaType));
         }
-        if (t.hasCreationTime() && rights.canSeeCreationTimeOf(t)) {
-            group.put(JSONConstants.CREATED_KEY,
-                      getDateTimeFormat().print(t.getCreationTime()));
+        if (entity.hasCreationTime() && rights.canSeeCreationTimeOf(entity)) {
+            group.put(JSONConstants.CREATED_KEY, getDateTimeFormat().print(entity.getCreationTime()));
         }
-        if (t.hasModificationTime() && rights
-                .canSeeModificationTimeOf(t)) {
-            group.put(JSONConstants.MODIFIED_KEY,
-                      getDateTimeFormat().print(t.getModificationTime()));
+        if (entity.hasModificationTime() && rights.canSeeModificationTimeOf(entity)) {
+            group.put(JSONConstants.MODIFIED_KEY, getDateTimeFormat().print(entity.getModificationTime()));
         }
         return group;
     }

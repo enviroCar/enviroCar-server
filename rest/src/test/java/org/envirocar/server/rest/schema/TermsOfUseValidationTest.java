@@ -19,6 +19,7 @@ package org.envirocar.server.rest.schema;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
+import org.envirocar.server.rest.GuiceRunner;
 import org.envirocar.server.rest.MediaTypes;
 import org.junit.Rule;
 import org.junit.Test;

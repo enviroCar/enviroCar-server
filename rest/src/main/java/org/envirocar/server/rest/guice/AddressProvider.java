@@ -17,7 +17,6 @@
 package org.envirocar.server.rest.guice;
 
 import com.google.common.base.Charsets;
-import com.google.common.base.Optional;
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import com.google.common.collect.Sets;
@@ -32,6 +31,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -52,7 +52,7 @@ public class AddressProvider implements Provider<Optional<Set<String>>> {
     }
 
     @Override
-    public Optional<Set<String>> get() {
+    public java.util.Optional<Set<String>> get() {
         return this.addresses.get();
     }
 
@@ -64,7 +64,7 @@ public class AddressProvider implements Provider<Optional<Set<String>>> {
                 File f = new File(FILE);
                 if (!f.exists()) {
                     log.debug("{} does not exist. All addresses allowed.", FILE);
-                    return Optional.absent();
+                    return Optional.empty();
                 } else {
                     log.debug("{} exists. Loading mail addresses.", FILE);
                     return Optional.of(Files.readLines(f, Charsets.UTF_8, new AddressProcessor()));

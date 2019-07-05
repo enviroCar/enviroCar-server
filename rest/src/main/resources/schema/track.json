@@ -1,6 +1,5 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "id": "https://envirocar.org/api/stable/schema/track.json#",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -19,7 +18,7 @@
       "type": "array",
       "minItems": 0,
       "items": {
-        "$ref": "https://envirocar.org/api/stable/schema/measurement.json#"
+        "$ref": "measurement.json#"
       }
     },
     "properties": {
@@ -42,10 +41,10 @@
           "format": "date-time"
         },
         "sensor": {
-          "$ref": "https://envirocar.org/api/stable/schema/sensor.json#"
+          "$ref": "sensor.json#"
         },
         "user": {
-          "$ref": "https://envirocar.org/api/stable/schema/user.json#"
+          "$ref": "user.json#"
         },
         "name": {
           "type": "string"

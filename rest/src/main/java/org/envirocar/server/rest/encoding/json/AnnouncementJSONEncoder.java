@@ -16,17 +16,17 @@
  */
 package org.envirocar.server.rest.encoding.json;
 
-import java.util.Map.Entry;
-
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.ext.Provider;
-
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.envirocar.server.core.entities.Announcement;
 import org.envirocar.server.rest.JSONConstants;
 import org.envirocar.server.rest.rights.AccessRights;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import javax.inject.Singleton;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.Provider;
+import java.util.Map.Entry;
 
+@Singleton
 @Provider
 public class AnnouncementJSONEncoder extends AbstractJSONEntityEncoder<Announcement> {
 
@@ -35,36 +35,33 @@ public class AnnouncementJSONEncoder extends AbstractJSONEntityEncoder<Announcem
     }
 
     @Override
-    public ObjectNode encodeJSON(Announcement a, AccessRights rights,
-                                 MediaType mediaType) {
-        ObjectNode anno = getJsonFactory().objectNode();
-        if (a.hasCreationTime()) {
-            anno.put(JSONConstants.CREATED_KEY, getDateTimeFormat()
-                    .print(a.getCreationTime()));
+    public ObjectNode encodeJSON(Announcement entity, AccessRights rights, MediaType mediaType) {
+        ObjectNode node = getJsonFactory().objectNode();
+        if (entity.hasCreationTime()) {
+            node.put(JSONConstants.CREATED_KEY, getDateTimeFormat().print(entity.getCreationTime()));
         }
-        if (a.hasModificationTime()) {
-            anno.put(JSONConstants.MODIFIED_KEY, getDateTimeFormat()
-                    .print(a.getModificationTime()));
+        if (entity.hasModificationTime()) {
+            node.put(JSONConstants.MODIFIED_KEY, getDateTimeFormat().print(entity.getModificationTime()));
         }
-        if (a.getIdentifier() != null) {
-            anno.put(JSONConstants.IDENTIFIER_KEY, a.getIdentifier());
+        if (entity.getIdentifier() != null) {
+            node.put(JSONConstants.IDENTIFIER_KEY, entity.getIdentifier());
         }
-        if (a.getVersions() != null) {
-            anno.put(JSONConstants.VERSIONS, a.getVersions());
+        if (entity.getVersions() != null) {
+            node.put(JSONConstants.VERSIONS, entity.getVersions());
         }
-        if (a.getCategory() != null) {
-            anno.put(JSONConstants.CATEGORY, a.getCategory());
+        if (entity.getCategory() != null) {
+            node.put(JSONConstants.CATEGORY, entity.getCategory());
         }
-        if (a.getPriority() != null) {
-            anno.put(JSONConstants.PRIORITY, a.getPriority());
+        if (entity.getPriority() != null) {
+            node.put(JSONConstants.PRIORITY, entity.getPriority());
         }
-        if (a.getContents() != null) {
-            ObjectNode values = anno.putObject(JSONConstants.CONTENT);
-            for (Entry<String, String> e : a.getContents().entrySet()) {
-                values.put(e.getKey(), e.getValue());
+        if (entity.getContents() != null) {
+            ObjectNode values = node.putObject(JSONConstants.CONTENT);
+            for (Entry<String, String> entry : entity.getContents().entrySet()) {
+                values.put(entry.getKey(), entry.getValue());
             }
         }
-        return anno;
+        return node;
     }
 
 }

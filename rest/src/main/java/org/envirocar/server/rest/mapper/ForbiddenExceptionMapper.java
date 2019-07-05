@@ -16,13 +16,15 @@
  */
 package org.envirocar.server.rest.mapper;
 
-import org.envirocar.server.rest.resources.ForbiddenException;
+import org.envirocar.server.rest.ForbiddenException;
 
+import javax.inject.Singleton;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.Provider;
 
 @Provider
+@Singleton
 public class ForbiddenExceptionMapper extends AbstractExceptionMapper<ForbiddenException> {
     @Override
     protected Response.StatusType getStatus(ForbiddenException exception) {

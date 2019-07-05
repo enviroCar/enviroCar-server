@@ -26,6 +26,7 @@ import org.envirocar.server.rest.JSONConstants;
 import org.envirocar.server.rest.encoding.JSONEntityEncoder;
 import org.envirocar.server.rest.rights.AccessRights;
 
+import javax.inject.Singleton;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
@@ -35,6 +36,7 @@ import javax.ws.rs.ext.Provider;
  * @author Matthes Rieke
  */
 @Provider
+@Singleton
 public class PrivacyStatementsJSONEncoder extends AbstractJSONEntityEncoder<PrivacyStatements> {
     private final JSONEntityEncoder<PrivacyStatement> privacyStatementEncoder;
 

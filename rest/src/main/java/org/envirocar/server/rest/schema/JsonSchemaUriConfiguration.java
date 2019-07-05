@@ -16,24 +16,22 @@
  */
 package org.envirocar.server.rest.schema;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Inherited;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.net.URI;
 
-import com.google.inject.Module;
+public interface JsonSchemaUriConfiguration {
+    /**
+     * Convert the schema {@link URI} to it's external form.
+     *
+     * @param uri The internal URI.
+     * @return The external URI.
+     */
+    URI toExternalURI(URI uri);
 
-/**
- * TODO JavaDoc
- *
- * @author Christian Autermann <autermann@uni-muenster.de>
- */
-@Inherited
-@Documented
-@Target(ElementType.TYPE)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface Modules {
-    Class<? extends Module>[] value();
+    /**
+     * Convert the schema {@link URI} to it's internal URI.
+     *
+     * @param uri The internal URI.
+     * @return The resource URI.
+     */
+    URI toInternalURI(URI uri);
 }

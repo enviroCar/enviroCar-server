@@ -16,19 +16,20 @@
  */
 package org.envirocar.server.rest.encoding.json;
 
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.ext.Provider;
-
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.inject.Inject;
 import org.envirocar.server.core.entities.Announcement;
 import org.envirocar.server.core.entities.Announcements;
 import org.envirocar.server.rest.JSONConstants;
 import org.envirocar.server.rest.encoding.JSONEntityEncoder;
 import org.envirocar.server.rest.rights.AccessRights;
 
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.inject.Inject;
+import javax.inject.Singleton;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.Provider;
 
+@Singleton
 @Provider
 public class AnnouncementsJSONEncoder extends AbstractJSONEntityEncoder<Announcements> {
     private final JSONEntityEncoder<Announcement> announcementEncoder;
@@ -41,13 +42,12 @@ public class AnnouncementsJSONEncoder extends AbstractJSONEntityEncoder<Announce
     }
 
     @Override
-    public ObjectNode encodeJSON(Announcements t, AccessRights rights,
-                                 MediaType mediaType) {
+    public ObjectNode encodeJSON(Announcements entity, AccessRights rights, MediaType mediaType) {
         ObjectNode root = getJsonFactory().objectNode();
-        ArrayNode annos = root.putArray(JSONConstants.ANNOUNCEMENTS_KEY);
+        ArrayNode announcements = root.putArray(JSONConstants.ANNOUNCEMENTS_KEY);
 
-        for (Announcement u : t) {
-            annos.add(announcementEncoder.encodeJSON(u, rights, mediaType));
+        for (Announcement u : entity) {
+            announcements.add(announcementEncoder.encodeJSON(u, rights, mediaType));
         }
         return root;
     }

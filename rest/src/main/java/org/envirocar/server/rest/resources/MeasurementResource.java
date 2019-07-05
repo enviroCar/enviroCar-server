@@ -24,7 +24,7 @@ import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.auth.Authenticated;
 import org.envirocar.server.rest.rights.HasAcceptedLatestLegalPolicies;
-import org.envirocar.server.rest.validation.Schema;
+import org.envirocar.server.rest.schema.Schema;
 
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -47,7 +47,7 @@ public class MeasurementResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.MEASUREMENT)
-    @Produces({MediaTypes.MEASUREMENT, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
+    @Produces({MediaTypes.JSON, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
     public Measurement get() {
         return measurement;
     }

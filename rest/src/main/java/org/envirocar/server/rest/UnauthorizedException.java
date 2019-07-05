@@ -14,25 +14,25 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.rest.validation;
+package org.envirocar.server.rest;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import org.envirocar.server.core.exception.ValidationException;
-
-/**
- * TODO JavaDoc
- *
- * @author Christian Autermann <autermann@uni-muenster.de>
- */
-public class JSONValidationException extends ValidationException {
-    private static final long serialVersionUID = -235700358046047325L;
-    private JsonNode error;
-
-    public JSONValidationException(JsonNode error) {
-        this.error = error;
+public class UnauthorizedException extends RuntimeException {
+    public UnauthorizedException() {
     }
 
-    public JsonNode getError() {
-        return error;
+    public UnauthorizedException(String message) {
+        super(message);
+    }
+
+    public UnauthorizedException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public UnauthorizedException(Throwable cause) {
+        super(cause);
+    }
+
+    protected UnauthorizedException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
     }
 }

@@ -18,6 +18,7 @@ package org.envirocar.server.rest.encoding.rdf;
 
 import java.util.Set;
 
+import javax.inject.Singleton;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.ext.Provider;
 
@@ -34,6 +35,7 @@ import org.envirocar.server.rest.resources.RootResource;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
+@Singleton
 public class GroupsRDFEncoder extends AbstractCollectionRDFEntityEncoder<Group, Groups> {
     @Inject
     public GroupsRDFEncoder(Set<RDFLinker<Group>> linkers) {

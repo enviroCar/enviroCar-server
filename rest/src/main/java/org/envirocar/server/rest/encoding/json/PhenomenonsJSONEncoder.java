@@ -16,18 +16,18 @@
  */
 package org.envirocar.server.rest.encoding.json;
 
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.ext.Provider;
-
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.inject.Inject;
 import org.envirocar.server.core.entities.Phenomenon;
 import org.envirocar.server.core.entities.Phenomenons;
 import org.envirocar.server.rest.JSONConstants;
 import org.envirocar.server.rest.encoding.JSONEntityEncoder;
 import org.envirocar.server.rest.rights.AccessRights;
 
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.inject.Inject;
+import javax.inject.Singleton;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.Provider;
 
 /**
  * TODO JavaDoc
@@ -35,23 +35,22 @@ import com.google.inject.Inject;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
+@Singleton
 public class PhenomenonsJSONEncoder extends AbstractJSONEntityEncoder<Phenomenons> {
     private final JSONEntityEncoder<Phenomenon> phenomenonEncoder;
 
     @Inject
-    public PhenomenonsJSONEncoder(
-            JSONEntityEncoder<Phenomenon> phenomenonEncoder) {
+    public PhenomenonsJSONEncoder(JSONEntityEncoder<Phenomenon> phenomenonEncoder) {
         super(Phenomenons.class);
         this.phenomenonEncoder = phenomenonEncoder;
     }
 
     @Override
-    public ObjectNode encodeJSON(Phenomenons t, AccessRights rights,
-                                 MediaType mediaType) {
+    public ObjectNode encodeJSON(Phenomenons entity, AccessRights rights, MediaType mediaType) {
         ObjectNode root = getJsonFactory().objectNode();
         ArrayNode phenomenons = root.putArray(JSONConstants.PHENOMENONS_KEY);
-        for (Phenomenon u : t) {
-            phenomenons.add(phenomenonEncoder.encodeJSON(u, rights, mediaType));
+        for (Phenomenon phenomenon : entity) {
+            phenomenons.add(phenomenonEncoder.encodeJSON(phenomenon, rights, mediaType));
         }
         return root;
     }

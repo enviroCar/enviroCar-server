@@ -30,7 +30,7 @@ import org.envirocar.server.core.filter.TrackFilter;
 import org.envirocar.server.rest.*;
 import org.envirocar.server.rest.auth.Authenticated;
 import org.envirocar.server.rest.rights.HasAcceptedLatestLegalPolicies;
-import org.envirocar.server.rest.validation.Schema;
+import org.envirocar.server.rest.schema.Schema;
 
 import javax.annotation.Nullable;
 import javax.ws.rs.*;
@@ -55,7 +55,7 @@ public class TracksResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.TRACKS)
-    @Produces({MediaTypes.TRACKS, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
+    @Produces({MediaTypes.JSON, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
     public Tracks get(@QueryParam(RESTConstants.BBOX) BoundingBox bbox) throws BadRequestException {
         SpatialFilter spatialFilter = null;
         if (bbox != null) {
@@ -71,7 +71,7 @@ public class TracksResource extends AbstractResource {
     @Authenticated
     @HasAcceptedLatestLegalPolicies
     @Schema(request = Schemas.TRACK_CREATE)
-    @Consumes({MediaTypes.TRACK_CREATE})
+    @Consumes({MediaTypes.JSON})
     public Response create(Track track) throws ValidationException {
         if (user != null) {
             checkRights(getRights().isSelf(user));

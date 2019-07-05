@@ -23,8 +23,7 @@ import org.envirocar.server.core.entities.UserStatistic;
 import org.envirocar.server.core.filter.UserStatisticFilter;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
-import org.envirocar.server.rest.resources.AbstractResource;
-import org.envirocar.server.rest.validation.Schema;
+import org.envirocar.server.rest.schema.Schema;
 
 import javax.annotation.Nullable;
 import javax.ws.rs.GET;
@@ -49,8 +48,8 @@ public class UserStatisticResource extends AbstractResource {
     }
 
     @GET
-    @Schema(response = Schemas.USERSTATISTIC)
-    @Produces({MediaTypes.USERSTATISTIC, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
+    @Schema(response = Schemas.USER_STATISTIC)
+    @Produces({MediaTypes.JSON, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
     public UserStatistic UserStatistics() {
         return getUserStatisticService()
                 .getUserStatistic(new UserStatisticFilter(user));

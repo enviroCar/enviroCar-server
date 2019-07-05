@@ -69,7 +69,7 @@ public abstract class AbstractJSONEntityEncoder<T>
     }
 
     @Override
-    public ObjectNode encodeJSON(T t, MediaType mt) {
-        return encodeJSON(t, rights.get(), mt);
+    public ObjectNode encodeJSON(T entity, MediaType mediaType) {
+        return encodeJSON(entity, rights.get(), mediaType);
     }
 }

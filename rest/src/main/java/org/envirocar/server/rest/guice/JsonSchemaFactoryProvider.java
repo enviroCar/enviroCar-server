@@ -16,63 +16,33 @@
  */
 package org.envirocar.server.rest.guice;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.github.fge.jsonschema.SchemaVersion;
 import com.github.fge.jsonschema.cfg.ValidationConfiguration;
 import com.github.fge.jsonschema.cfg.ValidationConfigurationBuilder;
 import com.github.fge.jsonschema.core.load.configuration.LoadingConfiguration;
-import com.github.fge.jsonschema.core.load.configuration.LoadingConfigurationBuilder;
 import com.github.fge.jsonschema.core.ref.JsonRef;
 import com.github.fge.jsonschema.format.draftv3.DateAttribute;
 import com.github.fge.jsonschema.library.DraftV4Library;
 import com.github.fge.jsonschema.library.Library;
 import com.github.fge.jsonschema.main.JsonSchemaFactory;
-import com.google.common.cache.LoadingCache;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-import com.google.inject.ProvisionException;
-import com.google.inject.name.Named;
 
 import java.lang.reflect.Field;
 import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ExecutionException;
 
 /**
  * TODO JavaDoc
  *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class JSONSchemaFactoryProvider implements Provider<JsonSchemaFactory> {
-    public static final String SCHEMAS = "schemas";
-    private final LoadingCache<String, JsonNode> cache;
-    private final Set<String> schemas;
-
-    @Inject
-    public JSONSchemaFactoryProvider(@Named(SCHEMAS) Set<String> schemaResources,
-                                     LoadingCache<String, JsonNode> cache) {
-        this.schemas = schemaResources;
-        this.cache = cache;
-    }
+public class JsonSchemaFactoryProvider implements Provider<JsonSchemaFactory> {
 
     @Override
     public JsonSchemaFactory get() {
         return JsonSchemaFactory.newBuilder()
                 .setValidationConfiguration(validationConfiguration())
-                .setLoadingConfiguration(loadingConfiguration())
                 .freeze();
-    }
-
-    private LoadingConfiguration loadingConfiguration() {
-        LoadingConfigurationBuilder cfgb = LoadingConfiguration.newBuilder();
-        for (String schema : schemas) {
-            try {
-                cfgb.preloadSchema(cache.get(schema));
-            } catch (IllegalArgumentException | ExecutionException ex) {
-                throw new ProvisionException("Error loading " + schema, ex);
-            }
-        }
-        return cfgb.freeze();
     }
 
     private ValidationConfiguration validationConfiguration() {

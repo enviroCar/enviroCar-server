@@ -21,12 +21,11 @@ import com.vividsolutions.jts.geom.Point;
 import org.envirocar.server.core.DataService;
 import org.envirocar.server.core.entities.*;
 import org.envirocar.server.core.filter.MeasurementFilter;
-import org.envirocar.server.rest.mapper.InternalServerError;
-import org.envirocar.server.rest.resources.ForbiddenException;
+import org.envirocar.server.rest.InternalServerError;
+import org.envirocar.server.rest.ForbiddenException;
 import org.envirocar.server.rest.rights.AccessRights;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import javax.inject.Singleton;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 import java.io.*;
@@ -41,10 +40,9 @@ import java.util.Set;
  * @author Benjamin Pross
  */
 @Provider
+@Singleton
 public class TrackCSVEncoder extends AbstractCSVTrackEncoder<Track> {
 
-    private static final Logger log = LoggerFactory
-            .getLogger(TrackCSVEncoder.class);
     private final DataService dataService;
     private static final String delimiter = "; ";
 

@@ -28,5 +28,5 @@ import org.envirocar.server.rest.rights.AccessRights;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface JSONEntityEncoder<T> {
-    ObjectNode encodeJSON(T t, AccessRights rights, MediaType mt);
+    ObjectNode encodeJSON(T entity, AccessRights rights, MediaType mediaType);
 }

@@ -25,7 +25,7 @@ import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.exception.BadRequestException;
 import org.envirocar.server.core.exception.UserNotFoundException;
 import org.envirocar.server.core.util.PasswordEncoder;
-import org.envirocar.server.rest.resources.ForbiddenException;
+import org.envirocar.server.rest.ForbiddenException;
 
 import javax.ws.rs.core.HttpHeaders;
 

@@ -16,22 +16,22 @@
  */
 package org.envirocar.server.rest.pagination;
 
-import java.util.List;
-
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.UriInfo;
-
+import com.google.inject.Inject;
 import org.envirocar.server.core.exception.BadRequestException;
 import org.envirocar.server.core.util.pagination.PageBasedPagination;
 import org.envirocar.server.core.util.pagination.Pagination;
 import org.envirocar.server.core.util.pagination.RangeBasedPagination;
 import org.envirocar.server.rest.RESTConstants;
 
-import com.google.common.base.Optional;
-import com.google.inject.Inject;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.UriInfo;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * TODO JavaDoc
+ *
  * @author Christian Autermann
  */
 public class PaginationProviderImpl implements PaginationProvider {
@@ -49,14 +49,11 @@ public class PaginationProviderImpl implements PaginationProvider {
     }
 
     @Override
-    public Pagination get()
-            throws BadRequestException {
-        return getPaginationFromRangeHeader().or(getPaginationFromQueryParam())
-                .or(getDefaultPagination());
+    public Pagination get() throws BadRequestException {
+        return or(getPaginationFromRangeHeader(), getPaginationFromQueryParam()).orElse(getDefaultPagination());
     }
 
-    private Optional<Pagination> getPaginationFromRangeHeader()
-            throws BadRequestException {
+    private Optional<Pagination> getPaginationFromRangeHeader() throws BadRequestException {
         List<String> headers = this.headers.getRequestHeader(RANGE_HEADER);
         if (headers != null) {
             for (String header : headers) {
@@ -68,14 +65,13 @@ public class PaginationProviderImpl implements PaginationProvider {
                 }
             }
         }
-        return Optional.absent();
+        return Optional.empty();
     }
 
-    protected Optional<Pagination> parseRangeHeader(String rangeHeader)
-            throws BadRequestException {
+    private Optional<Pagination> parseRangeHeader(String rangeHeader) throws BadRequestException {
         String trimmed = rangeHeader.trim();
         if (!trimmed.startsWith("items=")) {
-            return Optional.absent();
+            return Optional.empty();
         }
         trimmed = trimmed.substring("items=".length());
         String[] ranges = trimmed.split(",");
@@ -101,18 +97,19 @@ public class PaginationProviderImpl implements PaginationProvider {
         }
     }
 
+
+    private static <T> Optional<T> or(Optional<T>... alternatives) {
+        return Arrays.stream(alternatives).filter(Optional::isPresent).map(Optional::get).findFirst();
+    }
+
     private Optional<Pagination> getPaginationFromQueryParam()
             throws BadRequestException {
-        Optional<Integer> limit
-                = getQueryParameterValue(RESTConstants.LIMIT)
-                .or(getQueryParameterValue("l"));
-        Optional<Integer> page
-                = getQueryParameterValue(RESTConstants.PAGE)
-                .or(getQueryParameterValue("p"));
+        Optional<Integer> limit = or(getQueryParameterValue(RESTConstants.LIMIT), getQueryParameterValue("l"));
+        Optional<Integer> page = or(getQueryParameterValue(RESTConstants.PAGE), getQueryParameterValue("p"));
         if (limit.isPresent() || page.isPresent()) {
-            return Optional.of(new PageBasedPagination(limit.or(DEFAULT_LIMIT), page.or(DEFAULT_PAGE)));
+            return Optional.of(new PageBasedPagination(limit.orElse(DEFAULT_LIMIT), page.orElse(DEFAULT_PAGE)));
         }
-        return Optional.absent();
+        return Optional.empty();
     }
 
     private Optional<Integer> getQueryParameterValue(String parameter) {
@@ -123,7 +120,7 @@ public class PaginationProviderImpl implements PaginationProvider {
             } catch (NumberFormatException ignored) {
             }
         }
-        return Optional.absent();
+        return Optional.empty();
     }
 
     private Pagination getDefaultPagination() {

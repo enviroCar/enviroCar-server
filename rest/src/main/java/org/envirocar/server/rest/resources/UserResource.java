@@ -24,7 +24,7 @@ import org.envirocar.server.core.exception.*;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.auth.Authenticated;
-import org.envirocar.server.rest.validation.Schema;
+import org.envirocar.server.rest.schema.Schema;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.PathSegment;
@@ -66,7 +66,7 @@ public class UserResource extends AbstractResource {
     @PUT
     @Authenticated
     @Schema(request = Schemas.USER_MODIFY)
-    @Consumes({MediaTypes.USER_MODIFY})
+    @Consumes({MediaTypes.JSON})
     public Response modify(User changes)
             throws UserNotFoundException, IllegalModificationException,
             ValidationException, ResourceAlreadyExistException {
@@ -88,7 +88,7 @@ public class UserResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.USER)
-    @Produces({MediaTypes.USER, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
+    @Produces({MediaTypes.JSON, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
     public User get() {
         return user;
     }

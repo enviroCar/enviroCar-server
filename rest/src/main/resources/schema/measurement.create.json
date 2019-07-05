@@ -1,6 +1,5 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "id": "https://envirocar.org/api/stable/schema/measurement.create.json#",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -16,7 +15,7 @@
       ]
     },
     "geometry": {
-      "$ref": "https://envirocar.org/api/stable/schema/geometry.json#"
+      "$ref": "geometry.json#"
     },
     "properties": {
       "type": "object",

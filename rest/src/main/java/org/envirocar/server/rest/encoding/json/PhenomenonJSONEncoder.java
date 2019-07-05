@@ -16,15 +16,15 @@
  */
 package org.envirocar.server.rest.encoding.json;
 
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.ext.Provider;
-
 import com.fasterxml.jackson.databind.node.ObjectNode;
-
 import org.envirocar.server.core.entities.Phenomenon;
 import org.envirocar.server.rest.JSONConstants;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.rights.AccessRights;
+
+import javax.inject.Singleton;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.Provider;
 
 /**
  * TODO JavaDoc
@@ -32,29 +32,27 @@ import org.envirocar.server.rest.rights.AccessRights;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
+@Singleton
 public class PhenomenonJSONEncoder extends AbstractJSONEntityEncoder<Phenomenon> {
     public PhenomenonJSONEncoder() {
         super(Phenomenon.class);
     }
 
     @Override
-    public ObjectNode encodeJSON(Phenomenon t, AccessRights rights,
-                                 MediaType mediaType) {
+    public ObjectNode encodeJSON(Phenomenon entity, AccessRights rights, MediaType mediaType) {
         ObjectNode phenomenon = getJsonFactory().objectNode();
-        if (t.hasName()) {
-            phenomenon.put(JSONConstants.NAME_KEY, t.getName());
+        if (entity.hasName()) {
+            phenomenon.put(JSONConstants.NAME_KEY, entity.getName());
         }
-        if (t.hasUnit()) {
-            phenomenon.put(JSONConstants.UNIT_KEY, t.getUnit());
+        if (entity.hasUnit()) {
+            phenomenon.put(JSONConstants.UNIT_KEY, entity.getUnit());
         }
         if (mediaType.equals(MediaTypes.PHENOMENON_TYPE)) {
-            if (t.hasCreationTime()) {
-                phenomenon.put(JSONConstants.CREATED_KEY, getDateTimeFormat()
-                        .print(t.getCreationTime()));
+            if (entity.hasCreationTime()) {
+                phenomenon.put(JSONConstants.CREATED_KEY, getDateTimeFormat().print(entity.getCreationTime()));
             }
-            if (t.hasModificationTime()) {
-                phenomenon.put(JSONConstants.MODIFIED_KEY, getDateTimeFormat()
-                        .print(t.getModificationTime()));
+            if (entity.hasModificationTime()) {
+                phenomenon.put(JSONConstants.MODIFIED_KEY, getDateTimeFormat().print(entity.getModificationTime()));
             }
         }
         return phenomenon;

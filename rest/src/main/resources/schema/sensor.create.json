@@ -1,21 +1,20 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "id": "https://envirocar.org/api/stable/schema/sensor.create.json#",
   "allOf": [
     {
-      "$ref": "https://envirocar.org/api/stable/schema/sensor.json#/definitions/base"
+      "$ref": "sensor.json#/definitions/base"
     },
     {
       "oneOf": [
         {
           "not": {
-            "$ref": "https://envirocar.org/api/stable/schema/sensor.json#/definitions/car-type"
+            "$ref": "sensor.json#/definitions/car-type"
           }
         },
         {
           "allOf": [
             {
-              "$ref": "https://envirocar.org/api/stable/schema/sensor.json#/definitions/car-type"
+              "$ref": "sensor.json#/definitions/car-type"
             },
             {
               "$ref": "#/definitions/car-properties"
@@ -29,7 +28,7 @@
     "car-properties": {
       "allOf": [
         {
-          "$ref": "https://envirocar.org/api/stable/schema/sensor.json#/definitions/car-properties"
+          "$ref": "sensor.json#/definitions/car-properties"
         },
         {
           "properties": {

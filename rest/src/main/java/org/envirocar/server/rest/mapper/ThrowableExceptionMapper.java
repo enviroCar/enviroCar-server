@@ -16,10 +16,12 @@
  */
 package org.envirocar.server.rest.mapper;
 
+import javax.inject.Singleton;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 
 @Provider
+@Singleton
 public class ThrowableExceptionMapper extends AbstractExceptionMapper<Throwable> {
 
     @Override

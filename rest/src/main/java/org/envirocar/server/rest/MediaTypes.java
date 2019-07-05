@@ -17,6 +17,8 @@
 package org.envirocar.server.rest;
 
 import javax.ws.rs.core.MediaType;
+import java.util.Collections;
+import java.util.Map;
 
 /**
  * TODO JavaDoc
@@ -25,6 +27,21 @@ import javax.ws.rs.core.MediaType;
  * @author Arne de Wall
  */
 public interface MediaTypes {
+    String XML_RDF = "application/rdf+xml";
+    String TURTLE = "text/turtle";
+    String TEXT_CSV = "text/csv";
+    String TURTLE_ALT = "application/x-turtle";
+    String IMAGE_JPEG = "image/jpeg";
+    String APPLICATION_ZIPPED_SHP = "application/x-zipped-shp";
+
+    MediaType XML_RDF_TYPE = new MediaType("application", "rdf+xml");
+    MediaType APPLICATION_ZIPPED_SHP_TYPE = new MediaType("application", "x-zipped-shp");
+    MediaType TEXT_CSV_TYPE = new MediaType("text", "csv");
+    MediaType TURTLE_TYPE = new MediaType("text", "turtle");
+    MediaType TURTLE_ALT_TYPE = new MediaType("application", "x-turtle");
+    MediaType IMAGE_JPEG_TYPE = new MediaType("image", "jpeg");
+
+
     String SCHEMA_ATTRIBUTE = "schema";
     String ROOT = "application/json; schema=\"" + Schemas.ROOT + "\"";
     MediaType ROOT_TYPE = MediaType.valueOf(ROOT);
@@ -68,8 +85,6 @@ public interface MediaTypes {
     MediaType SENSORS_TYPE = MediaType.valueOf(SENSORS);
     String SENSOR_CREATE = "application/json; schema=\"" + Schemas.SENSOR_CREATE + "\"";
     MediaType SENSOR_CREATE_TYPE = MediaType.valueOf(SENSOR_CREATE);
-    String SENSOR_MODIFY = "application/json; schema=\"" + Schemas.SENSOR_MODIFY + "\"";
-    MediaType SENSOR_MODIFY_TYPE = MediaType.valueOf(SENSOR_MODIFY);
     String PHENOMENON = "application/json; schema=\"" + Schemas.PHENOMENON + "\"";
     MediaType PHENOMENON_TYPE = MediaType.valueOf(PHENOMENON);
     String PHENOMENONS = "application/json; schema=\"" + Schemas.PHENOMENONS + "\"";
@@ -84,18 +99,6 @@ public interface MediaTypes {
     MediaType ACTIVITY_TYPE = MediaType.valueOf(ACTIVITY);
     String ACTIVITIES = "application/json; schema=\"" + Schemas.ACTIVITIES + "\"";
     MediaType ACTIVITIES_TYPE = MediaType.valueOf(ACTIVITIES);
-    String XML_RDF = "application/rdf+xml";
-    MediaType XML_RDF_TYPE = MediaType.valueOf(XML_RDF);
-    String APPLICATION_ZIPPED_SHP = "application/x-zipped-shp";
-    MediaType APPLICATION_ZIPPED_SHP_TYPE = MediaType.valueOf(APPLICATION_ZIPPED_SHP);
-    String TEXT_CSV = "text/csv";
-    MediaType TEXT_CSV_TYPE = MediaType.valueOf(TEXT_CSV);
-    String TURTLE = "text/turtle";
-    MediaType TURTLE_TYPE = MediaType.valueOf(TURTLE);
-    String TURTLE_ALT = "application/x-turtle";
-    MediaType TURTLE_ALT_TYPE = MediaType.valueOf(TURTLE_ALT);
-    String IMAGE_JPEG = "image/jpeg";
-    MediaType IMAGE_JPEG_TYPE = MediaType.valueOf(IMAGE_JPEG);
     String TERMS_OF_USE = "application/json; schema=\"" + Schemas.TERMS_OF_USE + "\"";
     MediaType TERMS_OF_USE_TYPE = MediaType.valueOf(TERMS_OF_USE);
     String TERMS_OF_USE_INSTANCE = "application/json; schema=\"" + Schemas.TERMS_OF_USE_INSTANCE + "\"";
@@ -120,12 +123,26 @@ public interface MediaTypes {
     MediaType FUELING_CREATE_TYPE = MediaType.valueOf(FUELING_CREATE);
     String PNG_IMAGE = "image/png";
     MediaType PNG_IMAGE_TYPE = MediaType.valueOf(PNG_IMAGE);
-    String USERSTATISTIC = "application/json; schema=\"" + Schemas.USERSTATISTIC + "\"";
+    String USERSTATISTIC = "application/json; schema=\"" + Schemas.USER_STATISTIC + "\"";
     MediaType USERSTATISTIC_TYPE = MediaType.valueOf(USERSTATISTIC);
     String PRIVACY_STATEMENTS = "application/json; schema=\"" + Schemas.PRIVACY_STATEMENTS + "\"";
     MediaType PRIVACY_STATEMENTS_TYPE = MediaType.valueOf(PRIVACY_STATEMENTS);
     String PRIVACY_STATEMENT = "application/json; schema=\"" + Schemas.PRIVACY_STATEMENT + "\"";
     MediaType PRIVACY_STATEMENT_TYPE = MediaType.valueOf(PRIVACY_STATEMENT);
     String EXCEPTION = "application/json; schema=\"" + Schemas.EXCEPTION + "\"";
-    MediaType EXCEPTION_TYPE = MediaType.valueOf(EXCEPTION);
+    MediaType EXCEPTION_TYPE = new MediaType("application", "json", schema(Schemas.EXCEPTION));
+    String JSON = "application/json";
+
+    static Map<String, String> schema(String schema) {
+        return Collections.singletonMap(SCHEMA_ATTRIBUTE, schema);
+    }
+
+    static boolean hasSchemaAttribute(MediaType mediaType) {
+        return mediaType != null && mediaType.isCompatible(MediaType.APPLICATION_JSON_TYPE) &&
+                mediaType.getParameters().containsKey(SCHEMA_ATTRIBUTE);
+    }
+
+    static String getSchemaAttribute(MediaType mediaType) {
+        return hasSchemaAttribute(mediaType) ? mediaType.getParameters().get(SCHEMA_ATTRIBUTE) : null;
+    }
 }

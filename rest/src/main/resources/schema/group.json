@@ -1,7 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
   "additionalProperties": false,
-  "id": "https://envirocar.org/api/stable/schema/group.json#",
   "properties": {
     "created": {
       "type": "string",
@@ -18,7 +17,7 @@
       "type": "string"
     },
     "owner": {
-      "$ref": "https://envirocar.org/api/stable/schema/user.json#"
+      "$ref": "user.json#"
     }
   },
   "required": [

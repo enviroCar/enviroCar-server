@@ -16,19 +16,18 @@
  */
 package org.envirocar.server.rest.encoding.json;
 
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.ext.Provider;
-
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
-
 import org.envirocar.server.core.entities.Group;
 import org.envirocar.server.core.entities.Groups;
 import org.envirocar.server.rest.JSONConstants;
 import org.envirocar.server.rest.encoding.JSONEntityEncoder;
-
 import org.envirocar.server.rest.rights.AccessRights;
+
+import javax.inject.Singleton;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.Provider;
 
 /**
  * TODO JavaDoc
@@ -36,6 +35,7 @@ import org.envirocar.server.rest.rights.AccessRights;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
+@Singleton
 public class GroupsJSONEncoder extends AbstractJSONEntityEncoder<Groups> {
     private final JSONEntityEncoder<Group> groupEncoder;
 
@@ -46,13 +46,11 @@ public class GroupsJSONEncoder extends AbstractJSONEntityEncoder<Groups> {
     }
 
     @Override
-    public ObjectNode encodeJSON(Groups t,
-                                 AccessRights rights,
-                                 MediaType mediaType) {
+    public ObjectNode encodeJSON(Groups entity, AccessRights rights, MediaType mediaType) {
         ObjectNode root = getJsonFactory().objectNode();
         ArrayNode groups = root.putArray(JSONConstants.GROUPS_KEY);
-        for (Group u : t) {
-            groups.add(groupEncoder.encodeJSON(u, rights, mediaType));
+        for (Group group : entity) {
+            groups.add(groupEncoder.encodeJSON(group, rights, mediaType));
         }
         return root;
     }

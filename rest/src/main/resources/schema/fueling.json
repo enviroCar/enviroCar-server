@@ -1,6 +1,5 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "id": "https://envirocar.org/api/stable/schema/fueling.json#",
   "type": "object",
   "properties": {
     "fuelType": {
@@ -10,10 +9,10 @@
       "type": "string"
     },
     "car": {
-      "$ref": "https://envirocar.org/api/stable/schema/sensor.json#"
+      "$ref": "sensor.json#"
     },
     "user": {
-      "$ref": "https://envirocar.org/api/stable/schema/user.json#"
+      "$ref": "user.json#"
     },
     "cost": {
       "$ref": "#/definitions/numberWithUnit"

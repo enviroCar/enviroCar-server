@@ -25,7 +25,7 @@ import org.envirocar.server.core.exception.ValidationException;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.auth.Anonymous;
-import org.envirocar.server.rest.validation.Schema;
+import org.envirocar.server.rest.schema.Schema;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
@@ -41,7 +41,7 @@ public class UsersResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.USERS)
-    @Produces({MediaTypes.USERS, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
+    @Produces({MediaTypes.JSON, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
     public Users get() throws BadRequestException {
         checkRights(getRights().canSeeUsers());
         return getUserService().getUsers(getPagination());
@@ -50,7 +50,7 @@ public class UsersResource extends AbstractResource {
     @POST
     @Anonymous
     @Schema(request = Schemas.USER_CREATE)
-    @Consumes({MediaTypes.USER_CREATE})
+    @Consumes({MediaTypes.JSON})
     public Response create(User user) throws ValidationException, ResourceAlreadyExistException {
 //        checkMail(user);
         user = getUserService().createUser(user);

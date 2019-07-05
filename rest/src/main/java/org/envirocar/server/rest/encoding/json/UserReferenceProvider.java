@@ -16,17 +16,17 @@
  */
 package org.envirocar.server.rest.encoding.json;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.ext.Provider;
-
+import com.fasterxml.jackson.databind.JsonNode;
+import com.google.inject.Inject;
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.rest.UserReference;
 import org.envirocar.server.rest.decoding.json.AbstractJSONMessageBodyReader;
 import org.envirocar.server.rest.decoding.json.JSONEntityDecoder;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.google.inject.Inject;
+import javax.inject.Singleton;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.Provider;
 
 /**
  * TODO JavaDoc
@@ -34,6 +34,7 @@ import com.google.inject.Inject;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
+@Singleton
 @Consumes(MediaType.APPLICATION_JSON)
 public class UserReferenceProvider extends AbstractJSONMessageBodyReader<UserReference> {
     private final JSONEntityDecoder<User> userDecoder;
@@ -45,8 +46,8 @@ public class UserReferenceProvider extends AbstractJSONMessageBodyReader<UserRef
     }
 
     @Override
-    public UserReference decode(JsonNode j, MediaType mt) {
-        User user = userDecoder.decode(j, mt);
+    public UserReference decode(JsonNode node, MediaType mediaType) {
+        User user = userDecoder.decode(node, mediaType);
         return new UserReference(user.getName());
     }
 }

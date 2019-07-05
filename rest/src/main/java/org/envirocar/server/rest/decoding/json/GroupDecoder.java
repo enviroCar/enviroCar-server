@@ -16,6 +16,7 @@
  */
 package org.envirocar.server.rest.decoding.json;
 
+import javax.inject.Singleton;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
@@ -30,16 +31,17 @@ import org.envirocar.server.rest.JSONConstants;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
+@Singleton
 public class GroupDecoder extends AbstractJSONEntityDecoder<Group> {
     public GroupDecoder() {
         super(Group.class);
     }
 
     @Override
-    public Group decode(JsonNode j, MediaType mediaType) {
+    public Group decode(JsonNode node, MediaType mediaType) {
         Group group = getEntityFactory().createGroup();
-        group.setName(j.path(JSONConstants.NAME_KEY).textValue());
-        group.setDescription(j.path(JSONConstants.DESCRIPTION_KEY).textValue());
+        group.setName(node.path(JSONConstants.NAME_KEY).textValue());
+        group.setDescription(node.path(JSONConstants.DESCRIPTION_KEY).textValue());
         return group;
     }
 }

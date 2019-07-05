@@ -14,25 +14,25 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.rest.resources;
+package org.envirocar.server.rest.schema;
 
-public class ForbiddenException extends RuntimeException {
-    public ForbiddenException() {
+import com.fasterxml.jackson.databind.JsonNode;
+import org.envirocar.server.core.exception.ValidationException;
+
+/**
+ * TODO JavaDoc
+ *
+ * @author Christian Autermann <autermann@uni-muenster.de>
+ */
+public class JsonValidationException extends ValidationException {
+    private static final long serialVersionUID = -235700358046047325L;
+    private JsonNode error;
+
+    public JsonValidationException(JsonNode error) {
+        this.error = error;
     }
 
-    public ForbiddenException(String message) {
-        super(message);
-    }
-
-    public ForbiddenException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public ForbiddenException(Throwable cause) {
-        super(cause);
-    }
-
-    protected ForbiddenException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
+    public JsonNode getError() {
+        return error;
     }
 }

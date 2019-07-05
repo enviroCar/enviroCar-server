@@ -18,6 +18,7 @@ package org.envirocar.server.rest.mapper;
 
 import org.envirocar.server.core.exception.ResourceAlreadyExistException;
 
+import javax.inject.Singleton;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.Provider;
@@ -28,6 +29,7 @@ import javax.ws.rs.ext.Provider;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
+@Singleton
 public class ResourceAlreadyExistExceptionMapper extends AbstractExceptionMapper<ResourceAlreadyExistException> {
 
     @Override

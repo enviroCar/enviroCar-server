@@ -16,19 +16,18 @@
  */
 package org.envirocar.server.rest.encoding.json;
 
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.ext.Provider;
-
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
-
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.entities.Tracks;
 import org.envirocar.server.rest.JSONConstants;
 import org.envirocar.server.rest.encoding.JSONEntityEncoder;
-
 import org.envirocar.server.rest.rights.AccessRights;
+
+import javax.inject.Singleton;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.Provider;
 
 /**
  * TODO JavaDoc
@@ -36,6 +35,7 @@ import org.envirocar.server.rest.rights.AccessRights;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
+@Singleton
 public class TracksJSONEncoder extends AbstractJSONEntityEncoder<Tracks> {
     private final JSONEntityEncoder<Track> trackEncoder;
 
@@ -46,12 +46,11 @@ public class TracksJSONEncoder extends AbstractJSONEntityEncoder<Tracks> {
     }
 
     @Override
-    public ObjectNode encodeJSON(Tracks t, AccessRights rights,
-                                 MediaType mediaType) {
+    public ObjectNode encodeJSON(Tracks entity, AccessRights rights, MediaType mediaType) {
         ObjectNode root = getJsonFactory().objectNode();
         ArrayNode tracks = root.putArray(JSONConstants.TRACKS_KEY);
-        for (Track u : t) {
-            tracks.add(trackEncoder.encodeJSON(u, rights, mediaType));
+        for (Track track : entity) {
+            tracks.add(trackEncoder.encodeJSON(track, rights, mediaType));
         }
         return root;
     }

@@ -28,9 +28,8 @@ import org.envirocar.server.core.filter.FuelingFilter;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.auth.Authenticated;
-import org.envirocar.server.rest.resources.AbstractResource;
 import org.envirocar.server.rest.rights.HasAcceptedLatestLegalPolicies;
-import org.envirocar.server.rest.validation.Schema;
+import org.envirocar.server.rest.schema.Schema;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
@@ -54,7 +53,7 @@ public class FuelingsResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.FUELINGS)
-    @Produces({MediaTypes.FUELINGS, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
+    @Produces({MediaTypes.JSON, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
     public Fuelings getAll() throws BadRequestException {
         TemporalFilter tf = parseTemporalFilterForInstant();
         return getDataService().getFuelings(new FuelingFilter(user, tf, getPagination()));
@@ -63,7 +62,7 @@ public class FuelingsResource extends AbstractResource {
     @POST
     @HasAcceptedLatestLegalPolicies
     @Schema(request = Schemas.FUELING_CREATE)
-    @Consumes({MediaTypes.FUELING_CREATE})
+    @Consumes({MediaTypes.JSON})
     public Response create(Fueling fueling) {
         fueling.setUser(getCurrentUser());
         Fueling f = getDataService().createFueling(fueling);
@@ -74,7 +73,7 @@ public class FuelingsResource extends AbstractResource {
     @GET
     @Path(FUELING)
     @Schema(response = Schemas.FUELING)
-    @Produces({MediaTypes.FUELING, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
+    @Produces({MediaTypes.JSON, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
     public Fueling getFueling(@PathParam("id") String id) throws FuelingNotFoundException {
         return getDataService().getFueling(user, id);
     }

@@ -26,8 +26,7 @@ import org.envirocar.server.core.filter.StatisticsFilter;
 import org.envirocar.server.core.statistics.Statistic;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
-import org.envirocar.server.rest.resources.AbstractResource;
-import org.envirocar.server.rest.validation.Schema;
+import org.envirocar.server.rest.schema.Schema;
 
 import javax.annotation.Nullable;
 import javax.ws.rs.GET;
@@ -57,7 +56,7 @@ public class StatisticResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.STATISTIC)
-    @Produces({MediaTypes.STATISTIC, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
+    @Produces({MediaTypes.JSON, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
     public Statistic get() {
         return getStatisticsService().getStatistic(new StatisticsFilter(user, track, sensor), phenomenon);
     }

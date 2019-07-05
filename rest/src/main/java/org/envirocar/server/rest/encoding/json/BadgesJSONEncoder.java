@@ -16,38 +16,37 @@
  */
 package org.envirocar.server.rest.encoding.json;
 
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.ext.Provider;
-
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.inject.Inject;
 import org.envirocar.server.core.entities.Badge;
 import org.envirocar.server.core.entities.Badges;
 import org.envirocar.server.rest.JSONConstants;
 import org.envirocar.server.rest.encoding.JSONEntityEncoder;
 import org.envirocar.server.rest.rights.AccessRights;
 
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.inject.Inject;
+import javax.inject.Singleton;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.Provider;
 
+@Singleton
 @Provider
 public class BadgesJSONEncoder extends AbstractJSONEntityEncoder<Badges> {
     private final JSONEntityEncoder<Badge> badgeEncoder;
 
     @Inject
-    public BadgesJSONEncoder(
-            JSONEntityEncoder<Badge> enc) {
+    public BadgesJSONEncoder(JSONEntityEncoder<Badge> enc) {
         super(Badges.class);
         this.badgeEncoder = enc;
     }
 
     @Override
-    public ObjectNode encodeJSON(Badges badges, AccessRights rights,
-                                 MediaType mediaType) {
+    public ObjectNode encodeJSON(Badges entity, AccessRights rights, MediaType mediaType) {
         ObjectNode root = getJsonFactory().objectNode();
-        ArrayNode annos = root.putArray(JSONConstants.BADGES_KEY);
+        ArrayNode badges = root.putArray(JSONConstants.BADGES_KEY);
 
-        for (Badge b : badges) {
-            annos.add(badgeEncoder.encodeJSON(b, rights, mediaType));
+        for (Badge badge : entity) {
+            badges.add(badgeEncoder.encodeJSON(badge, rights, mediaType));
         }
         return root;
     }

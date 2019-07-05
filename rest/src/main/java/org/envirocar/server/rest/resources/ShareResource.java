@@ -25,7 +25,7 @@ import org.envirocar.server.core.filter.StatisticsFilter;
 import org.envirocar.server.core.statistics.Statistic;
 import org.envirocar.server.core.statistics.Statistics;
 import org.envirocar.server.rest.MediaTypes;
-import org.envirocar.server.rest.mapper.InternalServerError;
+import org.envirocar.server.rest.InternalServerError;
 import org.envirocar.server.rest.util.OSMTileRenderer;
 import org.envirocar.server.rest.util.TileRenderer;
 import org.joda.time.Period;

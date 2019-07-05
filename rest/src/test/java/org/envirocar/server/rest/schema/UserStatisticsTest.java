@@ -34,6 +34,7 @@ import org.envirocar.server.core.entities.TrackSummaries;
 import org.envirocar.server.core.entities.TrackSummary;
 import org.envirocar.server.core.entities.UserStatistic;
 import org.envirocar.server.mongo.util.UserStatisticUtils;
+import org.envirocar.server.rest.GuiceRunner;
 import org.envirocar.server.rest.TrackWithMeasurments;
 import org.joda.time.DateTime;
 import org.junit.Before;

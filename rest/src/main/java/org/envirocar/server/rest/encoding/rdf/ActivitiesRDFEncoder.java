@@ -18,6 +18,7 @@ package org.envirocar.server.rest.encoding.rdf;
 
 import java.util.Set;
 
+import javax.inject.Singleton;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
@@ -33,6 +34,7 @@ import com.google.inject.Provider;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @javax.ws.rs.ext.Provider
+@Singleton
 public class ActivitiesRDFEncoder extends AbstractCollectionRDFEntityEncoder<Activity, Activities> {
     private final Provider<UriInfo> uriInfo;
 
