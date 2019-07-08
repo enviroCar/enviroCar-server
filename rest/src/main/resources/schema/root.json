@@ -26,6 +26,18 @@
       "type": "string",
       "format": "uri"
     },
+    "schema": {
+      "type": "string",
+      "format": "uri"
+    },
+    "termsOfUse:": {
+      "type": "string",
+      "format": "uri"
+    },
+    "privacyStatements:": {
+      "type": "string",
+      "format": "uri"
+    },
     "statistics": {
       "type": "string",
       "format": "uri"
