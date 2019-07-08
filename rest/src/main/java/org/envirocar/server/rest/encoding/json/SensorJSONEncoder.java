@@ -19,7 +19,6 @@ package org.envirocar.server.rest.encoding.json;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.rest.JSONConstants;
-import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
 
 import javax.inject.Singleton;
@@ -60,7 +59,6 @@ public class SensorJSONEncoder extends AbstractJSONEntityEncoder<Sensor> {
                 properties.put(JSONConstants.MODIFIED_KEY, getDateTimeFormat().print(entity.getModificationTime()));
             }
         }
-
         sensor.putPOJO(JSONConstants.PROPERTIES_KEY, properties);
         return sensor;
     }
