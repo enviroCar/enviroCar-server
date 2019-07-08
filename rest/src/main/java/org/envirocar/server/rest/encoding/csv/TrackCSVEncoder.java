@@ -21,9 +21,9 @@ import com.vividsolutions.jts.geom.Point;
 import org.envirocar.server.core.DataService;
 import org.envirocar.server.core.entities.*;
 import org.envirocar.server.core.filter.MeasurementFilter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.envirocar.server.rest.InternalServerError;
 
+import javax.inject.Singleton;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 import java.io.*;
@@ -38,10 +38,9 @@ import java.util.Set;
  * @author Benjamin Pross
  */
 @Provider
+@Singleton
 public class TrackCSVEncoder extends AbstractCSVTrackEncoder<Track> {
 
-    private static final Logger log = LoggerFactory
-            .getLogger(TrackCSVEncoder.class);
     private final DataService dataService;
     private static final String delimiter = "; ";
 
@@ -53,16 +52,11 @@ public class TrackCSVEncoder extends AbstractCSVTrackEncoder<Track> {
 
     @Override
     public InputStream encodeCSV(Track t, MediaType mediaType) {
-
-        InputStream resultInputStream = null;
         try {
-            Measurements measurements = dataService.getMeasurements(new MeasurementFilter(t));
-            resultInputStream = convert(measurements);
+            return convert(dataService.getMeasurements(new MeasurementFilter(t)));
         } catch (Exception e) {
-            log.debug(e.getMessage());
+            throw new InternalServerError(e);
         }
-
-        return resultInputStream;
     }
 
     public InputStream convert(Measurements measurements) throws IOException {
@@ -94,11 +88,8 @@ public class TrackCSVEncoder extends AbstractCSVTrackEncoder<Track> {
             bw.append(delimiter);
 
             for (String key : properties) {
-
                 Object value = getValue(key, measurement.getValues());
-
-                bw.append(value != null ? value.toString() : Double
-                        .toString(Double.NaN));
+                bw.append(value != null ? value.toString() : Double.toString(Double.NaN));
                 bw.append(delimiter);
             }
 
@@ -166,30 +157,20 @@ public class TrackCSVEncoder extends AbstractCSVTrackEncoder<Track> {
 
 
     private Set<String> gatherPropertiesForHeader(Measurements measurements) {
-
         Set<String> distinctPhenomenonNames = new HashSet<>();
-
         for (Measurement measurement : measurements) {
-
             MeasurementValues values = measurement.getValues();
-
             for (MeasurementValue measurementValue : values) {
-
                 Phenomenon phenomenon = measurementValue.getPhenomenon();
-
                 String unit = phenomenon.getUnit();
 
                 /*
                  * create property name
                  */
-                String propertyName = createCompundPropertyName(phenomenon.getName(),
-                        unit);
-
+                String propertyName = createCompundPropertyName(phenomenon.getName(), unit);
                 distinctPhenomenonNames.add(propertyName);
             }
-
         }
-
         return distinctPhenomenonNames;
     }
 

@@ -16,47 +16,47 @@
  */
 package org.envirocar.server.rest.schema;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
-
-import java.util.Scanner;
-
-import org.envirocar.server.rest.MediaTypes;
+import org.envirocar.server.rest.GuiceRunner;
+import org.envirocar.server.rest.Schemas;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.Scanner;
+
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
+
 /**
  * TODO JavaDoc
- *
  */
 @RunWith(GuiceRunner.class)
 public class MeasurementsValidationTest {
 
-	@Rule
-	public final ValidationRule validate = new ValidationRule();
+    @Rule
+    public final ValidationRule validate = new ValidationRule();
 
-	@Test
-	public void validateValidMeasurementsInstance() {
-		assertThat(validate.parse(loadMeasurementsInstance("measurements-instance.json")),
-				is(validate.validInstanceOf(MediaTypes.MEASUREMENTS_TYPE)));
-	}
-	
-	@Test
-	public void validateValidMeasurementsInstanceWithoutTrackReference() {
-		assertThat(validate.parse(loadMeasurementsInstance("measurements-instance-wo-trackref.json")),
-				is(validate.validInstanceOf(MediaTypes.MEASUREMENTS_TYPE)));
-	}
+    @Test
+    public void validateValidMeasurementsInstance() {
+        assertThat(validate.parse(loadMeasurementsInstance("measurements-instance.json")),
+                is(validate.validInstanceOf(Schemas.MEASUREMENTS)));
+    }
 
-	private String loadMeasurementsInstance(String res) {
-		StringBuilder sb = new StringBuilder();
-		
-		Scanner sc = new Scanner(getClass().getResourceAsStream(res));
-		while (sc.hasNext()) {
-			sb.append(sc.nextLine());
-		}
-		sc.close();
-		
-		return sb.toString();
-	}
+    @Test
+    public void validateValidMeasurementsInstanceWithoutTrackReference() {
+        assertThat(validate.parse(loadMeasurementsInstance("measurements-instance-wo-trackref.json")),
+                is(validate.validInstanceOf(Schemas.MEASUREMENTS)));
+    }
+
+    private String loadMeasurementsInstance(String res) {
+        StringBuilder sb = new StringBuilder();
+
+        Scanner sc = new Scanner(getClass().getResourceAsStream(res));
+        while (sc.hasNext()) {
+            sb.append(sc.nextLine());
+        }
+        sc.close();
+
+        return sb.toString();
+    }
 }

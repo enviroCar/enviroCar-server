@@ -23,11 +23,13 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.google.inject.Inject;
 import org.envirocar.server.core.exception.BadRequestException;
 
+import javax.inject.Singleton;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.MessageBodyReader;
+import javax.ws.rs.ext.Provider;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
@@ -38,9 +40,10 @@ import java.lang.reflect.Type;
  *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
+
+@Provider
 @Consumes(MediaType.APPLICATION_JSON)
-public abstract class AbstractJSONMessageBodyReader<T>
-        implements MessageBodyReader<T> {
+public abstract class AbstractJSONMessageBodyReader<T> implements MessageBodyReader<T> {
     @Inject
     private ObjectReader reader;
     @Inject
@@ -68,9 +71,9 @@ public abstract class AbstractJSONMessageBodyReader<T>
         }
     }
 
-    public T decode(JsonNode j, MediaType mt, ContextKnowledge knowledge) {
-        return decode(j, mt);
+    public T decode(JsonNode node, MediaType mediaType, ContextKnowledge knowledge) {
+        return decode(node, mediaType);
     }
 
-    public abstract T decode(JsonNode j, MediaType mt);
+    public abstract T decode(JsonNode node, MediaType mediaType);
 }

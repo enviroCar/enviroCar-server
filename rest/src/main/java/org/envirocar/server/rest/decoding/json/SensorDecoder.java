@@ -20,6 +20,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Singleton;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
@@ -37,16 +38,17 @@ import org.envirocar.server.rest.JSONConstants;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
+@Singleton
 public class SensorDecoder extends AbstractJSONEntityDecoder<Sensor> {
     public SensorDecoder() {
         super(Sensor.class);
     }
 
     @Override
-    public Sensor decode(JsonNode j, MediaType mediaType) {
+    public Sensor decode(JsonNode node, MediaType mediaType) {
         Sensor s = getEntityFactory().createSensor();
-        s.setType(j.path(JSONConstants.TYPE_KEY).textValue());
-        JsonNode properties = j.path(JSONConstants.PROPERTIES_KEY);
+        s.setType(node.path(JSONConstants.TYPE_KEY).textValue());
+        JsonNode properties = node.path(JSONConstants.PROPERTIES_KEY);
         // do not allow a property called id...
         if (!properties.path(JSONConstants.IDENTIFIER_KEY).isMissingNode()) {
             throw new BadRequestException("missing identifier");

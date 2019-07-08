@@ -14,20 +14,25 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.rest.validation;
+package org.envirocar.server.rest;
 
-import java.lang.annotation.*;
+public class UnauthorizedException extends RuntimeException {
+    public UnauthorizedException() {
+    }
 
-/**
- * TODO JavaDoc
- *
- * @author Christian Autermann <autermann@uni-muenster.de>
- */
-@Documented
-@Target({ElementType.METHOD})
-@Retention(RetentionPolicy.RUNTIME)
-public @interface Schema {
-    String request() default "";
+    public UnauthorizedException(String message) {
+        super(message);
+    }
 
-    String response() default "";
+    public UnauthorizedException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public UnauthorizedException(Throwable cause) {
+        super(cause);
+    }
+
+    protected UnauthorizedException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
+    }
 }

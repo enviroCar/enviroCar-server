@@ -29,7 +29,7 @@ import org.envirocar.server.core.exception.ValidationException;
 import org.envirocar.server.core.filter.MeasurementFilter;
 import org.envirocar.server.rest.*;
 import org.envirocar.server.rest.rights.HasAcceptedLatestLegalPolicies;
-import org.envirocar.server.rest.validation.Schema;
+import org.envirocar.server.rest.schema.Schema;
 
 import javax.annotation.Nullable;
 import javax.ws.rs.*;
@@ -55,7 +55,7 @@ public class MeasurementsResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.MEASUREMENTS)
-    @Produces({MediaTypes.MEASUREMENTS, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
+    @Produces({MediaTypes.JSON, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
     public Measurements get(@QueryParam(RESTConstants.BBOX) BoundingBox bbox,
                             @QueryParam(RESTConstants.NEAR_POINT) NearPoint nearPoint) throws BadRequestException {
         //check spatial filter
@@ -75,7 +75,7 @@ public class MeasurementsResource extends AbstractResource {
     @POST
     @HasAcceptedLatestLegalPolicies
     @Schema(request = Schemas.MEASUREMENT_CREATE)
-    @Consumes({MediaTypes.MEASUREMENT_CREATE})
+    @Consumes({MediaTypes.JSON})
     public Response create(Measurement measurement) throws ValidationException {
         Measurement m;
         if (track != null) {

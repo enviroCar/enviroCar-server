@@ -19,6 +19,7 @@ package org.envirocar.server.rest.mapper;
 import org.envirocar.server.rest.rights.LegalPolicyException;
 import org.envirocar.server.rest.util.CustomStatus;
 
+import javax.inject.Singleton;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 
@@ -28,6 +29,7 @@ import javax.ws.rs.ext.Provider;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
+@Singleton
 public class LegalPolicyExceptionMapper extends AbstractExceptionMapper<LegalPolicyException> {
 
     private static final Response.StatusType UNAVAILABLE_FOR_LEGAL_REASONS

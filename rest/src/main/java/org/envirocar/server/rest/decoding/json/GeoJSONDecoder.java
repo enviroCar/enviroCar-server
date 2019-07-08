@@ -16,6 +16,7 @@
  */
 package org.envirocar.server.rest.decoding.json;
 
+import javax.inject.Singleton;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
@@ -33,6 +34,7 @@ import org.envirocar.server.rest.util.GeoJSON;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
+@Singleton
 public class GeoJSONDecoder extends AbstractJSONEntityDecoder<Geometry> {
     private final GeoJSON geoJSON;
 
@@ -43,9 +45,9 @@ public class GeoJSONDecoder extends AbstractJSONEntityDecoder<Geometry> {
     }
 
     @Override
-    public Geometry decode(JsonNode j, MediaType mt) {
+    public Geometry decode(JsonNode node, MediaType mediaType) {
         try {
-            return geoJSON.decode(j);
+            return geoJSON.decode(node);
         } catch (GeometryConverterException ex) {
             throw new BadRequestException(ex);
         }

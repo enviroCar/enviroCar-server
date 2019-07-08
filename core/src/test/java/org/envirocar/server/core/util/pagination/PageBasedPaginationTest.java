@@ -23,7 +23,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
 
-import com.google.common.base.Optional;
+import java.util.Optional;
 
 
 public class PageBasedPaginationTest {
@@ -117,7 +117,7 @@ public class PageBasedPaginationTest {
         return new PageBasedPagination(PAGE_SIZE, page);
     }
 
-    protected static Matcher<Optional<?>> isNotPresent() {
+    protected static Matcher<Optional<Pagination>> isNotPresent() {
         return Matchers.is(Matchers.not(Present.present()));
     }
 

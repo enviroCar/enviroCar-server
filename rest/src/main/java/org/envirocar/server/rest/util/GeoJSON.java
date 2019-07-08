@@ -16,29 +16,17 @@
  */
 package org.envirocar.server.rest.util;
 
-import static org.envirocar.server.core.util.GeoJSONConstants.*;
-
-import org.envirocar.server.core.exception.GeometryConverterException;
-import org.envirocar.server.core.util.GeometryConverter;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.JsonNodeCreator;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Preconditions;
 import com.google.inject.Inject;
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.CoordinateSequence;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryCollection;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.LinearRing;
-import com.vividsolutions.jts.geom.MultiLineString;
-import com.vividsolutions.jts.geom.MultiPoint;
-import com.vividsolutions.jts.geom.MultiPolygon;
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.geom.*;
+import org.envirocar.server.core.exception.GeometryConverterException;
+import org.envirocar.server.core.util.GeometryConverter;
+
+import static org.envirocar.server.core.util.GeoJSONConstants.*;
 
 /**
  * TODO JavaDoc
@@ -47,42 +35,33 @@ import com.vividsolutions.jts.geom.Polygon;
  */
 public class GeoJSON implements GeometryConverter<JsonNode> {
     protected final GeometryFactory geometryFactory;
-    private final JsonNodeFactory jsonFactory;
+    private final JsonNodeCreator jsonFactory;
 
     @Inject
-    public GeoJSON(GeometryFactory geometryFactory, JsonNodeFactory jsonFactory) {
+    public GeoJSON(GeometryFactory geometryFactory, JsonNodeCreator jsonFactory) {
         this.geometryFactory = geometryFactory;
         this.jsonFactory = jsonFactory;
     }
 
-    public JsonNodeFactory getJsonFactory() {
+    private JsonNodeCreator getJsonFactory() {
         return jsonFactory;
     }
 
-    public GeometryFactory getGeometryFactory() {
+    private GeometryFactory getGeometryFactory() {
         return geometryFactory;
     }
 
     @Override
     public ObjectNode encode(Geometry value) throws GeometryConverterException {
-        if (value == null) {
-            return null;
-        } else {
-            return encodeGeometry(value);
-        }
+        return value == null ? null : encodeGeometry(value);
     }
 
     @Override
     public Geometry decode(JsonNode json) throws GeometryConverterException {
-        if (json == null) {
-            return null;
-        } else {
-            return decodeGeometry(json);
-        }
+        return json == null ? null : decodeGeometry(json);
     }
 
-    protected ObjectNode encodeGeometry(Geometry geometry) throws
-            GeometryConverterException {
+    private ObjectNode encodeGeometry(Geometry geometry) throws GeometryConverterException {
         Preconditions.checkNotNull(geometry);
         if (geometry.isEmpty()) {
             return null;
@@ -101,13 +80,12 @@ public class GeoJSON implements GeometryConverter<JsonNode> {
         } else if (geometry instanceof GeometryCollection) {
             return encode((GeometryCollection) geometry);
         } else {
-            throw new GeometryConverterException("unknown geometry type " +
-                                                 geometry.getGeometryType());
+            throw new GeometryConverterException(String.format("unknown geometry type %s", geometry.getGeometryType()));
         }
     }
 
     @Override
-    public ObjectNode encode(Point geometry) throws GeometryConverterException {
+    public ObjectNode encode(Point geometry) {
         Preconditions.checkNotNull(geometry);
         ObjectNode json = getJsonFactory().objectNode();
         json.put(TYPE_KEY, POINT_TYPE);
@@ -116,8 +94,7 @@ public class GeoJSON implements GeometryConverter<JsonNode> {
     }
 
     @Override
-    public ObjectNode encode(LineString geometry) throws
-            GeometryConverterException {
+    public ObjectNode encode(LineString geometry) {
         Preconditions.checkNotNull(geometry);
         ObjectNode json = getJsonFactory().objectNode();
         json.put(TYPE_KEY, LINE_STRING_TYPE);
@@ -126,7 +103,7 @@ public class GeoJSON implements GeometryConverter<JsonNode> {
     }
 
     @Override
-    public ObjectNode encode(Polygon geometry) throws GeometryConverterException {
+    public ObjectNode encode(Polygon geometry) {
         Preconditions.checkNotNull(geometry);
         ObjectNode json = getJsonFactory().objectNode();
         json.put(TYPE_KEY, POLYGON_TYPE);
@@ -135,8 +112,7 @@ public class GeoJSON implements GeometryConverter<JsonNode> {
     }
 
     @Override
-    public ObjectNode encode(MultiPoint geometry) throws
-            GeometryConverterException {
+    public ObjectNode encode(MultiPoint geometry) {
         Preconditions.checkNotNull(geometry);
         ObjectNode json = getJsonFactory().objectNode();
         json.put(TYPE_KEY, MULTI_POINT_TYPE);
@@ -149,8 +125,7 @@ public class GeoJSON implements GeometryConverter<JsonNode> {
     }
 
     @Override
-    public ObjectNode encode(MultiLineString geometry) throws
-            GeometryConverterException {
+    public ObjectNode encode(MultiLineString geometry) {
         Preconditions.checkNotNull(geometry);
         ObjectNode json = getJsonFactory().objectNode();
         json.put(TYPE_KEY, MULTI_LINE_STRING_TYPE);
@@ -163,8 +138,7 @@ public class GeoJSON implements GeometryConverter<JsonNode> {
     }
 
     @Override
-    public ObjectNode encode(MultiPolygon geometry) throws
-            GeometryConverterException {
+    public ObjectNode encode(MultiPolygon geometry) {
         Preconditions.checkNotNull(geometry);
         ObjectNode json = getJsonFactory().objectNode();
         json.put(TYPE_KEY, MULTI_POLYGON_TYPE);
@@ -177,8 +151,7 @@ public class GeoJSON implements GeometryConverter<JsonNode> {
     }
 
     @Override
-    public ObjectNode encode(GeometryCollection geometry) throws
-            GeometryConverterException {
+    public ObjectNode encode(GeometryCollection geometry) throws GeometryConverterException {
         Preconditions.checkNotNull(geometry);
         ObjectNode json = getJsonFactory().objectNode();
         json.put(TYPE_KEY, GEOMETRY_COLLECTION_TYPE);
@@ -190,16 +163,14 @@ public class GeoJSON implements GeometryConverter<JsonNode> {
         return json;
     }
 
-    protected ArrayNode encodeCoordinate(Coordinate coordinate) throws
-            GeometryConverterException {
+    private ArrayNode encodeCoordinate(Coordinate coordinate) {
         ArrayNode list = getJsonFactory().arrayNode();
         list.add(coordinate.x);
         list.add(coordinate.y);
         return list;
     }
 
-    protected ArrayNode encodeCoordinates(CoordinateSequence coordinates) throws
-            GeometryConverterException {
+    private ArrayNode encodeCoordinates(CoordinateSequence coordinates) {
         ArrayNode list = getJsonFactory().arrayNode();
         for (int i = 0; i < coordinates.size(); ++i) {
             ArrayNode coordinate = getJsonFactory().arrayNode();
@@ -210,18 +181,15 @@ public class GeoJSON implements GeometryConverter<JsonNode> {
         return list;
     }
 
-    protected ArrayNode encodeCoordinates(Point geometry) throws
-            GeometryConverterException {
+    private ArrayNode encodeCoordinates(Point geometry) {
         return encodeCoordinate(geometry.getCoordinate());
     }
 
-    protected ArrayNode encodeCoordinates(LineString geometry) throws
-            GeometryConverterException {
+    private ArrayNode encodeCoordinates(LineString geometry) {
         return encodeCoordinates(geometry.getCoordinateSequence());
     }
 
-    protected ArrayNode encodeCoordinates(Polygon geometry) throws
-            GeometryConverterException {
+    private ArrayNode encodeCoordinates(Polygon geometry) {
         ArrayNode list = getJsonFactory().arrayNode();
         list.add(encodeCoordinates(geometry.getExteriorRing()));
         for (int i = 0; i < geometry.getNumInteriorRing(); ++i) {
@@ -230,16 +198,14 @@ public class GeoJSON implements GeometryConverter<JsonNode> {
         return list;
     }
 
-    protected ArrayNode requireCoordinates(JsonNode json) throws
-            GeometryConverterException {
+    private ArrayNode requireCoordinates(JsonNode json) throws GeometryConverterException {
         if (!json.has(COORDINATES_KEY)) {
             throw new GeometryConverterException("missing 'coordinates' field");
         }
         return toList(json.get(COORDINATES_KEY));
     }
 
-    protected Coordinate decodeCoordinate(ArrayNode list) throws
-            GeometryConverterException {
+    private Coordinate decodeCoordinate(ArrayNode list) throws GeometryConverterException {
         if (list.size() != 2) {
             throw new GeometryConverterException("coordinates may only have 2 dimensions");
         }
@@ -251,16 +217,14 @@ public class GeoJSON implements GeometryConverter<JsonNode> {
         return new Coordinate(x.doubleValue(), y.doubleValue());
     }
 
-    protected ArrayNode toList(Object o) throws
-            GeometryConverterException {
+    private ArrayNode toList(Object o) throws GeometryConverterException {
         if (!(o instanceof ArrayNode)) {
             throw new GeometryConverterException("expected list");
         }
         return (ArrayNode) o;
     }
 
-    protected Coordinate[] decodeCoordinates(ArrayNode list) throws
-            GeometryConverterException {
+    private Coordinate[] decodeCoordinates(ArrayNode list) throws GeometryConverterException {
         Coordinate[] coordinates = new Coordinate[list.size()];
         for (int i = 0; i < list.size(); ++i) {
             coordinates[i] = decodeCoordinate(toList(list.get(i)));
@@ -268,8 +232,7 @@ public class GeoJSON implements GeometryConverter<JsonNode> {
         return coordinates;
     }
 
-    protected Polygon decodePolygonCoordinates(ArrayNode coordinates) throws
-            GeometryConverterException {
+    private Polygon decodePolygonCoordinates(ArrayNode coordinates) throws GeometryConverterException {
         if (coordinates.size() < 1) {
             throw new GeometryConverterException("missing polygon shell");
         }
@@ -279,15 +242,14 @@ public class GeoJSON implements GeometryConverter<JsonNode> {
         for (int i = 1; i < coordinates.size(); ++i) {
             holes[i - 1] = getGeometryFactory()
                     .createLinearRing(decodeCoordinates(toList(coordinates
-                    .get(i))));
+                            .get(i))));
         }
         return getGeometryFactory().createPolygon(shell, holes);
     }
 
-    protected Geometry decodeGeometry(Object o) throws
-            GeometryConverterException {
+    private Geometry decodeGeometry(JsonNode o) throws GeometryConverterException {
         if (!(o instanceof ObjectNode)) {
-            throw new GeometryConverterException("Cannot decode " + o);
+            throw new GeometryConverterException(String.format("Cannot decode %s", o));
         }
         ObjectNode json = (ObjectNode) o;
         if (!json.has(TYPE_KEY)) {
@@ -315,28 +277,23 @@ public class GeoJSON implements GeometryConverter<JsonNode> {
     }
 
     @Override
-    public MultiLineString decodeMultiLineString(JsonNode json) throws
-            GeometryConverterException {
+    public MultiLineString decodeMultiLineString(JsonNode json) throws GeometryConverterException {
         ArrayNode coordinates = requireCoordinates(json);
         LineString[] lineStrings = new LineString[coordinates.size()];
         for (int i = 0; i < coordinates.size(); ++i) {
-            Object coords = coordinates.get(i);
-            lineStrings[i] = getGeometryFactory()
-                    .createLineString(decodeCoordinates(toList(coords)));
+            lineStrings[i] = getGeometryFactory().createLineString(decodeCoordinates(toList(coordinates.get(i))));
         }
         return getGeometryFactory().createMultiLineString(lineStrings);
     }
 
     @Override
-    public LineString decodeLineString(JsonNode json) throws
-            GeometryConverterException {
+    public LineString decodeLineString(JsonNode json) throws GeometryConverterException {
         Coordinate[] coordinates = decodeCoordinates(requireCoordinates(json));
         return getGeometryFactory().createLineString(coordinates);
     }
 
     @Override
-    public MultiPoint decodeMultiPoint(JsonNode json) throws
-            GeometryConverterException {
+    public MultiPoint decodeMultiPoint(JsonNode json) throws GeometryConverterException {
         Coordinate[] coordinates = decodeCoordinates(requireCoordinates(json));
         return getGeometryFactory().createMultiPoint(coordinates);
     }
@@ -348,15 +305,13 @@ public class GeoJSON implements GeometryConverter<JsonNode> {
     }
 
     @Override
-    public Polygon decodePolygon(JsonNode json) throws
-            GeometryConverterException {
+    public Polygon decodePolygon(JsonNode json) throws GeometryConverterException {
         ArrayNode coordinates = requireCoordinates(json);
         return decodePolygonCoordinates(coordinates);
     }
 
     @Override
-    public MultiPolygon decodeMultiPolygon(JsonNode json) throws
-            GeometryConverterException {
+    public MultiPolygon decodeMultiPolygon(JsonNode json) throws GeometryConverterException {
         ArrayNode coordinates = requireCoordinates(json);
         Polygon[] polygons = new Polygon[coordinates.size()];
         for (int i = 0; i < coordinates.size(); ++i) {
@@ -366,8 +321,7 @@ public class GeoJSON implements GeometryConverter<JsonNode> {
     }
 
     @Override
-    public GeometryCollection decodeGeometryCollection(JsonNode json) throws
-            GeometryConverterException {
+    public GeometryCollection decodeGeometryCollection(JsonNode json) throws GeometryConverterException {
         if (!json.has(GEOMETRIES_KEY)) {
             throw new GeometryConverterException("missing 'geometries' field");
         }

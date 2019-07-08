@@ -21,7 +21,7 @@ import com.google.inject.assistedinject.Assisted;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
-import org.envirocar.server.rest.validation.Schema;
+import org.envirocar.server.rest.schema.Schema;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -47,7 +47,7 @@ public class TrackResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.TRACK)
-    @Produces({MediaTypes.TRACK, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT, MediaTypes.TEXT_CSV, MediaTypes.APPLICATION_ZIPPED_SHP})
+    @Produces({MediaTypes.JSON, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT, MediaTypes.TEXT_CSV, MediaTypes.APPLICATION_ZIPPED_SHP})
     public Track get() {
         return track;
     }

@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
  * @author Maurin Radtke <Maurin.Radtke@uni-muenster.de>
  */
 public class TrackSummaries {
@@ -29,10 +28,6 @@ public class TrackSummaries {
 
     public TrackSummaries() {
         this.tracklist = new ArrayList<>();
-    }
-
-    public TrackSummaries getTrackSummaries() {
-        return this;
     }
 
     public List<TrackSummary> getTrackSummaryList() {
@@ -48,7 +43,6 @@ public class TrackSummaries {
     }
 
     public boolean hasTrackSummaries() {
-
         return !this.tracklist.isEmpty();
     }
 

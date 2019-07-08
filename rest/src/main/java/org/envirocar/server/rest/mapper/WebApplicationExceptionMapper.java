@@ -19,6 +19,7 @@ package org.envirocar.server.rest.mapper;
 import com.sun.jersey.core.spi.factory.ResponseImpl;
 import org.envirocar.server.rest.util.CustomStatus;
 
+import javax.inject.Singleton;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -31,6 +32,7 @@ import javax.ws.rs.ext.Provider;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
+@Singleton
 public class WebApplicationExceptionMapper extends AbstractExceptionMapper<WebApplicationException> {
 
     private static final String UNKNOWN_REASON_PHRASE = "Unknown";

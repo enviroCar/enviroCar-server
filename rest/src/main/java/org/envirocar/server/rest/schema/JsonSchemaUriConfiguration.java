@@ -14,25 +14,24 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.rest.mapper;
+package org.envirocar.server.rest.schema;
 
-public class InternalServerError extends RuntimeException {
-    public InternalServerError() {
-    }
+import java.net.URI;
 
-    public InternalServerError(String message) {
-        super(message);
-    }
+public interface JsonSchemaUriConfiguration {
+    /**
+     * Convert the schema {@link URI} to it's external form.
+     *
+     * @param uri The internal URI.
+     * @return The external URI.
+     */
+    URI toExternalURI(URI uri);
 
-    public InternalServerError(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public InternalServerError(Throwable cause) {
-        super(cause);
-    }
-
-    protected InternalServerError(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
-    }
+    /**
+     * Convert the schema {@link URI} to it's internal URI.
+     *
+     * @param uri The internal URI.
+     * @return The resource URI.
+     */
+    URI toInternalURI(URI uri);
 }

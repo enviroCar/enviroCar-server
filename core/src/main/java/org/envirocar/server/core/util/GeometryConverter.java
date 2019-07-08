@@ -16,16 +16,8 @@
  */
 package org.envirocar.server.core.util;
 
+import com.vividsolutions.jts.geom.*;
 import org.envirocar.server.core.exception.GeometryConverterException;
-
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryCollection;
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.MultiLineString;
-import com.vividsolutions.jts.geom.MultiPoint;
-import com.vividsolutions.jts.geom.MultiPolygon;
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * TODO JavaDoc
@@ -35,8 +27,7 @@ import com.vividsolutions.jts.geom.Polygon;
 public interface GeometryConverter<T> {
     Geometry decode(T t) throws GeometryConverterException;
 
-    GeometryCollection decodeGeometryCollection(T t) throws
-            GeometryConverterException;
+    GeometryCollection decodeGeometryCollection(T t) throws GeometryConverterException;
 
     Point decodePoint(T t) throws GeometryConverterException;
 
@@ -46,8 +37,7 @@ public interface GeometryConverter<T> {
 
     MultiPoint decodeMultiPoint(T t) throws GeometryConverterException;
 
-    MultiLineString decodeMultiLineString(T t) throws
-            GeometryConverterException;
+    MultiLineString decodeMultiLineString(T t) throws GeometryConverterException;
 
     MultiPolygon decodeMultiPolygon(T t) throws GeometryConverterException;
 

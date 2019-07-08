@@ -16,6 +16,7 @@
  */
 package org.envirocar.server.rest.decoding.json;
 
+import javax.inject.Singleton;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
@@ -37,6 +38,7 @@ import com.google.inject.Inject;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
+@Singleton
 public class TrackDecoder extends AbstractJSONEntityDecoder<Track> {
     private final JSONEntityDecoder<Measurement> measurementDecoder;
     private final SensorDao sensorDao;
@@ -53,11 +55,11 @@ public class TrackDecoder extends AbstractJSONEntityDecoder<Track> {
     }
 
     @Override
-    public Track decode(JsonNode j, MediaType mediaType) {
+    public Track decode(JsonNode node, MediaType mediaType) {
         Sensor trackSensor = null;
         Track track = getEntityFactory().createTrack();
-        if (j.has(GeoJSONConstants.PROPERTIES_KEY)) {
-            JsonNode p = j.path(GeoJSONConstants.PROPERTIES_KEY);
+        if (node.has(GeoJSONConstants.PROPERTIES_KEY)) {
+            JsonNode p = node.path(GeoJSONConstants.PROPERTIES_KEY);
             if (p.has(JSONConstants.SENSOR_KEY)) {
                 trackSensor = sensorDao.getByIdentifier(p.get(JSONConstants.SENSOR_KEY).asText());
                 track.setSensor(trackSensor);
@@ -70,8 +72,8 @@ public class TrackDecoder extends AbstractJSONEntityDecoder<Track> {
             track.setLength(p.path(JSONConstants.LENGTH_KEY).asDouble());
         }
 
-        if (!j.path(GeoJSONConstants.FEATURES_KEY).isMissingNode()) {
-            JsonNode ms = j.path(GeoJSONConstants.FEATURES_KEY);
+        if (!node.path(GeoJSONConstants.FEATURES_KEY).isMissingNode()) {
+            JsonNode ms = node.path(GeoJSONConstants.FEATURES_KEY);
             TrackWithMeasurments twm = new TrackWithMeasurments(track);
             
             ContextKnowledge knowledge = contextKnowledgeFactory.create();

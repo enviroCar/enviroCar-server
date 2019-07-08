@@ -17,13 +17,14 @@
 package org.envirocar.server.rest.encoding.json;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.common.collect.Maps;
 import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.rest.JSONConstants;
 import org.envirocar.server.rest.MediaTypes;
 
+import javax.inject.Singleton;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -32,30 +33,30 @@ import java.util.Map;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
+@Singleton
 public class SensorJSONEncoder extends AbstractJSONEntityEncoder<Sensor> {
     public SensorJSONEncoder() {
         super(Sensor.class);
     }
 
     @Override
-    public ObjectNode encodeJSON(Sensor t,
-                                 MediaType mediaType) {
+    public ObjectNode encodeJSON(Sensor entity, MediaType mediaType) {
         ObjectNode sensor = getJsonFactory().objectNode();
-        if (t.hasType()) {
-            sensor.put(JSONConstants.TYPE_KEY, t.getType());
+        if (entity.hasType()) {
+            sensor.put(JSONConstants.TYPE_KEY, entity.getType());
         }
-        Map<String, Object> properties = Maps.newHashMap();
+        Map<String, Object> properties = new HashMap<>();
 
-        if (t.hasProperties()) {
-            properties.putAll(t.getProperties());
+        if (entity.hasProperties()) {
+            properties.putAll(entity.getProperties());
         }
-        properties.put(JSONConstants.IDENTIFIER_KEY, t.getIdentifier());
+        properties.put(JSONConstants.IDENTIFIER_KEY, entity.getIdentifier());
         if (mediaType.equals(MediaTypes.SENSOR_TYPE)) {
-            if (t.hasCreationTime()) {
-                properties.put(JSONConstants.CREATED_KEY, getDateTimeFormat().print(t.getCreationTime()));
+            if (entity.hasCreationTime()) {
+                properties.put(JSONConstants.CREATED_KEY, getDateTimeFormat().print(entity.getCreationTime()));
             }
-            if (t.hasModificationTime()) {
-                properties.put(JSONConstants.MODIFIED_KEY, getDateTimeFormat().print(t.getModificationTime()));
+            if (entity.hasModificationTime()) {
+                properties.put(JSONConstants.MODIFIED_KEY, getDateTimeFormat().print(entity.getModificationTime()));
             }
         }
 

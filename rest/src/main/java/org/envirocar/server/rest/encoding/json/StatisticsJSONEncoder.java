@@ -24,6 +24,7 @@ import org.envirocar.server.core.statistics.Statistics;
 import org.envirocar.server.rest.JSONConstants;
 import org.envirocar.server.rest.encoding.JSONEntityEncoder;
 
+import javax.inject.Singleton;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
@@ -33,6 +34,7 @@ import javax.ws.rs.ext.Provider;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
+@Singleton
 public class StatisticsJSONEncoder extends AbstractJSONEntityEncoder<Statistics> {
     private final JSONEntityEncoder<Statistic> statisticEncoder;
 
@@ -43,11 +45,11 @@ public class StatisticsJSONEncoder extends AbstractJSONEntityEncoder<Statistics>
     }
 
     @Override
-    public ObjectNode encodeJSON(Statistics t, MediaType mt) {
+    public ObjectNode encodeJSON(Statistics entity, MediaType mediaType) {
         ObjectNode root = getJsonFactory().objectNode();
         ArrayNode statistics = root.putArray(JSONConstants.STATISTICS_KEY);
-        for (Statistic s : t) {
-            statistics.add(statisticEncoder.encodeJSON(s, mt));
+        for (Statistic statistic : entity) {
+            statistics.add(statisticEncoder.encodeJSON(statistic, mediaType));
         }
         return root;
     }

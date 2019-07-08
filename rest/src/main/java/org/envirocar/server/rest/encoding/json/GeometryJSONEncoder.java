@@ -20,9 +20,10 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 import com.vividsolutions.jts.geom.Geometry;
 import org.envirocar.server.core.exception.GeometryConverterException;
-import org.envirocar.server.rest.mapper.InternalServerError;
+import org.envirocar.server.rest.InternalServerError;
 import org.envirocar.server.rest.util.GeoJSON;
 
+import javax.inject.Singleton;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
@@ -33,6 +34,7 @@ import javax.ws.rs.ext.Provider;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
+@Singleton
 @Consumes(MediaType.APPLICATION_JSON)
 public class GeometryJSONEncoder extends AbstractJSONEntityEncoder<Geometry> {
     private final GeoJSON geoJSON;
@@ -44,9 +46,9 @@ public class GeometryJSONEncoder extends AbstractJSONEntityEncoder<Geometry> {
     }
 
     @Override
-    public ObjectNode encodeJSON(Geometry t, MediaType mt) {
+    public ObjectNode encodeJSON(Geometry entity, MediaType mediaType) {
         try {
-            return geoJSON.encode(t);
+            return geoJSON.encode(entity);
         } catch (GeometryConverterException ex) {
             throw new InternalServerError(ex);
         }

@@ -23,7 +23,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
 
-import com.google.common.base.Optional;
+import java.util.Optional;
 
 public class RangeBasedPaginationTest {
 
@@ -85,11 +85,11 @@ public class RangeBasedPaginationTest {
         return new RangeBasedPagination(begin, end);
     }
 
-    protected static Matcher<Optional<?>> isNotPresent() {
+    protected static Matcher<Optional<Pagination>> isNotPresent() {
         return Matchers.is(Matchers.not(Present.present()));
     }
 
-    protected static Matcher<Optional<Pagination>> isPresentAndRange(int begin, int end) {
+    protected static Matcher<java.util.Optional<Pagination>> isPresentAndRange(int begin, int end) {
         return Matchers.is(Present.presentAnd(Matchers.is(range(begin, end))));
     }
 }

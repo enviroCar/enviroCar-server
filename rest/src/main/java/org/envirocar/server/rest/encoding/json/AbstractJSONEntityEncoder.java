@@ -17,12 +17,9 @@
 package org.envirocar.server.rest.encoding.json;
 
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 import org.envirocar.server.rest.encoding.JSONEntityEncoder;
 import org.joda.time.format.DateTimeFormatter;
-
-import javax.ws.rs.core.MediaType;
 
 /**
  * TODO JavaDoc
@@ -57,8 +54,4 @@ public abstract class AbstractJSONEntityEncoder<T>
         this.dateTimeFormat = dateTimeFormat;
     }
 
-    @Override
-    public ObjectNode encodeJSON(T t, MediaType mt) {
-        return encodeJSON(t, mt);
-    }
 }

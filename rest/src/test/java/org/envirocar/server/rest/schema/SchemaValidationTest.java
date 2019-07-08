@@ -16,9 +16,9 @@
  */
 package org.envirocar.server.rest.schema;
 
-import com.github.fge.jackson.JsonLoader;
 import com.github.fge.jsonschema.SchemaVersion;
-import org.envirocar.server.rest.guice.JSONSchemaFactoryProvider;
+import org.envirocar.server.rest.GuiceRunner;
+import org.envirocar.server.rest.guice.JsonSchemaModule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
@@ -26,6 +26,7 @@ import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.net.URI;
 import java.util.Set;
 
 /**
@@ -37,8 +38,10 @@ import java.util.Set;
 public class SchemaValidationTest {
     private static final String SCHEMA_URI = SchemaVersion.DRAFTV4.getLocation().toASCIIString();
     @Inject
-    @Named(JSONSchemaFactoryProvider.SCHEMAS)
+    @Named(JsonSchemaModule.SCHEMAS)
     private Set<String> schemas;
+    @Inject
+    private JsonSchemaUriLoader loader;
     @Rule
     public final ValidationRule validation = new ValidationRule();
     @Rule
@@ -46,6 +49,9 @@ public class SchemaValidationTest {
 
     @Test
     public void validate() {
-        schemas.forEach(schema -> errors.checkThat(errors.checkSucceeds(() -> JsonLoader.fromResource(schema)), validation.validInstanceOf(SCHEMA_URI)));
+        schemas.stream().map(URI::create).forEach(schema ->
+                errors.checkThat(
+                        errors.checkSucceeds(() -> loader.load(schema)),
+                        validation.validInstanceOf(SCHEMA_URI)));
     }
 }

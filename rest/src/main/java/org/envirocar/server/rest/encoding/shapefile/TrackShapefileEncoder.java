@@ -23,6 +23,7 @@ import org.envirocar.server.core.DataService;
 import org.envirocar.server.core.entities.*;
 import org.envirocar.server.core.exception.TrackTooLongException;
 import org.envirocar.server.core.filter.MeasurementFilter;
+import org.envirocar.server.rest.InternalServerError;
 import org.geotools.data.DataStoreFactorySpi;
 import org.geotools.data.DefaultTransaction;
 import org.geotools.data.FeatureStore;
@@ -44,6 +45,7 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Singleton;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 import java.io.File;
@@ -58,24 +60,22 @@ import java.util.*;
  * @author Benjamin Pross
  */
 @Provider
+@Singleton
 public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder<Track> {
 
-    private static final Logger log = LoggerFactory
-            .getLogger(TrackShapefileEncoder.class);
+    private static final Logger log = LoggerFactory.getLogger(TrackShapefileEncoder.class);
 
     private SimpleFeatureTypeBuilder typeBuilder;
     private final DataService dataService;
     private CoordinateReferenceSystem crs_wgs84;
-    public static int shapeFileExportThreshold = 2;
+    public static final int shapeFileExportThreshold;
     private static final String shapefileExportThresholdPropertyName = "shapefile.export.measurement.threshold";
     private Track track;
     private static final String PROPERTIES = "/export.properties";
     private static final String DEFAULT_PROPERTIES = "/export.default.properties";
 
-    @Inject
-    public TrackShapefileEncoder(DataService dataService) {
-        super(Track.class);
-        this.dataService = dataService;
+
+    static {
         Properties properties = new Properties();
         InputStream in = null;
         try {
@@ -101,7 +101,15 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder<Track> 
         String property = properties.getProperty(shapefileExportThresholdPropertyName);
         if (property != null) {
             shapeFileExportThreshold = Integer.parseInt(property);
+        } else {
+            shapeFileExportThreshold = 1000;
         }
+    }
+
+    @Inject
+    public TrackShapefileEncoder(DataService dataService) {
+        super(Track.class);
+        this.dataService = dataService;
     }
 
     @Override
@@ -111,8 +119,9 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder<Track> 
         try {
             Measurements measurements = dataService.getMeasurements(new MeasurementFilter(t));
             zippedShapeFile = createZippedShapefile(createShapeFile(createFeatureCollection(measurements)));
-        } catch (IOException e) {
-            log.debug(e.getMessage());
+        } catch (
+                IOException e) {
+            throw new InternalServerError(e);
         }
 
         return zippedShapeFile;
@@ -298,7 +307,6 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder<Track> 
     private CoordinateReferenceSystem getCRS_WGS84() {
 
         if (crs_wgs84 == null) {
-
             try {
                 crs_wgs84 = CRS.decode("EPSG:4326");
             } catch (FactoryException e) {

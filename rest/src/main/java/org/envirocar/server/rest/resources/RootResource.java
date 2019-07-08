@@ -23,7 +23,7 @@ import com.google.inject.Inject;
 import org.envirocar.server.rest.JSONConstants;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
-import org.envirocar.server.rest.validation.Schema;
+import org.envirocar.server.rest.schema.Schema;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -56,7 +56,7 @@ public class RootResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.ROOT)
-    @Produces({MediaTypes.ROOT})
+    @Produces({MediaTypes.JSON})
     public JsonNode get() {
         ObjectNode root = factory.objectNode();
         root.put(JSONConstants.TRACKS_KEY, getUriBuilder().path(TRACKS).build().toString());
@@ -105,7 +105,7 @@ public class RootResource extends AbstractResource {
     }
 
     @Path(SCHEMA)
-    public JSONSchemaResource schemas() {
+    public JsonSchemaResource schemas() {
         return getResourceFactory().createSchemaResource();
     }
 

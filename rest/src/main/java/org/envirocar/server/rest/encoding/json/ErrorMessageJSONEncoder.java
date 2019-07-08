@@ -22,10 +22,12 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.envirocar.server.rest.JSONConstants;
 import org.envirocar.server.rest.util.ErrorMessage;
 
+import javax.inject.Singleton;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 import java.util.*;
 
+@Singleton
 @Provider
 public class ErrorMessageJSONEncoder extends AbstractJSONEntityEncoder<ErrorMessage> {
 
@@ -34,18 +36,18 @@ public class ErrorMessageJSONEncoder extends AbstractJSONEntityEncoder<ErrorMess
     }
 
     @Override
-    public ObjectNode encodeJSON(ErrorMessage errorMessage, MediaType mt) {
+    public ObjectNode encodeJSON(ErrorMessage entity, MediaType mediaType) {
         ObjectNode node = getJsonFactory().objectNode();
-        node.put(JSONConstants.STATUS_CODE, errorMessage.getStatus().getStatusCode());
-        node.put(JSONConstants.REASON_PHRASE, errorMessage.getStatus().getReasonPhrase());
-        if (errorMessage.getMessage() != null) {
-            node.put(JSONConstants.MESSAGE, errorMessage.getMessage());
+        node.put(JSONConstants.STATUS_CODE, entity.getStatus().getStatusCode());
+        node.put(JSONConstants.REASON_PHRASE, entity.getStatus().getReasonPhrase());
+        if (entity.getMessage() != null) {
+            node.put(JSONConstants.MESSAGE, entity.getMessage());
         }
-        if (errorMessage.getDetails() != null) {
-            node.set(JSONConstants.DETAILS, errorMessage.getDetails());
+        if (entity.getDetails() != null) {
+            node.set(JSONConstants.DETAILS, entity.getDetails());
         }
-        if (errorMessage.getThrowable() != null) {
-            node.set(JSONConstants.STACK_TRACE, encodeStackTrace(errorMessage.getThrowable()));
+        if (entity.getThrowable() != null) {
+            node.set(JSONConstants.STACK_TRACE, encodeStackTrace(entity.getThrowable()));
         }
         return node;
     }

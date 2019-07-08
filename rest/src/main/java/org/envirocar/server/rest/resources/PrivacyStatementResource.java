@@ -21,7 +21,7 @@ import com.google.inject.assistedinject.Assisted;
 import org.envirocar.server.core.entities.PrivacyStatement;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
-import org.envirocar.server.rest.validation.Schema;
+import org.envirocar.server.rest.schema.Schema;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Produces;
@@ -36,7 +36,7 @@ public class PrivacyStatementResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.PRIVACY_STATEMENT)
-    @Produces({MediaTypes.PRIVACY_STATEMENT})
+    @Produces({MediaTypes.JSON})
     public PrivacyStatement get() {
         return privacyStatement;
     }

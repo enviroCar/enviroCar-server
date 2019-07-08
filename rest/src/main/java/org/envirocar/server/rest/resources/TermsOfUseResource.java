@@ -22,7 +22,7 @@ import org.envirocar.server.core.exception.BadRequestException;
 import org.envirocar.server.core.exception.ResourceNotFoundException;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
-import org.envirocar.server.rest.validation.Schema;
+import org.envirocar.server.rest.schema.Schema;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -35,7 +35,7 @@ public class TermsOfUseResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.TERMS_OF_USE)
-    @Produces({MediaTypes.TERMS_OF_USE})
+    @Produces({MediaTypes.JSON})
     public TermsOfUse get() throws BadRequestException {
         return getDataService().getTermsOfUse(getPagination());
     }

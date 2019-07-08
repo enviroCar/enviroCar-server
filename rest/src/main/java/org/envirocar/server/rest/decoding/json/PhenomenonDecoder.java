@@ -16,6 +16,7 @@
  */
 package org.envirocar.server.rest.decoding.json;
 
+import javax.inject.Singleton;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
@@ -30,16 +31,17 @@ import org.envirocar.server.rest.JSONConstants;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
+@Singleton
 public class PhenomenonDecoder extends AbstractJSONEntityDecoder<Phenomenon> {
     public PhenomenonDecoder() {
         super(Phenomenon.class);
     }
 
     @Override
-    public Phenomenon decode(JsonNode j, MediaType mediaType) {
+    public Phenomenon decode(JsonNode node, MediaType mediaType) {
         Phenomenon p = getEntityFactory().createPhenomenon();
-        p.setName(j.path(JSONConstants.NAME_KEY).textValue());
-        p.setUnit(j.path(JSONConstants.UNIT_KEY).textValue());
+        p.setName(node.path(JSONConstants.NAME_KEY).textValue());
+        p.setUnit(node.path(JSONConstants.UNIT_KEY).textValue());
         return p;
     }
 }

@@ -25,6 +25,7 @@ import org.envirocar.server.core.entities.TermsOfUseInstance;
 import org.envirocar.server.rest.JSONConstants;
 import org.envirocar.server.rest.encoding.JSONEntityEncoder;
 
+import javax.inject.Singleton;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
@@ -34,23 +35,23 @@ import javax.ws.rs.ext.Provider;
  * @author Matthes Rieke
  */
 @Provider
+@Singleton
 public class TermsOfUseJSONEncoder extends AbstractJSONEntityEncoder<TermsOfUse> {
     private final JSONEntityEncoder<TermsOfUseInstance> termsOfUseEncoder;
 
     @Inject
-    public TermsOfUseJSONEncoder(
-            JSONEntityEncoder<TermsOfUseInstance> phenomenonEncoder) {
+    public TermsOfUseJSONEncoder(JSONEntityEncoder<TermsOfUseInstance> phenomenonEncoder) {
         super(TermsOfUse.class);
         this.termsOfUseEncoder = phenomenonEncoder;
     }
 
     @Override
-    public ObjectNode encodeJSON(TermsOfUse t, MediaType mediaType) {
+    public ObjectNode encodeJSON(TermsOfUse entity, MediaType mediaType) {
         ObjectNode root = getJsonFactory().objectNode();
         ArrayNode termsOfUse = root.putArray(JSONConstants.TERMS_OF_USE_KEY);
 
-        for (TermsOfUseInstance u : t) {
-            termsOfUse.add(termsOfUseEncoder.encodeJSON(u, mediaType));
+        for (TermsOfUseInstance termsOfUseInstance : entity) {
+            termsOfUse.add(termsOfUseEncoder.encodeJSON(termsOfUseInstance, mediaType));
         }
         return root;
     }

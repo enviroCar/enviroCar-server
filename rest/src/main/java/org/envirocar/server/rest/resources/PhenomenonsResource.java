@@ -23,7 +23,7 @@ import org.envirocar.server.core.exception.PhenomenonNotFoundException;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.rights.HasAcceptedLatestLegalPolicies;
-import org.envirocar.server.rest.validation.Schema;
+import org.envirocar.server.rest.schema.Schema;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
@@ -40,7 +40,7 @@ public class PhenomenonsResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.PHENOMENONS)
-    @Produces({MediaTypes.PHENOMENONS, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
+    @Produces({MediaTypes.JSON, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
     public Phenomenons get() throws BadRequestException {
         return getDataService().getPhenomenons(getPagination());
     }
@@ -48,7 +48,7 @@ public class PhenomenonsResource extends AbstractResource {
     @POST
     @HasAcceptedLatestLegalPolicies
     @Schema(request = Schemas.PHENOMENON_CREATE)
-    @Consumes({MediaTypes.PHENOMENON_CREATE})
+    @Consumes({MediaTypes.JSON})
     public Response create(Phenomenon phenomenon) {
         return Response.created(getUriInfo().getAbsolutePathBuilder()
                 .path(getDataService().createPhenomenon(phenomenon)

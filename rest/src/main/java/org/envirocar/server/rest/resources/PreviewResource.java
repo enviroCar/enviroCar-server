@@ -21,8 +21,8 @@ import com.google.inject.assistedinject.Assisted;
 import org.envirocar.server.core.entities.Measurements;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.filter.MeasurementFilter;
+import org.envirocar.server.rest.InternalServerError;
 import org.envirocar.server.rest.MediaTypes;
-import org.envirocar.server.rest.mapper.InternalServerError;
 import org.envirocar.server.rest.util.OSMTileRenderer;
 import org.envirocar.server.rest.util.TileRenderer;
 

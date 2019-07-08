@@ -35,54 +35,39 @@ import org.envirocar.server.rest.util.ErrorMessage;
 public class JerseyJSONEncoderModule extends AbstractModule {
     @Override
     protected void configure() {
-        bind(JsonNodeMessageBodyWriter.class).in(Scopes.SINGLETON);
-        bind(SensorJSONEncoder.class).in(Scopes.SINGLETON);
-        bind(new TypeLiteral<JSONEntityEncoder<Sensor>>() {
-        }).to(SensorJSONEncoder.class);
-        bind(SensorsJSONEncoder.class).in(Scopes.SINGLETON);
-        bind(new TypeLiteral<JSONEntityEncoder<Sensors>>() {
-        }).to(SensorsJSONEncoder.class);
-        bind(TrackJSONEncoder.class).in(Scopes.SINGLETON);
-        bind(new TypeLiteral<JSONEntityEncoder<Track>>() {
-        }).to(TrackJSONEncoder.class);
-        bind(TracksJSONEncoder.class).in(Scopes.SINGLETON);
-        bind(new TypeLiteral<JSONEntityEncoder<Tracks>>() {
-        }).to(TracksJSONEncoder.class);
-        bind(MeasurementJSONEncoder.class).in(Scopes.SINGLETON);
-        bind(new TypeLiteral<JSONEntityEncoder<Measurement>>() {
-        }).to(MeasurementJSONEncoder.class);
-        bind(MeasurementsJSONEncoder.class).in(Scopes.SINGLETON);
-        bind(new TypeLiteral<JSONEntityEncoder<Measurements>>() {
-        }).to(MeasurementsJSONEncoder.class);
-        bind(PhenomenonJSONEncoder.class).in(Scopes.SINGLETON);
-        bind(new TypeLiteral<JSONEntityEncoder<Phenomenon>>() {
-        }).to(PhenomenonJSONEncoder.class);
-        bind(PhenomenonsJSONEncoder.class).in(Scopes.SINGLETON);
-        bind(new TypeLiteral<JSONEntityEncoder<Phenomenons>>() {
-        }).to(PhenomenonsJSONEncoder.class);
-        bind(StatisticJSONEncoder.class).in(Scopes.SINGLETON);
-        bind(new TypeLiteral<JSONEntityEncoder<Statistic>>() {
-        }).to(StatisticJSONEncoder.class);
-        bind(StatisticsJSONEncoder.class).in(Scopes.SINGLETON);
-        bind(new TypeLiteral<JSONEntityEncoder<Statistics>>() {
-        }).to(StatisticsJSONEncoder.class);
-        bind(GeometryJSONEncoder.class).in(Scopes.SINGLETON);
-        bind(new TypeLiteral<JSONEntityEncoder<Geometry>>() {
-        }).to(GeometryJSONEncoder.class);
-        bind(TermsOfUseInstanceJSONEncoder.class).in(Scopes.SINGLETON);
-        bind(new TypeLiteral<JSONEntityEncoder<TermsOfUseInstance>>() {
-        }).to(TermsOfUseInstanceJSONEncoder.class);
-        bind(TermsOfUseJSONEncoder.class).in(Scopes.SINGLETON);
-        bind(new TypeLiteral<JSONEntityEncoder<TermsOfUse>>() {
-        }).to(TermsOfUseJSONEncoder.class);
-        bind(PrivacyStatementJSONEncoder.class).in(Scopes.SINGLETON);
-        bind(new TypeLiteral<JSONEntityEncoder<PrivacyStatement>>() {
-        }).to(PrivacyStatementJSONEncoder.class);
-        bind(PrivacyStatementsJSONEncoder.class).in(Scopes.SINGLETON);
-        bind(new TypeLiteral<JSONEntityEncoder<PrivacyStatements>>() {
-        }).to(PrivacyStatementsJSONEncoder.class);
-        bind(ErrorMessageJSONEncoder.class).in(Scopes.SINGLETON);
-        bind(new TypeLiteral<JSONEntityEncoder<ErrorMessage>>() {
-        }).to(ErrorMessageJSONEncoder.class);
+        bind(JsonNodeMessageBodyWriter.class);
+
+        bind(new TypeLiteral<JSONEntityEncoder<Sensor>>() {}).to(SensorJSONEncoder.class);
+        bind(new TypeLiteral<JSONEntityEncoder<Sensors>>() {}).to(SensorsJSONEncoder.class);
+        bind(new TypeLiteral<JSONEntityEncoder<Track>>() {}).to(TrackJSONEncoder.class);
+        bind(new TypeLiteral<JSONEntityEncoder<Tracks>>() {}).to(TracksJSONEncoder.class);
+        bind(new TypeLiteral<JSONEntityEncoder<Measurement>>() {}).to(MeasurementJSONEncoder.class);
+        bind(new TypeLiteral<JSONEntityEncoder<Measurements>>() {}).to(MeasurementsJSONEncoder.class);
+        bind(new TypeLiteral<JSONEntityEncoder<Phenomenon>>() {}).to(PhenomenonJSONEncoder.class);
+        bind(new TypeLiteral<JSONEntityEncoder<Phenomenons>>() {}).to(PhenomenonsJSONEncoder.class);
+        bind(new TypeLiteral<JSONEntityEncoder<Statistic>>() {}).to(StatisticJSONEncoder.class);
+        bind(new TypeLiteral<JSONEntityEncoder<Statistics>>() {}).to(StatisticsJSONEncoder.class);
+        bind(new TypeLiteral<JSONEntityEncoder<Geometry>>() {}).to(GeometryJSONEncoder.class);
+        bind(new TypeLiteral<JSONEntityEncoder<TermsOfUseInstance>>() {}).to(TermsOfUseInstanceJSONEncoder.class);
+        bind(new TypeLiteral<JSONEntityEncoder<TermsOfUse>>() {}).to(TermsOfUseJSONEncoder.class);
+        bind(new TypeLiteral<JSONEntityEncoder<PrivacyStatement>>() {}).to(PrivacyStatementJSONEncoder.class);
+        bind(new TypeLiteral<JSONEntityEncoder<PrivacyStatements>>() {}).to(PrivacyStatementsJSONEncoder.class);
+        bind(new TypeLiteral<JSONEntityEncoder<ErrorMessage>>() {}).to(ErrorMessageJSONEncoder.class).in(Scopes.SINGLETON);
+        bind(SensorJSONEncoder.class);
+        bind(SensorsJSONEncoder.class);
+        bind(TrackJSONEncoder.class);
+        bind(TracksJSONEncoder.class);
+        bind(MeasurementJSONEncoder.class);
+        bind(MeasurementsJSONEncoder.class);
+        bind(PhenomenonJSONEncoder.class);
+        bind(PhenomenonsJSONEncoder.class);
+        bind(StatisticJSONEncoder.class);
+        bind(StatisticsJSONEncoder.class);
+        bind(GeometryJSONEncoder.class);
+        bind(TermsOfUseInstanceJSONEncoder.class);
+        bind(TermsOfUseJSONEncoder.class);
+        bind(PrivacyStatementJSONEncoder.class);
+        bind(PrivacyStatementsJSONEncoder.class);
+        bind(ErrorMessageJSONEncoder.class);
     }
 }

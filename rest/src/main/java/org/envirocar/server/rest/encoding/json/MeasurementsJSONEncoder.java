@@ -25,6 +25,7 @@ import org.envirocar.server.core.entities.Measurements;
 import org.envirocar.server.core.util.GeoJSONConstants;
 import org.envirocar.server.rest.encoding.JSONEntityEncoder;
 
+import javax.inject.Singleton;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
@@ -35,28 +36,27 @@ import javax.ws.rs.ext.Provider;
  * @author Arne de Wall <a.dewall@52north.org>
  */
 @Provider
+@Singleton
 public class MeasurementsJSONEncoder extends AbstractJSONEntityEncoder<Measurements> {
     private final JSONEntityEncoder<Measurement> measurementEncoder;
     private final JsonNodeFactory factory;
 
     @Inject
-    public MeasurementsJSONEncoder(JsonNodeFactory factory,
-                                   JSONEntityEncoder<Measurement> measurementEncoder) {
+    public MeasurementsJSONEncoder(JsonNodeFactory factory, JSONEntityEncoder<Measurement> measurementEncoder) {
         super(Measurements.class);
         this.measurementEncoder = measurementEncoder;
         this.factory = factory;
     }
 
     @Override
-    public ObjectNode encodeJSON(Measurements t,
-                                 MediaType mediaType) {
-        ObjectNode on = factory.objectNode();
-        ArrayNode an = on.putArray(GeoJSONConstants.FEATURES_KEY);
-        for (Measurement measurement : t) {
-            an.add(measurementEncoder.encodeJSON(measurement, mediaType));
+    public ObjectNode encodeJSON(Measurements entity, MediaType mediaType) {
+        ObjectNode root = factory.objectNode();
+        root.put(GeoJSONConstants.TYPE_KEY, GeoJSONConstants.FEATURE_COLLECTION_TYPE);
+
+        ArrayNode features = root.putArray(GeoJSONConstants.FEATURES_KEY);
+        for (Measurement measurement : entity) {
+            features.add(measurementEncoder.encodeJSON(measurement, mediaType));
         }
-        on.put(GeoJSONConstants.TYPE_KEY,
-                GeoJSONConstants.FEATURE_COLLECTION_TYPE);
-        return on;
+        return root;
     }
 }

@@ -18,7 +18,8 @@ package org.envirocar.server.core.util.pagination;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-import com.google.common.base.Optional;
+
+import java.util.Optional;
 
 public class PageBasedPagination implements Pagination {
 	private final long size;
@@ -60,40 +61,40 @@ public class PageBasedPagination implements Pagination {
     @Override
     public Optional<Pagination> first(long elements) {
         if (page == 1 || page > lastPage(elements)) {
-            return Optional.absent();
+            return java.util.Optional.empty();
         } else {
-            return Optional.of(new PageBasedPagination(size, 0));
+            return java.util.Optional.of(new PageBasedPagination(size, 0));
         }
     }
 
     @Override
-    public Optional<Pagination> previous(long elements) {
+    public java.util.Optional<Pagination> previous(long elements) {
         if (page <= 2 || page > lastPage(elements)) {
-            return Optional.absent();
+            return java.util.Optional.empty();
         } else {
-            return Optional.of(new PageBasedPagination(size, page -
+            return java.util.Optional.of(new PageBasedPagination(size, page -
                                                                          1));
         }
     }
 
     @Override
-    public Optional<Pagination> next(long elements) {
+    public java.util.Optional<Pagination> next(long elements) {
         long lastPage = lastPage(elements);
         if (page >= (lastPage - 1)) {
-            return Optional.absent();
+            return java.util.Optional.empty();
         } else {
-            return Optional.of(new PageBasedPagination(size, page +
+            return java.util.Optional.of(new PageBasedPagination(size, page +
                                                                          1));
         }
     }
 
     @Override
-    public Optional<Pagination> last(long elements) {
+    public java.util.Optional<Pagination> last(long elements) {
         long lastPage = lastPage(elements);
         if (page == lastPage) {
-            return Optional.absent();
+            return java.util.Optional.empty();
         } else {
-            return Optional.of(new PageBasedPagination(size, lastPage));
+            return java.util.Optional.of(new PageBasedPagination(size, lastPage));
         }
     }
 

@@ -16,11 +16,15 @@
  */
 package org.envirocar.server.rest.mapper;
 
+import org.envirocar.server.rest.InternalServerError;
+
+import javax.inject.Singleton;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.Provider;
 
 @Provider
+@Singleton
 public class InternalServerErrorMapper extends AbstractExceptionMapper<InternalServerError> {
     @Override
     protected Response.StatusType getStatus(InternalServerError exception) {

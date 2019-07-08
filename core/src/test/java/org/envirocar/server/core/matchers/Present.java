@@ -21,7 +21,7 @@ import org.hamcrest.Description;
 import org.hamcrest.Factory;
 import org.hamcrest.Matcher;
 
-import com.google.common.base.Optional;
+import java.util.Optional;
 
 public class Present<T> extends BaseMatcher<Optional<T>> {
     private final Matcher<T> matcher;
@@ -63,9 +63,8 @@ public class Present<T> extends BaseMatcher<Optional<T>> {
     }
 
     @Factory
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    public static Matcher<Optional<?>> present() {
-        return new Present(null);
+    public static <T> Matcher<Optional<T>> present() {
+        return new Present<>(null);
     }
 
     @Factory

@@ -56,7 +56,7 @@ public interface ResourceFactory {
 
     TermsOfUseInstanceResource createTermsOfUseInstanceResource(TermsOfUseInstance t);
 
-    JSONSchemaResource createSchemaResource();
+    JsonSchemaResource createSchemaResource();
 
     PrivacyStatementsResource createPrivacyStatementsResource();
 

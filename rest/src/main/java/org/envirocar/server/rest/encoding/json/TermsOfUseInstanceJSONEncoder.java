@@ -21,6 +21,7 @@ import org.envirocar.server.core.entities.TermsOfUseInstance;
 import org.envirocar.server.rest.JSONConstants;
 import org.envirocar.server.rest.MediaTypes;
 
+import javax.inject.Singleton;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
@@ -30,6 +31,7 @@ import javax.ws.rs.ext.Provider;
  * @author Matthes Rieke
  */
 @Provider
+@Singleton
 public class TermsOfUseInstanceJSONEncoder extends AbstractJSONEntityEncoder<TermsOfUseInstance> {
 
     public TermsOfUseInstanceJSONEncoder() {
@@ -37,26 +39,23 @@ public class TermsOfUseInstanceJSONEncoder extends AbstractJSONEntityEncoder<Ter
     }
 
     @Override
-    public ObjectNode encodeJSON(TermsOfUseInstance t, MediaType mediaType) {
+    public ObjectNode encodeJSON(TermsOfUseInstance entity, MediaType mediaType) {
         ObjectNode termsOfUse = getJsonFactory().objectNode();
-        if (t.getIdentifier() != null) {
-            termsOfUse.put(JSONConstants.IDENTIFIER_KEY, t.getIdentifier());
+        if (entity.getIdentifier() != null) {
+            termsOfUse.put(JSONConstants.IDENTIFIER_KEY, entity.getIdentifier());
         }
-        if (t.getIssuedDate() != null) {
-            termsOfUse.put(JSONConstants.ISSUED_DATE, t.getIssuedDate());
+        if (entity.getIssuedDate() != null) {
+            termsOfUse.put(JSONConstants.ISSUED_DATE, entity.getIssuedDate());
         }
         if (mediaType.equals(MediaTypes.TERMS_OF_USE_INSTANCE_TYPE)) {
-            if (t.hasCreationTime()) {
-                termsOfUse.put(JSONConstants.CREATED_KEY, getDateTimeFormat()
-                        .print(t.getCreationTime()));
+            if (entity.hasCreationTime()) {
+                termsOfUse.put(JSONConstants.CREATED_KEY, getDateTimeFormat().print(entity.getCreationTime()));
             }
-            if (t.hasModificationTime()) {
-                termsOfUse.put(JSONConstants.MODIFIED_KEY, getDateTimeFormat()
-                        .print(t.getModificationTime()));
+            if (entity.hasModificationTime()) {
+                termsOfUse.put(JSONConstants.MODIFIED_KEY, getDateTimeFormat().print(entity.getModificationTime()));
             }
-
-            if (t.getContents() != null) {
-                termsOfUse.put(JSONConstants.CONTENTS, t.getContents());
+            if (entity.getContents() != null) {
+                termsOfUse.put(JSONConstants.CONTENTS, entity.getContents());
             }
         }
         return termsOfUse;

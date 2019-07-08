@@ -14,26 +14,28 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.rest.schema;
+package org.envirocar.server.core.guice;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Inherited;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import com.google.inject.AbstractModule;
+import com.google.inject.Provides;
+import com.google.inject.Singleton;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.PrecisionModel;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
 
-import com.google.inject.Module;
+public class JtsModule extends AbstractModule {
 
-/**
- * TODO JavaDoc
- *
- * @author Christian Autermann <autermann@uni-muenster.de>
- */
-@Inherited
-@Documented
-@Target(ElementType.TYPE)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface Modules {
-    Class<? extends Module>[] value();
+    @Provides
+    @Singleton
+    public GeometryFactory geometryFactory(PrecisionModel precisionModel) {
+        return new GeometryFactory(precisionModel, 4326);
+    }
+
+    @Provides
+    @Singleton
+    public PrecisionModel precisionModel() {
+        return new PrecisionModel(PrecisionModel.FLOATING_SINGLE);
+    }
+
 }

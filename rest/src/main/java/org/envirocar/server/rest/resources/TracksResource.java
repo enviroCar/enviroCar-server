@@ -27,7 +27,7 @@ import org.envirocar.server.core.exception.ValidationException;
 import org.envirocar.server.core.filter.TrackFilter;
 import org.envirocar.server.rest.*;
 import org.envirocar.server.rest.rights.HasAcceptedLatestLegalPolicies;
-import org.envirocar.server.rest.validation.Schema;
+import org.envirocar.server.rest.schema.Schema;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
@@ -48,7 +48,7 @@ public class TracksResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.TRACKS)
-    @Produces({MediaTypes.TRACKS, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
+    @Produces({MediaTypes.JSON, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
     public Tracks get(@QueryParam(RESTConstants.BBOX) BoundingBox bbox) throws BadRequestException {
         SpatialFilter spatialFilter = null;
         if (bbox != null) {
@@ -61,7 +61,7 @@ public class TracksResource extends AbstractResource {
     @POST
     @HasAcceptedLatestLegalPolicies
     @Schema(request = Schemas.TRACK_CREATE)
-    @Consumes({MediaTypes.TRACK_CREATE})
+    @Consumes({MediaTypes.JSON})
     public Response create(Track track) throws ValidationException {
         if (track instanceof TrackWithMeasurments) {
             TrackWithMeasurments twm = (TrackWithMeasurments) track;

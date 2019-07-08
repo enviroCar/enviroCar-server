@@ -27,7 +27,7 @@ import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.RESTConstants;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.rights.HasAcceptedLatestLegalPolicies;
-import org.envirocar.server.rest.validation.Schema;
+import org.envirocar.server.rest.schema.Schema;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MultivaluedMap;
@@ -47,7 +47,7 @@ public class SensorsResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.SENSORS)
-    @Produces({MediaTypes.SENSORS, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
+    @Produces({MediaTypes.JSON, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
     public Sensors get(@QueryParam(RESTConstants.TYPE) String type) throws BadRequestException {
         MultivaluedMap<String, String> queryParameters = getUriInfo().getQueryParameters();
         Set<PropertyFilter> filters = Sets.newHashSet();
@@ -64,7 +64,7 @@ public class SensorsResource extends AbstractResource {
     }
 
     @POST
-    @Consumes({MediaTypes.SENSOR_CREATE})
+    @Consumes({MediaTypes.JSON})
     @Schema(request = Schemas.SENSOR_CREATE)
     @HasAcceptedLatestLegalPolicies
     public Response create(Sensor sensor) {

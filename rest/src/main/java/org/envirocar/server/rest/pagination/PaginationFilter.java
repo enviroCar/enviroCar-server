@@ -17,6 +17,7 @@
 package org.envirocar.server.rest.pagination;
 
 import java.net.URI;
+import java.util.Optional;
 
 import javax.ws.rs.core.MediaType;
 
@@ -24,7 +25,6 @@ import org.envirocar.server.core.util.pagination.Paginated;
 import org.envirocar.server.core.util.pagination.Pagination;
 import org.envirocar.server.rest.RESTConstants;
 
-import com.google.common.base.Optional;
 import com.sun.jersey.core.header.LinkHeader;
 import com.sun.jersey.spi.container.ContainerRequest;
 import com.sun.jersey.spi.container.ContainerResponse;
@@ -72,7 +72,7 @@ public class PaginationFilter implements ContainerResponseFilter {
     private void insertLinks(Paginated<?> p,
                              ContainerRequest req,
                              ContainerResponse res) {
-        Optional<Pagination> first = p.getFirst();
+        java.util.Optional<Pagination> first = p.getFirst();
         if (first.isPresent()) {
             addLink(REL_FIRST, first.get(), req, res);
         }
@@ -80,11 +80,11 @@ public class PaginationFilter implements ContainerResponseFilter {
         if (last.isPresent()) {
             addLink(REL_LAST, last.get(), req, res);
         }
-        Optional<Pagination> previous = p.getPrevious();
+        java.util.Optional<Pagination> previous = p.getPrevious();
         if (previous.isPresent()) {
             addLink(REL_PREV, previous.get(), req, res);
         }
-        Optional<Pagination> next = p.getNext();
+        java.util.Optional<Pagination> next = p.getNext();
         if (next.isPresent()) {
             addLink(REL_NEXT, next.get(), req, res);
         }

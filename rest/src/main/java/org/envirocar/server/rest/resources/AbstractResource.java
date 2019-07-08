@@ -22,7 +22,6 @@ import org.envirocar.server.core.DataService;
 import org.envirocar.server.core.StatisticsService;
 import org.envirocar.server.core.TemporalFilter;
 import org.envirocar.server.core.TemporalFilterOperator;
-import org.envirocar.server.core.entities.EntityFactory;
 import org.envirocar.server.core.exception.BadRequestException;
 import org.envirocar.server.core.util.pagination.Pagination;
 import org.envirocar.server.rest.pagination.PaginationProvider;
@@ -39,7 +38,6 @@ public abstract class AbstractResource {
     private Provider<StatisticsService> statisticsService;
     private Provider<UriInfo> uriInfo;
     private Provider<ResourceFactory> resourceFactory;
-    private Provider<EntityFactory> entityFactory;
     private PaginationProvider pagination;
 
     protected Pagination getPagination() throws BadRequestException {
@@ -62,10 +60,6 @@ public abstract class AbstractResource {
         return resourceFactory.get();
     }
 
-    protected EntityFactory getEntityFactory() {
-        return entityFactory.get();
-    }
-
     @Inject
     public void setUriInfo(Provider<UriInfo> uriInfo) {
         this.uriInfo = uriInfo;
@@ -74,11 +68,6 @@ public abstract class AbstractResource {
     @Inject
     public void setResourceFactory(Provider<ResourceFactory> resourceFactory) {
         this.resourceFactory = resourceFactory;
-    }
-
-    @Inject
-    public void setEntityFactory(Provider<EntityFactory> entityFactory) {
-        this.entityFactory = entityFactory;
     }
 
     @Inject

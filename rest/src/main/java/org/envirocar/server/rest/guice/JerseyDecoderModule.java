@@ -17,7 +17,6 @@
 package org.envirocar.server.rest.guice;
 
 import com.google.inject.AbstractModule;
-import com.google.inject.Scopes;
 import com.google.inject.TypeLiteral;
 import com.vividsolutions.jts.geom.Geometry;
 import org.envirocar.server.core.entities.Measurement;
@@ -34,22 +33,19 @@ import org.envirocar.server.rest.decoding.json.*;
 public class JerseyDecoderModule extends AbstractModule {
     @Override
     protected void configure() {
-        bind(JsonNodeMessageBodyReader.class).in(Scopes.SINGLETON);
-        bind(PhenomenonDecoder.class).in(Scopes.SINGLETON);
-        bind(new TypeLiteral<JSONEntityDecoder<Phenomenon>>() {
-        }).to(PhenomenonDecoder.class);
-        bind(GeoJSONDecoder.class).in(Scopes.SINGLETON);
-        bind(new TypeLiteral<JSONEntityDecoder<Geometry>>() {
-        }).to(GeoJSONDecoder.class);
-        bind(MeasurementDecoder.class).in(Scopes.SINGLETON);
-        bind(new TypeLiteral<JSONEntityDecoder<Measurement>>() {
-        }).to(MeasurementDecoder.class);
-        bind(TrackDecoder.class).in(Scopes.SINGLETON);
-        bind(new TypeLiteral<JSONEntityDecoder<Track>>() {
-        }).to(TrackDecoder.class);
-        bind(SensorDecoder.class).in(Scopes.SINGLETON);
-        bind(new TypeLiteral<JSONEntityDecoder<Sensor>>() {
-        }).to(SensorDecoder.class);
-        bind(ContextKnowledgeFactory.class).toInstance(new ContextKnowledgeFactory());
+        bind(JsonNodeMessageBodyReader.class);
+        bind(ContextKnowledgeFactory.class);
+
+        bind(new TypeLiteral<JSONEntityDecoder<Phenomenon>>() {}).to(PhenomenonDecoder.class);
+        bind(new TypeLiteral<JSONEntityDecoder<Geometry>>() {}).to(GeoJSONDecoder.class);
+        bind(new TypeLiteral<JSONEntityDecoder<Measurement>>() {}).to(MeasurementDecoder.class);
+        bind(new TypeLiteral<JSONEntityDecoder<Track>>() {}).to(TrackDecoder.class);
+        bind(new TypeLiteral<JSONEntityDecoder<Sensor>>() {}).to(SensorDecoder.class);
+
+        bind(PhenomenonDecoder.class);
+        bind(GeoJSONDecoder.class);
+        bind(MeasurementDecoder.class);
+        bind(TrackDecoder.class);
+        bind(SensorDecoder.class);
     }
 }

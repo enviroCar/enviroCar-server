@@ -18,11 +18,13 @@ package org.envirocar.server.rest.mapper;
 
 import org.envirocar.server.core.exception.BadRequestException;
 
+import javax.inject.Singleton;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.Provider;
 
 @Provider
+@Singleton
 public class BadRequestExceptionMapper extends AbstractExceptionMapper<BadRequestException> {
     @Override
     protected Response.StatusType getStatus(BadRequestException exception) {

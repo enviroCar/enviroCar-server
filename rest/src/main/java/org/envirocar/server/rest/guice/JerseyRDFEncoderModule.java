@@ -33,35 +33,27 @@ import org.envirocar.server.rest.encoding.rdf.*;
 public class JerseyRDFEncoderModule extends AbstractModule {
     @Override
     protected void configure() {
-        bind(MeasurementRDFEncoder.class).in(Scopes.SINGLETON);
-        bind(new TypeLiteral<RDFEntityEncoder<Measurement>>() {
-        }).to(MeasurementRDFEncoder.class);
-        bind(MeasurementsRDFEncoder.class).in(Scopes.SINGLETON);
-        bind(new TypeLiteral<RDFEntityEncoder<Measurements>>() {
-        }).to(MeasurementsRDFEncoder.class);
-        bind(PhenomenonRDFEncoder.class).in(Scopes.SINGLETON);
-        bind(new TypeLiteral<RDFEntityEncoder<Phenomenon>>() {
-        }).to(PhenomenonRDFEncoder.class);
-        bind(PhenomenonsRDFEncoder.class).in(Scopes.SINGLETON);
-        bind(new TypeLiteral<RDFEntityEncoder<Phenomenons>>() {
-        }).to(PhenomenonsRDFEncoder.class);
-        bind(SensorRDFEncoder.class).in(Scopes.SINGLETON);
-        bind(new TypeLiteral<RDFEntityEncoder<Sensor>>() {
-        }).to(SensorRDFEncoder.class);
-        bind(SensorsRDFEncoder.class).in(Scopes.SINGLETON);
-        bind(new TypeLiteral<RDFEntityEncoder<Sensors>>() {
-        }).to(SensorsRDFEncoder.class);
-        bind(StatisticRDFEncoder.class).in(Scopes.SINGLETON);
-        bind(new TypeLiteral<RDFEntityEncoder<Statistic>>() {
-        }).to(StatisticRDFEncoder.class);
-        bind(StatisticsRDFEncoder.class).in(Scopes.SINGLETON);
-        bind(new TypeLiteral<RDFEntityEncoder<Statistics>>() {
-        }).to(StatisticsRDFEncoder.class);
-        bind(TrackRDFEncoder.class).in(Scopes.SINGLETON);
-        bind(new TypeLiteral<RDFEntityEncoder<Track>>() {
-        }).to(TrackRDFEncoder.class);
-        bind(TracksRDFEncoder.class).in(Scopes.SINGLETON);
-        bind(new TypeLiteral<RDFEntityEncoder<Tracks>>() {
-        }).to(TracksRDFEncoder.class);
+
+        bind(new TypeLiteral<RDFEntityEncoder<Measurement>>() {}).to(MeasurementRDFEncoder.class);
+        bind(new TypeLiteral<RDFEntityEncoder<Measurements>>() {}).to(MeasurementsRDFEncoder.class);
+        bind(new TypeLiteral<RDFEntityEncoder<Phenomenon>>() {}).to(PhenomenonRDFEncoder.class);
+        bind(new TypeLiteral<RDFEntityEncoder<Phenomenons>>() {}).to(PhenomenonsRDFEncoder.class);
+        bind(new TypeLiteral<RDFEntityEncoder<Sensor>>() {}).to(SensorRDFEncoder.class);
+        bind(new TypeLiteral<RDFEntityEncoder<Sensors>>() {}).to(SensorsRDFEncoder.class);
+        bind(new TypeLiteral<RDFEntityEncoder<Statistic>>() {}).to(StatisticRDFEncoder.class);
+        bind(new TypeLiteral<RDFEntityEncoder<Statistics>>() {}).to(StatisticsRDFEncoder.class);
+        bind(new TypeLiteral<RDFEntityEncoder<Track>>() {}).to(TrackRDFEncoder.class);
+        bind(new TypeLiteral<RDFEntityEncoder<Tracks>>() {}).to(TracksRDFEncoder.class);
+
+        bind(MeasurementRDFEncoder.class);
+        bind(MeasurementsRDFEncoder.class);
+        bind(PhenomenonRDFEncoder.class);
+        bind(PhenomenonsRDFEncoder.class);
+        bind(SensorRDFEncoder.class);
+        bind(SensorsRDFEncoder.class);
+        bind(StatisticRDFEncoder.class);
+        bind(StatisticsRDFEncoder.class);
+        bind(TrackRDFEncoder.class);
+        bind(TracksRDFEncoder.class);
     }
 }

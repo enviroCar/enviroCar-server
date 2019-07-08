@@ -57,18 +57,6 @@ public class CoreModule extends AbstractModule {
 
     @Provides
     @Singleton
-    public GeometryFactory geometryFactory(PrecisionModel precisionModel) {
-        return new GeometryFactory(precisionModel, 4326);
-    }
-
-    @Provides
-    @Singleton
-    public PrecisionModel precisionModel() {
-        return new PrecisionModel(PrecisionModel.FLOATING_SINGLE);
-    }
-
-    @Provides
-    @Singleton
     public DateTimeFormatter formatter() {
         return ISODateTimeFormat.dateTimeNoMillis();
     }

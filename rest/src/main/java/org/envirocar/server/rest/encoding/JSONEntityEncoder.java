@@ -26,5 +26,5 @@ import javax.ws.rs.core.MediaType;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface JSONEntityEncoder<T> {
-    ObjectNode encodeJSON(T t, MediaType mt);
+    ObjectNode encodeJSON(T entity, MediaType mediaType);
 }

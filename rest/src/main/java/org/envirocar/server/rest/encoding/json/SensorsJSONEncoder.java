@@ -25,6 +25,7 @@ import org.envirocar.server.core.entities.Sensors;
 import org.envirocar.server.rest.JSONConstants;
 import org.envirocar.server.rest.encoding.JSONEntityEncoder;
 
+import javax.inject.Singleton;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 import java.util.Set;
@@ -35,6 +36,7 @@ import java.util.Set;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
+@Singleton
 public class SensorsJSONEncoder extends AbstractJSONEntityEncoder<Sensors> {
     private final JSONEntityEncoder<Sensor> sensorEncoder;
     private final CarSimilarityService carSimilarity;
@@ -47,15 +49,15 @@ public class SensorsJSONEncoder extends AbstractJSONEntityEncoder<Sensors> {
     }
 
     @Override
-    public ObjectNode encodeJSON(Sensors t, MediaType mediaType) {
+    public ObjectNode encodeJSON(Sensors entity, MediaType mediaType) {
         ObjectNode root = getJsonFactory().objectNode();
         ArrayNode sensors = root.putArray(JSONConstants.SENSORS_KEY);
 
         Set<String> filteredDuplicates = this.carSimilarity.getMappedSensorIds();
 
-        for (Sensor u : t) {
-            if (filteredDuplicates == null || !filteredDuplicates.contains(u.getIdentifier())) {
-                sensors.add(sensorEncoder.encodeJSON(u, mediaType));
+        for (Sensor sensor : entity) {
+            if (filteredDuplicates == null || !filteredDuplicates.contains(sensor.getIdentifier())) {
+                sensors.add(sensorEncoder.encodeJSON(sensor, mediaType));
             }
         }
         return root;
