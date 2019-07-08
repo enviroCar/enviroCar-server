@@ -21,7 +21,6 @@ import com.google.inject.assistedinject.Assisted;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.rest.MediaTypes;
-import org.envirocar.server.rest.resources.AbstractResource;
 
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -48,7 +47,7 @@ public class AvatarResource extends AbstractResource {
     }
 
     @GET
-    @Produces({MediaTypes.IMAGE_JPEG})
+    @Produces({MediaTypes.JPEG})
     public Response get(@DefaultValue(DEFAULT_SIZE) @QueryParam(SIZE) int size) {
         return Response.temporaryRedirect(getURI(user, size)).build();
     }

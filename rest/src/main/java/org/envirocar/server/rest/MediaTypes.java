@@ -31,12 +31,12 @@ import java.util.Optional;
 public interface MediaTypes {
     String XML_RDF = "application/rdf+xml";
     String TURTLE = "text/turtle";
-    String TEXT_CSV = "text/csv";
+    String CSV = "text/csv";
     String TURTLE_ALT = "application/x-turtle";
-    String IMAGE_JPEG = "image/jpeg";
-    String IMAGE_PNG = "image/png";
+    String JPEG = "image/jpeg";
+    String PNG = "image/png";
     String APPLICATION_ZIPPED_SHP = "application/x-zipped-shp";
-    String JSON = "application/json";
+    String JSON = MediaType.APPLICATION_JSON;
 
     MediaType XML_RDF_TYPE = new MediaType("application", "rdf+xml");
     MediaType APPLICATION_ZIPPED_SHP_TYPE = new MediaType("application", "x-zipped-shp");

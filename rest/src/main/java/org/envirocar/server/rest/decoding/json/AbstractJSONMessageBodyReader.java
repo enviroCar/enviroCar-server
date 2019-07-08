@@ -56,8 +56,7 @@ public abstract class AbstractJSONMessageBodyReader<T> implements MessageBodyRea
 
     @Override
     public boolean isReadable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
-        return this.classType.isAssignableFrom(type) && mediaType
-                .isCompatible(MediaType.APPLICATION_JSON_TYPE);
+        return this.classType.isAssignableFrom(type) && mediaType.isCompatible(MediaType.APPLICATION_JSON_TYPE);
     }
 
     @Override

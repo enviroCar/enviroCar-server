@@ -35,7 +35,7 @@ import java.lang.reflect.Type;
  *
  * @author Benjamin Pross
  */
-@Produces(MediaTypes.TEXT_CSV)
+@Produces(MediaTypes.CSV)
 public abstract class AbstractCSVMessageBodyWriter<T> implements
         MessageBodyWriter<T>, CSVTrackEncoder<T> {
 
