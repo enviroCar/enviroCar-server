@@ -30,7 +30,7 @@
       "type": "string",
       "format": "uri"
     },
-    "termsOfUse:": {
+    "termsOfUse": {
       "type": "string",
       "format": "uri"
     },
