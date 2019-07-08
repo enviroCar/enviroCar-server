@@ -14,12 +14,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.rest.encoding.json;
+package org.envirocar.server.rest.decoding;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.rest.UserReference;
+import org.envirocar.server.rest.decoding.json.AbstractJSONEntityDecoder;
 import org.envirocar.server.rest.decoding.json.AbstractJSONMessageBodyReader;
 import org.envirocar.server.rest.decoding.json.JSONEntityDecoder;
 
@@ -36,11 +37,11 @@ import javax.ws.rs.ext.Provider;
 @Provider
 @Singleton
 @Consumes(MediaType.APPLICATION_JSON)
-public class UserReferenceProvider extends AbstractJSONMessageBodyReader<UserReference> {
+public class UserReferenceDecoder extends AbstractJSONEntityDecoder<UserReference> {
     private final JSONEntityDecoder<User> userDecoder;
 
     @Inject
-    public UserReferenceProvider(JSONEntityDecoder<User> userDecoder) {
+    public UserReferenceDecoder(JSONEntityDecoder<User> userDecoder) {
         super(UserReference.class);
         this.userDecoder = userDecoder;
     }

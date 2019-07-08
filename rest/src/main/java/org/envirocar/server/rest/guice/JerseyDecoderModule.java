@@ -20,8 +20,9 @@ import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
 import com.vividsolutions.jts.geom.Geometry;
 import org.envirocar.server.core.entities.*;
+import org.envirocar.server.rest.UserReference;
 import org.envirocar.server.rest.decoding.json.*;
-import org.envirocar.server.rest.encoding.json.UserReferenceProvider;
+import org.envirocar.server.rest.decoding.UserReferenceDecoder;
 import org.envirocar.server.rest.entity.ResetPasswordRequest;
 
 /**
@@ -33,10 +34,10 @@ public class JerseyDecoderModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(JsonNodeMessageBodyReader.class);
-        bind(UserReferenceProvider.class);
         bind(ContextKnowledgeFactory.class);
 
         bind(new TypeLiteral<JSONEntityDecoder<User>>() {}).to(UserDecoder.class);
+        bind(new TypeLiteral<JSONEntityDecoder<UserReference>>() {}).to(UserReferenceDecoder.class);
         bind(new TypeLiteral<JSONEntityDecoder<Phenomenon>>() {}).to(PhenomenonDecoder.class);
         bind(new TypeLiteral<JSONEntityDecoder<Group>>() {}).to(GroupDecoder.class);
         bind(new TypeLiteral<JSONEntityDecoder<Geometry>>() {}).to(GeoJSONDecoder.class);
@@ -47,6 +48,7 @@ public class JerseyDecoderModule extends AbstractModule {
         bind(new TypeLiteral<JSONEntityDecoder<Fueling>>() {}).to(FuelingDecoder.class);
 
         bind(UserDecoder.class);
+        bind(UserReferenceDecoder.class);
         bind(PhenomenonDecoder.class);
         bind(GroupDecoder.class);
         bind(GeoJSONDecoder.class);
