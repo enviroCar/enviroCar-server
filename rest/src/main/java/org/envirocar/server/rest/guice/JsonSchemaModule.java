@@ -19,18 +19,11 @@ package org.envirocar.server.rest.guice;
 import com.fasterxml.jackson.databind.node.JsonNodeCreator;
 import com.github.fge.jsonschema.main.JsonSchemaFactory;
 import com.google.inject.AbstractModule;
-import com.google.inject.Module;
 import com.google.inject.Scopes;
-import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.multibindings.Multibinder;
 import com.google.inject.name.Names;
-import com.sun.jersey.spi.container.ResourceFilter;
-import org.envirocar.server.rest.schema.*;
 
 import javax.ws.rs.core.UriInfo;
-
-import static org.envirocar.server.rest.schema.JsonSchemaValidationFilter.VALIDATE_REQUESTS;
-import static org.envirocar.server.rest.schema.JsonSchemaValidationFilter.VALIDATE_RESPONSES;
 
 /**
  * TODO JavaDoc
@@ -47,13 +40,7 @@ public class JsonSchemaModule extends AbstractModule {
         requireBinding(JsonNodeCreator.class);
         requireBinding(UriInfo.class);
 
-
-        bindConstant().annotatedWith(Names.named(VALIDATE_REQUESTS)).to(true);
-        bindConstant().annotatedWith(Names.named(VALIDATE_RESPONSES)).to(true);
         bind(JsonSchemaFactory.class).toProvider(JsonSchemaFactoryProvider.class).in(Scopes.SINGLETON);
-        bind(JsonSchemaUriReplacer.class).to(JsonSchemaUriReplacerImpl.class);
-        bind(JsonSchemaUriConfiguration.class).to(JsonSchemaUriConfigurationImpl.class);
-        bind(JsonSchemaUriLoader.class).to(JsonSchemaUriLoaderImpl.class);
 
         Multibinder<String> mb = Multibinder.newSetBinder(binder(), String.class, Names.named(JsonSchemaModule.SCHEMAS));
         mb.addBinding().toInstance("definitions.json");

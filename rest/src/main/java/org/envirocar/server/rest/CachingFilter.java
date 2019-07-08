@@ -16,28 +16,24 @@
  */
 package org.envirocar.server.rest;
 
-import java.util.Date;
+import com.sun.jersey.spi.container.ContainerRequest;
+import com.sun.jersey.spi.container.ContainerResponse;
+import com.sun.jersey.spi.container.ContainerResponseFilter;
+import org.envirocar.server.core.entities.BaseEntity;
 
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response.ResponseBuilder;
-
-import org.envirocar.server.core.entities.BaseEntity;
-
-import com.sun.jersey.spi.container.ContainerRequest;
-import com.sun.jersey.spi.container.ContainerResponse;
-import com.sun.jersey.spi.container.ContainerResponseFilter;
+import java.util.Date;
 
 public class CachingFilter implements ContainerResponseFilter {
 
     @Override
-    public ContainerResponse filter(ContainerRequest request,
-                                    ContainerResponse response) {
+    public ContainerResponse filter(ContainerRequest request, ContainerResponse response) {
         Object entity = response.getEntity();
         if (entity instanceof BaseEntity) {
             Date lastModified = getLastModificationTime((BaseEntity) entity);
             if (lastModified != null) {
-
                 ResponseBuilder b = request.evaluatePreconditions(lastModified);
                 if (b != null) {
                     response.setResponse(b.build());
@@ -50,7 +46,7 @@ public class CachingFilter implements ContainerResponseFilter {
         return response;
     }
 
-    protected Date getLastModificationTime(BaseEntity entity) {
+    private Date getLastModificationTime(BaseEntity entity) {
         if (entity.hasModificationTime()) {
             return entity.getModificationTime().toDate();
         } else if (entity.hasCreationTime()) {

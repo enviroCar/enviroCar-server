@@ -16,8 +16,12 @@
  */
 package org.envirocar.server.rest.schema;
 
+import com.google.inject.ImplementedBy;
+
+import javax.ws.rs.core.MediaType;
 import java.net.URI;
 
+@ImplementedBy(JsonSchemaUriConfigurationImpl.class)
 public interface JsonSchemaUriConfiguration {
     /**
      * Convert the schema {@link URI} to it's external form.
@@ -34,4 +38,6 @@ public interface JsonSchemaUriConfiguration {
      * @return The resource URI.
      */
     URI toInternalURI(URI uri);
+
+    boolean isSchema(MediaType mediaType, String schema);
 }

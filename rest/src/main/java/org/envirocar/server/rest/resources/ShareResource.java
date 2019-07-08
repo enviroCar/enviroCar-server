@@ -95,14 +95,14 @@ public class ShareResource extends AbstractResource {
     }
 
     @GET
-    @Produces(MediaTypes.PNG_IMAGE)
+    @Produces(MediaTypes.IMAGE_PNG)
     public Response getShareImage() {
         return getLocalizedShareImage(DEFAULT_LOCALE);
     }
 
     @GET
     @Path(LOCALE)
-    @Produces(MediaTypes.PNG_IMAGE)
+    @Produces(MediaTypes.IMAGE_PNG)
     public Response getLocalizedShareImage(@PathParam("locale") String locale) {
         try {
             BufferedImage image;

@@ -92,10 +92,7 @@ public class UserJSONEncoder extends AbstractJSONEntityEncoder<User> {
             j.put(JSONConstants.LANGUAGE_KEY, entity.getLanguage());
         }
         if (entity.hasBadges() && rights.canSeeBadgesOf(entity)) {
-            final ArrayNode badges = j.putArray(JSONConstants.BADGES);
-            for (String badge : entity.getBadges()) {
-                badges.add(badge);
-            }
+            entity.getBadges().forEach(j.putArray(JSONConstants.BADGES)::add);
         }
         if (entity.hasAcceptedTermsOfUseVersion() && rights.canSeeAcceptedTermsOfUseVersionOf(entity)) {
             j.put(JSONConstants.ACCEPTED_TERMS_OF_USE_VERSION_KEY, entity.getTermsOfUseVersion());

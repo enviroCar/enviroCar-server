@@ -40,9 +40,11 @@ public class JsonSchemaFactoryProvider implements Provider<JsonSchemaFactory> {
 
     @Override
     public JsonSchemaFactory get() {
-        return JsonSchemaFactory.newBuilder()
+        JsonSchemaFactory factory = JsonSchemaFactory.newBuilder()
                 .setValidationConfiguration(validationConfiguration())
+                .setLoadingConfiguration(LoadingConfiguration.byDefault().thaw().setEnableCache(true).freeze())
                 .freeze();
+        return factory;
     }
 
     private ValidationConfiguration validationConfiguration() {

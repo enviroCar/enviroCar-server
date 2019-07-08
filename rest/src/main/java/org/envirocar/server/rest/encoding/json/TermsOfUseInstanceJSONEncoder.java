@@ -19,7 +19,7 @@ package org.envirocar.server.rest.encoding.json;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.envirocar.server.core.entities.TermsOfUseInstance;
 import org.envirocar.server.rest.JSONConstants;
-import org.envirocar.server.rest.MediaTypes;
+import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.rights.AccessRights;
 
 import javax.inject.Singleton;
@@ -48,7 +48,7 @@ public class TermsOfUseInstanceJSONEncoder extends AbstractJSONEntityEncoder<Ter
         if (entity.getIssuedDate() != null) {
             termsOfUse.put(JSONConstants.ISSUED_DATE, entity.getIssuedDate());
         }
-        if (mediaType.equals(MediaTypes.TERMS_OF_USE_INSTANCE_TYPE)) {
+        if (getSchemaUriConfiguration().isSchema(mediaType, Schemas.TERMS_OF_USE_INSTANCE)) {
             if (entity.hasCreationTime()) {
                 termsOfUse.put(JSONConstants.CREATED_KEY, getDateTimeFormat().print(entity.getCreationTime()));
             }

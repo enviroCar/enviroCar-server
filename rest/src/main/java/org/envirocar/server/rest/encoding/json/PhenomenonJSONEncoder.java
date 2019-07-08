@@ -19,8 +19,8 @@ package org.envirocar.server.rest.encoding.json;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.envirocar.server.core.entities.Phenomenon;
 import org.envirocar.server.rest.JSONConstants;
-import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.rights.AccessRights;
+import org.envirocar.server.rest.Schemas;
 
 import javax.inject.Singleton;
 import javax.ws.rs.core.MediaType;
@@ -47,7 +47,7 @@ public class PhenomenonJSONEncoder extends AbstractJSONEntityEncoder<Phenomenon>
         if (entity.hasUnit()) {
             phenomenon.put(JSONConstants.UNIT_KEY, entity.getUnit());
         }
-        if (mediaType.equals(MediaTypes.PHENOMENON_TYPE)) {
+        if (getSchemaUriConfiguration().isSchema(mediaType, Schemas.PHENOMENON)) {
             if (entity.hasCreationTime()) {
                 phenomenon.put(JSONConstants.CREATED_KEY, getDateTimeFormat().print(entity.getCreationTime()));
             }

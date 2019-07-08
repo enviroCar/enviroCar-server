@@ -23,7 +23,6 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
@@ -34,11 +33,13 @@ import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.event.CreatedTrackEvent;
 import org.envirocar.server.core.event.DeletedTrackEvent;
 import org.envirocar.server.rest.MediaTypes;
+import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.encoding.JSONEntityEncoder;
 import org.envirocar.server.rest.rights.AccessRightsImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 
 @Singleton
@@ -76,10 +77,13 @@ public class HTTPPushListener {
     private synchronized void pushNewTrack(Track track) {
         HttpResponse resp = null;
         try {
-            ObjectNode jsonTrack = encoder.encodeJSON(track, DEFAULT_ACCESS_RIGHTS, MediaTypes.TRACK_TYPE);
+
+            MediaType mediaType = MediaTypes.jsonWithSchema(Schemas.TRACK);
+
+            ObjectNode jsonTrack = encoder.encodeJSON(track, DEFAULT_ACCESS_RIGHTS, mediaType);
             String content = writer.writeValueAsString(jsonTrack);
             //logger.debug("Entity: {}", content);
-            HttpEntity entity = new StringEntity(content, ContentType.create(MediaTypes.TRACK));
+            HttpEntity entity = new StringEntity(content, ContentType.APPLICATION_JSON);
             HttpPost hp = new HttpPost(host);
             hp.setEntity(entity);
             resp = this.client.execute(hp);

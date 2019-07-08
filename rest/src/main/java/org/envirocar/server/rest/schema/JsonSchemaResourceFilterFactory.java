@@ -23,7 +23,10 @@ import com.sun.jersey.spi.container.ResourceFilterFactory;
 
 import javax.inject.Provider;
 import java.net.URI;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * TODO JavaDoc
@@ -31,28 +34,40 @@ import java.util.*;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class JsonSchemaResourceFilterFactory implements ResourceFilterFactory {
-    private final JsonSchemaValidationFilter schemaValidationFilter;
+    private final JsonSchemaResponseValidationFilter responseValidationFilter;
+    private final JsonSchemaRequestValidationFilter requestValidationFilter;
     private final Provider<JsonSchemaUriConfiguration> schemaUriConfiguration;
 
     @Inject
-    public JsonSchemaResourceFilterFactory(JsonSchemaValidationFilter schemaValidationFilter,
+    public JsonSchemaResourceFilterFactory(JsonSchemaResponseValidationFilter responseValidationFilter,
+                                           JsonSchemaRequestValidationFilter requestValidationFilter,
                                            Provider<JsonSchemaUriConfiguration> schemaUriConfiguration) {
-        this.schemaValidationFilter = Objects.requireNonNull(schemaValidationFilter);
+        this.responseValidationFilter = Objects.requireNonNull(responseValidationFilter);
+        this.requestValidationFilter = Objects.requireNonNull(requestValidationFilter);
         this.schemaUriConfiguration = Objects.requireNonNull(schemaUriConfiguration);
     }
 
     @Override
     public List<ResourceFilter> create(AbstractMethod am) {
-        return Optional.ofNullable(am.getAnnotation(Schema.class))
-                .map(this::create).orElseGet(Collections::emptyList);
+        URI request = getRequestSchema(am), response = getResponseSchema(am);
+        List<ResourceFilter> filters = new ArrayList<>(3);
+        // always add the response validation filter for exceptions
+        filters.add(this.responseValidationFilter);
+        filters.add(new JsonSchemaMediaTypeResourceFilter(request, response, schemaUriConfiguration));
+        if (request != null) {
+            filters.add(this.requestValidationFilter);
+        }
+        return filters;
     }
 
-    public List<ResourceFilter> create(Schema annotation) {
-        URI request = Optional.of(annotation.request()).filter(this::isNotEmpty).map(URI::create).orElse(null);
-        URI response = Optional.of(annotation.response()).filter(this::isNotEmpty).map(URI::create).orElse(null);
-        if (request == null && response == null) return null;
-        ResourceFilter filter = new JsonSchemaMediaTypeResourceFilter(request, response, schemaUriConfiguration);
-        return Arrays.asList(filter, schemaValidationFilter);
+    private URI getRequestSchema(AbstractMethod am) {
+        return Optional.ofNullable(am.getAnnotation(Schema.class)).map(Schema::request)
+                .filter(this::isNotEmpty).map(URI::create).orElse(null);
+    }
+
+    private URI getResponseSchema(AbstractMethod am) {
+        return Optional.ofNullable(am.getAnnotation(Schema.class)).map(Schema::response)
+                .filter(this::isNotEmpty).map(URI::create).orElse(null);
     }
 
     private boolean isNotEmpty(String schema) {

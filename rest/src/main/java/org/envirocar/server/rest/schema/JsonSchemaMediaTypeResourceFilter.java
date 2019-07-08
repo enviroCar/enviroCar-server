@@ -19,6 +19,8 @@ package org.envirocar.server.rest.schema;
 import com.google.common.collect.ImmutableMap;
 import com.sun.jersey.spi.container.*;
 import org.envirocar.server.rest.MediaTypes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
 import javax.inject.Provider;
@@ -47,37 +49,43 @@ public class JsonSchemaMediaTypeResourceFilter implements ResourceFilter, Contai
 
     @Override
     public ContainerRequestFilter getRequestFilter() {
-        return requestSchema != null ? this : null;
+        return this.requestSchema == null ? null : this;
     }
 
     @Override
     public ContainerResponseFilter getResponseFilter() {
-        return responseSchema != null ? this : null;
+        return this;
     }
 
     @Override
     public ContainerRequest filter(ContainerRequest request) {
         URI schema = this.schemaUriConfiguration.get().toExternalURI(requestSchema);
         MediaType mediaType = adjustMediaType(request.getMediaType(), schema);
+        request.getRequestHeaders().remove(HttpHeaders.CONTENT_TYPE);
         request.getRequestHeaders().putSingle(HttpHeaders.CONTENT_TYPE, mediaType.toString());
         return request;
     }
 
     @Override
     public ContainerResponse filter(ContainerRequest request, ContainerResponse response) {
-        URI schema = this.schemaUriConfiguration.get().toExternalURI(responseSchema);
-        MediaType mediaType = adjustMediaType(response.getMediaType(), schema);
-        response.getHttpHeaders().putSingle(HttpHeaders.CONTENT_TYPE, mediaType);
+        URI schema = MediaTypes.getSchemaAttribute(response.getMediaType())
+                .map(URI::create).orElse(this.responseSchema);
+
+        if (schema != null) {
+            schema = this.schemaUriConfiguration.get().toExternalURI(schema);
+            MediaType mediaType = adjustMediaType(response.getMediaType(), schema);
+            response.getHttpHeaders().putSingle(HttpHeaders.CONTENT_TYPE, mediaType);
+        }
+
         return response;
     }
 
     private MediaType adjustMediaType(MediaType mediaType, URI schema) {
         if (mediaType == null) {
             return createMediaType(schema);
-        } else if (!mediaType.getParameters().containsKey(MediaTypes.SCHEMA_ATTRIBUTE)) {
+        } else {
             return createMediaType(mediaType, schema);
         }
-        return mediaType;
     }
 
     private MediaType createMediaType(URI schema) {
@@ -85,11 +93,12 @@ public class JsonSchemaMediaTypeResourceFilter implements ResourceFilter, Contai
     }
 
     private MediaType createMediaType(MediaType mediaType, URI schema) {
-        Map<String, String> parameters = ImmutableMap.<String, String>builder()
-                .putAll(mediaType.getParameters())
-                .put(MediaTypes.SCHEMA_ATTRIBUTE, schema.toString())
-                .build();
-        return createMediaType(parameters);
+        ImmutableMap.Builder<String, String> parameters = ImmutableMap.builder();
+        parameters.put(MediaTypes.SCHEMA_ATTRIBUTE, schema.toString());
+        mediaType.getParameters().entrySet().stream()
+                .filter(e -> !e.getKey().equalsIgnoreCase(MediaTypes.SCHEMA_ATTRIBUTE))
+                .forEach(parameters::put);
+        return createMediaType(parameters.build());
     }
 
     private MediaType createMediaType(Map<String, String> parameters) {

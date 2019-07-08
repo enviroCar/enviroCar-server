@@ -17,11 +17,13 @@
 package org.envirocar.server.rest.schema;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.inject.ImplementedBy;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 
+@ImplementedBy(JsonSchemaUriLoaderImpl.class)
 public interface JsonSchemaUriLoader {
     JsonNode load(URI uri) throws IOException;
 }

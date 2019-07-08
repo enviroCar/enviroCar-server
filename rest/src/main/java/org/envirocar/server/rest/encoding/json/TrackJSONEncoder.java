@@ -27,7 +27,7 @@ import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.filter.MeasurementFilter;
 import org.envirocar.server.core.util.GeoJSONConstants;
 import org.envirocar.server.rest.JSONConstants;
-import org.envirocar.server.rest.MediaTypes;
+import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.encoding.JSONEntityEncoder;
 import org.envirocar.server.rest.rights.AccessRights;
 
@@ -63,8 +63,7 @@ public class TrackJSONEncoder extends AbstractJSONEntityEncoder<Track> {
     @Override
     public ObjectNode encodeJSON(Track entity, AccessRights rights, MediaType mediaType) {
         ObjectNode track = getJsonFactory().objectNode();
-
-        if (mediaType.equals(MediaTypes.TRACK_TYPE)) {
+        if (getSchemaUriConfiguration().isSchema(mediaType, Schemas.TRACK)) {
             track.put(GeoJSONConstants.TYPE_KEY, GeoJSONConstants.FEATURE_COLLECTION_TYPE);
             ObjectNode properties = track.putObject(GeoJSONConstants.PROPERTIES_KEY);
             if (entity.hasIdentifier()) {
@@ -133,7 +132,7 @@ public class TrackJSONEncoder extends AbstractJSONEntityEncoder<Track> {
             if (entity.hasBegin() && canSeeTime) {
                 track.put(JSONConstants.END_KEY, getDateTimeFormat().print(entity.getEnd()));
             }
-            if (rights.canSeeSensorOf(entity)) {
+            if (entity.hasSensor() && rights.canSeeSensorOf(entity)) {
                 track.set(JSONConstants.SENSOR_KEY, this.sensorEncoder.encodeJSON(entity.getSensor(), rights, mediaType));
             }
         }

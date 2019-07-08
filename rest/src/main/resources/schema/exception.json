@@ -52,18 +52,25 @@
         }
       }
     },
+    "circularReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "circularReference"
+      ],
+      "properties": {
+        "circularReference": {
+          "$ref": "#/definitions/exception"
+        }
+      }
+    },
     "maybeCircularException": {
       "oneOf": [
         {
           "$ref": "#/definitions/exception"
         },
         {
-          "type": "object",
-          "properties": {
-            "circularReference": {
-              "$ref": "#/definitions/exception"
-            }
-          }
+          "$ref": "#/definitions/circularReference"
         }
       ]
     }
