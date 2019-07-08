@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.rest.JSONConstants;
 import org.envirocar.server.rest.MediaTypes;
+import org.envirocar.server.rest.Schemas;
 
 import javax.inject.Singleton;
 import javax.ws.rs.core.MediaType;
@@ -51,7 +52,7 @@ public class SensorJSONEncoder extends AbstractJSONEntityEncoder<Sensor> {
             properties.putAll(entity.getProperties());
         }
         properties.put(JSONConstants.IDENTIFIER_KEY, entity.getIdentifier());
-        if (mediaType.equals(MediaTypes.SENSOR_TYPE)) {
+        if (getSchemaUriConfiguration().isSchema(mediaType, Schemas.SENSOR)) {
             if (entity.hasCreationTime()) {
                 properties.put(JSONConstants.CREATED_KEY, getDateTimeFormat().print(entity.getCreationTime()));
             }

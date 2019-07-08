@@ -17,9 +17,11 @@
 package org.envirocar.server.rest.encoding.json;
 
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.google.inject.Inject;
 import org.envirocar.server.rest.encoding.JSONEntityEncoder;
+import org.envirocar.server.rest.schema.JsonSchemaUriConfiguration;
 import org.joda.time.format.DateTimeFormatter;
+
+import javax.inject.Inject;
 
 /**
  * TODO JavaDoc
@@ -31,6 +33,7 @@ public abstract class AbstractJSONEntityEncoder<T>
         implements JSONEntityEncoder<T> {
     private JsonNodeFactory jsonFactory;
     private DateTimeFormatter dateTimeFormat;
+    private JsonSchemaUriConfiguration schemaUriConfiguration;
 
     public AbstractJSONEntityEncoder(Class<T> classType) {
         super(classType);
@@ -54,4 +57,12 @@ public abstract class AbstractJSONEntityEncoder<T>
         this.dateTimeFormat = dateTimeFormat;
     }
 
+    public JsonSchemaUriConfiguration getSchemaUriConfiguration() {
+        return schemaUriConfiguration;
+    }
+
+    @Inject
+    public void setSchemaUriConfiguration(JsonSchemaUriConfiguration schemaUriConfiguration) {
+        this.schemaUriConfiguration = schemaUriConfiguration;
+    }
 }

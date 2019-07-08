@@ -43,7 +43,7 @@ public class PreviewResource extends AbstractResource {
     }
 
     @GET
-    @Produces(MediaTypes.PNG_IMAGE)
+    @Produces(MediaTypes.IMAGE_PNG)
     public Response getMapImage() {
         try {
             TileRenderer renderer = new OSMTileRenderer();

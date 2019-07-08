@@ -18,21 +18,27 @@ package org.envirocar.server.rest.guice;
 
 import com.google.common.collect.ImmutableMap;
 import com.sun.jersey.api.container.filter.GZIPContentEncodingFilter;
+import com.sun.jersey.api.core.HttpContext;
 import com.sun.jersey.api.core.ResourceConfig;
 import com.sun.jersey.guice.JerseyServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
-import com.sun.jersey.spi.container.ContainerRequestFilter;
-import com.sun.jersey.spi.container.ContainerResponseFilter;
-import com.sun.jersey.spi.container.ResourceFilterFactory;
+import com.sun.jersey.spi.container.*;
 import org.envirocar.server.rest.CachingFilter;
 import org.envirocar.server.rest.URIContentNegotiationFilter;
 import org.envirocar.server.rest.pagination.PaginationFilter;
 import org.envirocar.server.rest.rights.HasAcceptedLatestLegalPoliciesResourceFilterFactory;
 import org.envirocar.server.rest.schema.JsonSchemaResourceFilterFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
+import java.time.Duration;
+import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.StreamSupport;
 
 import static java.util.stream.Collectors.joining;
@@ -48,7 +54,7 @@ public class JerseyModule extends JerseyServletModule {
         serve("/*").with(GuiceContainer.class, getContainerFilterConfig());
     }
 
-    protected Map<String, String> getContainerFilterConfig() {
+    private Map<String, String> getContainerFilterConfig() {
         return ImmutableMap.<String, String>builder()
                 .put(ResourceConfig.FEATURE_DISABLE_WADL, "false")
                 .put(ResourceConfig.PROPERTY_CONTAINER_REQUEST_FILTERS, classList(requestFilters()))
@@ -61,16 +67,62 @@ public class JerseyModule extends JerseyServletModule {
         return StreamSupport.stream(classes.spliterator(), false).map(Class::getName).collect(joining(","));
     }
 
-    protected List<Class<? extends ContainerResponseFilter>> responseFilters() {
-        return Arrays.asList(CachingFilter.class, PaginationFilter.class, GZIPContentEncodingFilter.class);
+    private List<Class<? extends ContainerResponseFilter>> responseFilters() {
+        return Arrays.asList(LoggingFilter.class, CachingFilter.class, PaginationFilter.class, GZIPContentEncodingFilter.class);
     }
 
-    protected List<Class<? extends ContainerRequestFilter>> requestFilters() {
-        return Arrays.asList(GZIPContentEncodingFilter.class, URIContentNegotiationFilter.class);
+    private List<Class<? extends ContainerRequestFilter>> requestFilters() {
+        return Arrays.asList(LoggingFilter.class, GZIPContentEncodingFilter.class, URIContentNegotiationFilter.class);
     }
 
-    protected List<Class<? extends ResourceFilterFactory>> filterFactories() {
+    private List<Class<? extends ResourceFilterFactory>> filterFactories() {
         return Arrays.asList(HasAcceptedLatestLegalPoliciesResourceFilterFactory.class, JsonSchemaResourceFilterFactory.class);
+    }
+
+    private static class LoggingFilter implements ContainerRequestFilter, ContainerResponseFilter {
+        private static final Logger LOG = LoggerFactory.getLogger(LoggingFilter.class);
+        private final Provider<HttpContext> httpContext;
+        private final AtomicLong reqId = new AtomicLong();
+
+        @Inject
+        private LoggingFilter(Provider<HttpContext> httpContext) {
+            this.httpContext = httpContext;
+        }
+
+        @Override
+        public ContainerRequest filter(ContainerRequest request) {
+            long id = reqId.getAndIncrement();
+            Map<String, Object> contextProps = this.httpContext.get().getProperties();
+            contextProps.put("logging-filter-request-id", id);
+            contextProps.put("logging-filter-request-time", OffsetDateTime.now());
+            String message = String.format("[%d]> %s %s", id,
+                    request.getMethod(),
+                    request.getRequestUri());
+            log(message);
+            return request;
+        }
+
+
+        @Override
+        public ContainerResponse filter(ContainerRequest request, ContainerResponse response) {
+            Map<String, Object> contextProps = this.httpContext.get().getProperties();
+            Long id = (Long) contextProps.get("logging-filter-request-id");
+            if (id != null) {
+                OffsetDateTime time = (OffsetDateTime) contextProps.get("logging-filter-request-time");
+                String message = String.format("[%d]< %s %s: %d (took %s)", id,
+                        request.getMethod(),
+                        request.getRequestUri(),
+                        response.getStatus(),
+                        Duration.between(time, OffsetDateTime.now()));
+                log(message);
+            }
+            return response;
+        }
+
+        public void log(String message) {
+            LOG.info(message);
+        }
+
     }
 
 }

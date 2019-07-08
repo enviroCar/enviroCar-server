@@ -25,6 +25,7 @@ import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.core.util.GeoJSONConstants;
 import org.envirocar.server.rest.JSONConstants;
 import org.envirocar.server.rest.MediaTypes;
+import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.encoding.JSONEntityEncoder;
 
 import javax.inject.Singleton;
@@ -67,7 +68,7 @@ public class MeasurementJSONEncoder extends AbstractJSONEntityEncoder<Measuremen
             properties.put(JSONConstants.TIME_KEY, getDateTimeFormat().print(entity.getTime()));
         }
 
-        if (!mediaType.equals(MediaTypes.TRACK_TYPE)) {
+        if (!getSchemaUriConfiguration().isSchema(mediaType, Schemas.TRACK)) {
             if (entity.hasSensor()) {
                 properties.set(JSONConstants.SENSOR_KEY, sensorProvider.encodeJSON(entity.getSensor(), mediaType));
             }
@@ -75,8 +76,9 @@ public class MeasurementJSONEncoder extends AbstractJSONEntityEncoder<Measuremen
                 properties.put(JSONConstants.TRACK_KEY, entity.getTrack().getIdentifier());
             }
         }
-        if (mediaType.equals(MediaTypes.MEASUREMENT_TYPE) || mediaType.equals(MediaTypes.MEASUREMENTS_TYPE)
-                || mediaType.equals(MediaTypes.TRACK_TYPE)) {
+        if (getSchemaUriConfiguration().isSchema(mediaType, Schemas.MEASUREMENT)
+                || getSchemaUriConfiguration().isSchema(mediaType, Schemas.MEASUREMENTS)
+                || getSchemaUriConfiguration().isSchema(mediaType, Schemas.TRACK)) {
             ObjectNode values = properties.putObject(JSONConstants.PHENOMENONS_KEY);
 
             for (MeasurementValue mv : entity.getValues()) {

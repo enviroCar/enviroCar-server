@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.envirocar.server.core.entities.PrivacyStatement;
 import org.envirocar.server.rest.JSONConstants;
 import org.envirocar.server.rest.MediaTypes;
+import org.envirocar.server.rest.Schemas;
 
 import javax.inject.Singleton;
 import javax.ws.rs.core.MediaType;
@@ -47,7 +48,7 @@ public class PrivacyStatementJSONEncoder extends AbstractJSONEntityEncoder<Priva
         if (entity.getIssuedDate() != null) {
             termsOfUse.put(JSONConstants.ISSUED_DATE, entity.getIssuedDate());
         }
-        if (mediaType.equals(MediaTypes.PRIVACY_STATEMENT_TYPE)) {
+        if (getSchemaUriConfiguration().isSchema(mediaType, Schemas.PRIVACY_STATEMENT)) {
             if (entity.hasCreationTime()) {
                 termsOfUse.put(JSONConstants.CREATED_KEY, getDateTimeFormat().print(entity.getCreationTime()));
             }

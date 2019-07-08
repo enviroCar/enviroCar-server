@@ -33,11 +33,14 @@ import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.event.CreatedTrackEvent;
 import org.envirocar.server.core.event.DeletedTrackEvent;
 import org.envirocar.server.rest.MediaTypes;
+import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.encoding.JSONEntityEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.ws.rs.core.MediaType;
 import java.io.IOException;
+import java.util.Collections;
 
 @Singleton
 public class HTTPPushListener {
@@ -73,10 +76,14 @@ public class HTTPPushListener {
     private synchronized void pushNewTrack(Track track) {
         HttpResponse resp = null;
         try {
-            ObjectNode jsonTrack = encoder.encodeJSON(track, MediaTypes.TRACK_TYPE);
+
+            MediaType mediaType = new MediaType("application", "json",
+                    Collections.singletonMap(MediaTypes.SCHEMA_ATTRIBUTE, Schemas.TRACK));
+
+            ObjectNode jsonTrack = encoder.encodeJSON(track, mediaType);
             String content = writer.writeValueAsString(jsonTrack);
             //logger.debug("Entity: {}", content);
-            HttpEntity entity = new StringEntity(content, ContentType.create(MediaTypes.TRACK));
+            HttpEntity entity = new StringEntity(content, ContentType.APPLICATION_JSON);
             HttpPost hp = new HttpPost(host);
             hp.setEntity(entity);
             resp = this.client.execute(hp);
