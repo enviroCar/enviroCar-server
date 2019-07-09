@@ -16,14 +16,12 @@
  */
 package org.envirocar.server.core;
 
-import com.google.common.base.Preconditions;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.geom.Polygon;
-import org.envirocar.server.core.exception.ValidationException;
+import com.vividsolutions.jts.geom.*;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * class for representing spatial filter
@@ -54,24 +52,11 @@ public class SpatialFilter {
      * @param geom     The {@link Geometry}
      * @param params   The parameters
      */
-    public SpatialFilter(SpatialFilterOperator operator,
-                         Geometry geom,
-                         List<Double> params) {
-        switch (operator) {
-            case BBOX:
-                if (!(geom instanceof Polygon)) {
-                    throw new ValidationException("BBOX requires a Polygon");
-                }
-                break;
-            case NEARPOINT:
-                if (!(geom instanceof Point)) {
-                    throw new ValidationException("NEARPOINT requires a point!");
-                }
-                break;
-        }
-        this.operator = Preconditions.checkNotNull(operator);
-        this.geom = Preconditions.checkNotNull(geom);
-        this.params = params == null ? Collections.emptyList() : params;
+    public SpatialFilter(SpatialFilterOperator operator, Geometry geom, List<Double> params) {
+        this.operator = Objects.requireNonNull(operator);
+        this.geom = Optional.ofNullable(geom).map(g -> createGeometry(operator, geom))
+                .orElseThrow(NullPointerException::new);
+        this.params = Optional.ofNullable(params).orElseGet(Collections::emptyList);
     }
 
 
@@ -95,13 +80,36 @@ public class SpatialFilter {
         NEARPOINT
     }
 
-    public static SpatialFilter bbox(Polygon polygon) {
+    public static SpatialFilter bbox(Geometry polygon) {
         return new SpatialFilter(SpatialFilterOperator.BBOX, polygon, null);
     }
 
     public static SpatialFilter nearPoint(Point point, double distance) {
-        return new SpatialFilter(SpatialFilterOperator.NEARPOINT, point,
-                Collections.singletonList(distance));
+        return new SpatialFilter(SpatialFilterOperator.NEARPOINT, point, Collections.singletonList(distance));
+    }
+
+    private static Geometry createGeometry(SpatialFilterOperator operator, Geometry geom) {
+        switch (operator) {
+            case BBOX:
+                return getBoundingBox(geom);
+            case NEARPOINT:
+                return geom.getCentroid();
+            default:
+                return geom;
+        }
+    }
+
+    private static Geometry getBoundingBox(Geometry geom) {
+        Envelope envelope = geom.getEnvelopeInternal();
+        Coordinate[] coordinates = {
+                new Coordinate(envelope.getMinX(), envelope.getMinY()),
+                new Coordinate(envelope.getMinX(), envelope.getMaxY()),
+                new Coordinate(envelope.getMaxX(), envelope.getMaxY()),
+                new Coordinate(envelope.getMaxX(), envelope.getMinY()),
+                new Coordinate(envelope.getMinX(), envelope.getMinY())
+        };
+        GeometryFactory factory = geom.getFactory();
+        return factory.createPolygon(factory.createLinearRing(coordinates), null);
     }
 
 }

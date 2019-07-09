@@ -14,12 +14,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.rest;
+package org.envirocar.server.rest.filter;
 
 import javax.ws.rs.core.MediaType;
 
 import com.google.common.collect.ImmutableMap;
 import com.sun.jersey.api.container.filter.UriConnegFilter;
+import org.envirocar.server.rest.MediaTypes;
 
 public class URIContentNegotiationFilter extends UriConnegFilter {
 
