@@ -16,13 +16,11 @@
  */
 package org.envirocar.server.rest.schema;
 
-import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.resources.JsonSchemaResource;
 import org.envirocar.server.rest.resources.RootResource;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -63,15 +61,6 @@ public class JsonSchemaUriConfigurationImpl implements JsonSchemaUriConfiguratio
             }
         }
         return uri;
-    }
-
-    @Override
-    public boolean isSchema(MediaType mediaType, String schema) {
-        return MediaTypes.getSchemaAttribute(mediaType)
-                .map(URI::create)
-                .map(this::toExternalURI)
-                .map(s -> s.equals(toExternalURI(URI.create(schema))))
-                .orElse(false);
     }
 
 }

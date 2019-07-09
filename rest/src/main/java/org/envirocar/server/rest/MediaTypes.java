@@ -52,8 +52,9 @@ public interface MediaTypes {
     }
 
     static boolean hasSchemaAttribute(MediaType mediaType) {
-        return mediaType != null && mediaType.isCompatible(MediaType.APPLICATION_JSON_TYPE) &&
-                mediaType.getParameters().containsKey(SCHEMA_ATTRIBUTE);
+        return mediaType != null
+                && mediaType.isCompatible(MediaType.APPLICATION_JSON_TYPE)
+                && mediaType.getParameters().containsKey(SCHEMA_ATTRIBUTE);
     }
 
     static Optional<String> getSchemaAttribute(MediaType mediaType) {
