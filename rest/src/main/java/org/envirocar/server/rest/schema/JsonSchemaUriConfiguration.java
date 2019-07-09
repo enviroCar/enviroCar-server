@@ -17,6 +17,7 @@
 package org.envirocar.server.rest.schema;
 
 import com.google.inject.ImplementedBy;
+import org.envirocar.server.rest.MediaTypes;
 
 import javax.ws.rs.core.MediaType;
 import java.net.URI;
@@ -39,5 +40,15 @@ public interface JsonSchemaUriConfiguration {
      */
     URI toInternalURI(URI uri);
 
-    boolean isSchema(MediaType mediaType, String schema);
+    default boolean isSchema(MediaType mediaType, String schema) {
+        return schema != null && !schema.isEmpty() &&
+                MediaTypes.getSchemaAttribute(mediaType)
+                        .map(URI::create)
+                        .map(URI::getPath)
+                        .map(path -> path.split("/"))
+                        .filter(path -> path.length > 0)
+                        .map(path -> path[path.length - 1])
+                        .map(schema::equals)
+                        .orElse(false);
+    }
 }
