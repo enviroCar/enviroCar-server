@@ -146,11 +146,10 @@ public class TrackJSONEncoder extends AbstractJSONEntityEncoder<Track> {
     }
 
     private void addStartAndEnd(Track t, AccessRights rights, ObjectNode track) {
-        boolean canSeeTime = rights.canSeeCreationTimeOf(t);
-        if (t.hasBegin() && canSeeTime) {
+        if (t.hasBegin()) {
             track.put(JSONConstants.BEGIN_KEY, getDateTimeFormat().print(t.getBegin()));
         }
-        if (t.hasEnd() && canSeeTime) {
+        if (t.hasEnd()) {
             track.put(JSONConstants.END_KEY, getDateTimeFormat().print(t.getEnd()));
         }
     }
