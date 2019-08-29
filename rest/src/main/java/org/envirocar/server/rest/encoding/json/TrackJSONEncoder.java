@@ -16,9 +16,9 @@
  */
 package org.envirocar.server.rest.encoding.json;
 
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.ext.Provider;
-
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.inject.Inject;
 import org.envirocar.server.core.DataService;
 import org.envirocar.server.core.entities.Measurements;
 import org.envirocar.server.core.entities.Sensor;
@@ -31,9 +31,8 @@ import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.encoding.JSONEntityEncoder;
 import org.envirocar.server.rest.rights.AccessRights;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.inject.Inject;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.Provider;
 
 /**
  * TODO JavaDoc
@@ -68,7 +67,7 @@ public class TrackJSONEncoder extends AbstractJSONEntityEncoder<Track> {
             track.put(GeoJSONConstants.TYPE_KEY,
                       GeoJSONConstants.FEATURE_COLLECTION_TYPE);
             ObjectNode properties = track
-                    .putObject(GeoJSONConstants.PROPERTIES_KEY);
+                                            .putObject(GeoJSONConstants.PROPERTIES_KEY);
             if (t.hasIdentifier()) {
                 properties.put(JSONConstants.IDENTIFIER_KEY, t.getIdentifier());
             }
@@ -84,25 +83,24 @@ public class TrackJSONEncoder extends AbstractJSONEntityEncoder<Track> {
                                getDateTimeFormat().print(t.getCreationTime()));
             }
             if (t.hasModificationTime() && rights
-                    .canSeeModificationTimeOf(t)) {
+                                                   .canSeeModificationTimeOf(t)) {
                 properties.put(JSONConstants.MODIFIED_KEY,
                                getDateTimeFormat()
-                        .print(t.getModificationTime()));
+                                       .print(t.getModificationTime()));
             }
             if (t.hasSensor() && rights.canSeeSensorOf(t)) {
-                properties.set(JSONConstants.SENSOR_KEY, sensorEncoder
-                        .encodeJSON(t.getSensor(), rights, mediaType));
+                properties.set(JSONConstants.SENSOR_KEY, sensorEncoder.encodeJSON(t.getSensor(), rights, mediaType));
             }
             if (t.hasUser() && rights.canSeeUserOf(t)) {
-                properties.set(JSONConstants.USER_KEY, userEncoder
-                        .encodeJSON(t.getUser(), rights, mediaType));
+                properties.set(JSONConstants.USER_KEY, userEncoder.encodeJSON(t.getUser(), rights, mediaType));
             }
             if (rights.canSeeLengthOf(t)) {
-            	properties.put(JSONConstants.LENGTH_KEY, t.getLength());
+                properties.put(JSONConstants.LENGTH_KEY, t.getLength());
             }
             if (t.hasAppVersion() && rights.canSeeAppVersionOf(t)) {
-            	properties.put(JSONConstants.APP_VERSION_KEY, t.getAppVersion());
+                properties.put(JSONConstants.APP_VERSION_KEY, t.getAppVersion());
             }
+            addStartAndEnd(t, rights, properties);
             /*
              * do not serialize the OBD device for privacy's sake
              */
@@ -110,15 +108,13 @@ public class TrackJSONEncoder extends AbstractJSONEntityEncoder<Track> {
 //            	properties.put(JSONConstants.OBD_DEVICE_KEY, t.getObdDevice());
 //            }
             if (t.hasTouVersion() && rights.canSeeTouVersionOf(t)) {
-            	properties.put(JSONConstants.TOU_VERSION_KEY, t.getTouVersion());
+                properties.put(JSONConstants.TOU_VERSION_KEY, t.getTouVersion());
             }
             JsonNode features;
             if (rights.canSeeMeasurementsOf(t)) {
-                Measurements values = dataService
-                        .getMeasurements(new MeasurementFilter(t));
-                features = measurementsEncoder
-                        .encodeJSON(values, rights, mediaType)
-                        .path(GeoJSONConstants.FEATURES_KEY);
+                Measurements values = dataService.getMeasurements(new MeasurementFilter(t));
+                features = measurementsEncoder.encodeJSON(values, rights, mediaType)
+                                              .path(GeoJSONConstants.FEATURES_KEY);
             } else {
                 features = track.arrayNode();
             }
@@ -128,9 +124,9 @@ public class TrackJSONEncoder extends AbstractJSONEntityEncoder<Track> {
                 track.put(JSONConstants.IDENTIFIER_KEY, t.getIdentifier());
             }
             if (t.hasModificationTime() && rights
-                    .canSeeModificationTimeOf(t)) {
+                                                   .canSeeModificationTimeOf(t)) {
                 track.put(JSONConstants.MODIFIED_KEY, getDateTimeFormat()
-                        .print(t.getModificationTime()));
+                                                              .print(t.getModificationTime()));
             }
             if (t.hasName() && rights.canSeeNameOf(t)) {
                 track.put(JSONConstants.NAME_KEY, t.getName());
@@ -140,20 +136,22 @@ public class TrackJSONEncoder extends AbstractJSONEntityEncoder<Track> {
             if (t.hasLength() && rights.canSeeLengthOf(t)) {
                 track.put(JSONConstants.LENGTH_KEY, t.getLength());
             }
-            boolean canSeeTime = rights.canSeeCreationTimeOf(t);
-            if (t.hasBegin() && canSeeTime) {
-                track.put(JSONConstants.BEGIN_KEY, getDateTimeFormat()
-                        .print(t.getBegin()));
-            }
-            if (t.hasBegin() && canSeeTime) {
-                track.put(JSONConstants.END_KEY, getDateTimeFormat()
-                        .print(t.getEnd()));
-            }
+            addStartAndEnd(t, rights, track);
             if (rights.canSeeSensorOf(t)) {
                 track.set(JSONConstants.SENSOR_KEY,
-                        this.sensorEncoder.encodeJSON(t.getSensor(), rights, mediaType));
+                          this.sensorEncoder.encodeJSON(t.getSensor(), rights, mediaType));
             }
         }
         return track;
+    }
+
+    private void addStartAndEnd(Track t, AccessRights rights, ObjectNode track) {
+        boolean canSeeTime = rights.canSeeCreationTimeOf(t);
+        if (t.hasBegin() && canSeeTime) {
+            track.put(JSONConstants.BEGIN_KEY, getDateTimeFormat().print(t.getBegin()));
+        }
+        if (t.hasEnd() && canSeeTime) {
+            track.put(JSONConstants.END_KEY, getDateTimeFormat().print(t.getEnd()));
+        }
     }
 }
