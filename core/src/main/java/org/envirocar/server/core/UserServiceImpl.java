@@ -116,11 +116,12 @@ public class UserServiceImpl implements UserService {
         // set the hashed password
         user.setToken(passwordEncoder.encode(user.getToken()));
 
-
+        // FIXME check if terms of use is the current one
         if (user.hasAcceptedTermsOfUse() && !user.hasAcceptedTermsOfUseVersion()) {
             Optional.ofNullable(this.termsOfUseDao.getLatest())
                     .map(Terms::getIssuedDate).ifPresent(user::setTermsOfUseVersion);
         }
+        // FIXME check if privacy statement is the current one
         if (user.hasAcceptedPrivacyStatement() && !user.hasPrivacyStatementVersion()) {
             Optional.ofNullable(this.privacyStatementDao.getLatest())
                     .map(Terms::getIssuedDate).ifPresent(user::setPrivacyStatementVersion);
