@@ -20,7 +20,6 @@ import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.exception.ResourceNotFoundException;
-import org.envirocar.server.rest.rights.HasAcceptedLatestLegalPolicies;
 
 import javax.ws.rs.DELETE;
 
@@ -41,7 +40,6 @@ public class FriendResource extends UserResource {
     }
 
     @DELETE
-    @HasAcceptedLatestLegalPolicies
     @Override
     public void delete(boolean ignored) throws ResourceNotFoundException {
         checkRights(getRights().canUnfriend(user, getUser()));

@@ -30,10 +30,15 @@ import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.RESTConstants;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.auth.Authenticated;
-import org.envirocar.server.rest.rights.HasAcceptedLatestLegalPolicies;
 import org.envirocar.server.rest.schema.Schema;
 
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import java.util.List;
@@ -82,7 +87,6 @@ public class SensorsResource extends AbstractResource {
     @Consumes({MediaTypes.JSON})
     @Schema(request = Schemas.SENSOR_CREATE)
     @Authenticated
-    @HasAcceptedLatestLegalPolicies
     public Response create(Sensor sensor) {
         sensor = getDataService().createSensor(sensor);
         return Response.created(getUriInfo().getAbsolutePathBuilder().path(sensor.getIdentifier()).build()).build();

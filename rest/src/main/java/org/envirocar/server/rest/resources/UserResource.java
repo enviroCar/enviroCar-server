@@ -24,6 +24,7 @@ import org.envirocar.server.core.exception.*;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.auth.Authenticated;
+import org.envirocar.server.rest.rights.AllowOutdatedTerms;
 import org.envirocar.server.rest.schema.Schema;
 
 import javax.ws.rs.*;
@@ -67,6 +68,7 @@ public class UserResource extends AbstractResource {
     @Authenticated
     @Schema(request = Schemas.USER_MODIFY)
     @Consumes({MediaTypes.JSON})
+    @AllowOutdatedTerms
     public Response modify(User changes)
             throws UserNotFoundException, IllegalModificationException,
             ValidationException, ResourceAlreadyExistException {

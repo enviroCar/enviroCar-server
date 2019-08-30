@@ -27,10 +27,14 @@ import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.UserReference;
 import org.envirocar.server.rest.auth.Authenticated;
-import org.envirocar.server.rest.rights.HasAcceptedLatestLegalPolicies;
 import org.envirocar.server.rest.schema.Schema;
 
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 
 /**
  * TODO JavaDoc
@@ -56,7 +60,6 @@ public class GroupMembersResource extends AbstractResource {
 
     @POST
     @Authenticated
-    @HasAcceptedLatestLegalPolicies
     @Consumes({MediaTypes.JSON})
     @Schema(request = Schemas.USER_REF)
     public void add(UserReference user) throws UserNotFoundException {

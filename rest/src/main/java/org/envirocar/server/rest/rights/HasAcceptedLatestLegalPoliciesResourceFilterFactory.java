@@ -18,13 +18,15 @@ package org.envirocar.server.rest.rights;
 
 import com.google.inject.Inject;
 import com.sun.jersey.api.model.AbstractMethod;
-import com.sun.jersey.spi.container.*;
+import com.sun.jersey.spi.container.ContainerRequest;
+import com.sun.jersey.spi.container.ContainerRequestFilter;
+import com.sun.jersey.spi.container.ContainerResponseFilter;
+import com.sun.jersey.spi.container.ResourceFilter;
+import com.sun.jersey.spi.container.ResourceFilterFactory;
 import org.envirocar.server.core.entities.PolicyType;
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.validation.LegalPolicyValidator;
 import org.envirocar.server.rest.auth.PrincipalImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.core.SecurityContext;
 import java.util.Collections;
@@ -33,12 +35,12 @@ import java.util.Objects;
 import java.util.Optional;
 
 /**
- * ResourceFilterFactory for resources annotated with {@link HasAcceptedLatestLegalPolicies}.
+ * ResourceFilterFactory for resources.
  *
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public class HasAcceptedLatestLegalPoliciesResourceFilterFactory implements ResourceFilterFactory {
-    private static final Logger LOG = LoggerFactory.getLogger(HasAcceptedLatestLegalPoliciesResourceFilterFactory.class);
+public class HasAcceptedLatestLegalPoliciesResourceFilterFactory
+        implements ResourceFilterFactory, ResourceFilter, ContainerRequestFilter {
     private final LegalPolicyValidator validator;
 
     @Inject
@@ -48,63 +50,39 @@ public class HasAcceptedLatestLegalPoliciesResourceFilterFactory implements Reso
 
     @Override
     public List<ResourceFilter> create(AbstractMethod am) {
-        HasAcceptedLatestLegalPolicies annotation = am.getAnnotation(HasAcceptedLatestLegalPolicies.class);
-        if (annotation != null) {
-            PolicyType[] policyTypes = annotation.value();
-            if (policyTypes.length > 0) {
-                return Collections.singletonList(new LegalPolicyResourceFilter(this.validator, policyTypes));
-            } else {
-                LOG.warn("No policies given for method {}", am);
-            }
+
+        if (am.getAnnotation(AllowOutdatedTerms.class) != null) {
+            return Collections.emptyList();
         }
-        return Collections.emptyList();
+
+        return Collections.singletonList(this);
     }
 
-    private static class LegalPolicyRequestFilter implements ContainerRequestFilter {
-        private final LegalPolicyValidator validator;
-        private final PolicyType[] policyTypes;
-
-        private LegalPolicyRequestFilter(LegalPolicyValidator validator, PolicyType[] policyTypes) {
-            this.validator = validator;
-            this.policyTypes = policyTypes;
-        }
-
-        @Override
-        public ContainerRequest filter(ContainerRequest request) {
-            getUser(request).ifPresent(this::validate);
-            return request;
-        }
-
-        public void validate(User user) {
-            this.validator.validate(this.policyTypes, user);
-        }
-
-        public Optional<User> getUser(ContainerRequest request) {
-            return Optional.ofNullable(request)
-                    .map(ContainerRequest::getSecurityContext)
-                    .map(SecurityContext::getUserPrincipal)
-                    .map(PrincipalImpl.class::cast)
-                    .map(PrincipalImpl::getUser);
-        }
+    @Override
+    public ContainerRequest filter(ContainerRequest request) {
+        getUser(request).ifPresent(this::validate);
+        return request;
     }
 
-    private class LegalPolicyResourceFilter implements ResourceFilter {
-        private final LegalPolicyValidator validator;
-        private final PolicyType[] policyTypes;
+    public void validate(User user) {
+        this.validator.validate(PolicyType.TERMS_OF_USE, user);
+    }
 
-        private LegalPolicyResourceFilter(LegalPolicyValidator validator, PolicyType[] policyTypes) {
-            this.validator = validator;
-            this.policyTypes = policyTypes;
-        }
+    public Optional<User> getUser(ContainerRequest request) {
+        return Optional.ofNullable(request)
+                       .map(ContainerRequest::getSecurityContext)
+                       .map(SecurityContext::getUserPrincipal)
+                       .map(PrincipalImpl.class::cast)
+                       .map(PrincipalImpl::getUser);
+    }
 
-        @Override
-        public ContainerRequestFilter getRequestFilter() {
-            return new LegalPolicyRequestFilter(this.validator, this.policyTypes);
-        }
+    @Override
+    public ContainerRequestFilter getRequestFilter() {
+        return this;
+    }
 
-        @Override
-        public ContainerResponseFilter getResponseFilter() {
-            return null;
-        }
+    @Override
+    public ContainerResponseFilter getResponseFilter() {
+        return null;
     }
 }

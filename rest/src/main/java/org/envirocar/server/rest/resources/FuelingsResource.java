@@ -28,10 +28,15 @@ import org.envirocar.server.core.filter.FuelingFilter;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.auth.Authenticated;
-import org.envirocar.server.rest.rights.HasAcceptedLatestLegalPolicies;
 import org.envirocar.server.rest.schema.Schema;
 
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -60,14 +65,12 @@ public class FuelingsResource extends AbstractResource {
     }
 
     @POST
-    @HasAcceptedLatestLegalPolicies
     @Schema(request = Schemas.FUELING_CREATE)
     @Consumes({MediaTypes.JSON})
     public Response create(Fueling fueling) {
         fueling.setUser(getCurrentUser());
         Fueling f = getDataService().createFueling(fueling);
-        return Response.created(getUriInfo().getAbsolutePathBuilder().path(f
-                .getIdentifier()).build()).build();
+        return Response.created(getUriInfo().getAbsolutePathBuilder().path(f.getIdentifier()).build()).build();
     }
 
     @GET
@@ -80,7 +83,6 @@ public class FuelingsResource extends AbstractResource {
 
     @DELETE
     @Path(FUELING)
-    @HasAcceptedLatestLegalPolicies
     public void delete(@PathParam("id") String id) throws FuelingNotFoundException {
         Fueling fueling = getDataService().getFueling(user, id);
         checkRights(getRights().canDelete(fueling));

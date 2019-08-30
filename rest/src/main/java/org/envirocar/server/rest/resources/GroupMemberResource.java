@@ -22,7 +22,6 @@ import org.envirocar.server.core.entities.Group;
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.exception.GroupNotFoundException;
 import org.envirocar.server.core.exception.UserNotFoundException;
-import org.envirocar.server.rest.rights.HasAcceptedLatestLegalPolicies;
 
 import javax.ws.rs.DELETE;
 
@@ -43,7 +42,6 @@ public class GroupMemberResource extends UserResource {
 
     @DELETE
     @Override
-    @HasAcceptedLatestLegalPolicies
     public void delete(boolean ignored) throws UserNotFoundException, GroupNotFoundException {
         checkRights(getRights().canLeaveGroup(group));
         getGroupService().removeGroupMember(group, getUser());

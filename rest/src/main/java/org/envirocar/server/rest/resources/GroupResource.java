@@ -25,10 +25,14 @@ import org.envirocar.server.core.exception.ValidationException;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.auth.Authenticated;
-import org.envirocar.server.rest.rights.HasAcceptedLatestLegalPolicies;
 import org.envirocar.server.rest.schema.Schema;
 
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
@@ -54,14 +58,12 @@ public class GroupResource extends AbstractResource {
     @Schema(response = Schemas.GROUP)
     @Produces({MediaTypes.JSON, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
 
-
     public Group get() {
         return group;
     }
 
     @PUT
     @Authenticated
-    @HasAcceptedLatestLegalPolicies
     @Consumes({MediaTypes.JSON})
     @Schema(request = Schemas.GROUP_MODIFY)
     public Response modify(Group changes) throws ValidationException, IllegalModificationException {
@@ -82,7 +84,6 @@ public class GroupResource extends AbstractResource {
 
     @DELETE
     @Authenticated
-    @HasAcceptedLatestLegalPolicies
     public void delete() throws GroupNotFoundException {
         checkRights(getRights().canDelete(group));
         getGroupService().deleteGroup(group);

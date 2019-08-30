@@ -28,13 +28,22 @@ import org.envirocar.server.core.exception.BadRequestException;
 import org.envirocar.server.core.exception.MeasurementNotFoundException;
 import org.envirocar.server.core.exception.ValidationException;
 import org.envirocar.server.core.filter.MeasurementFilter;
-import org.envirocar.server.rest.*;
+import org.envirocar.server.rest.BoundingBox;
+import org.envirocar.server.rest.MediaTypes;
+import org.envirocar.server.rest.NearPoint;
+import org.envirocar.server.rest.RESTConstants;
+import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.auth.Authenticated;
-import org.envirocar.server.rest.rights.HasAcceptedLatestLegalPolicies;
 import org.envirocar.server.rest.schema.Schema;
 
 import javax.annotation.Nullable;
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import java.security.InvalidParameterException;
 
@@ -74,12 +83,11 @@ public class MeasurementsResource extends AbstractResource {
         }
 
         return getDataService()
-                .getMeasurements(new MeasurementFilter(track, user, sf, parseTemporalFilterForInstant(), getPagination()));
+                       .getMeasurements(new MeasurementFilter(track, user, sf, parseTemporalFilterForInstant(), getPagination()));
     }
 
     @POST
     @Authenticated
-    @HasAcceptedLatestLegalPolicies
     @Schema(request = Schemas.MEASUREMENT_CREATE)
     @Consumes({MediaTypes.JSON})
     public Response create(Measurement measurement) throws ValidationException {

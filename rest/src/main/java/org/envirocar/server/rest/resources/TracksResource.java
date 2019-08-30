@@ -27,13 +27,22 @@ import org.envirocar.server.core.exception.BadRequestException;
 import org.envirocar.server.core.exception.TrackNotFoundException;
 import org.envirocar.server.core.exception.ValidationException;
 import org.envirocar.server.core.filter.TrackFilter;
-import org.envirocar.server.rest.*;
+import org.envirocar.server.rest.BoundingBox;
+import org.envirocar.server.rest.MediaTypes;
+import org.envirocar.server.rest.RESTConstants;
+import org.envirocar.server.rest.Schemas;
+import org.envirocar.server.rest.TrackWithMeasurments;
 import org.envirocar.server.rest.auth.Authenticated;
-import org.envirocar.server.rest.rights.HasAcceptedLatestLegalPolicies;
 import org.envirocar.server.rest.schema.Schema;
 
 import javax.annotation.Nullable;
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
 /**
@@ -62,14 +71,13 @@ public class TracksResource extends AbstractResource {
             spatialFilter = SpatialFilter.bbox(bbox.asPolygon(factory));
         }
         return getDataService()
-                .getTracks(new TrackFilter(user, spatialFilter,
-                        parseTemporalFilterForInterval(),
-                        getPagination()));
+                       .getTracks(new TrackFilter(user, spatialFilter,
+                                                  parseTemporalFilterForInterval(),
+                                                  getPagination()));
     }
 
     @POST
     @Authenticated
-    @HasAcceptedLatestLegalPolicies
     @Schema(request = Schemas.TRACK_CREATE)
     @Consumes({MediaTypes.JSON})
     public Response create(Track track) throws ValidationException {
@@ -85,7 +93,7 @@ public class TracksResource extends AbstractResource {
             track = getDataService().createTrack(track);
         }
         return Response.created(getUriInfo().getAbsolutePathBuilder()
-                .path(track.getIdentifier()).build()).build();
+                                            .path(track.getIdentifier()).build()).build();
     }
 
     @Path(TRACK)

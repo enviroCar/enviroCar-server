@@ -23,10 +23,14 @@ import org.envirocar.server.core.exception.PhenomenonNotFoundException;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.auth.Authenticated;
-import org.envirocar.server.rest.rights.HasAcceptedLatestLegalPolicies;
 import org.envirocar.server.rest.schema.Schema;
 
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
 /**
@@ -48,13 +52,12 @@ public class PhenomenonsResource extends AbstractResource {
 
     @POST
     @Authenticated
-    @HasAcceptedLatestLegalPolicies
     @Schema(request = Schemas.PHENOMENON_CREATE)
     @Consumes({MediaTypes.JSON})
     public Response create(Phenomenon phenomenon) {
         return Response.created(getUriInfo().getAbsolutePathBuilder()
-                .path(getDataService().createPhenomenon(phenomenon)
-                        .getName()).build()).build();
+                                            .path(getDataService().createPhenomenon(phenomenon)
+                                                                  .getName()).build()).build();
     }
 
     @Path(PHENOMENON)

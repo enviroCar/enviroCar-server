@@ -29,11 +29,16 @@ import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.RESTConstants;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.auth.Authenticated;
-import org.envirocar.server.rest.rights.HasAcceptedLatestLegalPolicies;
 import org.envirocar.server.rest.schema.Schema;
 
 import javax.annotation.Nullable;
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
 /**
@@ -66,7 +71,6 @@ public class GroupsResource extends AbstractResource {
 
     @POST
     @Authenticated
-    @HasAcceptedLatestLegalPolicies
     @Consumes({MediaTypes.JSON})
     @Schema(request = Schemas.GROUP_CREATE)
     public Response createGroup(Group group) throws ResourceAlreadyExistException, ValidationException {
