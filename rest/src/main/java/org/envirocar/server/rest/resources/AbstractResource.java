@@ -16,22 +16,32 @@
  */
 package org.envirocar.server.rest.resources;
 
-import org.envirocar.server.core.*;
+import org.envirocar.server.core.DataService;
+import org.envirocar.server.core.FriendService;
+import org.envirocar.server.core.GroupService;
+import org.envirocar.server.core.StatisticsService;
+import org.envirocar.server.core.TemporalFilter;
+import org.envirocar.server.core.TemporalFilterOperator;
+import org.envirocar.server.core.UserService;
+import org.envirocar.server.core.UserStatisticService;
 import org.envirocar.server.core.entities.EntityFactory;
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.exception.BadRequestException;
 import org.envirocar.server.core.util.pagination.Pagination;
 import org.envirocar.server.rest.ForbiddenException;
-import org.envirocar.server.rest.auth.PrincipalImpl;
 import org.envirocar.server.rest.UnauthorizedException;
+import org.envirocar.server.rest.auth.PrincipalImpl;
 import org.envirocar.server.rest.pagination.PaginationProvider;
 import org.envirocar.server.rest.rights.AccessRights;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
+import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
 
@@ -45,8 +55,8 @@ public abstract class AbstractResource {
     public static final String ALLOWED_MAIL_ADDRESSES = "allowedMailAddresses";
     public static final String NOT_ALLOWED_MAIL_ADDRESS
             = "enviroCar is currently in a closed beta phase. Please "
-            + "contact envirocar@52north.org if you want to join the beta "
-            + "testers or with any other inquiries.";
+              + "contact envirocar@52north.org if you want to join the beta "
+              + "testers or with any other inquiries.";
     private Provider<SecurityContext> securityContext;
     private Provider<AccessRights> rights;
     private Provider<DataService> dataService;
@@ -108,8 +118,8 @@ public abstract class AbstractResource {
     protected void checkRights(boolean right) {
         if (!right) {
             throw getRights().isAuthenticated()
-                    ? new ForbiddenException("forbidden")
-                    : new UnauthorizedException("unauthorized");
+                  ? new ForbiddenException("forbidden")
+                  : new UnauthorizedException("unauthorized");
         }
     }
 
@@ -180,7 +190,7 @@ public abstract class AbstractResource {
 
     protected void checkMail(User user) {
         if (user.hasMail() && allowedMailAddresses.get().isPresent()
-                && !allowedMailAddresses.get().get().contains(user.getMail())) {
+            && !allowedMailAddresses.get().get().contains(user.getMail())) {
             throw new ForbiddenException(NOT_ALLOWED_MAIL_ADDRESS);
         }
     }

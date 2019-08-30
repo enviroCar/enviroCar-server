@@ -26,19 +26,19 @@ import org.envirocar.server.rest.schema.Schema;
 import javax.ws.rs.GET;
 import javax.ws.rs.Produces;
 
-public class PrivacyStatementResource extends AbstractResource {
-    private final PrivacyStatement privacyStatement;
+public class PrivacyStatementResource extends TermsResource {
+    private final PrivacyStatement entity;
 
     @Inject
-    public PrivacyStatementResource(@Assisted PrivacyStatement privacyStatement) {
-        this.privacyStatement = privacyStatement;
+    public PrivacyStatementResource(@Assisted PrivacyStatement entity) {
+        this.entity = entity;
     }
 
     @GET
     @Schema(response = Schemas.PRIVACY_STATEMENT)
     @Produces({MediaTypes.JSON})
     public PrivacyStatement get() {
-        return privacyStatement;
+        return setContents(entity);
     }
 
 }

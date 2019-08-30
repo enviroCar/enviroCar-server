@@ -23,8 +23,10 @@ import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.rights.AccessRights;
 
 import javax.inject.Singleton;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
+import java.util.Locale;
 
 /**
  * TODO JavaDoc
@@ -34,6 +36,8 @@ import javax.ws.rs.ext.Provider;
 @Provider
 @Singleton
 public class TermsOfUseInstanceJSONEncoder extends AbstractJSONEntityEncoder<TermsOfUseInstance> {
+
+
 
     public TermsOfUseInstanceJSONEncoder() {
         super(TermsOfUseInstance.class);

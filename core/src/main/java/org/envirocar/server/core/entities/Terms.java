@@ -16,6 +16,8 @@
  */
 package org.envirocar.server.core.entities;
 
+import java.util.Map;
+
 public interface Terms extends BaseEntity {
 
     String getIssuedDate();
@@ -29,5 +31,9 @@ public interface Terms extends BaseEntity {
     String getIdentifier();
 
     void setIdentifier(String id);
+
+    Map<String, String> getTranslations();
+
+    void setTranslations(Map<String, String> translations);
 
 }
