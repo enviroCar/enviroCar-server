@@ -18,6 +18,7 @@ package org.envirocar.server.rest.rights;
 
 import com.google.inject.Inject;
 import com.sun.jersey.api.model.AbstractMethod;
+import com.sun.jersey.api.model.AbstractResourceMethod;
 import com.sun.jersey.spi.container.ContainerRequest;
 import com.sun.jersey.spi.container.ContainerRequestFilter;
 import com.sun.jersey.spi.container.ContainerResponseFilter;
@@ -50,12 +51,8 @@ public class HasAcceptedLatestLegalPoliciesResourceFilterFactory
 
     @Override
     public List<ResourceFilter> create(AbstractMethod am) {
-
-        if (am.getAnnotation(AllowOutdatedTerms.class) != null) {
-            return Collections.emptyList();
-        }
-
-        return Collections.singletonList(this);
+        return am instanceof AbstractResourceMethod && !am.isAnnotationPresent(AllowOutdatedTerms.class)
+               ? Collections.singletonList(this) : Collections.emptyList();
     }
 
     @Override
