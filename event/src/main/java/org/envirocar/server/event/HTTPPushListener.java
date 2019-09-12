@@ -40,7 +40,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
-import java.util.Collections;
 
 @Singleton
 public class HTTPPushListener {
@@ -77,9 +76,7 @@ public class HTTPPushListener {
         HttpResponse resp = null;
         try {
 
-            MediaType mediaType = new MediaType("application", "json",
-                    Collections.singletonMap(MediaTypes.SCHEMA_ATTRIBUTE, Schemas.TRACK));
-
+            MediaType mediaType = MediaTypes.jsonWithSchema(Schemas.TRACK);
             ObjectNode jsonTrack = encoder.encodeJSON(track, mediaType);
             String content = writer.writeValueAsString(jsonTrack);
             //logger.debug("Entity: {}", content);

@@ -9,3 +9,4 @@ org.envirocar.server.rest.guice.JsonSchemaModule
 org.envirocar.server.rest.guice.JerseyModule
 org.envirocar.server.rest.guice.DefaultRDFLinkerModule
 org.envirocar.server.rest.pagination.PaginationModule
+org.envirocar.server.rest.guice.ApplicationPropertiesModule

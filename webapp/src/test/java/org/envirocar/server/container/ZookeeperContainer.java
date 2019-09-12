@@ -14,23 +14,27 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server;
+package org.envirocar.server.container;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.Module;
+import org.testcontainers.containers.GenericContainer;
 
-import java.util.ServiceLoader;
-import java.util.stream.StreamSupport;
+public class ZookeeperContainer extends GenericContainer<ZookeeperContainer> {
+    private int id;
 
-/**
- * TODO JavaDoc
- *
- * @author Christian Autermann <autermann@uni-muenster.de>
- */
-public class ServiceLoaderConfigurationModule extends AbstractModule {
+    public ZookeeperContainer() {
+        super("confluentinc/cp-zookeeper:latest");
+    }
+
+    public ZookeeperContainer withId(int id) {
+        this.id = id;
+        return this;
+    }
+
     @Override
     protected void configure() {
-        StreamSupport.stream(ServiceLoader.load(Module.class).spliterator(), false)
-                     .forEach(this::install);
+        withExposedPorts(2181);
+        withEnv("ZOOKEEPER_CLIENT_PORT", "2181");
+        withEnv("zk_id", String.valueOf(id));
+        super.configure();
     }
 }

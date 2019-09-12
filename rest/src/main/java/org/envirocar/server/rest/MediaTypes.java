@@ -16,7 +16,6 @@
  */
 package org.envirocar.server.rest;
 
-
 import javax.ws.rs.core.MediaType;
 import java.util.Collections;
 import java.util.Map;
@@ -53,14 +52,17 @@ public interface MediaTypes {
 
     static boolean hasSchemaAttribute(MediaType mediaType) {
         return mediaType != null
-                && mediaType.isCompatible(MediaType.APPLICATION_JSON_TYPE)
-                && mediaType.getParameters().containsKey(SCHEMA_ATTRIBUTE);
+               && mediaType.isCompatible(MediaType.APPLICATION_JSON_TYPE)
+               && mediaType.getParameters().containsKey(SCHEMA_ATTRIBUTE);
     }
 
     static Optional<String> getSchemaAttribute(MediaType mediaType) {
         return hasSchemaAttribute(mediaType)
-                ? Optional.ofNullable(mediaType.getParameters().get(SCHEMA_ATTRIBUTE))
-                : Optional.empty();
+               ? Optional.ofNullable(mediaType.getParameters().get(SCHEMA_ATTRIBUTE))
+               : Optional.empty();
     }
 
+    static MediaType jsonWithSchema(String schema) {
+        return new MediaType("application", "json", schema(schema));
+    }
 }

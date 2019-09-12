@@ -14,23 +14,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server;
+package org.envirocar.server.event.kafka;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.Module;
-
-import java.util.ServiceLoader;
-import java.util.stream.StreamSupport;
-
-/**
- * TODO JavaDoc
- *
- * @author Christian Autermann <autermann@uni-muenster.de>
- */
-public class ServiceLoaderConfigurationModule extends AbstractModule {
-    @Override
-    protected void configure() {
-        StreamSupport.stream(ServiceLoader.load(Module.class).spliterator(), false)
-                     .forEach(this::install);
-    }
+public interface KafkaConstants {
+    String KAFKA_TOPIC = "kafka.topic";
+    String KAFKA_BROKERS = "kafka.brokers";
+    String KAFKA_CLIENT_ID = "kafka.clientId";
 }
