@@ -1,2 +1,3 @@
 org.envirocar.server.event.guice.HTTPPushModule
 org.envirocar.server.event.guice.SendVerificationCodeViaMailModule
+org.envirocar.server.event.kafka.KafkaModule

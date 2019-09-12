@@ -47,7 +47,7 @@ public class HTTPPushListener {
     //TODO make configurable
     private static final String host = "http://ags.52north.org:8080/enviroCar-broker/";
     private static final Logger logger = LoggerFactory.getLogger(HTTPPushListener.class);
-    public static final AccessRightsImpl DEFAULT_ACCESS_RIGHTS = new AccessRightsImpl();
+    private static final AccessRightsImpl DEFAULT_ACCESS_RIGHTS = new AccessRightsImpl();
     private final HttpClient client;
     private final JSONEntityEncoder<Track> encoder;
     private final ObjectWriter writer;

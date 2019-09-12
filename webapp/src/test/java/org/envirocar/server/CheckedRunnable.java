@@ -14,20 +14,27 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.core.mail;
+package org.envirocar.server;
 
+@FunctionalInterface
+public interface CheckedRunnable {
+    void run() throws Exception;
 
-import com.google.inject.AbstractModule;
-
-/**
- * TODO JavaDoc
- *
- * @author Christian Autermann
- */
-public class NoopMailerModule extends AbstractModule {
-    @Override
-    protected void configure() {
-        bind(Mailer.class).to(NoopMailer.class);
+    static void runAll(CheckedRunnable... runnables) throws Exception {
+        Exception throwable = null;
+        for (CheckedRunnable runnable : runnables) {
+            try {
+                runnable.run();
+            } catch (Exception throwable1) {
+                if (throwable == null) {
+                    throwable = throwable1;
+                } else {
+                    throwable.addSuppressed(throwable1);
+                }
+            }
+        }
+        if (throwable != null) {
+            throw throwable;
+        }
     }
-
 }

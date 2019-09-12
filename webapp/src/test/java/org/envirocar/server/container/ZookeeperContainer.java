@@ -14,20 +14,27 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server;
+package org.envirocar.server.container;
 
-import com.google.common.base.Strings;
 import org.testcontainers.containers.GenericContainer;
 
-import java.util.Objects;
+public class ZookeeperContainer extends GenericContainer<ZookeeperContainer> {
+    private int id;
 
-public class MongoDatabase extends GenericContainer<MongoDatabase> {
-    public MongoDatabase(String version) {
-        super(String.format("mongo:%s", Objects.requireNonNull(Strings.emptyToNull(version))));
+    public ZookeeperContainer() {
+        super("confluentinc/cp-zookeeper:latest");
     }
 
-    public MongoDatabase() {
-        this("latest");
+    public ZookeeperContainer withId(int id) {
+        this.id = id;
+        return this;
     }
 
+    @Override
+    protected void configure() {
+        withExposedPorts(2181);
+        withEnv("ZOOKEEPER_CLIENT_PORT", "2181");
+        withEnv("zk_id", String.valueOf(id));
+        super.configure();
+    }
 }
