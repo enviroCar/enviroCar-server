@@ -41,35 +41,47 @@ public final class KafkaModule extends AbstractModule {
 
     @Provides
     @Named(KafkaConstants.KAFKA_CLIENT_ID)
-    public String clientId() {
-        return Optional.ofNullable(System.getenv(KafkaConstants.KAFKA_CLIENT_ID))
-                       .filter(x -> !x.isEmpty())
-                       .orElse("enviroCar-server");
+    public String clientId(Properties properties) {
+        return getProperty(properties, KafkaConstants.KAFKA_CLIENT_ID, "enviroCar-server");
     }
 
     @Provides
     @Named(KafkaConstants.KAFKA_BROKERS)
-    public String brokers() {
-        return System.getenv(KafkaConstants.KAFKA_BROKERS);
+    public String brokers(Properties properties) {
+        return getProperty(properties, KafkaConstants.KAFKA_BROKERS, "processing.envirocar.org:9092");
     }
 
     @Provides
     @Named(KafkaConstants.KAFKA_TOPIC)
-    public String topic() {
-        return Optional.ofNullable(System.getenv(KafkaConstants.KAFKA_TOPIC))
-                       .filter(x -> !x.isEmpty())
-                       .orElse("tracks");
+    public String topic(Properties properties) {
+        return getProperty(properties, KafkaConstants.KAFKA_TOPIC, "tracks");
     }
 
     @Provides
     public Producer<String, Track> createProducer(Serializer<String> keySerializer,
                                                   Serializer<Track> valueSerializer,
                                                   @Named(KafkaConstants.KAFKA_BROKERS) String brokers,
-                                                  @Named(KafkaConstants.KAFKA_BROKERS) String clientId,
-                                                  Properties properties) {
+                                                  @Named(KafkaConstants.KAFKA_BROKERS) String clientId) {
         Properties props = new Properties();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, brokers);
         props.put(ProducerConfig.CLIENT_ID_CONFIG, clientId);
         return new KafkaProducer<>(props, keySerializer, valueSerializer);
+    }
+
+    private String getProperty(Properties properties, String key, String defaultValue) {
+        Optional<String> property = getOptional(System.getenv(key));
+
+        if (!property.isPresent()) {
+            property = getOptional(System.getProperty(key));
+        }
+        if (!property.isPresent()) {
+            property = getOptional(properties.getProperty(key));
+        }
+
+        return property.orElse(defaultValue);
+    }
+
+    private Optional<String> getOptional(String property) {
+        return Optional.ofNullable(property).filter(x -> !x.isEmpty());
     }
 }
