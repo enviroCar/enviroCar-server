@@ -70,6 +70,9 @@ public class UserStatisticJSONEncoder extends AbstractJSONEntityEncoder<UserStat
                 .put(JSONConstants.DURATION_KEY, entity.getDurationNaN());
 
         userStatistics.set(JSONConstants.TRACKSUMMARIES_KEY, getTrackSummaries(entity.getTrackSummaries(), rights, mediaType));
+
+        userStatistics.put(JSONConstants.TRACK_COUNT, userStatistics.get(JSONConstants.TRACKSUMMARIES_KEY).size());
+
         return userStatistics;
     }
 

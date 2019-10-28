@@ -126,4 +126,5 @@ public interface JSONConstants {
     String AT = "at";
     String CIRCULAR_REFERENCE = "circularReference";
     String TOU_VERSION_KEY = "touVersion";
+    String TRACK_COUNT = "trackCount";
 }

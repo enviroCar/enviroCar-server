@@ -13,6 +13,9 @@
     "duration": {
       "type": "number"
     },
+    "trackCount": {
+      "type": "number"
+    },
     "userstatistic": {
       "below60kmh": {
         "distance": {
