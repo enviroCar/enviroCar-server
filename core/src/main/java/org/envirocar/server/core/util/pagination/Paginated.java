@@ -56,16 +56,8 @@ public abstract class Paginated<T> {
         return last;
     }
 
-    public boolean hasLast() {
-        return this.last.isPresent();
-    }
-
     public Optional<Pagination> getNext() {
         return this.next;
-    }
-
-    public boolean hasNext() {
-        return this.next.isPresent();
     }
 
     public Optional<Pagination> getCurrent() {
@@ -76,16 +68,8 @@ public abstract class Paginated<T> {
         return this.prev;
     }
 
-    public boolean hasPrevious() {
-        return this.prev.isPresent();
-    }
-
     public Optional<Pagination> getFirst() {
         return this.first;
-    }
-
-    public boolean hasFirst() {
-        return this.first.isPresent();
     }
 
     public boolean isPaginated() {
@@ -99,11 +83,11 @@ public abstract class Paginated<T> {
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
-                .add("first", getFirst().orElse(null))
-                .add("previous", getPrevious().orElse(null))
-                .add("current", getCurrent().orElse(null))
-                .add("next", getNext().orElse(null))
-                .add("last", getLast().orElse(null))
-                .toString();
+                          .add("first", getFirst().orElse(null))
+                          .add("previous", getPrevious().orElse(null))
+                          .add("current", getCurrent().orElse(null))
+                          .add("next", getNext().orElse(null))
+                          .add("last", getLast().orElse(null))
+                          .toString();
     }
 }

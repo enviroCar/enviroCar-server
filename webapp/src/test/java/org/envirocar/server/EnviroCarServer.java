@@ -85,7 +85,7 @@ public class EnviroCarServer extends ExternalResource {
 
     @Override
     protected void before() throws Throwable {
-        CheckedRunnable.runAll(zookeeper::start, kafka::start, mongo::start);
+        CheckedRunnable.runAll(/*zookeeper::start, kafka::start,*/ mongo::start);
 
         ServletContextHandler sch = new ServletContextHandler(jettyServer, "/");
         sch.addFilter(GuiceFilter.class, "/*", null);
@@ -93,8 +93,8 @@ public class EnviroCarServer extends ExternalResource {
             @Override
             public void configure(Binder binder) {
                 binder.bind(MongoContainer.class).toInstance(mongo);
-                binder.bind(KafkaContainer.class).toInstance(kafka);
-                binder.bind(ZookeeperContainer.class).toInstance(zookeeper);
+                // binder.bind(KafkaContainer.class).toInstance(kafka);
+                // binder.bind(ZookeeperContainer.class).toInstance(zookeeper);
                 binder.bind(Mailer.class).to(NoopMailer.class);
                 binder.bind(String.class).annotatedWith(Names.named(MongoDB.DATABASE_PROPERTY))
                       .toInstance("enviroCar-Testing");
@@ -103,7 +103,8 @@ public class EnviroCarServer extends ExternalResource {
             @Provides
             @Named(KafkaConstants.KAFKA_BROKERS)
             public String brokers(KafkaContainer kafka) {
-                return String.format("%s:%d", kafka.getContainerIpAddress(), kafka.getMappedPort(9092));
+                return "processing.envirocar.org:9092";
+                //return String.format("%s:%d", kafka.getContainerIpAddress(), kafka.getMappedPort(9092));
             }
 
             @Provides
@@ -134,7 +135,7 @@ public class EnviroCarServer extends ExternalResource {
 
     @Override
     protected void after() throws Exception {
-        CheckedRunnable.runAll(jettyServer::stop, mongo::stop, zookeeper::stop, kafka::stop);
+        CheckedRunnable.runAll(jettyServer::stop, mongo::stop/*, zookeeper::stop, kafka::stop*/);
     }
 
     public Server getServer() {

@@ -17,32 +17,40 @@
 package org.envirocar.server.mongo.entity;
 
 import com.google.common.base.Objects;
-import org.envirocar.server.core.entities.TrackSummaries;
+import org.envirocar.server.core.entities.TrackSummary;
 import org.envirocar.server.core.entities.UserStatistic;
 import org.joda.time.DateTime;
-import org.mongodb.morphia.annotations.*;
+import org.mongodb.morphia.annotations.Embedded;
+import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.annotations.Indexed;
+import org.mongodb.morphia.annotations.Property;
 import org.mongodb.morphia.mapping.Mapper;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * @author Maurin Radtke <maurin.radtke@uni-muenster.de>
  */
 @Entity("userstatistic")
 public class MongoUserStatistic implements UserStatistic {
-
-    public static final int METER_TOLERANCE = 1000;
-    public static final int SECOND_TOLERANCE = 10000;
-
-    public static final String KEY = Mapper.ID_KEY;
+    public static final String ID = Mapper.ID_KEY;
     public static final String CREATED = "created";
-    public static final String DIST_TOTAL = "distance";
-    public static final String DURA_TOTAL = "duration";
-    public static final String DIST_BELOW60KMH = "distanceBelow60kmh";
-    public static final String DURA_BELOW60KMH = "durationBelow60kmh";
-    public static final String DIST_ABOVE130KMH = "distanceAbove130kmh";
-    public static final String DURA_ABOVE130KMH = "durationAbove130kmh";
-    public static final String DIST_NAN = "distanceNaN";
-    public static final String DURA_NAN = "durationNaN";
-    public static final String TRACKSUMMARIES = "trackSummaries";
+    public static final String DISTANCE_TOTAL = "distance";
+    public static final String DURATION_TOTAL = "duration";
+    public static final String DISTANCE_BELOW_60KMH = "distanceBelow60kmh";
+    public static final String DURATION_BELOW_60KMH = "durationBelow60kmh";
+    public static final String DISTANCE_ABOVE_130KMH = "distanceAbove130kmh";
+    public static final String DURATION_ABOVE_130KMH = "durationAbove130kmh";
+    public static final String DISTANCE_NAN = "distanceNaN";
+    public static final String DURATION_NAN = "durationNaN";
+    public static final String TRACK_SUMMARIES = "trackSummaries";
+    public static final String NUM_TRACKS = "numTracks";
 
     @Id
     @Embedded
@@ -50,31 +58,32 @@ public class MongoUserStatistic implements UserStatistic {
     @Indexed
     @Embedded(CREATED)
     private final DateTime created = new DateTime();
-    @Property(DIST_TOTAL)
+    @Property(DISTANCE_TOTAL)
     private double distance;
-    @Property(DURA_TOTAL)
+    @Property(DURATION_TOTAL)
     private double duration;
-    @Property(DIST_BELOW60KMH)
+    @Property(DISTANCE_BELOW_60KMH)
     private double distanceBelow60kmh;
-    @Property(DURA_BELOW60KMH)
+    @Property(DURATION_BELOW_60KMH)
     private double durationBelow60kmh;
-    @Property(DIST_ABOVE130KMH)
+    @Property(DISTANCE_ABOVE_130KMH)
     private double distanceAbove130kmh;
-    @Property(DURA_ABOVE130KMH)
+    @Property(DURATION_ABOVE_130KMH)
     private double durationAbove130kmh;
-    @Property(DIST_NAN)
+    @Property(DISTANCE_NAN)
     private double distanceNaN;
-    @Property(DURA_NAN)
+    @Property(DURATION_NAN)
     private double durationNaN;
-    @Property(TRACKSUMMARIES)
-    private TrackSummaries trackSummaries;
+    @Embedded(TRACK_SUMMARIES)
+    private List<MongoTrackSummary> trackSummaries = new ArrayList<>();
+    @Property(NUM_TRACKS)
+    private int numTracks;
 
     public MongoUserStatistic() {
     }
 
     public MongoUserStatistic(MongoUserStatisticKey key) {
         this.key = key;
-        this.trackSummaries = new TrackSummaries();
     }
 
     public DateTime getCreated() {
@@ -107,13 +116,23 @@ public class MongoUserStatistic implements UserStatistic {
     }
 
     @Override
+    public int getNumTracks() {
+        return numTracks;
+    }
+
+    @Override
+    public void setNumTracks(int numTracks) {
+        this.numTracks = numTracks;
+    }
+
+    @Override
     public double getDistance() {
         return this.distance;
     }
 
     @Override
     public void setDistance(double distance) {
-        this.distance = roundByMeters(distance);
+        this.distance = distance;
     }
 
     @Override
@@ -123,7 +142,7 @@ public class MongoUserStatistic implements UserStatistic {
 
     @Override
     public void setDuration(double duration) {
-        this.duration = roundBySeconds(duration);
+        this.duration = duration;
     }
 
     @Override
@@ -133,7 +152,7 @@ public class MongoUserStatistic implements UserStatistic {
 
     @Override
     public void setDistanceBelow60kmh(double distanceBelow60kmh) {
-        this.distanceBelow60kmh = roundByMeters(distanceBelow60kmh);
+        this.distanceBelow60kmh = distanceBelow60kmh;
     }
 
     @Override
@@ -143,7 +162,7 @@ public class MongoUserStatistic implements UserStatistic {
 
     @Override
     public void setDurationBelow60kmh(double durationBelow60kmh) {
-        this.durationBelow60kmh = roundBySeconds(durationBelow60kmh);
+        this.durationBelow60kmh = durationBelow60kmh;
     }
 
     @Override
@@ -153,7 +172,7 @@ public class MongoUserStatistic implements UserStatistic {
 
     @Override
     public void setDistanceAbove130kmh(double distanceAbove130kmh) {
-        this.distanceAbove130kmh = roundByMeters(distanceAbove130kmh);
+        this.distanceAbove130kmh = distanceAbove130kmh;
     }
 
     @Override
@@ -163,7 +182,7 @@ public class MongoUserStatistic implements UserStatistic {
 
     @Override
     public void setDurationAbove130kmh(double durationAbove130kmh) {
-        this.durationAbove130kmh = roundBySeconds(durationAbove130kmh);
+        this.durationAbove130kmh = durationAbove130kmh;
     }
 
     @Override
@@ -173,7 +192,7 @@ public class MongoUserStatistic implements UserStatistic {
 
     @Override
     public void setDistanceNaN(double distance) {
-        this.distanceNaN = roundByMeters(distance);
+        this.distanceNaN = distance;
     }
 
     @Override
@@ -183,30 +202,28 @@ public class MongoUserStatistic implements UserStatistic {
 
     @Override
     public void setDurationNaN(double duration) {
-        this.durationNaN = roundBySeconds(duration);
+        this.durationNaN = duration;
     }
 
     @Override
-    public TrackSummaries getTrackSummaries() {
-        return this.trackSummaries;
+    public List<TrackSummary> getTrackSummaries() {
+        return Collections.unmodifiableList(trackSummaries);
     }
 
     @Override
-    public void setTrackSummaries(TrackSummaries trackSummaries) {
-        this.trackSummaries = trackSummaries;
+    public void setTrackSummaries(List<TrackSummary> trackSummaries) {
+        this.trackSummaries = Optional.ofNullable(trackSummaries).orElseGet(Collections::emptyList).stream()
+                                      .map(MongoTrackSummary.class::cast).collect(toList());
     }
 
     @Override
-    public boolean hasTrackSummaries() {
-        return (this.trackSummaries != null);
+    public void addTrackSummary(TrackSummary trackSummary) {
+        this.trackSummaries.add((MongoTrackSummary) trackSummary);
     }
 
-    private double roundByMeters(double distance) {
-        return Math.round(distance * METER_TOLERANCE) / METER_TOLERANCE;
-    }
-
-    private double roundBySeconds(double duration) {
-        return Math.round(duration * SECOND_TOLERANCE) / SECOND_TOLERANCE;
+    @Override
+    public void removeTrackSummary(String id) {
+        this.trackSummaries.removeIf(s -> s.getIdentifier().equals(id));
     }
 
 }

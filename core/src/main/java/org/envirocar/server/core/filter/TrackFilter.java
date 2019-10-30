@@ -51,6 +51,10 @@ public class TrackFilter {
         this(u, null, null, p);
     }
 
+    public TrackFilter(User u) {
+        this(u, null, null, null);
+    }
+
     public TrackFilter(Pagination p) {
         this(null, null, null, p);
     }

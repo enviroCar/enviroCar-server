@@ -16,11 +16,31 @@
  */
 package org.envirocar.server.mongo.util;
 
-import org.envirocar.server.core.entities.Measurements;
-import org.envirocar.server.core.entities.Track;
-import org.envirocar.server.mongo.entity.MongoUserStatistic;
+import org.envirocar.server.core.entities.TrackSummary;
+import org.envirocar.server.core.entities.UserStatistic;
 
-public interface UserStatisticOperations {
-    MongoUserStatistic addTrackStatistic(MongoUserStatistic previous, Track track, Measurements values);
-    MongoUserStatistic removeTrackStatistic(MongoUserStatistic previous, Track track, Measurements values);
+public interface TrackStatistic {
+    boolean isValid();
+
+    TrackStatisticImpl negate();
+
+    double getDistance();
+
+    double getDistanceAbove130();
+
+    double getDuration();
+
+    double getDistanceBelow60();
+
+    double getDurationAbove130();
+
+    double getDurationNaN();
+
+    double getDistanceNaN();
+
+    double getDurationBelow60();
+
+    TrackSummary getSummary();
+
+    void addTo(UserStatistic statistic);
 }

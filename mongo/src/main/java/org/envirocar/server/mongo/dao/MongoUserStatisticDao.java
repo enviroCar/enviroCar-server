@@ -16,29 +16,35 @@
  */
 package org.envirocar.server.mongo.dao;
 
-import java.util.function.Function;
-
+import com.google.inject.Inject;
 import org.envirocar.server.core.DataService;
 import org.envirocar.server.core.dao.UserStatisticDao;
 import org.envirocar.server.core.entities.Measurements;
 import org.envirocar.server.core.entities.Track;
-import org.envirocar.server.core.entities.TrackSummaries;
 import org.envirocar.server.core.entities.Tracks;
+import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.entities.UserStatistic;
 import org.envirocar.server.core.filter.MeasurementFilter;
 import org.envirocar.server.core.filter.TrackFilter;
 import org.envirocar.server.core.filter.UserStatisticFilter;
-import org.envirocar.server.core.util.pagination.PageBasedPagination;
 import org.envirocar.server.mongo.MongoDB;
+import org.envirocar.server.mongo.entity.MongoTrackSummary;
 import org.envirocar.server.mongo.entity.MongoUser;
 import org.envirocar.server.mongo.entity.MongoUserStatistic;
 import org.envirocar.server.mongo.entity.MongoUserStatisticKey;
-import org.envirocar.server.mongo.userstatistic.UserStatisticUpdateScheduler;
-import org.envirocar.server.mongo.util.UserStatisticUtils;
+import org.envirocar.server.mongo.util.TrackStatistic;
+import org.envirocar.server.mongo.util.TrackStatisticImpl;
+import org.mongodb.morphia.Datastore;
+import org.mongodb.morphia.Key;
 import org.mongodb.morphia.dao.BasicDAO;
-import org.mongodb.morphia.mapping.Mapper;
+import org.mongodb.morphia.query.UpdateOperations;
 
-import com.google.inject.Inject;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * TODO JavaDoc
@@ -46,117 +52,179 @@ import com.google.inject.Inject;
  * @author Maurin Radtke <maurin.radtke@uni-muenster.de>
  */
 public class MongoUserStatisticDao implements UserStatisticDao {
-
-    public static final String ID = Mapper.ID_KEY;
     private final BasicDAO<MongoUserStatistic, MongoUserStatisticKey> dao;
     private final DataService dataService;
     private final MongoDB mongoDB;
-    private final UserStatisticUpdateScheduler scheduler;
-
-    // calculate on get() calculation function, if UserStatistics have not been created yet
-    private final Function<UserStatisticFilter, MongoUserStatistic> calculateAllFunction = (UserStatisticFilter t) -> calculateAndSaveUserStatistic(t, key(t));
-
-    // update on New Track calculation function
-    private final Function<Object[], MongoUserStatistic> calculateOnNewTrackFunction = (Object[] params) -> {
-        UserStatisticFilter t = (UserStatisticFilter) params[0];
-        Track track = (Track) params[1];
-        return calculateAndSaveUserStatisticOnNewTrack(t, key(t), track);
-    };
-
-    // update on Track Deletion calculation function
-    private final Function<Object[], MongoUserStatistic> calculateOnTrackDeletionFunction = (Object[] params) -> {
-        UserStatisticFilter t = (UserStatisticFilter) params[0];
-        Track track = (Track) params[1];
-        Measurements measurements = (Measurements) params[2];
-        return calculateAndSaveUserStatisticOnTrackDeletion(t, key(t), track, measurements);
-    };
+    private final Map<MongoUserStatisticKey, CompletableFuture<MongoUserStatistic>> updates = new HashMap<>();
+    private final ReadWriteLock lock = new ReentrantReadWriteLock();
 
     @Inject
-    public MongoUserStatisticDao(MongoDB mongoDB, DataService dataService, UserStatisticUpdateScheduler scheduler) {
+    public MongoUserStatisticDao(MongoDB mongoDB, DataService dataService) {
         this.mongoDB = mongoDB;
-        this.dao = new BasicDAO<>(
-                MongoUserStatistic.class, mongoDB.getDatastore());
-        this.scheduler = scheduler;
+        this.dao = new BasicDAO<>(MongoUserStatistic.class, mongoDB.getDatastore());
         this.dataService = dataService;
+
     }
 
     @Override
     public UserStatistic get(UserStatisticFilter request) {
-        MongoUserStatisticKey key = key(request);
+
+        MongoUserStatisticKey key = key(request.getUser());
         MongoUserStatistic result = this.dao.get(key);
-        if (result == null) {
-            // calculate UserStatistics:
-            this.scheduler.updateUserStatistic(request, key, calculateAllFunction, true);
-            result = this.dao.get(key);
+        if (result != null) {
+            return result;
         }
-        return result;
-    }
-
-    private MongoUserStatistic calculateAndSaveUserStatisticOnTrackDeletion(UserStatisticFilter request,
-                                                                            MongoUserStatisticKey key, Track track,
-                                                                            Measurements measurements) {
-        // get previous:
-        MongoUserStatistic v = this.dao.get(key);
-        // calculate:
-        v = new UserStatisticUtils().removeTrackStatistic(v, track, measurements);
-        // persist:
-        this.dao.save(v);
-        return v;
-    }
-
-    private MongoUserStatistic calculateAndSaveUserStatisticOnNewTrack(UserStatisticFilter request,
-                                                                       MongoUserStatisticKey key, Track track) {
-        // get previous:
-        MongoUserStatistic v = this.dao.get(key);
-        // get measurements:
-        Measurements values = dataService.getMeasurements(new MeasurementFilter(track));
-        // calculate:
-        v = new UserStatisticUtils().addTrackStatistic(v, track, values);
-        // persist:
-        this.dao.save(v);
-        return v;
-    }
-
-    private MongoUserStatistic calculateAndSaveUserStatistic(UserStatisticFilter request, MongoUserStatisticKey key) {
-        MongoUserStatistic v = new MongoUserStatistic(key);
-        v.setTrackSummaries(new TrackSummaries());
-
-        // calculate it:
-        Tracks tracks = dataService.getTracks(new TrackFilter(request.getUser(), new PageBasedPagination(10000, 1))
-        );
-        Iterable<Track> userTracks = Tracks.from(tracks).build();
-        for (Track track : userTracks) { // get all measurments of this track:
-            Measurements values = dataService.getMeasurements(new MeasurementFilter(track));
-            v = new UserStatisticUtils().addTrackStatistic(v, track, values);
+        try {
+            return getFuture(request).get();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
         }
-        // persist:
-        this.dao.save(v);
-        return v;
     }
 
-    private MongoUserStatisticKey key(UserStatisticFilter request) {
-        MongoUser user = (MongoUser) request.getUser();
-        return new MongoUserStatisticKey(mongoDB.key(user));
+    private CompletableFuture<MongoUserStatistic> getFuture(UserStatisticFilter request) {
+        lock.writeLock().lock();
+        try {
+            return updates.computeIfAbsent(key(request.getUser()), this::createFuture);
+        } finally {
+            lock.writeLock().unlock();
+        }
+    }
+
+    private CompletableFuture<MongoUserStatistic> createFuture(MongoUserStatisticKey key) {
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                return createUserStatistic(key);
+            } finally {
+                lock.writeLock().lock();
+                try {
+                    updates.remove(key);
+                } finally {
+                    lock.writeLock().unlock();
+                }
+            }
+        });
+    }
+
+    private MongoUserStatistic createUserStatistic(MongoUserStatisticKey key) {
+        MongoUserStatistic userStatistic = new MongoUserStatistic(key);
+        for (Track track : getTracks(key)) {
+            TrackStatistic trackStatistic = new TrackStatisticImpl(track, getMeasurements(track));
+            userStatistic.incNumTracks();
+            userStatistic.addTrackSummary(trackStatistic.getSummary());
+            if (trackStatistic.isValid()) {
+                trackStatistic.addTo(userStatistic);
+            }
+        }
+        this.dao.save(userStatistic);
+        return userStatistic;
     }
 
     @Override
-    public void updateStatisticsOnTrackDeletion(Track t, Measurements m) {
-        UserStatisticFilter userFilter = new UserStatisticFilter(t.getUser());
-        MongoUserStatisticKey userKey = key(userFilter);
-        MongoUserStatistic v = this.dao.get(userKey);
-        if (v != null) {
-            this.scheduler
-                    .updateUserStatisticOnTrackDeletion(userFilter, userKey, calculateOnTrackDeletionFunction, true, t, m);
+    public void updateStatisticsOnTrackDeletion(Track track, Measurements measurements) {
+        MongoUserStatisticKey key = key(track.getUser());
+        lock.readLock().lock();
+        try {
+            if (updates.containsKey(key)) {
+                updates.get(key).thenAcceptAsync(s -> updateOnDeletion(track));
+                return;
+            }
+        } finally {
+            lock.readLock().unlock();
         }
+        updateOnDeletion(track);
+    }
+
+    private void updateOnDeletion(Track track) {
+        // update now
+        Datastore datastore = mongoDB.getDatastore();
+
+        UpdateOperations<MongoUserStatistic> ops = datastore.createUpdateOperations(MongoUserStatistic.class);
+        ops.dec(MongoUserStatistic.NUM_TRACKS);
+        ops.removeAll(MongoUserStatistic.TRACK_SUMMARIES, new MongoTrackSummary(track.getIdentifier()));
+        TrackStatistic stats = new TrackStatisticImpl(track, getMeasurements(track));
+        if (stats.isValid()) {
+            ops.dec(MongoUserStatistic.DISTANCE_ABOVE_130KMH, stats.getDistanceAbove130());
+            ops.dec(MongoUserStatistic.DISTANCE_BELOW_60KMH, stats.getDistanceBelow60());
+            ops.dec(MongoUserStatistic.DISTANCE_NAN, stats.getDistanceNaN());
+            ops.dec(MongoUserStatistic.DISTANCE_TOTAL, stats.getDistance());
+            ops.dec(MongoUserStatistic.DURATION_ABOVE_130KMH, stats.getDurationAbove130());
+            ops.dec(MongoUserStatistic.DURATION_BELOW_60KMH, stats.getDurationBelow60());
+            ops.dec(MongoUserStatistic.DURATION_NAN, stats.getDurationNaN());
+            ops.dec(MongoUserStatistic.DURATION_TOTAL, stats.getDuration());
+        }
+
+        datastore.update(datastore.createQuery(MongoUserStatistic.class)
+                                  .field(MongoUserStatistic.ID)
+                                  .equal(new MongoUserStatisticKey(getKey(track.getUser())))
+                                  .field(MongoUserStatistic.TRACK_SUMMARIES)
+                                  .elemMatch(datastore.createQuery(MongoTrackSummary.class)
+                                                      .field(MongoTrackSummary.IDENTIFIER)
+                                                      .equal(track.getIdentifier())), ops);
     }
 
     @Override
-    public void updateStatisticsOnNewTrack(Track t) {
-        UserStatisticFilter userFilter = new UserStatisticFilter(t.getUser());
-        MongoUserStatisticKey userKey = key(userFilter);
-        MongoUserStatistic v = this.dao.get(userKey);
-        if (v != null) {
-            this.scheduler.updateUserStatisticOnNewTrack(userFilter, userKey, calculateOnNewTrackFunction, true, t);
+    public void updateStatisticsOnNewTrack(Track track) {
+
+        MongoUserStatisticKey key = key(track.getUser());
+        lock.readLock().lock();
+        try {
+            if (updates.containsKey(key)) {
+                updates.get(key).thenAcceptAsync(s -> updateOnInsertion(key, track));
+                return;
+            }
+        } finally {
+            lock.readLock().unlock();
         }
+        updateOnInsertion(key, track);
     }
+
+    private void updateOnInsertion(MongoUserStatisticKey key, Track track) {
+        Datastore datastore = mongoDB.getDatastore();
+
+        UpdateOperations<MongoUserStatistic> ops = dao.createUpdateOperations();
+        TrackStatistic stats = new TrackStatisticImpl(track, getMeasurements(track));
+        ops.inc(MongoUserStatistic.NUM_TRACKS);
+        ops.push(MongoUserStatistic.TRACK_SUMMARIES, stats.getSummary());
+
+        if (stats.isValid()) {
+            ops.inc(MongoUserStatistic.DISTANCE_ABOVE_130KMH, stats.getDistanceAbove130());
+            ops.inc(MongoUserStatistic.DISTANCE_BELOW_60KMH, stats.getDistanceBelow60());
+            ops.inc(MongoUserStatistic.DISTANCE_NAN, stats.getDistanceNaN());
+            ops.inc(MongoUserStatistic.DISTANCE_TOTAL, stats.getDistance());
+            ops.inc(MongoUserStatistic.DURATION_ABOVE_130KMH, stats.getDurationAbove130());
+            ops.inc(MongoUserStatistic.DURATION_BELOW_60KMH, stats.getDurationBelow60());
+            ops.inc(MongoUserStatistic.DURATION_NAN, stats.getDurationNaN());
+            ops.inc(MongoUserStatistic.DURATION_TOTAL, stats.getDuration());
+
+        }
+        datastore.update(datastore.createQuery(MongoUserStatistic.class)
+                                  .field(MongoUserStatistic.ID).equal(key)
+                                  .field(MongoUserStatistic.TRACK_SUMMARIES)
+                                  .not().elemMatch(datastore.createQuery(MongoTrackSummary.class)
+                                                            .field(MongoTrackSummary.IDENTIFIER)
+                                                            .equal(track.getIdentifier())), ops);
+    }
+
+    private MongoUserStatisticKey key(User user) {
+        return new MongoUserStatisticKey(getKey(user));
+    }
+
+    private Key<MongoUser> getKey(User user) {
+        return mongoDB.key((MongoUser) user);
+    }
+
+    private Tracks getTracks(MongoUserStatisticKey key) {
+        MongoUser user = new MongoUser();
+        user.setName((String) key.getUser().getId());
+        return dataService.getTracks(new TrackFilter(user));
+    }
+
+    private Measurements getMeasurements(Track track) {
+        return dataService.getMeasurements(new MeasurementFilter(track));
+    }
+
+    private MongoUserStatistic getFor(User user) {
+        return this.dao.get(key(user));
+    }
+
 }
