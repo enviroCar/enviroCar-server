@@ -2,4 +2,3 @@ org.envirocar.server.core.guice.CoreModule
 org.envirocar.server.core.guice.UpdaterModule
 org.envirocar.server.core.guice.ValidatorModule
 org.envirocar.server.core.guice.EventModule
-org.envirocar.server.core.guice.MailerModule
