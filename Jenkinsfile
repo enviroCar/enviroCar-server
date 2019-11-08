@@ -6,7 +6,7 @@ node {
   }
 
   stage('Build image') {
-    app = docker.build("ec-components/usm")
+    app = docker.build("envirocar/api:dev")
   }
 
   stage('Push image') {
