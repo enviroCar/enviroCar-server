@@ -62,7 +62,7 @@ public class Schemas {
     public static final String FUELINGS = "fuelings.json";
     public static final String PASSWORD_RESET_REQUEST = "passwordResetRequest.json";
     public static final String PASSWORD_RESET_VERIFICATION = "passwordResetVerification.json";
-    public static final String USER_STATISTIC = "userstatistic.json";
+    public static final String USER_STATISTIC = "userStatistic.json";
     public static final String PRIVACY_STATEMENT = "privacy-statement.json";
     public static final String PRIVACY_STATEMENTS = "privacy-statements.json";
     public static final String EXCEPTION = "exception.json";
