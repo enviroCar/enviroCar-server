@@ -93,7 +93,7 @@ public class TrackJSONEncoder extends AbstractJSONEntityEncoder<Track> {
             if (entity.hasAppVersion() && rights.canSeeAppVersionOf(entity)) {
                 properties.put(JSONConstants.APP_VERSION_KEY, entity.getAppVersion());
             }
-            addStartAndEnd(track, rights, properties);
+            addStartAndEnd(entity, rights, properties);
             if (entity.hasTouVersion() && rights.canSeeTouVersionOf(entity)) {
                 properties.put(JSONConstants.TOU_VERSION_KEY, entity.getTouVersion());
             }
@@ -120,7 +120,7 @@ public class TrackJSONEncoder extends AbstractJSONEntityEncoder<Track> {
             if (entity.hasLength() && rights.canSeeLengthOf(entity)) {
                 track.put(JSONConstants.LENGTH_KEY, entity.getLength());
             }
-            addStartAndEnd(track, rights, track);
+            addStartAndEnd(entity, rights, track);
             if (entity.hasSensor() && rights.canSeeSensorOf(entity)) {
                 track.set(JSONConstants.SENSOR_KEY, this.sensorEncoder.encodeJSON(entity.getSensor(), rights, mediaType));
             }
@@ -128,12 +128,12 @@ public class TrackJSONEncoder extends AbstractJSONEntityEncoder<Track> {
         return track;
     }
 
-    private void addStartAndEnd(Track t, AccessRights rights, ObjectNode track) {
-        if (t.hasBegin()) {
-            track.put(JSONConstants.BEGIN_KEY, getDateTimeFormat().print(t.getBegin()));
+    private void addStartAndEnd(Track entity, AccessRights rights, ObjectNode track) {
+        if (entity.hasBegin()) {
+            track.put(JSONConstants.BEGIN_KEY, getDateTimeFormat().print(entity.getBegin()));
         }
-        if (t.hasEnd()) {
-            track.put(JSONConstants.END_KEY, getDateTimeFormat().print(t.getEnd()));
+        if (entity.hasEnd()) {
+            track.put(JSONConstants.END_KEY, getDateTimeFormat().print(entity.getEnd()));
         }
     }
 }
