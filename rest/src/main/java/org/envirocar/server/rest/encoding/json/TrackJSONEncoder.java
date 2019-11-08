@@ -93,7 +93,7 @@ public class TrackJSONEncoder extends AbstractJSONEntityEncoder<Track> {
             if (entity.hasAppVersion() && rights.canSeeAppVersionOf(entity)) {
                 properties.put(JSONConstants.APP_VERSION_KEY, entity.getAppVersion());
             }
-            addStartAndEnd(t, rights, properties);
+            addStartAndEnd(track, rights, properties);
             if (entity.hasTouVersion() && rights.canSeeTouVersionOf(entity)) {
                 properties.put(JSONConstants.TOU_VERSION_KEY, entity.getTouVersion());
             }
@@ -120,7 +120,7 @@ public class TrackJSONEncoder extends AbstractJSONEntityEncoder<Track> {
             if (entity.hasLength() && rights.canSeeLengthOf(entity)) {
                 track.put(JSONConstants.LENGTH_KEY, entity.getLength());
             }
-            addStartAndEnd(t, rights, track);
+            addStartAndEnd(track, rights, track);
             if (entity.hasSensor() && rights.canSeeSensorOf(entity)) {
                 track.set(JSONConstants.SENSOR_KEY, this.sensorEncoder.encodeJSON(entity.getSensor(), rights, mediaType));
             }
