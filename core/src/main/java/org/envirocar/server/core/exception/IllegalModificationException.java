@@ -23,13 +23,8 @@ package org.envirocar.server.core.exception;
  */
 public class IllegalModificationException extends Exception {
     private static final long serialVersionUID = -2141547378006507067L;
-    private final String field;
-    private final String cause;
 
     public IllegalModificationException(String field, String cause) {
-        super(String
-                .format("Invalid modification of field '%s': %s", field, cause));
-        this.field = field;
-        this.cause = cause;
+        super(String.format("Invalid modification of field '%s': %s", field, cause));
     }
 }

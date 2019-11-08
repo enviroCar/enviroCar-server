@@ -16,14 +16,9 @@
  */
 package org.envirocar.server.rest.decoding.json;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.ext.Provider;
-
+import com.fasterxml.jackson.databind.JsonNode;
+import com.google.inject.Inject;
+import com.vividsolutions.jts.geom.Geometry;
 import org.envirocar.server.core.dao.PhenomenonDao;
 import org.envirocar.server.core.dao.SensorDao;
 import org.envirocar.server.core.entities.Measurement;
@@ -33,9 +28,13 @@ import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.core.util.GeoJSONConstants;
 import org.envirocar.server.rest.JSONConstants;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.google.inject.Inject;
-import com.vividsolutions.jts.geom.Geometry;
+import javax.inject.Singleton;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.Provider;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * TODO JavaDoc
@@ -44,6 +43,7 @@ import com.vividsolutions.jts.geom.Geometry;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
+@Singleton
 public class MeasurementDecoder extends AbstractJSONEntityDecoder<Measurement> {
     private final JSONEntityDecoder<Geometry> geometryDecoder;
     private final PhenomenonDao phenomenonDao;
@@ -60,19 +60,19 @@ public class MeasurementDecoder extends AbstractJSONEntityDecoder<Measurement> {
     }
 
     @Override
-    public Measurement decode(JsonNode j, MediaType mediaType) {
-        return decode(j, mediaType, null);
+    public Measurement decode(JsonNode node, MediaType mediaType) {
+        return decode(node, mediaType, null);
     }
 
     @Override
-    public Measurement decode(JsonNode j, MediaType mediaType, ContextKnowledge knowledge) {
+    public Measurement decode(JsonNode node, MediaType mediaType, ContextKnowledge knowledge) {
         Measurement measurement = getEntityFactory().createMeasurement();
-        if (j.has(JSONConstants.GEOMETRY_KEY)) {
-            measurement.setGeometry(geometryDecoder.decode(j
+        if (node.has(JSONConstants.GEOMETRY_KEY)) {
+            measurement.setGeometry(geometryDecoder.decode(node
                     .path(JSONConstants.GEOMETRY_KEY), mediaType));
         }
-        if (j.has(GeoJSONConstants.PROPERTIES_KEY)) {
-            JsonNode p = j.path(GeoJSONConstants.PROPERTIES_KEY);
+        if (node.has(GeoJSONConstants.PROPERTIES_KEY)) {
+            JsonNode p = node.path(GeoJSONConstants.PROPERTIES_KEY);
             if (p.has(JSONConstants.SENSOR_KEY)) {
                 measurement.setSensor(resolveSensor(p, knowledge));
             }

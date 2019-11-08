@@ -27,18 +27,17 @@ import org.envirocar.server.core.filter.UserStatisticFilter;
  * @author Maurin Radtke <maurin.radtke@uni-muenster.de>
  */
 public interface UserStatisticDao {
-  
+
     /**
      * Get the {@code UserStatistic}s matching the specified filter.
      *
      * @param request the request
-     *
      * @return the {@code UserStatistics}
      */
     UserStatistic get(UserStatisticFilter request);
-    
-    public void updateStatisticsOnTrackDeletion(Track e, Measurements m);
-    
-    public void updateStatisticsOnNewTrack(Track e);
-    
+
+    void updateStatisticsOnTrackDeletion(Track e, Measurements m);
+
+    void updateStatisticsOnNewTrack(Track e);
+
 }

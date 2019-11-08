@@ -22,55 +22,51 @@ package org.envirocar.server.rest;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class Schemas {
-    private static final String PREFIX = "http://schema.envirocar.org/";
-    public static final String ROOT = PREFIX + "root.json#";
-    public static final String USERS = PREFIX + "users.json#";
-    public static final String USER = PREFIX + "user.json#";
-    public static final String USER_MODIFY = PREFIX + "user.modify.json#";
-    public static final String USER_CREATE = PREFIX + "user.create.json#";
-    public static final String USER_REF = PREFIX + "user.ref.json#";
-    public static final String GROUPS = PREFIX + "groups.json#";
-    public static final String GROUP = PREFIX + "group.json#";
-    public static final String GROUP_MODIFY = PREFIX + "group.modify.json#";
-    public static final String GROUP_CREATE = PREFIX + "group.create.json#";
-    public static final String GROUP_REF = PREFIX + "group.ref.json#";
-    public static final String TRACK = PREFIX + "track.json#";
-    public static final String TRACKS = PREFIX + "tracks.json#";
-    public static final String TRACK_CREATE = PREFIX + "track.create.json#";
-    public static final String TRACK_MODIFY = PREFIX + "track.modify.json#";
-    public static final String MEASUREMENT = PREFIX + "measurement.json#";
-    public static final String MEASUREMENTS = PREFIX + "measurements.json#";
-    public static final String MEASUREMENT_CREATE = PREFIX +
-                                                    "measurement.create.json#";
-    public static final String MEASUREMENT_MODIFY = PREFIX +
-                                                    "measurement.modify.json#";
-    public static final String SENSOR = PREFIX + "sensor.json#";
-    public static final String SENSORS = PREFIX + "sensors.json#";
-    public static final String SENSOR_CREATE = PREFIX + "sensor.create.json#";
-    public static final String SENSOR_MODIFY = PREFIX + "sensor.modify.json#";
-    public static final String PHENOMENON = PREFIX + "phenomenon.json#";
-    public static final String PHENOMENONS = PREFIX + "phenomenons.json#";
-    public static final String PHENOMENON_CREATE = PREFIX +
-                                                   "phenomenon.create.json#";
-    public static final String PHENOMENON_MODIFY = PREFIX +
-                                                   "phenomenon.modify.json#";
-    public static final String STATISTICS = PREFIX + "statistics.json#";
-    public static final String STATISTIC = PREFIX + "statistic.json#";
-    public static final String ACTIVITY = PREFIX + "activitiy.json#";
-    public static final String ACTIVITIES = PREFIX + "activities.json#";
-    public static final String TERMS_OF_USE = PREFIX + "terms-of-use.json#";
-    public static final String TERMS_OF_USE_INSTANCE = PREFIX + "terms-of-use-instance.json#";
-    public static final String ANNOUNCEMENTS = PREFIX + "announcements.json#";
-    public static final String ANNOUNCEMENT = PREFIX + "announcement.json#";
-    public static final String BADGE = PREFIX + "badge.json#";
-    public static final String BADGES = PREFIX + "badges.json#";
-    public static final String FUELING = PREFIX + "fueling.json#";
-    public static final String FUELING_CREATE = PREFIX + "fueling.create.json#";
-    public static final String FUELINGS = PREFIX + "fuelings.json#";
-    public static final String PASSWORD_RESET_REQUEST = PREFIX + "passwordResetRequest.json#";
-    public static final String PASSWORD_RESET_VERIFICATION = PREFIX + "passwordResetVerification.json#";
-    public static final String USERSTATISTIC = PREFIX + "userstatistic.json#";
-    
+
+    public static final String ROOT = "root.json";
+    public static final String USERS = "users.json";
+    public static final String USER = "user.json";
+    public static final String USER_MODIFY = "user.modify.json";
+    public static final String USER_CREATE = "user.create.json";
+    public static final String USER_REF = "user.ref.json";
+    public static final String GROUPS = "groups.json";
+    public static final String GROUP = "group.json";
+    public static final String GROUP_MODIFY = "group.modify.json";
+    public static final String GROUP_CREATE = "group.create.json";
+    public static final String GROUP_REF = "group.ref.json";
+    public static final String TRACK = "track.json";
+    public static final String TRACKS = "tracks.json";
+    public static final String TRACK_CREATE = "track.create.json";
+    public static final String TRACK_MODIFY = "track.modify.json";
+    public static final String MEASUREMENT = "measurement.json";
+    public static final String MEASUREMENTS = "measurements.json";
+    public static final String MEASUREMENT_CREATE = "measurement.create.json";
+    public static final String SENSOR = "sensor.json";
+    public static final String SENSORS = "sensors.json";
+    public static final String SENSOR_CREATE = "sensor.create.json";
+    public static final String PHENOMENON = "phenomenon.json";
+    public static final String PHENOMENONS = "phenomenons.json";
+    public static final String PHENOMENON_CREATE = "phenomenon.create.json";
+    public static final String STATISTICS = "statistics.json";
+    public static final String STATISTIC = "statistic.json";
+    public static final String ACTIVITY = "activitiy.json";
+    public static final String ACTIVITIES = "activities.json";
+    public static final String TERMS_OF_USE = "terms-of-use.json";
+    public static final String TERMS_OF_USE_INSTANCE = "terms-of-use-instance.json";
+    public static final String ANNOUNCEMENTS = "announcements.json";
+    public static final String ANNOUNCEMENT = "announcement.json";
+    public static final String BADGE = "badge.json";
+    public static final String BADGES = "badges.json";
+    public static final String FUELING = "fueling.json";
+    public static final String FUELING_CREATE = "fueling.create.json";
+    public static final String FUELINGS = "fuelings.json";
+    public static final String PASSWORD_RESET_REQUEST = "passwordResetRequest.json";
+    public static final String PASSWORD_RESET_VERIFICATION = "passwordResetVerification.json";
+    public static final String USER_STATISTIC = "userstatistic.json";
+    public static final String PRIVACY_STATEMENT = "privacy-statement.json";
+    public static final String PRIVACY_STATEMENTS = "privacy-statements.json";
+    public static final String EXCEPTION = "exception.json";
+
     private Schemas() {
     }
 }

@@ -16,18 +16,16 @@
  */
 package org.envirocar.server.rest.encoding.json;
 
-import javax.ws.rs.core.MediaType;
-
-import org.joda.time.format.DateTimeFormatter;
-
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-
 import org.envirocar.server.rest.encoding.JSONEntityEncoder;
-
 import org.envirocar.server.rest.rights.AccessRights;
+import org.envirocar.server.rest.schema.JsonSchemaUriConfiguration;
+import org.joda.time.format.DateTimeFormatter;
+
+import javax.ws.rs.core.MediaType;
 
 /**
  * TODO JavaDoc
@@ -40,6 +38,7 @@ public abstract class AbstractJSONEntityEncoder<T>
     private JsonNodeFactory jsonFactory;
     private DateTimeFormatter dateTimeFormat;
     private Provider<AccessRights> rights;
+    private JsonSchemaUriConfiguration schemaUriConfiguration;
 
     public AbstractJSONEntityEncoder(Class<T> classType) {
         super(classType);
@@ -69,7 +68,16 @@ public abstract class AbstractJSONEntityEncoder<T>
     }
 
     @Override
-    public ObjectNode encodeJSON(T t, MediaType mt) {
-        return encodeJSON(t, rights.get(), mt);
+    public ObjectNode encodeJSON(T entity, MediaType mediaType) {
+        return encodeJSON(entity, rights.get(), mediaType);
+    }
+
+    @Inject
+    public void setSchemaUriConfiguration(JsonSchemaUriConfiguration schemaUriConfiguration) {
+        this.schemaUriConfiguration = schemaUriConfiguration;
+    }
+
+    protected JsonSchemaUriConfiguration getSchemaUriConfiguration() {
+        return schemaUriConfiguration;
     }
 }

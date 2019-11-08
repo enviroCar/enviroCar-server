@@ -16,9 +16,14 @@
  */
 package org.envirocar.server.rest.mapper;
 
+import com.sun.jersey.core.spi.factory.ResponseImpl;
+import org.envirocar.server.rest.util.CustomStatus;
+
+import javax.inject.Singleton;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.ExceptionMapper;
+import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.Response.StatusType;
 import javax.ws.rs.ext.Provider;
 
 /**
@@ -27,10 +32,25 @@ import javax.ws.rs.ext.Provider;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
-public class WebApplicationExceptionMapper implements
-        ExceptionMapper<WebApplicationException> {
+@Singleton
+public class WebApplicationExceptionMapper extends AbstractExceptionMapper<WebApplicationException> {
+
+    private static final String UNKNOWN_REASON_PHRASE = "Unknown";
+
+
     @Override
-    public Response toResponse(WebApplicationException exception) {
-        return exception.getResponse();
+    protected StatusType getStatus(WebApplicationException exception) {
+        Response response = exception.getResponse();
+        if (response instanceof ResponseImpl) {
+            return ((ResponseImpl) response).getStatusType();
+        }
+        int statusCode = response.getStatus();
+        for (StatusType status : Status.values()) {
+            if (status.getStatusCode() == statusCode) {
+                return status;
+            }
+        }
+
+        return new CustomStatus(statusCode, UNKNOWN_REASON_PHRASE);
     }
 }

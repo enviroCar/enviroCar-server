@@ -16,6 +16,7 @@
  */
 package org.envirocar.server.rest.encoding.json;
 
+import javax.inject.Singleton;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
@@ -35,6 +36,7 @@ import org.envirocar.server.rest.rights.AccessRights;
  *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
+@Singleton
 @Provider
 public class ActivitiesJSONEncoder extends AbstractJSONEntityEncoder<Activities> {
     private final JSONEntityEncoder<Activity> activityEncoder;
@@ -46,11 +48,11 @@ public class ActivitiesJSONEncoder extends AbstractJSONEntityEncoder<Activities>
     }
 
     @Override
-    public ObjectNode encodeJSON(Activities t, AccessRights rights, MediaType mt) {
+    public ObjectNode encodeJSON(Activities entity, AccessRights rights, MediaType mediaType) {
         ObjectNode root = getJsonFactory().objectNode();
         ArrayNode activities = root.putArray(JSONConstants.ACTIVITIES_KEY);
-        for (Activity a : t) {
-            activities.add(activityEncoder.encodeJSON(a, rights, mt));
+        for (Activity activity : entity) {
+            activities.add(activityEncoder.encodeJSON(activity, rights, mediaType));
         }
         return root;
     }

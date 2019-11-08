@@ -66,7 +66,7 @@ public class MongoActivity implements Activity {
     private ActivityType type;
     @Inject
     @Transient
-    private MongoDB mongoDB;
+    private final MongoDB mongoDB;
 
     @AssistedInject
     public MongoActivity(MongoDB mongoDB,

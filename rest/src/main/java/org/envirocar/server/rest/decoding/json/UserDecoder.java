@@ -16,21 +16,19 @@
  */
 package org.envirocar.server.rest.decoding.json;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response.Status;
-import javax.ws.rs.ext.Provider;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
 import com.vividsolutions.jts.geom.Geometry;
-
 import org.envirocar.server.core.entities.Gender;
 import org.envirocar.server.core.entities.User;
+import org.envirocar.server.core.exception.BadRequestException;
 import org.envirocar.server.rest.JSONConstants;
+
+import javax.inject.Singleton;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.Provider;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * TODO JavaDoc
@@ -38,6 +36,7 @@ import org.envirocar.server.rest.JSONConstants;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
+@Singleton
 public class UserDecoder extends AbstractJSONEntityDecoder<User> {
     private final JSONEntityDecoder<Geometry> geometryDecoder;
 
@@ -48,47 +47,45 @@ public class UserDecoder extends AbstractJSONEntityDecoder<User> {
     }
 
     @Override
-    public User decode(JsonNode j, MediaType mediaType) {
+    public User decode(JsonNode node, MediaType mediaType) {
         User user = getEntityFactory().createUser();
-        user.setName(j.path(JSONConstants.NAME_KEY).textValue());
-        user.setMail(j.path(JSONConstants.MAIL_KEY).textValue());
-        user.setToken(j.path(JSONConstants.TOKEN_KEY).textValue());
+        user.setName(node.path(JSONConstants.NAME_KEY).textValue());
+        user.setMail(node.path(JSONConstants.MAIL_KEY).textValue());
+        user.setToken(node.path(JSONConstants.TOKEN_KEY).textValue());
 
-        user.setAboutMe(j.path(JSONConstants.ABOUT_ME_KEY).textValue());
-        user.setCountry(j.path(JSONConstants.COUNTRY_KEY).textValue());
-        user.setDayOfBirth(j.path(JSONConstants.DAY_OF_BIRTH_KEY).textValue());
-        user.setFirstName(j.path(JSONConstants.FIRST_NAME_KEY).textValue());
-        user.setLastName(j.path(JSONConstants.LAST_NAME_KEY).textValue());
-        user.setLanguage(j.path(JSONConstants.LANGUAGE_KEY).textValue());
+        user.setAboutMe(node.path(JSONConstants.ABOUT_ME_KEY).textValue());
+        user.setCountry(node.path(JSONConstants.COUNTRY_KEY).textValue());
+        user.setDayOfBirth(node.path(JSONConstants.DAY_OF_BIRTH_KEY).textValue());
+        user.setFirstName(node.path(JSONConstants.FIRST_NAME_KEY).textValue());
+        user.setLastName(node.path(JSONConstants.LAST_NAME_KEY).textValue());
+        user.setLanguage(node.path(JSONConstants.LANGUAGE_KEY).textValue());
 
-        user.setTermsOfUseVersion(j.path(JSONConstants.TOU_VERSION_KEY).textValue());
+        user.setAcceptedTermsOfUse(node.path(JSONConstants.ACCEPTED_TERMS_OF_USE).booleanValue());
+        user.setAcceptedPrivacyStatement(node.path(JSONConstants.ACCEPTED_PRIVACY_STATEMENT).booleanValue());
 
-        if (!user.hasAcceptedTermsOfUseVersion()) {
-            // kept for backwards compatibility
-        	user.setTermsOfUseVersion(j.path(JSONConstants.ACCEPTED_TERMS_OF_USE_VERSION_KEY).textValue());
+        user.setTermsOfUseVersion(node.path(JSONConstants.ACCEPTED_TERMS_OF_USE_VERSION_KEY).textValue());
+        user.setPrivacyStatementVersion(node.path(JSONConstants.ACCEPTED_PRIVACY_STATEMENT_VERSION).textValue());
+
+        JsonNode location = node.path(JSONConstants.LOCATION_KEY);
+        if (!location.isMissingNode() && !location.isNull()) {
+            user.setLocation(geometryDecoder.decode(location, mediaType));
         }
-
-        
-        JsonNode l = j.path(JSONConstants.LOCATION_KEY);
-        if (!l.isMissingNode() && !l.isNull()) {
-            user.setLocation(geometryDecoder.decode(l, mediaType));
-        }
-        String g = j.path(JSONConstants.GENDER_KEY).textValue();
+        String g = node.path(JSONConstants.GENDER_KEY).textValue();
         if (g != null) {
             if (g.equalsIgnoreCase(JSONConstants.MALE)) {
                 user.setGender(Gender.MALE);
             } else if (g.equalsIgnoreCase(JSONConstants.FEMALE)) {
                 user.setGender(Gender.FEMALE);
             } else {
-                throw new WebApplicationException(Status.BAD_REQUEST);
+                throw new BadRequestException();
             }
         }
-        String u = j.path(JSONConstants.URL_KEY).textValue();
+        String u = node.path(JSONConstants.URL_KEY).textValue();
         if (u != null) {
             try {
                 user.setUrl(new URL(u));
             } catch (MalformedURLException ex) {
-                throw new WebApplicationException(ex, Status.BAD_REQUEST);
+                throw new BadRequestException(ex);
             }
         }
         return user;

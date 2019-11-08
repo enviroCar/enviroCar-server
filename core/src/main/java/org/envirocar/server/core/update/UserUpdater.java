@@ -16,10 +16,9 @@
  */
 package org.envirocar.server.core.update;
 
+import com.google.inject.Inject;
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.util.PasswordEncoder;
-
-import com.google.inject.Inject;
 
 /**
  * TODO JavaDoc
@@ -94,7 +93,10 @@ public class UserUpdater implements EntityUpdater<User> {
             original.setUrl(changes.getUrl());
         }
         if (changes.getTermsOfUseVersion() != null) {
-        	original.setTermsOfUseVersion(changes.getTermsOfUseVersion());
+            original.setTermsOfUseVersion(changes.getTermsOfUseVersion());
+        }
+        if (changes.hasPrivacyStatementVersion()) {
+            original.setPrivacyStatementVersion(changes.getPrivacyStatementVersion());
         }
     }
 }

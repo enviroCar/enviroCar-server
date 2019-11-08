@@ -16,6 +16,25 @@
  */
 package org.envirocar.server.rest.resources;
 
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import org.envirocar.server.core.SpatialFilter;
+import org.envirocar.server.core.entities.Track;
+import org.envirocar.server.core.entities.Tracks;
+import org.envirocar.server.core.entities.User;
+import org.envirocar.server.core.exception.BadRequestException;
+import org.envirocar.server.core.exception.TrackNotFoundException;
+import org.envirocar.server.core.exception.ValidationException;
+import org.envirocar.server.core.filter.TrackFilter;
+import org.envirocar.server.rest.BoundingBox;
+import org.envirocar.server.rest.MediaTypes;
+import org.envirocar.server.rest.RESTConstants;
+import org.envirocar.server.rest.Schemas;
+import org.envirocar.server.rest.TrackWithMeasurments;
+import org.envirocar.server.rest.auth.Authenticated;
+import org.envirocar.server.rest.schema.Schema;
+
 import javax.annotation.Nullable;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -25,28 +44,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
-
-import org.envirocar.server.core.SpatialFilter;
-import org.envirocar.server.core.entities.Track;
-import org.envirocar.server.core.entities.Tracks;
-import org.envirocar.server.core.entities.User;
-import org.envirocar.server.core.exception.BadRequestException;
-import org.envirocar.server.core.exception.ResourceAlreadyExistException;
-import org.envirocar.server.core.exception.TrackNotFoundException;
-import org.envirocar.server.core.exception.UserNotFoundException;
-import org.envirocar.server.core.exception.ValidationException;
-import org.envirocar.server.core.filter.TrackFilter;
-import org.envirocar.server.rest.BoundingBox;
-import org.envirocar.server.rest.MediaTypes;
-import org.envirocar.server.rest.RESTConstants;
-import org.envirocar.server.rest.Schemas;
-import org.envirocar.server.rest.TrackWithMeasurments;
-import org.envirocar.server.rest.auth.Authenticated;
-import org.envirocar.server.rest.validation.Schema;
-
-import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
-import com.vividsolutions.jts.geom.GeometryFactory;
 
 /**
  * TODO JavaDoc
@@ -67,28 +64,23 @@ public class TracksResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.TRACKS)
-    @Produces({ MediaTypes.TRACKS,
-                MediaTypes.XML_RDF,
-                MediaTypes.TURTLE,
-                MediaTypes.TURTLE_ALT })
-    public Tracks get(@QueryParam(RESTConstants.BBOX) BoundingBox bbox) throws UserNotFoundException, BadRequestException {
+    @Produces({MediaTypes.JSON, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
+    public Tracks get(@QueryParam(RESTConstants.BBOX) BoundingBox bbox) throws BadRequestException {
         SpatialFilter spatialFilter = null;
         if (bbox != null) {
             spatialFilter = SpatialFilter.bbox(bbox.asPolygon(factory));
         }
         return getDataService()
-                .getTracks(new TrackFilter(user, spatialFilter,
-                                           parseTemporalFilterForInterval(),
-                                           getPagination()));
+                       .getTracks(new TrackFilter(user, spatialFilter,
+                                                  parseTemporalFilterForInterval(),
+                                                  getPagination()));
     }
 
     @POST
-    @Schema(request = Schemas.TRACK_CREATE)
-    @Consumes({ MediaTypes.TRACK_CREATE })
     @Authenticated
-    public Response create(Track track) throws ValidationException,
-                                               ResourceAlreadyExistException,
-                                               UserNotFoundException {
+    @Schema(request = Schemas.TRACK_CREATE)
+    @Consumes({MediaTypes.JSON})
+    public Response create(Track track) throws ValidationException {
         if (user != null) {
             checkRights(getRights().isSelf(user));
         }
@@ -96,18 +88,16 @@ public class TracksResource extends AbstractResource {
 
         if (track instanceof TrackWithMeasurments) {
             TrackWithMeasurments twm = (TrackWithMeasurments) track;
-            track = getDataService().createTrack(twm.getTrack(),
-                                                 twm.getMeasurements());
+            track = getDataService().createTrack(twm.getTrack(), twm.getMeasurements());
         } else {
             track = getDataService().createTrack(track);
         }
         return Response.created(getUriInfo().getAbsolutePathBuilder()
-                .path(track.getIdentifier()).build()).build();
+                                            .path(track.getIdentifier()).build()).build();
     }
 
     @Path(TRACK)
-    public TrackResource track(@PathParam("track") String id)
-            throws TrackNotFoundException {
+    public TrackResource track(@PathParam("track") String id) throws TrackNotFoundException {
         Track track = getDataService().getTrack(id);
         checkRights(getRights().canSee(track));
         return getResourceFactory().createTrackResource(track);

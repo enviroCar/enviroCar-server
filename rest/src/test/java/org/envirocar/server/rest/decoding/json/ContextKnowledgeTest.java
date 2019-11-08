@@ -16,18 +16,13 @@
  */
 package org.envirocar.server.rest.decoding.json;
 
-import java.io.IOException;
-
-import javax.ws.rs.core.MediaType;
-
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vividsolutions.jts.geom.Geometry;
 import org.envirocar.server.core.dao.MeasurementDao;
 import org.envirocar.server.core.dao.PhenomenonDao;
 import org.envirocar.server.core.dao.SensorDao;
-import org.envirocar.server.core.entities.EntityFactory;
-import org.envirocar.server.core.entities.Measurement;
-import org.envirocar.server.core.entities.MeasurementValue;
-import org.envirocar.server.core.entities.Phenomenon;
-import org.envirocar.server.core.entities.Track;
+import org.envirocar.server.core.entities.*;
 import org.envirocar.server.rest.JSONConstants;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
@@ -35,9 +30,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vividsolutions.jts.geom.Geometry;
+import javax.ws.rs.core.MediaType;
+import java.io.IOException;
 
 /**
  *

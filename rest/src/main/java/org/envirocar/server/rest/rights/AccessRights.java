@@ -16,8 +16,6 @@
  */
 package org.envirocar.server.rest.rights;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.envirocar.server.core.entities.User;
 
 /**
@@ -31,17 +29,16 @@ public interface AccessRights extends UserRights,
                                       GroupRights,
                                       SensorRights,
                                       PhenomenonRights,
-                                      TermsOfUseRights,
                                       FuelingRights {
     boolean isSelf(User user);
 
     boolean canSeeStatistics();
 
-    boolean canSeeSchema();
-    
     boolean canSeeBadges();
 
 	boolean canSeeAnnouncements();
 
-	boolean canAccessPasswordReset(HttpServletRequest request);
+	boolean canAccessPasswordReset();
+
+    boolean isAuthenticated();
 }

@@ -16,10 +16,11 @@
  */
 package org.envirocar.server;
 
-import java.util.ServiceLoader;
-
 import com.google.inject.AbstractModule;
 import com.google.inject.Module;
+
+import java.util.ServiceLoader;
+import java.util.stream.StreamSupport;
 
 /**
  * TODO JavaDoc
@@ -29,8 +30,7 @@ import com.google.inject.Module;
 public class ServiceLoaderConfigurationModule extends AbstractModule {
     @Override
     protected void configure() {
-        for (Module m : ServiceLoader.load(Module.class)) {
-            install(m);
-        }
+        StreamSupport.stream(ServiceLoader.load(Module.class).spliterator(), false)
+                     .forEach(this::install);
     }
 }

@@ -37,13 +37,9 @@ import com.google.inject.TypeLiteral;
 public class UpdaterModule extends AbstractModule {
     @Override
     protected void configure() {
-        bind(new TypeLiteral<EntityUpdater<User>>() {
-        }).to(UserUpdater.class);
-        bind(new TypeLiteral<EntityUpdater<Group>>() {
-        }).to(GroupUpdater.class);
-        bind(new TypeLiteral<EntityUpdater<Track>>() {
-        }).to(TrackUpdater.class);
-        bind(new TypeLiteral<EntityUpdater<Measurement>>() {
-        }).to(MeasurementUpdater.class);
+        bind(new TypeLiteral<EntityUpdater<User>>() {}).to(UserUpdater.class);
+        bind(new TypeLiteral<EntityUpdater<Group>>() {}).to(GroupUpdater.class);
+        bind(new TypeLiteral<EntityUpdater<Track>>() {}).to(TrackUpdater.class);
+        bind(new TypeLiteral<EntityUpdater<Measurement>>() {}).to(MeasurementUpdater.class);
     }
 }

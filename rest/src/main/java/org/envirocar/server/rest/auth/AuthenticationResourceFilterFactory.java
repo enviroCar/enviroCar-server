@@ -16,18 +16,13 @@
  */
 package org.envirocar.server.rest.auth;
 
+import com.sun.jersey.api.model.AbstractMethod;
+import com.sun.jersey.spi.container.*;
+import org.envirocar.server.rest.UnauthorizedException;
+import org.envirocar.server.rest.ForbiddenException;
+
 import java.util.Collections;
 import java.util.List;
-
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response.Status;
-
-import com.sun.jersey.api.model.AbstractMethod;
-import com.sun.jersey.spi.container.ContainerRequest;
-import com.sun.jersey.spi.container.ContainerRequestFilter;
-import com.sun.jersey.spi.container.ContainerResponseFilter;
-import com.sun.jersey.spi.container.ResourceFilter;
-import com.sun.jersey.spi.container.ResourceFilterFactory;
 
 /**
  * TODO JavaDoc
@@ -40,12 +35,12 @@ public class AuthenticationResourceFilterFactory implements ResourceFilterFactor
         Authenticated authenticated = am.getAnnotation(Authenticated.class);
         if (authenticated != null) {
             return Collections
-                    .<ResourceFilter>singletonList(new AuthenticatedResourceFilter());
+                    .singletonList(new AuthenticatedResourceFilter());
         }
         Anonymous anonymous = am.getAnnotation(Anonymous.class);
         if (anonymous != null) {
             return Collections
-                    .<ResourceFilter>singletonList(new AnonymousResourceFilter());
+                    .singletonList(new AnonymousResourceFilter());
         }
         return null;
     }
@@ -80,7 +75,7 @@ public class AuthenticationResourceFilterFactory implements ResourceFilterFactor
             if (request.getSecurityContext().getAuthenticationScheme() == null) {
                 return request;
             }
-            throw new WebApplicationException(Status.FORBIDDEN);
+            throw new ForbiddenException();
         }
     }
 
@@ -91,9 +86,8 @@ public class AuthenticationResourceFilterFactory implements ResourceFilterFactor
                     .isUserInRole(AuthConstants.ADMIN_ROLE)) {
                 return request;
             }
-            if (!request.getSecurityContext()
-                    .isUserInRole(AuthConstants.USER_ROLE)) {
-                throw new WebApplicationException(Status.UNAUTHORIZED);
+            if (!request.getSecurityContext().isUserInRole(AuthConstants.USER_ROLE)) {
+                throw new UnauthorizedException();
             }
             return request;
         }

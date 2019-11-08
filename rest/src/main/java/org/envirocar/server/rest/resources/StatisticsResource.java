@@ -16,12 +16,8 @@
  */
 package org.envirocar.server.rest.resources;
 
-import javax.annotation.Nullable;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-
+import com.google.inject.assistedinject.Assisted;
+import com.google.inject.assistedinject.AssistedInject;
 import org.envirocar.server.core.entities.Phenomenon;
 import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.core.entities.Track;
@@ -31,10 +27,13 @@ import org.envirocar.server.core.filter.StatisticsFilter;
 import org.envirocar.server.core.statistics.Statistics;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
-import org.envirocar.server.rest.validation.Schema;
+import org.envirocar.server.rest.schema.Schema;
 
-import com.google.inject.assistedinject.Assisted;
-import com.google.inject.assistedinject.AssistedInject;
+import javax.annotation.Nullable;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 
 /**
  * TODO JavaDoc
@@ -78,21 +77,15 @@ public class StatisticsResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.STATISTICS)
-    @Produces({ MediaTypes.STATISTICS,
-                MediaTypes.XML_RDF,
-                MediaTypes.TURTLE,
-                MediaTypes.TURTLE_ALT })
+    @Produces({MediaTypes.JSON, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
     public Statistics statistics() {
-        return getStatisticsService()
-                .getStatistics(new StatisticsFilter(user, track, sensor));
+        return getStatisticsService().getStatistics(new StatisticsFilter(user, track, sensor));
     }
 
     @Path(PHENOMENON)
-    public StatisticResource statistics(@PathParam("phen") String phenomenon)
-            throws PhenomenonNotFoundException {
+    public StatisticResource statistics(@PathParam("phen") String phenomenon) throws PhenomenonNotFoundException {
         Phenomenon p = getDataService().getPhenomenonByName(phenomenon);
-        return getResourceFactory()
-                .createStatisticResource(p, user, track, sensor);
+        return getResourceFactory().createStatisticResource(p, user, track, sensor);
     }
 
     public Track getTrack() {

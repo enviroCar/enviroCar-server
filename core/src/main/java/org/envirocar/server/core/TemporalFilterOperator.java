@@ -45,7 +45,7 @@ public enum TemporalFilterOperator {
     private final boolean instantfilteredByInterval;
     private final boolean instantFilteredByInstant;
 
-    private TemporalFilterOperator(boolean intervalFilteredByInterval,
+    TemporalFilterOperator(boolean intervalFilteredByInterval,
                            boolean intervalFilteredByInstant,
                            boolean instantfilteredByInterval,
                            boolean instantFilteredByInstant) {
@@ -108,5 +108,5 @@ public enum TemporalFilterOperator {
         }
     }
 
-    
+
 }

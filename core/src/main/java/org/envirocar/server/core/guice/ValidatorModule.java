@@ -16,26 +16,10 @@
  */
 package org.envirocar.server.core.guice;
 
-import org.envirocar.server.core.entities.Fueling;
-import org.envirocar.server.core.entities.Group;
-import org.envirocar.server.core.entities.Measurement;
-import org.envirocar.server.core.entities.Track;
-import org.envirocar.server.core.entities.User;
-import org.envirocar.server.core.validation.EntityValidator;
-import org.envirocar.server.core.validation.FuelingValidator;
-import org.envirocar.server.core.validation.GroupValidator;
-import org.envirocar.server.core.validation.MeasurementValidator;
-import org.envirocar.server.core.validation.TrackValidator;
-import org.envirocar.server.core.validation.UserValidator;
-import org.envirocar.server.core.entities.TrackSummaries;
-import org.envirocar.server.core.validation.UserStatisticValidator;
-import org.envirocar.server.core.entities.TrackSummary;
-import org.envirocar.server.core.validation.TrackSummariesValidator;
-import org.envirocar.server.core.validation.TrackSummaryValidator;
-import org.envirocar.server.core.entities.UserStatistic;
-
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
+import org.envirocar.server.core.entities.*;
+import org.envirocar.server.core.validation.*;
 
 /**
  * TODO JavaDoc
@@ -43,23 +27,14 @@ import com.google.inject.TypeLiteral;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class ValidatorModule extends AbstractModule {
+
     @Override
     protected void configure() {
-        bind(new TypeLiteral<EntityValidator<User>>() {
-        }).to(UserValidator.class);
-        bind(new TypeLiteral<EntityValidator<Group>>() {
-        }).to(GroupValidator.class);
-        bind(new TypeLiteral<EntityValidator<Track>>() {
-        }).to(TrackValidator.class);
-        bind(new TypeLiteral<EntityValidator<Measurement>>() {
-        }).to(MeasurementValidator.class);
-        bind(new TypeLiteral<EntityValidator<Fueling>>() {
-        }).to(FuelingValidator.class);
-        bind(new TypeLiteral<EntityValidator<UserStatistic>>() {
-        }).to(UserStatisticValidator.class);
-        bind(new TypeLiteral<EntityValidator<TrackSummary>>() {
-        }).to(TrackSummaryValidator.class);
-        bind(new TypeLiteral<EntityValidator<TrackSummaries>>() {
-        }).to(TrackSummariesValidator.class);
+        bind(new TypeLiteral<EntityValidator<User>>() {}).to(UserValidator.class);
+        bind(new TypeLiteral<EntityValidator<Group>>() {}).to(GroupValidator.class);
+        bind(new TypeLiteral<EntityValidator<Track>>() {}).to(TrackValidator.class);
+        bind(new TypeLiteral<EntityValidator<Measurement>>() {}).to(MeasurementValidator.class);
+        bind(new TypeLiteral<EntityValidator<Fueling>>() {}).to(FuelingValidator.class);
+        bind(LegalPolicyValidator.class).to(LegalPolicyValidatorImpl.class);
     }
 }

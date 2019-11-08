@@ -85,9 +85,7 @@ public class StatisticsUpdateScheduler {
                     /*
                     the thread is waiting, do not use it again and spawn a new
                      */
-                    new Thread(() -> {
-                        updateStatistics(filter, key, calculator, false);
-                    }).start();
+                    new Thread(() -> updateStatistics(filter, key, calculator, false)).start();
                 } else {
                     updateStatistics(filter, key, calculator, false);
                 }

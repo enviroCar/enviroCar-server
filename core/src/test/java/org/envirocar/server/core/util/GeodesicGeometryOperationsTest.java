@@ -35,8 +35,8 @@ public class GeodesicGeometryOperationsTest {
 	private static final double EXPECTED_DISTANCE_NORTH_SOUTH = 10001.9657;
 	private static final double EXPECTED_DISTANCE_EAST_WEST = 19903.5934;
 	
-	private GeodesicGeometryOperations ggo = new GeodesicGeometryOperations();
-	private GeometryFactory gf = new GeometryFactory();
+	private final GeodesicGeometryOperations ggo = new GeodesicGeometryOperations();
+	private final GeometryFactory gf = new GeometryFactory();
 	
 	@Mock
 	private Measurement m1;

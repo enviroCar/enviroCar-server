@@ -37,7 +37,6 @@ import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.UpdateResults;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
-import com.mongodb.CommandResult;
 import com.mongodb.WriteResult;
 
 /**

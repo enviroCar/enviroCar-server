@@ -35,7 +35,7 @@ public class Tracks extends UpCastingIterable<Track> {
     }
 
     public static Tracks none() {
-        return from(Collections.<Track>emptyList()).build();
+        return from(Collections.emptyList()).build();
     }
 
     public static class Builder extends UpCastingIterable.Builder<Builder, Tracks, Track> {

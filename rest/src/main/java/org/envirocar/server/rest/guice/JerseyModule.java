@@ -16,28 +16,27 @@
  */
 package org.envirocar.server.rest.guice;
 
-import static java.util.stream.Collectors.joining;
+import com.google.common.collect.ImmutableMap;
+import com.sun.jersey.api.container.filter.GZIPContentEncodingFilter;
+import com.sun.jersey.api.core.ResourceConfig;
+import com.sun.jersey.guice.JerseyServletModule;
+import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
+import com.sun.jersey.spi.container.*;
+import org.envirocar.server.rest.filter.CachingFilter;
+import org.envirocar.server.rest.filter.LoggingFilter;
+import org.envirocar.server.rest.filter.URIContentNegotiationFilter;
+import org.envirocar.server.rest.auth.AuthenticationFilter;
+import org.envirocar.server.rest.auth.AuthenticationResourceFilterFactory;
+import org.envirocar.server.rest.pagination.PaginationFilter;
+import org.envirocar.server.rest.rights.HasAcceptedLatestLegalPoliciesResourceFilterFactory;
+import org.envirocar.server.rest.schema.JsonSchemaResourceFilterFactory;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.StreamSupport;
 
-import org.envirocar.server.rest.CachingFilter;
-import org.envirocar.server.rest.URIContentNegotiationFilter;
-import org.envirocar.server.rest.auth.AuthenticationFilter;
-import org.envirocar.server.rest.auth.AuthenticationResourceFilterFactory;
-import org.envirocar.server.rest.pagination.PaginationFilter;
-import org.envirocar.server.rest.validation.JSONSchemaResourceFilterFactory;
-
-import com.google.common.collect.ImmutableMap;
-import com.sun.jersey.api.container.filter.GZIPContentEncodingFilter;
-import com.sun.jersey.api.core.ResourceConfig;
-import com.sun.jersey.guice.JerseyServletModule;
-import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
-import com.sun.jersey.spi.container.ContainerRequestFilter;
-import com.sun.jersey.spi.container.ContainerResponseFilter;
-import com.sun.jersey.spi.container.ResourceFilterFactory;
+import static java.util.stream.Collectors.joining;
 
 /**
  * TODO JavaDoc
@@ -50,7 +49,7 @@ public class JerseyModule extends JerseyServletModule {
         serve("/*").with(GuiceContainer.class, getContainerFilterConfig());
     }
 
-    protected Map<String, String> getContainerFilterConfig() {
+    private Map<String, String> getContainerFilterConfig() {
         return ImmutableMap.<String, String>builder()
                 .put(ResourceConfig.FEATURE_DISABLE_WADL, "false")
                 .put(ResourceConfig.PROPERTY_CONTAINER_REQUEST_FILTERS, classList(requestFilters()))
@@ -63,20 +62,27 @@ public class JerseyModule extends JerseyServletModule {
         return StreamSupport.stream(classes.spliterator(), false).map(Class::getName).collect(joining(","));
     }
 
-    protected List<Class<? extends ContainerResponseFilter>> responseFilters() {
-        return Arrays.asList(CachingFilter.class,
-                             PaginationFilter.class,
-                             GZIPContentEncodingFilter.class);
+    private List<Class<? extends ContainerResponseFilter>> responseFilters() {
+        return Arrays.asList(
+                LoggingFilter.class,
+                CachingFilter.class,
+                PaginationFilter.class,
+                GZIPContentEncodingFilter.class);
     }
 
-    protected List<Class<? extends ContainerRequestFilter>> requestFilters() {
-        return Arrays.asList(GZIPContentEncodingFilter.class,
-                             URIContentNegotiationFilter.class,
-                             AuthenticationFilter.class);
+    private List<Class<? extends ContainerRequestFilter>> requestFilters() {
+        return Arrays.asList(
+                LoggingFilter.class,
+                GZIPContentEncodingFilter.class,
+                URIContentNegotiationFilter.class,
+                AuthenticationFilter.class);
     }
 
-    protected List<Class<? extends ResourceFilterFactory>> filterFactories() {
-        return Arrays.asList(AuthenticationResourceFilterFactory.class,
-                             JSONSchemaResourceFilterFactory.class);
+    private List<Class<? extends ResourceFilterFactory>> filterFactories() {
+        return Arrays.asList(
+                AuthenticationResourceFilterFactory.class,
+                HasAcceptedLatestLegalPoliciesResourceFilterFactory.class,
+                JsonSchemaResourceFilterFactory.class);
     }
+
 }

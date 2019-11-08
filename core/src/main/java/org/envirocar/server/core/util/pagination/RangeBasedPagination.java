@@ -17,7 +17,8 @@
 package org.envirocar.server.core.util.pagination;
 
 import com.google.common.base.Objects;
-import com.google.common.base.Optional;
+
+import java.util.Optional;
 
 public class RangeBasedPagination implements Pagination {
     private final long begin;
@@ -32,19 +33,19 @@ public class RangeBasedPagination implements Pagination {
         if (end < 0 || end < begin) {
             throw new IllegalArgumentException();
         }
-        
+
         if (end - begin > MAX_PAGE_SIZE) {
-        	throw new IllegalArgumentException(
-        			String.format("Maximum response limit exceeded. Max is %s", MAX_PAGE_SIZE));
+            throw new IllegalArgumentException(
+                    String.format("Maximum response limit exceeded. Max is %s", MAX_PAGE_SIZE));
         }
-        
+
         this.begin = begin;
         this.end = end;
         this.size = this.end - this.begin + 1;
         this.paginated = this.begin % this.size == 0L;
         this.isFirstChunk = this.begin <= 0L;
         this.isPreviousFirstChunk = this.begin - this.size <= 0;
-        this.page = this.paginated ? this.begin/this.size + 1 : -1;
+        this.page = this.paginated ? this.begin / this.size + 1 : -1;
     }
 
     @Override
@@ -64,7 +65,7 @@ public class RangeBasedPagination implements Pagination {
 
     @Override
     public long getPage() {
-       return this.page;
+        return this.page;
 
     }
 
@@ -80,7 +81,7 @@ public class RangeBasedPagination implements Pagination {
     @Override
     public Optional<Pagination> first(long elements) {
         if (this.isFirstChunk || !this.paginated) {
-            return Optional.absent();
+            return Optional.empty();
         }
         return optionalRange(0, this.size - 1);
     }
@@ -88,7 +89,7 @@ public class RangeBasedPagination implements Pagination {
     @Override
     public Optional<Pagination> previous(long elements) {
         if (this.isFirstChunk || this.isPreviousFirstChunk || !this.paginated) {
-            return Optional.absent();
+            return Optional.empty();
         }
         return optionalRange(this.begin - this.size, this.begin - 1);
     }
@@ -96,7 +97,7 @@ public class RangeBasedPagination implements Pagination {
     @Override
     public Optional<Pagination> next(long elements) {
         if (isLastChunk(elements) || isNextChunkLast(elements) || !this.paginated) {
-            return Optional.absent();
+            return Optional.empty();
         }
         return optionalRange(this.end + 1, this.end + this.size);
     }
@@ -104,11 +105,11 @@ public class RangeBasedPagination implements Pagination {
     @Override
     public Optional<Pagination> last(long elements) {
         if (isLastChunk(elements) || !this.paginated) {
-            return Optional.absent();
+            return Optional.empty();
         }
         long start = elements % this.size == 0L
-                             ? elements - this.size
-                             : (long) Math.floor(elements/this.size) * this.size;
+                ? elements - this.size
+                : (long) Math.floor(elements / this.size) * this.size;
         return optionalRange(start, elements - 1);
     }
 
@@ -117,7 +118,7 @@ public class RangeBasedPagination implements Pagination {
         if (obj instanceof RangeBasedPagination) {
             RangeBasedPagination that = (RangeBasedPagination) obj;
             return this.getBegin() == that.getBegin() &&
-                   this.getEnd() == that.getEnd();
+                    this.getEnd() == that.getEnd();
         }
         return false;
     }
@@ -133,6 +134,6 @@ public class RangeBasedPagination implements Pagination {
     }
 
     protected static Optional<Pagination> optionalRange(long begin, long end) {
-        return Optional.<Pagination>of(new RangeBasedPagination(begin, end));
+        return Optional.of(new RangeBasedPagination(begin, end));
     }
 }

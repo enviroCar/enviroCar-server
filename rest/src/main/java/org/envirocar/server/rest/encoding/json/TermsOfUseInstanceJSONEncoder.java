@@ -16,15 +16,17 @@
  */
 package org.envirocar.server.rest.encoding.json;
 
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.ext.Provider;
-
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.envirocar.server.core.entities.TermsOfUseInstance;
 import org.envirocar.server.rest.JSONConstants;
-import org.envirocar.server.rest.MediaTypes;
+import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.rights.AccessRights;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import javax.inject.Singleton;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.Provider;
+import java.util.Locale;
 
 /**
  * TODO JavaDoc
@@ -32,34 +34,33 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
  * @author Matthes Rieke
  */
 @Provider
+@Singleton
 public class TermsOfUseInstanceJSONEncoder extends AbstractJSONEntityEncoder<TermsOfUseInstance> {
+
+
 
     public TermsOfUseInstanceJSONEncoder() {
         super(TermsOfUseInstance.class);
     }
 
     @Override
-    public ObjectNode encodeJSON(TermsOfUseInstance t, AccessRights rights,
-                                 MediaType mediaType) {
+    public ObjectNode encodeJSON(TermsOfUseInstance entity, AccessRights rights, MediaType mediaType) {
         ObjectNode termsOfUse = getJsonFactory().objectNode();
-        if (t.getIdentifier() != null) {
-            termsOfUse.put(JSONConstants.IDENTIFIER_KEY, t.getIdentifier());
+        if (entity.getIdentifier() != null) {
+            termsOfUse.put(JSONConstants.IDENTIFIER_KEY, entity.getIdentifier());
         }
-        if (t.getIssuedDate() != null) {
-            termsOfUse.put(JSONConstants.ISSUED_DATE, t.getIssuedDate());
+        if (entity.getIssuedDate() != null) {
+            termsOfUse.put(JSONConstants.ISSUED_DATE, entity.getIssuedDate());
         }
-        if (mediaType.equals(MediaTypes.TERMS_OF_USE_INSTANCE_TYPE)) {
-            if (t.hasCreationTime()) {
-                termsOfUse.put(JSONConstants.CREATED_KEY, getDateTimeFormat()
-                        .print(t.getCreationTime()));
+        if (getSchemaUriConfiguration().isSchema(mediaType, Schemas.TERMS_OF_USE_INSTANCE)) {
+            if (entity.hasCreationTime()) {
+                termsOfUse.put(JSONConstants.CREATED_KEY, getDateTimeFormat().print(entity.getCreationTime()));
             }
-            if (t.hasModificationTime()) {
-                termsOfUse.put(JSONConstants.MODIFIED_KEY, getDateTimeFormat()
-                        .print(t.getModificationTime()));
+            if (entity.hasModificationTime()) {
+                termsOfUse.put(JSONConstants.MODIFIED_KEY, getDateTimeFormat().print(entity.getModificationTime()));
             }
-
-            if (t.getContents() != null) {
-                termsOfUse.put(JSONConstants.CONTENTS, t.getContents());
+            if (entity.getContents() != null) {
+                termsOfUse.put(JSONConstants.CONTENTS, entity.getContents());
             }
         }
         return termsOfUse;

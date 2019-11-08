@@ -16,20 +16,18 @@
  */
 package org.envirocar.server.rest.schema;
 
-import java.io.IOException;
-import java.util.Set;
-
-import org.envirocar.server.rest.guice.JSONSchemaFactoryProvider;
+import com.github.fge.jsonschema.SchemaVersion;
+import org.envirocar.server.rest.GuiceRunner;
+import org.envirocar.server.rest.guice.JsonSchemaModule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
 import org.junit.runner.RunWith;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.github.fge.jsonschema.SchemaVersion;
-import com.github.fge.jsonschema.util.JsonLoader;
-import com.google.inject.Inject;
-import com.google.inject.name.Named;
+import javax.inject.Inject;
+import javax.inject.Named;
+import java.net.URI;
+import java.util.Set;
 
 /**
  * TODO JavaDoc
@@ -38,11 +36,12 @@ import com.google.inject.name.Named;
  */
 @RunWith(GuiceRunner.class)
 public class SchemaValidationTest {
-    public static final String SCHEMA_URI =
-            SchemaVersion.DRAFTV4.getLocation().toASCIIString();
+    private static final String SCHEMA_URI = SchemaVersion.DRAFTV4.getLocation().toASCIIString();
     @Inject
-    @Named(JSONSchemaFactoryProvider.SCHEMAS)
+    @Named(JsonSchemaModule.SCHEMAS)
     private Set<String> schemas;
+    @Inject
+    private JsonSchemaUriLoader loader;
     @Rule
     public final ValidationRule validation = new ValidationRule();
     @Rule
@@ -50,13 +49,9 @@ public class SchemaValidationTest {
 
     @Test
     public void validate() {
-        for (String schema : schemas) {
-            try {
-                JsonNode json = JsonLoader.fromResource(schema);
-                errors.checkThat(json, validation.validInstanceOf(SCHEMA_URI));
-            } catch (IOException ex) {
-                errors.addError(ex);
-            }
-        }
+        schemas.stream().map(URI::create).forEach(schema ->
+                errors.checkThat(
+                        errors.checkSucceeds(() -> loader.load(schema)),
+                        validation.validInstanceOf(SCHEMA_URI)));
     }
 }

@@ -22,6 +22,7 @@ package org.envirocar.server.rest;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface JSONConstants {
+    String PARTIAL_FUELING = "partialFueling";
     String BADGES = "badges";
     String INSTANCE_KEY = "instance";
     String FRIEND_ACTIVITIES = "friendActivities";
@@ -91,27 +92,22 @@ public interface JSONConstants {
     String STARTPOSITION_KEY = "startPosition";
     String ENDPOSITION_KEY = "endPosition";
     String TRACKSUMMARY_KEY = "trackSummary";
-
-    /**
-     * @deprecated use {@link #TOU_VERSION_KEY} instead. kept for backwards
-     * compatibility
-     */
-    @Deprecated
+    String ACCEPTED_TERMS_OF_USE = "acceptedTerms";
+    String ACCEPTED_PRIVACY_STATEMENT = "acceptedPrivacy";
     String ACCEPTED_TERMS_OF_USE_VERSION_KEY = "acceptedTermsOfUseVersion";
-
     String APP_VERSION_KEY = "appVersion";
     String OBD_DEVICE_KEY = "obdDevice";
-    String TOU_VERSION_KEY = "touVersion";
+    String ACCEPTED_PRIVACY_STATEMENT_VERSION = "acceptedPrivacyStatementVersion";
     String SCHEMA = "schema";
     String ANNOUNCEMENTS_KEY = "announcements";
     String ISSUED_DATE = "issuedDate";
     String CONTENTS = "contents";
     String VERSIONS = "versions";
     String CONTENT = "content";
-    String PRIORITY  = "priority";
+    String PRIORITY = "priority";
     String CATEGORY = "category";
     String BADGES_KEY = "badges";
-	String DISPLAY_NAME_KEY = "displayName";
+    String DISPLAY_NAME_KEY = "displayName";
     String FUELINGS = "fuelings";
     String MILEAGE = "mileage";
     String COST = "cost";
@@ -119,4 +115,16 @@ public interface JSONConstants {
     String MISSED_FUEL_STOP = "missedFuelStop";
     String FUEL_TYPE = "fuelType";
     String VOLUME = "volume";
+    String PRIVACY_STATEMENTS = "privacyStatements";
+    String MESSAGE = "message";
+    String STATUS_CODE = "statusCode";
+    String REASON_PHRASE = "reasonPhrase";
+    String DETAILS = "details";
+    String STACK_TRACE = "stackTrace";
+    String CAUSED_BY = "causedBy";
+    String SUPPRESSED = "suppressed";
+    String AT = "at";
+    String CIRCULAR_REFERENCE = "circularReference";
+    String TOU_VERSION_KEY = "touVersion";
+    String TRACK_COUNT = "trackCount";
 }

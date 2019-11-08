@@ -1,11 +1,12 @@
 org.envirocar.server.rest.guice.JerseyResourceModule
-org.envirocar.server.rest.guice.JerseyCodingModule
+org.envirocar.server.rest.guice.JacksonModule
 org.envirocar.server.rest.guice.JerseyDecoderModule
 org.envirocar.server.rest.guice.JerseyJSONEncoderModule
 org.envirocar.server.rest.guice.JerseyShapefileEncoderModule
 org.envirocar.server.rest.guice.JerseyCSVEncoderModule
 org.envirocar.server.rest.guice.JerseyRDFEncoderModule
-org.envirocar.server.rest.guice.JerseyValidationModule
+org.envirocar.server.rest.guice.JsonSchemaModule
 org.envirocar.server.rest.guice.JerseyModule
 org.envirocar.server.rest.guice.DefaultRDFLinkerModule
 org.envirocar.server.rest.pagination.PaginationModule
+org.envirocar.server.rest.guice.ApplicationPropertiesModule

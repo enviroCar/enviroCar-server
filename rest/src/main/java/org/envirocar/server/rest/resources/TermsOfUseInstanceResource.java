@@ -16,35 +16,34 @@
  */
 package org.envirocar.server.rest.resources;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Produces;
-
-import org.envirocar.server.core.entities.TermsOfUseInstance;
-import org.envirocar.server.core.exception.ResourceNotFoundException;
-import org.envirocar.server.rest.MediaTypes;
-import org.envirocar.server.rest.Schemas;
-import org.envirocar.server.rest.validation.Schema;
-
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
+import org.envirocar.server.core.entities.Terms;
+import org.envirocar.server.core.entities.TermsOfUseInstance;
+import org.envirocar.server.rest.MediaTypes;
+import org.envirocar.server.rest.Schemas;
+import org.envirocar.server.rest.schema.Schema;
+
+import javax.ws.rs.GET;
+import javax.ws.rs.Produces;
+import java.util.Locale;
 
 /**
  * @author matthes rieke
- *
  */
-public class TermsOfUseInstanceResource extends AbstractResource {
-    private final TermsOfUseInstance termsOfUseInstance;
+public class TermsOfUseInstanceResource extends TermsResource {
+    private final TermsOfUseInstance entity;
 
-	@Inject
+    @Inject
     public TermsOfUseInstanceResource(@Assisted TermsOfUseInstance t) {
-        this.termsOfUseInstance = t;
+        this.entity = t;
     }
-	
+
     @GET
     @Schema(response = Schemas.TERMS_OF_USE_INSTANCE)
-    @Produces({ MediaTypes.TERMS_OF_USE_INSTANCE })
-    public TermsOfUseInstance get() throws ResourceNotFoundException {
-        return termsOfUseInstance;
+    @Produces({MediaTypes.JSON})
+    public TermsOfUseInstance get() {
+        return setContents(entity);
     }
-    
+
 }

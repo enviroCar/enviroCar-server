@@ -16,7 +16,7 @@
  */
 package org.envirocar.server.core.util.pagination;
 
-import com.google.common.base.Optional;
+import java.util.Optional;
 
 /**
  * TODO JavaDoc
@@ -24,13 +24,15 @@ import com.google.common.base.Optional;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface Pagination {
-	
-	long MAX_PAGE_SIZE = 5000;
+
+    long MAX_PAGE_SIZE = 5000;
 
     long getBegin();
+
     long getEnd();
 
     long getPage();
+
     long getLimit();
 
     Optional<Pagination> first(long elements);

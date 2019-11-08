@@ -16,18 +16,16 @@
  */
 package org.envirocar.server.rest.resources;
 
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
+import org.envirocar.server.core.entities.Phenomenon;
+import org.envirocar.server.rest.MediaTypes;
+import org.envirocar.server.rest.Schemas;
+import org.envirocar.server.rest.schema.Schema;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-
-import org.envirocar.server.core.entities.Phenomenon;
-import org.envirocar.server.core.exception.PhenomenonNotFoundException;
-import org.envirocar.server.rest.MediaTypes;
-import org.envirocar.server.rest.Schemas;
-import org.envirocar.server.rest.validation.Schema;
-
-import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
 
 /**
  * TODO JavaDoc
@@ -45,11 +43,8 @@ public class PhenomenonResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.PHENOMENON)
-    @Produces({ MediaTypes.PHENOMENON,
-                MediaTypes.XML_RDF,
-                MediaTypes.TURTLE,
-                MediaTypes.TURTLE_ALT })
-    public Phenomenon getPhenomenon() throws PhenomenonNotFoundException {
+    @Produces({MediaTypes.JSON, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
+    public Phenomenon getPhenomenon() {
         return phenomenon;
     }
 

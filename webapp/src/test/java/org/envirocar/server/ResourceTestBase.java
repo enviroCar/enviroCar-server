@@ -16,17 +16,11 @@
  */
 package org.envirocar.server;
 
-import org.envirocar.server.rest.decoding.json.JsonNodeMessageBodyReader;
-import org.envirocar.server.rest.encoding.json.JsonNodeMessageBodyWriter;
-import org.junit.Before;
-import org.junit.BeforeClass;
-
 import com.google.inject.Inject;
 import com.mongodb.DB;
-import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.api.client.config.ClientConfig;
-import com.sun.jersey.api.client.config.DefaultClientConfig;
+import org.junit.Before;
+import org.junit.ClassRule;
 
 /**
  * TODO JavaDoc
@@ -36,26 +30,16 @@ import com.sun.jersey.api.client.config.DefaultClientConfig;
 public class ResourceTestBase {
     @Inject
     private DB db;
-    @Inject
-    private JsonNodeMessageBodyWriter jsonNodeWriter;
-    @Inject
-    private JsonNodeMessageBodyReader jsonNodeReader;
-
-    @BeforeClass
-    public static void start() throws Exception {
-        EnviroCarServer.getInstance();
-    }
+    @ClassRule
+    public static EnviroCarServer server = new EnviroCarServer();
 
     @Before
-    public void inject() throws Exception {
-        EnviroCarServer.getInstance().getInjector().injectMembers(this);
+    public void inject() {
+        server.getInjector().injectMembers(this);
     }
 
     protected WebResource resource() {
-        ClientConfig cc = new DefaultClientConfig();
-        cc.getSingletons().add(jsonNodeReader);
-        cc.getSingletons().add(jsonNodeWriter);
-        return Client.create(cc).resource("http://localhost:9998");
+        return server.resource();
     }
 
     protected void clearDatabase() {

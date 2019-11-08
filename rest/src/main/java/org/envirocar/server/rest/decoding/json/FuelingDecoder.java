@@ -18,6 +18,7 @@ package org.envirocar.server.rest.decoding.json;
 
 import java.math.BigDecimal;
 
+import javax.inject.Singleton;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
@@ -35,8 +36,10 @@ import com.google.inject.Inject;
  * @author Christian Autermann
  */
 @Provider
+@Singleton
 public class FuelingDecoder extends AbstractJSONEntityDecoder<Fueling> {
-    public static final boolean MISSED_FUEL_STOP_DEFAULT_VALUE = true;
+    private static final boolean MISSED_FUEL_STOP_DEFAULT_VALUE = true;
+    private static final boolean PARTIAL_FUELING_DEFAULT_VALUE = false;
     private final SensorDao sensorDao;
 
     /**
@@ -51,16 +54,17 @@ public class FuelingDecoder extends AbstractJSONEntityDecoder<Fueling> {
     }
 
     @Override
-    public Fueling decode(JsonNode j, MediaType mt) {
+    public Fueling decode(JsonNode node, MediaType mediaType) {
         Fueling fueling = getEntityFactory().createFueling();
-        fueling.setFuelType(j.path(JSONConstants.FUEL_TYPE).textValue());
-        fueling.setComment(j.path(JSONConstants.COMMENT).textValue());
-        fueling.setCost(decodeDimensionedNumber(j.path(JSONConstants.COST)));
-        fueling.setMileage(decodeDimensionedNumber(j.path(JSONConstants.MILEAGE)));
-        fueling.setMissedFuelStop(j.path(JSONConstants.MISSED_FUEL_STOP).asBoolean(MISSED_FUEL_STOP_DEFAULT_VALUE));
-        fueling.setTime(getDateTimeFormat().parseDateTime(j.path(JSONConstants.TIME_KEY).textValue()));
-        fueling.setVolume(decodeDimensionedNumber(j.path(JSONConstants.VOLUME)));
-        fueling.setCar(sensorDao.getByIdentifier(j.path(JSONConstants.CAR_KEY).textValue()));
+        fueling.setFuelType(node.path(JSONConstants.FUEL_TYPE).textValue());
+        fueling.setComment(node.path(JSONConstants.COMMENT).textValue());
+        fueling.setCost(decodeDimensionedNumber(node.path(JSONConstants.COST)));
+        fueling.setMileage(decodeDimensionedNumber(node.path(JSONConstants.MILEAGE)));
+        fueling.setMissedFuelStop(node.path(JSONConstants.MISSED_FUEL_STOP).asBoolean(MISSED_FUEL_STOP_DEFAULT_VALUE));
+        fueling.setPartialFueling(node.path(JSONConstants.PARTIAL_FUELING).asBoolean(PARTIAL_FUELING_DEFAULT_VALUE));
+        fueling.setTime(getDateTimeFormat().parseDateTime(node.path(JSONConstants.TIME_KEY).textValue()));
+        fueling.setVolume(decodeDimensionedNumber(node.path(JSONConstants.VOLUME)));
+        fueling.setCar(sensorDao.getByIdentifier(node.path(JSONConstants.CAR_KEY).textValue()));
         return fueling;
     }
 

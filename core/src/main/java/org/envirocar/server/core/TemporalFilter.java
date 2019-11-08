@@ -84,7 +84,7 @@ public class TemporalFilter {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj != null && obj instanceof TemporalFilter) {
+        if (obj instanceof TemporalFilter) {
             TemporalFilter other = (TemporalFilter) obj;
             return Objects.equal(getOperator(), other.getOperator()) &&
                    Objects.equal(getBegin(), other.getBegin()) &&

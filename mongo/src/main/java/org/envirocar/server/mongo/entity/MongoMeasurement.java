@@ -73,7 +73,7 @@ public class MongoMeasurement extends MongoEntityBase implements Measurement {
     @Property(TRACK)
     private Key<MongoTrack> track;
     @Embedded(PHENOMENONS)
-    private Set<MongoMeasurementValue> values = Sets.newHashSet();
+    private final Set<MongoMeasurementValue> values = Sets.newHashSet();
     @Transient
     private MongoTrack _track;
     @Transient
@@ -155,7 +155,7 @@ public class MongoMeasurement extends MongoEntityBase implements Measurement {
 
     @Override
     public void removeValue(MeasurementValue value) {
-        this.values.remove((MongoMeasurementValue) value);
+        this.values.remove(value);
     }
 
     @Override

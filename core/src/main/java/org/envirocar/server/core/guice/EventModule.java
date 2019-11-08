@@ -16,11 +16,6 @@
  */
 package org.envirocar.server.core.guice;
 
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-
-import org.envirocar.server.core.util.GroupedAndNamedThreadFactory;
-
 import com.google.common.eventbus.AsyncEventBus;
 import com.google.common.eventbus.EventBus;
 import com.google.inject.AbstractModule;
@@ -29,6 +24,10 @@ import com.google.inject.matcher.Matchers;
 import com.google.inject.spi.InjectionListener;
 import com.google.inject.spi.TypeEncounter;
 import com.google.inject.spi.TypeListener;
+import org.envirocar.server.core.util.GroupedAndNamedThreadFactory;
+
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 /**
  * TODO JavaDoc
@@ -50,7 +49,7 @@ public class EventModule extends AbstractModule {
         return new AsyncEventBus("eventbus", e);
     }
 
-    private class EventBusTypeListener implements TypeListener {
+    private static class EventBusTypeListener implements TypeListener {
         private final EventBus eventBus;
 
         EventBusTypeListener(EventBus eventBus) {
@@ -58,13 +57,12 @@ public class EventModule extends AbstractModule {
         }
 
         @Override
-        public <I> void hear(TypeLiteral<I> typeLiteral,
-                             TypeEncounter<I> typeEncounter) {
-            typeEncounter.register(new EventBusInjectionListener<I>(eventBus));
+        public <I> void hear(TypeLiteral<I> typeLiteral, TypeEncounter<I> typeEncounter) {
+            typeEncounter.register(new EventBusInjectionListener<>(eventBus));
         }
     }
 
-    private class EventBusInjectionListener<I> implements InjectionListener<I> {
+    private static class EventBusInjectionListener<I> implements InjectionListener<I> {
         private final EventBus eventBus;
 
         EventBusInjectionListener(EventBus eventBus) {
@@ -73,7 +71,7 @@ public class EventModule extends AbstractModule {
 
         @Override
         public void afterInjection(I i) {
-            eventBus.register(i);
+            this.eventBus.register(i);
         }
     }
 }

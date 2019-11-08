@@ -18,50 +18,22 @@ package org.envirocar.server.core.entities;
 
 import com.vividsolutions.jts.geom.Geometry;
 
-/**
- *
- * @author maurin
- */
-public class TrackSummary {
+public interface TrackSummary {
+    String getIdentifier();
 
-    private String identifier;
-    private Geometry startPosition;
-    private Geometry endPosition;
-    
-    public String getIdentifier() {
-       return this.identifier;
-    }
+    void setIdentifier(String id);
 
-    public void setIdentifier(String id) {
-        this.identifier = id;
-    }
-    
-    public boolean hasIdentifier() {
-        return (this.identifier != null);
-    }
+    boolean hasIdentifier();
 
-    public Geometry getStartPosition() {
-        return this.startPosition;
-    }
+    Geometry getStartPosition();
 
-    public void setStartPosition(Geometry startPosition) {
-        this.startPosition = startPosition;
-    }
+    void setStartPosition(Geometry startPosition);
 
-    public boolean hasStartPosition() {
-        return (this.startPosition != null);
-    }
+    boolean hasStartPosition();
 
-    public Geometry getEndPosition() {
-        return this.endPosition;
-    }
+    Geometry getEndPosition();
 
-    public void setEndPosition(Geometry endPosition) {
-        this.endPosition = endPosition;
-    }
+    void setEndPosition(Geometry endPosition);
 
-    public boolean hasEndPosition() {
-        return (this.endPosition != null);
-    }
-
+    boolean hasEndPosition();
 }

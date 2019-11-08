@@ -39,7 +39,7 @@ public class URLConverter extends TypeConverter implements SimpleValueConverter 
         if (value == null) {
             return null;
         }
-        return ((URL) value).toString();
+        return value.toString();
     }
 
     @Override

@@ -20,10 +20,8 @@ import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Factory;
 import org.hamcrest.Matcher;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Optional;
+import java.util.Optional;
 
 public class Present<T> extends BaseMatcher<Optional<T>> {
     private final Matcher<T> matcher;
@@ -36,8 +34,7 @@ public class Present<T> extends BaseMatcher<Optional<T>> {
     public boolean matches(Object item) {
         if (item instanceof Optional) {
             Optional<?> optional = (Optional) item;
-            return !optional.isPresent() ? false : matcher != null ? matcher
-                    .matches(optional.get()) : true;
+            return optional.isPresent() && (matcher == null || matcher.matches(optional.get()));
         }
         return false;
     }
@@ -66,13 +63,12 @@ public class Present<T> extends BaseMatcher<Optional<T>> {
     }
 
     @Factory
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    public static Matcher<Optional<?>> present() {
-        return new Present(null);
+    public static <T> Matcher<Optional<T>> present() {
+        return new Present<>(null);
     }
 
     @Factory
     public static <T> Matcher<Optional<T>> presentAnd(Matcher<T> matcher) {
-        return new Present<T>(matcher);
+        return new Present<>(matcher);
     }
 }

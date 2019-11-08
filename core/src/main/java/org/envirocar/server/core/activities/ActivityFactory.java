@@ -16,11 +16,10 @@
  */
 package org.envirocar.server.core.activities;
 
+import com.google.inject.assistedinject.Assisted;
 import org.envirocar.server.core.entities.Group;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.entities.User;
-
-import com.google.inject.assistedinject.Assisted;
 
 /**
  * TODO JavaDoc
@@ -28,18 +27,11 @@ import com.google.inject.assistedinject.Assisted;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface ActivityFactory {
-    Activity createActivity(ActivityType type,
-                            User user);
+    Activity createActivity(ActivityType type, User user);
 
-    GroupActivity createGroupActivity(ActivityType type,
-                                      User user,
-                                      Group group);
+    GroupActivity createGroupActivity(ActivityType type, User user, Group group);
 
-    TrackActivity createTrackActivity(ActivityType type,
-                                      User user,
-                                      Track track);
+    TrackActivity createTrackActivity(ActivityType type, User user, Track track);
 
-    UserActivity createUserActivity(ActivityType type,
-                                    @Assisted("user") User user,
-                                    @Assisted("other") User other);
+    UserActivity createUserActivity(ActivityType type, @Assisted("user") User user, @Assisted("other") User other);
 }

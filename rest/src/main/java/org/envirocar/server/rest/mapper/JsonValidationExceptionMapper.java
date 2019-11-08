@@ -16,13 +16,13 @@
  */
 package org.envirocar.server.rest.mapper;
 
-import javax.ws.rs.core.MediaType;
+import com.fasterxml.jackson.databind.JsonNode;
+import org.envirocar.server.rest.schema.JsonValidationException;
+
+import javax.inject.Singleton;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
-
-import org.envirocar.server.rest.validation.JSONValidationException;
 
 /**
  * TODO JavaDoc
@@ -30,12 +30,16 @@ import org.envirocar.server.rest.validation.JSONValidationException;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
-public class JsonValidationExceptionMapper implements
-        ExceptionMapper<JSONValidationException> {
+@Singleton
+public class JsonValidationExceptionMapper extends AbstractExceptionMapper<JsonValidationException> {
+
     @Override
-    public Response toResponse(JSONValidationException exception) {
-        return Response.status(Status.BAD_REQUEST)
-                .type(MediaType.APPLICATION_JSON_TYPE)
-                .entity(exception.getError()).build();
+    protected Response.StatusType getStatus(JsonValidationException exception) {
+        return Status.BAD_REQUEST;
+    }
+
+    @Override
+    protected JsonNode getDetails(JsonValidationException exception) {
+        return exception.getError();
     }
 }

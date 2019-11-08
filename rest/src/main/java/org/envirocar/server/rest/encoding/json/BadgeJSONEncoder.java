@@ -16,17 +16,17 @@
  */
 package org.envirocar.server.rest.encoding.json;
 
-import java.util.Map.Entry;
-
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.ext.Provider;
-
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.envirocar.server.core.entities.Badge;
 import org.envirocar.server.rest.JSONConstants;
 import org.envirocar.server.rest.rights.AccessRights;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import javax.inject.Singleton;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.Provider;
+import java.util.Map.Entry;
 
+@Singleton
 @Provider
 public class BadgeJSONEncoder extends AbstractJSONEntityEncoder<Badge> {
 
@@ -35,27 +35,26 @@ public class BadgeJSONEncoder extends AbstractJSONEntityEncoder<Badge> {
     }
 
     @Override
-    public ObjectNode encodeJSON(Badge badge, AccessRights rights,
-                                 MediaType mediaType) {
-        ObjectNode json = getJsonFactory().objectNode();
+    public ObjectNode encodeJSON(Badge entity, AccessRights rights, MediaType mediaType) {
+        ObjectNode node = getJsonFactory().objectNode();
 
-        if (badge.getName() != null) {
-            json.put(JSONConstants.NAME_KEY, badge.getName());
+        if (entity.getName() != null) {
+            node.put(JSONConstants.NAME_KEY, entity.getName());
         }
-        
-        if (badge.getDisplayName() != null) {
-            ObjectNode values = json.putObject(JSONConstants.DISPLAY_NAME_KEY);
-            for (Entry<String, String> e : badge.getDisplayName().entrySet()) {
+
+        if (entity.getDisplayName() != null) {
+            ObjectNode values = node.putObject(JSONConstants.DISPLAY_NAME_KEY);
+            for (Entry<String, String> e : entity.getDisplayName().entrySet()) {
                 values.put(e.getKey(), e.getValue());
             }
         }
-        
-        if (badge.getDescription() != null) {
-            ObjectNode values = json.putObject(JSONConstants.DESCRIPTION_KEY);
-            for (Entry<String, String> e : badge.getDescription().entrySet()) {
+
+        if (entity.getDescription() != null) {
+            ObjectNode values = node.putObject(JSONConstants.DESCRIPTION_KEY);
+            for (Entry<String, String> e : entity.getDescription().entrySet()) {
                 values.put(e.getKey(), e.getValue());
             }
         }
-        return json;
+        return node;
     }
 }

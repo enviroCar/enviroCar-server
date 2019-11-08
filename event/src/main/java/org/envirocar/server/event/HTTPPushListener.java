@@ -16,41 +16,38 @@
  */
 package org.envirocar.server.event;
 
-import java.io.IOException;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
-import org.envirocar.server.core.entities.Track;
-import org.envirocar.server.core.event.CreatedTrackEvent;
-import org.envirocar.server.rest.MediaTypes;
-import org.envirocar.server.rest.encoding.JSONEntityEncoder;
-import org.envirocar.server.rest.rights.AccessRightsImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
+import org.envirocar.server.core.entities.Track;
+import org.envirocar.server.core.event.CreatedTrackEvent;
 import org.envirocar.server.core.event.DeletedTrackEvent;
+import org.envirocar.server.rest.MediaTypes;
+import org.envirocar.server.rest.Schemas;
+import org.envirocar.server.rest.encoding.JSONEntityEncoder;
+import org.envirocar.server.rest.rights.AccessRightsImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.ws.rs.core.MediaType;
+import java.io.IOException;
 
 @Singleton
 public class HTTPPushListener {
     //TODO make configurable
-    private static final String host =
-            "http://ags.52north.org:8080/enviroCar-broker/";
-    private static final Logger logger = LoggerFactory
-            .getLogger(HTTPPushListener.class);
-    public static final AccessRightsImpl DEFAULT_ACCESS_RIGHTS =
-            new AccessRightsImpl();
+    private static final String host = "http://ags.52north.org:8080/enviroCar-broker/";
+    private static final Logger logger = LoggerFactory.getLogger(HTTPPushListener.class);
+    private static final AccessRightsImpl DEFAULT_ACCESS_RIGHTS = new AccessRightsImpl();
     private final HttpClient client;
     private final JSONEntityEncoder<Track> encoder;
     private final ObjectWriter writer;
@@ -67,30 +64,29 @@ public class HTTPPushListener {
     public void onCreatedTrackEvent(CreatedTrackEvent e) {
         pushNewTrack(e.getTrack());
     }
-    
-    public void onDeletedTrackEvent(DeletedTrackEvent e){
+
+    @Subscribe
+    public void onDeletedTrackEvent(DeletedTrackEvent e) {
         popDeletedTrack(e.getTrack());
     }
-    
-    private synchronized void popDeletedTrack(Track track){
+
+    private synchronized void popDeletedTrack(Track track) {
         // TODO: USE ME
     }
 
     private synchronized void pushNewTrack(Track track) {
         HttpResponse resp = null;
         try {
-            ObjectNode jsonTrack = encoder
-                    .encodeJSON(track, DEFAULT_ACCESS_RIGHTS,
-                                MediaTypes.TRACK_TYPE);
+
+            MediaType mediaType = MediaTypes.jsonWithSchema(Schemas.TRACK);
+
+            ObjectNode jsonTrack = encoder.encodeJSON(track, DEFAULT_ACCESS_RIGHTS, mediaType);
             String content = writer.writeValueAsString(jsonTrack);
             //logger.debug("Entity: {}", content);
-            HttpEntity entity = new StringEntity(
-                    content, ContentType.create(MediaTypes.TRACK));
+            HttpEntity entity = new StringEntity(content, ContentType.APPLICATION_JSON);
             HttpPost hp = new HttpPost(host);
             hp.setEntity(entity);
             resp = this.client.execute(hp);
-        } catch (ClientProtocolException e) {
-            logger.warn(e.getMessage(), e);
         } catch (IOException e) {
             logger.warn(e.getMessage(), e);
         } finally {
@@ -105,6 +101,6 @@ public class HTTPPushListener {
     }
 
     private HttpClient createClient() {
-        return new DefaultHttpClient();
+        return HttpClientBuilder.create().build();
     }
 }

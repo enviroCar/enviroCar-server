@@ -27,10 +27,11 @@ import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.filter.MeasurementFilter;
 import org.envirocar.server.core.util.GeoJSONConstants;
 import org.envirocar.server.rest.JSONConstants;
-import org.envirocar.server.rest.MediaTypes;
+import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.encoding.JSONEntityEncoder;
 import org.envirocar.server.rest.rights.AccessRights;
 
+import javax.inject.Singleton;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
@@ -40,6 +41,7 @@ import javax.ws.rs.ext.Provider;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
+@Singleton
 public class TrackJSONEncoder extends AbstractJSONEntityEncoder<Track> {
     private final JSONEntityEncoder<Sensor> sensorEncoder;
     private final JSONEntityEncoder<Measurements> measurementsEncoder;
@@ -59,87 +61,68 @@ public class TrackJSONEncoder extends AbstractJSONEntityEncoder<Track> {
     }
 
     @Override
-    public ObjectNode encodeJSON(Track t, AccessRights rights,
-                                 MediaType mediaType) {
+    public ObjectNode encodeJSON(Track entity, AccessRights rights, MediaType mediaType) {
         ObjectNode track = getJsonFactory().objectNode();
-
-        if (mediaType.equals(MediaTypes.TRACK_TYPE)) {
-            track.put(GeoJSONConstants.TYPE_KEY,
-                      GeoJSONConstants.FEATURE_COLLECTION_TYPE);
-            ObjectNode properties = track
-                                            .putObject(GeoJSONConstants.PROPERTIES_KEY);
-            if (t.hasIdentifier()) {
-                properties.put(JSONConstants.IDENTIFIER_KEY, t.getIdentifier());
+        if (getSchemaUriConfiguration().isSchema(mediaType, Schemas.TRACK)) {
+            track.put(GeoJSONConstants.TYPE_KEY, GeoJSONConstants.FEATURE_COLLECTION_TYPE);
+            ObjectNode properties = track.putObject(GeoJSONConstants.PROPERTIES_KEY);
+            if (entity.hasIdentifier()) {
+                properties.put(JSONConstants.IDENTIFIER_KEY, entity.getIdentifier());
             }
-            if (t.hasName() && rights.canSeeNameOf(t)) {
-                properties.put(JSONConstants.NAME_KEY, t.getName());
+            if (entity.hasName() && rights.canSeeNameOf(entity)) {
+                properties.put(JSONConstants.NAME_KEY, entity.getName());
             }
-            if (t.hasDescription() && rights.canSeeDescriptionOf(t)) {
-                properties
-                        .put(JSONConstants.DESCRIPTION_KEY, t.getDescription());
+            if (entity.hasDescription() && rights.canSeeDescriptionOf(entity)) {
+                properties.put(JSONConstants.DESCRIPTION_KEY, entity.getDescription());
             }
-            if (t.hasCreationTime() && rights.canSeeCreationTimeOf(t)) {
-                properties.put(JSONConstants.CREATED_KEY,
-                               getDateTimeFormat().print(t.getCreationTime()));
+            if (entity.hasCreationTime() && rights.canSeeCreationTimeOf(entity)) {
+                properties.put(JSONConstants.CREATED_KEY, getDateTimeFormat().print(entity.getCreationTime()));
             }
-            if (t.hasModificationTime() && rights
-                                                   .canSeeModificationTimeOf(t)) {
-                properties.put(JSONConstants.MODIFIED_KEY,
-                               getDateTimeFormat()
-                                       .print(t.getModificationTime()));
+            if (entity.hasModificationTime() && rights.canSeeModificationTimeOf(entity)) {
+                properties.put(JSONConstants.MODIFIED_KEY, getDateTimeFormat().print(entity.getModificationTime()));
             }
-            if (t.hasSensor() && rights.canSeeSensorOf(t)) {
-                properties.set(JSONConstants.SENSOR_KEY, sensorEncoder.encodeJSON(t.getSensor(), rights, mediaType));
+            if (entity.hasSensor() && rights.canSeeSensorOf(entity)) {
+                properties.set(JSONConstants.SENSOR_KEY, sensorEncoder.encodeJSON(entity.getSensor(), rights, mediaType));
             }
-            if (t.hasUser() && rights.canSeeUserOf(t)) {
-                properties.set(JSONConstants.USER_KEY, userEncoder.encodeJSON(t.getUser(), rights, mediaType));
+            if (entity.hasUser() && rights.canSeeUserOf(entity)) {
+                properties.set(JSONConstants.USER_KEY, userEncoder.encodeJSON(entity.getUser(), rights, mediaType));
             }
-            if (rights.canSeeLengthOf(t)) {
-                properties.put(JSONConstants.LENGTH_KEY, t.getLength());
+            if (rights.canSeeLengthOf(entity)) {
+                properties.put(JSONConstants.LENGTH_KEY, entity.getLength());
             }
-            if (t.hasAppVersion() && rights.canSeeAppVersionOf(t)) {
-                properties.put(JSONConstants.APP_VERSION_KEY, t.getAppVersion());
+            if (entity.hasAppVersion() && rights.canSeeAppVersionOf(entity)) {
+                properties.put(JSONConstants.APP_VERSION_KEY, entity.getAppVersion());
             }
             addStartAndEnd(t, rights, properties);
-            /*
-             * do not serialize the OBD device for privacy's sake
-             */
-//            if (t.hasObdDevice() && rights.canSeeObdDeviceOf(t)) {
-//            	properties.put(JSONConstants.OBD_DEVICE_KEY, t.getObdDevice());
-//            }
-            if (t.hasTouVersion() && rights.canSeeTouVersionOf(t)) {
-                properties.put(JSONConstants.TOU_VERSION_KEY, t.getTouVersion());
+            if (entity.hasTouVersion() && rights.canSeeTouVersionOf(entity)) {
+                properties.put(JSONConstants.TOU_VERSION_KEY, entity.getTouVersion());
             }
             JsonNode features;
-            if (rights.canSeeMeasurementsOf(t)) {
-                Measurements values = dataService.getMeasurements(new MeasurementFilter(t));
-                features = measurementsEncoder.encodeJSON(values, rights, mediaType)
-                                              .path(GeoJSONConstants.FEATURES_KEY);
+            if (rights.canSeeMeasurementsOf(entity)) {
+                Measurements values = dataService.getMeasurements(new MeasurementFilter(entity));
+                features = measurementsEncoder.encodeJSON(values, rights, mediaType).path(GeoJSONConstants.FEATURES_KEY);
             } else {
                 features = track.arrayNode();
             }
             track.set(GeoJSONConstants.FEATURES_KEY, features);
         } else {
-            if (t.hasIdentifier()) {
-                track.put(JSONConstants.IDENTIFIER_KEY, t.getIdentifier());
+            if (entity.hasIdentifier()) {
+                track.put(JSONConstants.IDENTIFIER_KEY, entity.getIdentifier());
             }
-            if (t.hasModificationTime() && rights
-                                                   .canSeeModificationTimeOf(t)) {
-                track.put(JSONConstants.MODIFIED_KEY, getDateTimeFormat()
-                                                              .print(t.getModificationTime()));
+            if (entity.hasModificationTime() && rights.canSeeModificationTimeOf(entity)) {
+                track.put(JSONConstants.MODIFIED_KEY, getDateTimeFormat().print(entity.getModificationTime()));
             }
-            if (t.hasName() && rights.canSeeNameOf(t)) {
-                track.put(JSONConstants.NAME_KEY, t.getName());
+            if (entity.hasName() && rights.canSeeNameOf(entity)) {
+                track.put(JSONConstants.NAME_KEY, entity.getName());
             }
 
             //additional props
-            if (t.hasLength() && rights.canSeeLengthOf(t)) {
-                track.put(JSONConstants.LENGTH_KEY, t.getLength());
+            if (entity.hasLength() && rights.canSeeLengthOf(entity)) {
+                track.put(JSONConstants.LENGTH_KEY, entity.getLength());
             }
             addStartAndEnd(t, rights, track);
-            if (rights.canSeeSensorOf(t)) {
-                track.set(JSONConstants.SENSOR_KEY,
-                          this.sensorEncoder.encodeJSON(t.getSensor(), rights, mediaType));
+            if (entity.hasSensor() && rights.canSeeSensorOf(entity)) {
+                track.set(JSONConstants.SENSOR_KEY, this.sensorEncoder.encodeJSON(entity.getSensor(), rights, mediaType));
             }
         }
         return track;

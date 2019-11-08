@@ -16,14 +16,15 @@
  */
 package org.envirocar.server.rest.schema;
 
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.assertThat;
-
-import org.envirocar.server.rest.MediaTypes;
+import org.envirocar.server.rest.GuiceRunner;
+import org.envirocar.server.rest.Schemas;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertThat;
 
 /**
  * TODO JavaDoc
@@ -45,31 +46,26 @@ public class ActivitiesValidationTest {
 
     @Test
     public void validateActivities() {
-        assertThat(validate.parse(VALID_ACTIVITIES),
-                   is(validate.validInstanceOf(MediaTypes.ACTIVITIES_TYPE)));
+        assertThat(validate.parse(VALID_ACTIVITIES), is(validate.validInstanceOf(Schemas.ACTIVITIES)));
     }
 
     @Test
     public void validateEmptyObject() {
-        assertThat(validate.parse(EMPTY),
-                   is(not(validate.validInstanceOf(MediaTypes.ACTIVITIES_TYPE))));
+        assertThat(validate.parse(EMPTY), is(not(validate.validInstanceOf(Schemas.ACTIVITIES))));
     }
 
     @Test
     public void validateEmptyActivities() {
-        assertThat(validate.parse(EMPTY_ACTIVITIES),
-                   is(validate.validInstanceOf(MediaTypes.ACTIVITIES_TYPE)));
+        assertThat(validate.parse(EMPTY_ACTIVITIES), is(validate.validInstanceOf(Schemas.ACTIVITIES)));
     }
 
     @Test
     public void validateAdditionalKey() {
-        assertThat(validate.parse(ADDITIONAL_KEY),
-                   is(not(validate.validInstanceOf(MediaTypes.ACTIVITIES_TYPE))));
+        assertThat(validate.parse(ADDITIONAL_KEY), is(not(validate.validInstanceOf(Schemas.ACTIVITIES))));
     }
 
     @Test
     public void missingUser() {
-        assertThat(validate.parse(MISSING_USER),
-                   is(not(validate.validInstanceOf(MediaTypes.ACTIVITIES_TYPE))));
+        assertThat(validate.parse(MISSING_USER), is(not(validate.validInstanceOf(Schemas.ACTIVITIES))));
     }
 }

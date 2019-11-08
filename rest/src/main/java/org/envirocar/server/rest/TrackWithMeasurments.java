@@ -41,8 +41,8 @@ public class TrackWithMeasurments implements Track, Iterable<Measurement> {
     public static final String NAME = "name";
     public static final String DESCIPTION = "description";
     public static final String LENGTH = "length";
-    private Track track;
-    private List<Measurement> measurements = Lists.newLinkedList();
+    private final Track track;
+    private final List<Measurement> measurements = Lists.newLinkedList();
 
     public TrackWithMeasurments(Track track) {
         this.track = track;
@@ -186,7 +186,7 @@ public class TrackWithMeasurments implements Track, Iterable<Measurement> {
 
     @Override
     public void setBegin(DateTime begin) {
-        setBegin(begin);
+        track.setBegin(begin);
     }
 
     @Override

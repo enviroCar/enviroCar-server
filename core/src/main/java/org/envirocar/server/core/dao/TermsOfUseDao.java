@@ -18,12 +18,6 @@ package org.envirocar.server.core.dao;
 
 import org.envirocar.server.core.entities.TermsOfUse;
 import org.envirocar.server.core.entities.TermsOfUseInstance;
-import org.envirocar.server.core.util.pagination.Pagination;
 
-public interface TermsOfUseDao {
-
-	TermsOfUse get(Pagination p);
-
-	TermsOfUseInstance getById(String id);
-
+public interface TermsOfUseDao extends TermsDao<TermsOfUseInstance, TermsOfUse> {
 }

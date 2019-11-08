@@ -1,14 +1,13 @@
 {
-    "$schema": "http://json-schema.org/draft-04/schema#",
-    "id": "http://schema.envirocar.org/user.ref.json#",
-    "type": "object",
-    "additionalProperties": false,
-    "required": [
-        "name"
-    ],
-    "properties": {
-        "name": {
-            "$ref": "http://schema.envirocar.org/definitions.json#/username"
-        }
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "name"
+  ],
+  "properties": {
+    "name": {
+      "$ref": "definitions.json#/username"
     }
+  }
 }

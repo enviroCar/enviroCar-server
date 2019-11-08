@@ -16,19 +16,9 @@
  */
 package org.envirocar.server.rest.rights;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.envirocar.server.core.FriendService;
 import org.envirocar.server.core.GroupService;
-import org.envirocar.server.core.entities.Fueling;
-import org.envirocar.server.core.entities.Group;
-import org.envirocar.server.core.entities.Measurement;
-import org.envirocar.server.core.entities.Phenomenon;
-import org.envirocar.server.core.entities.Sensor;
-import org.envirocar.server.core.entities.TermsOfUseInstance;
-import org.envirocar.server.core.entities.Track;
-import org.envirocar.server.core.entities.User;
-import org.envirocar.server.core.entities.UserStatistic;
+import org.envirocar.server.core.entities.*;
 
 /**
  * TODO JavaDoc
@@ -229,12 +219,12 @@ public class AccessRightsImpl extends AbstractAccessRights {
     public boolean canSeeStatisticsOf(User user) {
         return isSelfFriendOfOrShareGroup(user);
     }
-    
+
     @Override
     public boolean canSeeUserStatisticsOf(User user) {
         return isSelfFriendOfOrShareGroup(user);
     }
-    
+
     @Override
     public boolean canSeeFriendActivitiesOf(User user) {
         return isSelf(user);
@@ -430,66 +420,57 @@ public class AccessRightsImpl extends AbstractAccessRights {
         return isAuthenticated();
     }
 
-	@Override
-	public boolean canSeeTermsOfUse() {
-		return true;
-	}
-
-	@Override
-	public boolean canSee(TermsOfUseInstance t) {
-		return true;
-	}
-
     @Override
-    public boolean canSeeSchema() {
+    public boolean canSeeAppVersionOf(Track track) {
         return true;
     }
 
-	@Override
-	public boolean canSeeAppVersionOf(Track track) {
-		return true;
-	}
+    @Override
+    public boolean canSeeObdDeviceOf(Track track) {
+        //TODO re-visit regarding privacy
+        return true;
+    }
 
-	@Override
-	public boolean canSeeObdDeviceOf(Track track) {
-		//TODO re-visit regarding privacy
-		return true;
-	}
+    @Override
+    public boolean canSeeTouVersionOf(Track track) {
+        //TODO re-visit regarding privacy
+        return true;
+    }
 
-	@Override
-	public boolean canSeeTouVersionOf(Track track) {
-		//TODO re-visit regarding privacy
-		return true;
-	}
+    @Override
+    public boolean canSeeAnnouncements() {
+        return true;
+    }
 
-	@Override
-	public boolean canSeeAnnouncements() {
-		return true;
-	}
+    @Override
+    public boolean canSeeBadges() {
+        return true;
+    }
 
-	@Override
-	public boolean canSeeBadges() {
-		return true;
-	}
-
-	@Override
-	public boolean canAccessPasswordReset(HttpServletRequest request) {
-		/*
-		 * TODO: password reset requests should only be valid from enviroCar-www,
-		 * could be implemented via a shared secret (could scale on a cascaded setup)
-		 */
-		return !isAuthenticated();
-	}
+    @Override
+    public boolean canAccessPasswordReset() {
+        return !isAuthenticated();
+    }
 
     @Override
     public boolean canSeeFuelingsOf(User user) {
         return isSelf(user);
     }
 
-	@Override
-	public boolean canSeeLengthOf(Track t) {
-		return true;
-	}
+    @Override
+    public boolean canSeeAcceptedTermsOfUseVersionOf(User user) {
+        return isSelf(user);
+    }
+
+    @Override
+    public boolean canSeeAcceptedPrivacyStatementVersionOf(User user) {
+        return isSelf(user);
+    }
+
+    @Override
+    public boolean canSeeLengthOf(Track t) {
+        return true;
+    }
 
     @Override
     public boolean canDelete(Fueling f) {

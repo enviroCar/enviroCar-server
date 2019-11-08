@@ -7,5 +7,5 @@
 /target/
 .project
 .settings
-
+.idea/
 /webapp/nbactions.xml

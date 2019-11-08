@@ -16,21 +16,19 @@
  */
 package org.envirocar.server.mongo.guice;
 
+import com.google.inject.AbstractModule;
+import com.google.inject.TypeLiteral;
+import com.google.inject.multibindings.Multibinder;
 import org.bson.BSONObject;
 import org.envirocar.server.core.util.GeometryConverter;
 import org.envirocar.server.mongo.convert.DateTimeConverter;
 import org.envirocar.server.mongo.convert.DimensionedNumberConverter;
 import org.envirocar.server.mongo.convert.DurationConverter;
-import org.envirocar.server.mongo.convert.TrackSummariesConverter;
 import org.envirocar.server.mongo.convert.FileConverter;
 import org.envirocar.server.mongo.convert.JTSConverter;
 import org.envirocar.server.mongo.convert.URLConverter;
 import org.envirocar.server.mongo.util.GeoBSON;
-
 import org.mongodb.morphia.converters.TypeConverter;
-import com.google.inject.AbstractModule;
-import com.google.inject.TypeLiteral;
-import com.google.inject.multibindings.Multibinder;
 
 /**
  * TODO JavaDoc
@@ -41,7 +39,7 @@ public class MongoConverterModule extends AbstractModule {
     @Override
     protected void configure() {
         Multibinder<TypeConverter> mb = Multibinder
-                .newSetBinder(binder(), TypeConverter.class);
+                                                .newSetBinder(binder(), TypeConverter.class);
         bind(new TypeLiteral<GeometryConverter<BSONObject>>() {
         }).to(GeoBSON.class);
         mb.addBinding().to(DateTimeConverter.class);
@@ -50,6 +48,5 @@ public class MongoConverterModule extends AbstractModule {
         mb.addBinding().to(JTSConverter.class);
         mb.addBinding().to(URLConverter.class);
         mb.addBinding().to(DimensionedNumberConverter.class);
-        mb.addBinding().to(TrackSummariesConverter.class);
     }
 }

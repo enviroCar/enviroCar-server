@@ -16,24 +16,16 @@
  */
 package org.envirocar.server.rest.encoding.rdf;
 
-import java.util.Set;
-
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response.Status;
-import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
-
-import org.envirocar.server.core.activities.Activity;
-import org.envirocar.server.rest.resources.ActivitiesResource;
-import org.envirocar.server.rest.resources.FriendsActivitiesResource;
-import org.envirocar.server.rest.resources.GroupResource;
-import org.envirocar.server.rest.resources.GroupsResource;
-import org.envirocar.server.rest.resources.RootResource;
-import org.envirocar.server.rest.resources.UserResource;
-import org.envirocar.server.rest.resources.UsersResource;
-
 import com.google.inject.Inject;
 import com.google.inject.Provider;
+import org.envirocar.server.core.activities.Activity;
+import org.envirocar.server.rest.InternalServerError;
+import org.envirocar.server.rest.resources.*;
+
+import javax.inject.Singleton;
+import javax.ws.rs.core.UriBuilder;
+import javax.ws.rs.core.UriInfo;
+import java.util.Set;
 
 /**
  * TODO JavaDoc
@@ -41,6 +33,7 @@ import com.google.inject.Provider;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @javax.ws.rs.ext.Provider
+@Singleton
 public class ActivityRDFEncoder extends AbstractLinkerRDFEntityEncoder<Activity> {
     private final Provider<UriInfo> uriInfo;
 
@@ -90,10 +83,10 @@ public class ActivityRDFEncoder extends AbstractLinkerRDFEntityEncoder<Activity>
                         .build(ar.getUser().getName(), t.getIdentifier())
                         .toASCIIString();
             } else {
-                throw new WebApplicationException(Status.INTERNAL_SERVER_ERROR);
+                throw new InternalServerError();
             }
         } else {
-            throw new WebApplicationException(Status.INTERNAL_SERVER_ERROR);
+            throw new InternalServerError();
         }
     }
 }

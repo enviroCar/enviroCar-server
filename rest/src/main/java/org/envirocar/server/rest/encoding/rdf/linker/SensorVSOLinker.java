@@ -84,14 +84,19 @@ public class SensorVSOLinker implements RDFLinker<Sensor> {
             final Resource sensor) {
         final String fuelType = (String) p.get(FUEL_TYPE_PROPERTY);
         if (fuelType != null) {
-            if (fuelType.equals(FUEL_TYPE_DIESEL)) {
-                sensor.addProperty(VSO.fuelType, DBPedia.DBPEDIA_DIESEL);
-            } else if (fuelType.equals(FUEL_TYPE_GASOLINE)) {
-                sensor.addProperty(VSO.fuelType, DBPedia.DBPEDIA_GASOLINE);
-            } else if (fuelType.equals(FUEL_TYPE_BIODIESEL)) {
-                sensor.addProperty(VSO.fuelType, DBPedia.DBPEDIA_BIODIESEL);
-            } else if (fuelType.equals(FUEL_TYPE_KEROSENE)) {
-                sensor.addProperty(VSO.fuelType, DBPedia.DBPEDIA_KEROSENE);
+            switch (fuelType) {
+                case FUEL_TYPE_DIESEL:
+                    sensor.addProperty(VSO.fuelType, DBPedia.DBPEDIA_DIESEL);
+                    break;
+                case FUEL_TYPE_GASOLINE:
+                    sensor.addProperty(VSO.fuelType, DBPedia.DBPEDIA_GASOLINE);
+                    break;
+                case FUEL_TYPE_BIODIESEL:
+                    sensor.addProperty(VSO.fuelType, DBPedia.DBPEDIA_BIODIESEL);
+                    break;
+                case FUEL_TYPE_KEROSENE:
+                    sensor.addProperty(VSO.fuelType, DBPedia.DBPEDIA_KEROSENE);
+                    break;
             }
         }
     }

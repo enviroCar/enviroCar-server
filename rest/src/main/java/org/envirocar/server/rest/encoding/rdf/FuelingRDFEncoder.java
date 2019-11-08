@@ -18,21 +18,20 @@ package org.envirocar.server.rest.encoding.rdf;
 
 import java.util.Set;
 
+import javax.inject.Singleton;
 import javax.ws.rs.core.UriBuilder;
 
 import org.envirocar.server.core.entities.Fueling;
-import org.envirocar.server.rest.resources.FuelingsResource;
-import org.envirocar.server.rest.resources.RootResource;
-import org.envirocar.server.rest.resources.UserResource;
-import org.envirocar.server.rest.resources.UsersResource;
 
 import com.google.inject.Inject;
+import org.envirocar.server.rest.resources.*;
 
 /**
  * RDF Encoder for {@link Fueling}s.
  *
  * @author Christian Autermann
  */
+@Singleton
 public class FuelingRDFEncoder extends AbstractLinkerRDFEntityEncoder<Fueling> {
     /**
      * Creates a new {@code FuelingRDFEncoder} using the supplied

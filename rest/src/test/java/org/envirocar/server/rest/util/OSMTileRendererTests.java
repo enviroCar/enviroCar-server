@@ -30,7 +30,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.envirocar.server.rest.schema.GuiceRunner;
+import org.envirocar.server.rest.GuiceRunner;
 import org.envirocar.server.rest.util.OSMTileRenderer.BoundingBox;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,7 +39,7 @@ import com.vividsolutions.jts.geom.Coordinate;
 
 @RunWith(GuiceRunner.class)
 public class OSMTileRendererTests {
-    private OSMTileRenderer osmt;
+    private final OSMTileRenderer osmt;
 
     public OSMTileRendererTests() {
         osmt = new OSMTileRenderer();
@@ -59,24 +59,24 @@ public class OSMTileRendererTests {
     public void createImageTestHorizontal() throws IOException {
         BufferedImage bi = createImageTest(populateCoordinates("horizontal"));
         osmt.saveImage(bi, "1235456-test");
-        assertTrue("Image height ok", 1024 == bi.getHeight());
-        assertTrue("Image width ok", 1280 == bi.getWidth());
+        assertEquals("Image height ok", 1024, bi.getHeight());
+        assertEquals("Image width ok", 1280, bi.getWidth());
     }
 
     @Test
     public void createImageTestVertical() throws IOException {
         BufferedImage biv = createImageTest(populateCoordinates("vertical"));
         osmt.saveImage(biv, "1235456-test-vertical");
-        assertTrue("Image height ok", 1024 == biv.getHeight());
-        assertTrue("Image width ok", 1280 == biv.getWidth());
+        assertEquals("Image height ok", 1024, biv.getHeight());
+        assertEquals("Image width ok", 1280, biv.getWidth());
     }
 
     @Test
     public void createImageTestSmall() throws IOException {
         BufferedImage biv = createImageTest(populateCoordinates("regular"));
         osmt.saveImage(biv, "1235456-test-small");
-        assertTrue("Image height ok", 1024 == biv.getHeight());
-        assertTrue("Image width ok", 1280 == biv.getWidth());
+        assertEquals("Image height ok", 1024, biv.getHeight());
+        assertEquals("Image width ok", 1280, biv.getWidth());
     }
 
     @Test
@@ -85,7 +85,7 @@ public class OSMTileRendererTests {
         coords.add(new Coordinate(89.9, 179.9));
         coords.add(new Coordinate(-89.9, -179.9));
         int level = osmt.getZoomLevel(coords);
-        assertTrue("Zoom level exceeds limit", 2 == level);
+        assertEquals("Zoom level exceeds limit", 2, level);
     }
 
     @Test
@@ -138,10 +138,10 @@ public class OSMTileRendererTests {
     @Test
     public void bBox() throws IOException {
         BoundingBox bbox = osmt.findBoundingBoxForGivenLocations(populateCoordinates("regular"));
-        assertTrue(decimalRound(bbox.east) == decimalRound(7.651712168008089));
-        assertTrue(decimalRound(bbox.west) == decimalRound(7.653740337118506));
-        assertTrue(decimalRound(bbox.north) == decimalRound(51.93612792994827));
-        assertTrue(decimalRound(bbox.south) == decimalRound(51.934406915679574));
+        assertEquals(decimalRound(bbox.east), decimalRound(7.651712168008089), 0.0);
+        assertEquals(decimalRound(bbox.west), decimalRound(7.653740337118506), 0.0);
+        assertEquals(decimalRound(bbox.north), decimalRound(51.93612792994827), 0.0);
+        assertEquals(decimalRound(bbox.south), decimalRound(51.934406915679574), 0.0);
 
     }
 

@@ -49,8 +49,13 @@ public abstract class AbstractValidator<T> implements EntityValidator<T> {
 
     protected void isNull(String name, Object o) throws ValidationException {
         if (o != null) {
-            throw new ValidationException(String
-                    .format("%s may not be changed", name));
+            throw new ValidationException(String.format("%s may not be changed", name));
+        }
+    }
+
+    protected void isTrue(String name, boolean flag) throws ValidationException {
+        if (!flag) {
+            throw new ValidationException(String.format("%s has to be true", name));
         }
     }
 

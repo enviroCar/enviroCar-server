@@ -16,18 +16,18 @@
  */
 package org.envirocar.server.rest.encoding.json;
 
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.ext.Provider;
-
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.inject.Inject;
 import org.envirocar.server.core.entities.Fueling;
 import org.envirocar.server.core.entities.Fuelings;
 import org.envirocar.server.rest.JSONConstants;
 import org.envirocar.server.rest.encoding.JSONEntityEncoder;
 import org.envirocar.server.rest.rights.AccessRights;
 
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.inject.Inject;
+import javax.inject.Singleton;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.Provider;
 
 /**
  * JSON encoder for {@link Fuelings}.
@@ -35,6 +35,7 @@ import com.google.inject.Inject;
  * @author Christian Autermann
  */
 @Provider
+@Singleton
 public class FuelingsJSONEncoder extends AbstractJSONEntityEncoder<Fuelings> {
     private final JSONEntityEncoder<Fueling> fuelingEncoder;
 
@@ -51,13 +52,12 @@ public class FuelingsJSONEncoder extends AbstractJSONEntityEncoder<Fuelings> {
     }
 
     @Override
-    public ObjectNode encodeJSON(Fuelings fuelings, AccessRights rights,
-                                 MediaType mt) {
+    public ObjectNode encodeJSON(Fuelings entity, AccessRights rights, MediaType mediaType) {
         ObjectNode root = getJsonFactory().objectNode();
-        ArrayNode annos = root.putArray(JSONConstants.FUELINGS);
+        ArrayNode fuelings = root.putArray(JSONConstants.FUELINGS);
 
-        for (Fueling b : fuelings) {
-            annos.add(fuelingEncoder.encodeJSON(b, rights, mt));
+        for (Fueling b : entity) {
+            fuelings.add(fuelingEncoder.encodeJSON(b, rights, mediaType));
         }
         return root;
     }

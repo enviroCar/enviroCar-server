@@ -16,37 +16,15 @@
  */
 package org.envirocar.server.core;
 
-import java.util.List;
-
-import org.envirocar.server.core.entities.Announcement;
-import org.envirocar.server.core.entities.Announcements;
-import org.envirocar.server.core.entities.Badges;
-import org.envirocar.server.core.entities.Fueling;
-import org.envirocar.server.core.entities.Fuelings;
-import org.envirocar.server.core.entities.Measurement;
-import org.envirocar.server.core.entities.Measurements;
-import org.envirocar.server.core.entities.Phenomenon;
-import org.envirocar.server.core.entities.Phenomenons;
-import org.envirocar.server.core.entities.Sensor;
-import org.envirocar.server.core.entities.Sensors;
-import org.envirocar.server.core.entities.TermsOfUse;
-import org.envirocar.server.core.entities.TermsOfUseInstance;
-import org.envirocar.server.core.entities.Track;
-import org.envirocar.server.core.entities.Tracks;
-import org.envirocar.server.core.entities.User;
-import org.envirocar.server.core.exception.FuelingNotFoundException;
-import org.envirocar.server.core.exception.IllegalModificationException;
-import org.envirocar.server.core.exception.MeasurementNotFoundException;
-import org.envirocar.server.core.exception.PhenomenonNotFoundException;
-import org.envirocar.server.core.exception.ResourceNotFoundException;
-import org.envirocar.server.core.exception.SensorNotFoundException;
-import org.envirocar.server.core.exception.TrackNotFoundException;
-import org.envirocar.server.core.exception.ValidationException;
+import org.envirocar.server.core.entities.*;
+import org.envirocar.server.core.exception.*;
 import org.envirocar.server.core.filter.FuelingFilter;
 import org.envirocar.server.core.filter.MeasurementFilter;
 import org.envirocar.server.core.filter.SensorFilter;
 import org.envirocar.server.core.filter.TrackFilter;
 import org.envirocar.server.core.util.pagination.Pagination;
+
+import java.util.List;
 
 /**
  * TODO JavaDoc
@@ -98,7 +76,11 @@ public interface DataService {
 
     TermsOfUse getTermsOfUse(Pagination pagination);
 
-	TermsOfUseInstance getTermsOfUseInstance(String id) throws ResourceNotFoundException;
+    TermsOfUseInstance getTermsOfUseInstance(String id) throws ResourceNotFoundException;
+
+    PrivacyStatements getPrivacyStatements(Pagination pagination);
+
+    PrivacyStatement getPrivacyStatement(String id) throws ResourceNotFoundException;
 
     Announcements getAnnouncements(Pagination pagination);
 
@@ -110,7 +92,6 @@ public interface DataService {
      * Create the specified {@code Fueling} by validating and persisting it.
      *
      * @param fueling the fueling
-     *
      * @return the persisted fueling
      */
     Fueling createFueling(Fueling fueling);
@@ -119,7 +100,6 @@ public interface DataService {
      * Get all {@code Fueling}s matching the specified filter.
      *
      * @param filter the filter
-     *
      * @return the found {@code Fueling}s
      */
     Fuelings getFuelings(FuelingFilter filter);
@@ -129,9 +109,7 @@ public interface DataService {
      *
      * @param user the user owning the {@code Fueling}
      * @param id   the id of the {@code Fueling}
-     *
      * @return the {@code Fueling}
-     *
      * @throws FuelingNotFoundException if the {@code Fueling} is not found or
      *                                  is not owned by the specified user
      */

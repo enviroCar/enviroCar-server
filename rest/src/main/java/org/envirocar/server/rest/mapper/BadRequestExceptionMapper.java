@@ -16,36 +16,18 @@
  */
 package org.envirocar.server.rest.mapper;
 
-import javax.ws.rs.core.MediaType;
+import org.envirocar.server.core.exception.BadRequestException;
+
+import javax.inject.Singleton;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
-import org.envirocar.server.core.exception.BadRequestException;
-import org.envirocar.server.rest.JSONConstants;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
 @Provider
-public class BadRequestExceptionMapper implements ExceptionMapper<BadRequestException> {
-    
-    private static JsonNodeFactory factory = new JsonNodeFactory(false);
-
-	@Override
-    public Response toResponse(BadRequestException exception) {
-        return Response.status(Status.BAD_REQUEST)
-                .type(MediaType.APPLICATION_JSON_TYPE)
-                .entity(createJson(exception.getMessage())).build();
+@Singleton
+public class BadRequestExceptionMapper extends AbstractExceptionMapper<BadRequestException> {
+    @Override
+    protected Response.StatusType getStatus(BadRequestException exception) {
+        return Status.BAD_REQUEST;
     }
-
-	private JsonNode createJson(String message) {
-		ObjectNode error = factory.objectNode();
-        ArrayNode errors = error.putArray(JSONConstants.ERRORS_KEY);
-        errors.add(factory.textNode(message));
-		return error;
-	}
 }

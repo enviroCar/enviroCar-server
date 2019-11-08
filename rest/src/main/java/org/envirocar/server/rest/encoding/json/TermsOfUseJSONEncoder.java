@@ -17,18 +17,18 @@
 package org.envirocar.server.rest.encoding.json;
 
 
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.ext.Provider;
-
-import org.envirocar.server.core.entities.TermsOfUseInstance;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.inject.Inject;
 import org.envirocar.server.core.entities.TermsOfUse;
+import org.envirocar.server.core.entities.TermsOfUseInstance;
 import org.envirocar.server.rest.JSONConstants;
 import org.envirocar.server.rest.encoding.JSONEntityEncoder;
 import org.envirocar.server.rest.rights.AccessRights;
 
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.inject.Inject;
+import javax.inject.Singleton;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.Provider;
 
 /**
  * TODO JavaDoc
@@ -36,24 +36,23 @@ import com.google.inject.Inject;
  * @author Matthes Rieke
  */
 @Provider
+@Singleton
 public class TermsOfUseJSONEncoder extends AbstractJSONEntityEncoder<TermsOfUse> {
     private final JSONEntityEncoder<TermsOfUseInstance> termsOfUseEncoder;
 
     @Inject
-    public TermsOfUseJSONEncoder(
-            JSONEntityEncoder<TermsOfUseInstance> phenomenonEncoder) {
+    public TermsOfUseJSONEncoder(JSONEntityEncoder<TermsOfUseInstance> phenomenonEncoder) {
         super(TermsOfUse.class);
         this.termsOfUseEncoder = phenomenonEncoder;
     }
 
     @Override
-    public ObjectNode encodeJSON(TermsOfUse t, AccessRights rights,
-                                 MediaType mediaType) {
+    public ObjectNode encodeJSON(TermsOfUse entity, AccessRights rights, MediaType mediaType) {
         ObjectNode root = getJsonFactory().objectNode();
         ArrayNode termsOfUse = root.putArray(JSONConstants.TERMS_OF_USE_KEY);
-        
-        for (TermsOfUseInstance u : t) {
-            termsOfUse.add(termsOfUseEncoder.encodeJSON(u, rights, mediaType));
+
+        for (TermsOfUseInstance termsOfUseInstance : entity) {
+            termsOfUse.add(termsOfUseEncoder.encodeJSON(termsOfUseInstance, rights, mediaType));
         }
         return root;
     }

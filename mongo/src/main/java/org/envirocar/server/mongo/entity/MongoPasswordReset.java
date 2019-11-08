@@ -41,7 +41,7 @@ public class MongoPasswordReset extends MongoEntityBase implements PasswordReset
     public static final int EXPIRATION_PERIOD_HOURS = 24;
 
     @Id
-    private ObjectId id = new ObjectId();
+    private final ObjectId id = new ObjectId();
 
     @Property(EXPIRES)
     @Indexed(options = @IndexOptions(expireAfterSeconds = EXPIRATION_PERIOD_HOURS * 60 * 60))

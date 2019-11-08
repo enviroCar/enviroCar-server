@@ -16,19 +16,19 @@
  */
 package org.envirocar.server.rest.resources;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-
-import org.envirocar.server.rest.JSONConstants;
-import org.envirocar.server.rest.MediaTypes;
-import org.envirocar.server.rest.Schemas;
-import org.envirocar.server.rest.validation.Schema;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
+import org.envirocar.server.rest.JSONConstants;
+import org.envirocar.server.rest.MediaTypes;
+import org.envirocar.server.rest.Schemas;
+import org.envirocar.server.rest.schema.Schema;
+
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.UriBuilder;
 
 /**
  * TODO JavaDoc
@@ -38,6 +38,7 @@ import com.google.inject.Inject;
  */
 @Path("/")
 public class RootResource extends AbstractResource {
+
     public static final String USERS = "users";
     public static final String GROUPS = "groups";
     public static final String TRACKS = "tracks";
@@ -45,77 +46,61 @@ public class RootResource extends AbstractResource {
     public static final String SENSORS = "sensors";
     public static final String MEASUREMENTS = "measurements";
     public static final String STATISTICS = "statistics";
-	public static final String TERMS_OF_USE = "termsOfUse";
+    public static final String TERMS_OF_USE = "termsOfUse";
     public static final String SCHEMA = "schema";
     public static final String ANNOUNCEMENTS = "announcements";
     public static final String BADGES = "badges";
     public static final String RESET_PASSWORD = "resetPassword";
     public static final String CONFIRM = "confirm";
+    public static final String PRIVACY_STATEMENTS = "privacyStatements";
+    private final JsonNodeFactory factory;
 
     @Inject
-    private JsonNodeFactory factory;
+    public RootResource(JsonNodeFactory factory) {
+        this.factory = factory;
+    }
 
     @GET
     @Schema(response = Schemas.ROOT)
-    @Produces({ MediaTypes.ROOT })
+    @Produces({MediaTypes.JSON})
     public JsonNode get() {
         ObjectNode root = factory.objectNode();
         if (getRights().canSeeUsers()) {
-            root.put(JSONConstants.USERS_KEY,
-                     getUriInfo().getAbsolutePathBuilder()
-                    .path(USERS).build().toString());
+            root.put(JSONConstants.USERS_KEY, getUriBuilder().path(USERS).build().toString());
         }
         if (getRights().canSeeGroups()) {
-            root.put(JSONConstants.GROUPS_KEY, getUriInfo()
-                    .getAbsolutePathBuilder()
-                    .path(GROUPS).build().toString());
+            root.put(JSONConstants.GROUPS_KEY, getUriBuilder().path(GROUPS).build().toString());
         }
         if (getRights().canSeeTracks()) {
-            root.put(JSONConstants.TRACKS_KEY, getUriInfo()
-                    .getAbsolutePathBuilder()
-                    .path(TRACKS).build().toString());
+            root.put(JSONConstants.TRACKS_KEY, getUriBuilder().path(TRACKS).build().toString());
         }
         if (getRights().canSeeSensors()) {
-            root.put(JSONConstants.SENSORS_KEY, getUriInfo()
-                    .getAbsolutePathBuilder().path(SENSORS)
-                    .build().toString());
+            root.put(JSONConstants.SENSORS_KEY, getUriBuilder().path(SENSORS).build().toString());
         }
         if (getRights().canSeePhenomenons()) {
-            root.put(JSONConstants.PHENOMENONS_KEY, getUriInfo()
-                    .getAbsolutePathBuilder()
-                    .path(PHENOMENONS).build().toString());
+            root.put(JSONConstants.PHENOMENONS_KEY, getUriBuilder().path(PHENOMENONS).build().toString());
         }
         if (getRights().canSeeMeasurements()) {
-            root.put(JSONConstants.MEASUREMENTS_KEY, getUriInfo()
-                    .getAbsolutePathBuilder()
-                    .path(MEASUREMENTS).build().toString());
+            root.put(JSONConstants.MEASUREMENTS_KEY, getUriBuilder().path(MEASUREMENTS).build().toString());
         }
         if (getRights().canSeeStatistics()) {
-            root.put(JSONConstants.STATISTICS_KEY, getUriInfo()
-                    .getAbsolutePathBuilder()
-                    .path(STATISTICS).build().toString());
-        }
-        if (getRights().canSeeTermsOfUse()) {
-            root.put(JSONConstants.TERMS_OF_USE_KEY, getUriInfo()
-                    .getAbsolutePathBuilder()
-                    .path(TERMS_OF_USE).build().toString());
-        }
-        if (getRights().canSeeSchema()) {
-            root.put(JSONConstants.SCHEMA, getUriInfo()
-                    .getAbsolutePathBuilder()
-                    .path(SCHEMA).build().toString());
+            root.put(JSONConstants.STATISTICS_KEY, getUriBuilder().path(STATISTICS).build().toString());
         }
         if (getRights().canSeeAnnouncements()) {
-            root.put(JSONConstants.ANNOUNCEMENTS_KEY, getUriInfo()
-                    .getAbsolutePathBuilder()
-                    .path(ANNOUNCEMENTS).build().toString());
+            root.put(JSONConstants.ANNOUNCEMENTS_KEY, getUriBuilder().path(ANNOUNCEMENTS).build().toString());
         }
         if (getRights().canSeeBadges()) {
-            root.put(JSONConstants.BADGES_KEY, getUriInfo()
-                    .getAbsolutePathBuilder()
-                    .path(BADGES).build().toString());
+            root.put(JSONConstants.BADGES_KEY, getUriBuilder().path(BADGES).build().toString());
         }
+
+        root.put(JSONConstants.SCHEMA, getUriBuilder().path(SCHEMA).build().toString());
+        root.put(JSONConstants.PRIVACY_STATEMENTS, getUriBuilder().path(PRIVACY_STATEMENTS).build().toString());
+        root.put(JSONConstants.TERMS_OF_USE_KEY, getUriBuilder().path(TERMS_OF_USE).build().toString());
         return root;
+    }
+
+    public UriBuilder getUriBuilder() {
+        return getUriInfo().getAbsolutePathBuilder();
     }
 
     @Path(USERS)
@@ -161,31 +146,34 @@ public class RootResource extends AbstractResource {
 
     @Path(TERMS_OF_USE)
     public TermsOfUseResource termsOfUse() {
-        checkRights(getRights().canSeeTermsOfUse());
         return getResourceFactory().createTermsOfUseResource();
     }
 
     @Path(SCHEMA)
-    public JSONSchemaResource schemas() {
-        checkRights(getRights().canSeeSchema());
+    public JsonSchemaResource schemas() {
         return getResourceFactory().createSchemaResource();
     }
 
     @Path(ANNOUNCEMENTS)
     public AnnouncementsResource announcements() {
-    	checkRights(getRights().canSeeAnnouncements());
-    	return getResourceFactory().createAnnouncementsResource();
+        checkRights(getRights().canSeeAnnouncements());
+        return getResourceFactory().createAnnouncementsResource();
     }
 
     @Path(BADGES)
     public BadgesResource badges() {
-    	checkRights(getRights().canSeeBadges());
-    	return getResourceFactory().createBadgesResource();
+        checkRights(getRights().canSeeBadges());
+        return getResourceFactory().createBadgesResource();
+    }
+
+    @Path(PRIVACY_STATEMENTS)
+    public PrivacyStatementsResource privacyStatements() {
+        return getResourceFactory().createPrivacyStatementsResource();
     }
 
     @Path(RESET_PASSWORD)
     public ResetPasswordResource resetPassword() {
-    	return getResourceFactory().createResetPasswordResource();
+        return getResourceFactory().createResetPasswordResource();
     }
 
     @Path(CONFIRM)

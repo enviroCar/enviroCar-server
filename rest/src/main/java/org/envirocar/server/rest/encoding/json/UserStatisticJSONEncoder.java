@@ -16,21 +16,18 @@
  */
 package org.envirocar.server.rest.encoding.json;
 
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.ext.Provider;
-
-import org.envirocar.server.core.entities.TrackSummaries;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.inject.Inject;
+import com.vividsolutions.jts.geom.Geometry;
 import org.envirocar.server.core.entities.TrackSummary;
 import org.envirocar.server.core.entities.UserStatistic;
 import org.envirocar.server.rest.JSONConstants;
 import org.envirocar.server.rest.encoding.JSONEntityEncoder;
 import org.envirocar.server.rest.rights.AccessRights;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.inject.Inject;
-import com.vividsolutions.jts.geom.Geometry;
+import javax.inject.Singleton;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.Provider;
 
 /**
  * TODO JavaDoc
@@ -38,58 +35,64 @@ import com.vividsolutions.jts.geom.Geometry;
  * @author Maurin Radtke <maurin.radtke@uni-muenster.de>
  */
 @Provider
+@Singleton
 public class UserStatisticJSONEncoder extends AbstractJSONEntityEncoder<UserStatistic> {
 
     private final JSONEntityEncoder<Geometry> geometryEncoder;
 
     @Inject
-    public UserStatisticJSONEncoder(
-            JSONEntityEncoder<Geometry> geometryEncoder) {
+    public UserStatisticJSONEncoder(JSONEntityEncoder<Geometry> geometryEncoder) {
         super(UserStatistic.class);
         this.geometryEncoder = geometryEncoder;
     }
 
     @Override
-    public ObjectNode encodeJSON(UserStatistic t, AccessRights rights, MediaType mt) {
-        ObjectNode userStatistics = getJsonFactory().objectNode();
-        userStatistics.putPOJO(JSONConstants.DISTANCE_KEY, t.getDistance());
-        userStatistics.putPOJO(JSONConstants.DURATION_KEY, t.getDuration());
+    public ObjectNode encodeJSON(UserStatistic entity, AccessRights rights, MediaType mediaType) {
+        ObjectNode userStatistics = getJsonFactory().objectNode()
+                                                    .put(JSONConstants.DISTANCE_KEY, entity.getDistance())
+                                                    .put(JSONConstants.DURATION_KEY, entity.getDuration());
+
         ObjectNode statistics = userStatistics.putObject(JSONConstants.USERSTATISTIC_KEY);
-        ObjectNode below60kmh = statistics.putObject(JSONConstants.BELOW60KMH_KEY);
-        below60kmh.putPOJO(JSONConstants.DISTANCE_KEY, t.getDistanceBelow60kmh());
-        below60kmh.putPOJO(JSONConstants.DURATION_KEY, t.getDurationBelow60kmh());
-        ObjectNode above130kmh = statistics.putObject(JSONConstants.ABOVE130KMH_KEY);
-        above130kmh.putPOJO(JSONConstants.DISTANCE_KEY, t.getDistanceAbove130kmh());
-        above130kmh.putPOJO(JSONConstants.DURATION_KEY, t.getDurationAbove130kmh());
-        ObjectNode NaN = statistics.putObject(JSONConstants.NAN_KEY);
-        NaN.putPOJO(JSONConstants.DISTANCE_KEY, t.getDistanceNaN());
-        NaN.putPOJO(JSONConstants.DURATION_KEY, t.getDurationNaN());
-        userStatistics.set(JSONConstants.TRACKSUMMARIES_KEY, getTrackSummaries(t.getTrackSummaries(), rights, mt));
+
+        statistics.putObject(JSONConstants.BELOW60KMH_KEY)
+                  .put(JSONConstants.DISTANCE_KEY, entity.getDistanceBelow60kmh())
+                  .put(JSONConstants.DURATION_KEY, entity.getDurationBelow60kmh());
+
+        statistics.putObject(JSONConstants.ABOVE130KMH_KEY)
+                  .put(JSONConstants.DISTANCE_KEY, entity.getDistanceAbove130kmh())
+                  .put(JSONConstants.DURATION_KEY, entity.getDurationAbove130kmh());
+
+        statistics.putObject(JSONConstants.NAN_KEY)
+                  .put(JSONConstants.DISTANCE_KEY, entity.getDistanceNaN())
+                  .put(JSONConstants.DURATION_KEY, entity.getDurationNaN());
+
+        if (entity.hasTrackSummaries()) {
+            for (TrackSummary trackSummary : entity.getTrackSummaries()) {
+                userStatistics.withArray(JSONConstants.TRACKSUMMARIES_KEY)
+                              .add(encodeTrackSummary(trackSummary, rights, mediaType));
+            }
+        }
+
+        userStatistics.put(JSONConstants.TRACK_COUNT, entity.getNumTracks());
+
         return userStatistics;
     }
 
-    private JsonNode getTrackSummaries(TrackSummaries t, AccessRights rights, MediaType mediaType) {
-        ArrayNode result = getJsonFactory().arrayNode();
-        if (t.hasTrackSummaries()) {
-            for (TrackSummary item : t.getTrackSummaryList()) {
-                ObjectNode ts = result.addObject();
-                if (item.hasIdentifier()) {
-                    ts.putPOJO(JSONConstants.IDENTIFIER_KEY, item.getIdentifier());
-                }
-                if (item.hasStartPosition()) {
-                    ObjectNode startPos = ts.putObject(JSONConstants.STARTPOSITION_KEY);
-                    startPos.set(JSONConstants.GEOMETRY_KEY,
-                                 geometryEncoder.encodeJSON(item.getStartPosition(), rights, mediaType));
-                }
-                if (item.hasEndPosition()) {
-                    ObjectNode endPos = ts.putObject(JSONConstants.ENDPOSITION_KEY);
-                    endPos.set(JSONConstants.GEOMETRY_KEY,
-                               geometryEncoder.encodeJSON(item.getEndPosition(), rights, mediaType));
-                }
-            }
-        } else {
-            // keep result as an empty jsonarray:   [  ]
+    private ObjectNode encodeTrackSummary(TrackSummary trackSummary, AccessRights rights, MediaType mediaType) {
+        ObjectNode node = getJsonFactory().objectNode();
+        if (trackSummary.hasIdentifier()) {
+            node.putPOJO(JSONConstants.IDENTIFIER_KEY, trackSummary.getIdentifier());
         }
-        return result;
+        if (trackSummary.hasStartPosition()) {
+            ObjectNode startPosition = node.putObject(JSONConstants.STARTPOSITION_KEY);
+            startPosition.set(JSONConstants.GEOMETRY_KEY,
+                              geometryEncoder.encodeJSON(trackSummary.getStartPosition(), rights, mediaType));
+        }
+        if (trackSummary.hasEndPosition()) {
+            ObjectNode endPosition = node.putObject(JSONConstants.ENDPOSITION_KEY);
+            endPosition.set(JSONConstants.GEOMETRY_KEY,
+                            geometryEncoder.encodeJSON(trackSummary.getEndPosition(), rights, mediaType));
+        }
+        return node;
     }
 }

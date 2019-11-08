@@ -17,9 +17,12 @@
 package org.envirocar.server.rest.decoding.json;
 
 
+import javax.inject.Singleton;
+
 /**
  *
  */
+@Singleton
 public class ContextKnowledgeFactory {
     
     public ContextKnowledge create() {

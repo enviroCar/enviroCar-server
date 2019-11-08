@@ -1,18 +1,17 @@
 {
-    "$schema": "http://json-schema.org/draft-04/schema#",
-    "id": "http://schema.envirocar.org/users.json#",
-    "type": "object",
-    "additionalProperties": false,
-    "required": [
-        "users"
-    ],
-    "properties": {
-        "users": {
-            "type": "array",
-            "minItems": 0,
-            "items": {
-                "$ref": "http://schema.envirocar.org/user.json#"
-            }
-        }
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "users"
+  ],
+  "properties": {
+    "users": {
+      "type": "array",
+      "minItems": 0,
+      "items": {
+        "$ref": "user.json#"
+      }
     }
+  }
 }

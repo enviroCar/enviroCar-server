@@ -16,13 +16,17 @@
  */
 package org.envirocar.server.rest.schema;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
-
-import org.envirocar.server.rest.MediaTypes;
+import org.envirocar.server.rest.GuiceRunner;
+import org.envirocar.server.rest.Modules;
+import org.envirocar.server.rest.Schemas;
+import org.envirocar.server.rest.guice.JacksonModule;
+import org.envirocar.server.rest.guice.JsonSchemaModule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 
 /**
  * TODO JavaDoc
@@ -30,12 +34,14 @@ import org.junit.runner.RunWith;
  * @author matthes rieke
  */
 @RunWith(GuiceRunner.class)
+@Modules({JacksonModule.class, JsonSchemaModule.class})
 public class BadgesValidationTest {
+
     private static final String BADGE
             = "{\"name\":\"contributor\","
-            		+ "\"displayName\": {\"en\": \"Contributor\",\"de\": \"Unterstützer\"},"
-            		+ "\"description\": {\"en\": \"an enviroCar contributor\","
-            		+ "\"de\": \"ein enviroCar unterstützer\"}}";
+            + "\"displayName\": {\"en\": \"Contributor\",\"de\": \"Unterstützer\"},"
+            + "\"description\": {\"en\": \"an enviroCar contributor\","
+            + "\"de\": \"ein enviroCar unterstützer\"}}";
     private static final String BADGES
             = "{\"badges\":[" + BADGE + "]}";
     @Rule
@@ -43,13 +49,11 @@ public class BadgesValidationTest {
 
     @Test
     public void validateList() {
-        assertThat(validate.parse(BADGES),
-                   is(validate.validInstanceOf(MediaTypes.BADGES_TYPE)));
+        assertThat(validate.parse(BADGES), is(validate.validInstanceOf(Schemas.BADGES)));
     }
 
     @Test
     public void validateInstance() {
-        assertThat(validate.parse(BADGE),
-                   is(validate.validInstanceOf(MediaTypes.BADGE_TYPE)));
+        assertThat(validate.parse(BADGE), is(validate.validInstanceOf(Schemas.BADGE)));
     }
 }

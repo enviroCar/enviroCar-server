@@ -16,10 +16,12 @@
  */
 package org.envirocar.server.rest.mapper;
 
+import org.envirocar.server.core.exception.IllegalModificationException;
+
+import javax.inject.Singleton;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.Provider;
-
-import org.envirocar.server.core.exception.IllegalModificationException;
 
 /**
  * TODO JavaDoc
@@ -27,8 +29,11 @@ import org.envirocar.server.core.exception.IllegalModificationException;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
+@Singleton
 public class IllegalModificationExceptionMapper extends AbstractExceptionMapper<IllegalModificationException> {
-    public IllegalModificationExceptionMapper() {
-        super(Status.BAD_REQUEST);
+
+    @Override
+    protected Response.StatusType getStatus(IllegalModificationException exception) {
+        return Status.BAD_REQUEST;
     }
 }

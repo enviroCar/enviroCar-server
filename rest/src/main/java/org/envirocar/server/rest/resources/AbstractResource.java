@@ -16,17 +16,6 @@
  */
 package org.envirocar.server.rest.resources;
 
-import static org.envirocar.server.rest.resources.AbstractResource.NOT_ALLOWED_MAIL_ADDRESS;
-
-import java.util.Set;
-
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-import javax.ws.rs.core.SecurityContext;
-import javax.ws.rs.core.UriInfo;
-
 import org.envirocar.server.core.DataService;
 import org.envirocar.server.core.FriendService;
 import org.envirocar.server.core.GroupService;
@@ -39,14 +28,22 @@ import org.envirocar.server.core.entities.EntityFactory;
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.exception.BadRequestException;
 import org.envirocar.server.core.util.pagination.Pagination;
+import org.envirocar.server.rest.ForbiddenException;
+import org.envirocar.server.rest.UnauthorizedException;
 import org.envirocar.server.rest.auth.PrincipalImpl;
 import org.envirocar.server.rest.pagination.PaginationProvider;
 import org.envirocar.server.rest.rights.AccessRights;
 
-import com.google.common.base.Optional;
-import com.google.inject.Inject;
-import com.google.inject.Provider;
-import com.google.inject.name.Named;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Provider;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.SecurityContext;
+import javax.ws.rs.core.UriInfo;
+import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * TODO JavaDoc
@@ -58,8 +55,8 @@ public abstract class AbstractResource {
     public static final String ALLOWED_MAIL_ADDRESSES = "allowedMailAddresses";
     public static final String NOT_ALLOWED_MAIL_ADDRESS
             = "enviroCar is currently in a closed beta phase. Please "
-            + "contact envirocar@52north.org if you want to join the beta "
-            + "testers or with any other inquiries.";
+              + "contact envirocar@52north.org if you want to join the beta "
+              + "testers or with any other inquiries.";
     private Provider<SecurityContext> securityContext;
     private Provider<AccessRights> rights;
     private Provider<DataService> dataService;
@@ -120,13 +117,14 @@ public abstract class AbstractResource {
 
     protected void checkRights(boolean right) {
         if (!right) {
-            throw new WebApplicationException(Status.FORBIDDEN);
+            throw getRights().isAuthenticated()
+                  ? new ForbiddenException("forbidden")
+                  : new UnauthorizedException("unauthorized");
         }
     }
 
     protected User getCurrentUser() {
-        PrincipalImpl p = (PrincipalImpl) securityContext.get()
-                .getUserPrincipal();
+        PrincipalImpl p = (PrincipalImpl) securityContext.get().getUserPrincipal();
         return p == null ? null : p.getUser();
     }
 
@@ -176,14 +174,12 @@ public abstract class AbstractResource {
     }
 
     @Inject
-    public void setStatisticsService(
-            Provider<StatisticsService> statisticsService) {
+    public void setStatisticsService(Provider<StatisticsService> statisticsService) {
         this.statisticsService = statisticsService;
     }
 
     @Inject
-    public void setUserStatisticService(
-            Provider<UserStatisticService> userStatisticsService) {
+    public void setUserStatisticService(Provider<UserStatisticService> userStatisticsService) {
         this.userStatisticService = userStatisticsService;
     }
 
@@ -194,12 +190,8 @@ public abstract class AbstractResource {
 
     protected void checkMail(User user) {
         if (user.hasMail() && allowedMailAddresses.get().isPresent()
-                && !allowedMailAddresses.get().get().contains(user.getMail())) {
-            throw new WebApplicationException(Response
-                    .status(Status.FORBIDDEN)
-                    .type(MediaType.TEXT_PLAIN)
-                    .entity(NOT_ALLOWED_MAIL_ADDRESS)
-                    .build());
+            && !allowedMailAddresses.get().get().contains(user.getMail())) {
+            throw new ForbiddenException(NOT_ALLOWED_MAIL_ADDRESS);
         }
     }
 
@@ -216,7 +208,7 @@ public abstract class AbstractResource {
                 try {
                     return op.parseFilterForInstant(param);
                 } catch (IllegalArgumentException e) {
-                    throw new WebApplicationException(e, Status.BAD_REQUEST);
+                    throw new BadRequestException(e);
                 }
             }
         }
@@ -230,7 +222,7 @@ public abstract class AbstractResource {
                 try {
                     return op.parseFilterForInterval(param);
                 } catch (IllegalArgumentException e) {
-                    throw new WebApplicationException(e, Status.BAD_REQUEST);
+                    throw new BadRequestException(e);
                 }
             }
         }

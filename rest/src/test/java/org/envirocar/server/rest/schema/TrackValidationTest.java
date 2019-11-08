@@ -16,49 +16,49 @@
  */
 package org.envirocar.server.rest.schema;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
-
-import java.util.Scanner;
-
-import org.envirocar.server.rest.MediaTypes;
+import org.envirocar.server.rest.GuiceRunner;
+import org.envirocar.server.rest.Schemas;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.Scanner;
+
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
+
 /**
  * TODO JavaDoc
- * 
+ *
  * @author matthes rieke
  */
 @RunWith(GuiceRunner.class)
 public class TrackValidationTest {
 
-	@Rule
-	public final ValidationRule validate = new ValidationRule();
+    @Rule
+    public final ValidationRule validate = new ValidationRule();
 
-	@Test
-	public void validateValidTrackInstanceWithNoLengthAttribute() {
-		assertThat(validate.parse(loadTrackInstance("track-instance-no-length-attribute.json")),
-				is(validate.validInstanceOf(MediaTypes.TRACK_TYPE)));
-	}
-	
-	@Test
-	public void validateValidTrackInstance() {
-		assertThat(validate.parse(loadTrackInstance("track-instance.json")),
-				is(validate.validInstanceOf(MediaTypes.TRACK_TYPE)));
-	}
+    @Test
+    public void validateValidTrackInstanceWithNoLengthAttribute() {
+        assertThat(validate.parse(loadTrackInstance("track-instance-no-length-attribute.json")),
+                is(validate.validInstanceOf(Schemas.TRACK)));
+    }
 
-	private String loadTrackInstance(String resourceName) {
-		StringBuilder sb = new StringBuilder();
-		
-		Scanner sc = null;
-		sc = new Scanner(getClass().getResourceAsStream(resourceName));
-		while (sc.hasNext()) {
-			sb.append(sc.nextLine());
-		}
-		sc.close();
-		
-		return sb.toString();
-	}
+    @Test
+    public void validateValidTrackInstance() {
+        assertThat(validate.parse(loadTrackInstance("track-instance.json")),
+                is(validate.validInstanceOf(Schemas.TRACK)));
+    }
+
+    private String loadTrackInstance(String resourceName) {
+        StringBuilder sb = new StringBuilder();
+
+        Scanner sc = new Scanner(getClass().getResourceAsStream(resourceName));
+        while (sc.hasNext()) {
+            sb.append(sc.nextLine());
+        }
+        sc.close();
+
+        return sb.toString();
+    }
 }

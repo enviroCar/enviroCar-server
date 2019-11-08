@@ -19,7 +19,9 @@ package org.envirocar.server.rest.schema;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
+import org.envirocar.server.rest.GuiceRunner;
 import org.envirocar.server.rest.MediaTypes;
+import org.envirocar.server.rest.Schemas;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,12 +43,12 @@ public class TracksValidationTest {
     @Test
     public void validateIdList() {
         assertThat(validate.parse(ID_LIST),
-                   is(validate.validInstanceOf(MediaTypes.TRACKS_TYPE)));
+                   is(validate.validInstanceOf(Schemas.TRACKS)));
     }
 
     @Test
     public void validateValidTracks() {
         assertThat(validate.parse(TRACKS),
-                   is(validate.validInstanceOf(MediaTypes.TRACKS_TYPE)));
+                   is(validate.validInstanceOf(Schemas.TRACKS)));
     }
 }

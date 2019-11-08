@@ -1,58 +1,57 @@
 {
-    "$schema": "http://json-schema.org/draft-04/schema#",
-    "id": "http://schema.envirocar.org/measurement.create.json#",
-    "type": "object",
-    "additionalProperties": false,
-    "required": [
-        "type",
-        "geometry",
-        "properties"
-    ],
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "type",
+    "geometry",
+    "properties"
+  ],
+  "properties": {
+    "type": {
+      "type": "string",
+      "enum": [
+        "Feature"
+      ]
+    },
+    "geometry": {
+      "$ref": "geometry.json#"
+    },
     "properties": {
-        "type": {
-            "type": "string",
-            "enum": [
-                "Feature"
-            ]
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "time"
+      ],
+      "properties": {
+        "sensor": {
+          "type": "string",
+          "description": "the id of an existing sensor"
         },
-        "geometry": {
-            "$ref": "http://schema.envirocar.org/geometry.json#"
+        "time": {
+          "type": "string",
+          "format": "date-time"
         },
-        "properties": {
+        "phenomenons": {
+          "type": "object",
+          "additionalProperties": {
             "type": "object",
             "additionalProperties": false,
             "required": [
-                "time"
+              "value"
             ],
             "properties": {
-                "sensor": {
-                    "type": "string",
-                    "description": "the id of an existing sensor"
-                },
-                "time": {
-                    "type": "string",
-                    "format": "date-time"
-                },
-                "phenomenons": {
-                    "type": "object",
-                    "additionalProperties": {
-                        "type": "object",
-                        "additionalProperties": false,
-                        "required": [
-                            "value"
-                        ],
-                        "properties": {
-                            "value": {
-                                "type": [
-                                    "string",
-                                    "number",
-                                    "boolean"
-                                ]
-                            }
-                        }
-                    }
-                }
+              "value": {
+                "type": [
+                  "string",
+                  "number",
+                  "boolean"
+                ]
+              }
             }
+          }
         }
+      }
     }
+  }
 }

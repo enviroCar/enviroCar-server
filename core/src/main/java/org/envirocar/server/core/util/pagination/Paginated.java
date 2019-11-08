@@ -17,7 +17,8 @@
 package org.envirocar.server.core.util.pagination;
 
 import com.google.common.base.MoreObjects;
-import com.google.common.base.Optional;
+
+import java.util.Optional;
 
 /**
  * TODO JavaDoc
@@ -33,7 +34,7 @@ public abstract class Paginated<T> {
     private final long elements;
 
     public Paginated(Pagination current, long elements) {
-        this.current = Optional.fromNullable(current);
+        this.current = Optional.ofNullable(current);
         this.elements = elements;
 
         if (this.current.isPresent()) {
@@ -42,7 +43,7 @@ public abstract class Paginated<T> {
             this.prev = this.current.get().previous(this.elements);
             this.next = this.current.get().next(this.elements);
         } else {
-            Optional<Pagination> absent = Optional.absent();
+            Optional<Pagination> absent = Optional.empty();
             this.last = absent;
             this.first = absent;
             this.prev = absent;
@@ -55,16 +56,8 @@ public abstract class Paginated<T> {
         return last;
     }
 
-    public boolean hasLast() {
-        return this.last.isPresent();
-    }
-
     public Optional<Pagination> getNext() {
         return this.next;
-    }
-
-    public boolean hasNext() {
-        return this.next.isPresent();
     }
 
     public Optional<Pagination> getCurrent() {
@@ -75,16 +68,8 @@ public abstract class Paginated<T> {
         return this.prev;
     }
 
-    public boolean hasPrevious() {
-        return this.prev.isPresent();
-    }
-
     public Optional<Pagination> getFirst() {
         return this.first;
-    }
-
-    public boolean hasFirst() {
-        return this.first.isPresent();
     }
 
     public boolean isPaginated() {
@@ -98,11 +83,11 @@ public abstract class Paginated<T> {
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
-                .add("first", getFirst().orNull())
-                .add("previous", getPrevious().orNull())
-                .add("current", getCurrent().orNull())
-                .add("next", getNext().orNull())
-                .add("last", getLast().orNull())
-                .toString();
+                          .add("first", getFirst().orElse(null))
+                          .add("previous", getPrevious().orElse(null))
+                          .add("current", getCurrent().orElse(null))
+                          .add("next", getNext().orElse(null))
+                          .add("last", getLast().orElse(null))
+                          .toString();
     }
 }

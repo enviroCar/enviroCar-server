@@ -16,48 +16,68 @@
  */
 package org.envirocar.server.core.entities;
 
+import java.util.List;
+
 /**
  * Entity to represent a UserStatistic
  *
  * @author Maurin Radtke <Maurin.Radtke@uni-muenster.de>
  */
 public interface UserStatistic {
-    
+
     double getDistance();
-    
+
     void setDistance(double distance);
-    
+
     double getDuration();
-    
+
     void setDuration(double duration);
-    
+
     double getDistanceBelow60kmh();
-    
+
     void setDistanceBelow60kmh(double distance);
-    
+
     double getDurationBelow60kmh();
-    
+
     void setDurationBelow60kmh(double duration);
-    
+
     double getDistanceAbove130kmh();
-    
+
     void setDistanceAbove130kmh(double distance);
-    
+
     double getDurationAbove130kmh();
-    
+
     void setDurationAbove130kmh(double duration);
-    
+
     double getDistanceNaN();
-    
+
     void setDistanceNaN(double distance);
-    
+
     double getDurationNaN();
-    
+
     void setDurationNaN(double duration);
-    
-    TrackSummaries getTrackSummaries();
-    
-    void setTrackSummaries(TrackSummaries trackSummaries);
-    
-    boolean hasTrackSummaries();
+
+    List<TrackSummary> getTrackSummaries();
+
+    void setTrackSummaries(List<TrackSummary> trackSummaries);
+
+    void addTrackSummary(TrackSummary trackSummary);
+
+    void removeTrackSummary(String id);
+
+    default boolean hasTrackSummaries() {
+        return getTrackSummaries() != null && !getTrackSummaries().isEmpty();
+    }
+
+    int getNumTracks();
+
+    void setNumTracks(int numTracks);
+
+    default void incNumTracks() {
+        setNumTracks(getNumTracks() + 1);
+    }
+
+    default void decNumTrack() {
+        setNumTracks(getNumTracks() - 1);
+    }
 }

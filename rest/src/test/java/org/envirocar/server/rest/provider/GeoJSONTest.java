@@ -16,14 +16,11 @@
  */
 package org.envirocar.server.rest.provider;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
-
-import java.io.IOException;
-import java.util.Random;
-
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.JsonNodeCreator;
+import com.vividsolutions.jts.geom.*;
 import org.envirocar.server.core.exception.GeometryConverterException;
-import org.envirocar.server.rest.schema.GuiceRunner;
+import org.envirocar.server.rest.GuiceRunner;
 import org.envirocar.server.rest.schema.ValidationRule;
 import org.envirocar.server.rest.util.GeoJSON;
 import org.junit.Rule;
@@ -31,20 +28,12 @@ import org.junit.Test;
 import org.junit.rules.ErrorCollector;
 import org.junit.runner.RunWith;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.google.inject.Inject;
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryCollection;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.LinearRing;
-import com.vividsolutions.jts.geom.MultiLineString;
-import com.vividsolutions.jts.geom.MultiPoint;
-import com.vividsolutions.jts.geom.MultiPolygon;
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.geom.Polygon;
+import javax.inject.Inject;
+import java.util.Random;
+
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 
 /**
  * TODO JavaDoc
@@ -53,6 +42,7 @@ import com.vividsolutions.jts.geom.Polygon;
  */
 @RunWith(GuiceRunner.class)
 public class GeoJSONTest {
+
     @Rule
     public final ValidationRule validate = new ValidationRule();
     @Rule
@@ -60,7 +50,7 @@ public class GeoJSONTest {
     @Inject
     private GeometryFactory geometryFactory;
     @Inject
-    private JsonNodeFactory jsonNodeFactory;
+    private JsonNodeCreator jsonNodeFactory;
     private final Random random = new Random();
 
     private Coordinate randomCoordinate() {
@@ -68,18 +58,18 @@ public class GeoJSONTest {
     }
 
     private LineString randomLineString() {
-        return geometryFactory.createLineString(new Coordinate[] {
-            randomCoordinate(),
-            randomCoordinate(),
-            randomCoordinate()
+        return geometryFactory.createLineString(new Coordinate[]{
+                randomCoordinate(),
+                randomCoordinate(),
+                randomCoordinate()
         });
     }
 
     private MultiLineString randomMultiLineString() {
-        return geometryFactory.createMultiLineString(new LineString[] {
-            randomLineString(),
-            randomLineString(),
-            randomLineString() });
+        return geometryFactory.createMultiLineString(new LineString[]{
+                randomLineString(),
+                randomLineString(),
+                randomLineString()});
     }
 
     private Point randomPoint() {
@@ -88,78 +78,74 @@ public class GeoJSONTest {
 
     private LinearRing randomLinearRing() {
         Coordinate p = randomCoordinate();
-        return geometryFactory.createLinearRing(new Coordinate[] {
-            p,
-            randomCoordinate(),
-            randomCoordinate(),
-            randomCoordinate(),
-            p
+        return geometryFactory.createLinearRing(new Coordinate[]{
+                p,
+                randomCoordinate(),
+                randomCoordinate(),
+                randomCoordinate(),
+                p
         });
     }
 
     private Polygon randomPolygon() {
         return geometryFactory.createPolygon(randomLinearRing(),
-                                             new LinearRing[] {
-            randomLinearRing(),
-            randomLinearRing(),
-            randomLinearRing()
-        });
+                new LinearRing[]{
+                        randomLinearRing(),
+                        randomLinearRing(),
+                        randomLinearRing()
+                });
     }
 
     private MultiPoint randomMultiPoint() {
-        return geometryFactory.createMultiPoint(new Coordinate[] {
-            randomCoordinate(),
-            randomCoordinate(),
-            randomCoordinate(),
-            randomCoordinate(),
-            randomCoordinate(),
-            randomCoordinate()
+        return geometryFactory.createMultiPoint(new Coordinate[]{
+                randomCoordinate(),
+                randomCoordinate(),
+                randomCoordinate(),
+                randomCoordinate(),
+                randomCoordinate(),
+                randomCoordinate()
         });
     }
 
     private MultiPolygon randomMultiPolygon() {
-        return geometryFactory.createMultiPolygon(new Polygon[] {
-            randomPolygon(),
-            randomPolygon(),
-            randomPolygon()
+        return geometryFactory.createMultiPolygon(new Polygon[]{
+                randomPolygon(),
+                randomPolygon(),
+                randomPolygon()
         });
     }
 
     private GeometryCollection randomGeometryCollection() {
-        return geometryFactory.createGeometryCollection(new Geometry[] {
-            randomPoint(),
-            randomMultiPoint(),
-            randomLineString(),
-            randomMultiLineString(),
-            randomPolygon(),
-            randomMultiPolygon()
+        return geometryFactory.createGeometryCollection(new Geometry[]{
+                randomPoint(),
+                randomMultiPoint(),
+                randomLineString(),
+                randomMultiLineString(),
+                randomPolygon(),
+                randomMultiPolygon()
         });
     }
 
     @Test
-    public void testGeometryCollection() throws GeometryConverterException,
-                                                IOException {
-        readWriteTest(geometryFactory.createGeometryCollection(new Geometry[] {
-            randomGeometryCollection(),
-            randomGeometryCollection()
+    public void testGeometryCollection() {
+        readWriteTest(geometryFactory.createGeometryCollection(new Geometry[]{
+                randomGeometryCollection(),
+                randomGeometryCollection()
         }));
     }
 
     @Test
-    public void testPolygon() throws GeometryConverterException,
-                                     IOException {
+    public void testPolygon() {
         readWriteTest(randomPolygon());
     }
 
     @Test
-    public void testMultiPolygon() throws GeometryConverterException,
-                                          IOException {
+    public void testMultiPolygon() {
         readWriteTest(randomMultiPolygon());
     }
 
     @Test
-    public void testPoint() throws GeometryConverterException,
-                                   IOException {
+    public void testPoint() {
         readWriteTest(randomPoint());
     }
 
@@ -184,8 +170,7 @@ public class GeoJSONTest {
             JsonNode json = conv.encode(geom);
             Geometry parsed = conv.decode(json);
             assertThat(geom, is(equalTo(parsed)));
-            assertThat(json, is(validate
-                    .validInstanceOf("http://schema.envirocar.org/geometry.json#")));
+            assertThat(json, is(validate.validInstanceOf("geometry.json#")));
         } catch (GeometryConverterException ex) {
             errors.addError(ex);
         }

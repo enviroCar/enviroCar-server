@@ -16,21 +16,18 @@
  */
 package org.envirocar.server.rest.encoding.json;
 
-import static org.envirocar.server.core.entities.Gender.FEMALE;
-import static org.envirocar.server.core.entities.Gender.MALE;
-
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.ext.Provider;
-
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.inject.Inject;
+import com.vividsolutions.jts.geom.Geometry;
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.rest.JSONConstants;
 import org.envirocar.server.rest.encoding.JSONEntityEncoder;
 import org.envirocar.server.rest.rights.AccessRights;
 
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.inject.Inject;
-import com.vividsolutions.jts.geom.Geometry;
+import javax.inject.Singleton;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.Provider;
 
 /**
  * TODO JavaDoc
@@ -38,6 +35,7 @@ import com.vividsolutions.jts.geom.Geometry;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
+@Singleton
 public class UserJSONEncoder extends AbstractJSONEntityEncoder<User> {
     private final JSONEntityEncoder<Geometry> geometryEncoder;
 
@@ -48,31 +46,28 @@ public class UserJSONEncoder extends AbstractJSONEntityEncoder<User> {
     }
 
     @Override
-    public ObjectNode encodeJSON(User t, AccessRights rights,
-                                 MediaType mediaType) {
+    public ObjectNode encodeJSON(User entity, AccessRights rights, MediaType mediaType) {
         ObjectNode j = getJsonFactory().objectNode();
-        if (t.hasName() && rights.canSeeNameOf(t)) {
-            j.put(JSONConstants.NAME_KEY, t.getName());
+        if (entity.hasName() && rights.canSeeNameOf(entity)) {
+            j.put(JSONConstants.NAME_KEY, entity.getName());
         }
-        if (t.hasMail() && rights.canSeeMailOf(t)) {
-            j.put(JSONConstants.MAIL_KEY, t.getMail());
+        if (entity.hasMail() && rights.canSeeMailOf(entity)) {
+            j.put(JSONConstants.MAIL_KEY, entity.getMail());
         }
-        if (t.hasCreationTime() && rights.canSeeCreationTimeOf(t)) {
-            j.put(JSONConstants.CREATED_KEY,
-                  getDateTimeFormat().print(t.getCreationTime()));
+        if (entity.hasCreationTime() && rights.canSeeCreationTimeOf(entity)) {
+            j.put(JSONConstants.CREATED_KEY, getDateTimeFormat().print(entity.getCreationTime()));
         }
-        if (t.hasModificationTime() && rights.canSeeModificationTimeOf(t)) {
-            j.put(JSONConstants.MODIFIED_KEY,
-                  getDateTimeFormat().print(t.getModificationTime()));
+        if (entity.hasModificationTime() && rights.canSeeModificationTimeOf(entity)) {
+            j.put(JSONConstants.MODIFIED_KEY, getDateTimeFormat().print(entity.getModificationTime()));
         }
-        if (t.hasFirstName() && rights.canSeeFirstNameOf(t)) {
-            j.put(JSONConstants.FIRST_NAME_KEY, t.getFirstName());
+        if (entity.hasFirstName() && rights.canSeeFirstNameOf(entity)) {
+            j.put(JSONConstants.FIRST_NAME_KEY, entity.getFirstName());
         }
-        if (t.hasLastName() && rights.canSeeLastNameOf(t)) {
-            j.put(JSONConstants.LAST_NAME_KEY, t.getLastName());
+        if (entity.hasLastName() && rights.canSeeLastNameOf(entity)) {
+            j.put(JSONConstants.LAST_NAME_KEY, entity.getLastName());
         }
-        if (t.hasGender() && rights.canSeeGenderOf(t)) {
-            switch (t.getGender()) {
+        if (entity.hasGender() && rights.canSeeGenderOf(entity)) {
+            switch (entity.getGender()) {
                 case MALE:
                     j.put(JSONConstants.GENDER_KEY, JSONConstants.MALE);
                     break;
@@ -81,33 +76,29 @@ public class UserJSONEncoder extends AbstractJSONEntityEncoder<User> {
                     break;
             }
         }
-        if (t.hasDayOfBirth() && rights.canSeeDayOfBirthOf(t)) {
-            j.put(JSONConstants.DAY_OF_BIRTH_KEY, t.getDayOfBirth());
+        if (entity.hasDayOfBirth() && rights.canSeeDayOfBirthOf(entity)) {
+            j.put(JSONConstants.DAY_OF_BIRTH_KEY, entity.getDayOfBirth());
         }
-        if (t.hasAboutMe() && rights.canSeeAboutMeOf(t)) {
-            j.put(JSONConstants.ABOUT_ME_KEY, t.getAboutMe());
+        if (entity.hasAboutMe() && rights.canSeeAboutMeOf(entity)) {
+            j.put(JSONConstants.ABOUT_ME_KEY, entity.getAboutMe());
         }
-        if (t.hasCountry() && rights.canSeeCountryOf(t)) {
-            j.put(JSONConstants.COUNTRY_KEY, t.getCountry());
+        if (entity.hasCountry() && rights.canSeeCountryOf(entity)) {
+            j.put(JSONConstants.COUNTRY_KEY, entity.getCountry());
         }
-        if (t.hasLocation() && rights.canSeeLocationOf(t)) {
-            j.set(JSONConstants.LOCATION_KEY,
-                  geometryEncoder.encodeJSON(t.getLocation(), rights, mediaType));
+        if (entity.hasLocation() && rights.canSeeLocationOf(entity)) {
+            j.set(JSONConstants.LOCATION_KEY, geometryEncoder.encodeJSON(entity.getLocation(), rights, mediaType));
         }
-        if (t.hasLanguage() && rights.canSeeLanguageOf(t)) {
-            j.put(JSONConstants.LANGUAGE_KEY, t.getLanguage());
+        if (entity.hasLanguage() && rights.canSeeLanguageOf(entity)) {
+            j.put(JSONConstants.LANGUAGE_KEY, entity.getLanguage());
         }
-        if (t.hasBadges() && rights.canSeeBadgesOf(t)) {
-            final ArrayNode badges = j.putArray(JSONConstants.BADGES);
-            for (String badge : t.getBadges()) {
-                badges.add(badge);
-            }
+        if (entity.hasBadges() && rights.canSeeBadgesOf(entity)) {
+            entity.getBadges().forEach(j.putArray(JSONConstants.BADGES)::add);
         }
-        if (t.getTermsOfUseVersion() != null) {
-        	j.put(JSONConstants.TOU_VERSION_KEY, t.getTermsOfUseVersion());
-
-        	// kept for backwards compatibility
-        	j.put(JSONConstants.ACCEPTED_TERMS_OF_USE_VERSION_KEY, t.getTermsOfUseVersion());
+        if (entity.hasAcceptedTermsOfUseVersion() && rights.canSeeAcceptedTermsOfUseVersionOf(entity)) {
+            j.put(JSONConstants.ACCEPTED_TERMS_OF_USE_VERSION_KEY, entity.getTermsOfUseVersion());
+        }
+        if (entity.hasPrivacyStatementVersion() && rights.canSeeAcceptedPrivacyStatementVersionOf(entity)) {
+            j.put(JSONConstants.ACCEPTED_PRIVACY_STATEMENT_VERSION, entity.getPrivacyStatementVersion());
         }
         return j;
     }

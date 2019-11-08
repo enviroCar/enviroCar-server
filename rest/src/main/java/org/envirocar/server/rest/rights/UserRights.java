@@ -85,4 +85,8 @@ public interface UserRights {
     boolean canSeeBadgesOf(User user);
 
     boolean canSeeFuelingsOf(User user);
+
+    boolean canSeeAcceptedTermsOfUseVersionOf(User user);
+
+    boolean canSeeAcceptedPrivacyStatementVersionOf(User user);
 }

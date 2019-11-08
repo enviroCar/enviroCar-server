@@ -16,29 +16,25 @@
  */
 package org.envirocar.server.rest.resources;
 
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
+import org.envirocar.server.core.entities.Group;
+import org.envirocar.server.core.entities.User;
+import org.envirocar.server.core.entities.Users;
+import org.envirocar.server.core.exception.BadRequestException;
+import org.envirocar.server.core.exception.UserNotFoundException;
+import org.envirocar.server.rest.MediaTypes;
+import org.envirocar.server.rest.Schemas;
+import org.envirocar.server.rest.UserReference;
+import org.envirocar.server.rest.auth.Authenticated;
+import org.envirocar.server.rest.schema.Schema;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-
-import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
-
-import org.envirocar.server.core.entities.Group;
-import org.envirocar.server.core.entities.User;
-import org.envirocar.server.core.entities.Users;
-import org.envirocar.server.core.exception.BadRequestException;
-
-import org.envirocar.server.core.exception.GroupNotFoundException;
-import org.envirocar.server.core.exception.UserNotFoundException;
-import org.envirocar.server.rest.MediaTypes;
-import org.envirocar.server.rest.Schemas;
-import org.envirocar.server.rest.UserReference;
-import org.envirocar.server.rest.auth.Authenticated;
-
-import org.envirocar.server.rest.validation.Schema;
 
 /**
  * TODO JavaDoc
@@ -47,7 +43,7 @@ import org.envirocar.server.rest.validation.Schema;
  */
 public class GroupMembersResource extends AbstractResource {
     public static final String MEMBER = "{member}";
-    private Group group;
+    private final Group group;
 
     @Inject
     public GroupMembersResource(@Assisted Group group) {
@@ -56,31 +52,24 @@ public class GroupMembersResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.USERS)
-    @Produces({ MediaTypes.USERS,
-                MediaTypes.XML_RDF,
-                MediaTypes.TURTLE,
-                MediaTypes.TURTLE_ALT })
+    @Produces({MediaTypes.JSON, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
     public Users get() throws BadRequestException {
         checkRights(getRights().canSeeMembersOf(group));
-        return getGroupService()
-                .getGroupMembers(group, getPagination());
+        return getGroupService().getGroupMembers(group, getPagination());
     }
 
     @POST
     @Authenticated
+    @Consumes({MediaTypes.JSON})
     @Schema(request = Schemas.USER_REF)
-    @Consumes({ MediaTypes.USER_REF })
-    public void add(UserReference user) throws UserNotFoundException,
-                                               GroupNotFoundException {
+    public void add(UserReference user) throws UserNotFoundException {
         User u = getUserService().getUser(user.getName());
-        checkRights(getRights().isSelf(u) &&
-                    getRights().canJoinGroup(group));
+        checkRights(getRights().isSelf(u) && getRights().canJoinGroup(group));
         getGroupService().addGroupMember(group, u);
     }
 
     @Path(MEMBER)
-    public GroupMemberResource member(@PathParam("member") String username)
-            throws UserNotFoundException {
+    public GroupMemberResource member(@PathParam("member") String username) throws UserNotFoundException {
         checkRights(getRights().canSeeMembersOf(group));
         User user = getGroupService().getGroupMember(group, username);
         checkRights(getRights().canSee(user));

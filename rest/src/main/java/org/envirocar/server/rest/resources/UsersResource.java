@@ -16,14 +16,6 @@
  */
 package org.envirocar.server.rest.resources;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Response;
-
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.entities.Users;
 import org.envirocar.server.core.exception.BadRequestException;
@@ -33,7 +25,10 @@ import org.envirocar.server.core.exception.ValidationException;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.auth.Anonymous;
-import org.envirocar.server.rest.validation.Schema;
+import org.envirocar.server.rest.schema.Schema;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.Response;
 
 /**
  * TODO JavaDoc
@@ -41,14 +36,12 @@ import org.envirocar.server.rest.validation.Schema;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class UsersResource extends AbstractResource {
+
     public static final String USER = "{username}";
 
     @GET
     @Schema(response = Schemas.USERS)
-    @Produces({ MediaTypes.USERS,
-                MediaTypes.XML_RDF,
-                MediaTypes.TURTLE,
-                MediaTypes.TURTLE_ALT })
+    @Produces({MediaTypes.JSON, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
     public Users get() throws BadRequestException {
         checkRights(getRights().canSeeUsers());
         return getUserService().getUsers(getPagination());
@@ -57,19 +50,15 @@ public class UsersResource extends AbstractResource {
     @POST
     @Anonymous
     @Schema(request = Schemas.USER_CREATE)
-    @Consumes({ MediaTypes.USER_CREATE })
-    public Response create(User user) throws ValidationException,
-                                             ResourceAlreadyExistException {
+    @Consumes({MediaTypes.JSON})
+    public Response create(User user) throws ValidationException, ResourceAlreadyExistException {
 //        checkMail(user);
-        return Response.created(
-                getUriInfo().getAbsolutePathBuilder()
-                        .path(getUserService().createUser(user).getName())
-                        .build()).build();
+        user = getUserService().createUser(user);
+        return Response.created(getUriInfo().getAbsolutePathBuilder().path(user.getName()).build()).build();
     }
 
     @Path(USER)
-    public UserResource user(@PathParam("username") String username)
-            throws UserNotFoundException {
+    public UserResource user(@PathParam("username") String username) throws UserNotFoundException {
         User user = getUserService().getUser(username);
         checkRights(getRights().canSee(user));
         return getResourceFactory().createUserResource(user);

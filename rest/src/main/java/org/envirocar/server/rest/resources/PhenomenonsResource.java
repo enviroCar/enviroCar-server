@@ -16,6 +16,15 @@
  */
 package org.envirocar.server.rest.resources;
 
+import org.envirocar.server.core.entities.Phenomenon;
+import org.envirocar.server.core.entities.Phenomenons;
+import org.envirocar.server.core.exception.BadRequestException;
+import org.envirocar.server.core.exception.PhenomenonNotFoundException;
+import org.envirocar.server.rest.MediaTypes;
+import org.envirocar.server.rest.Schemas;
+import org.envirocar.server.rest.auth.Authenticated;
+import org.envirocar.server.rest.schema.Schema;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -24,17 +33,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
-import org.envirocar.server.core.entities.Phenomenon;
-import org.envirocar.server.core.entities.Phenomenons;
-import org.envirocar.server.core.exception.BadRequestException;
-
-import org.envirocar.server.core.exception.PhenomenonNotFoundException;
-import org.envirocar.server.rest.MediaTypes;
-import org.envirocar.server.rest.Schemas;
-import org.envirocar.server.rest.auth.Authenticated;
-
-import org.envirocar.server.rest.validation.Schema;
-
 /**
  * TODO JavaDoc
  *
@@ -42,14 +40,12 @@ import org.envirocar.server.rest.validation.Schema;
  * @author Jan Wirwahn <jan.wirwahn@wwu.de>
  */
 public class PhenomenonsResource extends AbstractResource {
+
     public static final String PHENOMENON = "{phenomenon}";
 
     @GET
     @Schema(response = Schemas.PHENOMENONS)
-    @Produces({ MediaTypes.PHENOMENONS,
-                MediaTypes.XML_RDF,
-                MediaTypes.TURTLE,
-                MediaTypes.TURTLE_ALT })
+    @Produces({MediaTypes.JSON, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
     public Phenomenons get() throws BadRequestException {
         return getDataService().getPhenomenons(getPagination());
     }
@@ -57,16 +53,15 @@ public class PhenomenonsResource extends AbstractResource {
     @POST
     @Authenticated
     @Schema(request = Schemas.PHENOMENON_CREATE)
-    @Consumes({ MediaTypes.PHENOMENON_CREATE })
+    @Consumes({MediaTypes.JSON})
     public Response create(Phenomenon phenomenon) {
         return Response.created(getUriInfo().getAbsolutePathBuilder()
-                .path(getDataService().createPhenomenon(phenomenon)
-                .getName()).build()).build();
+                                            .path(getDataService().createPhenomenon(phenomenon)
+                                                                  .getName()).build()).build();
     }
 
     @Path(PHENOMENON)
-    public PhenomenonResource phenomenon(@PathParam("phenomenon") String id)
-            throws PhenomenonNotFoundException {
+    public PhenomenonResource phenomenon(@PathParam("phenomenon") String id) throws PhenomenonNotFoundException {
         Phenomenon p = getDataService().getPhenomenonByName(id);
         checkRights(getRights().canSee(p));
         return getResourceFactory().createPhenomenonResource(p);

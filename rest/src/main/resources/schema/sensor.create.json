@@ -1,49 +1,48 @@
 {
-    "$schema": "http://json-schema.org/draft-04/schema#",
-    "id": "http://schema.envirocar.org/sensor.create.json#",
-    "allOf": [
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "allOf": [
+    {
+      "$ref": "sensor.json#/definitions/base"
+    },
+    {
+      "oneOf": [
         {
-            "$ref": "http://schema.envirocar.org/sensor.json#/definitions/base"
+          "not": {
+            "$ref": "sensor.json#/definitions/car-type"
+          }
         },
         {
-            "oneOf": [
-                {
-                    "not": {
-                        "$ref": "http://schema.envirocar.org/sensor.json#/definitions/car-type"
-                    }
-                },
-                {
-                    "allOf": [
-                        {
-                            "$ref": "http://schema.envirocar.org/sensor.json#/definitions/car-type"
-                        },
-                        {
-                            "$ref": "#/definitions/car-properties"
-                        }
-                    ]
-                }
-            ]
+          "allOf": [
+            {
+              "$ref": "sensor.json#/definitions/car-type"
+            },
+            {
+              "$ref": "#/definitions/car-properties"
+            }
+          ]
         }
-    ],
-    "definitions": {
-        "car-properties": {
-            "allOf": [
-                {
-                    "$ref": "http://schema.envirocar.org/sensor.json#/definitions/car-properties"
-                },
-                {
-                    "properties": {
-                        "properties": {
-                            "required": [
-                                "manufacturer",
-                                "model",
-                                "fuelType",
-                                "constructionYear"
-                            ]
-                        }
-                    }
-                }
-            ]
-        }
+      ]
     }
+  ],
+  "definitions": {
+    "car-properties": {
+      "allOf": [
+        {
+          "$ref": "sensor.json#/definitions/car-properties"
+        },
+        {
+          "properties": {
+            "properties": {
+              "required": [
+                "manufacturer",
+                "model",
+                "fuelType",
+                "constructionYear"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  }
 }

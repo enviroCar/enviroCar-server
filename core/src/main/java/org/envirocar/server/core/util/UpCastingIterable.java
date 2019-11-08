@@ -44,7 +44,7 @@ public class UpCastingIterable<T> extends Paginated<T> implements Iterable<T> {
     @SuppressWarnings("unchecked")
     public Iterator<T> iterator() {
         if (items == null) {
-            items = new LinkedList<T>();
+            items = new LinkedList<>();
             return new Iterator<T>() {
                 private final Iterator<? extends T> it = delegate.iterator();
 
@@ -71,7 +71,7 @@ public class UpCastingIterable<T> extends Paginated<T> implements Iterable<T> {
     }
 
     public abstract static class Builder<B extends Builder<B, I, T>, I extends UpCastingIterable<T>, T> {
-        private Iterable<? extends T> delegate;
+        private final Iterable<? extends T> delegate;
         private Pagination pagination;
         private long elements;
 

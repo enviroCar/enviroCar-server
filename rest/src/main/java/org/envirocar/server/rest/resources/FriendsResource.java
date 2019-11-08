@@ -16,26 +16,24 @@
  */
 package org.envirocar.server.rest.resources;
 
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
+import org.envirocar.server.core.entities.User;
+import org.envirocar.server.core.entities.Users;
+import org.envirocar.server.core.exception.BadRequestException;
+import org.envirocar.server.core.exception.UserNotFoundException;
+import org.envirocar.server.rest.MediaTypes;
+import org.envirocar.server.rest.Schemas;
+import org.envirocar.server.rest.UserReference;
+import org.envirocar.server.rest.auth.Authenticated;
+import org.envirocar.server.rest.schema.Schema;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response.Status;
-
-import org.envirocar.server.core.entities.User;
-import org.envirocar.server.core.entities.Users;
-import org.envirocar.server.core.exception.UserNotFoundException;
-import org.envirocar.server.rest.MediaTypes;
-import org.envirocar.server.rest.Schemas;
-import org.envirocar.server.rest.UserReference;
-import org.envirocar.server.rest.auth.Authenticated;
-import org.envirocar.server.rest.validation.Schema;
-
-import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
 
 /**
  * TODO JavaDoc
@@ -45,8 +43,8 @@ import com.google.inject.assistedinject.Assisted;
 public class FriendsResource extends AbstractResource {
     public static final String FRIEND = "{friend}";
     public static final String INCOMING_FRIEND_REQUESTS = "incomingRequests";
-	public static final String OUTGOING_FRIEND_REQUESTS = "outgoingRequests";
-	public static final String DECLINE_FRIEND_REQUEST = "declineRequest";
+    public static final String OUTGOING_FRIEND_REQUESTS = "outgoingRequests";
+    public static final String DECLINE_FRIEND_REQUEST = "declineRequest";
     private final User user;
 
     @Inject
@@ -56,10 +54,7 @@ public class FriendsResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.USERS)
-    @Produces({ MediaTypes.USERS,
-                MediaTypes.XML_RDF,
-                MediaTypes.TURTLE,
-                MediaTypes.TURTLE_ALT })
+    @Produces({MediaTypes.JSON, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
     public Users get() {
         checkRights(getRights().canSeeFriendsOf(user));
         return getFriendService().getFriends(user);
@@ -67,12 +62,11 @@ public class FriendsResource extends AbstractResource {
 
     @POST
     @Authenticated
+    @Consumes(MediaTypes.JSON)
     @Schema(request = Schemas.USER_REF)
-    @Consumes({ MediaTypes.USER_REF })
     public void add(UserReference friend) throws UserNotFoundException {
-        if (friend.getName() == null ||
-            friend.getName().equals(getCurrentUser().getName())) {
-            throw new WebApplicationException(Status.BAD_REQUEST);
+        if (friend.getName() == null || friend.getName().equals(getCurrentUser().getName())) {
+            throw new BadRequestException();
         }
         User f = getUserService().getUser(friend.getName());
         checkRights(getRights().canFriend(user, f));
@@ -80,8 +74,7 @@ public class FriendsResource extends AbstractResource {
     }
 
     @Path(FRIEND)
-    public UserResource friend(@PathParam("friend") String friendName) throws
-            UserNotFoundException {
+    public UserResource friend(@PathParam("friend") String friendName) throws UserNotFoundException {
         checkRights(getRights().canSeeFriendsOf(user));
         User friends = getFriendService().getFriend(user, friendName);
         return getResourceFactory().createFriendResource(user, friends);
@@ -89,29 +82,31 @@ public class FriendsResource extends AbstractResource {
 
     @GET
     @Path(INCOMING_FRIEND_REQUESTS)
-    @Produces({ MediaTypes.USERS})
+    @Produces(MediaTypes.JSON)
     public Users pendingIncomingFriendRequests() {
-    	checkRights(getRights().canSeeFriendsOf(user));
-    	return getFriendService().pendingIncomingRequests(user);
+        checkRights(getRights().canSeeFriendsOf(user));
+        return getFriendService().pendingIncomingRequests(user);
     }
 
     @GET
     @Path(OUTGOING_FRIEND_REQUESTS)
-    @Produces({ MediaTypes.USERS})
+    @Produces(MediaTypes.JSON)
     public Users pendingOutgoingFriendRequests() {
-    	checkRights(getRights().canSeeFriendsOf(user));
-    	return getFriendService().pendingOutgoingRequests(user);
+        checkRights(getRights().canSeeFriendsOf(user));
+        return getFriendService().pendingOutgoingRequests(user);
     }
 
     @POST
     @Path(DECLINE_FRIEND_REQUEST)
-    @Authenticated
     @Schema(request = Schemas.USER_REF)
-    @Consumes({ MediaTypes.USER_REF })
+    @Consumes(MediaTypes.JSON)
+    @Authenticated
     public void decline(UserReference friend) throws UserNotFoundException {
         User f = getUserService().getUser(friend.getName());
 
-        if (f == null) throw new UserNotFoundException(friend.getName());
+        if (f == null) {
+            throw new UserNotFoundException(friend.getName());
+        }
 
         getFriendService().removeFriend(f, user);
     }

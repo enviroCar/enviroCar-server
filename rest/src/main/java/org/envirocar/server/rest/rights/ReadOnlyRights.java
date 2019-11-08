@@ -18,13 +18,7 @@ package org.envirocar.server.rest.rights;
 
 import org.envirocar.server.core.FriendService;
 import org.envirocar.server.core.GroupService;
-import org.envirocar.server.core.entities.Fueling;
-import org.envirocar.server.core.entities.Group;
-import org.envirocar.server.core.entities.Measurement;
-import org.envirocar.server.core.entities.Phenomenon;
-import org.envirocar.server.core.entities.Sensor;
-import org.envirocar.server.core.entities.Track;
-import org.envirocar.server.core.entities.User;
+import org.envirocar.server.core.entities.*;
 
 /**
  * TODO JavaDoc
@@ -40,6 +34,7 @@ public class ReadOnlyRights extends AccessRightsImpl {
                           FriendService friendService) {
         super(user, groupService, friendService);
     }
+
     @Override
     public boolean canDelete(Fueling f) {
         return false;

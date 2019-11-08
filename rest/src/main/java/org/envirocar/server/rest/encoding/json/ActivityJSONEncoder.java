@@ -16,9 +16,8 @@
  */
 package org.envirocar.server.rest.encoding.json;
 
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.ext.Provider;
-
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.inject.Inject;
 import org.envirocar.server.core.activities.Activity;
 import org.envirocar.server.core.activities.GroupActivity;
 import org.envirocar.server.core.activities.TrackActivity;
@@ -30,14 +29,16 @@ import org.envirocar.server.rest.JSONConstants;
 import org.envirocar.server.rest.encoding.JSONEntityEncoder;
 import org.envirocar.server.rest.rights.AccessRights;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.inject.Inject;
+import javax.inject.Singleton;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.Provider;
 
 /**
  * TODO JavaDoc
  *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
+@Singleton
 @Provider
 public class ActivityJSONEncoder extends AbstractJSONEntityEncoder<Activity> {
     private final JSONEntityEncoder<User> userEncoder;
@@ -55,36 +56,31 @@ public class ActivityJSONEncoder extends AbstractJSONEntityEncoder<Activity> {
     }
 
     @Override
-    public ObjectNode encodeJSON(Activity t, AccessRights rights, MediaType mt) {
+    public ObjectNode encodeJSON(Activity entity, AccessRights rights, MediaType mediaType) {
         ObjectNode root = getJsonFactory().objectNode();
-        if (t.hasTime()) {
-            root.put(JSONConstants.TIME_KEY, getDateTimeFormat().print(t
-                    .getTime()));
+        if (entity.hasTime()) {
+            root.put(JSONConstants.TIME_KEY, getDateTimeFormat().print(entity.getTime()));
         }
-        if (t.hasType()) {
-            root.put(JSONConstants.TYPE_KEY, t.getType().toString());
+        if (entity.hasType()) {
+            root.put(JSONConstants.TYPE_KEY, entity.getType().toString());
         }
-        if (t.hasUser()) {
-            root.set(JSONConstants.USER_KEY,
-                     userEncoder.encodeJSON(t.getUser(), rights, mt));
+        if (entity.hasUser()) {
+            root.set(JSONConstants.USER_KEY, userEncoder.encodeJSON(entity.getUser(), rights, mediaType));
         }
-        if (t instanceof GroupActivity) {
-            GroupActivity groupActivity = (GroupActivity) t;
-            if (groupActivity.hasGroup()) {
-                root.set(JSONConstants.GROUP_KEY, groupEncoder
-                        .encodeJSON(groupActivity.getGroup(), rights, mt));
+        if (entity instanceof GroupActivity) {
+            GroupActivity activity = (GroupActivity) entity;
+            if (activity.hasGroup()) {
+                root.set(JSONConstants.GROUP_KEY, groupEncoder.encodeJSON(activity.getGroup(), rights, mediaType));
             }
-        } else if (t instanceof UserActivity) {
-            UserActivity userActivity = (UserActivity) t;
-            if (userActivity.hasOther()) {
-                root.set(JSONConstants.OTHER_KEY, userEncoder
-                        .encodeJSON(userActivity.getOther(), rights, mt));
+        } else if (entity instanceof UserActivity) {
+            UserActivity activity = (UserActivity) entity;
+            if (activity.hasOther()) {
+                root.set(JSONConstants.OTHER_KEY, userEncoder.encodeJSON(activity.getOther(), rights, mediaType));
             }
-        } else if (t instanceof TrackActivity) {
-            TrackActivity trackActivity = (TrackActivity) t;
-            if (trackActivity.hasTrack()) {
-                root.set(JSONConstants.TRACK_KEY, trackEncoder
-                        .encodeJSON(trackActivity.getTrack(), rights, mt));
+        } else if (entity instanceof TrackActivity) {
+            TrackActivity activity = (TrackActivity) entity;
+            if (activity.hasTrack()) {
+                root.set(JSONConstants.TRACK_KEY, trackEncoder.encodeJSON(activity.getTrack(), rights, mediaType));
             }
         }
         return root;

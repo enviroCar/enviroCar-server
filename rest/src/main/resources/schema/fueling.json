@@ -1,63 +1,65 @@
 {
-    "$schema": "http://json-schema.org/draft-04/schema#",
-    "id": "http://schema.envirocar.org/fueling.json#",
-    "type": "object",
-    "properties": {
-        "fuelType": {
-            "type": "string"
-        },
-        "comment": {
-            "type": "string"
-        },
-        "car": {
-            "$ref": "http://schema.envirocar.org/sensor.json#"
-        },
-        "user": {
-            "$ref": "http://schema.envirocar.org/user.json#"
-        },
-        "cost": {
-            "$ref": "#/definitions/numberWithUnit"
-        },
-        "mileage": {
-            "$ref": "#/definitions/numberWithUnit"
-        },
-        "volume": {
-            "$ref": "#/definitions/numberWithUnit"
-        },
-        "time": {
-            "type": "string",
-            "format": "date-time"
-        },
-        "created": {
-            "type": "string",
-            "format": "date-time"
-        },
-        "modified": {
-            "type": "string",
-            "format": "date-time"
-        },
-        "id": {
-            "type": "string"
-        },
-        "missedFuelStop": {
-            "type": "boolean"
-        }
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "fuelType": {
+      "type": "string"
     },
-    "definitions": {
-        "numberWithUnit": {
-            "type": "object",
-            "required": [
-                "value",
-                "unit"
-            ],
-            "properties": {
-                "value": {
-                    "type": "number"
-                },
-                "unit": {
-                    "type": "string"
-                }
-            }
-        }
+    "comment": {
+      "type": "string"
+    },
+    "car": {
+      "$ref": "sensor.json#"
+    },
+    "user": {
+      "$ref": "user.json#"
+    },
+    "cost": {
+      "$ref": "#/definitions/numberWithUnit"
+    },
+    "mileage": {
+      "$ref": "#/definitions/numberWithUnit"
+    },
+    "volume": {
+      "$ref": "#/definitions/numberWithUnit"
+    },
+    "time": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "created": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "modified": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "id": {
+      "type": "string"
+    },
+    "missedFuelStop": {
+      "type": "boolean"
+    },
+    "partialFueling": {
+      "type": "boolean"
     }
+  },
+  "definitions": {
+    "numberWithUnit": {
+      "type": "object",
+      "required": [
+        "value",
+        "unit"
+      ],
+      "properties": {
+        "value": {
+          "type": "number"
+        },
+        "unit": {
+          "type": "string"
+        }
+      }
+    }
+  }
 }

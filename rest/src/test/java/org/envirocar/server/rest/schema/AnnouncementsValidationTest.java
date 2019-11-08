@@ -16,13 +16,14 @@
  */
 package org.envirocar.server.rest.schema;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
-
-import org.envirocar.server.rest.MediaTypes;
+import org.envirocar.server.rest.GuiceRunner;
+import org.envirocar.server.rest.Schemas;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 
 /**
  * TODO JavaDoc
@@ -63,13 +64,11 @@ public class AnnouncementsValidationTest {
 
     @Test
     public void validateList() {
-        assertThat(validate.parse(ANNOUNCEMNTS),
-                   is(validate.validInstanceOf(MediaTypes.ANNOUNCEMENTS_TYPE)));
+        assertThat(validate.parse(ANNOUNCEMNTS), is(validate.validInstanceOf(Schemas.ANNOUNCEMENTS)));
     }
 
     @Test
     public void validateInstance() {
-        assertThat(validate.parse(ANNOUNCMENT),
-                   is(validate.validInstanceOf(MediaTypes.ANNOUNCEMENT_TYPE)));
+        assertThat(validate.parse(ANNOUNCMENT), is(validate.validInstanceOf(Schemas.ANNOUNCEMENT)));
     }
 }

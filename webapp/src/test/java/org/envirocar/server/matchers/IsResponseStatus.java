@@ -37,7 +37,7 @@ public class IsResponseStatus extends BaseMatcher<ClientResponse> {
 
     @Override
     public boolean matches(Object item) {
-        if (item == null || !(item instanceof ClientResponse)) {
+        if (!(item instanceof ClientResponse)) {
             return false;
         }
         return ((ClientResponse) item).getStatus() == status.getStatusCode();

@@ -17,7 +17,6 @@
 package org.envirocar.server.core.validation;
 
 import org.envirocar.server.core.entities.Track;
-
 import org.envirocar.server.core.exception.ValidationException;
 
 /**
@@ -26,6 +25,7 @@ import org.envirocar.server.core.exception.ValidationException;
  * @author Arne de Wall <a.dewall@52north.org>
  */
 public class TrackValidator extends AbstractValidator<Track> {
+
     @Override
     public void validateCreate(Track t) throws ValidationException {
         isNull("bbox", t.getBoundingBox());
@@ -41,4 +41,5 @@ public class TrackValidator extends AbstractValidator<Track> {
         isNull("modified", t.getModificationTime());
         isNull("user", t.getUser());
     }
+
 }

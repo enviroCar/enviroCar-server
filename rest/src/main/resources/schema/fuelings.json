@@ -1,18 +1,17 @@
 {
-    "$schema": "http://json-schema.org/draft-04/schema#",
-    "id": "http://schema.envirocar.org/fuelings.json#",
-    "type": "object",
-    "required": [
-        "fuelings"
-    ],
-    "additionalProperties": false,
-    "properties": {
-        "fuelings": {
-            "type": "array",
-            "minItems": 0,
-            "items": {
-                "$ref": "http://schema.envirocar.org/fueling.json#"
-            }
-        }
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "required": [
+    "fuelings"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "fuelings": {
+      "type": "array",
+      "minItems": 0,
+      "items": {
+        "$ref": "fueling.json#"
+      }
     }
+  }
 }

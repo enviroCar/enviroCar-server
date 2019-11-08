@@ -16,15 +16,15 @@
  */
 package org.envirocar.server.rest.decoding.json;
 
-import javax.ws.rs.WebApplicationException;
+import javax.inject.Singleton;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.Provider;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
 import com.vividsolutions.jts.geom.Geometry;
 
+import org.envirocar.server.core.exception.BadRequestException;
 import org.envirocar.server.core.exception.GeometryConverterException;
 import org.envirocar.server.rest.util.GeoJSON;
 
@@ -34,6 +34,7 @@ import org.envirocar.server.rest.util.GeoJSON;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
+@Singleton
 public class GeoJSONDecoder extends AbstractJSONEntityDecoder<Geometry> {
     private final GeoJSON geoJSON;
 
@@ -44,11 +45,11 @@ public class GeoJSONDecoder extends AbstractJSONEntityDecoder<Geometry> {
     }
 
     @Override
-    public Geometry decode(JsonNode j, MediaType mt) {
+    public Geometry decode(JsonNode node, MediaType mediaType) {
         try {
-            return geoJSON.decode(j);
+            return geoJSON.decode(node);
         } catch (GeometryConverterException ex) {
-            throw new WebApplicationException(ex, Status.BAD_REQUEST);
+            throw new BadRequestException(ex);
         }
     }
 }

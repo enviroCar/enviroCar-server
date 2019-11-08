@@ -18,8 +18,7 @@ package org.envirocar.server.rest.encoding.rdf;
 
 import java.util.Set;
 
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response.Status;
+import javax.inject.Singleton;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
@@ -28,18 +27,11 @@ import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.statistics.Statistic;
-import org.envirocar.server.rest.resources.RootResource;
-import org.envirocar.server.rest.resources.SensorResource;
-import org.envirocar.server.rest.resources.SensorsResource;
-import org.envirocar.server.rest.resources.StatisticResource;
-import org.envirocar.server.rest.resources.StatisticsResource;
-import org.envirocar.server.rest.resources.TrackResource;
-import org.envirocar.server.rest.resources.TracksResource;
-import org.envirocar.server.rest.resources.UserResource;
-import org.envirocar.server.rest.resources.UsersResource;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
+import org.envirocar.server.rest.InternalServerError;
+import org.envirocar.server.rest.resources.*;
 
 /**
  * TODO JavaDoc
@@ -47,6 +39,7 @@ import com.google.inject.Provider;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @javax.ws.rs.ext.Provider
+@Singleton
 public class StatisticRDFEncoder extends AbstractLinkerRDFEntityEncoder<Statistic> {
     private final Provider<UriInfo> uriInfo;
 
@@ -61,9 +54,9 @@ public class StatisticRDFEncoder extends AbstractLinkerRDFEntityEncoder<Statisti
     protected String getURI(Statistic t, Provider<UriBuilder> builder) {
         Object resource = uriInfo.get().getMatchedResources().get(0);
 
-        User user = null;
-        Track track = null;
-        Sensor sensor = null;
+        User user;
+        Track track;
+        Sensor sensor;
 
         if (resource instanceof StatisticResource) {
             StatisticResource sr = (StatisticResource) resource;
@@ -76,7 +69,7 @@ public class StatisticRDFEncoder extends AbstractLinkerRDFEntityEncoder<Statisti
             track = sr.getTrack();
             sensor = sr.getSensor();
         } else {
-            throw new WebApplicationException(Status.INTERNAL_SERVER_ERROR);
+            throw new InternalServerError();
         }
         return build(track, user, sensor, t.getPhenomenon(), builder);
     }

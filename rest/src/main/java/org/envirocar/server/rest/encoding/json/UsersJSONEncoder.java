@@ -16,19 +16,18 @@
  */
 package org.envirocar.server.rest.encoding.json;
 
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.ext.Provider;
-
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
-
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.entities.Users;
 import org.envirocar.server.rest.JSONConstants;
 import org.envirocar.server.rest.encoding.JSONEntityEncoder;
-
 import org.envirocar.server.rest.rights.AccessRights;
+
+import javax.inject.Singleton;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.Provider;
 
 /**
  * TODO JavaDoc
@@ -36,6 +35,7 @@ import org.envirocar.server.rest.rights.AccessRights;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Provider
+@Singleton
 public class UsersJSONEncoder extends AbstractJSONEntityEncoder<Users> {
     private final JSONEntityEncoder<User> userEncoder;
 
@@ -46,12 +46,11 @@ public class UsersJSONEncoder extends AbstractJSONEntityEncoder<Users> {
     }
 
     @Override
-    public ObjectNode encodeJSON(Users t, AccessRights rights,
-                                 MediaType mediaType) {
+    public ObjectNode encodeJSON(Users entity, AccessRights rights, MediaType mediaType) {
         ObjectNode root = getJsonFactory().objectNode();
         ArrayNode users = root.putArray(JSONConstants.USERS_KEY);
-        for (User u : t) {
-            users.add(userEncoder.encodeJSON(u, rights, mediaType));
+        for (User user : entity) {
+            users.add(userEncoder.encodeJSON(user, rights, mediaType));
         }
         return root;
     }

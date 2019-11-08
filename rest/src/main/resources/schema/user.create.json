@@ -1,28 +1,35 @@
 {
-    "$schema": "http://json-schema.org/draft-04/schema#",
-    "id": "http://schema.envirocar.org/user.create.json#",
-    "type": "object",
-    "required": [
-        "name",
-        "mail",
-        "token"
-    ],
-    "allOf": [
-        {
-            "$ref": "http://schema.envirocar.org/definitions.json#/optional-user-properties"
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "required": [
+    "name",
+    "mail",
+    "token",
+    "acceptedTerms",
+    "acceptedPrivacy"
+  ],
+  "allOf": [
+    {
+      "$ref": "definitions.json#/optional-user-properties"
+    },
+    {
+      "properties": {
+        "name": {
+          "$ref": "definitions.json#/username"
         },
-        {
-            "properties": {
-                "name": {
-                    "$ref": "http://schema.envirocar.org/definitions.json#/username"
-                },
-                "mail": {
-                    "$ref": "http://schema.envirocar.org/definitions.json#/mail"
-                },
-                "token": {
-                    "type": "string"
-                }
-            }
+        "mail": {
+          "$ref": "definitions.json#/mail"
+        },
+        "token": {
+          "type": "string"
+        },
+        "acceptedTerms": {
+          "type": "boolean"
+        },
+        "acceptedPrivacy": {
+          "type": "boolean"
         }
-    ]
+      }
+    }
+  ]
 }
