@@ -43,6 +43,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -57,6 +59,7 @@ public class MongoUserStatisticDao implements UserStatisticDao {
     private final MongoDB mongoDB;
     private final Map<MongoUserStatisticKey, CompletableFuture<MongoUserStatistic>> updates = new HashMap<>();
     private final ReadWriteLock lock = new ReentrantReadWriteLock();
+    private final ExecutorService executor = Executors.newWorkStealingPool();
 
     @Inject
     public MongoUserStatisticDao(MongoDB mongoDB, DataService dataService) {
@@ -102,7 +105,7 @@ public class MongoUserStatisticDao implements UserStatisticDao {
                     lock.writeLock().unlock();
                 }
             }
-        });
+        }, executor);
     }
 
     private MongoUserStatistic createUserStatistic(MongoUserStatisticKey key) {
