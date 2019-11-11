@@ -16,24 +16,21 @@
  */
 package org.envirocar.server.mongo.entity;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-
+import com.google.common.base.Objects;
+import com.google.common.collect.Sets;
+import org.envirocar.server.core.entities.Phenomenon;
+import org.envirocar.server.core.entities.Phenomenons;
 import org.joda.time.DateTime;
-
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Indexed;
 import org.mongodb.morphia.annotations.Property;
 import org.mongodb.morphia.mapping.Mapper;
-import com.google.common.base.Objects;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 
-import org.envirocar.server.core.entities.Phenomenon;
-import org.envirocar.server.core.entities.Phenomenons;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * TODO JavaDoc
@@ -45,7 +42,7 @@ public class MongoStatistics {
     public static final String KEY = Mapper.ID_KEY;
     public static final String CREATED = "created";
     public static final String STATISTICS = "statistics";
-//    private static final int EXPIRE_AFTER_SECONDS = 60 * 60 * 3; // 3 hours
+    //    private static final int EXPIRE_AFTER_SECONDS = 60 * 60 * 3; // 3 hours
     @Id
     @Embedded
     private MongoStatisticKey key;
@@ -74,18 +71,13 @@ public class MongoStatistics {
                 return statistic;
             }
         }
-        return null;
+        return MongoStatistic.empty(phenomenon);
     }
 
     public List<MongoStatistic> getStatistics(Phenomenons phenomenons) {
-        HashSet<Phenomenon> phens = Sets.newHashSet(phenomenons);
-        List<MongoStatistic> list = Lists.newLinkedList();
-        for (MongoStatistic statistic : statistics) {
-            if (phens.contains(statistic.getPhenomenon())) {
-                list.add(statistic);
-            }
-        }
-        return Collections.unmodifiableList(list);
+        return Collections.unmodifiableList(Sets.newHashSet(phenomenons).stream()
+                                                .map(this::getStatistic)
+                                                .collect(Collectors.toList()));
     }
 
     public void setStatistics(List<MongoStatistic> statistics) {
