@@ -18,7 +18,6 @@ package org.envirocar.server.mongo.entity;
 
 import org.envirocar.server.core.entities.Phenomenon;
 import org.envirocar.server.core.statistics.Statistic;
-
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Property;
 
@@ -124,5 +123,18 @@ public class MongoStatistic implements Statistic {
 
     public void setSensors(long sensors) {
         this.sensors = sensors;
+    }
+
+    public static MongoStatistic empty(Phenomenon phenomenon) {
+        MongoStatistic mongoStatistic = new MongoStatistic();
+        mongoStatistic.setPhenomenon(phenomenon);
+        mongoStatistic.setMax(0);
+        mongoStatistic.setMean(0);
+        mongoStatistic.setMin(0);
+        mongoStatistic.setMeasurements(0);
+        mongoStatistic.setSensors(0);
+        mongoStatistic.setTracks(0);
+        mongoStatistic.setUsers(0);
+        return mongoStatistic;
     }
 }
