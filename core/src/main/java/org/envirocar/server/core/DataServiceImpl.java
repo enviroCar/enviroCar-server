@@ -83,9 +83,7 @@ import java.util.List;
  * @author Jan Wirwahn <jan.wirwahn@wwu.de>
  */
 public class DataServiceImpl implements DataService {
-
     private static final Logger log = LoggerFactory.getLogger(DataServiceImpl.class);
-
     private final TrackDao trackDao;
     private final MeasurementDao measurementDao;
     private final SensorDao sensorDao;
@@ -104,10 +102,13 @@ public class DataServiceImpl implements DataService {
     private final CarSimilarityService carSimilarity;
 
     @Inject
-    public DataServiceImpl(TrackDao trackDao, MeasurementDao measurementDao,
-                           SensorDao sensorDao, PhenomenonDao phenomenonDao,
+    public DataServiceImpl(TrackDao trackDao,
+                           MeasurementDao measurementDao,
+                           SensorDao sensorDao,
+                           PhenomenonDao phenomenonDao,
                            TermsOfUseDao termsOfUseDao,
-                           PrivacyStatementDao privacyStatementDao, AnnouncementsDao announcementsDao,
+                           PrivacyStatementDao privacyStatementDao,
+                           AnnouncementsDao announcementsDao,
                            BadgesDao badgesDao, FuelingDao fuelingDao,
                            EntityValidator<Track> trackValidator,
                            EntityUpdater<Track> trackUpdater,
@@ -162,8 +163,8 @@ public class DataServiceImpl implements DataService {
     }
 
     @Override
-    public Track createTrack(Track track, List<Measurement> measurements) throws
-                                                                          ValidationException {
+    public Track createTrack(Track track, List<Measurement> measurements)
+            throws ValidationException {
         this.trackValidator.validateCreate(track);
         DateTime begin = null, end = null;
         for (Measurement m : measurements) {

@@ -21,33 +21,25 @@ import org.envirocar.server.core.entities.Terms;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.ws.rs.core.HttpHeaders;
-import java.util.List;
 import java.util.Locale;
 
 public class TermsResource extends AbstractResource {
     private Provider<HttpHeaders> httpHeaders;
-
-    protected HttpHeaders getHttpHeaders() {
-        return httpHeaders.get();
-    }
-
-    protected List<Locale> getAcceptableLanguages() {
-        return getHttpHeaders().getAcceptableLanguages();
-    }
 
     @Inject
     public void setHttpHeaders(Provider<HttpHeaders> httpHeaders) {
         this.httpHeaders = httpHeaders;
     }
 
-    protected <T extends Terms> T setContents(T entity) {
-        entity.setContents(getAcceptableLanguages()
-                                   .stream()
-                                   .map(Locale::getLanguage)
-                                   .filter(entity.getTranslations()::containsKey)
-                                   .map(entity.getTranslations()::get)
-                                   .findFirst()
-                                   .orElse(entity.getContents()));
+    <T extends Terms> T setContents(T entity) {
+        entity.setContents(httpHeaders.get()
+                                      .getAcceptableLanguages()
+                                      .stream()
+                                      .map(Locale::getLanguage)
+                                      .filter(entity.getTranslations()::containsKey)
+                                      .map(entity.getTranslations()::get)
+                                      .findFirst()
+                                      .orElse(entity.getContents()));
         return entity;
     }
 }

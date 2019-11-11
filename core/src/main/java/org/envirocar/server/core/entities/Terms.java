@@ -35,5 +35,4 @@ public interface Terms extends BaseEntity {
     Map<String, String> getTranslations();
 
     void setTranslations(Map<String, String> translations);
-
 }

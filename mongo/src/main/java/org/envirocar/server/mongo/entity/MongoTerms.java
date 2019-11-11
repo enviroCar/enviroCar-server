@@ -81,8 +81,8 @@ public class MongoTerms extends MongoEntityBase implements Terms {
     }
 
     @Override
-    public void setContents(String c) {
-        this.contents = c;
+    public void setContents(String contents) {
+        this.contents = contents;
     }
 
     @Override
