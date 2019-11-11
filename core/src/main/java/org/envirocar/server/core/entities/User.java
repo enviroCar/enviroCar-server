@@ -151,7 +151,7 @@ public interface User extends BaseEntity {
 
     String getTermsOfUseVersion();
 
-    default boolean hasAcceptedTermsOfUseVersion() {
+    default boolean hasTermsOfUseVersion() {
         return getTermsOfUseVersion() != null && !getTermsOfUseVersion().isEmpty();
     }
 

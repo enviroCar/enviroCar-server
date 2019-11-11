@@ -18,6 +18,7 @@ package org.envirocar.server.core.validation;
 
 import java.util.regex.Pattern;
 
+import org.envirocar.server.core.entities.Terms;
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.exception.ValidationException;
 

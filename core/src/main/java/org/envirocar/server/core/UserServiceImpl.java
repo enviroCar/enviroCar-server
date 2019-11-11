@@ -22,17 +22,22 @@ import com.google.inject.Provider;
 import org.envirocar.server.core.activities.Activities;
 import org.envirocar.server.core.activities.Activity;
 import org.envirocar.server.core.dao.ActivityDao;
-import org.envirocar.server.core.dao.PrivacyStatementDao;
-import org.envirocar.server.core.dao.TermsOfUseDao;
 import org.envirocar.server.core.dao.UserDao;
 import org.envirocar.server.core.entities.PasswordReset;
+import org.envirocar.server.core.entities.PrivacyStatement;
 import org.envirocar.server.core.entities.Terms;
+import org.envirocar.server.core.entities.TermsOfUseInstance;
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.entities.Users;
 import org.envirocar.server.core.event.ChangedProfileEvent;
 import org.envirocar.server.core.event.DeletedUserEvent;
 import org.envirocar.server.core.event.PasswordResetEvent;
-import org.envirocar.server.core.exception.*;
+import org.envirocar.server.core.exception.BadRequestException;
+import org.envirocar.server.core.exception.IllegalModificationException;
+import org.envirocar.server.core.exception.InvalidUserMailCombinationException;
+import org.envirocar.server.core.exception.ResourceAlreadyExistException;
+import org.envirocar.server.core.exception.UserNotFoundException;
+import org.envirocar.server.core.exception.ValidationException;
 import org.envirocar.server.core.filter.ActivityFilter;
 import org.envirocar.server.core.mail.Mailer;
 import org.envirocar.server.core.mail.MailerException;
@@ -41,6 +46,8 @@ import org.envirocar.server.core.update.EntityUpdater;
 import org.envirocar.server.core.util.PasswordEncoder;
 import org.envirocar.server.core.util.pagination.Pagination;
 import org.envirocar.server.core.validation.EntityValidator;
+import org.envirocar.server.core.validation.PrivacyStatementException;
+import org.envirocar.server.core.validation.TermsOfUseException;
 import org.joda.time.format.ISODateTimeFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,9 +83,7 @@ public class UserServiceImpl implements UserService {
     private final EventBus eventBus;
     private final Mailer mailer;
     private final Provider<ConfirmationLinkFactory> confirmationLinkFactory;
-
-    private final PrivacyStatementDao privacyStatementDao;
-    private final TermsOfUseDao termsOfUseDao;
+    private final TermsRepository termsRepository;
 
     @Inject
     public UserServiceImpl(ActivityDao activityDao,
@@ -89,8 +94,7 @@ public class UserServiceImpl implements UserService {
                            EventBus eventBus,
                            Mailer mailer,
                            Provider<ConfirmationLinkFactory> confirmationLinkFactory,
-                           PrivacyStatementDao privacyStatementDao,
-                           TermsOfUseDao termsOfUseDao) {
+                           TermsRepository termsRepository) {
         this.activityDao = activityDao;
         this.passwordEncoder = passwordEncoder;
         this.userDao = userDao;
@@ -99,13 +103,12 @@ public class UserServiceImpl implements UserService {
         this.eventBus = eventBus;
         this.mailer = mailer;
         this.confirmationLinkFactory = confirmationLinkFactory;
-        this.privacyStatementDao = privacyStatementDao;
-        this.termsOfUseDao = termsOfUseDao;
+        this.termsRepository = termsRepository;
     }
 
     @Override
     public User createUser(User user) throws ValidationException,
-            ResourceAlreadyExistException {
+                                             ResourceAlreadyExistException {
         userValidator.validateCreate(user);
         if (userDao.getByName(user.getName(), true) != null) {
             throw new ResourceAlreadyExistException("name already exists");
@@ -116,16 +119,17 @@ public class UserServiceImpl implements UserService {
         // set the hashed password
         user.setToken(passwordEncoder.encode(user.getToken()));
 
-        // FIXME check if terms of use is the current one
-        if (user.hasAcceptedTermsOfUse() && !user.hasAcceptedTermsOfUseVersion()) {
-            Optional.ofNullable(this.termsOfUseDao.getLatest())
-                    .map(Terms::getIssuedDate).ifPresent(user::setTermsOfUseVersion);
+        if (user.hasAcceptedTermsOfUse() && !user.hasTermsOfUseVersion()) {
+            termsRepository.getLatestTermsOfUse().map(Terms::getIssuedDate)
+                           .ifPresent(user::setTermsOfUseVersion);
         }
-        // FIXME check if privacy statement is the current one
+
         if (user.hasAcceptedPrivacyStatement() && !user.hasPrivacyStatementVersion()) {
-            Optional.ofNullable(this.privacyStatementDao.getLatest())
-                    .map(Terms::getIssuedDate).ifPresent(user::setPrivacyStatementVersion);
+            termsRepository.getLatestPrivacyStatement().map(Terms::getIssuedDate)
+                           .ifPresent(user::setPrivacyStatementVersion);
         }
+
+        checkCurrentTerms(user);
 
         User created = this.userDao.create(user);
 
@@ -136,6 +140,24 @@ public class UserServiceImpl implements UserService {
         }
 
         return user;
+    }
+
+    private void checkCurrentTerms(User user) {
+        if (user.hasTermsOfUseVersion()) {
+            Optional<TermsOfUseInstance> term = termsRepository.getLatestTermsOfUse();
+            if (!term.map(Terms::getIssuedDate).map(user.getTermsOfUseVersion()::equals).orElse(false)) {
+                throw new TermsOfUseException(term.map(Terms::getIssuedDate).orElse(null),
+                                              user.getTermsOfUseVersion());
+            }
+        }
+
+        if (user.hasPrivacyStatementVersion()) {
+            Optional<PrivacyStatement> term = termsRepository.getLatestPrivacyStatement();
+            if (!term.map(Terms::getIssuedDate).map(user.getPrivacyStatementVersion()::equals).orElse(false)) {
+                throw new PrivacyStatementException(term.map(Terms::getIssuedDate).orElse(null),
+                                                    user.getPrivacyStatementVersion());
+            }
+        }
     }
 
     private Path getTemplatePath() {
@@ -182,16 +204,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User modifyUser(User user, User changes) throws UserNotFoundException,
-            IllegalModificationException,
-            ValidationException,
-            ResourceAlreadyExistException {
+    public User modifyUser(User user, User changes) throws IllegalModificationException,
+                                                           ValidationException,
+                                                           ResourceAlreadyExistException {
         this.userValidator.validateUpdate(changes);
         if (changes.hasMail() && !changes.getMail().equals(user.getMail())) {
             if (this.userDao.getByMail(changes.getMail()) != null) {
                 throw new ResourceAlreadyExistException();
             }
         }
+        checkCurrentTerms(changes);
         this.userUpdater.update(changes, user);
         this.userDao.save(user);
         this.eventBus.post(new ChangedProfileEvent(user));
@@ -270,8 +292,8 @@ public class UserServiceImpl implements UserService {
                     mailSubject = lines.iterator().next();
                     String template = lines.stream().skip(2).collect(joining(System.lineSeparator()));
                     mailBody = template.replace(REGISTRATION_LINK_PLACEHOLDER, confirmationLink.toString())
-                            .replace(REGISTRATION_USERNAME_PLACEHOLDER, user.getName())
-                            .replace(REGISTRATION_EXIRATION_TIME_PLACEHOLDER, expirationTime);
+                                       .replace(REGISTRATION_USERNAME_PLACEHOLDER, user.getName())
+                                       .replace(REGISTRATION_EXIRATION_TIME_PLACEHOLDER, expirationTime);
                 }
             } catch (IOException ex) {
                 LOG.warn("Could not read mail template", ex);
