@@ -29,6 +29,7 @@ import org.mongodb.morphia.query.FindOptions;
 import org.mongodb.morphia.query.Sort;
 
 import java.util.Iterator;
+import java.util.Optional;
 
 /**
  * @author matthes rieke
@@ -53,25 +54,25 @@ public class MongoTermsOfUseDao extends AbstractMongoDao<ObjectId, MongoTermsOfU
     }
 
     @Override
-    public TermsOfUseInstance getById(String id) {
+    public Optional<TermsOfUseInstance> getById(String id) {
         ObjectId oid;
         try {
             oid = new ObjectId(id);
         } catch (IllegalArgumentException e) {
-            return null;
+            return Optional.empty();
         }
-        return super.get(oid);
+        return Optional.ofNullable(super.get(oid));
     }
 
     @Override
-    public TermsOfUseInstance getLatest() {
+    public Optional<TermsOfUseInstance> getLatest() {
         Sort order = Sort.descending(MongoTermsOfUseInstance.ISSUED_DATE);
         FindOptions options = new FindOptions().limit(1);
         Iterator<MongoTermsOfUseInstance> privacyStatements = fetch(q().order(order), options).iterator();
         if (privacyStatements.hasNext()) {
-            return privacyStatements.next();
+            return Optional.of(privacyStatements.next());
         }
-        return null;
+        return Optional.empty();
     }
 
 }

@@ -18,10 +18,49 @@ package org.envirocar.server.core;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
-import org.envirocar.server.core.dao.*;
-import org.envirocar.server.core.entities.*;
-import org.envirocar.server.core.event.*;
-import org.envirocar.server.core.exception.*;
+import org.envirocar.server.core.dao.AnnouncementsDao;
+import org.envirocar.server.core.dao.BadgesDao;
+import org.envirocar.server.core.dao.FuelingDao;
+import org.envirocar.server.core.dao.MeasurementDao;
+import org.envirocar.server.core.dao.PhenomenonDao;
+import org.envirocar.server.core.dao.PrivacyStatementDao;
+import org.envirocar.server.core.dao.SensorDao;
+import org.envirocar.server.core.dao.TermsOfUseDao;
+import org.envirocar.server.core.dao.TrackDao;
+import org.envirocar.server.core.entities.Announcement;
+import org.envirocar.server.core.entities.Announcements;
+import org.envirocar.server.core.entities.Badges;
+import org.envirocar.server.core.entities.Fueling;
+import org.envirocar.server.core.entities.Fuelings;
+import org.envirocar.server.core.entities.Measurement;
+import org.envirocar.server.core.entities.Measurements;
+import org.envirocar.server.core.entities.Phenomenon;
+import org.envirocar.server.core.entities.Phenomenons;
+import org.envirocar.server.core.entities.PrivacyStatement;
+import org.envirocar.server.core.entities.PrivacyStatements;
+import org.envirocar.server.core.entities.Sensor;
+import org.envirocar.server.core.entities.Sensors;
+import org.envirocar.server.core.entities.TermsOfUse;
+import org.envirocar.server.core.entities.TermsOfUseInstance;
+import org.envirocar.server.core.entities.Track;
+import org.envirocar.server.core.entities.Tracks;
+import org.envirocar.server.core.entities.User;
+import org.envirocar.server.core.event.ChangedTrackEvent;
+import org.envirocar.server.core.event.CreatedFuelingEvent;
+import org.envirocar.server.core.event.CreatedMeasurementEvent;
+import org.envirocar.server.core.event.CreatedPhenomenonEvent;
+import org.envirocar.server.core.event.CreatedSensorEvent;
+import org.envirocar.server.core.event.CreatedTrackEvent;
+import org.envirocar.server.core.event.DeletedMeasurementEvent;
+import org.envirocar.server.core.event.DeletedTrackEvent;
+import org.envirocar.server.core.exception.FuelingNotFoundException;
+import org.envirocar.server.core.exception.IllegalModificationException;
+import org.envirocar.server.core.exception.MeasurementNotFoundException;
+import org.envirocar.server.core.exception.PhenomenonNotFoundException;
+import org.envirocar.server.core.exception.ResourceNotFoundException;
+import org.envirocar.server.core.exception.SensorNotFoundException;
+import org.envirocar.server.core.exception.TrackNotFoundException;
+import org.envirocar.server.core.exception.ValidationException;
 import org.envirocar.server.core.filter.FuelingFilter;
 import org.envirocar.server.core.filter.MeasurementFilter;
 import org.envirocar.server.core.filter.SensorFilter;
@@ -34,7 +73,6 @@ import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -57,7 +95,6 @@ public class DataServiceImpl implements DataService {
     private final PrivacyStatementDao privacyStatementDao;
     private final EntityValidator<Track> trackValidator;
     private final EntityUpdater<Track> trackUpdater;
-    private final EntityUpdater<Measurement> measurementUpdater;
     private final EntityValidator<Measurement> measurementValidator;
     private final EntityValidator<Fueling> fuelingValidator;
     private final EventBus eventBus;
@@ -74,7 +111,6 @@ public class DataServiceImpl implements DataService {
                            BadgesDao badgesDao, FuelingDao fuelingDao,
                            EntityValidator<Track> trackValidator,
                            EntityUpdater<Track> trackUpdater,
-                           EntityUpdater<Measurement> measurementUpdater,
                            EntityValidator<Measurement> measurementValidator,
                            EntityValidator<Fueling> fuelingValidator,
                            EventBus eventBus,
@@ -87,7 +123,6 @@ public class DataServiceImpl implements DataService {
         this.privacyStatementDao = privacyStatementDao;
         this.trackValidator = trackValidator;
         this.trackUpdater = trackUpdater;
-        this.measurementUpdater = measurementUpdater;
         this.measurementValidator = measurementValidator;
         this.eventBus = eventBus;
         this.termsOfUseDao = termsOfUseDao;
@@ -128,7 +163,7 @@ public class DataServiceImpl implements DataService {
 
     @Override
     public Track createTrack(Track track, List<Measurement> measurements) throws
-            ValidationException {
+                                                                          ValidationException {
         this.trackValidator.validateCreate(track);
         DateTime begin = null, end = null;
         for (Measurement m : measurements) {
@@ -158,13 +193,7 @@ public class DataServiceImpl implements DataService {
 
     @Override
     public void deleteTrack(Track track) {
-        MeasurementFilter filter = new MeasurementFilter(track);
-        Measurements measurements = getMeasurements(filter);
-        Iterable<Measurement> measurementIterator = measurements;
-        List<Measurement> list = new ArrayList<>();
-        for (Measurement m : measurementIterator) {
-            list.add(m);
-        }
+        Measurements measurements = getMeasurements(new MeasurementFilter(track));
         this.eventBus.post(new DeletedTrackEvent(track, track.getUser(), measurements));
         this.trackDao.delete(track);
     }
@@ -195,7 +224,7 @@ public class DataServiceImpl implements DataService {
 
     @Override
     public Measurement getMeasurement(String id) throws
-            MeasurementNotFoundException {
+                                                 MeasurementNotFoundException {
         Measurement m = this.measurementDao.getById(id);
         if (m == null) {
             throw new MeasurementNotFoundException(id);
@@ -276,11 +305,11 @@ public class DataServiceImpl implements DataService {
     @Override
     public TermsOfUseInstance getTermsOfUseInstance(String id)
             throws ResourceNotFoundException {
-        TermsOfUseInstance result = this.termsOfUseDao.getById(id);
-        if (result == null) {
-            throw new ResourceNotFoundException(String.format("TermsOfUse with id '%s' not found.", id));
-        }
-        return result;
+        return termsOfUseDao.getById(id)
+                            .orElseThrow(() -> {
+                                String message = String.format("TermsOfUse with id '%s' not found.", id);
+                                return new ResourceNotFoundException(message);
+                            });
     }
 
     @Override
@@ -290,11 +319,11 @@ public class DataServiceImpl implements DataService {
 
     @Override
     public PrivacyStatement getPrivacyStatement(String id) throws ResourceNotFoundException {
-        PrivacyStatement result = this.privacyStatementDao.getById(id);
-        if (result == null) {
-            throw new ResourceNotFoundException(String.format("PrivacyStatement with id '%s' not found.", id));
-        }
-        return result;
+        return privacyStatementDao.getById(id)
+                                  .orElseThrow(() -> {
+                                      String message = String.format("PrivacyStatement with id '%s' not found.", id);
+                                      return new ResourceNotFoundException(message);
+                                  });
     }
 
     @Override

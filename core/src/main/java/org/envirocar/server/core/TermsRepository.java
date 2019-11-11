@@ -14,18 +14,15 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.core.dao;
+package org.envirocar.server.core;
 
-import org.envirocar.server.core.entities.Terms;
-import org.envirocar.server.core.util.UpCastingIterable;
-import org.envirocar.server.core.util.pagination.Pagination;
+import org.envirocar.server.core.entities.PrivacyStatement;
+import org.envirocar.server.core.entities.TermsOfUseInstance;
 
 import java.util.Optional;
 
-public interface TermsDao<T extends Terms, V extends UpCastingIterable<T>> {
-    V get(Pagination p);
+public interface TermsRepository {
+    Optional<PrivacyStatement> getLatestPrivacyStatement();
 
-    Optional<T> getById(String id);
-
-    Optional<T> getLatest();
+    Optional<TermsOfUseInstance> getLatestTermsOfUse();
 }

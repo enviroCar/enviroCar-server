@@ -16,6 +16,8 @@
  */
 package org.envirocar.server.core.guice;
 
+import com.google.inject.AbstractModule;
+import com.google.inject.Scopes;
 import org.envirocar.server.core.CarSimilarityService;
 import org.envirocar.server.core.CarSimilarityServiceImpl;
 import org.envirocar.server.core.ConfirmationLinkFactory;
@@ -27,6 +29,8 @@ import org.envirocar.server.core.GroupService;
 import org.envirocar.server.core.GroupServiceImpl;
 import org.envirocar.server.core.StatisticsService;
 import org.envirocar.server.core.StatisticsServiceImpl;
+import org.envirocar.server.core.TermsRepositoryImpl;
+import org.envirocar.server.core.TermsRepository;
 import org.envirocar.server.core.UserService;
 import org.envirocar.server.core.UserServiceImpl;
 import org.envirocar.server.core.UserStatisticService;
@@ -37,14 +41,6 @@ import org.envirocar.server.core.util.GeodesicGeometryOperations;
 import org.envirocar.server.core.util.GeometryOperations;
 import org.envirocar.server.core.util.PasswordEncoder;
 import org.joda.time.DateTimeZone;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.ISODateTimeFormat;
-
-import com.google.inject.AbstractModule;
-import com.google.inject.Provides;
-import com.google.inject.Singleton;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.PrecisionModel;
 
 /**
  * TODO JavaDoc
@@ -67,8 +63,6 @@ public class CoreModule extends AbstractModule {
         bind(CarSimilarityService.class).to(CarSimilarityServiceImpl.class);
         DateTimeZone.setDefault(DateTimeZone.UTC);
         requireBinding(ConfirmationLinkFactory.class);
+        bind(TermsRepository.class).to(TermsRepositoryImpl.class).in(Scopes.SINGLETON);
     }
-
-
-
 }

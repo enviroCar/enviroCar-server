@@ -29,6 +29,7 @@ import org.mongodb.morphia.query.FindOptions;
 import org.mongodb.morphia.query.Sort;
 
 import java.util.Iterator;
+import java.util.Optional;
 
 /**
  * @author Christian Autermann
@@ -53,25 +54,25 @@ public class MongoPrivacyStatementDao extends AbstractMongoDao<ObjectId, MongoPr
     }
 
     @Override
-    public PrivacyStatement getById(String id) {
+    public Optional<PrivacyStatement> getById(String id) {
         ObjectId oid;
         try {
             oid = new ObjectId(id);
         } catch (IllegalArgumentException e) {
-            return null;
+            return Optional.empty();
         }
-        return super.get(oid);
+        return Optional.ofNullable(super.get(oid));
     }
 
     @Override
-    public PrivacyStatement getLatest() {
+    public Optional<PrivacyStatement> getLatest() {
         Sort order = Sort.descending(MongoPrivacyStatement.ISSUED_DATE);
         FindOptions options = new FindOptions().limit(1);
         Iterator<MongoPrivacyStatement> privacyStatements = fetch(q().order(order), options).iterator();
         if (privacyStatements.hasNext()) {
-            return privacyStatements.next();
+            return Optional.of(privacyStatements.next());
         }
-        return null;
+        return Optional.empty();
     }
 
 }

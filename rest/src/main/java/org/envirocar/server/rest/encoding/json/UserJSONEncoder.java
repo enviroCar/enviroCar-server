@@ -16,7 +16,6 @@
  */
 package org.envirocar.server.rest.encoding.json;
 
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 import com.vividsolutions.jts.geom.Geometry;
@@ -94,7 +93,7 @@ public class UserJSONEncoder extends AbstractJSONEntityEncoder<User> {
         if (entity.hasBadges() && rights.canSeeBadgesOf(entity)) {
             entity.getBadges().forEach(j.putArray(JSONConstants.BADGES)::add);
         }
-        if (entity.hasAcceptedTermsOfUseVersion() && rights.canSeeAcceptedTermsOfUseVersionOf(entity)) {
+        if (entity.hasTermsOfUseVersion() && rights.canSeeAcceptedTermsOfUseVersionOf(entity)) {
             j.put(JSONConstants.ACCEPTED_TERMS_OF_USE_VERSION_KEY, entity.getTermsOfUseVersion());
         }
         if (entity.hasPrivacyStatementVersion() && rights.canSeeAcceptedPrivacyStatementVersionOf(entity)) {
