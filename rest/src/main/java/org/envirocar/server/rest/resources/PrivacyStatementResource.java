@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2018 The enviroCar project
+ * Copyright (C) 2013-2019 The enviroCar project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -21,6 +21,7 @@ import com.google.inject.assistedinject.Assisted;
 import org.envirocar.server.core.entities.PrivacyStatement;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
+import org.envirocar.server.rest.rights.AllowOutdatedTerms;
 import org.envirocar.server.rest.schema.Schema;
 
 import javax.ws.rs.GET;
@@ -35,6 +36,7 @@ public class PrivacyStatementResource extends TermsResource {
     }
 
     @GET
+    @AllowOutdatedTerms
     @Schema(response = Schemas.PRIVACY_STATEMENT)
     @Produces({MediaTypes.JSON})
     public PrivacyStatement get() {

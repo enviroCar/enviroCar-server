@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2018 The enviroCar project
+ * Copyright (C) 2013-2019 The enviroCar project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -81,8 +81,8 @@ public class MongoTerms extends MongoEntityBase implements Terms {
     }
 
     @Override
-    public void setContents(String c) {
-        this.contents = c;
+    public void setContents(String contents) {
+        this.contents = contents;
     }
 
     @Override

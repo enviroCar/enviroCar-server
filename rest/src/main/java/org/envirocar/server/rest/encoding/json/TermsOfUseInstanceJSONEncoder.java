@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2018 The enviroCar project
+ * Copyright (C) 2013-2019 The enviroCar project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -16,17 +16,11 @@
  */
 package org.envirocar.server.rest.encoding.json;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.envirocar.server.core.entities.TermsOfUseInstance;
-import org.envirocar.server.rest.JSONConstants;
 import org.envirocar.server.rest.Schemas;
-import org.envirocar.server.rest.rights.AccessRights;
 
 import javax.inject.Singleton;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
-import java.util.Locale;
 
 /**
  * TODO JavaDoc
@@ -35,34 +29,8 @@ import java.util.Locale;
  */
 @Provider
 @Singleton
-public class TermsOfUseInstanceJSONEncoder extends AbstractJSONEntityEncoder<TermsOfUseInstance> {
-
-
-
+public class TermsOfUseInstanceJSONEncoder extends TermsJSONEncoder<TermsOfUseInstance> {
     public TermsOfUseInstanceJSONEncoder() {
-        super(TermsOfUseInstance.class);
-    }
-
-    @Override
-    public ObjectNode encodeJSON(TermsOfUseInstance entity, AccessRights rights, MediaType mediaType) {
-        ObjectNode termsOfUse = getJsonFactory().objectNode();
-        if (entity.getIdentifier() != null) {
-            termsOfUse.put(JSONConstants.IDENTIFIER_KEY, entity.getIdentifier());
-        }
-        if (entity.getIssuedDate() != null) {
-            termsOfUse.put(JSONConstants.ISSUED_DATE, entity.getIssuedDate());
-        }
-        if (getSchemaUriConfiguration().isSchema(mediaType, Schemas.TERMS_OF_USE_INSTANCE)) {
-            if (entity.hasCreationTime()) {
-                termsOfUse.put(JSONConstants.CREATED_KEY, getDateTimeFormat().print(entity.getCreationTime()));
-            }
-            if (entity.hasModificationTime()) {
-                termsOfUse.put(JSONConstants.MODIFIED_KEY, getDateTimeFormat().print(entity.getModificationTime()));
-            }
-            if (entity.getContents() != null) {
-                termsOfUse.put(JSONConstants.CONTENTS, entity.getContents());
-            }
-        }
-        return termsOfUse;
+        super(TermsOfUseInstance.class, Schemas.TERMS_OF_USE_INSTANCE);
     }
 }
