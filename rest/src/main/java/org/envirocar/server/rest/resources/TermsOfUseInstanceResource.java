@@ -22,6 +22,7 @@ import org.envirocar.server.core.entities.Terms;
 import org.envirocar.server.core.entities.TermsOfUseInstance;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
+import org.envirocar.server.rest.rights.AllowOutdatedTerms;
 import org.envirocar.server.rest.schema.Schema;
 
 import javax.ws.rs.GET;
@@ -40,6 +41,7 @@ public class TermsOfUseInstanceResource extends TermsResource {
     }
 
     @GET
+    @AllowOutdatedTerms
     @Schema(response = Schemas.TERMS_OF_USE_INSTANCE)
     @Produces({MediaTypes.JSON})
     public TermsOfUseInstance get() {

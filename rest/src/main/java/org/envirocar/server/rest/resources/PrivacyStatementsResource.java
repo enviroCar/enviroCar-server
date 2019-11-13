@@ -22,6 +22,7 @@ import org.envirocar.server.core.exception.BadRequestException;
 import org.envirocar.server.core.exception.ResourceNotFoundException;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
+import org.envirocar.server.rest.rights.AllowOutdatedTerms;
 import org.envirocar.server.rest.schema.Schema;
 
 import javax.ws.rs.GET;
@@ -34,6 +35,7 @@ public class PrivacyStatementsResource extends AbstractResource {
     public static final String PRIVACY_STATEMENT = "{id}";
 
     @GET
+    @AllowOutdatedTerms
     @Schema(response = Schemas.PRIVACY_STATEMENTS)
     @Produces({MediaTypes.JSON})
     public PrivacyStatements get() throws BadRequestException {
