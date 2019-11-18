@@ -16,7 +16,7 @@
  */
 package org.envirocar.server.core.util;
 
-import com.vividsolutions.jts.geom.*;
+import org.locationtech.jts.geom.*;
 import org.envirocar.server.core.exception.GeometryConverterException;
 
 /**

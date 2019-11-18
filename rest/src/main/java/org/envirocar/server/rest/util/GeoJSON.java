@@ -22,7 +22,7 @@ import com.fasterxml.jackson.databind.node.JsonNodeCreator;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Preconditions;
 import com.google.inject.Inject;
-import com.vividsolutions.jts.geom.*;
+import org.locationtech.jts.geom.*;
 import org.envirocar.server.core.exception.GeometryConverterException;
 import org.envirocar.server.core.util.GeometryConverter;
 

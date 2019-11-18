@@ -39,8 +39,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
     private final PasswordEncoder passwordEncoder;
 
     @Inject
-    public AuthenticationFilter(UserService service,
-                                PasswordEncoder passwordEncoder) {
+    public AuthenticationFilter(UserService service, PasswordEncoder passwordEncoder) {
         this.service = service;
         this.passwordEncoder = passwordEncoder;
     }
@@ -56,8 +55,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
                 if (!auth.startsWith("Basic ")) {
                     throw new BadRequestException("unsupported authorization scheme");
                 }
-                String decoded = new String(Base64.decode(auth
-                        .replaceFirst("Basic ", "")));
+                String decoded = new String(Base64.decode(auth.replaceFirst("Basic ", "")));
                 int sep = decoded.indexOf(':');
                 if (sep >= 0) {
                     username = decoded.substring(0, sep);

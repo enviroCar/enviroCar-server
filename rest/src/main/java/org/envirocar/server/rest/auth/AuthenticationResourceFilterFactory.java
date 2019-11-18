@@ -17,9 +17,13 @@
 package org.envirocar.server.rest.auth;
 
 import com.sun.jersey.api.model.AbstractMethod;
-import com.sun.jersey.spi.container.*;
-import org.envirocar.server.rest.UnauthorizedException;
+import com.sun.jersey.spi.container.ContainerRequest;
+import com.sun.jersey.spi.container.ContainerRequestFilter;
+import com.sun.jersey.spi.container.ContainerResponseFilter;
+import com.sun.jersey.spi.container.ResourceFilter;
+import com.sun.jersey.spi.container.ResourceFilterFactory;
 import org.envirocar.server.rest.ForbiddenException;
+import org.envirocar.server.rest.UnauthorizedException;
 
 import java.util.Collections;
 import java.util.List;
@@ -32,20 +36,16 @@ import java.util.List;
 public class AuthenticationResourceFilterFactory implements ResourceFilterFactory {
     @Override
     public List<ResourceFilter> create(AbstractMethod am) {
-        Authenticated authenticated = am.getAnnotation(Authenticated.class);
-        if (authenticated != null) {
-            return Collections
-                    .singletonList(new AuthenticatedResourceFilter());
+        if (am.getAnnotation(Authenticated.class) != null) {
+            return Collections.singletonList(new AuthenticatedResourceFilter());
         }
-        Anonymous anonymous = am.getAnnotation(Anonymous.class);
-        if (anonymous != null) {
-            return Collections
-                    .singletonList(new AnonymousResourceFilter());
+        if (am.getAnnotation(Anonymous.class) != null) {
+            return Collections.singletonList(new AnonymousResourceFilter());
         }
         return null;
     }
 
-    private class AuthenticatedResourceFilter implements ResourceFilter {
+    private static class AuthenticatedResourceFilter implements ResourceFilter {
         @Override
         public ContainerRequestFilter getRequestFilter() {
             return new AuthenticatedRequestFilter();
@@ -57,7 +57,7 @@ public class AuthenticationResourceFilterFactory implements ResourceFilterFactor
         }
     }
 
-    private class AnonymousResourceFilter implements ResourceFilter {
+    private static class AnonymousResourceFilter implements ResourceFilter {
         @Override
         public ContainerRequestFilter getRequestFilter() {
             return new AnonymousRequestFilter();
@@ -69,7 +69,7 @@ public class AuthenticationResourceFilterFactory implements ResourceFilterFactor
         }
     }
 
-    private class AnonymousRequestFilter implements ContainerRequestFilter {
+    private static class AnonymousRequestFilter implements ContainerRequestFilter {
         @Override
         public ContainerRequest filter(ContainerRequest request) {
             if (request.getSecurityContext().getAuthenticationScheme() == null) {
@@ -79,11 +79,11 @@ public class AuthenticationResourceFilterFactory implements ResourceFilterFactor
         }
     }
 
-    private class AuthenticatedRequestFilter implements ContainerRequestFilter {
+    private static class AuthenticatedRequestFilter implements ContainerRequestFilter {
         @Override
         public ContainerRequest filter(ContainerRequest request) {
             if (request.getSecurityContext()
-                    .isUserInRole(AuthConstants.ADMIN_ROLE)) {
+                       .isUserInRole(AuthConstants.ADMIN_ROLE)) {
                 return request;
             }
             if (!request.getSecurityContext().isUserInRole(AuthConstants.USER_ROLE)) {

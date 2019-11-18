@@ -47,10 +47,11 @@
         <morphia-version>1.3.2</morphia-version>
         <jersey-version>1.19.4</jersey-version>
         <slf4j-version>1.7.25</slf4j-version>
-        <geotools-version>8.7</geotools-version>
-        <wps-version>3.2.0</wps-version>
+        <geotools-version>22.0</geotools-version>
+        <wps-version>3.6.3</wps-version>
         <guice-version>4.2.2</guice-version>
-        <jackson-version>2.10.0</jackson-version>
+        <jackson-version>2.10.1</jackson-version>
+        <testcontainers-version>1.10.7</testcontainers-version>
     </properties>
     <repositories>
         <repository>
@@ -132,6 +133,12 @@
                 <groupId>org.geotools</groupId>
                 <artifactId>gt-referencing</artifactId>
                 <version>${geotools-version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>javax</groupId>
+                        <artifactId>javaee-api</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.geotools</groupId>
@@ -175,7 +182,7 @@
             <dependency>
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
-                <version>20.0</version>
+                <version>23.0</version>
             </dependency>
             <dependency>
                 <groupId>com.google.inject</groupId>
@@ -268,9 +275,9 @@
                 <version>2.9.7</version>
             </dependency>
             <dependency>
-                <groupId>com.vividsolutions</groupId>
-                <artifactId>jts</artifactId>
-                <version>1.13</version>
+                <groupId>org.locationtech.jts</groupId>
+                <artifactId>jts-core</artifactId>
+                <version>1.16.1</version>
             </dependency>
             <dependency>
                 <groupId>com.sun.jersey</groupId>
@@ -296,19 +303,13 @@
             <dependency>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-servlet</artifactId>
-                <version>9.4.19.v20190610</version>
+                <version>9.4.22.v20191022</version>
                 <scope>test</scope>
-                <exclusions>
-                    <exclusion>
-                        <artifactId>javax.servlet</artifactId>
-                        <groupId>org.eclipse.jetty.orbit</groupId>
-                    </exclusion>
-                </exclusions>
             </dependency>
             <dependency>
                 <groupId>javax.servlet</groupId>
-                <artifactId>servlet-api</artifactId>
-                <version>2.5</version>
+                <artifactId>javax.servlet-api</artifactId>
+                <version>3.1.0</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
@@ -343,11 +344,6 @@
                 <version>1.12</version>
             </dependency>
             <dependency>
-                <groupId>org.n52.sensorweb</groupId>
-                <artifactId>oxf-common</artifactId>
-                <version>2.0.0-alpha.4-SNAPSHOT</version>
-            </dependency>
-            <dependency>
                 <groupId>org.clojars.ndimiduk</groupId>
                 <artifactId>geodesy</artifactId>
                 <version>1.1.1</version>
@@ -365,7 +361,7 @@
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-databind</artifactId>
-                <version>2.9.9.1</version>
+                <version>2.9.10.1</version>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
@@ -380,7 +376,12 @@
             <dependency>
                 <groupId>org.testcontainers</groupId>
                 <artifactId>testcontainers</artifactId>
-                <version>1.11.3</version>
+                <version>${testcontainers-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>kafka</artifactId>
+                <version>${testcontainers-version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.kafka</groupId>
@@ -404,6 +405,8 @@
                         <configuration>
                             <name>current.year</name>
                             <pattern>yyyy</pattern>
+                            <timeZone>UTC</timeZone>
+                            <locale>en_US</locale>
                         </configuration>
                     </execution>
                 </executions>
@@ -474,7 +477,7 @@
                 <plugin>
                     <groupId>org.eclipse.jetty</groupId>
                     <artifactId>jetty-maven-plugin</artifactId>
-                    <version>9.4.14.v20181114</version>
+                    <version>9.4.22.v20191022</version>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -484,7 +487,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-project-info-reports-plugin</artifactId>
-                <version>2.6</version>
+                <version>3.0.0</version>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -494,7 +497,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>2.10</version>
+                <version>3.1.0</version>
             </plugin>
         </plugins>
     </reporting>

@@ -16,9 +16,9 @@
  */
 package org.envirocar.server.rest.encoding.csv;
 
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.PrecisionModel;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.PrecisionModel;
 import org.envirocar.server.core.DataService;
 import org.envirocar.server.core.entities.*;
 import org.envirocar.server.mongo.entity.*;
@@ -79,7 +79,7 @@ public class CSVEncodingTest {
         Measurements measurements = createTrackWithMeasurements_AllMeasurementsHaveAllPhenomenons();
         Mockito.when(dataService.getMeasurements(Mockito.anyObject())).thenReturn(measurements);
 
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(trackCSVEncoder.encodeCSV(track, MediaTypes.TEXT_CSV_TYPE)));
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(trackCSVEncoder.encodeCSV(track, MediaTypes.CSV_TYPE)));
 
         String line;
 
@@ -144,7 +144,7 @@ public class CSVEncodingTest {
 
         BufferedReader bufferedReader = new BufferedReader(
                 new InputStreamReader(trackCSVEncoder.encodeCSV(track,
-                        MediaTypes.TEXT_CSV_TYPE)));
+                        MediaTypes.CSV_TYPE)));
 
         String line;
 
@@ -207,7 +207,7 @@ public class CSVEncodingTest {
         Measurements measurements = createTrackWithMeasurements_FirstMeasurementHasMorePhenomenons();
         Mockito.when(dataService.getMeasurements(Mockito.anyObject())).thenReturn(measurements);
 
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(trackCSVEncoder.encodeCSV(track, MediaTypes.TEXT_CSV_TYPE)));
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(trackCSVEncoder.encodeCSV(track, MediaTypes.CSV_TYPE)));
 
         String line;
 

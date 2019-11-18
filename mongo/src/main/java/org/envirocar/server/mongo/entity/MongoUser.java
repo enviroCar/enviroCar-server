@@ -17,7 +17,7 @@
 package org.envirocar.server.mongo.entity;
 
 import com.google.common.base.Objects;
-import com.vividsolutions.jts.geom.Geometry;
+import org.locationtech.jts.geom.Geometry;
 import org.envirocar.server.core.entities.Gender;
 import org.envirocar.server.core.entities.User;
 import org.joda.time.DateTime;
@@ -34,7 +34,7 @@ import java.util.Set;
  *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-@Entity("users")
+@Entity(MongoUser.COLLECTION)
 public class MongoUser extends MongoEntityBase implements User {
     public static final String TOKEN = "token";
     public static final String IS_ADMIN = "isAdmin";
@@ -61,6 +61,7 @@ public class MongoUser extends MongoEntityBase implements User {
     public static final String ACCEPTED_TERMS_OF_USE = "acceptedTermsOfUseVersion";
     public static final String TERMS_OF_USE_VERSION = "touVersion";
     public static final String PRIVACY_STATEMENT_VERSION = "privacyStatementVersion";
+    public static final String COLLECTION = "users";
 
     @Property(MongoUser.TOKEN)
     private String token;

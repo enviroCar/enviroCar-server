@@ -57,7 +57,7 @@ public abstract class AbstractCSVMessageBodyWriter<T> implements
     public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations,
                                MediaType mediaType) {
         return this.classType.isAssignableFrom(type) &&
-                mediaType.isCompatible(MediaTypes.TEXT_CSV_TYPE);
+                mediaType.isCompatible(MediaTypes.CSV_TYPE);
     }
 
     @Override
