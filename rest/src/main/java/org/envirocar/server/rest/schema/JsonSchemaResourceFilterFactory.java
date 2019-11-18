@@ -49,7 +49,9 @@ public class JsonSchemaResourceFilterFactory implements ResourceFilterFactory {
 
     @Override
     public List<ResourceFilter> create(AbstractMethod am) {
-        URI request = getRequestSchema(am), response = getResponseSchema(am);
+        URI request = getRequestSchema(am);
+        URI response = getResponseSchema(am);
+
         List<ResourceFilter> filters = new ArrayList<>(3);
         // always add the response validation filter for exceptions
         filters.add(this.responseValidationFilter);
@@ -62,15 +64,15 @@ public class JsonSchemaResourceFilterFactory implements ResourceFilterFactory {
 
     private URI getRequestSchema(AbstractMethod am) {
         return Optional.ofNullable(am.getAnnotation(Schema.class)).map(Schema::request)
-                .filter(this::isNotEmpty).map(URI::create).orElse(null);
+                       .filter(this::isNotEmpty).map(URI::create).orElse(null);
     }
 
     private URI getResponseSchema(AbstractMethod am) {
         return Optional.ofNullable(am.getAnnotation(Schema.class)).map(Schema::response)
-                .filter(this::isNotEmpty).map(URI::create).orElse(null);
+                       .filter(this::isNotEmpty).map(URI::create).orElse(null);
     }
 
-    private boolean isNotEmpty(String schema) {
-        return !schema.isEmpty();
+    private boolean isNotEmpty(String value) {
+        return !value.isEmpty();
     }
 }

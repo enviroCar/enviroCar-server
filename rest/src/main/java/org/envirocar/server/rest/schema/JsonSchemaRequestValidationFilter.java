@@ -26,11 +26,8 @@ import com.sun.jersey.spi.container.ContainerRequest;
 import com.sun.jersey.spi.container.ContainerRequestFilter;
 import org.envirocar.server.core.exception.BadRequestException;
 import org.envirocar.server.rest.MediaTypes;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import javax.ws.rs.core.MediaType;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -53,11 +50,9 @@ public class JsonSchemaRequestValidationFilter extends AbstractJsonSchemaValidat
 
     @Override
     public ContainerRequest filter(ContainerRequest request) {
-        MediaType mediaType = request.getMediaType();
-        if (!MediaTypes.hasSchemaAttribute(mediaType)) {
+        if (!MediaTypes.hasSchemaAttribute(request.getMediaType())) {
             return request;
         }
-
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         InputStream in = request.getEntityInputStream();
         try {
@@ -65,7 +60,7 @@ public class JsonSchemaRequestValidationFilter extends AbstractJsonSchemaValidat
             byte[] requestEntity = out.toByteArray();
             request.setEntityInputStream(new ByteArrayInputStream(requestEntity));
             try {
-                validate(requestEntity, mediaType);
+                validate(requestEntity, request.getMediaType());
             } catch (JsonParseException e) {
                 throw new BadRequestException(e);
             }

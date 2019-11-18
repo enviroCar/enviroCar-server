@@ -62,7 +62,11 @@ public class JsonSchemaResponseValidationFilter extends AbstractJsonSchemaValida
     @Override
     public ContainerResponse filter(ContainerRequest request, ContainerResponse response) {
         MediaType mediaType = response.getMediaType();
-        if (!MediaTypes.hasSchemaAttribute(mediaType) || request.getMethod().equals(HttpMethod.HEAD)) {
+        String method = request.getMethod();
+
+        if (!MediaTypes.hasSchemaAttribute(mediaType) ||
+            method.equals(HttpMethod.HEAD) ||
+            method.equals(HttpMethod.OPTIONS)) {
             return response;
         }
         response.setContainerResponseWriter(new ValidatingWriter(response.getContainerResponseWriter()));
@@ -98,7 +102,7 @@ public class JsonSchemaResponseValidationFilter extends AbstractJsonSchemaValida
             }
             this.delegate.finish();
             if (bytes.length > 0) {
-                if (contentEncoding != null && contentEncoding.equals("gzip")) {
+                if ("gzip".equals(contentEncoding)) {
                     bytes = gunzip(bytes);
                 }
                 try {

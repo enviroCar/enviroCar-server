@@ -16,7 +16,6 @@
  */
 package org.envirocar.server.rest;
 
-
 import javax.ws.rs.core.MediaType;
 import java.util.Collections;
 import java.util.Map;
@@ -29,6 +28,7 @@ import java.util.Optional;
  * @author Arne de Wall
  */
 public interface MediaTypes {
+    String JSON = MediaType.APPLICATION_JSON;
     String XML_RDF = "application/rdf+xml";
     String TURTLE = "text/turtle";
     String CSV = "text/csv";
@@ -36,13 +36,13 @@ public interface MediaTypes {
     String JPEG = "image/jpeg";
     String PNG = "image/png";
     String APPLICATION_ZIPPED_SHP = "application/x-zipped-shp";
-    String JSON = MediaType.APPLICATION_JSON;
 
-    MediaType XML_RDF_TYPE = new MediaType("application", "rdf+xml");
-    MediaType APPLICATION_ZIPPED_SHP_TYPE = new MediaType("application", "x-zipped-shp");
-    MediaType TEXT_CSV_TYPE = new MediaType("text", "csv");
-    MediaType TURTLE_TYPE = new MediaType("text", "turtle");
-    MediaType TURTLE_ALT_TYPE = new MediaType("application", "x-turtle");
+    MediaType JSON_TYPE = MediaType.APPLICATION_JSON_TYPE;
+    MediaType XML_RDF_TYPE = MediaType.valueOf(XML_RDF);
+    MediaType APPLICATION_ZIPPED_SHP_TYPE = MediaType.valueOf(APPLICATION_ZIPPED_SHP);
+    MediaType CSV_TYPE = MediaType.valueOf(CSV);
+    MediaType TURTLE_TYPE = MediaType.valueOf(TURTLE);
+    MediaType TURTLE_ALT_TYPE = MediaType.valueOf(TURTLE_ALT);
     MediaType EXCEPTION_TYPE = jsonWithSchema(Schemas.EXCEPTION);
 
     String SCHEMA_ATTRIBUTE = "schema";
@@ -52,19 +52,20 @@ public interface MediaTypes {
     }
 
     static MediaType jsonWithSchema(String schema) {
-        return new MediaType("application", "json", schema(schema));
+        return new MediaType(JSON_TYPE.getType(), JSON_TYPE.getSubtype(), schema(schema));
     }
 
     static boolean hasSchemaAttribute(MediaType mediaType) {
         return mediaType != null
-                && mediaType.isCompatible(MediaType.APPLICATION_JSON_TYPE)
-                && mediaType.getParameters().containsKey(SCHEMA_ATTRIBUTE);
+               && mediaType.isCompatible(JSON_TYPE)
+               && mediaType.getParameters().containsKey(SCHEMA_ATTRIBUTE);
     }
 
     static Optional<String> getSchemaAttribute(MediaType mediaType) {
-        return hasSchemaAttribute(mediaType)
-                ? Optional.ofNullable(mediaType.getParameters().get(SCHEMA_ATTRIBUTE))
-                : Optional.empty();
+        return Optional.ofNullable(mediaType)
+                       .filter(mt -> mt.isCompatible(JSON_TYPE))
+                       .map(MediaType::getParameters)
+                       .map(m -> m.get(SCHEMA_ATTRIBUTE));
     }
 
 }

@@ -79,7 +79,7 @@ public class CSVEncodingTest {
         Measurements measurements = createTrackWithMeasurements_AllMeasurementsHaveAllPhenomenons();
         Mockito.when(dataService.getMeasurements(Mockito.anyObject())).thenReturn(measurements);
 
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(trackCSVEncoder.encodeCSV(track, MediaTypes.TEXT_CSV_TYPE)));
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(trackCSVEncoder.encodeCSV(track, MediaTypes.CSV_TYPE)));
 
         String line;
 
@@ -144,7 +144,7 @@ public class CSVEncodingTest {
 
         BufferedReader bufferedReader = new BufferedReader(
                 new InputStreamReader(trackCSVEncoder.encodeCSV(track,
-                        MediaTypes.TEXT_CSV_TYPE)));
+                        MediaTypes.CSV_TYPE)));
 
         String line;
 
@@ -207,7 +207,7 @@ public class CSVEncodingTest {
         Measurements measurements = createTrackWithMeasurements_FirstMeasurementHasMorePhenomenons();
         Mockito.when(dataService.getMeasurements(Mockito.anyObject())).thenReturn(measurements);
 
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(trackCSVEncoder.encodeCSV(track, MediaTypes.TEXT_CSV_TYPE)));
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(trackCSVEncoder.encodeCSV(track, MediaTypes.CSV_TYPE)));
 
         String line;
 

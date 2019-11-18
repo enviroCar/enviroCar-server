@@ -108,10 +108,18 @@ public class EnviroCarServer extends ExternalResource {
     }
 
     public WebResource resource() {
+        return client().resource(getBaseURL());
+    }
+
+    public String getBaseURL() {
+        return String.format("http://localhost:%d", this.port);
+    }
+
+    public Client client() {
         ClientConfig cc = new DefaultClientConfig();
         cc.getSingletons().add(injector.getInstance(JsonNodeMessageBodyReader.class));
         cc.getSingletons().add(injector.getInstance(JsonNodeMessageBodyWriter.class));
-        return Client.create(cc).resource(String.format("http://localhost:%d", this.port));
+        return Client.create(cc);
     }
 
     @Override
