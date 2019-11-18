@@ -23,11 +23,9 @@ The documentation is a GitHub page and managed in the branch ``gh-pages``, see h
 * Run `mvn clean install`.
 * Deploy the `war` file in `webapp/target` to a application server of your choice (e.g. [Apache Tomcat](http://tomcat.apache.org/)).
 
-## [License](https://github.com/enviroCar/enviroCar-server/blob/master/LICENSE) ##
+## [License](LICENSE) ##
 
-    Copyright (C) 2013  Christian Autermann,
-                        Jan Alexander Wirwahn,
-                        Arne De Wall
+    Copyright (C) 2013-2019 The enviroCar project
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as
