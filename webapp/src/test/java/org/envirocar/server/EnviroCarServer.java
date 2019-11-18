@@ -30,9 +30,7 @@ import com.sun.jersey.api.client.config.DefaultClientConfig;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.envirocar.server.container.KafkaContainer;
 import org.envirocar.server.container.MongoContainer;
-import org.envirocar.server.container.ZookeeperContainer;
 import org.envirocar.server.core.mail.Mailer;
 import org.envirocar.server.core.mail.NoopMailer;
 import org.envirocar.server.event.kafka.KafkaConstants;
@@ -41,8 +39,7 @@ import org.envirocar.server.rest.decoding.json.JsonNodeMessageBodyReader;
 import org.envirocar.server.rest.encoding.json.JsonNodeMessageBodyWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.testcontainers.containers.Network;
-import org.testcontainers.containers.output.Slf4jLogConsumer;
+import org.testcontainers.containers.KafkaContainer;
 
 /**
  * TODO JavaDoc
@@ -54,7 +51,6 @@ public class EnviroCarServer extends ExternalResource {
     private final Server jettyServer;
     private final MongoContainer mongo;
     private final KafkaContainer kafka;
-    private final ZookeeperContainer zookeeper;
     private Injector injector;
     private final int port;
 
@@ -66,26 +62,13 @@ public class EnviroCarServer extends ExternalResource {
         this.port = port;
         this.jettyServer = new Server(port);
         this.jettyServer.setStopAtShutdown(true);
-
-        Network network = Network.builder().driver("bridge").build();
-
-        this.mongo = new MongoContainer()
-                             .withLogConsumer(new Slf4jLogConsumer(LOG).withPrefix("mongo"));
-        this.zookeeper = new ZookeeperContainer()
-                                 .withNetwork(network)
-                                 .withNetworkAliases("zookeeper")
-                                 .withLogConsumer(new Slf4jLogConsumer(LOG).withPrefix("zookeeper"))
-                                 .withId(1);
-        this.kafka = new KafkaContainer()
-                             .withId(1)
-                             .withNetwork(network)
-                             .withZookeeper("zookeeper:2181")
-                             .withLogConsumer(new Slf4jLogConsumer(LOG).withPrefix("kafka"));
+        this.kafka = new KafkaContainer().withEmbeddedZookeeper();
+        this.mongo = new MongoContainer();
     }
 
     @Override
     protected void before() throws Throwable {
-        CheckedRunnable.runAll(/*zookeeper::start, kafka::start,*/ mongo::start);
+        CheckedRunnable.runAll(kafka::start, mongo::start);
 
         ServletContextHandler sch = new ServletContextHandler(jettyServer, "/");
         sch.addFilter(GuiceFilter.class, "/*", null);
@@ -93,8 +76,7 @@ public class EnviroCarServer extends ExternalResource {
             @Override
             public void configure(Binder binder) {
                 binder.bind(MongoContainer.class).toInstance(mongo);
-                // binder.bind(KafkaContainer.class).toInstance(kafka);
-                // binder.bind(ZookeeperContainer.class).toInstance(zookeeper);
+                binder.bind(KafkaContainer.class).toInstance(kafka);
                 binder.bind(Mailer.class).to(NoopMailer.class);
                 binder.bind(String.class).annotatedWith(Names.named(MongoDB.DATABASE_PROPERTY))
                       .toInstance("enviroCar-Testing");
@@ -103,20 +85,19 @@ public class EnviroCarServer extends ExternalResource {
             @Provides
             @Named(KafkaConstants.KAFKA_BROKERS)
             public String brokers(KafkaContainer kafka) {
-                return "processing.envirocar.org:9092";
-                //return String.format("%s:%d", kafka.getContainerIpAddress(), kafka.getMappedPort(9092));
+                return kafka.getBootstrapServers();
             }
 
             @Provides
             @Named(MongoDB.HOST_PROPERTY)
             public String mongoHost(MongoContainer mongo) {
-                return mongo.getContainerIpAddress();
+                return mongo.getHost();
             }
 
             @Provides
             @Named(MongoDB.PORT_PROPERTY)
             public int mongoPort(MongoContainer mongo) {
-                return mongo.getMappedPort(27017);
+                return mongo.getPort();
             }
         });
         injector = servletContextListener.getInjector();
@@ -135,7 +116,7 @@ public class EnviroCarServer extends ExternalResource {
 
     @Override
     protected void after() throws Exception {
-        CheckedRunnable.runAll(jettyServer::stop, mongo::stop/*, zookeeper::stop, kafka::stop*/);
+        CheckedRunnable.runAll(jettyServer::stop, mongo::stop, kafka::stop);
     }
 
     public Server getServer() {

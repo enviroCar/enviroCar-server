@@ -51,6 +51,7 @@
         <wps-version>3.2.0</wps-version>
         <guice-version>4.2.2</guice-version>
         <jackson-version>2.10.0</jackson-version>
+        <testcontainers-version>1.10.7</testcontainers-version>
     </properties>
     <repositories>
         <repository>
@@ -380,7 +381,12 @@
             <dependency>
                 <groupId>org.testcontainers</groupId>
                 <artifactId>testcontainers</artifactId>
-                <version>1.11.3</version>
+                <version>${testcontainers-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>kafka</artifactId>
+                <version>${testcontainers-version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.kafka</groupId>

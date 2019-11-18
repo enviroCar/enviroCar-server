@@ -22,12 +22,23 @@ import org.testcontainers.containers.GenericContainer;
 import java.util.Objects;
 
 public class MongoContainer extends GenericContainer<MongoContainer> {
+
+    private static final int PORT = 27017;
+
     public MongoContainer(String version) {
         super(String.format("mongo:%s", Objects.requireNonNull(Strings.emptyToNull(version))));
     }
 
     public MongoContainer() {
         this("latest");
+        withExposedPorts(PORT);
     }
 
+    public String getHost() {
+        return getContainerIpAddress();
+    }
+
+    public int getPort() {
+        return getMappedPort(PORT);
+    }
 }
