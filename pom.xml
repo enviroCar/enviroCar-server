@@ -48,7 +48,7 @@
         <jersey-version>1.19.4</jersey-version>
         <slf4j-version>1.7.25</slf4j-version>
         <geotools-version>8.7</geotools-version>
-        <wps-version>3.2.0</wps-version>
+        <wps-version>3.6.3</wps-version>
         <guice-version>4.2.2</guice-version>
         <jackson-version>2.10.0</jackson-version>
     </properties>
