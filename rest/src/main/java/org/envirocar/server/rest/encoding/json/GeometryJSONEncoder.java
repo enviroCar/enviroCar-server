@@ -18,7 +18,7 @@ package org.envirocar.server.rest.encoding.json;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
-import com.vividsolutions.jts.geom.Geometry;
+import org.locationtech.jts.geom.Geometry;
 import org.envirocar.server.core.exception.GeometryConverterException;
 import org.envirocar.server.rest.InternalServerError;
 import org.envirocar.server.rest.rights.AccessRights;

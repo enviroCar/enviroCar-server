@@ -19,7 +19,7 @@ package org.envirocar.server.rest.guice;
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
 import com.google.inject.TypeLiteral;
-import com.vividsolutions.jts.geom.Geometry;
+import org.locationtech.jts.geom.Geometry;
 import org.envirocar.server.core.activities.*;
 import org.envirocar.server.core.entities.*;
 import org.envirocar.server.core.statistics.Statistic;

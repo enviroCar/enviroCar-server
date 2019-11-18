@@ -18,7 +18,7 @@ package org.envirocar.server.rest.provider;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeCreator;
-import com.vividsolutions.jts.geom.*;
+import org.locationtech.jts.geom.*;
 import org.envirocar.server.core.exception.GeometryConverterException;
 import org.envirocar.server.rest.GuiceRunner;
 import org.envirocar.server.rest.schema.ValidationRule;

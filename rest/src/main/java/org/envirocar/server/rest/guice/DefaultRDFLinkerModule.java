@@ -51,7 +51,7 @@ import org.envirocar.server.rest.encoding.rdf.linker.W3CGeoMeasurementLinker;
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
 import com.google.inject.multibindings.Multibinder;
-import com.vividsolutions.jts.geom.Geometry;
+import org.locationtech.jts.geom.Geometry;
 
 public class DefaultRDFLinkerModule extends AbstractModule {
     @Override

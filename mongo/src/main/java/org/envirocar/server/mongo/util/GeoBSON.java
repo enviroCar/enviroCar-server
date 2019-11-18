@@ -20,11 +20,13 @@ import com.google.common.base.Preconditions;
 import com.google.inject.Inject;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
-import com.vividsolutions.jts.geom.*;
+import org.locationtech.jts.geom.*;
 import org.bson.BSONObject;
 import org.bson.types.BasicBSONList;
 import org.envirocar.server.core.exception.GeometryConverterException;
 import org.envirocar.server.core.util.GeometryConverter;
+
+import java.util.Objects;
 
 import static org.envirocar.server.core.util.GeoJSONConstants.*;
 
@@ -42,7 +44,7 @@ public class GeoBSON implements GeometryConverter<BSONObject> {
     }
 
     private BSONObject encodeGeometry(Geometry geometry) throws GeometryConverterException {
-        Preconditions.checkNotNull(geometry);
+        Objects.requireNonNull(geometry);
         if (geometry.isEmpty()) {
             return null;
         } else if (geometry instanceof Point) {
@@ -280,7 +282,7 @@ public class GeoBSON implements GeometryConverter<BSONObject> {
     @Override
     public MultiPoint decodeMultiPoint(BSONObject bson) throws GeometryConverterException {
         Coordinate[] coordinates = decodeCoordinates(requireCoordinates(bson));
-        return factory.createMultiPoint(coordinates);
+        return factory.createMultiPointFromCoords(coordinates);
     }
 
     @Override

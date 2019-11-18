@@ -35,7 +35,7 @@ import org.envirocar.server.rest.util.OSMTileRenderer.BoundingBox;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.vividsolutions.jts.geom.Coordinate;
+import org.locationtech.jts.geom.Coordinate;
 
 @RunWith(GuiceRunner.class)
 public class OSMTileRendererTests {
