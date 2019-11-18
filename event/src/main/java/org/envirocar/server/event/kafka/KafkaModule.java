@@ -29,6 +29,7 @@ import org.envirocar.server.core.entities.Track;
 import javax.inject.Named;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.UUID;
 
 public final class KafkaModule extends AbstractModule {
 
@@ -42,7 +43,8 @@ public final class KafkaModule extends AbstractModule {
     @Provides
     @Named(KafkaConstants.KAFKA_CLIENT_ID)
     public String clientId(Properties properties) {
-        return getProperty(properties, KafkaConstants.KAFKA_CLIENT_ID, "enviroCar-server");
+        return getProperty(properties, KafkaConstants.KAFKA_CLIENT_ID,
+                           String.format("enviroCar-server-%s", UUID.randomUUID()));
     }
 
     @Provides
@@ -61,7 +63,7 @@ public final class KafkaModule extends AbstractModule {
     public Producer<String, Track> createProducer(Serializer<String> keySerializer,
                                                   Serializer<Track> valueSerializer,
                                                   @Named(KafkaConstants.KAFKA_BROKERS) String brokers,
-                                                  @Named(KafkaConstants.KAFKA_BROKERS) String clientId) {
+                                                  @Named(KafkaConstants.KAFKA_CLIENT_ID) String clientId) {
         Properties props = new Properties();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, brokers);
         props.put(ProducerConfig.CLIENT_ID_CONFIG, clientId);
