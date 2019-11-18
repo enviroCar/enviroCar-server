@@ -133,6 +133,12 @@
                 <groupId>org.geotools</groupId>
                 <artifactId>gt-referencing</artifactId>
                 <version>${geotools-version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>javax</groupId>
+                        <artifactId>javaee-api</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.geotools</groupId>
