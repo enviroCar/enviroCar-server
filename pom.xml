@@ -404,6 +404,8 @@
                         <configuration>
                             <name>current.year</name>
                             <pattern>yyyy</pattern>
+                            <timeZone>UTC</timeZone>
+                            <locale>en_US</locale>
                         </configuration>
                     </execution>
                 </executions>
