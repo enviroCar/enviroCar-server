@@ -76,6 +76,10 @@ public class TrackResourceTest extends ResourceTestBase {
         assertThat(response, hasStatus(Response.Status.OK));
         assertThat(response.getType(), isCompatible(MediaTypes.CSV_TYPE));
 
+        response = client().resource(location + ".csv").accept(MediaTypes.CSV).get(ClientResponse.class);
+        assertThat(response, hasStatus(Response.Status.OK));
+        assertThat(response.getType(), isCompatible(MediaTypes.CSV_TYPE));
+
         response = client().resource(location).accept(MediaTypes.JSON).get(ClientResponse.class);
         assertThat(response, hasStatus(Response.Status.OK));
         assertThat(response.getType(), isCompatible(MediaTypes.JSON_TYPE));
