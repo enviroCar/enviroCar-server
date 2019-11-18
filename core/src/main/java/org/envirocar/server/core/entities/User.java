@@ -16,7 +16,7 @@
  */
 package org.envirocar.server.core.entities;
 
-import com.vividsolutions.jts.geom.Geometry;
+import org.locationtech.jts.geom.Geometry;
 import org.joda.time.DateTime;
 
 import java.net.URL;

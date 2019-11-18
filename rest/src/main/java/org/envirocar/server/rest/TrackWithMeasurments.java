@@ -27,7 +27,7 @@ import org.envirocar.server.core.entities.User;
 import org.joda.time.DateTime;
 
 import com.google.common.collect.Lists;
-import com.vividsolutions.jts.geom.Geometry;
+import org.locationtech.jts.geom.Geometry;
 
 /**
  * TODO JavaDoc

@@ -33,7 +33,7 @@ import org.mongodb.morphia.utils.IndexDirection;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.Sets;
-import com.vividsolutions.jts.geom.Geometry;
+import org.locationtech.jts.geom.Geometry;
 
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.MeasurementValue;

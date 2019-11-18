@@ -22,7 +22,7 @@ import javax.ws.rs.ext.Provider;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
-import com.vividsolutions.jts.geom.Geometry;
+import org.locationtech.jts.geom.Geometry;
 
 import org.envirocar.server.core.exception.BadRequestException;
 import org.envirocar.server.core.exception.GeometryConverterException;

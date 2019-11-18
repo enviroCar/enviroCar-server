@@ -16,7 +16,7 @@
  */
 package org.envirocar.server.core;
 
-import com.vividsolutions.jts.geom.*;
+import org.locationtech.jts.geom.*;
 
 import java.util.Collections;
 import java.util.List;

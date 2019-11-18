@@ -18,7 +18,7 @@ package org.envirocar.server.rest.resources;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
-import com.vividsolutions.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.GeometryFactory;
 import org.envirocar.server.core.SpatialFilter;
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.Measurements;

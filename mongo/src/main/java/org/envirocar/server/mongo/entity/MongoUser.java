@@ -17,7 +17,7 @@
 package org.envirocar.server.mongo.entity;
 
 import com.google.common.base.Objects;
-import com.vividsolutions.jts.geom.Geometry;
+import org.locationtech.jts.geom.Geometry;
 import org.envirocar.server.core.entities.Gender;
 import org.envirocar.server.core.entities.User;
 import org.joda.time.DateTime;

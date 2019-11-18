@@ -16,7 +16,7 @@
  */
 package org.envirocar.server.mongo.entity;
 
-import com.vividsolutions.jts.geom.Geometry;
+import org.locationtech.jts.geom.Geometry;
 import org.envirocar.server.core.entities.TrackSummary;
 import org.mongodb.morphia.annotations.Property;
 

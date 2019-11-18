@@ -17,7 +17,7 @@
 package org.envirocar.server.rest.encoding.csv;
 
 import com.google.inject.Inject;
-import com.vividsolutions.jts.geom.Point;
+import org.locationtech.jts.geom.Point;
 import org.envirocar.server.core.DataService;
 import org.envirocar.server.core.entities.*;
 import org.envirocar.server.core.filter.MeasurementFilter;

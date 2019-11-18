@@ -16,7 +16,7 @@
  */
 package org.envirocar.server.core.util;
 
-import com.vividsolutions.jts.geom.Coordinate;
+import org.locationtech.jts.geom.Coordinate;
 import org.envirocar.server.core.entities.Measurement;
 import org.gavaghan.geodesy.Ellipsoid;
 import org.gavaghan.geodesy.GeodeticCalculator;
