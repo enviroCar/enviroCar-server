@@ -67,7 +67,7 @@ public class AddressProvider implements Provider<Optional<Set<String>>> {
                     return Optional.empty();
                 } else {
                     log.debug("{} exists. Loading mail addresses.", FILE);
-                    return Optional.of(Files.readLines(f, Charsets.UTF_8, new AddressProcessor()));
+                    return Optional.of(Files.asCharSource(f, Charsets.UTF_8).readLines(new AddressProcessor()));
                 }
             } catch (IOException ex) {
                 throw new RuntimeException(ex);

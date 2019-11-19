@@ -97,7 +97,7 @@ public class GeoJSONTest {
     }
 
     private MultiPoint randomMultiPoint() {
-        return geometryFactory.createMultiPoint(new Coordinate[]{
+        return geometryFactory.createMultiPointFromCoords(new Coordinate[]{
                 randomCoordinate(),
                 randomCoordinate(),
                 randomCoordinate(),
@@ -164,7 +164,7 @@ public class GeoJSONTest {
         readWriteTest(randomMultiLineString());
     }
 
-    protected void readWriteTest(final Geometry geom) {
+    private void readWriteTest(final Geometry geom) {
         try {
             GeoJSON conv = new GeoJSON(geometryFactory, jsonNodeFactory);
             JsonNode json = conv.encode(geom);

@@ -59,11 +59,10 @@ public class UserFOAFLinker implements RDFLinker<User> {
         p.addLiteral(FOAF.nick, t.getName());
         if (t.hasFirstName() && rights.canSeeFirstNameOf(t)) {
             p.addLiteral(FOAF.firstName, t.getFirstName());
-            p.addLiteral(FOAF.givenname, t.getFirstName());
+            p.addLiteral(FOAF.givenName, t.getFirstName());
         }
         if (t.hasLastName() && rights.canSeeLastNameOf(t)) {
-            p.addLiteral(FOAF.surname, t.getLastName());
-            p.addLiteral(FOAF.family_name, t.getLastName());
+            p.addLiteral(FOAF.familyName, t.getLastName());
         }
         if (t.hasDayOfBirth() && rights.canSeeDayOfBirthOf(t)) {
             p.addLiteral(FOAF.birthday, t.getDayOfBirth());

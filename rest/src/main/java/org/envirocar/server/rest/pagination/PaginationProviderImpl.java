@@ -34,6 +34,7 @@ import java.util.Optional;
  *
  * @author Christian Autermann
  */
+@SuppressWarnings("unchecked")
 public class PaginationProviderImpl implements PaginationProvider {
     private static final int DECIMAL_RADIX = 10;
     private static final int DEFAULT_PAGE = 1;
@@ -96,7 +97,6 @@ public class PaginationProviderImpl implements PaginationProvider {
             throw newInvalidRangeException();
         }
     }
-
 
     private static <T> Optional<T> or(Optional<T>... alternatives) {
         return Arrays.stream(alternatives).filter(Optional::isPresent).map(Optional::get).findFirst();

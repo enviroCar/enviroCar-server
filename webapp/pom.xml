@@ -17,6 +17,10 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
+            <groupId>com.netflix.governator</groupId>
+            <artifactId>governator-core</artifactId>
+        </dependency>
+        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>core</artifactId>
             <!--            <scope>runtime</scope>-->
