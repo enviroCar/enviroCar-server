@@ -16,6 +16,8 @@
  */
 package org.envirocar.server.mongo.dao;
 
+import com.google.inject.Inject;
+import com.mongodb.client.MongoCursor;
 import org.bson.types.ObjectId;
 import org.envirocar.server.core.dao.BadgesDao;
 import org.envirocar.server.core.entities.Badges;
@@ -23,26 +25,22 @@ import org.envirocar.server.core.util.pagination.Pagination;
 import org.envirocar.server.mongo.MongoDB;
 import org.envirocar.server.mongo.entity.MongoBadge;
 
-import com.google.inject.Inject;
-
 public class MongoBadgesDao extends AbstractMongoDao<ObjectId, MongoBadge, Badges>
-		implements BadgesDao {
+        implements BadgesDao {
 
-	@Inject
-	public MongoBadgesDao(MongoDB mongoDB) {
-		super(MongoBadge.class, mongoDB);
-	}
+    @Inject
+    public MongoBadgesDao(MongoDB mongoDB) {
+        super(MongoBadge.class, mongoDB);
+    }
 
-	@Override
-	public Badges get(Pagination p) {
-		return fetch(q(), p);
-	}
+    @Override
+    public Badges get(Pagination p) {
+        return fetch(q(), p);
+    }
 
-	@Override
-	protected Badges createPaginatedIterable(
-			Iterable<MongoBadge> i, Pagination p, long count) {
-		return Badges.from(i).withPagination(p).withElements(count).build();
-	}
-
+    @Override
+    protected Badges createPaginatedIterable(MongoCursor<MongoBadge> i, Pagination p, long count) {
+        return Badges.from(asCloseableIterator(i)).withPagination(p).withElements(count).build();
+    }
 
 }

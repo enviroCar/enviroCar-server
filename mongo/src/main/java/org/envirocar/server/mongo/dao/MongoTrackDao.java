@@ -16,8 +16,14 @@
  */
 package org.envirocar.server.mongo.dao;
 
-import java.util.List;
-
+import com.google.common.collect.Lists;
+import com.google.inject.Inject;
+import com.mongodb.WriteResult;
+import com.mongodb.client.MongoCursor;
+import dev.morphia.Key;
+import dev.morphia.query.Query;
+import dev.morphia.query.Sort;
+import dev.morphia.query.UpdateResults;
 import org.bson.types.ObjectId;
 import org.envirocar.server.core.dao.TrackDao;
 import org.envirocar.server.core.entities.Track;
@@ -32,22 +38,16 @@ import org.envirocar.server.mongo.util.MorphiaUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import dev.morphia.Key;
-import dev.morphia.query.Query;
-import dev.morphia.query.UpdateResults;
-import com.google.common.collect.Lists;
-import com.google.inject.Inject;
-import com.mongodb.WriteResult;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * TODO JavaDoc
  *
  * @author Arne de Wall <a.dewall@52north.org>
  */
-public class MongoTrackDao extends AbstractMongoDao<ObjectId, MongoTrack, Tracks>
-        implements TrackDao {
-    private static final Logger log = LoggerFactory
-            .getLogger(MongoTrackDao.class);
+public class MongoTrackDao extends AbstractMongoDao<ObjectId, MongoTrack, Tracks> implements TrackDao {
+    private static final Logger LOG = LoggerFactory.getLogger(MongoTrackDao.class);
     private MongoMeasurementDao measurementDao;
 
     @Inject
@@ -99,8 +99,8 @@ public class MongoTrackDao extends AbstractMongoDao<ObjectId, MongoTrack, Tracks
         Query<MongoTrack> q = q();
         if (request.hasSpatialFilter()) {
             List<Key<MongoTrack>> keys = measurementDao
-                    .getTrackKeysByBbox(new MeasurementFilter(
-                    null, request.getUser(), request.getSpatialFilter(), null, null));
+                                                 .getTrackKeysByBbox(new MeasurementFilter(
+                                                         null, request.getUser(), request.getSpatialFilter(), null, null));
             if (keys.isEmpty()) {
                 return Tracks.none();
             }
@@ -110,8 +110,8 @@ public class MongoTrackDao extends AbstractMongoDao<ObjectId, MongoTrack, Tracks
         }
         if (request.hasTemporalFilter()) {
             MorphiaUtils.temporalFilter(q.field(MongoTrack.BEGIN),
-                                           q.field(MongoTrack.END),
-                                           request.getTemporalFilter());
+                                        q.field(MongoTrack.END),
+                                        request.getTemporalFilter());
         }
         return fetch(q, request.getPagination());
     }
@@ -123,12 +123,12 @@ public class MongoTrackDao extends AbstractMongoDao<ObjectId, MongoTrack, Tracks
 
     void deleteUser(MongoUser user) {
         WriteResult result = delete(q().field(MongoTrack.USER).equal(key(user)));
-        
+
         if (result.wasAcknowledged()) {
-            log.debug("Removed user {} from {} tracks",
+            LOG.debug("Removed user {} from {} tracks",
                       user, result.getN());
         } else {
-            log.error("Error removing user {} from tracks: {}",
+            LOG.error("Error removing user {} from tracks: {}",
                       user, result);
         }
     }
@@ -138,31 +138,30 @@ public class MongoTrackDao extends AbstractMongoDao<ObjectId, MongoTrack, Tracks
                 q().field(MongoTrack.USER).equal(key(user)),
                 up().unset(MongoTrack.USER));
         if (result.getWriteResult() != null && !result.getWriteResult().wasAcknowledged()) {
-            log.error("Error removing user {} from tracks: {}",
+            LOG.error("Error removing user {} from tracks: {}",
                       user, result.getWriteResult());
         } else {
-            log.debug("Removed user {} from {} tracks",
+            LOG.debug("Removed user {} from {} tracks",
                       user, result.getUpdatedCount());
         }
     }
 
     @Override
-    protected Tracks createPaginatedIterable(Iterable<MongoTrack> i,
-                                             Pagination p, long count) {
-        return Tracks.from(i).withPagination(p).withElements(count).build();
+    protected Tracks createPaginatedIterable(MongoCursor<MongoTrack> i, Pagination p, long count) {
+        return Tracks.from(asCloseableIterator(i)).withPagination(p).withElements(count).build();
     }
 
     @Override
-    protected Iterable<MongoTrack> fetch(Query<MongoTrack> q) {
-        return super.fetch(q.order(MongoTrack.RECENTLY_CREATED_ORDER));
+    protected Iterator<MongoTrack> fetch(Query<MongoTrack> q) {
+        return super.fetch(q.order(Sort.descending((MongoTrack.CREATION_DATE))));
     }
 
     @Override
     protected Tracks fetch(Query<MongoTrack> q, Pagination p) {
-        return super.fetch(q.order(MongoTrack.RECENTLY_CREATED_ORDER), p);
+        return super.fetch(q.order(Sort.descending(MongoTrack.CREATION_DATE)), p);
     }
 
-    protected <T> List<Object> toIdList(List<Key<T>> keys) {
+    private <T> List<Object> toIdList(List<Key<T>> keys) {
         List<Object> ids = Lists.newArrayListWithExpectedSize(keys.size());
         for (Key<T> key : keys) {
             ids.add(key.getId());

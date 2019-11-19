@@ -20,6 +20,8 @@ import org.joda.time.DateTime;
 
 import org.locationtech.jts.geom.Geometry;
 
+import java.util.Set;
+
 /**
  * TODO JavaDoc
  *
@@ -44,7 +46,7 @@ public interface Measurement extends BaseEntity, Comparable<Measurement> {
 
     boolean hasTime();
 
-    MeasurementValues getValues();
+    Set<MeasurementValue> getValues();
 
     void addValue(MeasurementValue value);
 

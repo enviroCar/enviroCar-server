@@ -16,9 +16,9 @@
  */
 package org.envirocar.server.mongo.entity;
 
-import org.locationtech.jts.geom.Geometry;
-import org.envirocar.server.core.entities.TrackSummary;
 import dev.morphia.annotations.Property;
+import org.envirocar.server.core.entities.TrackSummary;
+import org.locationtech.jts.geom.Geometry;
 
 /**
  * @author maurin
@@ -53,11 +53,6 @@ public class MongoTrackSummary implements TrackSummary {
     }
 
     @Override
-    public boolean hasIdentifier() {
-        return (this.identifier != null);
-    }
-
-    @Override
     public Geometry getStartPosition() {
         return this.startPosition;
     }
@@ -65,11 +60,6 @@ public class MongoTrackSummary implements TrackSummary {
     @Override
     public void setStartPosition(Geometry startPosition) {
         this.startPosition = startPosition;
-    }
-
-    @Override
-    public boolean hasStartPosition() {
-        return (this.startPosition != null);
     }
 
     @Override
@@ -82,9 +72,5 @@ public class MongoTrackSummary implements TrackSummary {
         this.endPosition = endPosition;
     }
 
-    @Override
-    public boolean hasEndPosition() {
-        return (this.endPosition != null);
-    }
 
 }

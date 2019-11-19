@@ -16,34 +16,34 @@
  */
 package org.envirocar.server.mongo.entity;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import org.bson.types.ObjectId;
-import org.envirocar.server.core.entities.DimensionedNumber;
-import org.envirocar.server.core.entities.Fueling;
-import org.envirocar.server.core.entities.Sensor;
-import org.envirocar.server.core.entities.User;
-import org.joda.time.DateTime;
-
-import dev.morphia.Key;
+import com.google.common.base.Strings;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.Property;
-import dev.morphia.annotations.Transient;
+import dev.morphia.annotations.Reference;
+import dev.morphia.mapping.experimental.MorphiaReference;
 import dev.morphia.utils.IndexDirection;
-import com.google.common.base.Strings;
+import org.bson.types.ObjectId;
+import org.envirocar.server.core.entities.DimensionedNumber;
+import org.envirocar.server.core.entities.Fueling;
+import org.envirocar.server.core.entities.Sensor;
+import org.envirocar.server.core.entities.User;
+import org.envirocar.server.mongo.util.Ref;
+import org.joda.time.DateTime;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Mongo implementation of a {@link Fueling}.
  *
  * @author Christian Autermann
  */
-@Entity("fuelings")
+@Entity(value = MongoFueling.COLLECTION, noClassnameStored = true)
 public class MongoFueling extends MongoEntityBase implements Fueling {
     public static final String FUEL_TYPE = "fuelType";
     public static final String COST = "cost";
@@ -55,6 +55,7 @@ public class MongoFueling extends MongoEntityBase implements Fueling {
     public static final String COMMENT = "comment";
     public static final String CAR = "car";
     public static final String USER = "user";
+    public static final String COLLECTION = "fuelings";
 
     @Id
     private ObjectId id = new ObjectId();
@@ -74,10 +75,8 @@ public class MongoFueling extends MongoEntityBase implements Fueling {
     @Embedded(CAR)
     private MongoSensor car;
     @Indexed
-    @Property(USER)
-    private Key<MongoUser> user;
-    @Transient
-    private User _user;
+    //@Reference(USER)
+    private MorphiaReference<MongoUser> user;
     @Property(MISSED_FUEL_STOP)
     private boolean missedFuelStop;
     @Property(PARTIAL_FUELING)
@@ -200,19 +199,12 @@ public class MongoFueling extends MongoEntityBase implements Fueling {
 
     @Override
     public User getUser() {
-        if (this._user == null) {
-            this._user = getMongoDB().deref(MongoUser.class, this.user);
-        }
-        return this._user;
+        return Ref.unwrap(user);
     }
 
     @Override
     public void setUser(@Nullable User user) {
-        Key<MongoUser> nKey = getMongoDB().key((MongoUser) user);
-        if (nKey == null || !nKey.equals(this.user)) {
-            this.user = nKey;
-            this._user = null;
-        }
+        this.user = Ref.wrap(user);
     }
 
     @Override

@@ -23,7 +23,6 @@ import com.google.inject.Inject;
 import org.envirocar.server.core.DataService;
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.MeasurementValue;
-import org.envirocar.server.core.entities.MeasurementValues;
 import org.envirocar.server.core.entities.Measurements;
 import org.envirocar.server.core.entities.Phenomenon;
 import org.envirocar.server.core.entities.Track;
@@ -68,6 +67,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.Set;
 import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -170,7 +170,7 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder {
         sftb.add(GEOMETRY_ATTRIBUTE_NAME, Point.class);
         sftb.add(ID_ATTRIBUTE_NAME, String.class);
         sftb.add(TIME_ATTRIBUTE_NAME, String.class);
-        measurements.stream().map(Measurement::getValues).flatMap(MeasurementValues::stream)
+        measurements.stream().map(Measurement::getValues).flatMap(Set::stream)
                     .map(this::getPropertyName).distinct().forEach(name -> sftb.add(name, String.class));
 
         return sftb.buildFeatureType();

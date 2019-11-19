@@ -38,4 +38,6 @@ public interface EntityFactory {
     Phenomenon createPhenomenon();
 
     Fueling createFueling();
+
+    PasswordReset createPasswordReset();
 }

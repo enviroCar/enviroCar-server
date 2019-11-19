@@ -88,7 +88,6 @@ public class MongoUserStatisticDaoTest {
         track = createTrack();
         phenomenon = createPhenomenon();
         createMeasurements();
-
     }
 
     @Test

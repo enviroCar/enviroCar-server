@@ -16,45 +16,39 @@
  */
 package org.envirocar.server.mongo.entity;
 
-import org.bson.types.ObjectId;
-import org.envirocar.server.core.entities.PasswordReset;
-import org.envirocar.server.core.entities.User;
-import org.joda.time.DateTime;
-import dev.morphia.Key;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.IndexOptions;
 import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.Property;
-import dev.morphia.annotations.Transient;
-import dev.morphia.mapping.Mapper;
+import dev.morphia.annotations.Reference;
+import dev.morphia.mapping.experimental.MorphiaReference;
+import org.bson.types.ObjectId;
+import org.envirocar.server.core.entities.PasswordReset;
+import org.envirocar.server.core.entities.User;
+import org.envirocar.server.mongo.util.Ref;
+import org.joda.time.DateTime;
 
-@Entity("passwordResetStatus")
+@Entity(value = MongoPasswordReset.COLLECTION, noClassnameStored = true)
 public class MongoPasswordReset extends MongoEntityBase implements PasswordReset {
 
-
-    public static final String NAME = Mapper.ID_KEY;
+    public static final String ID = "_id";
     public static final String EXPIRES = "expires";
     public static final String VERIFICATION_CODE = "code";
     public static final String USER = "user";
 
     public static final int EXPIRATION_PERIOD_HOURS = 24;
+    public static final String COLLECTION = "passwordResetStatus";
 
     @Id
     private final ObjectId id = new ObjectId();
-
     @Property(EXPIRES)
     @Indexed(options = @IndexOptions(expireAfterSeconds = EXPIRATION_PERIOD_HOURS * 60 * 60))
     private DateTime expires;
-
-    @Property(USER)
-    private Key<MongoUser> user;
-
+    //@Reference(USER)
+    private MorphiaReference<MongoUser> user;
     @Property(VERIFICATION_CODE)
     private String code;
-
-    @Transient
-    private MongoUser _user;
 
     public MongoPasswordReset() {
         setExpires(new DateTime().plusHours(EXPIRATION_PERIOD_HOURS));
@@ -71,15 +65,11 @@ public class MongoPasswordReset extends MongoEntityBase implements PasswordReset
 
     @Override
     public User getUser() {
-        if (this._user == null) {
-            this._user = getMongoDB().deref(MongoUser.class, this.user);
-        }
-        return this._user;
+        return Ref.unwrap(user);
     }
 
     public void setUser(User user) {
-        this._user = (MongoUser) user;
-        this.user = getMongoDB().key(this._user);
+        this.user = Ref.wrap(user);
     }
 
     @Override

@@ -16,6 +16,8 @@
  */
 package org.envirocar.server.mongo.dao;
 
+import com.google.inject.Inject;
+import com.mongodb.client.MongoCursor;
 import org.envirocar.server.core.dao.PhenomenonDao;
 import org.envirocar.server.core.entities.Phenomenon;
 import org.envirocar.server.core.entities.Phenomenons;
@@ -23,8 +25,6 @@ import org.envirocar.server.core.util.pagination.Pagination;
 import org.envirocar.server.mongo.MongoDB;
 import org.envirocar.server.mongo.entity.MongoPhenomenon;
 import org.envirocar.server.mongo.entity.MongoSensor;
-
-import com.google.inject.Inject;
 
 /**
  * TODO JavaDoc
@@ -41,7 +41,7 @@ public class MongoPhenomenonDao extends AbstractMongoDao<String, MongoPhenomenon
 
     @Override
     public MongoPhenomenon getByName(final String name) {
-        return q().field(MongoSensor.ID).equal(name).get();
+        return q().field(MongoSensor.ID).equal(name).first();
     }
 
     @Override
@@ -50,15 +50,15 @@ public class MongoPhenomenonDao extends AbstractMongoDao<String, MongoPhenomenon
     }
 
     @Override
-    public MongoPhenomenon create(Phenomenon phen) {
-        MongoPhenomenon ph = (MongoPhenomenon) phen;
-        save(ph);
-        return ph;
+    public MongoPhenomenon create(Phenomenon phenomenon) {
+        MongoPhenomenon mongoPhenomenon = (MongoPhenomenon) phenomenon;
+        save(mongoPhenomenon);
+        return mongoPhenomenon;
     }
 
     @Override
-    protected Phenomenons createPaginatedIterable(Iterable<MongoPhenomenon> i,
-                                                  Pagination p, long count) {
-        return Phenomenons.from(i).withPagination(p).withElements(count).build();
+    protected Phenomenons createPaginatedIterable(MongoCursor<MongoPhenomenon> i, Pagination p, long count) {
+        return Phenomenons.from(asCloseableIterator(i)).withPagination(p).withElements(count).build();
     }
+
 }

@@ -16,8 +16,11 @@
  */
 package org.envirocar.server.rest.encoding.rdf.linker;
 
-import javax.ws.rs.core.UriBuilder;
-
+import com.google.inject.Provider;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.vocabulary.RDF;
+import org.apache.jena.vocabulary.RDFS;
 import org.envirocar.server.core.entities.Phenomenon;
 import org.envirocar.server.rest.encoding.rdf.vocab.DUL;
 import org.envirocar.server.rest.encoding.rdf.vocab.SSN;
@@ -25,11 +28,7 @@ import org.envirocar.server.rest.resources.PhenomenonsResource;
 import org.envirocar.server.rest.resources.RootResource;
 import org.envirocar.server.rest.rights.AccessRights;
 
-import com.google.inject.Provider;
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.vocabulary.RDF;
-import org.apache.jena.vocabulary.RDFS;
+import javax.ws.rs.core.UriBuilder;
 
 /**
  * TODO JavaDoc
@@ -39,14 +38,14 @@ import org.apache.jena.vocabulary.RDFS;
 public class PhenomenonSSNLinker extends AbstractSSNLinker<Phenomenon> {
     @Override
     protected void linkInternal(Model m, Phenomenon t, AccessRights rights,
-            Resource uri, Provider<UriBuilder> uriBuilder) {
+                                Resource uri, Provider<UriBuilder> uriBuilder) {
         Resource phenomenon = m.createResource(uriBuilder.get()
-                .path(RootResource.class).path(RootResource.PHENOMENONS)
-                .path(PhenomenonsResource.PHENOMENON).build(t.getName())
-                .toASCIIString());
+                                                         .path(RootResource.class).path(RootResource.PHENOMENONS)
+                                                         .path(PhenomenonsResource.PHENOMENON).build(t.getName())
+                                                         .toASCIIString());
         phenomenon.addProperty(RDF.type, SSN.Property);
         Resource unit = m.createResource(fragment(phenomenon,
-                MeasurementSSNLinker.UNIT_FRAGMENT));
+                                                  MeasurementSSNLinker.UNIT_FRAGMENT));
         unit.addProperty(RDF.type, DUL.UnitOfMeasure);
         unit.addLiteral(RDFS.comment, t.getUnit());
     }

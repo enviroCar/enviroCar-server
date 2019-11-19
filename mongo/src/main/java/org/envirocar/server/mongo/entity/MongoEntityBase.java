@@ -16,21 +16,15 @@
  */
 package org.envirocar.server.mongo.entity;
 
-import static org.envirocar.server.mongo.util.MongoUtils.reverse;
-
-import org.envirocar.server.core.entities.BaseEntity;
-import org.envirocar.server.mongo.MongoDB;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
+import com.google.common.base.MoreObjects;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.PrePersist;
 import dev.morphia.annotations.Property;
-import dev.morphia.annotations.Transient;
 import dev.morphia.utils.IndexDirection;
-
-import com.google.common.base.MoreObjects;
-import com.google.common.base.MoreObjects.ToStringHelper;
-import com.google.inject.Inject;
+import org.envirocar.server.core.entities.BaseEntity;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 
 /**
  * TODO JavaDoc
@@ -40,10 +34,6 @@ import com.google.inject.Inject;
 public abstract class MongoEntityBase implements BaseEntity {
     public static final String CREATION_DATE = "created";
     public static final String LAST_MODIFIED = "modified";
-    public static final String RECENTLY_MODIFIED_ORDER = reverse(LAST_MODIFIED);
-    public static final String RECENTLY_CREATED_ORDER = reverse(CREATION_DATE);
-    @Transient
-    private MongoDB mongoDB;
     @Indexed(IndexDirection.DESC)
     @Property(CREATION_DATE)
     private DateTime creationTime;
@@ -88,19 +78,10 @@ public abstract class MongoEntityBase implements BaseEntity {
         return getModificationTime() != null;
     }
 
-    public MongoDB getMongoDB() {
-        return mongoDB;
-    }
-
-    @Inject
-    public void setMongoDB(MongoDB mongoDB) {
-        this.mongoDB = mongoDB;
-    }
-
     protected ToStringHelper toStringHelper() {
         return MoreObjects.toStringHelper(this)
-                .omitNullValues()
-                .add(CREATION_DATE, this.creationTime)
-                .add(LAST_MODIFIED, this.modificationTime);
+                          .omitNullValues()
+                          .add(CREATION_DATE, this.creationTime)
+                          .add(LAST_MODIFIED, this.modificationTime);
     }
 }

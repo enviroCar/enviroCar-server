@@ -17,6 +17,8 @@
 package org.envirocar.server.mongo.dao;
 
 import com.google.inject.Inject;
+import com.mongodb.client.MongoCursor;
+import dev.morphia.query.Sort;
 import org.bson.types.ObjectId;
 import org.envirocar.server.core.dao.TermsOfUseDao;
 import org.envirocar.server.core.entities.TermsOfUse;
@@ -24,11 +26,7 @@ import org.envirocar.server.core.entities.TermsOfUseInstance;
 import org.envirocar.server.core.util.pagination.Pagination;
 import org.envirocar.server.mongo.MongoDB;
 import org.envirocar.server.mongo.entity.MongoTermsOfUseInstance;
-import org.envirocar.server.mongo.util.MongoUtils;
-import dev.morphia.query.FindOptions;
-import dev.morphia.query.Sort;
 
-import java.util.Iterator;
 import java.util.Optional;
 
 /**
@@ -44,13 +42,12 @@ public class MongoTermsOfUseDao extends AbstractMongoDao<ObjectId, MongoTermsOfU
 
     @Override
     public TermsOfUse get(Pagination p) {
-        return fetch(q().order(MongoUtils.reverse(MongoTermsOfUseInstance.CREATION_DATE)), p);
+        return fetch(q().order(Sort.descending(MongoTermsOfUseInstance.ISSUED_DATE)), p);
     }
 
     @Override
-    protected TermsOfUse createPaginatedIterable(
-            Iterable<MongoTermsOfUseInstance> i, Pagination p, long count) {
-        return TermsOfUse.from(i).withPagination(p).withElements(count).build();
+    protected TermsOfUse createPaginatedIterable(MongoCursor<MongoTermsOfUseInstance> i, Pagination p, long count) {
+        return TermsOfUse.from(asCloseableIterator(i)).withPagination(p).withElements(count).build();
     }
 
     @Override
@@ -66,13 +63,6 @@ public class MongoTermsOfUseDao extends AbstractMongoDao<ObjectId, MongoTermsOfU
 
     @Override
     public Optional<TermsOfUseInstance> getLatest() {
-        Sort order = Sort.descending(MongoTermsOfUseInstance.ISSUED_DATE);
-        FindOptions options = new FindOptions().limit(1);
-        Iterator<MongoTermsOfUseInstance> privacyStatements = fetch(q().order(order), options).iterator();
-        if (privacyStatements.hasNext()) {
-            return Optional.of(privacyStatements.next());
-        }
-        return Optional.empty();
+        return Optional.ofNullable(q().order(Sort.descending(MongoTermsOfUseInstance.ISSUED_DATE)).first());
     }
-
 }

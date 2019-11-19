@@ -98,6 +98,7 @@ public class PaginationProviderImpl implements PaginationProvider {
         }
     }
 
+    @SafeVarargs
     private static <T> Optional<T> or(Optional<T>... alternatives) {
         return Arrays.stream(alternatives).filter(Optional::isPresent).map(Optional::get).findFirst();
     }

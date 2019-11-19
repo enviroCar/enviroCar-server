@@ -17,12 +17,12 @@
 package org.envirocar.server.core.dao;
 
 import org.envirocar.server.core.entities.Terms;
-import org.envirocar.server.core.util.UpCastingIterable;
+import org.envirocar.server.core.util.PaginatedIterableImpl;
 import org.envirocar.server.core.util.pagination.Pagination;
 
 import java.util.Optional;
 
-public interface TermsDao<T extends Terms, V extends UpCastingIterable<T>> {
+public interface TermsDao<T extends Terms, V extends PaginatedIterableImpl<T>> {
     V get(Pagination p);
 
     Optional<T> getById(String id);

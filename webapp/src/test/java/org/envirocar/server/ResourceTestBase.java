@@ -20,12 +20,12 @@ import com.fasterxml.jackson.databind.node.JsonNodeCreator;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBObject;
+import com.mongodb.client.MongoDatabase;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.core.util.Base64;
+import org.bson.Document;
 import org.envirocar.server.mongo.entity.MongoUser;
 import org.envirocar.server.rest.JSONConstants;
 import org.envirocar.server.rest.MediaTypes;
@@ -52,7 +52,7 @@ import static org.junit.Assert.assertThat;
  */
 public class ResourceTestBase {
     @Inject
-    private DB db;
+    private MongoDatabase db;
     @Inject
     private JsonNodeCreator nodeFactory;
     @ClassRule
@@ -95,7 +95,9 @@ public class ResourceTestBase {
                              .post(ClientResponse.class),
                    hasStatus(Response.Status.CREATED));
 
-        DBObject mongoUser = db.getCollection(MongoUser.COLLECTION).findOne(new BasicDBObject(MongoUser.NAME, name));
+        Document mongoUser = db.getCollection(MongoUser.COLLECTION)
+                               .find(new BasicDBObject(MongoUser.NAME, name))
+                               .first();
 
         Assert.assertThat(mongoUser, is(not(nullValue())));
         String confirmationCode = (String) mongoUser.get(MongoUser.CONFIRMATION_CODE);

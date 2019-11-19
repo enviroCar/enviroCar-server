@@ -16,20 +16,21 @@
  */
 package org.envirocar.server.core.entities;
 
-import org.envirocar.server.core.util.UpCastingIterable;
+import org.envirocar.server.core.util.CloseableIterator;
+import org.envirocar.server.core.util.PaginatedIterableImpl;
 
-public class Badges extends UpCastingIterable<Badge> {
+public class Badges extends PaginatedIterableImpl<Badge> {
 
     protected Badges(Builder builder) {
         super(builder);
     }
 
-    public static Builder from(Iterable<? extends Badge> delegate) {
+    public static Builder from(CloseableIterator<? extends Badge> delegate) {
         return new Builder(delegate);
     }
 
-    public static class Builder extends UpCastingIterable.Builder<Builder, Badges, Badge> {
-        protected Builder(Iterable<? extends Badge> delegate) {
+    public static class Builder extends PaginatedIterableImpl.Builder<Builder, Badges, Badge> {
+        protected Builder(CloseableIterator<? extends Badge> delegate) {
             super(delegate);
         }
 

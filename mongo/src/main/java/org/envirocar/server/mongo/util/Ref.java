@@ -14,12 +14,17 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.mongo.entity;
+package org.envirocar.server.mongo.util;
 
-import dev.morphia.annotations.Entity;
-import org.envirocar.server.core.entities.TermsOfUseInstance;
+import dev.morphia.mapping.experimental.MorphiaReference;
 
-@Entity(value = MongoTermsOfUseInstance.COLLECTION, noClassnameStored = true)
-public class MongoTermsOfUseInstance extends MongoTerms implements TermsOfUseInstance {
-    public static final String COLLECTION = "termsOfUse";
+public class Ref {
+    @SuppressWarnings("unchecked")
+    public static <X, T extends X> MorphiaReference<T> wrap(X t) {
+        return t == null ? null : MorphiaReference.wrap((T) t);
+    }
+
+    public static <T> T unwrap(MorphiaReference<T> m) {
+        return m == null ? null : m.get();
+    }
 }

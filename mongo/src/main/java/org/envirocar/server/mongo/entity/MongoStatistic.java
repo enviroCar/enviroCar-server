@@ -16,10 +16,10 @@
  */
 package org.envirocar.server.mongo.entity;
 
-import org.envirocar.server.core.entities.Phenomenon;
-import org.envirocar.server.core.statistics.Statistic;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Property;
+import org.envirocar.server.core.entities.Phenomenon;
+import org.envirocar.server.core.statistics.Statistic;
 
 /**
  * TODO JavaDoc

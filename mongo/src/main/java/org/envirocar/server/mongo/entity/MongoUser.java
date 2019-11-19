@@ -17,13 +17,18 @@
 package org.envirocar.server.mongo.entity;
 
 import com.google.common.base.Objects;
-import org.locationtech.jts.geom.Geometry;
+import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
+import dev.morphia.annotations.IndexOptions;
+import dev.morphia.annotations.Indexed;
+import dev.morphia.annotations.Property;
+import dev.morphia.annotations.Transient;
+import dev.morphia.mapping.experimental.MorphiaReference;
 import org.envirocar.server.core.entities.Gender;
 import org.envirocar.server.core.entities.User;
+import org.envirocar.server.mongo.util.Ref;
 import org.joda.time.DateTime;
-import dev.morphia.Key;
-import dev.morphia.annotations.*;
-import dev.morphia.mapping.Mapper;
+import org.locationtech.jts.geom.Geometry;
 
 import java.net.URL;
 import java.util.Collections;
@@ -34,11 +39,11 @@ import java.util.Set;
  *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-@Entity(MongoUser.COLLECTION)
+@Entity(value = MongoUser.COLLECTION, noClassnameStored = true)
 public class MongoUser extends MongoEntityBase implements User {
     public static final String TOKEN = "token";
     public static final String IS_ADMIN = "isAdmin";
-    public static final String NAME = Mapper.ID_KEY;
+    public static final String NAME = "_id";
     public static final String MAIL = "mail";
     public static final String FRIENDS = "friends";
     public static final String LAST_NAME = "lastName";
@@ -63,60 +68,53 @@ public class MongoUser extends MongoEntityBase implements User {
     public static final String PRIVACY_STATEMENT_VERSION = "privacyStatementVersion";
     public static final String COLLECTION = "users";
 
-    @Property(MongoUser.TOKEN)
+    @Property(TOKEN)
     private String token;
-    @Property(MongoUser.IS_ADMIN)
+    @Property(IS_ADMIN)
     private boolean isAdmin = false;
     @Id
     private String name;
     @Indexed
-    @Property(MongoUser.MAIL)
+    @Property(MAIL)
     private String mail;
-    @Property(MongoUser.FRIENDS)
-    private Set<Key<MongoUser>> friends;
-    @Property(MongoUser.FIRST_NAME)
+    //@Reference(FRIENDS)
+    private MorphiaReference<Set<MongoUser>> friends;
+    @Property(FIRST_NAME)
     private String firstName;
-    @Property(MongoUser.LAST_NAME)
+    @Property(LAST_NAME)
     private String lastName;
-    @Property(MongoUser.COUNTRY)
+    @Property(COUNTRY)
     private String country;
-    @Property(MongoUser.LOCATION)
+    @Property(LOCATION)
     private Geometry location;
-    @Property(MongoUser.ABOUT_ME)
+    @Property(ABOUT_ME)
     private String aboutMe;
-    @Property(MongoUser.URL)
+    @Property(URL)
     private URL url;
-    @Property(MongoUser.DAY_OF_BIRTH)
+    @Property(DAY_OF_BIRTH)
     private String dayOfBirth;
-    @Property(MongoUser.GENDER)
+    @Property(GENDER)
     private Gender gender;
-    @Property(MongoUser.LANGUAGE)
+    @Property(LANGUAGE)
     private String language;
-    @Property(MongoUser.BADGES)
+    @Property(BADGES)
     private Set<String> badges;
     /**
      * @deprecated use {@link #termsOfUseVersion} instead. kept for backwards compatibility
      */
     @Deprecated
-    @Property(MongoUser.ACCEPTED_TERMS_OF_USE)
+    @Property(ACCEPTED_TERMS_OF_USE)
     private String acceptedTermsOfUseVersion;
-    @Property(MongoUser.TERMS_OF_USE_VERSION)
+    @Property(TERMS_OF_USE_VERSION)
     private String termsOfUseVersion;
-    @Property(MongoUser.PRIVACY_STATEMENT_VERSION)
+    @Property(PRIVACY_STATEMENT_VERSION)
     private String privacyStatementVersion;
-
-    @Indexed(
-            options = @IndexOptions(
-                    unique = true,
-                    partialFilter = "{confirmationCode:{$type: \"string\"}}"
-            )
-    )
-    @Property(MongoUser.CONFIRMATION_CODE)
+    @Indexed(options = @IndexOptions(unique = true, partialFilter = "{confirmationCode:{$type: \"string\"}}"))
+    @Property(CONFIRMATION_CODE)
     private String confirmationCode;
     @Indexed(options = @IndexOptions(expireAfterSeconds = 0))
-    @Property(MongoUser.EXPIRE_AT)
+    @Property(EXPIRE_AT)
     private DateTime expireAt;
-
     @Transient
     private boolean hasAcceptedTermsOfUse = true;
     @Transient
@@ -169,17 +167,17 @@ public class MongoUser extends MongoEntityBase implements User {
         this.isAdmin = isAdmin;
     }
 
-    public Set<Key<MongoUser>> getFriends() {
-        return friends == null ? null : Collections.unmodifiableSet(friends);
+    public Set<MongoUser> getFriends() {
+        return Ref.unwrap(friends);
     }
 
     @Override
     public String toString() {
         return toStringHelper()
-                .add(NAME, name)
-                .add(MAIL, mail)
-                .add(IS_ADMIN, isAdmin)
-                .add(FRIENDS, friends).toString();
+                       .add(NAME, name)
+                       .add(MAIL, mail)
+                       .add(IS_ADMIN, isAdmin)
+                       .add(FRIENDS, friends).toString();
     }
 
     @Override
@@ -341,8 +339,8 @@ public class MongoUser extends MongoEntityBase implements User {
     }
 
     @Override
-    public void setAcceptedPrivacyStatement(boolean hasAccceptedPrivacyStatement) {
-        this.hasAcceptedPrivacyStatement = hasAccceptedPrivacyStatement;
+    public void setAcceptedPrivacyStatement(boolean hasAcceptedPrivacyStatement) {
+        this.hasAcceptedPrivacyStatement = hasAcceptedPrivacyStatement;
     }
 
     @Override

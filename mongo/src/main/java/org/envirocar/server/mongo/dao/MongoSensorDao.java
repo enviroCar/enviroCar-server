@@ -19,7 +19,13 @@ package org.envirocar.server.mongo.dao;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
-import com.mongodb.*;
+import com.mongodb.AggregationOptions;
+import com.mongodb.BasicDBObject;
+import com.mongodb.Cursor;
+import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
+import com.mongodb.client.MongoCursor;
+import dev.morphia.query.Query;
 import org.bson.types.ObjectId;
 import org.envirocar.server.core.CarSimilarityService;
 import org.envirocar.server.core.dao.SensorDao;
@@ -34,7 +40,6 @@ import org.envirocar.server.mongo.MongoDB;
 import org.envirocar.server.mongo.entity.MongoMeasurement;
 import org.envirocar.server.mongo.entity.MongoSensor;
 import org.envirocar.server.mongo.util.MongoUtils;
-import dev.morphia.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,8 +49,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import static org.envirocar.server.mongo.dao.MongoMeasurementDao.ID;
-
 /**
  * TODO JavaDoc
  *
@@ -54,9 +57,8 @@ import static org.envirocar.server.mongo.dao.MongoMeasurementDao.ID;
 public class MongoSensorDao extends AbstractMongoDao<ObjectId, MongoSensor, Sensors>
         implements SensorDao {
 
-    private static final Logger log = LoggerFactory.getLogger(MongoSensorDao.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MongoSensorDao.class);
     private final CarSimilarityService carSimilarity;
-
 
     @Inject
     public MongoSensorDao(MongoDB mongoDB, CarSimilarityService carSimilarity) {
@@ -75,7 +77,7 @@ public class MongoSensorDao extends AbstractMongoDao<ObjectId, MongoSensor, Sens
              */
             return this.carSimilarity.resolveMappedSensor(id);
         } catch (ResourceNotFoundException ex) {
-            log.trace("No mapped sensor found for id {}, fetching from db", id);
+            LOG.trace("No mapped sensor found for id {}, fetching from db", id);
         }
 
         ObjectId oid;
@@ -93,21 +95,18 @@ public class MongoSensorDao extends AbstractMongoDao<ObjectId, MongoSensor, Sens
         if (request.hasType()) {
             q.field(MongoSensor.TYPE).equal(request.getType());
         }
-
         if (request.hasUser()) {
             q.field(MongoSensor.ID).in(getIds(request.getUser()));
         }
-
         if (request.hasFilters()) {
             applyFilters(q, request.getFilters());
         }
-        Sensors result = fetch(q, request.getPagination());
-        return result;
+        return fetch(q, request.getPagination());
     }
 
-
     public List<ObjectId> getIds(User user) {
-        DBObject group = MongoUtils.group(new BasicDBObject(ID, MongoUtils.valueOf(MongoMeasurement.SENSOR, ID)));
+        DBObject group = MongoUtils.group(new BasicDBObject("_id", MongoUtils.valueOf(MongoMeasurement.SENSOR,
+                                                                                      MongoSensor.ID)));
         DBObject match = MongoUtils.match(MongoMeasurement.USER, ref(user));
         DBCollection collection = getMongoDB().getDatastore().getCollection(MongoMeasurement.class);
         List<DBObject> ops = Arrays.asList(match, group);
@@ -116,7 +115,7 @@ public class MongoSensorDao extends AbstractMongoDao<ObjectId, MongoSensor, Sens
             List<ObjectId> ids = new LinkedList<>();
             result.forEachRemaining(x -> {
                 //ids.add(new Key<>(MongoSensor.class, collection.getName(), x.get(ID)));
-                ids.add((ObjectId) x.get(ID));
+                ids.add((ObjectId) x.get("_id"));
             });
             return ids;
         }
@@ -131,9 +130,8 @@ public class MongoSensorDao extends AbstractMongoDao<ObjectId, MongoSensor, Sens
     }
 
     @Override
-    protected Sensors createPaginatedIterable(Iterable<MongoSensor> i,
-                                              Pagination p, long count) {
-        return Sensors.from(i).withElements(count).withPagination(p).build();
+    protected Sensors createPaginatedIterable(MongoCursor<MongoSensor> i, Pagination p, long count) {
+        return Sensors.from(asCloseableIterator(i)).withElements(count).withPagination(p).build();
     }
 
     private Query<MongoSensor> applyFilters(Query<MongoSensor> q,
@@ -164,20 +162,20 @@ public class MongoSensorDao extends AbstractMongoDao<ObjectId, MongoSensor, Sens
         return q.enableValidation();
     }
 
-    public boolean isTrue(String str) {
+    private boolean isTrue(String str) {
         return str.equalsIgnoreCase("true");
     }
 
-    public boolean isFalse(String str) {
+    private boolean isFalse(String str) {
         return str.equalsIgnoreCase("false");
     }
 
-    public boolean isNumeric(String str) {
+    private boolean isNumeric(String str) {
         DecimalFormatSymbols symbols = DecimalFormatSymbols.getInstance();
         char localeMinusSign = symbols.getMinusSign();
 
         if (!Character.isDigit(str.charAt(0)) &&
-                str.charAt(0) != localeMinusSign) {
+            str.charAt(0) != localeMinusSign) {
             return false;
         }
 

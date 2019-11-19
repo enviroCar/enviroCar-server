@@ -14,12 +14,9 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.mongo.entity;
+package org.envirocar.server.core.util;
 
-import dev.morphia.annotations.Entity;
-import org.envirocar.server.core.entities.TermsOfUseInstance;
-
-@Entity(value = MongoTermsOfUseInstance.COLLECTION, noClassnameStored = true)
-public class MongoTermsOfUseInstance extends MongoTerms implements TermsOfUseInstance {
-    public static final String COLLECTION = "termsOfUse";
+public interface CloseableIterable<T> extends Iterable<T>, AutoCloseable {
+    @Override
+    void close();
 }

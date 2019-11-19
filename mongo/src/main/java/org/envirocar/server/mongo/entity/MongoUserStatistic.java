@@ -17,15 +17,14 @@
 package org.envirocar.server.mongo.entity;
 
 import com.google.common.base.Objects;
-import org.envirocar.server.core.entities.TrackSummary;
-import org.envirocar.server.core.entities.UserStatistic;
-import org.joda.time.DateTime;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.Property;
-import dev.morphia.mapping.Mapper;
+import org.envirocar.server.core.entities.TrackSummary;
+import org.envirocar.server.core.entities.UserStatistic;
+import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,9 +36,9 @@ import static java.util.stream.Collectors.toList;
 /**
  * @author Maurin Radtke <maurin.radtke@uni-muenster.de>
  */
-@Entity("userstatistic")
+@Entity(value = MongoUserStatistic.COLLECTION, noClassnameStored = true)
 public class MongoUserStatistic implements UserStatistic {
-    public static final String ID = Mapper.ID_KEY;
+    public static final String ID = "_id";
     public static final String CREATED = "created";
     public static final String DISTANCE_TOTAL = "distance";
     public static final String DURATION_TOTAL = "duration";
@@ -51,6 +50,7 @@ public class MongoUserStatistic implements UserStatistic {
     public static final String DURATION_NAN = "durationNaN";
     public static final String TRACK_SUMMARIES = "trackSummaries";
     public static final String NUM_TRACKS = "numTracks";
+    public static final String COLLECTION = "userstatistic";
 
     @Id
     @Embedded

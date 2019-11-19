@@ -16,10 +16,13 @@
  */
 package org.envirocar.server.mongo.entity;
 
-import dev.morphia.Key;
+import com.google.common.base.Objects;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Property;
-import com.google.common.base.Objects;
+import dev.morphia.annotations.Reference;
+import org.envirocar.server.core.entities.Sensor;
+import org.envirocar.server.core.entities.Track;
+import org.envirocar.server.core.entities.User;
 
 /**
  * TODO JavaDoc
@@ -32,21 +35,19 @@ public class MongoStatisticKey {
     public static final String TRACK = "track";
     public static final String USER = "user";
     public static final String SENSOR = "sensor";
-    @Property(TRACK)
-    private Key<MongoTrack> track;
-    @Property(USER)
-    private Key<MongoUser> user;
-    @Property(SENSOR)
-    private Key<MongoSensor> sensor;
+    @Reference(value = TRACK, lazy = true)
+    private MongoTrack track;
+    @Reference(value = USER, lazy = true)
+    private MongoUser user;
+    @Reference(value = SENSOR, lazy = true)
+    private MongoSensor sensor;
     @Property(ALL)
     private boolean all;
 
-    public MongoStatisticKey(Key<MongoTrack> track,
-                             Key<MongoUser> user,
-                             Key<MongoSensor> sensor) {
-        this.track = track;
-        this.user = user;
-        this.sensor = sensor;
+    public MongoStatisticKey(Track track, User user, Sensor sensor) {
+        this.track = (MongoTrack) track;
+        this.user = (MongoUser) user;
+        this.sensor = (MongoSensor) sensor;
         all = track == null && user == null && sensor == null;
     }
 
@@ -54,30 +55,30 @@ public class MongoStatisticKey {
         this(null, null, null);
     }
 
-    public Key<MongoTrack> getTrack() {
+    public MongoTrack getTrack() {
         return track;
     }
 
-    public void setTrack(Key<MongoTrack> track) {
-        this.track = track;
+    public void setTrack(Track track) {
+        this.track = (MongoTrack) track;
         this.all = track == null && user == null && sensor == null;
     }
 
-    public Key<MongoUser> getUser() {
+    public MongoUser getUser() {
         return user;
     }
 
-    public void setUser(Key<MongoUser> user) {
-        this.user = user;
+    public void setUser(User user) {
+        this.user = (MongoUser) user;
         this.all = track == null && user == null && sensor == null;
     }
 
-    public Key<MongoSensor> getSensor() {
+    public MongoSensor getSensor() {
         return sensor;
     }
 
-    public void setSensor(Key<MongoSensor> sensor) {
-        this.sensor = sensor;
+    public void setSensor(Sensor sensor) {
+        this.sensor = (MongoSensor) sensor;
         this.all = track == null && user == null && sensor == null;
     }
 
@@ -118,6 +119,5 @@ public class MongoStatisticKey {
     public String toString() {
         return String.format("MongoStatisticKey [user=%s, track=%s, sensor=%s]", this.user, this.track, this.sensor);
     }
-    
-    
+
 }

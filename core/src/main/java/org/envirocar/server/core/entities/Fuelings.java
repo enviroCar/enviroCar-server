@@ -16,26 +16,26 @@
  */
 package org.envirocar.server.core.entities;
 
-import org.envirocar.server.core.util.UpCastingIterable;
+import org.envirocar.server.core.util.CloseableIterator;
+import org.envirocar.server.core.util.PaginatedIterableImpl;
 
 /**
- *
  * A collection of {@code Fueling}s.
  *
  * @author Christian Autermann
  */
-public class Fuelings extends UpCastingIterable<Fueling> {
+public class Fuelings extends PaginatedIterableImpl<Fueling> {
     protected Fuelings(Builder builder) {
         super(builder);
     }
 
-    public static Builder from(Iterable<? extends Fueling> delegate) {
+    public static Builder from(CloseableIterator<? extends Fueling> delegate) {
         return new Builder(delegate);
     }
 
-    public static class Builder extends UpCastingIterable.Builder<Builder, Fuelings, Fueling> {
+    public static class Builder extends PaginatedIterableImpl.Builder<Builder, Fuelings, Fueling> {
 
-        protected Builder(Iterable<? extends Fueling> delegate) {
+        protected Builder(CloseableIterator<? extends Fueling> delegate) {
             super(delegate);
         }
 

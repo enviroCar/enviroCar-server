@@ -147,7 +147,7 @@ public class TrackCSVEncoder extends AbstractCSVTrackEncoder<Track> {
         return sb.delete(sb.length() - delimiter.length(), sb.length());
     }
 
-    private String getValue(String phenomenonName, MeasurementValues values) {
+    private String getValue(String phenomenonName, Set<MeasurementValue> values) {
 
         String[] nameAndUnit = dissolvePropertyName(phenomenonName);
 
@@ -167,8 +167,7 @@ public class TrackCSVEncoder extends AbstractCSVTrackEncoder<Track> {
     private Set<String> gatherPropertiesForHeader(Measurements measurements) {
         Set<String> distinctPhenomenonNames = new HashSet<>();
         for (Measurement measurement : measurements) {
-            MeasurementValues values = measurement.getValues();
-            for (MeasurementValue measurementValue : values) {
+            for (MeasurementValue measurementValue : measurement.getValues()) {
                 Phenomenon phenomenon = measurementValue.getPhenomenon();
                 String unit = phenomenon.getUnit();
 

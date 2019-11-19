@@ -96,8 +96,8 @@ public class CarSimilarityServiceTest {
         Mockito.when(oldSensor.getProperties()).thenReturn(props);
         
         SensorDao dao = Mockito.mock(SensorDao.class);
-        Mockito.when(dao.get(Mockito.any(SensorFilter.class))).thenReturn(
-                Sensors.from(Collections.singletonList(oldSensor)).build());
+        Mockito.when(dao.get(Mockito.any(SensorFilter.class)))
+               .thenReturn(Sensors.from(Collections.singletonList(oldSensor)).build());
         Mockito.when(dao.getByIdentifier(id)).thenReturn(oldSensor);
         
         return dao;

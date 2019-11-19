@@ -16,6 +16,9 @@
  */
 package org.envirocar.server.mongo.dao;
 
+import com.google.inject.Inject;
+import com.mongodb.client.MongoCursor;
+import dev.morphia.query.Query;
 import org.bson.types.ObjectId;
 import org.envirocar.server.core.dao.FuelingDao;
 import org.envirocar.server.core.entities.Fueling;
@@ -26,9 +29,6 @@ import org.envirocar.server.mongo.MongoDB;
 import org.envirocar.server.mongo.entity.MongoFueling;
 import org.envirocar.server.mongo.entity.MongoUser;
 import org.envirocar.server.mongo.util.MorphiaUtils;
-
-import dev.morphia.query.Query;
-import com.google.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,10 +37,8 @@ import org.slf4j.LoggerFactory;
  *
  * @author Christian Autermann
  */
-public class MongoFuelingDao extends AbstractMongoDao<ObjectId, MongoFueling, Fuelings>
-        implements FuelingDao {
-    
-    private static final Logger log = LoggerFactory.getLogger(MongoFuelingDao.class);
+public class MongoFuelingDao extends AbstractMongoDao<ObjectId, MongoFueling, Fuelings> implements FuelingDao {
+    private static final Logger LOG = LoggerFactory.getLogger(MongoFuelingDao.class);
 
     @Inject
     public MongoFuelingDao(MongoDB mongoDB) {
@@ -48,9 +46,8 @@ public class MongoFuelingDao extends AbstractMongoDao<ObjectId, MongoFueling, Fu
     }
 
     @Override
-    protected Fuelings createPaginatedIterable(Iterable<MongoFueling> i,
-                                               Pagination p, long count) {
-        return Fuelings.from(i).withPagination(p).withElements(count).build();
+    protected Fuelings createPaginatedIterable(MongoCursor<MongoFueling> i, Pagination p, long count) {
+        return Fuelings.from(asCloseableIterator(i)).withPagination(p).withElements(count).build();
     }
 
     @Override
@@ -95,7 +92,7 @@ public class MongoFuelingDao extends AbstractMongoDao<ObjectId, MongoFueling, Fu
             oid = new ObjectId(fueling.getIdentifier());
             delete(oid);
         } catch (IllegalArgumentException e) {
-            log.warn(String.format("Cannot delete fueling %s", fueling), e);
+            LOG.warn(String.format("Cannot delete fueling %s", fueling), e);
         }
     }
 

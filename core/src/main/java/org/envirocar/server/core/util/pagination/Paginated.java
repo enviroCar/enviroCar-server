@@ -16,78 +16,30 @@
  */
 package org.envirocar.server.core.util.pagination;
 
-import com.google.common.base.MoreObjects;
-
 import java.util.Optional;
 
-/**
- * TODO JavaDoc
- *
- * @author Christian Autermann <autermann@uni-muenster.de>
- */
-public abstract class Paginated<T> {
-    private final Optional<Pagination> current;
-    private final Optional<Pagination> last;
-    private final Optional<Pagination> first;
-    private final Optional<Pagination> prev;
-    private final Optional<Pagination> next;
-    private final long elements;
+public interface Paginated {
+    Optional<Pagination> getCurrent();
 
-    public Paginated(Pagination current, long elements) {
-        this.current = Optional.ofNullable(current);
-        this.elements = elements;
-
-        if (this.current.isPresent()) {
-            this.last = this.current.get().last(this.elements);
-            this.first = this.current.get().first(this.elements);
-            this.prev = this.current.get().previous(this.elements);
-            this.next = this.current.get().next(this.elements);
-        } else {
-            Optional<Pagination> absent = Optional.empty();
-            this.last = absent;
-            this.first = absent;
-            this.prev = absent;
-            this.next = absent;
-        }
-
+    default Optional<Pagination> getLastPage() {
+        return getCurrent().flatMap(p -> p.last(getTotalCount()));
     }
 
-    public Optional<Pagination> getLast() {
-        return last;
+    default Optional<Pagination> getNextPage() {
+        return getCurrent().flatMap(p -> p.next(getTotalCount()));
     }
 
-    public Optional<Pagination> getNext() {
-        return this.next;
+    default Optional<Pagination> getPreviousPage() {
+        return getCurrent().flatMap(p -> p.previous(getTotalCount()));
     }
 
-    public Optional<Pagination> getCurrent() {
-        return this.current;
+    default Optional<Pagination> getFirstPage() {
+        return getCurrent().flatMap(p -> p.first(getTotalCount()));
     }
 
-    public Optional<Pagination> getPrevious() {
-        return this.prev;
+    default boolean isPaginated() {
+        return getCurrent().isPresent();
     }
 
-    public Optional<Pagination> getFirst() {
-        return this.first;
-    }
-
-    public boolean isPaginated() {
-        return this.current.isPresent();
-    }
-
-    public long getTotalCount() {
-        return this.elements;
-    }
-
-    @Override
-    public String toString() {
-        return MoreObjects.toStringHelper(this)
-                          .add("first", getFirst().orElse(null))
-                          .add("previous", getPrevious().orElse(null))
-                          .add("current", getCurrent().orElse(null))
-                          .add("next", getNext().orElse(null))
-                          .add("last", getLast().orElse(null))
-                          .toString();
-    }
+    long getTotalCount();
 }

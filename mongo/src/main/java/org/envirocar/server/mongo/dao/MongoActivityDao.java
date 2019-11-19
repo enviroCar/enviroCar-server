@@ -16,8 +16,10 @@
  */
 package org.envirocar.server.mongo.dao;
 
-import static org.envirocar.server.mongo.util.MongoUtils.reverse;
-
+import com.google.inject.Inject;
+import com.mongodb.client.MongoCursor;
+import dev.morphia.query.Query;
+import dev.morphia.query.Sort;
 import org.bson.types.ObjectId;
 import org.envirocar.server.core.activities.Activities;
 import org.envirocar.server.core.activities.Activity;
@@ -26,37 +28,22 @@ import org.envirocar.server.core.filter.ActivityFilter;
 import org.envirocar.server.core.util.pagination.Pagination;
 import org.envirocar.server.mongo.MongoDB;
 import org.envirocar.server.mongo.activities.MongoActivity;
+import org.envirocar.server.mongo.entity.MongoGroup;
 import org.envirocar.server.mongo.entity.MongoUser;
 
-import dev.morphia.query.Query;
-import com.google.inject.Inject;
+import java.util.Iterator;
 
 /**
  * TODO JavaDoc
  *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class MongoActivityDao extends AbstractMongoDao<ObjectId, MongoActivity, Activities>
-        implements ActivityDao {
-    private MongoGroupDao groupDao;
+public class MongoActivityDao extends AbstractMongoDao<ObjectId, MongoActivity, Activities> implements ActivityDao {
     private MongoUserDao userDao;
 
     @Inject
     public MongoActivityDao(MongoDB mongoDB) {
         super(MongoActivity.class, mongoDB);
-    }
-
-    public MongoGroupDao getGroupDao() {
-        return groupDao;
-    }
-
-    @Inject
-    public void setGroupDao(MongoGroupDao groupDao) {
-        this.groupDao = groupDao;
-    }
-
-    public MongoUserDao getUserDao() {
-        return userDao;
     }
 
     @Inject
@@ -65,9 +52,8 @@ public class MongoActivityDao extends AbstractMongoDao<ObjectId, MongoActivity, 
     }
 
     @Override
-    protected Activities createPaginatedIterable(Iterable<MongoActivity> i,
-                                                 Pagination p, long count) {
-        return Activities.from(i).withPagination(p).withElements(count).build();
+    protected Activities createPaginatedIterable(MongoCursor<MongoActivity> i, Pagination p, long count) {
+        return Activities.from(asCloseableIterator(i)).withPagination(p).withElements(count).build();
     }
 
     @Override
@@ -81,32 +67,28 @@ public class MongoActivityDao extends AbstractMongoDao<ObjectId, MongoActivity, 
         if (request.hasUser()) {
             MongoUser u = (MongoUser) request.getUser();
             if (request.isFriendActivities()) {
-                q.field(MongoActivity.USER)
-                        .in(userDao.getBidirectionalFriendRefs(u));
+                q.field(MongoActivity.USER).in(userDao.getBidirectionalFriends(u));
             } else {
-                q.field(MongoActivity.USER)
-                        .equal(key(u));
+                q.field(MongoActivity.USER).equal(key(u));
             }
         }
         if (request.hasGroup()) {
-            q.field(MongoActivity.USER)
-                    .in(groupDao.getMemberRefs(request.getGroup()));
+            q.field(MongoActivity.USER).in(((MongoGroup) request.getGroup()).getMembers());
         }
         if (request.hasType()) {
-            q.field(MongoActivity.TYPE)
-                    .equal(request.getType());
+            q.field(MongoActivity.TYPE).equal(request.getType());
         }
         return fetch(q, request.getPagination());
     }
 
     @Override
-    protected Iterable<MongoActivity> fetch(Query<MongoActivity> q) {
-        return super.fetch(q.order(reverse(MongoActivity.TIME)));
+    protected Iterator<MongoActivity> fetch(Query<MongoActivity> q) {
+        return super.fetch(q.order(Sort.descending(MongoActivity.TIME)));
     }
 
     @Override
     protected Activities fetch(Query<MongoActivity> q, Pagination p) {
-        return super.fetch(q.order(reverse(MongoActivity.TIME)), p);
+        return super.fetch(q.order(Sort.descending(MongoActivity.TIME)), p);
     }
 
     @Override
@@ -115,26 +97,22 @@ public class MongoActivityDao extends AbstractMongoDao<ObjectId, MongoActivity, 
         if (request.hasUser()) {
             MongoUser u = (MongoUser) request.getUser();
             if (request.isFriendActivities()) {
-                q.field(MongoActivity.USER)
-                        .in(userDao.getFriendRefs(u));
+                q.field(MongoActivity.USER).in(userDao.getFriends(u));
             } else {
-                q.field(MongoActivity.USER)
-                        .equal(key(u));
+                q.field(MongoActivity.USER).equal(key(u));
             }
         }
         if (request.hasGroup()) {
-            q.field(MongoActivity.USER)
-                    .in(groupDao.getMemberRefs(request.getGroup()));
+            q.field(MongoActivity.USER).in(((MongoGroup) request.getGroup()).getMembers());
         }
         if (request.hasType()) {
-            q.field(MongoActivity.TYPE)
-                    .equal(request.getType());
+            q.field(MongoActivity.TYPE).equal(request.getType());
         }
         try {
             q.field(MongoActivity.ID).equal(new ObjectId(id));
         } catch (IllegalArgumentException e) {
             return null;
         }
-        return q.get();
+        return q.first();
     }
 }

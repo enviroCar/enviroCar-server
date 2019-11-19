@@ -16,81 +16,76 @@
  */
 package org.envirocar.server.mongo.entity;
 
-import java.util.Map;
-
-import org.bson.types.ObjectId;
-import org.envirocar.server.core.entities.Announcement;
-
+import com.google.common.base.Objects;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Property;
-import dev.morphia.mapping.Mapper;
-import com.google.common.base.Objects;
+import org.bson.types.ObjectId;
+import org.envirocar.server.core.entities.Announcement;
 
-@Entity("announcements")
+import java.util.Map;
+
+@Entity(value = MongoAnnouncement.COLLECTION, noClassnameStored = true)
 public class MongoAnnouncement extends MongoEntityBase implements Announcement {
 
-	public static final String NAME = Mapper.ID_KEY;
-	public static final String CONTENTS = "content";
-	public static final String VERSIONS = "versions";
-	public static final String PRIORITY = "priority";
-	public static final String CATEGORY = "category";
+    public static final String NAME = "_id";
+    public static final String CONTENTS = "content";
+    public static final String VERSIONS = "versions";
+    public static final String PRIORITY = "priority";
+    public static final String CATEGORY = "category";
+    public static final String COLLECTION = "announcements";
 
-	@Id
-	private ObjectId id = new ObjectId();
-	
-	@Property(VERSIONS)
-	private String versions;
+    @Id
+    private ObjectId id = new ObjectId();
+    @Property(VERSIONS)
+    private String versions;
+    @Property(CONTENTS)
+    private Map<String, String> contents;
+    @Property(PRIORITY)
+    private String priority;
+    @Property(CATEGORY)
+    private String category;
 
-	@Property(CONTENTS)
-	private Map<String, String> contents;
-	
-	@Property(PRIORITY)
-	private String priority;
-	
-	@Property(CATEGORY)
-	private String category;
+    @Override
+    public String getVersions() {
+        return versions;
+    }
 
-	@Override
-	public String getVersions() {
-		return versions;
-	}
+    @Override
+    public void setVersions(String versions) {
+        this.versions = versions;
+    }
 
-	@Override
-	public void setVersions(String versions) {
-		this.versions = versions;
-	}
+    @Override
+    public Map<String, String> getContents() {
+        return contents;
+    }
 
-	@Override
-	public Map<String, String> getContents() {
-		return contents;
-	}
+    @Override
+    public void setContents(Map<String, String> contents) {
+        this.contents = contents;
+    }
 
-	@Override
-	public void setContents(Map<String, String> contents) {
-		this.contents = contents;
-	}
+    @Override
+    public String getPriority() {
+        return priority;
+    }
 
-	@Override
-	public String getPriority() {
-		return priority;
-	}
+    @Override
+    public void setPriority(String priority) {
+        this.priority = priority;
+    }
 
-	@Override
-	public void setPriority(String priority) {
-		this.priority = priority;
-	}
+    @Override
+    public String getCategory() {
+        return category;
+    }
 
-	@Override
-	public String getCategory() {
-		return category;
-	}
+    @Override
+    public void setCategory(String category) {
+        this.category = category;
+    }
 
-	@Override
-	public void setCategory(String category) {
-		this.category = category;
-	}
-	
     @Override
     public String getIdentifier() {
         return this.id == null ? null : this.id.toString();
@@ -100,22 +95,22 @@ public class MongoAnnouncement extends MongoEntityBase implements Announcement {
     public void setIdentifier(String id) {
         this.id = id == null ? null : new ObjectId(id);
     }
-    
-	@Override
-	public int hashCode() {
-		return Objects.hashCode(this.id);
-	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		final MongoAnnouncement other = (MongoAnnouncement) obj;
-		return Objects.equal(this.id, other.id);
-	}
-	
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(this.id);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final MongoAnnouncement other = (MongoAnnouncement) obj;
+        return Objects.equal(this.id, other.id);
+    }
+
 }

@@ -16,21 +16,22 @@
  */
 package org.envirocar.server.core.entities;
 
-import org.envirocar.server.core.util.UpCastingIterable;
+import org.envirocar.server.core.util.CloseableIterator;
+import org.envirocar.server.core.util.PaginatedIterableImpl;
 
-public class TermsOfUse extends UpCastingIterable<TermsOfUseInstance> {
+public class TermsOfUse extends PaginatedIterableImpl<TermsOfUseInstance> {
 
     protected TermsOfUse(Builder builder) {
         super(builder);
     }
 
-    public static Builder from(Iterable<? extends TermsOfUseInstance> delegate) {
+    public static Builder from(CloseableIterator<? extends TermsOfUseInstance> delegate) {
         return new Builder(delegate);
     }
 
-    public static class Builder extends UpCastingIterable.Builder<Builder, TermsOfUse, TermsOfUseInstance> {
+    public static class Builder extends PaginatedIterableImpl.Builder<Builder, TermsOfUse, TermsOfUseInstance> {
 
-        protected Builder(Iterable<? extends TermsOfUseInstance> delegate) {
+        protected Builder(CloseableIterator<? extends TermsOfUseInstance> delegate) {
             super(delegate);
         }
 
