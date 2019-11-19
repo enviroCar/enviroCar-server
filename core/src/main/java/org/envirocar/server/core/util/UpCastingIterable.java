@@ -16,15 +16,16 @@
  */
 package org.envirocar.server.core.util;
 
+import com.google.common.base.Joiner;
+import com.google.common.base.Preconditions;
 import org.envirocar.server.core.util.pagination.Paginated;
 import org.envirocar.server.core.util.pagination.Pagination;
 
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-
-import com.google.common.base.Joiner;
-import com.google.common.base.Preconditions;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 /**
  * TODO JavaDoc
@@ -38,6 +39,10 @@ public class UpCastingIterable<T> extends Paginated<T> implements Iterable<T> {
     public UpCastingIterable(Builder<?, ?, T> builder) {
         super(builder.getPagination(), builder.getElements());
         this.delegate = Preconditions.checkNotNull(builder.getDelegate());
+    }
+
+    public Stream<T> stream() {
+        return StreamSupport.stream(spliterator(), false);
     }
 
     @Override
@@ -109,7 +114,7 @@ public class UpCastingIterable<T> extends Paginated<T> implements Iterable<T> {
     @Override
     public String toString() {
         return Joiner.on(", ").appendTo(new StringBuilder()
-                .append(getClass().getSimpleName())
-                .append('['), iterator()).append(']').toString();
+                                                .append(getClass().getSimpleName())
+                                                .append('['), iterator()).append(']').toString();
     }
 }

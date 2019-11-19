@@ -52,7 +52,7 @@ import java.util.Set;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 @Singleton
-public class MongoDB {
+public class MongoDB implements AutoCloseable {
     public static final String MAPPED_CLASSES = "mappedClasses";
     public static final String HOST_PROPERTY = "host";
     public static final String PORT_PROPERTY = "port";
@@ -176,8 +176,7 @@ public class MongoDB {
     protected <T> ListMultimap<String, Key<T>> getKindMap(Class<T> clazz,
                                                           List<Key<T>> keys) {
         ListMultimap<String, Key<T>> kindMap = LinkedListMultimap.create();
-        String clazzKind = (clazz == null) ? null : getMapper()
-                                                            .getCollectionName(clazz);
+        String clazzKind = (clazz == null) ? null : getMapper().getCollectionName(clazz);
         for (Key<T> key : keys) {
             getMapper().updateCollection(key);
             String kind = key.getCollection();
@@ -190,5 +189,10 @@ public class MongoDB {
             kindMap.put(kind, key);
         }
         return kindMap;
+    }
+
+    @Override
+    public void close() {
+        this.mongo.close();
     }
 }
