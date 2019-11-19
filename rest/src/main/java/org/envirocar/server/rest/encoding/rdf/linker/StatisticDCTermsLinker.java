@@ -22,8 +22,8 @@ import org.envirocar.server.core.statistics.Statistic;
 import org.envirocar.server.rest.rights.AccessRights;
 
 import com.google.inject.Provider;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Resource;
 
 /**
  * @author Jan Wirwahn

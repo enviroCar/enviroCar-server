@@ -23,9 +23,9 @@ import javax.ws.rs.core.UriBuilder;
 import org.envirocar.server.rest.rights.AccessRights;
 
 import com.google.inject.Provider;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Resource;
 
 public abstract class AbstractCollectionRDFEntityEncoder<V, T extends Iterable<V>>
         extends AbstractRDFEntityEncoder<T> {

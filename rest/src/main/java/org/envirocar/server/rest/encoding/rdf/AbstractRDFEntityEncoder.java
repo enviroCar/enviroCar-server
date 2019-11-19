@@ -21,7 +21,7 @@ import javax.ws.rs.core.UriInfo;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-import com.hp.hpl.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Model;
 
 import org.envirocar.server.rest.encoding.RDFEntityEncoder;
 

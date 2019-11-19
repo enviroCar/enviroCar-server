@@ -18,7 +18,7 @@ package org.envirocar.server.rest.encoding.rdf.linker;
 
 import org.envirocar.server.rest.encoding.rdf.vocab.SSN;
 
-import com.hp.hpl.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Model;
 
 /**
  * TODO JavaDoc
