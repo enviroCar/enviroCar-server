@@ -16,19 +16,22 @@
  */
 package org.envirocar.server.mongo.entity;
 
-import com.google.common.base.Objects;
-import dev.morphia.annotations.Embedded;
-import dev.morphia.annotations.Entity;
-import dev.morphia.annotations.Id;
-import dev.morphia.annotations.Property;
-import dev.morphia.annotations.Reference;
-import dev.morphia.mapping.experimental.MorphiaReference;
+import static org.envirocar.server.mongo.entity.MongoMeasurement.IDENTIFIER;
+
 import org.bson.types.ObjectId;
 import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.entities.User;
-import org.envirocar.server.mongo.util.Ref;
 import org.joda.time.DateTime;
+
+import dev.morphia.Key;
+import dev.morphia.annotations.Embedded;
+import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
+import dev.morphia.annotations.Property;
+import dev.morphia.annotations.Transient;
+import dev.morphia.mapping.Mapper;
+import com.google.common.base.Objects;
 import org.locationtech.jts.geom.Geometry;
 
 /**
@@ -36,9 +39,9 @@ import org.locationtech.jts.geom.Geometry;
  *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-@Entity(value = MongoTrack.COLLECTION, noClassnameStored = true)
+@Entity("tracks")
 public class MongoTrack extends MongoEntityBase implements Track {
-    public static final String ID = "_id";
+    public static final String ID = Mapper.ID_KEY;
     public static final String USER = "user";
     public static final String SENSOR = "sensor";
     public static final String NAME = "name";
@@ -46,15 +49,16 @@ public class MongoTrack extends MongoEntityBase implements Track {
     public static final String BBOX = "bbox";
     public static final String BEGIN = "begin";
     public static final String END = "end";
-    public static final String APP_VERSION = "appVersion";
-    public static final String OBD_DEVICE = "obdDevice";
-    public static final String TERMS_OF_USE_VERSION = "touVersion";
-    public static final String LENGTH = "length";
-    public static final String COLLECTION = "tracks";
+	public static final String APP_VERSION = "appVersion";
+	public static final String OBD_DEVICE = "obdDevice";
+	public static final String TERMS_OF_USE_VERSION = "touVersion";
+	public static final String LENGTH = "length";
     @Id
     private ObjectId id = new ObjectId();
-    //@Reference(USER)
-    private MorphiaReference<MongoUser> user;
+    @Property(USER)
+    private Key<MongoUser> user;
+    @Transient
+    private MongoUser _user;
     @Embedded(SENSOR)
     private MongoSensor sensor;
     @Property(NAME)
@@ -78,12 +82,16 @@ public class MongoTrack extends MongoEntityBase implements Track {
 
     @Override
     public MongoUser getUser() {
-        return Ref.unwrap(user);
+        if (this._user == null) {
+            this._user = getMongoDB().deref(MongoUser.class, this.user);
+        }
+        return this._user;
     }
 
     @Override
     public void setUser(User user) {
-        this.user = Ref.wrap(user);
+        this._user = (MongoUser) user;
+        this.user = getMongoDB().key(this._user);
     }
 
     @Override
@@ -98,7 +106,12 @@ public class MongoTrack extends MongoEntityBase implements Track {
 
     @Override
     public boolean hasUser() {
-        return user != null;
+        return getUser() != null;
+    }
+
+    @Override
+    public boolean hasSensor() {
+        return getSensor() != null;
     }
 
     @Override
@@ -112,6 +125,11 @@ public class MongoTrack extends MongoEntityBase implements Track {
     }
 
     @Override
+    public boolean hasName() {
+        return getName() != null && !getName().isEmpty();
+    }
+
+    @Override
     public String getDescription() {
         return this.description;
     }
@@ -119,6 +137,11 @@ public class MongoTrack extends MongoEntityBase implements Track {
     @Override
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Override
+    public boolean hasDescription() {
+        return getDescription() != null && !getDescription().isEmpty();
     }
 
     @Override
@@ -146,6 +169,11 @@ public class MongoTrack extends MongoEntityBase implements Track {
         this.bbox = bbox;
     }
 
+    @Override
+    public boolean hasBoundingBox() {
+        return getBoundingBox() != null && !getBoundingBox().isEmpty();
+    }
+
     public ObjectId getId() {
         return id;
     }
@@ -157,15 +185,15 @@ public class MongoTrack extends MongoEntityBase implements Track {
     @Override
     public String toString() {
         return toStringHelper()
-                       .add(ID, id)
-                       .add(NAME, name)
-                       .add(DESCRIPTION, description)
-                       .add(USER, user)
-                       .add(SENSOR, sensor)
-                       .add(BBOX, bbox)
-                       .add(BEGIN, begin)
-                       .add(END, end)
-                       .toString();
+                .add(IDENTIFIER, id)
+                .add(NAME, name)
+                .add(DESCRIPTION, description)
+                .add(USER, user)
+                .add(SENSOR, sensor)
+                .add(BBOX, bbox)
+                .add(BEGIN, begin)
+                .add(END, end)
+                .toString();
     }
 
     @Override
@@ -196,6 +224,11 @@ public class MongoTrack extends MongoEntityBase implements Track {
     }
 
     @Override
+    public boolean hasBegin() {
+        return getBegin() != null;
+    }
+
+    @Override
     public DateTime getEnd() {
         return end;
     }
@@ -206,42 +239,68 @@ public class MongoTrack extends MongoEntityBase implements Track {
     }
 
     @Override
-    public String getAppVersion() {
-        return appVersion;
+    public boolean hasEnd() {
+        return getEnd() != null;
     }
 
     @Override
-    public void setAppVersion(String appVersion) {
-        this.appVersion = appVersion;
-    }
+	public String getAppVersion() {
+		return appVersion;
+	}
 
     @Override
-    public String getObdDevice() {
-        return obdDevice;
-    }
+	public void setAppVersion(String appVersion) {
+		this.appVersion = appVersion;
+	}
 
     @Override
-    public void setObdDevice(String obdDevice) {
-        this.obdDevice = obdDevice;
-    }
+	public String getObdDevice() {
+		return obdDevice;
+	}
 
     @Override
-    public String getTouVersion() {
-        return touVersion;
-    }
+	public void setObdDevice(String obdDevice) {
+		this.obdDevice = obdDevice;
+	}
 
     @Override
-    public double getLength() {
-        return length;
-    }
+	public String getTouVersion() {
+		return touVersion;
+	}
+
+	@Override
+	public double getLength() {		
+		return length;
+	}
+
+	@Override
+	public void setLength(double length) {
+		this.length = length;
+	}
 
     @Override
-    public void setLength(double length) {
-        this.length = length;
-    }
+	public void setTouVersion(String touVersion) {
+		this.touVersion = touVersion;
+	}
 
-    @Override
-    public void setTouVersion(String touVersion) {
-        this.touVersion = touVersion;
-    }
+	@Override
+	public boolean hasAppVersion() {
+		return appVersion != null && !appVersion.isEmpty();
+	}
+
+	@Override
+	public boolean hasObdDevice() {
+		return obdDevice != null && !obdDevice.isEmpty();
+	}
+
+	@Override
+	public boolean hasTouVersion() {
+		return touVersion != null && !touVersion.isEmpty();
+	}
+
+	@Override
+	public boolean hasLength() {
+		return getLength() != 0.0;
+	}
+    
 }

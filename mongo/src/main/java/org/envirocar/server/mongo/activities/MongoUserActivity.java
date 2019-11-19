@@ -16,15 +16,18 @@
  */
 package org.envirocar.server.mongo.activities;
 
-import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
-import com.google.inject.assistedinject.AssistedInject;
-import dev.morphia.mapping.experimental.MorphiaReference;
 import org.envirocar.server.core.activities.ActivityType;
 import org.envirocar.server.core.activities.UserActivity;
 import org.envirocar.server.core.entities.User;
+import org.envirocar.server.mongo.MongoDB;
 import org.envirocar.server.mongo.entity.MongoUser;
-import org.envirocar.server.mongo.util.Ref;
+
+import dev.morphia.Key;
+import dev.morphia.annotations.Property;
+import dev.morphia.annotations.Transient;
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
+import com.google.inject.assistedinject.AssistedInject;
 
 /**
  * TODO JavaDoc
@@ -33,29 +36,38 @@ import org.envirocar.server.mongo.util.Ref;
  */
 public class MongoUserActivity extends MongoActivity implements UserActivity {
     public static final String OTHER = "other";
-    private MorphiaReference<MongoUser> other;
+    @Property(OTHER)
+    private Key<MongoUser> other;
+    @Transient
+    private MongoUser _other;
 
     @AssistedInject
-    public MongoUserActivity(@Assisted ActivityType type,
+    public MongoUserActivity(MongoDB mongoDB,
+                             @Assisted ActivityType type,
                              @Assisted("user") User user,
                              @Assisted("other") User other) {
-        super(user, type);
-        this.other = Ref.wrap(other);
+        super(mongoDB, user, type);
+        this._other = (MongoUser) other;
+        this.other = mongoDB.key(this._other);
     }
 
     @Inject
-    public MongoUserActivity() {
-        this(null, null, null);
+    public MongoUserActivity(MongoDB mongoDB) {
+        this(mongoDB, null, null, null);
     }
 
     @Override
     public MongoUser getOther() {
-        return Ref.unwrap(other);
+        if (this._other == null) {
+            this._other = getMongoDB().deref(MongoUser.class, this.other);
+        }
+        return this._other;
     }
 
     @Override
-    public void setOther(User other) {
-        this.other = Ref.wrap(other);
+    public void setOther(User user) {
+        this._other = (MongoUser) user;
+        this.other = getMongoDB().key(this._other);
     }
 
     @Override

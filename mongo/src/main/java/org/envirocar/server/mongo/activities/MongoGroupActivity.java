@@ -19,13 +19,15 @@ package org.envirocar.server.mongo.activities;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
-import dev.morphia.mapping.experimental.MorphiaReference;
+import dev.morphia.Key;
+import dev.morphia.annotations.Property;
+import dev.morphia.annotations.Transient;
 import org.envirocar.server.core.activities.ActivityType;
 import org.envirocar.server.core.activities.GroupActivity;
 import org.envirocar.server.core.entities.Group;
 import org.envirocar.server.core.entities.User;
+import org.envirocar.server.mongo.MongoDB;
 import org.envirocar.server.mongo.entity.MongoGroup;
-import org.envirocar.server.mongo.util.Ref;
 
 /**
  * TODO JavaDoc
@@ -34,29 +36,38 @@ import org.envirocar.server.mongo.util.Ref;
  */
 public class MongoGroupActivity extends MongoActivity implements GroupActivity {
     public static final String GROUP = "group";
-    private MorphiaReference<MongoGroup> group;
+    @Property(GROUP)
+    private Key<MongoGroup> group;
+    @Transient
+    private MongoGroup _group;
 
     @AssistedInject
-    public MongoGroupActivity(@Assisted ActivityType type,
+    public MongoGroupActivity(MongoDB mongoDB,
+                              @Assisted ActivityType type,
                               @Assisted User user,
                               @Assisted Group group) {
-        super(user, type);
-        this.group = Ref.wrap(group);
+        super(mongoDB, user, type);
+        this._group = (MongoGroup) group;
+        this.group = mongoDB.key(this._group);
     }
 
     @Inject
-    public MongoGroupActivity() {
-        this(null, null, null);
+    public MongoGroupActivity(MongoDB mongoDB) {
+        this(mongoDB, null, null, null);
     }
 
     @Override
     public MongoGroup getGroup() {
-        return Ref.unwrap(group);
+        if (this._group == null) {
+            this._group = getMongoDB().deref(MongoGroup.class, this.group);
+        }
+        return this._group;
     }
 
     @Override
     public void setGroup(Group group) {
-        this.group = Ref.wrap(group);
+        this._group = (MongoGroup) group;
+        this.group = getMongoDB().key(this._group);
     }
 
     @Override

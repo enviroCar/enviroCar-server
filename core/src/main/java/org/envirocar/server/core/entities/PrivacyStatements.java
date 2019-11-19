@@ -16,22 +16,21 @@
  */
 package org.envirocar.server.core.entities;
 
-import org.envirocar.server.core.util.CloseableIterator;
-import org.envirocar.server.core.util.PaginatedIterableImpl;
+import org.envirocar.server.core.util.UpCastingIterable;
 
-public class PrivacyStatements extends PaginatedIterableImpl<PrivacyStatement> {
+public class PrivacyStatements extends UpCastingIterable<PrivacyStatement> {
 
     protected PrivacyStatements(PrivacyStatements.Builder builder) {
         super(builder);
     }
 
-    public static PrivacyStatements.Builder from(CloseableIterator<? extends PrivacyStatement> delegate) {
+    public static PrivacyStatements.Builder from(Iterable<? extends PrivacyStatement> delegate) {
         return new PrivacyStatements.Builder(delegate);
     }
 
-    public static class Builder extends PaginatedIterableImpl.Builder<PrivacyStatements.Builder, PrivacyStatements, PrivacyStatement> {
+    public static class Builder extends UpCastingIterable.Builder<PrivacyStatements.Builder, PrivacyStatements, PrivacyStatement> {
 
-        protected Builder(CloseableIterator<? extends PrivacyStatement> delegate) {
+        protected Builder(Iterable<? extends PrivacyStatement> delegate) {
             super(delegate);
         }
 

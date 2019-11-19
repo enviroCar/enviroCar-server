@@ -17,9 +17,6 @@
 package org.envirocar.server.mongo.dao;
 
 import com.google.inject.Inject;
-import dev.morphia.Datastore;
-import dev.morphia.query.Query;
-import dev.morphia.query.UpdateOperations;
 import org.envirocar.server.core.DataService;
 import org.envirocar.server.core.dao.UserStatisticDao;
 import org.envirocar.server.core.entities.Measurements;
@@ -32,10 +29,15 @@ import org.envirocar.server.core.filter.TrackFilter;
 import org.envirocar.server.core.filter.UserStatisticFilter;
 import org.envirocar.server.mongo.MongoDB;
 import org.envirocar.server.mongo.entity.MongoTrackSummary;
+import org.envirocar.server.mongo.entity.MongoUser;
 import org.envirocar.server.mongo.entity.MongoUserStatistic;
 import org.envirocar.server.mongo.entity.MongoUserStatisticKey;
 import org.envirocar.server.mongo.util.TrackStatistic;
 import org.envirocar.server.mongo.util.TrackStatisticImpl;
+import dev.morphia.Datastore;
+import dev.morphia.Key;
+import dev.morphia.dao.BasicDAO;
+import dev.morphia.query.UpdateOperations;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -52,6 +54,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * @author Maurin Radtke <maurin.radtke@uni-muenster.de>
  */
 public class MongoUserStatisticDao implements UserStatisticDao {
+    private final BasicDAO<MongoUserStatistic, MongoUserStatisticKey> dao;
     private final DataService dataService;
     private final MongoDB mongoDB;
     private final Map<MongoUserStatisticKey, CompletableFuture<MongoUserStatistic>> updates = new HashMap<>();
@@ -61,12 +64,16 @@ public class MongoUserStatisticDao implements UserStatisticDao {
     @Inject
     public MongoUserStatisticDao(MongoDB mongoDB, DataService dataService) {
         this.mongoDB = mongoDB;
+        this.dao = new BasicDAO<>(MongoUserStatistic.class, mongoDB.getDatastore());
         this.dataService = dataService;
+
     }
 
     @Override
     public UserStatistic get(UserStatisticFilter request) {
-        MongoUserStatistic result = getFor(request.getUser());
+
+        MongoUserStatisticKey key = key(request.getUser());
+        MongoUserStatistic result = this.dao.get(key);
         if (result != null) {
             return result;
         }
@@ -77,18 +84,10 @@ public class MongoUserStatisticDao implements UserStatisticDao {
         }
     }
 
-    private Query<MongoUserStatistic> q() {
-        return getDatastore().createQuery(MongoUserStatistic.class);
-    }
-
-    private Datastore getDatastore() {
-        return mongoDB.getDatastore();
-    }
-
     private CompletableFuture<MongoUserStatistic> getFuture(UserStatisticFilter request) {
         lock.writeLock().lock();
         try {
-            return updates.computeIfAbsent(new MongoUserStatisticKey(request.getUser()), this::createFuture);
+            return updates.computeIfAbsent(key(request.getUser()), this::createFuture);
         } finally {
             lock.writeLock().unlock();
         }
@@ -119,13 +118,13 @@ public class MongoUserStatisticDao implements UserStatisticDao {
                 trackStatistic.addTo(userStatistic);
             }
         }
-        getDatastore().save(userStatistic);
+        this.dao.save(userStatistic);
         return userStatistic;
     }
 
     @Override
     public void updateStatisticsOnTrackDeletion(Track track, Measurements measurements) {
-        MongoUserStatisticKey key = new MongoUserStatisticKey(track.getUser());
+        MongoUserStatisticKey key = key(track.getUser());
         lock.readLock().lock();
         try {
             if (updates.containsKey(key)) {
@@ -159,7 +158,7 @@ public class MongoUserStatisticDao implements UserStatisticDao {
 
         datastore.update(datastore.createQuery(MongoUserStatistic.class)
                                   .field(MongoUserStatistic.ID)
-                                  .equal(new MongoUserStatisticKey(track.getUser()))
+                                  .equal(new MongoUserStatisticKey(getKey(track.getUser())))
                                   .field(MongoUserStatistic.TRACK_SUMMARIES)
                                   .elemMatch(datastore.createQuery(MongoTrackSummary.class)
                                                       .field(MongoTrackSummary.IDENTIFIER)
@@ -169,7 +168,7 @@ public class MongoUserStatisticDao implements UserStatisticDao {
     @Override
     public void updateStatisticsOnNewTrack(Track track) {
 
-        MongoUserStatisticKey key = new MongoUserStatisticKey(track.getUser());
+        MongoUserStatisticKey key = key(track.getUser());
         lock.readLock().lock();
         try {
             if (updates.containsKey(key)) {
@@ -183,10 +182,12 @@ public class MongoUserStatisticDao implements UserStatisticDao {
     }
 
     private void updateOnInsertion(MongoUserStatisticKey key, Track track) {
+        Datastore datastore = mongoDB.getDatastore();
+
+        UpdateOperations<MongoUserStatistic> ops = dao.createUpdateOperations();
         TrackStatistic stats = new TrackStatisticImpl(track, getMeasurements(track));
-        UpdateOperations<MongoUserStatistic> ops = getDatastore().createUpdateOperations(MongoUserStatistic.class)
-                                                                 .inc(MongoUserStatistic.NUM_TRACKS)
-                                                                 .push(MongoUserStatistic.TRACK_SUMMARIES, stats.getSummary());
+        ops.inc(MongoUserStatistic.NUM_TRACKS);
+        ops.push(MongoUserStatistic.TRACK_SUMMARIES, stats.getSummary());
 
         if (stats.isValid()) {
             ops.inc(MongoUserStatistic.DISTANCE_ABOVE_130KMH, stats.getDistanceAbove130());
@@ -197,19 +198,28 @@ public class MongoUserStatisticDao implements UserStatisticDao {
             ops.inc(MongoUserStatistic.DURATION_BELOW_60KMH, stats.getDurationBelow60());
             ops.inc(MongoUserStatistic.DURATION_NAN, stats.getDurationNaN());
             ops.inc(MongoUserStatistic.DURATION_TOTAL, stats.getDuration());
+
         }
-        Query<MongoUserStatistic> query = getDatastore().createQuery(MongoUserStatistic.class)
-                                                        .field(MongoUserStatistic.ID).equal(key)
-                                                        .field(MongoUserStatistic.TRACK_SUMMARIES)
-                                                        .not().elemMatch(getDatastore()
-                                                                                 .createQuery(MongoTrackSummary.class)
-                                                                                 .field(MongoTrackSummary.IDENTIFIER)
-                                                                                 .equal(track.getIdentifier()));
-        getDatastore().update(query, ops);
+        datastore.update(datastore.createQuery(MongoUserStatistic.class)
+                                  .field(MongoUserStatistic.ID).equal(key)
+                                  .field(MongoUserStatistic.TRACK_SUMMARIES)
+                                  .not().elemMatch(datastore.createQuery(MongoTrackSummary.class)
+                                                            .field(MongoTrackSummary.IDENTIFIER)
+                                                            .equal(track.getIdentifier())), ops);
+    }
+
+    private MongoUserStatisticKey key(User user) {
+        return new MongoUserStatisticKey(getKey(user));
+    }
+
+    private Key<MongoUser> getKey(User user) {
+        return mongoDB.key((MongoUser) user);
     }
 
     private Tracks getTracks(MongoUserStatisticKey key) {
-        return dataService.getTracks(new TrackFilter(key.getUser()));
+        MongoUser user = new MongoUser();
+        user.setName((String) key.getUser().getId());
+        return dataService.getTracks(new TrackFilter(user));
     }
 
     private Measurements getMeasurements(Track track) {
@@ -217,7 +227,7 @@ public class MongoUserStatisticDao implements UserStatisticDao {
     }
 
     private MongoUserStatistic getFor(User user) {
-        return q().field(MongoUserStatistic.ID).equal(new MongoUserStatisticKey(user)).first();
+        return this.dao.get(key(user));
     }
 
 }

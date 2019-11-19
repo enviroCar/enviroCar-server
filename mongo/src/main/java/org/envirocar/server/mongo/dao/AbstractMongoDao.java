@@ -16,26 +16,30 @@
  */
 package org.envirocar.server.mongo.dao;
 
-import com.mongodb.DBRef;
-import com.mongodb.WriteResult;
-import com.mongodb.client.MongoCursor;
-import dev.morphia.AdvancedDatastore;
-import dev.morphia.FindAndModifyOptions;
-import dev.morphia.Key;
-import dev.morphia.mapping.Mapper;
-import dev.morphia.query.FindOptions;
-import dev.morphia.query.Query;
-import dev.morphia.query.UpdateOperations;
-import dev.morphia.query.UpdateResults;
-import org.envirocar.server.core.util.CloseableIterator;
-import org.envirocar.server.core.util.PaginatedIterableImpl;
+import org.envirocar.server.core.util.pagination.Paginated;
 import org.envirocar.server.core.util.pagination.Pagination;
 import org.envirocar.server.mongo.MongoDB;
 import org.envirocar.server.mongo.entity.MongoEntityBase;
 import org.joda.time.DateTime;
+import dev.morphia.Datastore;
+import dev.morphia.Key;
+import dev.morphia.annotations.Version;
+import dev.morphia.dao.BasicDAO;
+import dev.morphia.mapping.MappedClass;
+import dev.morphia.mapping.MappedField;
+import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.cache.EntityCache;
+import dev.morphia.query.FindOptions;
+import dev.morphia.query.Query;
+import dev.morphia.query.UpdateOperations;
+import dev.morphia.query.UpdateOpsImpl;
+import dev.morphia.query.UpdateResults;
 
-import java.util.Iterator;
-import java.util.Objects;
+import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
+import com.mongodb.DBRef;
+import com.mongodb.WriteResult;
+import com.mongodb.client.model.DBCollectionFindAndModifyOptions;
 
 /**
  * TODO JavaDoc
@@ -43,15 +47,16 @@ import java.util.Objects;
  * @param <K> the key type
  * @param <E> the entity type
  * @param <C> the collection type
+ *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public abstract class AbstractMongoDao<K, E, C extends PaginatedIterableImpl<? super E>> {
+public abstract class AbstractMongoDao<K, E, C extends Paginated<? super E>> {
+    private final BasicDAO<E, K> dao;
     private final MongoDB mongoDB;
-    private final Class<E> type;
 
     public AbstractMongoDao(Class<E> type, MongoDB mongoDB) {
         this.mongoDB = mongoDB;
-        this.type = Objects.requireNonNull(type);
+        this.dao = new BasicDAO<>(type, this.mongoDB.getDatastore());
     }
 
     public MongoDB getMongoDB() {
@@ -59,45 +64,47 @@ public abstract class AbstractMongoDao<K, E, C extends PaginatedIterableImpl<? s
     }
 
     protected Query<E> q() {
-        return getDatastore().createQuery(type);
+        return dao.createQuery();
     }
 
     protected UpdateOperations<E> up() {
-        return getDatastore().createUpdateOperations(type);
+        return dao.createUpdateOperations();
     }
 
     protected E get(K key) {
-        return q().field("_id").equal(key).first();
+        return dao.get(key);
     }
 
-    @Deprecated
     protected long count() {
-        return count(q());
+        return dao.count();
     }
 
-    @Deprecated
     protected long count(Query<E> q) {
-        return q.count();
+        return dao.count(q);
     }
 
     protected Key<E> save(E entity) {
-        return getDatastore().save(entity);
+        return dao.save(entity);
     }
 
     protected UpdateResults update(K key, UpdateOperations<E> ops) {
-        return getDatastore().update(q().field("_id").equal(key), ops);
+        return dao.update(q().field(Mapper.ID_KEY).equal(key), ops);
+    }
+
+    protected BasicDAO<E, K> dao() {
+        return this.dao;
     }
 
     protected UpdateResults update(Query<E> q, UpdateOperations<E> ops) {
-        return getDatastore().update(q, ops);
+        return dao.update(q, ops);
     }
 
-    protected Iterator<E> fetch(Query<E> q) {
-        return q.find();
+    protected Iterable<E> fetch(Query<E> q) {
+        return q.fetch();
     }
 
-    protected MongoCursor<E> fetch(Query<E> q, FindOptions options) {
-        return q.find(options);
+    protected Iterable<E> fetch(Query<E> q, FindOptions options) {
+        return dao.find(q).fetch(options);
     }
 
     protected C fetch(Query<E> q, Pagination p) {
@@ -109,28 +116,68 @@ public abstract class AbstractMongoDao<K, E, C extends PaginatedIterableImpl<? s
             findOptions.skip((int) p.getBegin());
             findOptions.limit((int) p.getLimit());
         }
-        return createPaginatedIterable(fetch(q, findOptions), p, count);
+        return createPaginatedIterable(fetch(q,findOptions), p, count);
     }
 
     protected E findAndModify(Query<E> query, UpdateOperations<E> update, boolean returnNew) {
-        return getDatastore().findAndModify(query, update, new FindAndModifyOptions()
-                                                                   .returnNew(returnNew)
-                                                                   .upsert(false));
+        Class<E> entityClass = query.getEntityClass();
+
+        Mapper mapper = getMapper();
+        Datastore datastore = getDatastore();
+        DBCollection dbColl = datastore.getCollection(entityClass);
+        MappedClass mc = mapper.getMappedClass(entityClass);
+
+        DBObject queryObject = query.getQueryObject();
+
+        if (update.isIsolated()) {
+            queryObject.put("$isolated", true);
+        }
+
+        mc.getFieldsAnnotatedWith(Version.class).stream()
+                .map(MappedField::getNameToStore)
+                .forEach(field -> update.inc(field, 1));
+
+        DBObject operations = ((UpdateOpsImpl) update).getOps();
+
+        DBCollectionFindAndModifyOptions options = new DBCollectionFindAndModifyOptions()
+                .upsert(false).remove(false).update(operations).returnNew(returnNew);
+
+        DBObject dbObject = dbColl.findAndModify(queryObject, options);
+
+        if (dbObject == null) {
+            return null;
+        }
+
+        EntityCache entityCache = mapper.createEntityCache();
+
+        E entity = mapper.fromDBObject(datastore, entityClass, dbObject, entityCache);
+
+        return entity;
     }
 
+    protected abstract C createPaginatedIterable(
+            Iterable<E> i, Pagination p, long count);
+
     protected WriteResult delete(K id) {
-        return getDatastore().delete(q().field("_id").equal(id));
+        return dao.deleteById(id);
     }
 
     protected WriteResult delete(Query<E> q) {
-        return getDatastore().delete(q);
+        return dao.deleteByQuery(q);
     }
 
     @SuppressWarnings("unchecked")
     protected void updateTimestamp(E e) {
-        final K key = (K) getDatastore().getKey(e).getId();
-        final UpdateOperations<E> operations = up().set(MongoEntityBase.LAST_MODIFIED, new DateTime());
-        update(key, operations);
+        update((K) this.mongoDB.getMapper().getId(e), up()
+               .set(MongoEntityBase.LAST_MODIFIED, new DateTime()));
+    }
+
+    public <T> T deref(Class<T> c, Key<T> key) {
+        return mongoDB.deref(c, key);
+    }
+
+    public <T> Iterable<T> deref(Class<T> c, Iterable<Key<T>> keys) {
+        return mongoDB.deref(c, keys);
     }
 
     public <T> Key<T> key(T entity) {
@@ -141,33 +188,11 @@ public abstract class AbstractMongoDao<K, E, C extends PaginatedIterableImpl<? s
         return mongoDB.ref(entity);
     }
 
-    public AdvancedDatastore getDatastore() {
-        return (AdvancedDatastore) mongoDB.getDatastore();
+    public Datastore getDatastore() {
+        return mongoDB.getDatastore();
     }
 
-    @Deprecated
     public Mapper getMapper() {
-        return mongoDB.getDatastore().getMapper();
-    }
-
-    protected abstract C createPaginatedIterable(MongoCursor<E> i, Pagination p, long count);
-
-    protected <T> CloseableIterator<T> asCloseableIterator(MongoCursor<T> cursor) {
-        return new CloseableIterator<T>() {
-            @Override
-            public void close() {
-                cursor.close();
-            }
-
-            @Override
-            public boolean hasNext() {
-                return cursor.hasNext();
-            }
-
-            @Override
-            public T next() {
-                return cursor.next();
-            }
-        };
+        return mongoDB.getMapper();
     }
 }

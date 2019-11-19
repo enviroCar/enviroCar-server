@@ -16,6 +16,20 @@
  */
 package org.envirocar.server.rest.encoding.rdf.linker;
 
+import org.envirocar.server.rest.encoding.rdf.vocab.SSN;
+import org.envirocar.server.rest.encoding.rdf.vocab.DUL;
+import javax.ws.rs.core.UriBuilder;
+
+import org.envirocar.server.core.entities.Measurement;
+import org.envirocar.server.core.entities.MeasurementValue;
+import org.envirocar.server.core.entities.MeasurementValues;
+import org.envirocar.server.rest.encoding.rdf.vocab.W3CGeo;
+import org.envirocar.server.rest.resources.PhenomenonsResource;
+import org.envirocar.server.rest.resources.RootResource;
+import org.envirocar.server.rest.resources.SensorsResource;
+import org.envirocar.server.rest.rights.AccessRights;
+import org.joda.time.format.DateTimeFormatter;
+
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
@@ -23,20 +37,7 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
-import org.envirocar.server.core.entities.Measurement;
-import org.envirocar.server.core.entities.MeasurementValue;
-import org.envirocar.server.rest.encoding.rdf.vocab.DUL;
-import org.envirocar.server.rest.encoding.rdf.vocab.SSN;
-import org.envirocar.server.rest.encoding.rdf.vocab.W3CGeo;
-import org.envirocar.server.rest.resources.PhenomenonsResource;
-import org.envirocar.server.rest.resources.RootResource;
-import org.envirocar.server.rest.resources.SensorsResource;
-import org.envirocar.server.rest.rights.AccessRights;
-import org.joda.time.format.DateTimeFormatter;
 import org.locationtech.jts.geom.Point;
-
-import javax.ws.rs.core.UriBuilder;
-import java.util.Set;
 
 /**
  * TODO JavaDoc
@@ -50,8 +51,8 @@ public class MeasurementSSNLinker extends AbstractSSNLinker<Measurement> {
     private static final String SENSING_FRAGMENT = "sensing";
     private static final String VALUE_FRAGMENT_POSTFIX = "_value";
     private static final String OUT_FRAGMENT_POSTFIX = "_out";
-    static final String UNIT_FRAGMENT = "unit";
-    private static final String FEATURE_FRAGMENT = "feature";
+    public static final String UNIT_FRAGMENT = "unit";
+    public static final String FEATURE_FRAGMENT = "feature";
     private final DateTimeFormatter formatter;
 
     @Inject
@@ -61,8 +62,8 @@ public class MeasurementSSNLinker extends AbstractSSNLinker<Measurement> {
 
     @Override
     protected void linkInternal(Model m, Measurement t, AccessRights rights,
-                                Resource measurement, Provider<UriBuilder> uriBuilder) {
-        Set<MeasurementValue> values = t.getValues();
+                         Resource measurement, Provider<UriBuilder> uriBuilder) {
+        MeasurementValues values = t.getValues();
 
         Resource samplingTime = createSamplingTime(m, measurement, t);
         Resource resultTime = createResultTime(m, measurement, t);
@@ -95,8 +96,9 @@ public class MeasurementSSNLinker extends AbstractSSNLinker<Measurement> {
         measurement.addProperty(RDF.type, SSN.Observation);
     }
 
-    private Resource createResultTime(Model m, Resource r, Measurement t) {
-        Resource creationTime = m.createResource(fragment(r, CREATIONTIME_FRAGMENT));
+    protected Resource createResultTime(Model m, Resource r, Measurement t) {
+        Resource creationTime = m
+                .createResource(fragment(r, CREATIONTIME_FRAGMENT));
         creationTime.addProperty(RDF.type, DUL.TimeInterval);
         creationTime.addProperty(DUL.hasDataValue,
                                  formatter.print(t.getCreationTime()),
@@ -104,7 +106,7 @@ public class MeasurementSSNLinker extends AbstractSSNLinker<Measurement> {
         return creationTime;
     }
 
-    private Resource createSamplingTime(Model m, Resource r, Measurement t) {
+    protected Resource createSamplingTime(Model m, Resource r, Measurement t) {
         Resource time = m.createResource(fragment(r, TIME_FRAGMENT));
         time.addProperty(RDF.type, DUL.TimeInterval);
         time.addProperty(DUL.hasDataValue,
@@ -113,41 +115,47 @@ public class MeasurementSSNLinker extends AbstractSSNLinker<Measurement> {
         return time;
     }
 
-    private Resource createFeatureOfInterest(Model m, Resource r, Measurement t) {
+    protected Resource createFeatureOfInterest(Model m, Resource r,
+                                               Measurement t) {
         Resource feature = m.createResource(fragment(r, FEATURE_FRAGMENT));
         feature.addProperty(RDF.type, SSN.FeatureOfInterest);
         if (t.getGeometry() instanceof Point) {
             m.setNsPrefix(W3CGeo.PREFIX, W3CGeo.URI);
             Point p = (Point) t.getGeometry();
             r.addLiteral(W3CGeo.lat, p.getY())
-             .addLiteral(W3CGeo.lon, p.getX());
+                    .addLiteral(W3CGeo.lon, p.getX());
         }
         return feature;
     }
 
-    private Resource createOurSensor(Model m, Provider<UriBuilder> uriBuilder, Measurement t) {
-        return m.createResource(uriBuilder.get()
-                                          .path(RootResource.class)
-                                          .path(RootResource.SENSORS)
-                                          .path(SensorsResource.SENSOR)
-                                          .build(t.getSensor().getIdentifier())
-                                          .toASCIIString());
+    protected Resource createOurSensor(Model m,
+                                       Provider<UriBuilder> uriBuilder,
+                                       Measurement t) {
+        Resource ourSensor = m.createResource(uriBuilder.get()
+                .path(RootResource.class)
+                .path(RootResource.SENSORS)
+                .path(SensorsResource.SENSOR)
+                .build(t.getSensor().getIdentifier())
+                .toASCIIString());
+        return ourSensor;
     }
 
-    private Resource createSensor(Model m, Resource ourSensor) {
+    protected Resource createSensor(Model m, Resource ourSensor) {
         Resource sensor = m.createResource(fragment(ourSensor, SENSOR_FRAGMENT));
         sensor.addProperty(RDF.type, SSN.Sensor);
         return sensor;
     }
 
-    private Resource createSensing(Model m, Resource sensor, Resource ourSensor) {
+    protected Resource createSensing(Model m, Resource sensor,
+                                     Resource ourSensor) {
         Resource sensing = m.createResource(fragment(sensor, SENSING_FRAGMENT));
         sensing.addProperty(RDF.type, SSN.Sensing);
         sensing.addProperty(SSN.hasInput, ourSensor);
         return sensing;
     }
 
-    private Resource createAmount(Model m, Resource measurement, MeasurementValue v, Resource unit) {
+    protected Resource createAmount(Model m, Resource measurement,
+                                    MeasurementValue v, Resource unit) {
         Resource amount = m.createResource(
                 fragment(measurement, v.getPhenomenon().getName() +
                                       VALUE_FRAGMENT_POSTFIX));
@@ -172,10 +180,12 @@ public class MeasurementSSNLinker extends AbstractSSNLinker<Measurement> {
         return amount;
     }
 
-    private Resource createSensorOutput(Model m, Resource measurement, MeasurementValue v, Resource sensor,
-                                        Resource unit) {
-        Resource sensorOutput = m.createResource(fragment(measurement, v.getPhenomenon()
-                                                                        .getName() + OUT_FRAGMENT_POSTFIX));
+    protected Resource createSensorOutput(Model m, Resource measurement,
+                                          MeasurementValue v, Resource sensor,
+                                          Resource unit) {
+        Resource sensorOutput = m.createResource(
+                fragment(measurement, v.getPhenomenon().getName() +
+                                      OUT_FRAGMENT_POSTFIX));
         sensorOutput.addProperty(RDF.type, SSN.SensorOutput);
         sensorOutput.addProperty(SSN.isProducedBy, sensor);
         Resource amount = createAmount(m, measurement, v, unit);
@@ -183,18 +193,22 @@ public class MeasurementSSNLinker extends AbstractSSNLinker<Measurement> {
         return sensorOutput;
     }
 
-    private Resource createPhenomenon(Model m, Provider<UriBuilder> uriBuilder, MeasurementValue v) {
+    protected Resource createPhenomenon(Model m,
+                                        Provider<UriBuilder> uriBuilder,
+                                        MeasurementValue v) {
         Resource phenomenon = m.createResource(uriBuilder.get()
-                                                         .path(RootResource.class)
-                                                         .path(RootResource.PHENOMENONS)
-                                                         .path(PhenomenonsResource.PHENOMENON)
-                                                         .build(v.getPhenomenon().getName()).toASCIIString());
+                .path(RootResource.class)
+                .path(RootResource.PHENOMENONS)
+                .path(PhenomenonsResource.PHENOMENON)
+                .build(v.getPhenomenon().getName()).toASCIIString());
         phenomenon.addProperty(RDF.type, SSN.Property);
         return phenomenon;
     }
 
-    private Resource createUnit(Model m, Resource phenomenon, MeasurementValue v) {
-        Resource unit = m.createResource(fragment(phenomenon, UNIT_FRAGMENT));
+    protected Resource createUnit(Model m, Resource phenomenon,
+                                  MeasurementValue v) {
+        Resource unit = m
+                .createResource(fragment(phenomenon, UNIT_FRAGMENT));
         unit.addProperty(RDF.type, DUL.UnitOfMeasure);
         unit.addLiteral(RDFS.comment, v.getPhenomenon().getUnit());
         return unit;

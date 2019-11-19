@@ -23,23 +23,23 @@ import org.envirocar.server.core.util.UpCastingIterable;
  *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class Users extends UpCastingIterable<User> {
-    protected Users(Builder builder) {
+public class MeasurementValues extends UpCastingIterable<MeasurementValue> {
+    protected MeasurementValues(Builder builder) {
         super(builder);
     }
 
-    public static Builder from(Iterable<? extends User> delegate) {
+    public static Builder from(Iterable<? extends MeasurementValue> delegate) {
         return new Builder(delegate);
     }
 
-    public static class Builder extends UpCastingIterable.Builder<Builder, Users, User> {
-        protected Builder(Iterable<? extends User> delegate) {
+    public static class Builder extends UpCastingIterable.Builder<Builder, MeasurementValues, MeasurementValue> {
+        protected Builder(Iterable<? extends MeasurementValue> delegate) {
             super(delegate);
         }
 
         @Override
-        public Users build() {
-            return new Users(this);
+        public MeasurementValues build() {
+            return new MeasurementValues(this);
         }
     }
 }

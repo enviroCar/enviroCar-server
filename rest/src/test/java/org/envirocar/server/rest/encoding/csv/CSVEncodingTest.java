@@ -16,18 +16,12 @@
  */
 package org.envirocar.server.rest.encoding.csv;
 
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.PrecisionModel;
 import org.envirocar.server.core.DataService;
-import org.envirocar.server.core.entities.Measurement;
-import org.envirocar.server.core.entities.MeasurementValue;
-import org.envirocar.server.core.entities.Measurements;
-import org.envirocar.server.core.entities.Phenomenon;
-import org.envirocar.server.core.entities.Sensor;
-import org.envirocar.server.core.entities.Track;
-import org.envirocar.server.mongo.entity.MongoMeasurement;
-import org.envirocar.server.mongo.entity.MongoMeasurementValue;
-import org.envirocar.server.mongo.entity.MongoPhenomenon;
-import org.envirocar.server.mongo.entity.MongoSensor;
-import org.envirocar.server.mongo.entity.MongoTrack;
+import org.envirocar.server.core.entities.*;
+import org.envirocar.server.mongo.entity.*;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.rights.NonRestrictiveRights;
 import org.joda.time.DateTime;
@@ -37,9 +31,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
 import org.junit.rules.ExpectedException;
-import org.locationtech.jts.geom.Coordinate;
-import org.locationtech.jts.geom.GeometryFactory;
-import org.locationtech.jts.geom.PrecisionModel;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnit;
@@ -48,12 +39,7 @@ import org.mockito.junit.MockitoRule;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
@@ -78,6 +64,7 @@ public class CSVEncodingTest {
     private final Sensor sensor = createSensor();
     private final List<Phenomenon> phenomenons = createPhenomenons();
 
+
     @Before
     public void setup() {
         this.trackCSVEncoder = new TrackCSVEncoder(this.dataService);
@@ -92,16 +79,17 @@ public class CSVEncodingTest {
         Measurements measurements = createTrackWithMeasurements_AllMeasurementsHaveAllPhenomenons();
         Mockito.when(dataService.getMeasurements(Mockito.anyObject())).thenReturn(measurements);
 
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(
-                trackCSVEncoder.encodeCSV(track, MediaTypes.CSV_TYPE)));
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(trackCSVEncoder.encodeCSV(track, MediaTypes.CSV_TYPE)));
+
+        String line;
 
         String[] propertyNames = new String[0];
         String[] propertyValues1 = new String[0];
         String[] propertyValues2 = new String[0];
 
-        String line;
         for (int i = 0; i < 3; i++) {
-            if ((line = bufferedReader.readLine()) != null) {
+            line = bufferedReader.readLine();
+            if (line != null) {
                 switch (i) {
                     case 0:
                         propertyNames = line.split(";");
@@ -112,6 +100,7 @@ public class CSVEncodingTest {
                     case 2:
                         propertyValues2 = line.split(";");
                         break;
+
                     default:
                         break;
                 }
@@ -154,7 +143,8 @@ public class CSVEncodingTest {
         Mockito.when(dataService.getMeasurements(Mockito.anyObject())).thenReturn(measurements);
 
         BufferedReader bufferedReader = new BufferedReader(
-                new InputStreamReader(trackCSVEncoder.encodeCSV(track, MediaTypes.CSV_TYPE)));
+                new InputStreamReader(trackCSVEncoder.encodeCSV(track,
+                        MediaTypes.CSV_TYPE)));
 
         String line;
 
@@ -175,6 +165,7 @@ public class CSVEncodingTest {
                     case 2:
                         line2 = line.split(";");
                         break;
+
                     default:
                         break;
                 }
@@ -216,8 +207,7 @@ public class CSVEncodingTest {
         Measurements measurements = createTrackWithMeasurements_FirstMeasurementHasMorePhenomenons();
         Mockito.when(dataService.getMeasurements(Mockito.anyObject())).thenReturn(measurements);
 
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(
-                trackCSVEncoder.encodeCSV(track, MediaTypes.CSV_TYPE)));
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(trackCSVEncoder.encodeCSV(track, MediaTypes.CSV_TYPE)));
 
         String line;
 
@@ -238,12 +228,14 @@ public class CSVEncodingTest {
                     case 2:
                         line2 = line.split(";");
                         break;
+
                     default:
                         break;
                 }
             }
 
         }
+
 
         Iterator<Measurement> iterator = measurements.iterator();
 
@@ -274,23 +266,29 @@ public class CSVEncodingTest {
     }
 
     private Measurements createTrackWithMeasurements_AllMeasurementsHaveAllPhenomenons() {
-        return Measurements.from(Arrays.asList(createMeasurement(this.phenomenons, 1),
-                                               createMeasurement(this.phenomenons, 2))).build();
+        return Measurements.from(Arrays.asList(
+                createMeasurement(this.phenomenons, 1),
+                createMeasurement(this.phenomenons, 2)
+        )).build();
 
     }
 
     private Measurements createTrackWithMeasurements_FirstMeasurementHasLessPhenomenons() {
         List<Phenomenon> lessPhenomena = new ArrayList<>(this.phenomenons);
         lessPhenomena.remove(lessPhenomena.size() - 1);
-        return Measurements.from(Arrays.asList(createMeasurement(lessPhenomena, 1),
-                                               createMeasurement(this.phenomenons, 2))).build();
+        return Measurements.from(Arrays.asList(
+                createMeasurement(lessPhenomena, 1),
+                createMeasurement(this.phenomenons, 2)
+        )).build();
     }
 
     private Measurements createTrackWithMeasurements_FirstMeasurementHasMorePhenomenons() {
         List<Phenomenon> lessPhenomena = new ArrayList<>(this.phenomenons);
         lessPhenomena.remove(lessPhenomena.size() - 1);
-        return Measurements.from(Arrays.asList(createMeasurement(this.phenomenons, 1),
-                                               createMeasurement(lessPhenomena, 2))).build();
+        return Measurements.from(Arrays.asList(
+                createMeasurement(this.phenomenons, 1),
+                createMeasurement(lessPhenomena, 2)
+        )).build();
     }
 
     private Measurement createMeasurement(List<Phenomenon> phenomena, int basenumber) {
@@ -346,8 +344,7 @@ public class CSVEncodingTest {
         return phenomenon;
     }
 
-    private void checkMeasurementValues(String[] propertyNames, String[] propertyValues,
-                                        Map<String, String> expectedValues) {
+    private void checkMeasurementValues(String[] propertyNames, String[] propertyValues, Map<String, String> expectedValues) {
         for (int i = 0; i < propertyNames.length; i++) {
             String propertyName = propertyNames[i].trim();
             if (!propertyName.equals("time")) {

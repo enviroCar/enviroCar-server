@@ -17,6 +17,7 @@
 package org.envirocar.server.core.entities;
 
 import org.joda.time.DateTime;
+
 import org.locationtech.jts.geom.Geometry;
 
 /**
@@ -29,95 +30,71 @@ public interface Track extends BaseEntity {
 
     void setName(String name);
 
-    default boolean hasName() {
-        return getName() != null && !getName().isEmpty();
-    }
+    boolean hasName();
 
     String getDescription();
 
     void setDescription(String description);
 
-    default boolean hasDescription() {
-        return getDescription() != null && !getDescription().isEmpty();
-    }
+    boolean hasDescription();
 
     String getIdentifier();
 
     void setIdentifier(String id);
 
-    default boolean hasIdentifier() {
-        return getIdentifier() != null && !getIdentifier().isEmpty();
-    }
+    boolean hasIdentifier();
 
     Geometry getBoundingBox();
 
     void setBoundingBox(Geometry boundingBox);
 
-    default boolean hasBoundingBox() {
-        return getBoundingBox() != null && !getBoundingBox().isEmpty();
-    }
+    boolean hasBoundingBox();
 
     User getUser();
 
     void setUser(User user);
 
-    default boolean hasUser() {
-        return getUser() != null;
-    }
+    boolean hasUser();
 
     Sensor getSensor();
 
     void setSensor(Sensor track);
 
-    default boolean hasSensor() {
-        return getSensor() != null;
-    }
+    boolean hasSensor();
 
     DateTime getBegin();
 
     void setBegin(DateTime begin);
 
-    default boolean hasBegin() {
-        return getBegin() != null;
-    }
+    boolean hasBegin();
 
     DateTime getEnd();
 
     void setEnd(DateTime end);
 
-    default boolean hasEnd() {
-        return getEnd() != null;
-    }
+    boolean hasEnd();
 
-    void setTouVersion(String touVersion);
+	void setTouVersion(String touVersion);
 
-    String getTouVersion();
+	String getTouVersion();
 
-    void setObdDevice(String obdDevice);
+	void setObdDevice(String obdDevice);
 
-    String getObdDevice();
+	String getObdDevice();
 
-    void setAppVersion(String appVersion);
+	void setAppVersion(String appVersion);
 
-    String getAppVersion();
+	String getAppVersion();
 
-    default boolean hasAppVersion() {
-        return getAppVersion() != null && !getAppVersion().isEmpty();
-    }
+	boolean hasAppVersion();
 
-    default boolean hasObdDevice() {
-        return getObdDevice() != null && !getObdDevice().isEmpty();
-    }
+	boolean hasObdDevice();
 
-    default boolean hasTouVersion() {
-        return getTouVersion() != null && !getTouVersion().isEmpty();
-    }
+	boolean hasTouVersion();
+	
+	double getLength();
+	
+	void setLength(double length);
 
-    double getLength();
-
-    void setLength(double length);
-
-    default boolean hasLength() {
-        return getLength() > 0.0d;
-    }
+	boolean hasLength();
 }

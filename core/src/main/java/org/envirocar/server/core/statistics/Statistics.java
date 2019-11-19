@@ -16,35 +16,30 @@
  */
 package org.envirocar.server.core.statistics;
 
-import java.util.Iterator;
-import java.util.Objects;
+import org.envirocar.server.core.util.UpCastingIterable;
 
 /**
  * TODO JavaDoc
  *
  * @author jan
  */
-public class Statistics implements Iterable<Statistic> {
-    private final Iterable<? extends Statistic> delegate;
-
-    public Statistics(Iterable<? extends Statistic> delegate) {
-        this.delegate = Objects.requireNonNull(delegate);
+public class Statistics extends UpCastingIterable<Statistic> {
+    protected Statistics(Builder builder) {
+        super(builder);
     }
 
-    @Override
-    public Iterator<Statistic> iterator() {
-        return new Iterator<Statistic>() {
-            final Iterator<? extends Statistic> it = delegate.iterator();
+    public static Builder from(Iterable<? extends Statistic> delegate) {
+        return new Builder(delegate);
+    }
 
-            @Override
-            public boolean hasNext() {
-                return it.hasNext();
-            }
+    public static class Builder extends UpCastingIterable.Builder<Builder, Statistics, Statistic> {
+        protected Builder(Iterable<? extends Statistic> delegate) {
+            super(delegate);
+        }
 
-            @Override
-            public Statistic next() {
-                return it.next();
-            }
-        };
+        @Override
+        public Statistics build() {
+            return new Statistics(this);
+        }
     }
 }

@@ -16,8 +16,6 @@
  */
 package org.envirocar.server.mongo.dao;
 
-import com.google.inject.Inject;
-import com.mongodb.client.MongoCursor;
 import org.bson.types.ObjectId;
 import org.envirocar.server.core.dao.AnnouncementsDao;
 import org.envirocar.server.core.entities.Announcement;
@@ -26,33 +24,36 @@ import org.envirocar.server.core.util.pagination.Pagination;
 import org.envirocar.server.mongo.MongoDB;
 import org.envirocar.server.mongo.entity.MongoAnnouncement;
 
+import com.google.inject.Inject;
+
 public class MongoAnnouncementsDao extends AbstractMongoDao<ObjectId, MongoAnnouncement, Announcements>
-        implements AnnouncementsDao {
+		implements AnnouncementsDao {
 
-    @Inject
-    public MongoAnnouncementsDao(MongoDB mongoDB) {
-        super(MongoAnnouncement.class, mongoDB);
-    }
+	@Inject
+	public MongoAnnouncementsDao(MongoDB mongoDB) {
+		super(MongoAnnouncement.class, mongoDB);
+	}
 
-    @Override
-    public Announcements get(Pagination p) {
-        return fetch(q(), p);
-    }
+	@Override
+	public Announcements get(Pagination p) {
+		return fetch(q(), p);
+	}
 
-    @Override
-    protected Announcements createPaginatedIterable(MongoCursor<MongoAnnouncement> i, Pagination p, long count) {
-        return Announcements.from(asCloseableIterator(i)).withPagination(p).withElements(count).build();
-    }
+	@Override
+	protected Announcements createPaginatedIterable(
+			Iterable<MongoAnnouncement> i, Pagination p, long count) {
+		return Announcements.from(i).withPagination(p).withElements(count).build();
+	}
 
-    @Override
-    public Announcement getById(String id) {
-        ObjectId oid;
-        try {
-            oid = new ObjectId(id);
-        } catch (IllegalArgumentException e) {
-            return null;
-        }
-        return super.get(oid);
-    }
+	@Override
+	public Announcement getById(String id) {
+		ObjectId oid;
+		try {
+			oid = new ObjectId(id);
+		} catch (IllegalArgumentException e) {
+			return null;
+		}
+		return super.get(oid);
+	}
 
 }

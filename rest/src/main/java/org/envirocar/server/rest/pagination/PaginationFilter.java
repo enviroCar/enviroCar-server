@@ -16,16 +16,19 @@
  */
 package org.envirocar.server.rest.pagination;
 
-import com.sun.jersey.core.header.LinkHeader;
-import com.sun.jersey.spi.container.ContainerRequest;
-import com.sun.jersey.spi.container.ContainerResponse;
-import com.sun.jersey.spi.container.ContainerResponseFilter;
+import java.net.URI;
+import java.util.Optional;
+
+import javax.ws.rs.core.MediaType;
+
 import org.envirocar.server.core.util.pagination.Paginated;
 import org.envirocar.server.core.util.pagination.Pagination;
 import org.envirocar.server.rest.RESTConstants;
 
-import javax.ws.rs.core.MediaType;
-import java.net.URI;
+import com.sun.jersey.core.header.LinkHeader;
+import com.sun.jersey.spi.container.ContainerRequest;
+import com.sun.jersey.spi.container.ContainerResponse;
+import com.sun.jersey.spi.container.ContainerResponseFilter;
 
 public class PaginationFilter implements ContainerResponseFilter {
     public static final String REL_FIRST = "first";
@@ -40,7 +43,7 @@ public class PaginationFilter implements ContainerResponseFilter {
                                     ContainerResponse res) {
         Object entity = res.getEntity();
         if (entity instanceof Paginated) {
-            Paginated p = (Paginated) entity;
+            Paginated<?> p = (Paginated) entity;
             if (p.isPaginated()) {
                 insertLinks(p, req, res);
                 insertRangeHeader(p, res);
@@ -49,7 +52,7 @@ public class PaginationFilter implements ContainerResponseFilter {
         return res;
     }
 
-    private void insertRangeHeader(Paginated p, ContainerResponse res) {
+    private void insertRangeHeader(Paginated<?> p, ContainerResponse res) {
         if (p.getCurrent().isPresent()) {
             Pagination current = p.getCurrent().get();
             StringBuilder sb = new StringBuilder("items ");
@@ -65,19 +68,35 @@ public class PaginationFilter implements ContainerResponseFilter {
         }
     }
 
-    private void insertLinks(Paginated p, ContainerRequest req, ContainerResponse res) {
-        p.getFirstPage().ifPresent(pagination -> addLink(REL_FIRST, pagination, req, res));
-        p.getLastPage().ifPresent(pagination -> addLink(REL_LAST, pagination, req, res));
-        p.getPreviousPage().ifPresent(pagination -> addLink(REL_PREV, pagination, req, res));
-        p.getNextPage().ifPresent(pagination -> addLink(REL_NEXT, pagination, req, res));
+
+    private void insertLinks(Paginated<?> p,
+                             ContainerRequest req,
+                             ContainerResponse res) {
+        java.util.Optional<Pagination> first = p.getFirst();
+        if (first.isPresent()) {
+            addLink(REL_FIRST, first.get(), req, res);
+        }
+        Optional<Pagination> last = p.getLast();
+        if (last.isPresent()) {
+            addLink(REL_LAST, last.get(), req, res);
+        }
+        java.util.Optional<Pagination> previous = p.getPrevious();
+        if (previous.isPresent()) {
+            addLink(REL_PREV, previous.get(), req, res);
+        }
+        java.util.Optional<Pagination> next = p.getNext();
+        if (next.isPresent()) {
+            addLink(REL_NEXT, next.get(), req, res);
+        }
     }
 
-    protected void addLink(String rel, Pagination p, ContainerRequest req, ContainerResponse res) {
-        if (p.getPage() >= 0 && p.getLimit() >= 0) {
+    protected void addLink(String rel, Pagination p, ContainerRequest req,
+                           ContainerResponse res) {
+        if (p.getPage()>= 0 && p.getLimit() >= 0) {
             URI uri = req.getRequestUriBuilder()
-                         .replaceQueryParam(RESTConstants.LIMIT, p.getLimit())
-                         .replaceQueryParam(RESTConstants.PAGE, p.getPage())
-                         .build();
+                    .replaceQueryParam(RESTConstants.LIMIT, p.getLimit())
+                    .replaceQueryParam(RESTConstants.PAGE, p.getPage())
+                    .build();
             MediaType type = res.getMediaType();
             LinkHeader header = LinkHeader.uri(uri).type(type).rel(rel).build();
             res.getHttpHeaders().add(LINK_HEADER, header.toString());

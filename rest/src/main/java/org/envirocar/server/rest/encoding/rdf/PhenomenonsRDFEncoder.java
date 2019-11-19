@@ -16,16 +16,18 @@
  */
 package org.envirocar.server.rest.encoding.rdf;
 
-import com.google.inject.Inject;
-import org.envirocar.server.core.entities.Phenomenon;
-import org.envirocar.server.core.entities.Phenomenons;
-import org.envirocar.server.rest.resources.PhenomenonsResource;
-import org.envirocar.server.rest.resources.RootResource;
+import java.util.Set;
 
 import javax.inject.Singleton;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.ext.Provider;
-import java.util.Set;
+
+import org.envirocar.server.core.entities.Phenomenon;
+import org.envirocar.server.core.entities.Phenomenons;
+
+import com.google.inject.Inject;
+import org.envirocar.server.rest.resources.PhenomenonsResource;
+import org.envirocar.server.rest.resources.RootResource;
 
 /**
  * TODO JavaDoc
@@ -41,12 +43,13 @@ public class PhenomenonsRDFEncoder extends AbstractCollectionRDFEntityEncoder<Ph
     }
 
     @Override
-    protected String getURI(Phenomenon t, com.google.inject.Provider<UriBuilder> uri) {
+    protected String getURI(Phenomenon t,
+                            com.google.inject.Provider<UriBuilder> uri) {
         return uri.get()
-                  .path(RootResource.class)
-                  .path(RootResource.PHENOMENONS)
-                  .path(PhenomenonsResource.PHENOMENON)
-                  .build(t.getName())
-                  .toASCIIString();
+                .path(RootResource.class)
+                .path(RootResource.PHENOMENONS)
+                .path(PhenomenonsResource.PHENOMENON)
+                .build(t.getName())
+                .toASCIIString();
     }
 }

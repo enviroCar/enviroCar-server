@@ -66,11 +66,13 @@ public class RangeBasedPagination implements Pagination {
     @Override
     public long getPage() {
         return this.page;
+
     }
 
-    private boolean isLastChunk(long elements) {
+    protected boolean isLastChunk(long elements) {
         return this.end >= elements - 1;
     }
+
 
     private boolean isNextChunkLast(long elements) {
         return this.end + this.size >= elements - 1;
@@ -106,8 +108,8 @@ public class RangeBasedPagination implements Pagination {
             return Optional.empty();
         }
         long start = elements % this.size == 0L
-                     ? elements - this.size
-                     : (long) Math.floor(elements / this.size) * this.size;
+                ? elements - this.size
+                : (long) Math.floor(elements / this.size) * this.size;
         return optionalRange(start, elements - 1);
     }
 
@@ -116,7 +118,7 @@ public class RangeBasedPagination implements Pagination {
         if (obj instanceof RangeBasedPagination) {
             RangeBasedPagination that = (RangeBasedPagination) obj;
             return this.getBegin() == that.getBegin() &&
-                   this.getEnd() == that.getEnd();
+                    this.getEnd() == that.getEnd();
         }
         return false;
     }
@@ -131,7 +133,7 @@ public class RangeBasedPagination implements Pagination {
         return String.format("RangeBasedPagination(%d-%d)", this.begin, this.end);
     }
 
-    private static Optional<Pagination> optionalRange(long begin, long end) {
+    protected static Optional<Pagination> optionalRange(long begin, long end) {
         return Optional.of(new RangeBasedPagination(begin, end));
     }
 }

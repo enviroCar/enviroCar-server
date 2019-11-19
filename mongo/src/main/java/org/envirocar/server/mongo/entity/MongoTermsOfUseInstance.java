@@ -16,10 +16,8 @@
  */
 package org.envirocar.server.mongo.entity;
 
-import dev.morphia.annotations.Entity;
 import org.envirocar.server.core.entities.TermsOfUseInstance;
+import dev.morphia.annotations.Entity;
 
-@Entity(value = MongoTermsOfUseInstance.COLLECTION, noClassnameStored = true)
-public class MongoTermsOfUseInstance extends MongoTerms implements TermsOfUseInstance {
-    public static final String COLLECTION = "termsOfUse";
-}
+@Entity("termsOfUse")
+public class MongoTermsOfUseInstance extends MongoTerms implements TermsOfUseInstance {}

@@ -22,7 +22,6 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.mongodb.DB;
 import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
-import com.mongodb.client.MongoDatabase;
 import dev.morphia.Datastore;
 import dev.morphia.Morphia;
 import dev.morphia.mapping.Mapper;
@@ -36,7 +35,6 @@ import org.envirocar.server.core.entities.Fueling;
 import org.envirocar.server.core.entities.Group;
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.MeasurementValue;
-import org.envirocar.server.core.entities.PasswordReset;
 import org.envirocar.server.core.entities.Phenomenon;
 import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.core.entities.Track;
@@ -50,7 +48,6 @@ import org.envirocar.server.mongo.entity.MongoFueling;
 import org.envirocar.server.mongo.entity.MongoGroup;
 import org.envirocar.server.mongo.entity.MongoMeasurement;
 import org.envirocar.server.mongo.entity.MongoMeasurementValue;
-import org.envirocar.server.mongo.entity.MongoPasswordReset;
 import org.envirocar.server.mongo.entity.MongoPhenomenon;
 import org.envirocar.server.mongo.entity.MongoSensor;
 import org.envirocar.server.mongo.entity.MongoTrack;
@@ -75,7 +72,6 @@ public class MongoModule extends AbstractModule {
                         .implement(Phenomenon.class, MongoPhenomenon.class)
                         .implement(Sensor.class, MongoSensor.class)
                         .implement(Fueling.class, MongoFueling.class)
-                        .implement(PasswordReset.class, MongoPasswordReset.class)
                         .build(EntityFactory.class));
         install(new FactoryModuleBuilder()
                         .implement(Activity.class, MongoActivity.class)
@@ -114,7 +110,7 @@ public class MongoModule extends AbstractModule {
     }
 
     @Provides
-    public MongoDatabase db(Datastore datastore) {
-        return datastore.getDatabase();
+    public DB db(Datastore datastore) {
+        return datastore.getDB();
     }
 }

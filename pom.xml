@@ -230,11 +230,6 @@
                 <version>${morphia-version}</version>
             </dependency>
             <dependency>
-                <groupId>cglib</groupId>
-                <artifactId>cglib-nodep</artifactId>
-                <version>3.3.0</version>
-            </dependency>
-            <dependency>
                 <artifactId>mongo-java-driver</artifactId>
                 <groupId>org.mongodb</groupId>
                 <version>3.8.2</version>

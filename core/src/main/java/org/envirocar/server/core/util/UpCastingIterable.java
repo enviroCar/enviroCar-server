@@ -16,14 +16,14 @@
  */
 package org.envirocar.server.core.util;
 
-import org.envirocar.server.core.util.pagination.AbstractPaginated;
-import org.envirocar.server.core.util.pagination.PaginatedIterable;
+import com.google.common.base.Joiner;
+import com.google.common.base.Preconditions;
+import org.envirocar.server.core.util.pagination.Paginated;
 import org.envirocar.server.core.util.pagination.Pagination;
 
-import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -32,12 +32,13 @@ import java.util.stream.StreamSupport;
  *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class PaginatedIterableImpl<T> extends AbstractPaginated implements PaginatedIterable<T> {
+public class UpCastingIterable<T> extends Paginated<T> implements Iterable<T> {
     private final Iterable<? extends T> delegate;
+    private List<T> items = null;
 
-    public PaginatedIterableImpl(Builder<?, ?, T> builder) {
+    public UpCastingIterable(Builder<?, ?, T> builder) {
         super(builder.getPagination(), builder.getElements());
-        this.delegate = Objects.requireNonNull(builder.getDelegate());
+        this.delegate = Preconditions.checkNotNull(builder.getDelegate());
     }
 
     public Stream<T> stream() {
@@ -45,71 +46,75 @@ public class PaginatedIterableImpl<T> extends AbstractPaginated implements Pagin
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public Iterator<T> iterator() {
-        return new Iterator<T>() {
-            final Iterator<? extends T> it = delegate.iterator();
+        if (items == null) {
+            items = new LinkedList<>();
+            return new Iterator<T>() {
+                private final Iterator<? extends T> it = delegate.iterator();
 
-            @Override
-            public boolean hasNext() {
-                return it.hasNext();
-            }
+                @Override
+                public boolean hasNext() {
+                    return it.hasNext();
+                }
 
-            @Override
-            public T next() {
-                return it.next();
-            }
-        };
+                @Override
+                public T next() {
+                    T t = it.next();
+                    items.add(t);
+                    return t;
+                }
+
+                @Override
+                public void remove() {
+                    throw new UnsupportedOperationException();
+                }
+            };
+        } else {
+            return items.iterator();
+        }
     }
 
-    public abstract static class Builder<B extends Builder<B, I, T>, I extends PaginatedIterableImpl<T>, T> {
+    public abstract static class Builder<B extends Builder<B, I, T>, I extends UpCastingIterable<T>, T> {
         private final Iterable<? extends T> delegate;
         private Pagination pagination;
         private long elements;
-
-        public Builder(CloseableIterator<? extends T> delegate) {
-            try {
-                List<T> a = new ArrayList<T>();
-                while (delegate.hasNext()) {
-                    final T next = delegate.next();
-                    a.add(next);
-                }
-                this.delegate = a;
-            } finally {
-                delegate.close();
-            }
-        }
 
         public Builder(Iterable<? extends T> delegate) {
             this.delegate = delegate;
         }
 
+        @SuppressWarnings("unchecked")
         public B withPagination(Pagination pagination) {
             this.pagination = pagination;
-            return self();
-        }
-
-        public B withElements(long elements) {
-            this.elements = elements;
-            return self();
-        }
-
-        @SuppressWarnings("unchecked")
-        private B self() {
             return (B) this;
         }
 
-        private Iterable<? extends T> getDelegate() {
+        @SuppressWarnings("unchecked")
+        public B withElements(long elements) {
+            this.elements = elements;
+            return (B) this;
+        }
+
+        protected Iterable<? extends T> getDelegate() {
             return delegate;
         }
 
-        private Pagination getPagination() {
+        protected Pagination getPagination() {
             return pagination;
         }
 
-        private long getElements() {
+        protected long getElements() {
             return elements;
         }
 
         public abstract I build();
+    }
+
+    @Override
+    public String toString() {
+        return Joiner.on(", ").appendTo(new StringBuilder()
+                                                .append(getClass().getSimpleName())
+                                                .append('['), iterator()).append(']').toString();
     }
 }

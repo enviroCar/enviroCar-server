@@ -22,7 +22,7 @@ import com.google.common.base.Objects;
 import java.util.Optional;
 
 public class PageBasedPagination implements Pagination {
-    private final long size;
+	private final long size;
     private final long page;
     private final long begin;
     private final long end;
@@ -61,45 +61,45 @@ public class PageBasedPagination implements Pagination {
     @Override
     public Optional<Pagination> first(long elements) {
         if (page == 1 || page > lastPage(elements)) {
-            return Optional.empty();
+            return java.util.Optional.empty();
         } else {
-            return Optional.of(new PageBasedPagination(size, 0));
+            return java.util.Optional.of(new PageBasedPagination(size, 0));
         }
     }
 
     @Override
-    public Optional<Pagination> previous(long elements) {
+    public java.util.Optional<Pagination> previous(long elements) {
         if (page <= 2 || page > lastPage(elements)) {
-            return Optional.empty();
+            return java.util.Optional.empty();
         } else {
-            return Optional.of(new PageBasedPagination(size, page - 1));
+            return java.util.Optional.of(new PageBasedPagination(size, page -
+                                                                         1));
         }
     }
 
     @Override
-    public Optional<Pagination> next(long elements) {
+    public java.util.Optional<Pagination> next(long elements) {
         long lastPage = lastPage(elements);
         if (page >= (lastPage - 1)) {
-            return Optional.empty();
+            return java.util.Optional.empty();
         } else {
-            return Optional.of(new PageBasedPagination(size, page + 1));
+            return java.util.Optional.of(new PageBasedPagination(size, page +
+                                                                         1));
         }
     }
 
     @Override
-    public Optional<Pagination> last(long elements) {
+    public java.util.Optional<Pagination> last(long elements) {
         long lastPage = lastPage(elements);
         if (page == lastPage) {
-            return Optional.empty();
+            return java.util.Optional.empty();
         } else {
-            return Optional.of(new PageBasedPagination(size, lastPage));
+            return java.util.Optional.of(new PageBasedPagination(size, lastPage));
         }
     }
 
-    private long lastPage(long elements) {
-        if (elements == 0) {
-            return 1;
-        }
+    protected long lastPage(long elements) {
+        if (elements == 0) { return 1; }
         long p = elements / size;
         return (elements % size) == 0 ? p : p + 1;
     }
@@ -122,9 +122,9 @@ public class PageBasedPagination implements Pagination {
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
-                          .add("size", this.size)
-                          .add("page", this.page)
-                          .toString();
+                .add("size", this.size)
+                .add("page", this.page)
+                .toString();
     }
 
 }

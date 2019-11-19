@@ -16,12 +16,12 @@
  */
 package org.envirocar.server.mongo;
 
+import dev.morphia.ObjectFactory;
+import dev.morphia.ext.guice.GuiceObjectFactory;
+import dev.morphia.mapping.Mapper;
+
 import com.google.inject.Injector;
 import com.mongodb.DBObject;
-import dev.morphia.ext.guice.GuiceObjectFactory;
-import dev.morphia.mapping.MapperOptions;
-
-import java.util.Objects;
 
 /**
  * TODO JavaDoc
@@ -29,26 +29,23 @@ import java.util.Objects;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class CustomGuiceObjectFactory extends GuiceObjectFactory {
-    private MapperOptions options;
-
-    public CustomGuiceObjectFactory(MapperOptions options, Injector injector) {
-        super(options.getObjectFactory(), injector);
-        this.options = Objects.requireNonNull(options);
+    public CustomGuiceObjectFactory(ObjectFactory delegate, Injector injector) {
+        super(delegate, injector);
     }
 
     @Override
-    public <T> T createInstance(Class<T> clazz, DBObject dbObj) {
-        String className = (String) dbObj.get(options.getDiscriminatorField());
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    public Object createInstance(Class clazz, DBObject dbObj) {
+        String className = (String) dbObj.get(Mapper.CLASS_NAME_FIELDNAME);
         if (className != null) {
             try {
-                @SuppressWarnings("unchecked")
-                Class<? extends T> subclass = (Class<? extends T>) Class.forName(className);
-                return super.createInstance(subclass, dbObj);
+                return super.createInstance(Class.forName(className), dbObj);
             } catch (ClassNotFoundException ex) {
                 throw new RuntimeException(ex);
             }
         } else {
             return super.createInstance(clazz, dbObj);
         }
+
     }
 }

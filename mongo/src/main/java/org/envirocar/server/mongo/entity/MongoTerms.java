@@ -17,27 +17,31 @@
 package org.envirocar.server.mongo.entity;
 
 import com.google.common.base.Objects;
-import dev.morphia.annotations.Id;
-import dev.morphia.annotations.Property;
 import org.bson.types.ObjectId;
 import org.envirocar.server.core.entities.Terms;
+import dev.morphia.annotations.Id;
+import dev.morphia.annotations.Property;
+import dev.morphia.mapping.Mapper;
 
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 
 public class MongoTerms extends MongoEntityBase implements Terms {
-    public static final String NAME = "_id";
+    public static final String NAME = Mapper.ID_KEY;
     public static final String CONTENTS = "contents";
     public static final String ISSUED_DATE = "issuedDate";
     public static final String TRANSLATIONS = "translations";
 
     @Id
     private ObjectId id = new ObjectId();
+
     @Property(ISSUED_DATE)
     private String issuedDate;
+
     @Property(CONTENTS)
     private String contents;
+
     @Property(TRANSLATIONS)
     private Map<String, String> translations = Collections.emptyMap();
 

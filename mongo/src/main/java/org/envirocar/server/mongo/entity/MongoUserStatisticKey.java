@@ -16,10 +16,10 @@
  */
 package org.envirocar.server.mongo.entity;
 
-import com.google.common.base.Objects;
+import dev.morphia.Key;
 import dev.morphia.annotations.Embedded;
-import dev.morphia.annotations.Reference;
-import org.envirocar.server.core.entities.User;
+import dev.morphia.annotations.Property;
+import com.google.common.base.Objects;
 
 /**
  * TODO JavaDoc
@@ -29,23 +29,23 @@ import org.envirocar.server.core.entities.User;
 @Embedded
 public class MongoUserStatisticKey {
     public static final String USER = "user";
-    @Reference(value = USER, lazy = true)
-    private MongoUser user;
+    @Property(USER)
+    private Key<MongoUser> user;
 
-    public MongoUserStatisticKey(User user) {
-        this.user = (MongoUser) user;
+    public MongoUserStatisticKey(Key<MongoUser> user) {
+        this.user = user;
     }
-
-    public MongoUserStatisticKey() {
+    
+    public MongoUserStatisticKey(){
         this(null);
     }
 
-    public MongoUser getUser() {
+    public Key<MongoUser> getUser() {
         return user;
     }
 
-    public void setUser(User user) {
-        this.user = (MongoUser) user;
+    public void setUser(Key<MongoUser> user) {
+        this.user = user;
     }
 
     @Override
@@ -69,5 +69,6 @@ public class MongoUserStatisticKey {
     public String toString() {
         return String.format("MongoUserStatisticKey [user=%s]", this.user);
     }
-
+    
+    
 }

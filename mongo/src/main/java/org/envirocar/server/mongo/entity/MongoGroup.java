@@ -16,36 +16,39 @@
  */
 package org.envirocar.server.mongo.entity;
 
-import com.google.common.base.Objects;
+import java.util.Collections;
+import java.util.Set;
+
+import dev.morphia.Key;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Property;
-import dev.morphia.annotations.Reference;
-import dev.morphia.mapping.experimental.MorphiaReference;
+import dev.morphia.annotations.Transient;
+import dev.morphia.mapping.Mapper;
+import com.google.common.base.Objects;
+
 import org.envirocar.server.core.entities.Group;
 import org.envirocar.server.core.entities.User;
-import org.envirocar.server.mongo.util.Ref;
-
-import java.util.Set;
 
 /**
  * TODO JavaDoc
  *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-@Entity(value = MongoGroup.COLLECTION, noClassnameStored = true)
+@Entity("groups")
 public class MongoGroup extends MongoEntityBase implements Group {
     public static final String OWNER = "owner";
-    public static final String NAME = "_id";
+    public static final String NAME = Mapper.ID_KEY;
     public static final String DESCRIPTION = "desc";
     public static final String MEMBERS = "members";
-    public static final String COLLECTION = "groups";
+    @Property(OWNER)
+    private Key<MongoUser> owner;
+    @Transient
+    private MongoUser _owner;
+    @Property(MEMBERS)
+    private Set<Key<MongoUser>> members;
     @Id
     private String name;
-    //@Reference(OWNER)
-    private MorphiaReference<MongoUser> owner;
-    //@Reference(MEMBERS)
-    private MorphiaReference<Set<MongoUser>> members;
     @Property(DESCRIPTION)
     private String description;
 
@@ -80,13 +83,18 @@ public class MongoGroup extends MongoEntityBase implements Group {
     }
 
     @Override
-    public void setOwner(User owner) {
-        this.owner = Ref.wrap(owner);
+    public void setOwner(User user) {
+        this._owner = (MongoUser) user;
+        this.owner = getMongoDB().key(this._owner);
+
     }
 
     @Override
     public MongoUser getOwner() {
-        return Ref.unwrap(owner);
+        if (this._owner == null) {
+            this._owner = getMongoDB().deref(MongoUser.class, this.owner);
+        }
+        return this._owner;
     }
 
     @Override
@@ -94,17 +102,17 @@ public class MongoGroup extends MongoEntityBase implements Group {
         return getOwner() != null;
     }
 
-    public Set<MongoUser> getMembers() {
-        return Ref.unwrap(members);
+    public Set<Key<MongoUser>> getMembers() {
+        return members == null ? null : Collections.unmodifiableSet(members);
     }
 
     @Override
     public String toString() {
         return toStringHelper()
-                       .add(NAME, name)
-                       .add(OWNER, owner)
-                       .add(DESCRIPTION, description)
-                       .add(MEMBERS, members).toString();
+                .add(NAME, name)
+                .add(OWNER, owner)
+                .add(DESCRIPTION, description)
+                .add(MEMBERS, members).toString();
     }
 
     @Override

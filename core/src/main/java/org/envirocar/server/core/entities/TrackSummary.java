@@ -23,23 +23,17 @@ public interface TrackSummary {
 
     void setIdentifier(String id);
 
-    default boolean hasIdentifier() {
-        return getIdentifier() != null;
-    }
+    boolean hasIdentifier();
 
     Geometry getStartPosition();
 
     void setStartPosition(Geometry startPosition);
 
-    default boolean hasStartPosition() {
-        return getStartPosition() != null;
-    }
+    boolean hasStartPosition();
 
     Geometry getEndPosition();
 
     void setEndPosition(Geometry endPosition);
 
-    default boolean hasEndPosition() {
-        return getEndPosition() != null;
-    }
+    boolean hasEndPosition();
 }

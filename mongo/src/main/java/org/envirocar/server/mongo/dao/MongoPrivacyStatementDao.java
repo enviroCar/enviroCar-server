@@ -17,8 +17,6 @@
 package org.envirocar.server.mongo.dao;
 
 import com.google.inject.Inject;
-import com.mongodb.client.MongoCursor;
-import dev.morphia.query.Sort;
 import org.bson.types.ObjectId;
 import org.envirocar.server.core.dao.PrivacyStatementDao;
 import org.envirocar.server.core.entities.PrivacyStatement;
@@ -26,7 +24,11 @@ import org.envirocar.server.core.entities.PrivacyStatements;
 import org.envirocar.server.core.util.pagination.Pagination;
 import org.envirocar.server.mongo.MongoDB;
 import org.envirocar.server.mongo.entity.MongoPrivacyStatement;
+import org.envirocar.server.mongo.util.MongoUtils;
+import dev.morphia.query.FindOptions;
+import dev.morphia.query.Sort;
 
+import java.util.Iterator;
 import java.util.Optional;
 
 /**
@@ -42,13 +44,13 @@ public class MongoPrivacyStatementDao extends AbstractMongoDao<ObjectId, MongoPr
 
     @Override
     public PrivacyStatements get(Pagination p) {
-        return fetch(q().order(Sort.descending(MongoPrivacyStatement.ISSUED_DATE)), p);
+        return fetch(q().order(MongoUtils.reverse(MongoPrivacyStatement.CREATION_DATE)), p);
     }
 
     @Override
-    protected PrivacyStatements createPaginatedIterable(MongoCursor<MongoPrivacyStatement> i, Pagination p,
-                                                        long count) {
-        return PrivacyStatements.from(asCloseableIterator(i)).withPagination(p).withElements(count).build();
+    protected PrivacyStatements createPaginatedIterable(
+            Iterable<MongoPrivacyStatement> i, Pagination p, long count) {
+        return PrivacyStatements.from(i).withPagination(p).withElements(count).build();
     }
 
     @Override
@@ -64,7 +66,13 @@ public class MongoPrivacyStatementDao extends AbstractMongoDao<ObjectId, MongoPr
 
     @Override
     public Optional<PrivacyStatement> getLatest() {
-        return Optional.ofNullable(q().order(Sort.descending(MongoPrivacyStatement.ISSUED_DATE)).first());
+        Sort order = Sort.descending(MongoPrivacyStatement.ISSUED_DATE);
+        FindOptions options = new FindOptions().limit(1);
+        Iterator<MongoPrivacyStatement> privacyStatements = fetch(q().order(order), options).iterator();
+        if (privacyStatements.hasNext()) {
+            return Optional.of(privacyStatements.next());
+        }
+        return Optional.empty();
     }
 
 }

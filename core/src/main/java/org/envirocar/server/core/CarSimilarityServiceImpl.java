@@ -16,24 +16,26 @@
  */
 package org.envirocar.server.core;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.inject.Inject;
-import org.envirocar.server.core.dao.SensorDao;
-import org.envirocar.server.core.entities.Sensor;
-import org.envirocar.server.core.entities.Sensors;
-import org.envirocar.server.core.exception.ResourceNotFoundException;
-import org.envirocar.server.core.filter.PropertyFilter;
-import org.envirocar.server.core.filter.SensorFilter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
+import org.envirocar.server.core.dao.SensorDao;
+import org.envirocar.server.core.entities.Sensor;
+import org.envirocar.server.core.entities.Sensors;
+import org.envirocar.server.core.exception.ResourceNotFoundException;
+import org.envirocar.server.core.filter.PropertyFilter;
+import org.envirocar.server.core.filter.SensorFilter;
+import org.envirocar.server.core.util.pagination.PageBasedPagination;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.inject.Inject;
 
 /**
  *
@@ -62,8 +64,12 @@ public class CarSimilarityServiceImpl implements CarSimilarityService {
     }
 
     public void setSimilarityDefinition(String carSimilarityResourcePath) {
-        similarManufactures.clear();
-        staticIdMappings.clear();
+        if (similarManufactures != null) {
+            similarManufactures.clear();
+        }
+        if (staticIdMappings != null) {
+            staticIdMappings.clear();
+        }
 
         loadSimilarityDefinition(carSimilarityResourcePath);
     }
@@ -102,22 +108,27 @@ public class CarSimilarityServiceImpl implements CarSimilarityService {
 
     @Override
     public Sensor resolveEquivalent(final Sensor s) throws ResourceNotFoundException {
-        Sensors candidates = this.sensorDao.get(new SensorFilter("car", null, createFilter(s), null));
+        Sensors candidates = this.sensorDao.get(new SensorFilter("car",
+                null,
+                createFilter(s),
+                new PageBasedPagination(PageBasedPagination.MAX_PAGE_SIZE, 0)));
 
-        Sensor m = null;
+        final Holder h = new Holder();
 
-        for (Sensor curr : candidates) {
-            if (m == null && isEquivalent(s, curr)) {
-                m = curr;
+        candidates.forEach((Sensor t) -> {
+            if (h.get() == null && isEquivalent(s, t)) {
+                h.set(t);
             }
-        }
-        if (m == null) {
+        });
+
+        if (h.get() == null) {
             throw new ResourceNotFoundException("No equivalent sensor available");
         }
-        return m;
+
+        return h.get();
     }
 
-    private boolean isEquivalent(Sensor a, Sensor b) {
+    protected boolean isEquivalent(Sensor a, Sensor b) {
         Map<String, Object> aProps = a.getProperties();
         Map<String, Object> bProps = b.getProperties();
 
@@ -136,8 +147,7 @@ public class CarSimilarityServiceImpl implements CarSimilarityService {
         }
 
         if (s.getProperties().containsKey(ENGINE_DISPLACEMENT)) {
-            filterSet.add(new PropertyFilter(ENGINE_DISPLACEMENT, s.getProperties().get(ENGINE_DISPLACEMENT)
-                                                                   .toString()));
+            filterSet.add(new PropertyFilter(ENGINE_DISPLACEMENT, s.getProperties().get(ENGINE_DISPLACEMENT).toString()));
         }
 
         if (s.getProperties().containsKey(CONSTRUCTION_YEAR)) {
@@ -147,7 +157,7 @@ public class CarSimilarityServiceImpl implements CarSimilarityService {
         return filterSet;
     }
 
-    private boolean isModelEquivalent(Object s1, Object s2) {
+    protected boolean isModelEquivalent(Object s1, Object s2) {
         if (s1 == null || s2 == null) {
             return false;
         }
@@ -155,7 +165,7 @@ public class CarSimilarityServiceImpl implements CarSimilarityService {
         return s1.toString().toLowerCase().trim().equals(s2.toString().toLowerCase().trim());
     }
 
-    private boolean isManufacturerEquivalent(Object s1, Object s2) {
+    protected boolean isManufacturerEquivalent(Object s1, Object s2) {
         if (s1 == null || s2 == null) {
             return false;
         }
@@ -165,12 +175,13 @@ public class CarSimilarityServiceImpl implements CarSimilarityService {
 
         if (s1Optimized.equals(s2Optimized)) {
             return true;
-        } else {
+        }
+        else {
             return isManufacturerSimilar(s1Optimized, s2Optimized);
         }
     }
 
-    boolean isManufacturerSimilar(String s1Optimized, String s2Optimized) {
+    protected boolean isManufacturerSimilar(String s1Optimized, String s2Optimized) {
         String matched1 = matchToName(s1Optimized, this.similarManufactures);
         String matched2 = matchToName(s2Optimized, this.similarManufactures);
 
@@ -183,6 +194,7 @@ public class CarSimilarityServiceImpl implements CarSimilarityService {
                 return name;
             }
         }
+
         return s;
     }
 
@@ -192,11 +204,27 @@ public class CarSimilarityServiceImpl implements CarSimilarityService {
             return this.sensorDao.getByIdentifier(this.staticIdMappings.get(id));
         }
 
-        throw new ResourceNotFoundException("No static mapping found for sensor " + id);
+        throw new ResourceNotFoundException("No static mapping found for sensor "+id);
     }
 
     @Override
     public Set<String> getMappedSensorIds() {
         return this.staticIdMappings.keySet();
     }
+
+    private class Holder {
+
+        private Sensor sensor;
+
+        public void set(Sensor s) {
+            this.sensor = s;
+        }
+
+        public Sensor get() {
+            return this.sensor;
+        }
+
+    }
+
+
 }

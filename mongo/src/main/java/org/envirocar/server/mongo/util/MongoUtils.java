@@ -20,8 +20,13 @@ import com.google.common.base.Joiner;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import org.bson.BSONObject;
+import org.envirocar.server.core.SpatialFilter;
+import org.envirocar.server.core.SpatialFilter.SpatialFilterOperator;
 import org.envirocar.server.core.TemporalFilter;
+import org.envirocar.server.core.exception.GeometryConverterException;
+import org.envirocar.server.core.util.GeometryConverter;
 
+import java.security.InvalidParameterException;
 import java.util.List;
 
 /**
@@ -105,12 +110,40 @@ public class MongoUtils {
         return Joiner.on(',').join(order, second, (Object[]) orders);
     }
 
+    public static String order(String order, String second) {
+        return order + ',' + second;
+    }
+
+    public static String order(String order) {
+        return order;
+    }
+
     public static String reverse(String order) {
         return "-" + order;
     }
 
+    public static DBObject spatialFilter(SpatialFilter spatialFilter, GeometryConverter<BSONObject> converter)
+            throws GeometryConverterException {
+        SpatialFilterOperator ops = spatialFilter.getOperator();
+        switch (ops) {
+            case BBOX:
+                return geoWithin(converter.encode(spatialFilter.getGeom()));
+            case NEARPOINT:
+                return geoNearSphere(converter.encode(spatialFilter.getGeom()), spatialFilter.getParams().get(0));
+            default:
+                throw new InvalidParameterException(String.format("Spatial operator %s not supported!", spatialFilter
+                        .getOperator().toString()));
+        }
+    }
+
     public static DBObject geoWithin(BSONObject geometry) {
         return new BasicDBObject(Ops.GEO_WITHIN, geometry(geometry));
+    }
+
+    public static DBObject geoNearSphere(BSONObject geometry, double distance) {
+        BasicDBObject geom = geometry(geometry);
+        geom.append("$maxDistance", distance);
+        return new BasicDBObject(Ops.NEAR_SPHERE, geom);
     }
 
     protected static BasicDBObject geometry(BSONObject geometry) {
@@ -150,7 +183,7 @@ public class MongoUtils {
             default:
                 throw new IllegalArgumentException(
                         "unsupported temporal operator: " +
-                        temporalFilter.getOperator());
+                                temporalFilter.getOperator());
         }
         return time;
     }

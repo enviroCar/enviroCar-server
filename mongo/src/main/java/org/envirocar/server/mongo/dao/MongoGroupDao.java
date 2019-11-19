@@ -16,12 +16,9 @@
  */
 package org.envirocar.server.mongo.dao;
 
-import com.google.inject.Inject;
-import com.mongodb.client.MongoCursor;
-import dev.morphia.Key;
-import dev.morphia.query.Query;
-import dev.morphia.query.Sort;
-import dev.morphia.query.UpdateResults;
+import java.util.Collections;
+import java.util.Set;
+
 import org.envirocar.server.core.dao.GroupDao;
 import org.envirocar.server.core.entities.Group;
 import org.envirocar.server.core.entities.Groups;
@@ -32,28 +29,43 @@ import org.envirocar.server.mongo.MongoDB;
 import org.envirocar.server.mongo.entity.MongoGroup;
 import org.envirocar.server.mongo.entity.MongoUser;
 import org.joda.time.DateTime;
+import dev.morphia.Key;
+import dev.morphia.query.Query;
+import dev.morphia.query.UpdateResults;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
-import java.util.Set;
+import com.google.common.collect.Lists;
+import com.google.inject.Inject;
 
 /**
  * TODO JavaDoc
  *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class MongoGroupDao extends AbstractMongoDao<String, MongoGroup, Groups> implements GroupDao {
-    private static final Logger log = LoggerFactory.getLogger(MongoGroupDao.class);
+public class MongoGroupDao extends AbstractMongoDao<String, MongoGroup, Groups>
+        implements GroupDao {
+    private static final Logger log = LoggerFactory
+            .getLogger(MongoGroupDao.class);
+    private MongoUserDao userDao;
 
     @Inject
     public MongoGroupDao(MongoDB mongoDB) {
         super(MongoGroup.class, mongoDB);
     }
 
+    public MongoUserDao getUserDao() {
+        return userDao;
+    }
+
+    @Inject
+    public void setUserDao(MongoUserDao userDao) {
+        this.userDao = userDao;
+    }
+
     @Override
     public MongoGroup getByName(String name) {
-        return q().field(MongoGroup.NAME).equal(name).first();
+        return q().field(MongoGroup.NAME).equal(name).get();
     }
 
     @Override
@@ -63,7 +75,7 @@ public class MongoGroupDao extends AbstractMongoDao<String, MongoGroup, Groups> 
 
     @Override
     public Groups get(Pagination p) {
-        return fetch(q().order(Sort.descending(MongoGroup.LAST_MODIFIED)), p);
+        return fetch(q().order(MongoGroup.LAST_MODIFIED), p);
     }
 
     @Override
@@ -97,36 +109,43 @@ public class MongoGroupDao extends AbstractMongoDao<String, MongoGroup, Groups> 
     }
 
     @Override
-    protected Groups createPaginatedIterable(MongoCursor<MongoGroup> i, Pagination p, long count) {
-        return Groups.from(asCloseableIterator(i)).withElements(count).withPagination(p).build();
+    protected Groups createPaginatedIterable(Iterable<MongoGroup> i,
+                                             Pagination p, long count) {
+        return Groups.from(i).withElements(count).withPagination(p).build();
     }
 
     @Override
     public Group get(User user, String groupName) {
         return q().field(MongoGroup.NAME).equal(groupName)
-                  .field(MongoGroup.MEMBERS).hasThisElement(key(user)).first();
+                .field(MongoGroup.MEMBERS).hasThisElement(key(user)).get();
     }
 
     @Override
     public Groups getByMember(User user, Pagination p) {
-        return fetch(q().field(MongoGroup.MEMBERS).hasThisElement(key(user)), p);
+        return fetch(q().field(MongoGroup.MEMBERS)
+                .hasThisElement(key(user)), p);
     }
 
     @Override
     public void removeMember(Group group, User user) {
         MongoGroup g = (MongoGroup) group;
-        update(g.getName(), up().removeAll(MongoGroup.MEMBERS, key(user))
-                                .set(MongoGroup.LAST_MODIFIED, new DateTime()));
+        update(g.getName(), up()
+               .removeAll(MongoGroup.MEMBERS, key(user))
+               .set(MongoGroup.LAST_MODIFIED, new DateTime()));
     }
 
     @Override
     public void addMember(Group group, User user) {
         MongoGroup g = (MongoGroup) group;
-        update(g.getName(), up().addToSet(MongoGroup.MEMBERS, key(user)).set(MongoGroup.LAST_MODIFIED, new DateTime()));
+        update(g.getName(), up()
+               .addToSet(MongoGroup.MEMBERS, key(user))
+               .set(MongoGroup.LAST_MODIFIED, new DateTime()));
     }
 
     protected void removeOwner(MongoUser user) {
-        UpdateResults result = update(q().field(MongoGroup.OWNER).equal(key(user)), up().unset(MongoGroup.OWNER));
+        UpdateResults result = update(
+                q().field(MongoGroup.OWNER).equal(key(user)),
+                up().unset(MongoGroup.OWNER));
 
         if (result.getWriteResult() != null && !result.getWriteResult().wasAcknowledged()) {
             log.error("Error removing user {} as group owner: {}",
@@ -154,7 +173,14 @@ public class MongoGroupDao extends AbstractMongoDao<String, MongoGroup, Groups> 
 
     @Override
     public Users getMembers(Group group, Pagination pagination) {
-        return Users.from(((MongoGroup) group).getMembers()).build();
+        Set<Key<MongoUser>> memberRefs = getMemberRefs(group);
+        Iterable<MongoUser> members;
+        if (memberRefs != null) {
+            members = deref(MongoUser.class, memberRefs);
+        } else {
+            members = Collections.emptyList();
+        }
+        return Users.from(members).build();
     }
 
     @Override
@@ -164,16 +190,36 @@ public class MongoGroupDao extends AbstractMongoDao<String, MongoGroup, Groups> 
 
     @Override
     public User getMember(Group group, String username) {
-        Set<MongoUser> memberRefs = ((MongoGroup) group).getMembers();
+        Set<Key<MongoUser>> memberRefs = getMemberRefs(group);
         if (memberRefs != null) {
-            return memberRefs.stream().filter(member -> member.getName().equals(username)).findFirst().orElse(null);
+            Key<MongoUser> memberRef = key(new MongoUser(username));
+            getMapper().updateCollection(memberRef);
+            if (memberRefs.contains(memberRef)) {
+                return deref(MongoUser.class, memberRef);
+            }
         }
         return null;
     }
 
+    public Set<Key<MongoUser>> getMemberRefs(Group group) {
+        MongoGroup g = (MongoGroup) group;
+        Set<Key<MongoUser>> memberRefs = g.getMembers();
+        if (memberRefs == null) {
+            MongoGroup groupWithMembers = q()
+                    .field(MongoGroup.NAME).equal(g.getName())
+                    .project(MongoGroup.MEMBERS, true).get();
+            if (groupWithMembers != null) {
+                memberRefs = groupWithMembers.getMembers();
+            }
+        }
+        return memberRefs;
+    }
+
     @Override
     public boolean shareGroup(User user1, User user2) {
-        return q().field(MongoGroup.MEMBERS).hasAllOf(Arrays.asList(user1, user2))
-                  .project(MongoGroup.NAME, true).first() != null;
+        @SuppressWarnings("unchecked")
+        Iterable<Key<User>> users = Lists.newArrayList(key(user1),
+                                                       key(user2));
+        return q().field(MongoGroup.MEMBERS).hasAllOf(users).getKey() != null;
     }
 }

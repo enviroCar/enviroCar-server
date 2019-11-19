@@ -16,59 +16,71 @@
  */
 package org.envirocar.server.mongo.activities;
 
+import java.util.Objects;
+
+import org.bson.types.ObjectId;
+import org.envirocar.server.core.activities.Activity;
+import org.envirocar.server.core.activities.ActivityType;
+import org.envirocar.server.core.entities.User;
+import org.envirocar.server.mongo.MongoDB;
+import org.envirocar.server.mongo.entity.MongoUser;
+import org.joda.time.DateTime;
+import dev.morphia.Key;
+import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
+import dev.morphia.annotations.Indexed;
+import dev.morphia.annotations.Property;
+import dev.morphia.annotations.Transient;
+import dev.morphia.mapping.Mapper;
+import dev.morphia.utils.IndexDirection;
+
 import com.google.common.base.MoreObjects;
 import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
-import dev.morphia.annotations.Entity;
-import dev.morphia.annotations.Id;
-import dev.morphia.annotations.Indexed;
-import dev.morphia.annotations.Property;
-import dev.morphia.mapping.experimental.MorphiaReference;
-import dev.morphia.utils.IndexDirection;
-import org.bson.types.ObjectId;
-import org.envirocar.server.core.activities.Activity;
-import org.envirocar.server.core.activities.ActivityType;
-import org.envirocar.server.core.entities.User;
-import org.envirocar.server.mongo.entity.MongoUser;
-import org.envirocar.server.mongo.util.Ref;
-import org.joda.time.DateTime;
-
-import java.util.Objects;
 
 /**
  * TODO JavaDoc
  *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-@Entity(value = MongoActivity.COLLECTION)
+@Entity("activities")
 public class MongoActivity implements Activity {
-    public static final String ID = "_id";
+    public static final String ID = Mapper.ID_KEY;
     public static final String USER = "user";
     public static final String TYPE = "type";
     public static final String TIME = "time";
-    public static final String COLLECTION = "activities";
     @Id
     private ObjectId id = new ObjectId();
     @Indexed(IndexDirection.DESC)
     @Property(TIME)
     private DateTime time = new DateTime();
     @Indexed
-    private MorphiaReference<MongoUser> user;
+    @Property(USER)
+    private Key<MongoUser> user;
+    @Transient
+    private MongoUser _user;
     @Indexed
     @Property(TYPE)
     private ActivityType type;
+    @Inject
+    @Transient
+    private final MongoDB mongoDB;
 
     @AssistedInject
-    public MongoActivity(@Assisted User user, @Assisted ActivityType type) {
-        this.user = Ref.wrap(user);
+    public MongoActivity(MongoDB mongoDB,
+                         @Assisted User user,
+                         @Assisted ActivityType type) {
+        this.mongoDB = mongoDB;
+        this._user = (MongoUser) user;
+        this.user = mongoDB.key(this._user);
         this.type = type;
     }
 
     @Inject
-    public MongoActivity() {
-        this(null, null);
+    public MongoActivity(MongoDB mongoDB) {
+        this(mongoDB, null, null);
     }
 
     public ObjectId getId() {
@@ -79,13 +91,21 @@ public class MongoActivity implements Activity {
         this.id = id;
     }
 
+    public boolean hasId() {
+        return getId() != null;
+    }
+
     @Override
     public MongoUser getUser() {
-        return Ref.unwrap(user);
+        if (this._user == null) {
+            this._user = getMongoDB().deref(MongoUser.class, this.user);
+        }
+        return this._user;
     }
 
     public void setUser(User user) {
-        this.user = Ref.wrap(user);
+        this._user = (MongoUser) user;
+        this.user = getMongoDB().key(this._user);
     }
 
     @Override
@@ -141,10 +161,14 @@ public class MongoActivity implements Activity {
 
     protected ToStringHelper toStringHelper() {
         return MoreObjects.toStringHelper(this)
-                          .omitNullValues()
-                          .add(ID, this.id)
-                          .add(TYPE, this.type)
-                          .add(USER, this.user);
+                .omitNullValues()
+                .add(ID, this.id)
+                .add(TYPE, this.type)
+                .add(USER, this.user);
+    }
+
+    public MongoDB getMongoDB() {
+        return mongoDB;
     }
 
     @Override

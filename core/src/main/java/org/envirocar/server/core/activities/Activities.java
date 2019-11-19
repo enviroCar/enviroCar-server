@@ -16,25 +16,24 @@
  */
 package org.envirocar.server.core.activities;
 
-import org.envirocar.server.core.util.CloseableIterator;
-import org.envirocar.server.core.util.PaginatedIterableImpl;
+import org.envirocar.server.core.util.UpCastingIterable;
 
 /**
  * TODO JavaDoc
  *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class Activities extends PaginatedIterableImpl<Activity> {
+public class Activities extends UpCastingIterable<Activity> {
     protected Activities(Builder builder) {
         super(builder);
     }
 
-    public static Builder from(CloseableIterator<? extends Activity> delegate) {
+    public static Builder from(Iterable<? extends Activity> delegate) {
         return new Builder(delegate);
     }
 
-    public static class Builder extends PaginatedIterableImpl.Builder<Builder, Activities, Activity> {
-        public Builder(CloseableIterator<? extends Activity> delegate) {
+    public static class Builder extends UpCastingIterable.Builder<Builder, Activities, Activity> {
+        public Builder(Iterable<? extends Activity> delegate) {
             super(delegate);
         }
 

@@ -16,11 +16,7 @@
  */
 package org.envirocar.server.rest.guice;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectReader;
-import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.node.JsonNodeCreator;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.google.inject.AbstractModule;
@@ -29,7 +25,6 @@ import com.google.inject.Scopes;
 import com.google.inject.TypeLiteral;
 import org.envirocar.server.core.util.GeometryConverter;
 import org.envirocar.server.rest.util.GeoJSON;
-import org.locationtech.jts.geom.GeometryFactory;
 
 /**
  * TODO JavaDoc
@@ -58,10 +53,7 @@ public class JacksonModule extends AbstractModule {
     }
 
     @Provides
-    public ObjectMapper objectMapper(JsonNodeFactory factory, GeometryFactory geometryFactory) {
-        return new ObjectMapper()
-                       .setNodeFactory(factory)
-                       //.registerModule(new JtsModule(geometryFactory, IncludeBoundingBox.never(), 8))
-                       .disable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS);
+    public ObjectMapper objectMapper(JsonNodeFactory factory) {
+        return new ObjectMapper().setNodeFactory(factory).disable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS);
     }
 }

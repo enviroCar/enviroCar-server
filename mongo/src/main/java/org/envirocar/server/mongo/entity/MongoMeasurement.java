@@ -16,28 +16,31 @@
  */
 package org.envirocar.server.mongo.entity;
 
-import com.google.common.base.Objects;
-import com.google.common.collect.Sets;
+import java.util.Set;
+
+import org.bson.types.ObjectId;
+import org.joda.time.DateTime;
+
+import dev.morphia.Key;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
-import dev.morphia.annotations.Field;
 import dev.morphia.annotations.Id;
-import dev.morphia.annotations.Index;
-import dev.morphia.annotations.Indexes;
+import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.Property;
-import dev.morphia.mapping.experimental.MorphiaReference;
-import dev.morphia.utils.IndexType;
-import org.bson.types.ObjectId;
+import dev.morphia.annotations.Transient;
+import dev.morphia.mapping.Mapper;
+import dev.morphia.utils.IndexDirection;
+
+import com.google.common.base.Objects;
+import com.google.common.collect.Sets;
+import org.locationtech.jts.geom.Geometry;
+
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.MeasurementValue;
+import org.envirocar.server.core.entities.MeasurementValues;
 import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.entities.User;
-import org.envirocar.server.mongo.util.Ref;
-import org.joda.time.DateTime;
-import org.locationtech.jts.geom.Geometry;
-
-import java.util.Set;
 
 /**
  * TODO JavaDoc
@@ -45,42 +48,36 @@ import java.util.Set;
  * @author Christian Autermann <autermann@uni-muenster.de>
  * @author Arne de Wall
  */
-@Entity(value = MongoMeasurement.COLLECTION, noClassnameStored = true)
-@Indexes(value = {
-        @Index(fields = {
-                @Field(value = MongoMeasurement.GEOMETRY, type = IndexType.GEO2DSPHERE)
-        }),
-        @Index(fields = {
-                @Field(value = MongoMeasurement.GEOMETRY, type = IndexType.GEO2DSPHERE),
-                @Field(value = MongoMeasurement.TIME, type = IndexType.ASC)
-        }),
-        @Index(fields = @Field(value = MongoMeasurement.TIME, type = IndexType.ASC)),
-        @Index(fields = @Field(value = MongoMeasurement.TRACK)),
-        @Index(fields = @Field(value = MongoMeasurement.USER))
-})
+@Entity("measurements")
 public class MongoMeasurement extends MongoEntityBase implements Measurement {
-    public static final String IDENTIFIER = "_id";
+    public static final String IDENTIFIER = Mapper.ID_KEY;
     public static final String PHENOMENONS = "phenomenons";
     public static final String USER = "user";
     public static final String SENSOR = "sensor";
     public static final String TRACK = "track";
     public static final String GEOMETRY = "geometry";
     public static final String TIME = "time";
-    public static final String COLLECTION = "measurements";
     @Id
     private ObjectId id = new ObjectId();
     @Property(GEOMETRY)
     private Geometry geometry;
+    @Indexed(IndexDirection.ASC)
     @Property(TIME)
     private DateTime time;
-    //@Reference(USER)
-    private MorphiaReference<MongoUser> user;
+    @Indexed
+    @Property(USER)
+    private Key<MongoUser> user;
     @Embedded(SENSOR)
     private MongoSensor sensor;
-    //@Reference(TRACK)
-    private MorphiaReference<MongoTrack> track;
+    @Indexed
+    @Property(TRACK)
+    private Key<MongoTrack> track;
     @Embedded(PHENOMENONS)
     private final Set<MongoMeasurementValue> values = Sets.newHashSet();
+    @Transient
+    private MongoTrack _track;
+    @Transient
+    private MongoUser _user;
 
     @Override
     public Geometry getGeometry() {
@@ -128,8 +125,8 @@ public class MongoMeasurement extends MongoEntityBase implements Measurement {
     }
 
     @Override
-    public Set<MeasurementValue> getValues() {
-        return Sets.newHashSet(this.values);
+    public MeasurementValues getValues() {
+        return MeasurementValues.from(this.values).build();
     }
 
     @Override
@@ -139,12 +136,16 @@ public class MongoMeasurement extends MongoEntityBase implements Measurement {
 
     @Override
     public MongoUser getUser() {
-        return user == null ? null : user.get();
+        if (this._user == null) {
+            this._user = getMongoDB().deref(MongoUser.class, this.user);
+        }
+        return this._user;
     }
 
     @Override
     public void setUser(User user) {
-        this.user = Ref.wrap(user);
+        this._user = (MongoUser) user;
+        this.user = getMongoDB().key(this._user);
     }
 
     @Override
@@ -154,7 +155,7 @@ public class MongoMeasurement extends MongoEntityBase implements Measurement {
 
     @Override
     public void removeValue(MeasurementValue value) {
-        this.values.remove((MongoMeasurementValue) value);
+        this.values.remove(value);
     }
 
     @Override
@@ -169,12 +170,16 @@ public class MongoMeasurement extends MongoEntityBase implements Measurement {
 
     @Override
     public void setTrack(Track track) {
-        this.track = Ref.wrap((MongoTrack) track);
+        this._track = (MongoTrack) track;
+        this.track = getMongoDB().key(this._track);
     }
 
     @Override
     public MongoTrack getTrack() {
-        return Ref.unwrap(track);
+        if (this._track == null) {
+            this._track = getMongoDB().deref(MongoTrack.class, this.track);
+        }
+        return this._track;
     }
 
     @Override
@@ -203,14 +208,14 @@ public class MongoMeasurement extends MongoEntityBase implements Measurement {
     @Override
     public String toString() {
         return toStringHelper()
-                       .add(IDENTIFIER, id)
-                       .add(TIME, time)
-                       .add(GEOMETRY, geometry)
-                       .add(USER, user)
-                       .add(SENSOR, sensor)
-                       .add(TRACK, track)
-                       .add(PHENOMENONS, values)
-                       .toString();
+                .add(IDENTIFIER, id)
+                .add(TIME, time)
+                .add(GEOMETRY, geometry)
+                .add(USER, user)
+                .add(SENSOR, sensor)
+                .add(TRACK, track)
+                .add(PHENOMENONS, values)
+                .toString();
     }
 
     @Override

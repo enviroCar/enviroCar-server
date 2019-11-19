@@ -16,10 +16,12 @@
  */
 package org.envirocar.server.mongo.entity;
 
-import com.google.common.base.Objects;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Property;
+import dev.morphia.mapping.Mapper;
+import com.google.common.base.Objects;
+
 import org.envirocar.server.core.entities.Phenomenon;
 
 /**
@@ -27,11 +29,10 @@ import org.envirocar.server.core.entities.Phenomenon;
  *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-@Entity(value = MongoPhenomenon.COLLECTION, noClassnameStored = true)
+@Entity("phenomenons")
 public class MongoPhenomenon extends MongoEntityBase implements Phenomenon {
-    public static final String NAME = "_id";
+    public static final String NAME = Mapper.ID_KEY;
     public static final String UNIT = "unit";
-    public static final String COLLECTION = "phenomenons";
     @Id
     private String name;
     @Property(UNIT)
@@ -70,7 +71,7 @@ public class MongoPhenomenon extends MongoEntityBase implements Phenomenon {
     @Override
     public String toString() {
         return toStringHelper()
-                       .add(NAME, name).toString();
+                .add(NAME, name).toString();
     }
 
     @Override
