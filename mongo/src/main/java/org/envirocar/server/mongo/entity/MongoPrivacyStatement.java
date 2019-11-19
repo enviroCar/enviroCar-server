@@ -17,7 +17,7 @@
 package org.envirocar.server.mongo.entity;
 
 import org.envirocar.server.core.entities.PrivacyStatement;
-import org.mongodb.morphia.annotations.Entity;
+import dev.morphia.annotations.Entity;
 
 @Entity("privacyStatements")
 public class MongoPrivacyStatement extends MongoTerms implements PrivacyStatement {}

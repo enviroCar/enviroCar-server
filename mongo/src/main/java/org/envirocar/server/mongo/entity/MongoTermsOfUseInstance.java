@@ -17,7 +17,7 @@
 package org.envirocar.server.mongo.entity;
 
 import org.envirocar.server.core.entities.TermsOfUseInstance;
-import org.mongodb.morphia.annotations.Entity;
+import dev.morphia.annotations.Entity;
 
 @Entity("termsOfUse")
 public class MongoTermsOfUseInstance extends MongoTerms implements TermsOfUseInstance {}

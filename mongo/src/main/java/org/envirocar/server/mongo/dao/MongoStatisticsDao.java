@@ -40,8 +40,8 @@ import org.envirocar.server.mongo.entity.MongoUser;
 import org.envirocar.server.mongo.statistics.StatisticsUpdateScheduler;
 import org.envirocar.server.mongo.util.MongoUtils;
 import org.envirocar.server.mongo.util.Ops;
-import org.mongodb.morphia.dao.BasicDAO;
-import org.mongodb.morphia.mapping.Mapper;
+import dev.morphia.dao.BasicDAO;
+import dev.morphia.mapping.Mapper;
 
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;

@@ -35,9 +35,9 @@ import org.envirocar.server.mongo.activities.MongoUserActivity;
 import org.envirocar.server.mongo.entity.*;
 import org.envirocar.server.mongo.statistics.NewTrackListener;
 import org.envirocar.server.mongo.statistics.StatisticsUpdateScheduler;
-import org.mongodb.morphia.Datastore;
-import org.mongodb.morphia.Morphia;
-import org.mongodb.morphia.mapping.Mapper;
+import dev.morphia.Datastore;
+import dev.morphia.Morphia;
+import dev.morphia.mapping.Mapper;
 
 /**
  * TODO JavaDoc

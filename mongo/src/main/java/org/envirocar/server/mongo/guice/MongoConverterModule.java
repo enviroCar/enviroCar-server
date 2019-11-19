@@ -28,7 +28,7 @@ import org.envirocar.server.mongo.convert.FileConverter;
 import org.envirocar.server.mongo.convert.JTSConverter;
 import org.envirocar.server.mongo.convert.URLConverter;
 import org.envirocar.server.mongo.util.GeoBSON;
-import org.mongodb.morphia.converters.TypeConverter;
+import dev.morphia.converters.TypeConverter;
 
 /**
  * TODO JavaDoc

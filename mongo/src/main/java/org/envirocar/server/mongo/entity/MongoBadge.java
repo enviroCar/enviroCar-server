@@ -20,10 +20,10 @@ import java.util.Map;
 
 import org.envirocar.server.core.entities.Badge;
 
-import org.mongodb.morphia.annotations.Entity;
-import org.mongodb.morphia.annotations.Id;
-import org.mongodb.morphia.annotations.Property;
-import org.mongodb.morphia.mapping.Mapper;
+import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
+import dev.morphia.annotations.Property;
+import dev.morphia.mapping.Mapper;
 import com.google.common.base.Objects;
 
 @Entity("badges")

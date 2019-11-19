@@ -16,9 +16,9 @@
  */
 package org.envirocar.server.mongo;
 
-import org.mongodb.morphia.ObjectFactory;
-import org.mongodb.morphia.ext.guice.GuiceObjectFactory;
-import org.mongodb.morphia.mapping.Mapper;
+import dev.morphia.ObjectFactory;
+import dev.morphia.ext.guice.GuiceObjectFactory;
+import dev.morphia.mapping.Mapper;
 
 import com.google.inject.Injector;
 import com.mongodb.DBObject;

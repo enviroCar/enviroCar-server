@@ -16,21 +16,6 @@
  */
 package org.envirocar.server.mongo;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-
-import javax.annotation.Nullable;
-
-import org.envirocar.server.mongo.entity.MongoMeasurement;
-import org.mongodb.morphia.Datastore;
-import org.mongodb.morphia.Key;
-import org.mongodb.morphia.Morphia;
-import org.mongodb.morphia.converters.TypeConverter;
-import org.mongodb.morphia.mapping.DefaultCreator;
-import org.mongodb.morphia.mapping.Mapper;
-
 import com.google.common.collect.Iterables;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.ListMultimap;
@@ -47,6 +32,19 @@ import com.mongodb.MongoClient;
 import com.mongodb.MongoClientOptions;
 import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
+import dev.morphia.Datastore;
+import dev.morphia.Key;
+import dev.morphia.Morphia;
+import dev.morphia.converters.TypeConverter;
+import dev.morphia.mapping.DefaultCreator;
+import dev.morphia.mapping.Mapper;
+import org.envirocar.server.mongo.entity.MongoMeasurement;
+
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
 /**
  * TODO JavaDoc
@@ -85,7 +83,8 @@ public class MongoDB {
 
             morphia = new Morphia();
             morphia.getMapper().getOptions()
-                    .setObjectFactory(new CustomGuiceObjectFactory(new DefaultCreator(), injector));
+                   .setObjectFactory(new CustomGuiceObjectFactory(new DefaultCreator(morphia.getMapper().getOptions()),
+                                                                  injector));
             addConverters(converters);
             addMappedClasses(mappedClasses);
 
@@ -129,9 +128,9 @@ public class MongoDB {
         DBCollection collection = getDatastore().getCollection(MongoMeasurement.class);
         collection.createIndex(new BasicDBObject(MongoMeasurement.GEOMETRY, "2dsphere"));
         collection.createIndex(new BasicDBObjectBuilder()
-                .append(MongoMeasurement.GEOMETRY, "2dsphere")
-                .append(MongoMeasurement.TIME, 1)
-                .get());
+                                       .append(MongoMeasurement.GEOMETRY, "2dsphere")
+                                       .append(MongoMeasurement.TIME, 1)
+                                       .get());
     }
 
     public <T> T deref(Class<T> c, Key<T> key) {
@@ -157,11 +156,11 @@ public class MongoDB {
                                  : clazz;
             kindKeys.stream().map(Key::getId).forEach(objIds::add);
             fetched.add(getDatastore()
-                    .find(kindClass)
-                    .disableValidation()
-                    .field(Mapper.ID_KEY)
-                    .in(objIds)
-                    .fetch());
+                                .find(kindClass)
+                                .disableValidation()
+                                .field(Mapper.ID_KEY)
+                                .in(objIds)
+                                .fetch());
         }
         return Iterables.concat(fetched);
     }
@@ -178,17 +177,17 @@ public class MongoDB {
                                                           List<Key<T>> keys) {
         ListMultimap<String, Key<T>> kindMap = LinkedListMultimap.create();
         String clazzKind = (clazz == null) ? null : getMapper()
-                .getCollectionName(clazz);
+                                                            .getCollectionName(clazz);
         for (Key<T> key : keys) {
-                    getMapper().updateCollection(key);
-                    String kind = key.getCollection();
+            getMapper().updateCollection(key);
+            String kind = key.getCollection();
 
-                    if (clazzKind != null && !kind.equals(clazzKind)) {
-                        throw new IllegalArgumentException(String.format(
-                                "Types are not equal (%s!=%s) for key and method parameter clazz",
+            if (clazzKind != null && !kind.equals(clazzKind)) {
+                throw new IllegalArgumentException(String.format(
+                        "Types are not equal (%s!=%s) for key and method parameter clazz",
                         clazz, key.getType()));
-                    }
-                    kindMap.put(kind, key);
+            }
+            kindMap.put(kind, key);
         }
         return kindMap;
     }

@@ -21,9 +21,9 @@ import org.locationtech.jts.geom.Geometry;
 import org.envirocar.server.core.entities.Gender;
 import org.envirocar.server.core.entities.User;
 import org.joda.time.DateTime;
-import org.mongodb.morphia.Key;
-import org.mongodb.morphia.annotations.*;
-import org.mongodb.morphia.mapping.Mapper;
+import dev.morphia.Key;
+import dev.morphia.annotations.*;
+import dev.morphia.mapping.Mapper;
 
 import java.net.URL;
 import java.util.Collections;
