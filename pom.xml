@@ -232,7 +232,7 @@
             <dependency>
                 <artifactId>mongo-java-driver</artifactId>
                 <groupId>org.mongodb</groupId>
-                <version>3.8.2</version>
+                <version>3.11.2</version>
             </dependency>
             <dependency>
                 <artifactId>slf4j-api</artifactId>
