@@ -47,7 +47,7 @@
         <morphia-version>1.5.8</morphia-version>
         <jersey-version>1.19.4</jersey-version>
         <slf4j-version>1.7.29</slf4j-version>
-        <geotools-version>22.0</geotools-version>
+        <geotools-version>22.2</geotools-version>
         <wps-version>3.6.3</wps-version>
         <guice-version>4.2.2</guice-version>
         <jackson-version>2.10.1</jackson-version>
