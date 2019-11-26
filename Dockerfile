@@ -12,7 +12,7 @@ RUN mvn --batch-mode --errors --fail-fast \
 
 FROM jetty:jre8-alpine
 
-ARG SERVER_VERSION=2.0.0-SNAPSHOT
+ARG SERVER_VERSION=1.2.0-SNAPSHOT
 
 COPY --from=BUILD /usr/src/app/webapp/target/webapp-${SERVER_VERSION} /var/lib/jetty/webapps/ROOT
 COPY ./docker/logback.xml /var/lib/jetty/webapps/ROOT/WEB-INF/classes/
