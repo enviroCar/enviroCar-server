@@ -34,7 +34,7 @@ import org.envirocar.server.mongo.MongoDB;
 import org.envirocar.server.mongo.entity.MongoMeasurement;
 import org.envirocar.server.mongo.entity.MongoSensor;
 import org.envirocar.server.mongo.util.MongoUtils;
-import org.mongodb.morphia.query.Query;
+import dev.morphia.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -30,10 +30,10 @@ import org.envirocar.server.rest.rights.AccessRights;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.sparql.vocabulary.FOAF;
-import com.hp.hpl.jena.vocabulary.RDF;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.sparql.vocabulary.FOAF;
+import org.apache.jena.vocabulary.RDF;
 
 /**
  * TODO JavaDoc
@@ -59,11 +59,10 @@ public class UserFOAFLinker implements RDFLinker<User> {
         p.addLiteral(FOAF.nick, t.getName());
         if (t.hasFirstName() && rights.canSeeFirstNameOf(t)) {
             p.addLiteral(FOAF.firstName, t.getFirstName());
-            p.addLiteral(FOAF.givenname, t.getFirstName());
+            p.addLiteral(FOAF.givenName, t.getFirstName());
         }
         if (t.hasLastName() && rights.canSeeLastNameOf(t)) {
-            p.addLiteral(FOAF.surname, t.getLastName());
-            p.addLiteral(FOAF.family_name, t.getLastName());
+            p.addLiteral(FOAF.familyName, t.getLastName());
         }
         if (t.hasDayOfBirth() && rights.canSeeDayOfBirthOf(t)) {
             p.addLiteral(FOAF.birthday, t.getDayOfBirth());

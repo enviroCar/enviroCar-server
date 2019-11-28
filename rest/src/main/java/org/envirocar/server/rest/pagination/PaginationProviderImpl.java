@@ -21,6 +21,7 @@ import org.envirocar.server.core.exception.BadRequestException;
 import org.envirocar.server.core.util.pagination.PageBasedPagination;
 import org.envirocar.server.core.util.pagination.Pagination;
 import org.envirocar.server.core.util.pagination.RangeBasedPagination;
+import org.envirocar.server.rest.PrefixedUriInfo;
 import org.envirocar.server.rest.RESTConstants;
 
 import javax.ws.rs.core.HttpHeaders;
@@ -34,6 +35,7 @@ import java.util.Optional;
  *
  * @author Christian Autermann
  */
+@SuppressWarnings("unchecked")
 public class PaginationProviderImpl implements PaginationProvider {
     private static final int DECIMAL_RADIX = 10;
     private static final int DEFAULT_PAGE = 1;
@@ -43,9 +45,9 @@ public class PaginationProviderImpl implements PaginationProvider {
     private final UriInfo uriInfo;
 
     @Inject
-    public PaginationProviderImpl(HttpHeaders headers, UriInfo UriInfo) {
+    public PaginationProviderImpl(HttpHeaders headers, UriInfo uriInfo) {
         this.headers = headers;
-        this.uriInfo = UriInfo;
+        this.uriInfo = new PrefixedUriInfo(uriInfo, headers);
     }
 
     @Override
@@ -96,7 +98,6 @@ public class PaginationProviderImpl implements PaginationProvider {
             throw newInvalidRangeException();
         }
     }
-
 
     private static <T> Optional<T> or(Optional<T>... alternatives) {
         return Arrays.stream(alternatives).filter(Optional::isPresent).map(Optional::get).findFirst();

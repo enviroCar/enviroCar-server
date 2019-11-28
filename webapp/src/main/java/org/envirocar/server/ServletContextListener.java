@@ -17,11 +17,13 @@
 package org.envirocar.server;
 
 import com.google.inject.CreationException;
-import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
+import com.google.inject.Stage;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.google.inject.util.Modules;
+import com.netflix.governator.LifecycleInjector;
+import com.netflix.governator.LifecycleInjectorCreator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.bridge.SLF4JBridgeHandler;
@@ -36,7 +38,7 @@ import java.util.Arrays;
  */
 public class ServletContextListener extends GuiceServletContextListener {
     private static final Logger LOG = LoggerFactory.getLogger(ServletContextListener.class);
-    private Injector injector;
+    private LifecycleInjector injector;
 
     private Module overrides;
 
@@ -57,7 +59,7 @@ public class ServletContextListener extends GuiceServletContextListener {
                 module = Modules.override(module).with(overrides);
             }
             try {
-                injector = Guice.createInjector(module);
+                injector = new LifecycleInjectorCreator().createInjector(Stage.PRODUCTION, module);
             } catch (CreationException ex) {
                 LOG.error("Error creating injector", ex);
                 throw ex;
@@ -77,20 +79,14 @@ public class ServletContextListener extends GuiceServletContextListener {
     @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
         if (injector != null) {
-            ShutdownManager shutdownManager = injector.getInstance(ShutdownManager.class);
-            if (shutdownManager != null) {
-                shutdownManager.shutdownListeners();
-            }
+            injector.close();
         }
-
         super.contextDestroyed(servletContextEvent);
     }
 
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
-
         configureLogging();
-
         super.contextInitialized(servletContextEvent);
     }
 

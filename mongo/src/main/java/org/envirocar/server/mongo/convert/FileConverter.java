@@ -18,10 +18,10 @@ package org.envirocar.server.mongo.convert;
 
 import java.io.File;
 
-import org.mongodb.morphia.converters.SimpleValueConverter;
-import org.mongodb.morphia.converters.TypeConverter;
-import org.mongodb.morphia.mapping.MappedField;
-import org.mongodb.morphia.mapping.MappingException;
+import dev.morphia.converters.SimpleValueConverter;
+import dev.morphia.converters.TypeConverter;
+import dev.morphia.mapping.MappedField;
+import dev.morphia.mapping.MappingException;
 
 /**
  * TODO JavaDoc

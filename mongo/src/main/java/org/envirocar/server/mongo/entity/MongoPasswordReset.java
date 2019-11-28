@@ -20,14 +20,14 @@ import org.bson.types.ObjectId;
 import org.envirocar.server.core.entities.PasswordReset;
 import org.envirocar.server.core.entities.User;
 import org.joda.time.DateTime;
-import org.mongodb.morphia.Key;
-import org.mongodb.morphia.annotations.Entity;
-import org.mongodb.morphia.annotations.Id;
-import org.mongodb.morphia.annotations.IndexOptions;
-import org.mongodb.morphia.annotations.Indexed;
-import org.mongodb.morphia.annotations.Property;
-import org.mongodb.morphia.annotations.Transient;
-import org.mongodb.morphia.mapping.Mapper;
+import dev.morphia.Key;
+import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
+import dev.morphia.annotations.IndexOptions;
+import dev.morphia.annotations.Indexed;
+import dev.morphia.annotations.Property;
+import dev.morphia.annotations.Transient;
+import dev.morphia.mapping.Mapper;
 
 @Entity("passwordResetStatus")
 public class MongoPasswordReset extends MongoEntityBase implements PasswordReset {

@@ -18,7 +18,7 @@ package org.envirocar.server.mongo.util;
 
 import org.envirocar.server.core.TemporalFilter;
 import org.joda.time.DateTime;
-import org.mongodb.morphia.query.FieldEnd;
+import dev.morphia.query.FieldEnd;
 
 /**
  * TODO JavaDoc

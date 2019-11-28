@@ -32,9 +32,9 @@ import org.envirocar.server.mongo.util.MorphiaUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.mongodb.morphia.Key;
-import org.mongodb.morphia.query.Query;
-import org.mongodb.morphia.query.UpdateResults;
+import dev.morphia.Key;
+import dev.morphia.query.Query;
+import dev.morphia.query.UpdateResults;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.mongodb.WriteResult;

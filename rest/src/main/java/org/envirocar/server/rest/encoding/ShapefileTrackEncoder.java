@@ -16,12 +16,11 @@
  */
 package org.envirocar.server.rest.encoding;
 
-import java.io.File;
+import org.envirocar.server.rest.rights.AccessRights;
 
 import javax.ws.rs.core.MediaType;
-
-import org.envirocar.server.core.exception.TrackTooLongException;
-import org.envirocar.server.rest.rights.AccessRights;
+import java.io.IOException;
+import java.nio.file.Path;
 
 /**
  * TODO JavaDoc
@@ -29,5 +28,5 @@ import org.envirocar.server.rest.rights.AccessRights;
  * @author Benjamin Pross
  */
 public interface ShapefileTrackEncoder<T> {
-    File encodeShapefile(T t, AccessRights rights, MediaType mt) throws TrackTooLongException;
+    Path encodeShapefile(T t, AccessRights rights, MediaType mt) throws IOException;
 }

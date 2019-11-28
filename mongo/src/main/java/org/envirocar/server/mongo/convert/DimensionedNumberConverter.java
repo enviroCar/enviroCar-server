@@ -20,10 +20,10 @@ import java.math.BigDecimal;
 
 import org.envirocar.server.core.entities.DimensionedNumber;
 
-import org.mongodb.morphia.converters.SimpleValueConverter;
-import org.mongodb.morphia.converters.TypeConverter;
-import org.mongodb.morphia.mapping.MappedField;
-import org.mongodb.morphia.mapping.MappingException;
+import dev.morphia.converters.SimpleValueConverter;
+import dev.morphia.converters.TypeConverter;
+import dev.morphia.mapping.MappedField;
+import dev.morphia.mapping.MappingException;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBObject;
 

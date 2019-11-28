@@ -24,13 +24,13 @@ import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.entities.User;
 import org.joda.time.DateTime;
 
-import org.mongodb.morphia.Key;
-import org.mongodb.morphia.annotations.Embedded;
-import org.mongodb.morphia.annotations.Entity;
-import org.mongodb.morphia.annotations.Id;
-import org.mongodb.morphia.annotations.Property;
-import org.mongodb.morphia.annotations.Transient;
-import org.mongodb.morphia.mapping.Mapper;
+import dev.morphia.Key;
+import dev.morphia.annotations.Embedded;
+import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
+import dev.morphia.annotations.Property;
+import dev.morphia.annotations.Transient;
+import dev.morphia.mapping.Mapper;
 import com.google.common.base.Objects;
 import org.locationtech.jts.geom.Geometry;
 

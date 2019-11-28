@@ -28,7 +28,7 @@ import org.envirocar.server.core.util.pagination.Pagination;
 import org.envirocar.server.mongo.MongoDB;
 import org.envirocar.server.mongo.dao.AbstractMongoDao;
 import org.envirocar.server.mongo.entity.MongoPasswordReset;
-import org.mongodb.morphia.query.Query;
+import dev.morphia.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

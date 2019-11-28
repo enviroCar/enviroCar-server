@@ -19,25 +19,41 @@ package org.envirocar.server.mongo.guice;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
-import com.google.inject.multibindings.Multibinder;
 import com.mongodb.DB;
 import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
-import org.envirocar.server.core.activities.*;
-import org.envirocar.server.core.entities.*;
-import org.envirocar.server.core.guice.ResourceShutdownListener;
+import dev.morphia.Datastore;
+import dev.morphia.Morphia;
+import dev.morphia.mapping.Mapper;
+import org.envirocar.server.core.activities.Activity;
+import org.envirocar.server.core.activities.ActivityFactory;
+import org.envirocar.server.core.activities.GroupActivity;
+import org.envirocar.server.core.activities.TrackActivity;
+import org.envirocar.server.core.activities.UserActivity;
+import org.envirocar.server.core.entities.EntityFactory;
+import org.envirocar.server.core.entities.Fueling;
+import org.envirocar.server.core.entities.Group;
+import org.envirocar.server.core.entities.Measurement;
+import org.envirocar.server.core.entities.MeasurementValue;
+import org.envirocar.server.core.entities.Phenomenon;
+import org.envirocar.server.core.entities.Sensor;
+import org.envirocar.server.core.entities.Track;
+import org.envirocar.server.core.entities.User;
 import org.envirocar.server.mongo.MongoDB;
-import org.envirocar.server.mongo.MongoShutdownListener;
 import org.envirocar.server.mongo.activities.MongoActivity;
 import org.envirocar.server.mongo.activities.MongoGroupActivity;
 import org.envirocar.server.mongo.activities.MongoTrackActivity;
 import org.envirocar.server.mongo.activities.MongoUserActivity;
-import org.envirocar.server.mongo.entity.*;
+import org.envirocar.server.mongo.entity.MongoFueling;
+import org.envirocar.server.mongo.entity.MongoGroup;
+import org.envirocar.server.mongo.entity.MongoMeasurement;
+import org.envirocar.server.mongo.entity.MongoMeasurementValue;
+import org.envirocar.server.mongo.entity.MongoPhenomenon;
+import org.envirocar.server.mongo.entity.MongoSensor;
+import org.envirocar.server.mongo.entity.MongoTrack;
+import org.envirocar.server.mongo.entity.MongoUser;
 import org.envirocar.server.mongo.statistics.NewTrackListener;
 import org.envirocar.server.mongo.statistics.StatisticsUpdateScheduler;
-import org.mongodb.morphia.Datastore;
-import org.mongodb.morphia.Morphia;
-import org.mongodb.morphia.mapping.Mapper;
 
 /**
  * TODO JavaDoc
@@ -48,27 +64,24 @@ public class MongoModule extends AbstractModule {
     @Override
     protected void configure() {
         install(new FactoryModuleBuilder()
-                .implement(User.class, MongoUser.class)
-                .implement(Group.class, MongoGroup.class)
-                .implement(Track.class, MongoTrack.class)
-                .implement(Measurement.class, MongoMeasurement.class)
-                .implement(MeasurementValue.class, MongoMeasurementValue.class)
-                .implement(Phenomenon.class, MongoPhenomenon.class)
-                .implement(Sensor.class, MongoSensor.class)
-                .implement(Fueling.class, MongoFueling.class)
-                .build(EntityFactory.class));
+                        .implement(User.class, MongoUser.class)
+                        .implement(Group.class, MongoGroup.class)
+                        .implement(Track.class, MongoTrack.class)
+                        .implement(Measurement.class, MongoMeasurement.class)
+                        .implement(MeasurementValue.class, MongoMeasurementValue.class)
+                        .implement(Phenomenon.class, MongoPhenomenon.class)
+                        .implement(Sensor.class, MongoSensor.class)
+                        .implement(Fueling.class, MongoFueling.class)
+                        .build(EntityFactory.class));
         install(new FactoryModuleBuilder()
-                .implement(Activity.class, MongoActivity.class)
-                .implement(GroupActivity.class, MongoGroupActivity.class)
-                .implement(TrackActivity.class, MongoTrackActivity.class)
-                .implement(UserActivity.class, MongoUserActivity.class)
-                .build(ActivityFactory.class));
+                        .implement(Activity.class, MongoActivity.class)
+                        .implement(GroupActivity.class, MongoGroupActivity.class)
+                        .implement(TrackActivity.class, MongoTrackActivity.class)
+                        .implement(UserActivity.class, MongoUserActivity.class)
+                        .build(ActivityFactory.class));
         bind(MongoDB.class);
         bind(StatisticsUpdateScheduler.class).asEagerSingleton();
         bind(NewTrackListener.class).asEagerSingleton();
-
-        Multibinder<ResourceShutdownListener> binder = Multibinder.newSetBinder(binder(), ResourceShutdownListener.class);
-        binder.addBinding().to(MongoShutdownListener.class);
     }
 
     @Provides

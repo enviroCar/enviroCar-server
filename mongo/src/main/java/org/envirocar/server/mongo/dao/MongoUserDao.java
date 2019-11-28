@@ -35,10 +35,10 @@ import org.envirocar.server.mongo.entity.MongoPasswordReset;
 import org.envirocar.server.mongo.entity.MongoUser;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
-import org.mongodb.morphia.Key;
-import org.mongodb.morphia.query.Query;
-import org.mongodb.morphia.query.UpdateOperations;
-import org.mongodb.morphia.query.UpdateResults;
+import dev.morphia.Key;
+import dev.morphia.query.Query;
+import dev.morphia.query.UpdateOperations;
+import dev.morphia.query.UpdateResults;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -22,9 +22,9 @@ import org.envirocar.server.core.entities.User;
 import org.envirocar.server.mongo.MongoDB;
 import org.envirocar.server.mongo.entity.MongoUser;
 
-import org.mongodb.morphia.Key;
-import org.mongodb.morphia.annotations.Property;
-import org.mongodb.morphia.annotations.Transient;
+import dev.morphia.Key;
+import dev.morphia.annotations.Property;
+import dev.morphia.annotations.Transient;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;

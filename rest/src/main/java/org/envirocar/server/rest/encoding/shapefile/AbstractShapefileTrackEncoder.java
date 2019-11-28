@@ -16,40 +16,27 @@
  */
 package org.envirocar.server.rest.encoding.shapefile;
 
-import java.io.File;
-
-import javax.ws.rs.core.MediaType;
-
-import org.envirocar.server.core.exception.TrackTooLongException;
-import org.envirocar.server.rest.encoding.ShapefileTrackEncoder;
-import org.envirocar.server.rest.rights.AccessRights;
-import org.joda.time.format.DateTimeFormatter;
-
 import com.google.inject.Inject;
 import com.google.inject.Provider;
+import org.envirocar.server.core.entities.Track;
+import org.envirocar.server.rest.encoding.ShapefileTrackEncoder;
+import org.envirocar.server.rest.rights.AccessRights;
+
+import javax.ws.rs.core.MediaType;
+import java.io.IOException;
+import java.nio.file.Path;
 
 /**
  * TODO JavaDoc
  *
  * @author Benjamin Pross
  */
-public abstract class AbstractShapefileTrackEncoder<T>
-        extends AbstractShapefileMessageBodyWriter<T>
-        implements ShapefileTrackEncoder<T> {
-    private DateTimeFormatter dateTimeFormat;
+public abstract class AbstractShapefileTrackEncoder extends AbstractShapefileMessageBodyWriter<Track>
+        implements ShapefileTrackEncoder<Track> {
     private Provider<AccessRights> rights;
 
-    public AbstractShapefileTrackEncoder(Class<T> classType) {
-        super(classType);
-    }
-
-    public DateTimeFormatter getDateTimeFormat() {
-        return dateTimeFormat;
-    }
-
-    @Inject
-    public void setDateTimeFormat(DateTimeFormatter dateTimeFormat) {
-        this.dateTimeFormat = dateTimeFormat;
+    public AbstractShapefileTrackEncoder() {
+        super(Track.class);
     }
 
     @Inject
@@ -58,7 +45,7 @@ public abstract class AbstractShapefileTrackEncoder<T>
     }
 
     @Override
-    public File encodeShapefile(T t, MediaType mt) throws TrackTooLongException{
+    public Path encodeShapefile(Track t, MediaType mt) throws IOException {
         return encodeShapefile(t, rights.get(), mt);
     }
 }

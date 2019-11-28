@@ -16,13 +16,18 @@
  */
 package org.envirocar.server.rest.encoding.shapefile;
 
-import org.locationtech.jts.geom.Coordinate;
-import org.locationtech.jts.geom.GeometryFactory;
-import org.locationtech.jts.geom.PrecisionModel;
 import org.envirocar.server.core.DataService;
-import org.envirocar.server.core.entities.*;
-import org.envirocar.server.core.exception.TrackTooLongException;
-import org.envirocar.server.mongo.entity.*;
+import org.envirocar.server.core.entities.Measurement;
+import org.envirocar.server.core.entities.MeasurementValue;
+import org.envirocar.server.core.entities.Measurements;
+import org.envirocar.server.core.entities.Phenomenon;
+import org.envirocar.server.core.entities.Sensor;
+import org.envirocar.server.core.entities.Track;
+import org.envirocar.server.mongo.entity.MongoMeasurement;
+import org.envirocar.server.mongo.entity.MongoMeasurementValue;
+import org.envirocar.server.mongo.entity.MongoPhenomenon;
+import org.envirocar.server.mongo.entity.MongoSensor;
+import org.envirocar.server.mongo.entity.MongoTrack;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.rights.NonRestrictiveRights;
 import org.joda.time.DateTime;
@@ -31,12 +36,17 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.PrecisionModel;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
-import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
@@ -66,37 +76,28 @@ public class ShapefileEncodingTest {
 
     @Before
     public void setup() {
-        this.trackShapefileEncoder = new TrackShapefileEncoder(dataService);
-        this.trackShapefileEncoder.setDateTimeFormat(ISODateTimeFormat.dateTimeNoMillis());
+        this.trackShapefileEncoder = new TrackShapefileEncoder(dataService, ISODateTimeFormat.dateTimeNoMillis());
         this.trackShapefileEncoder.setRights(NonRestrictiveRights::new);
     }
 
     @Test
-    public void testShapefileEncoding() {
+    public void testShapefileEncoding() throws IOException {
         Measurements measurements = createTrackWithMeasurementsLessThanThreshold();
         Mockito.when(dataService.getMeasurements(Mockito.anyObject())).thenReturn(measurements);
-        File shapeFile = trackShapefileEncoder.encodeShapefile(track, MediaTypes.APPLICATION_ZIPPED_SHP_TYPE);
-        assertTrue(shapeFile.exists());
-    }
-
-    @Test
-    public void testShapefileEncodingMoreMeasurementsThanAllowed() {
-        exception.expect(TrackTooLongException.class);
-        Measurements measurements = createTrackWithMeasurementsMoreThanThreshold();
-        Mockito.when(dataService.getMeasurements(Mockito.anyObject())).thenReturn(measurements);
-        trackShapefileEncoder.encodeShapefile(track, MediaTypes.APPLICATION_ZIPPED_SHP_TYPE);
+        Path shapeFile = trackShapefileEncoder.encodeShapefile(track, MediaTypes.APPLICATION_ZIPPED_SHP_TYPE);
+        assertTrue(Files.exists(shapeFile));
     }
 
     private Measurements createTrackWithMeasurementsLessThanThreshold() {
         return Measurements.from(IntStream.range(0, TrackShapefileEncoder.shapeFileExportThreshold - 1)
-                .mapToObj(this::createMeasurement)
-                .collect(toList())).build();
+                                          .mapToObj(this::createMeasurement)
+                                          .collect(toList())).build();
     }
 
     private Measurements createTrackWithMeasurementsMoreThanThreshold() {
         return Measurements.from(IntStream.range(0, TrackShapefileEncoder.shapeFileExportThreshold)
-                .mapToObj(this::createMeasurement)
-                .collect(toList())).build();
+                                          .mapToObj(this::createMeasurement)
+                                          .collect(toList())).build();
     }
 
     private Measurement createMeasurement(int basenumber) {
@@ -125,7 +126,6 @@ public class ShapefileEncodingTest {
         result.setModificationTime(DateTime.now());
         return result;
     }
-
 
     private List<Phenomenon> createPhenomenoms() {
         List<Phenomenon> phenomena = new ArrayList<>();

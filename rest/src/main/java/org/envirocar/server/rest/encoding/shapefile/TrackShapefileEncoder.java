@@ -16,14 +16,18 @@
  */
 package org.envirocar.server.rest.encoding.shapefile;
 
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Throwables;
 import com.google.common.io.Closeables;
 import com.google.inject.Inject;
-import org.locationtech.jts.geom.Point;
 import org.envirocar.server.core.DataService;
-import org.envirocar.server.core.entities.*;
-import org.envirocar.server.core.exception.TrackTooLongException;
+import org.envirocar.server.core.entities.Measurement;
+import org.envirocar.server.core.entities.MeasurementValue;
+import org.envirocar.server.core.entities.MeasurementValues;
+import org.envirocar.server.core.entities.Measurements;
+import org.envirocar.server.core.entities.Phenomenon;
+import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.filter.MeasurementFilter;
-import org.envirocar.server.rest.InternalServerError;
 import org.envirocar.server.rest.rights.AccessRights;
 import org.geotools.data.DataStoreFactorySpi;
 import org.geotools.data.DefaultTransaction;
@@ -37,11 +41,13 @@ import org.geotools.feature.NameImpl;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.geotools.referencing.CRS;
-import org.n52.wps.io.IOUtils;
+import org.geotools.referencing.factory.AbstractAuthorityFactory;
+import org.joda.time.format.DateTimeFormatter;
+import org.locationtech.jts.geom.Point;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
-import org.opengis.feature.type.Name;
 import org.opengis.referencing.FactoryException;
+import org.opengis.referencing.crs.CRSAuthorityFactory;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,11 +55,24 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Singleton;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.Serializable;
-import java.util.*;
+import java.io.UncheckedIOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Properties;
+import java.util.UUID;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * TODO: Javadoc
@@ -62,262 +81,191 @@ import java.util.*;
  */
 @Provider
 @Singleton
-public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder<Track> {
-
-    private static final Logger log = LoggerFactory.getLogger(TrackShapefileEncoder.class);
-
-    private SimpleFeatureTypeBuilder typeBuilder;
+public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder {
+    private static final Logger LOG = LoggerFactory.getLogger(TrackShapefileEncoder.class);
+    private static final String ID_ATTRIBUTE_NAME = "id";
+    private static final String GEOMETRY_ATTRIBUTE_NAME = "geometry";
+    private static final String TIME_ATTRIBUTE_NAME = "time";
+    private static final String PROPERTIES_PATH = "/export.properties";
+    private static final String DEFAULT_PROPERTIES_PATH = "/export.default.properties";
+    private static final Properties PROPERTIES = getProperties();
+    @VisibleForTesting
+    static final int shapeFileExportThreshold = Optional.ofNullable(PROPERTIES
+                                                                            .getProperty("shapefile.export.measurement.threshold"))
+                                                        .map(Integer::parseInt).orElse(1000);
     private final DataService dataService;
-    private CoordinateReferenceSystem crs_wgs84;
-    public static final int shapeFileExportThreshold;
-    private static final String shapefileExportThresholdPropertyName = "shapefile.export.measurement.threshold";
-    private Track track;
-    private static final String PROPERTIES = "/export.properties";
-    private static final String DEFAULT_PROPERTIES = "/export.default.properties";
+    private CoordinateReferenceSystem crs;
+    private final DateTimeFormatter dateTimeFormat;
 
-
-    static {
+    private static Properties getProperties() {
         Properties properties = new Properties();
         InputStream in = null;
         try {
-            in = TrackShapefileEncoder.class.getResourceAsStream(PROPERTIES);
+            in = TrackShapefileEncoder.class.getResourceAsStream(PROPERTIES_PATH);
+            if (in == null) {
+                LOG.info("No {} found, loading {}.", PROPERTIES_PATH, DEFAULT_PROPERTIES_PATH);
+                in = TrackShapefileEncoder.class.getResourceAsStream(DEFAULT_PROPERTIES_PATH);
+                if (in == null) {
+                    LOG.warn("No {} found!", DEFAULT_PROPERTIES_PATH);
+                }
+            }
             if (in != null) {
                 properties.load(in);
-            } else {
-                log.info("No {} found, loading {}.", PROPERTIES, DEFAULT_PROPERTIES);
-                in = TrackShapefileEncoder.class.getResourceAsStream(DEFAULT_PROPERTIES);
-                if (in != null) {
-                    properties.load(in);
-                } else {
-                    log.warn("No {} found!", PROPERTIES);
-                }
             }
 
         } catch (IOException ex) {
-            log.error("Error reading " + PROPERTIES, ex);
+            throw new UncheckedIOException(ex);
         } finally {
             Closeables.closeQuietly(in);
         }
-
-        String property = properties.getProperty(shapefileExportThresholdPropertyName);
-        if (property != null) {
-            shapeFileExportThreshold = Integer.parseInt(property);
-        } else {
-            shapeFileExportThreshold = 1000;
-        }
+        return properties;
     }
 
     @Inject
-    public TrackShapefileEncoder(DataService dataService) {
-        super(Track.class);
-        this.dataService = dataService;
+    public TrackShapefileEncoder(DataService dataService, DateTimeFormatter dateTimeFormat) {
+        this.dataService = Objects.requireNonNull(dataService);
+        this.dateTimeFormat = Objects.requireNonNull(dateTimeFormat);
     }
 
     @Override
-    public File encodeShapefile(Track t, AccessRights rights,
-                                MediaType mediaType) throws TrackTooLongException {
-        this.track = t;
-        File zippedShapeFile = null;
+    public Path encodeShapefile(Track track, AccessRights rights, MediaType mediaType)
+            throws IOException {
+        Path shapeDirectory = null;
+        Path zippedShapeFile;
         try {
-            if (rights.canSeeMeasurementsOf(t)) {
-                Measurements measurements = dataService.getMeasurements(new MeasurementFilter(t));
-                zippedShapeFile = createZippedShapefile(createShapeFile(createFeatureCollection(measurements)));
-            }
-        } catch (IOException e) {
-            throw new InternalServerError(e);
+            Measurements measurements = dataService.getMeasurements(new MeasurementFilter(track));
+            shapeDirectory = createShapeFile(track.getIdentifier(), createFeatureCollection(measurements));
+            zippedShapeFile = zip(shapeDirectory);
+        } finally {
+            delete(shapeDirectory);
         }
 
         return zippedShapeFile;
     }
 
-    private FeatureCollection<SimpleFeatureType, SimpleFeature> createFeatureCollection(Measurements measurements)
-            throws TrackTooLongException {
-
-        List<SimpleFeature> simpleFeatureList = new ArrayList<>();
-
-        String uuid = UUID.randomUUID().toString().substring(0, 5);
-
-        String namespace = "http://enviroCar.org/" + uuid;
-
-        String idAttributeName = "id";
-        String geometryAttributeName = "geometry";
-        String timeAttributeName = "time";
-
-        typeBuilder = new SimpleFeatureTypeBuilder();
-
-        typeBuilder.setCRS(getCRS_WGS84());
-
-        typeBuilder.setNamespaceURI(namespace);
-        Name nameType = new NameImpl(namespace, "Feature-" + uuid);
-        typeBuilder.setName(nameType);
-
-        typeBuilder.add(geometryAttributeName, Point.class);
-        typeBuilder.add(idAttributeName, String.class);
-        typeBuilder.add(timeAttributeName, String.class);
-
-        SimpleFeatureType sft = buildFeatureType(measurements);
+    private FeatureCollection<SimpleFeatureType, SimpleFeature> createFeatureCollection(Measurements measurements) {
+        SimpleFeatureType sft = createFeatureType(measurements);
         SimpleFeatureBuilder sfb = new SimpleFeatureBuilder(sft);
 
-        for (Measurement measurement : measurements) {
+        List<SimpleFeature> simpleFeatureList = measurements.stream().map(measurement -> {
+            sfb.set(ID_ATTRIBUTE_NAME, measurement.getIdentifier());
+            sfb.set(TIME_ATTRIBUTE_NAME, dateTimeFormat.print(measurement.getTime()));
+            sfb.set(GEOMETRY_ATTRIBUTE_NAME, measurement.getGeometry());
+            measurement.getValues().forEach(mv -> sfb.set(getPropertyName(mv), mv.getValue().toString()));
+            return sfb.buildFeature(measurement.getIdentifier());
+        }).collect(toList());
 
-            MeasurementValues values = measurement.getValues();
-
-            String id = measurement.getIdentifier();
-
-            sfb.set(idAttributeName, id);
-            sfb.set(timeAttributeName, measurement.getTime().toString());
-            sfb.set(geometryAttributeName, measurement.getGeometry());
-
-            for (MeasurementValue measurementValue : values) {
-
-                Phenomenon phenomenon = measurementValue.getPhenomenon();
-
-                String value = measurementValue.getValue().toString();
-                String unit = phenomenon.getUnit();
-
-                /*
-                 * create property name
-                 */
-                String propertyName = getPropertyName(phenomenon.getName(), unit);
-
-                sfb.set(propertyName, value);
-
-            }
-
-            simpleFeatureList.add(sfb.buildFeature(id));
-
-        }
         return new ListFeatureCollection(sft, simpleFeatureList);
     }
 
-    private SimpleFeatureType buildFeatureType(Measurements measurements) throws TrackTooLongException {
+    private SimpleFeatureType createFeatureType(Measurements measurements) {
+        String uuid = UUID.randomUUID().toString().substring(0, 5);
 
-        Set<String> distinctPhenomenonNames = new HashSet<>();
+        String namespace = String.format("http://enviroCar.org/%s", uuid);
 
-        int count = 0;
+        SimpleFeatureTypeBuilder sftb = new SimpleFeatureTypeBuilder();
+        sftb.setCRS(getCRS());
+        sftb.setNamespaceURI(namespace);
+        sftb.setName(new NameImpl(namespace, String.format("Feature-%s", uuid)));
+        sftb.add(GEOMETRY_ATTRIBUTE_NAME, Point.class);
+        sftb.add(ID_ATTRIBUTE_NAME, String.class);
+        sftb.add(TIME_ATTRIBUTE_NAME, String.class);
+        measurements.stream().map(Measurement::getValues).flatMap(MeasurementValues::stream)
+                    .map(this::getPropertyName).distinct().forEach(name -> sftb.add(name, String.class));
 
-        for (Measurement measurement : measurements) {
-
-            count++;
-
-            MeasurementValues values = measurement.getValues();
-
-            for (MeasurementValue measurementValue : values) {
-
-                Phenomenon phenomenon = measurementValue.getPhenomenon();
-
-                String unit = phenomenon.getUnit();
-
-                /*
-                 * create property name
-                 */
-
-
-                distinctPhenomenonNames.add(getPropertyName(phenomenon.getName(), unit));
-            }
-
-        }
-
-        if (count >= shapeFileExportThreshold) {
-            throw new TrackTooLongException(track.getIdentifier(), shapeFileExportThreshold, count);
-        }
-
-        distinctPhenomenonNames.forEach(name -> typeBuilder.add(name, String.class));
-
-        return typeBuilder.buildFeatureType();
+        return sftb.buildFeatureType();
     }
 
-    private File createShapeFile(FeatureCollection<SimpleFeatureType, SimpleFeature> collection) throws IOException {
+    private String getPropertyName(MeasurementValue measurementValue) {
+        Phenomenon phenomenon = measurementValue.getPhenomenon();
+        return String.format("%s(%s)", phenomenon.getName(), phenomenon.getUnit());
+    }
 
-        String shapeFileSuffix = ".shp";
-
-        File tempBaseFile = File.createTempFile("resolveDir", ".tmp");
-        tempBaseFile.deleteOnExit();
-        File parent = tempBaseFile.getParentFile();
-
-        File shpBaseDirectory = new File(parent, UUID.randomUUID().toString());
-
-        if (!shpBaseDirectory.mkdir()) {
-            throw new IllegalStateException("Could not create temporary shp directory.");
-        }
-
-        File tempSHPfile = File.createTempFile("shp", shapeFileSuffix, shpBaseDirectory);
-        tempSHPfile.deleteOnExit();
-        DataStoreFactorySpi dataStoreFactory = new ShapefileDataStoreFactory();
-        Map<String, Serializable> params = new HashMap<>();
-        params.put("url", tempSHPfile.toURI().toURL());
-        params.put("create spatial index", Boolean.TRUE);
-
-        ShapefileDataStore newDataStore = (ShapefileDataStore) dataStoreFactory
-                .createNewDataStore(params);
-
-        newDataStore.createSchema(collection.getSchema());
-        if (collection.getSchema().getCoordinateReferenceSystem() == null) {
-            newDataStore.forceSchemaCRS(getCRS_WGS84());
-        } else {
-            newDataStore.forceSchemaCRS(collection.getSchema()
-                    .getCoordinateReferenceSystem());
-        }
-
-        Transaction transaction = new DefaultTransaction("create");
-
-        String typeName = newDataStore.getTypeNames()[0];
-        @SuppressWarnings("unchecked")
-        FeatureStore<SimpleFeatureType, SimpleFeature> featureStore
-                = (FeatureStore<SimpleFeatureType, SimpleFeature>) newDataStore
-                .getFeatureSource(typeName);
-        featureStore.setTransaction(transaction);
+    private Path createShapeFile(String name, FeatureCollection<SimpleFeatureType, SimpleFeature> collection)
+            throws IOException {
+        Path tempDirectory = Files.createTempDirectory("enviroCarShapeExport-");
         try {
-            featureStore.addFeatures(collection);
-            transaction.commit();
-        } catch (Exception problem) {
-            transaction.rollback();
-        } finally {
-            transaction.close();
-        }
+            Path shpFile = tempDirectory.resolve(String.format("%s.shp", name));
 
-        // Get names of additional files
-        String path = tempSHPfile.getAbsolutePath();
-        String baseName = path.substring(0, path.length() - shapeFileSuffix.length());
-        File shx = new File(baseName + ".shx");
-        File dbf = new File(baseName + ".dbf");
-        File prj = new File(baseName + ".prj");
+            DataStoreFactorySpi dataStoreFactory = new ShapefileDataStoreFactory();
 
-        // mark created files for delete
-        tempSHPfile.deleteOnExit();
-        shx.deleteOnExit();
-        dbf.deleteOnExit();
-        prj.deleteOnExit();
-        shpBaseDirectory.deleteOnExit();
+            Map<String, Serializable> params = new HashMap<>();
+            params.put("url", shpFile.toUri().toURL());
+            params.put("create spatial index", Boolean.TRUE);
 
-        return shpBaseDirectory;
-    }
+            ShapefileDataStore newDataStore = (ShapefileDataStore) dataStoreFactory.createNewDataStore(params);
 
-    private File createZippedShapefile(File shapeDirectory) throws IOException {
-        if (shapeDirectory != null && shapeDirectory.isDirectory()) {
-            File[] files = shapeDirectory.listFiles();
-            return IOUtils.zip(files);
-        }
+            newDataStore.createSchema(collection.getSchema());
+            if (collection.getSchema().getCoordinateReferenceSystem() == null) {
+                newDataStore.forceSchemaCRS(getCRS());
+            } else {
+                newDataStore.forceSchemaCRS(collection.getSchema().getCoordinateReferenceSystem());
+            }
 
-        return null;
-    }
+            Transaction transaction = new DefaultTransaction("create");
 
-    private String getPropertyName(String propertyName, String unit) {
-
-        return propertyName + "(" + unit + ")";
-    }
-
-    private CoordinateReferenceSystem getCRS_WGS84() {
-
-        if (crs_wgs84 == null) {
-
+            String typeName = newDataStore.getTypeNames()[0];
+            @SuppressWarnings("unchecked")
+            FeatureStore<SimpleFeatureType, SimpleFeature> featureStore
+                    = (FeatureStore<SimpleFeatureType, SimpleFeature>) newDataStore.getFeatureSource(typeName);
+            featureStore.setTransaction(transaction);
             try {
-                crs_wgs84 = CRS.decode("EPSG:4326");
+                featureStore.addFeatures(collection);
+                transaction.commit();
+            } catch (Exception problem) {
+                transaction.rollback();
+            } finally {
+                transaction.close();
+            }
+
+            return tempDirectory;
+        } catch (Exception e) {
+            try {
+                delete(tempDirectory);
+            } catch (IOException ex) {
+                e.addSuppressed(ex);
+            }
+            Throwables.propagateIfPossible(e, IOException.class);
+            throw new IOException(e);
+        }
+    }
+
+    private Path zip(Path directory) throws IOException {
+        Path zipFile = Files.createTempFile("enviroCarShapeExport-", ".zip");
+        try (OutputStream outputStream = Files.newOutputStream(zipFile);
+             ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream)) {
+            Files.walk(directory)
+                 .filter(path -> !Files.isDirectory(path))
+                 .forEach(path -> {
+                     ZipEntry zipEntry = new ZipEntry(directory.relativize(path).toString());
+                     try {
+                         zipOutputStream.putNextEntry(zipEntry);
+                         Files.copy(path, zipOutputStream);
+                         zipOutputStream.closeEntry();
+                     } catch (IOException e) {
+                         throw new UncheckedIOException(e);
+                     }
+                 });
+        }
+        return zipFile;
+    }
+
+    private CoordinateReferenceSystem getCRS() {
+        if (crs == null) {
+            try {
+                CRSAuthorityFactory authorityFactory = CRS.getAuthorityFactory(false);
+                try {
+                    crs = authorityFactory.createCoordinateReferenceSystem("EPSG:4326");
+                } finally {
+                    if (authorityFactory instanceof AbstractAuthorityFactory) {
+                        ((AbstractAuthorityFactory) authorityFactory).dispose();
+                    }
+                }
             } catch (FactoryException e) {
-                log.debug(e.getMessage());
+                LOG.debug(e.getMessage());
             }
         }
-        return crs_wgs84;
+        return crs;
     }
 
 }

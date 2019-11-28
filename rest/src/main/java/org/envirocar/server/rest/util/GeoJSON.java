@@ -295,7 +295,7 @@ public class GeoJSON implements GeometryConverter<JsonNode> {
     @Override
     public MultiPoint decodeMultiPoint(JsonNode json) throws GeometryConverterException {
         Coordinate[] coordinates = decodeCoordinates(requireCoordinates(json));
-        return getGeometryFactory().createMultiPoint(coordinates);
+        return getGeometryFactory().createMultiPointFromCoords(coordinates);
     }
 
     @Override

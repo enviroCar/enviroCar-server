@@ -16,6 +16,10 @@
  */
 package org.envirocar.server.rest.resources;
 
+import com.google.common.base.Optional;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+import com.google.inject.name.Named;
 import org.envirocar.server.core.DataService;
 import org.envirocar.server.core.FriendService;
 import org.envirocar.server.core.GroupService;
@@ -29,20 +33,15 @@ import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.exception.BadRequestException;
 import org.envirocar.server.core.util.pagination.Pagination;
 import org.envirocar.server.rest.ForbiddenException;
+import org.envirocar.server.rest.PrefixedUriInfo;
 import org.envirocar.server.rest.UnauthorizedException;
 import org.envirocar.server.rest.auth.PrincipalImpl;
 import org.envirocar.server.rest.pagination.PaginationProvider;
 import org.envirocar.server.rest.rights.AccessRights;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Provider;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -51,12 +50,6 @@ import java.util.Set;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public abstract class AbstractResource {
-
-    public static final String ALLOWED_MAIL_ADDRESSES = "allowedMailAddresses";
-    public static final String NOT_ALLOWED_MAIL_ADDRESS
-            = "enviroCar is currently in a closed beta phase. Please "
-              + "contact envirocar@52north.org if you want to join the beta "
-              + "testers or with any other inquiries.";
     private Provider<SecurityContext> securityContext;
     private Provider<AccessRights> rights;
     private Provider<DataService> dataService;
@@ -71,6 +64,8 @@ public abstract class AbstractResource {
     private Provider<Optional<Set<String>>> allowedMailAddresses;
     private PaginationProvider pagination;
 
+    private Provider<HttpHeaders> headers;
+
     protected AccessRights getRights() {
         return rights.get();
     }
@@ -80,7 +75,7 @@ public abstract class AbstractResource {
     }
 
     protected UriInfo getUriInfo() {
-        return uriInfo.get();
+        return new PrefixedUriInfo(uriInfo.get(), headers.get().getRequestHeader("x-forwarded-prefix"));
     }
 
     protected DataService getDataService() {
@@ -144,6 +139,11 @@ public abstract class AbstractResource {
     }
 
     @Inject
+    public void setHeaders(Provider<HttpHeaders> headers) {
+        this.headers = headers;
+    }
+
+    @Inject
     public void setResourceFactory(Provider<ResourceFactory> resourceFactory) {
         this.resourceFactory = resourceFactory;
     }
@@ -186,19 +186,6 @@ public abstract class AbstractResource {
     @Inject
     public void setPagination(PaginationProvider pagination) {
         this.pagination = pagination;
-    }
-
-    protected void checkMail(User user) {
-        if (user.hasMail() && allowedMailAddresses.get().isPresent()
-            && !allowedMailAddresses.get().get().contains(user.getMail())) {
-            throw new ForbiddenException(NOT_ALLOWED_MAIL_ADDRESS);
-        }
-    }
-
-    @Inject
-    public void setAllowedMailAddresses(
-            @Named(ALLOWED_MAIL_ADDRESSES) Provider<Optional<Set<String>>> allowedMailAddresses) {
-        this.allowedMailAddresses = allowedMailAddresses;
     }
 
     protected TemporalFilter parseTemporalFilterForInstant() {

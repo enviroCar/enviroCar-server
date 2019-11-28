@@ -19,9 +19,9 @@ package org.envirocar.server.mongo.entity;
 import com.google.common.base.Objects;
 import org.bson.types.ObjectId;
 import org.envirocar.server.core.entities.Terms;
-import org.mongodb.morphia.annotations.Id;
-import org.mongodb.morphia.annotations.Property;
-import org.mongodb.morphia.mapping.Mapper;
+import dev.morphia.annotations.Id;
+import dev.morphia.annotations.Property;
+import dev.morphia.mapping.Mapper;
 
 import java.util.Collections;
 import java.util.Map;

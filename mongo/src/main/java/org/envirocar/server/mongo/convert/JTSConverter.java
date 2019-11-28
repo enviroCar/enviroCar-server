@@ -18,10 +18,10 @@ package org.envirocar.server.mongo.convert;
 
 import org.bson.BSONObject;
 
-import org.mongodb.morphia.converters.SimpleValueConverter;
-import org.mongodb.morphia.converters.TypeConverter;
-import org.mongodb.morphia.mapping.MappedField;
-import org.mongodb.morphia.mapping.MappingException;
+import dev.morphia.converters.SimpleValueConverter;
+import dev.morphia.converters.TypeConverter;
+import dev.morphia.mapping.MappedField;
+import dev.morphia.mapping.MappingException;
 import com.google.inject.Inject;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.GeometryCollection;

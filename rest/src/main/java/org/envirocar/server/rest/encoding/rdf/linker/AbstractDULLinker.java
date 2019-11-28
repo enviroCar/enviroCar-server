@@ -20,8 +20,8 @@ import javax.ws.rs.core.UriBuilder;
 
 import org.envirocar.server.rest.encoding.rdf.vocab.DUL;
 
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Resource;
 
 /**
  * TODO JavaDoc

@@ -16,8 +16,6 @@
  */
 package org.envirocar.server.rest.encoding.shapefile;
 
-import org.apache.commons.io.IOUtils;
-import org.envirocar.server.core.exception.TrackTooLongException;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.encoding.ShapefileTrackEncoder;
 
@@ -25,12 +23,15 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.MessageBodyWriter;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 
 /**
  * TODO: Javadoc
@@ -38,16 +39,13 @@ import java.lang.reflect.Type;
  * @author Benjamin Pross
  */
 @Produces(MediaTypes.APPLICATION_ZIPPED_SHP)
-public abstract class AbstractShapefileMessageBodyWriter<T> implements
-        MessageBodyWriter<T>, ShapefileTrackEncoder<T> {
+public abstract class AbstractShapefileMessageBodyWriter<T> implements MessageBodyWriter<T>, ShapefileTrackEncoder<T> {
 
     private final Class<T> classType;
 
     public AbstractShapefileMessageBodyWriter(Class<T> classType) {
         this.classType = classType;
     }
-
-    public abstract File encodeShapefile(T t, MediaType mt) throws TrackTooLongException;
 
     @Override
     public long getSize(T t, Class<?> type, Type genericType, Annotation[] annotations,
@@ -59,25 +57,51 @@ public abstract class AbstractShapefileMessageBodyWriter<T> implements
     public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations,
                                MediaType mediaType) {
         return this.classType.isAssignableFrom(type) &&
-                mediaType.isCompatible(MediaTypes.APPLICATION_ZIPPED_SHP_TYPE);
+               mediaType.isCompatible(MediaTypes.APPLICATION_ZIPPED_SHP_TYPE);
     }
 
     @Override
     public void writeTo(T t, Class<?> type, Type genericType, Annotation[] annotations,
                         MediaType mediaType, MultivaluedMap<String, Object> h,
                         OutputStream out) throws IOException {
-
-        File shapeFile;
+        Path shapeFile = null;
         try {
             shapeFile = encodeShapefile(t, mediaType);
-        } catch (Exception e) {
-            throw new IOException(e.getMessage());
+            Files.copy(shapeFile, out);
+        } finally {
+            if (shapeFile != null) {
+                delete(shapeFile);
+            }
         }
-
-        FileInputStream fileInputStream = new FileInputStream(shapeFile);
-
-        IOUtils.copy(fileInputStream, out);
-
     }
+
+    protected void delete(Path path) throws IOException {
+        if (path != null && !Files.exists(path)) {
+            Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                    Files.delete(file);
+                    return FileVisitResult.CONTINUE;
+                }
+
+                @Override
+                public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
+                    Files.delete(file);
+                    return FileVisitResult.CONTINUE;
+                }
+
+                @Override
+                public FileVisitResult postVisitDirectory(Path directory, IOException exception) throws IOException {
+                    if (exception != null) {
+                        throw exception;
+                    }
+                    Files.delete(directory);
+                    return FileVisitResult.CONTINUE;
+                }
+            });
+        }
+    }
+
+    protected abstract Path encodeShapefile(T t, MediaType mt) throws IOException;
 
 }
