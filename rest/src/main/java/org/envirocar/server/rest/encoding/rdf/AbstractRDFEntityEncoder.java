@@ -19,8 +19,10 @@ package org.envirocar.server.rest.encoding.rdf;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.hp.hpl.jena.rdf.model.Model;
+import org.envirocar.server.rest.PrefixedUriInfo;
 import org.envirocar.server.rest.encoding.RDFEntityEncoder;
 
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
@@ -33,6 +35,7 @@ public abstract class AbstractRDFEntityEncoder<T>
         extends AbstractRDFMessageBodyWriter<T>
         implements RDFEntityEncoder<T> {
     private Provider<UriInfo> uriInfo;
+    private Provider<HttpHeaders> headers;
 
     public AbstractRDFEntityEncoder(Class<T> classType) {
         super(classType);
@@ -43,6 +46,11 @@ public abstract class AbstractRDFEntityEncoder<T>
         this.uriInfo = uriInfo;
     }
 
+    @Inject
+    public void setHeaders(Provider<HttpHeaders> headers) {
+        this.headers = headers;
+    }
+
     @Override
     public Model encodeRDF(T t) {
         return encodeRDF(t, new RequestUriBuilderProvider());
@@ -51,7 +59,7 @@ public abstract class AbstractRDFEntityEncoder<T>
     private class RequestUriBuilderProvider implements Provider<UriBuilder> {
         @Override
         public UriBuilder get() {
-            return uriInfo.get().getBaseUriBuilder();
+            return new PrefixedUriInfo(uriInfo.get(), headers.get()).getBaseUriBuilder();
         }
     }
 }

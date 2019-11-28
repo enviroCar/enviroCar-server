@@ -24,8 +24,10 @@ import org.envirocar.server.core.TemporalFilter;
 import org.envirocar.server.core.TemporalFilterOperator;
 import org.envirocar.server.core.exception.BadRequestException;
 import org.envirocar.server.core.util.pagination.Pagination;
+import org.envirocar.server.rest.PrefixedUriInfo;
 import org.envirocar.server.rest.pagination.PaginationProvider;
 
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.UriInfo;
 
 /**
@@ -39,13 +41,14 @@ public abstract class AbstractResource {
     private Provider<UriInfo> uriInfo;
     private Provider<ResourceFactory> resourceFactory;
     private PaginationProvider pagination;
+    private Provider<HttpHeaders> headers;
 
     protected Pagination getPagination() throws BadRequestException {
         return pagination.get();
     }
 
     protected UriInfo getUriInfo() {
-        return uriInfo.get();
+        return new PrefixedUriInfo(uriInfo.get(), headers.get().getRequestHeader("x-forwarded-prefix"));
     }
 
     protected DataService getDataService() {
@@ -66,6 +69,11 @@ public abstract class AbstractResource {
     }
 
     @Inject
+    public void setHeaders(Provider<HttpHeaders> headers) {
+        this.headers = headers;
+    }
+
+    @Inject
     public void setResourceFactory(Provider<ResourceFactory> resourceFactory) {
         this.resourceFactory = resourceFactory;
     }
@@ -74,7 +82,6 @@ public abstract class AbstractResource {
     public void setDataService(Provider<DataService> dataService) {
         this.dataService = dataService;
     }
-
 
     @Inject
     public void setStatisticsService(Provider<StatisticsService> statisticsService) {
