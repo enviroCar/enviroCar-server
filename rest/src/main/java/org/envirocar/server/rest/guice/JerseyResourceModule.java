@@ -51,10 +51,6 @@ public class JerseyResourceModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(new TypeLiteral<Optional<Set<String>>>() {})
-                .annotatedWith(Names.named(AbstractResource.ALLOWED_MAIL_ADDRESSES))
-                .toProvider(AddressProvider.class);
-
         bind(IllegalModificationExceptionMapper.class);
         bind(ResourceNotFoundExceptionMapper.class);
         bind(ValidationExceptionMapper.class);
