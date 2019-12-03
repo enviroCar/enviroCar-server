@@ -17,6 +17,8 @@ ARG SERVER_VERSION=1.2.0-SNAPSHOT
 COPY --from=BUILD /usr/src/app/webapp/target/webapp-${SERVER_VERSION} /var/lib/jetty/webapps/ROOT
 COPY ./docker/logback.xml /var/lib/jetty/webapps/ROOT/WEB-INF/classes/
 
+VOLUME /var/data/envirocar/previews
+
 HEALTHCHECK --interval=5s --timeout=20s --retries=3 \
   CMD wget http://localhost:8080/ -q -O - > /dev/null 2>&1
 

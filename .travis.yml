@@ -3,7 +3,8 @@ notifications:
     email: false
 jdk:
     - openjdk8
-services: mongodb
+services:
+    - docker
 after_script:
     - "gem query --local | grep bundler >/dev/null || gem install bundler"
     - "export BUNDLE_GEMFILE=$PWD/docs/Gemfile"

@@ -16,18 +16,25 @@
  */
 package org.envirocar.server;
 
-import com.google.common.base.Strings;
-import org.testcontainers.containers.GenericContainer;
+@FunctionalInterface
+public interface CheckedRunnable {
+    void run() throws Exception;
 
-import java.util.Objects;
-
-public class MongoDatabase extends GenericContainer<MongoDatabase> {
-    public MongoDatabase(String version) {
-        super(String.format("mongo:%s", Objects.requireNonNull(Strings.emptyToNull(version))));
+    static void runAll(CheckedRunnable... runnables) throws Exception {
+        Exception throwable = null;
+        for (CheckedRunnable runnable : runnables) {
+            try {
+                runnable.run();
+            } catch (Exception throwable1) {
+                if (throwable == null) {
+                    throwable = throwable1;
+                } else {
+                    throwable.addSuppressed(throwable1);
+                }
+            }
+        }
+        if (throwable != null) {
+            throw throwable;
+        }
     }
-
-    public MongoDatabase() {
-        this("latest");
-    }
-
 }

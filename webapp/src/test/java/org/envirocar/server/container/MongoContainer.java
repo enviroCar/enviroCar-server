@@ -14,23 +14,20 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server;
+package org.envirocar.server.container;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.Module;
+import com.google.common.base.Strings;
+import org.testcontainers.containers.GenericContainer;
 
-import java.util.ServiceLoader;
-import java.util.stream.StreamSupport;
+import java.util.Objects;
 
-/**
- * TODO JavaDoc
- *
- * @author Christian Autermann <autermann@uni-muenster.de>
- */
-public class ServiceLoaderConfigurationModule extends AbstractModule {
-    @Override
-    protected void configure() {
-        StreamSupport.stream(ServiceLoader.load(Module.class).spliterator(), false)
-                     .forEach(this::install);
+public class MongoContainer extends GenericContainer<MongoContainer> {
+    public MongoContainer(String version) {
+        super(String.format("mongo:%s", Objects.requireNonNull(Strings.emptyToNull(version))));
     }
+
+    public MongoContainer() {
+        this("latest");
+    }
+
 }
