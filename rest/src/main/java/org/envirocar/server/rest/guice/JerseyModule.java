@@ -54,13 +54,12 @@ import static java.util.stream.Collectors.joining;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class JerseyModule extends AbstractModule {
-
     @Override
     protected void configure() {
-        install(Modules.override(new JerseyServletModuleImpl()).with(new JerseyOverrideModule()));
+        install(Modules.override(new JerseyModuleImpl()).with(new JerseyOverrideModule()));
     }
 
-    private static class JerseyServletModuleImpl extends JerseyServletModule {
+    private static class JerseyModuleImpl extends JerseyServletModule {
         @Override
         protected void configureServlets() {
             serve("/*").with(GuiceContainer.class, getContainerFilterConfig());
@@ -102,5 +101,4 @@ public class JerseyModule extends AbstractModule {
             return new PrefixedUriInfo(uriInfo, headers);
         }
     }
-
 }

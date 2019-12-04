@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import javax.ws.rs.core.UriInfo;
 import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.Map;
@@ -37,30 +38,31 @@ public class LoggingFilter implements ContainerRequestFilter, ContainerResponseF
     private static final String ID_PROPERTY = LoggingFilter.class.getName() + "-request-id";
     private static final String TIME_PROPERTY = LoggingFilter.class.getName() + "-request-time";
     private final Provider<HttpContext> httpContext;
+    private final Provider<UriInfo> uriInfo;
     private final AtomicLong reqId = new AtomicLong();
 
     @Inject
-    private LoggingFilter(Provider<HttpContext> httpContext) {
+    public LoggingFilter(Provider<HttpContext> httpContext,
+                         Provider<UriInfo> uriInfo) {
         this.httpContext = httpContext;
+        this.uriInfo = uriInfo;
     }
 
     @Override
     public ContainerRequest filter(ContainerRequest request) {
         setStartTime();
-        log(String.format("[%d]> %s %s", setId(), request.getMethod(), request.getRequestUri()));
+        log(String.format("[%d]> %s %s", setId(), request.getMethod(), uriInfo.get().getRequestUri()));
         return request;
     }
 
-
     @Override
     public ContainerResponse filter(ContainerRequest request, ContainerResponse response) {
-        getId().map(id ->
-                String.format("[%d]< %s %s: %d (%s)", id,
-                        request.getMethod(),
-                        request.getRequestUri(),
-                        response.getStatus(),
-                        getDuration().orElse(null)))
-                .ifPresent(this::log);
+        getId().map(id -> String.format("[%d]< %s %s: %d (%s)", id,
+                                        request.getMethod(),
+                                        uriInfo.get().getRequestUri(),
+                                        response.getStatus(),
+                                        getDuration().orElse(null)))
+               .ifPresent(this::log);
         return response;
     }
 
@@ -89,7 +91,6 @@ public class LoggingFilter implements ContainerRequestFilter, ContainerResponseF
     private Map<String, Object> getContext() {
         return this.httpContext.get().getProperties();
     }
-
 
     public void log(String message) {
         LOG.info(message);
