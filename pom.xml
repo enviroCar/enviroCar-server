@@ -54,6 +54,10 @@
     </properties>
     <repositories>
         <repository>
+            <id>maven-central</id>
+            <url>https://repo.maven.apache.org/maven2</url>
+        </repository>
+        <repository>
             <id>geotools</id>
             <name>Geotools Repo</name>
             <url>http://download.osgeo.org/webdav/geotools</url>
