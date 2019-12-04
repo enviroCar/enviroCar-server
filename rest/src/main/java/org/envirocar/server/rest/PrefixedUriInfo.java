@@ -30,18 +30,48 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class PrefixedUriInfo extends DelegatingUriInfo {
+    public static final String X_FORWARDED_PORT = "x-forwarded-port";
+    public static final String X_FORWARDED_PROTO = "x-forwarded-proto";
+    public static final String X_FORWARDED_PREFIX = "x-forwarded-prefix";
     private final List<String> prefix;
-
-    public PrefixedUriInfo(UriInfo delegate, List<String> prefix) {
-        super(delegate);
-        this.prefix = prefix;
-    }
+    private final String scheme;
+    private final int port;
 
     public PrefixedUriInfo(UriInfo delegate, HttpHeaders headers) {
         super(delegate);
-        this.prefix = headers.getRequestHeader("x-forwarded-prefix");
+        this.prefix = getPrefix(headers);
+        this.scheme = getScheme(delegate, headers);
+        this.port = getPort(delegate, headers);
     }
 
+    private List<String> getPrefix(HttpHeaders headers) {
+        return headers.getRequestHeader(X_FORWARDED_PREFIX);
+    }
+
+    private String getScheme(UriInfo delegate, HttpHeaders headers) {
+        List<String> requestHeader = headers.getRequestHeader(X_FORWARDED_PROTO);
+        if (requestHeader == null || requestHeader.isEmpty()) {
+            return delegate.getRequestUri().getScheme();
+        } else {
+            return requestHeader.get(0);
+        }
+    }
+
+    private int getPort(UriInfo delegate, HttpHeaders headers) {
+        List<String> requestHeader = headers.getRequestHeader(X_FORWARDED_PORT);
+        if (requestHeader == null || requestHeader.isEmpty()) {
+            return delegate.getRequestUri().getPort();
+        } else {
+            int port = Integer.parseInt(requestHeader.get(0), 10);
+            if ("https".equals(this.scheme) && port != 443) {
+                return port;
+            } else if ("http".equals(this.scheme) && port != 80) {
+                return port;
+            } else {
+                return delegate.getRequestUri().getPort();
+            }
+        }
+    }
 
     @Override
     public URI getBaseUri() {
@@ -60,17 +90,17 @@ public class PrefixedUriInfo extends DelegatingUriInfo {
 
     @Override
     public UriBuilder getBaseUriBuilder() {
-        return addPrefix(super.getBaseUri());
+        return applyForwardedHeaders(super.getBaseUri());
     }
 
     @Override
     public UriBuilder getRequestUriBuilder() {
-        return addPrefix(super.getRequestUri());
+        return applyForwardedHeaders(super.getRequestUri());
     }
 
     @Override
     public UriBuilder getAbsolutePathBuilder() {
-        return addPrefix(super.getAbsolutePath());
+        return applyForwardedHeaders(super.getAbsolutePath());
     }
 
     @Override
@@ -79,9 +109,29 @@ public class PrefixedUriInfo extends DelegatingUriInfo {
     }
 
     @Override
+    public String getPath() {
+        return getPath(true);
+    }
+
+    @Override
+    public String getPath(boolean decode) {
+        if (prefix == null || prefix.isEmpty()) {
+            return super.getPath(decode);
+        }
+        Iterator<String> iter = this.prefix.iterator();
+        UriBuilder builder = UriBuilder.fromPath(iter.next());
+        while (iter.hasNext()) {
+            builder = builder.path(iter.next());
+        }
+        builder.path(super.getPath(decode));
+        return builder.build().getPath();
+    }
+
+    @Override
     public List<PathSegment> getPathSegments(boolean decode) {
         return Stream.concat(getPrefixSegments(decode).stream(),
-                super.getPathSegments(decode).stream()).collect(Collectors.toList());
+                             super.getPathSegments(decode).stream())
+                     .collect(Collectors.toList());
     }
 
     private List<PathSegment> getPrefixSegments(boolean decode) {
@@ -96,7 +146,7 @@ public class PrefixedUriInfo extends DelegatingUriInfo {
         return UriComponent.decodePath(builder.build(), decode);
     }
 
-    private UriBuilder addPrefix(URI uri) {
+    private UriBuilder applyForwardedHeaders(URI uri) {
         UriBuilder builder = UriBuilder.fromUri(uri);
         if (this.prefix != null && !this.prefix.isEmpty()) {
             builder = builder.replacePath("");
@@ -106,6 +156,12 @@ public class PrefixedUriInfo extends DelegatingUriInfo {
                 }
             }
             builder = builder.path(uri.getPath());
+        }
+        if (port > 0) {
+            builder = builder.port(port);
+        }
+        if (scheme != null) {
+            builder = builder.scheme(scheme);
         }
         return builder;
     }

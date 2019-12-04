@@ -111,7 +111,7 @@ public class JerseyModule extends AbstractModule {
             HttpContext context = wa.getThreadLocalHttpContext();
             ExtendedUriInfo uriInfo = context.getUriInfo();
             HttpHeaders headers = context.getRequest();
-            return new PrefixedUriInfo(uriInfo, headers.getRequestHeader("x-forwarded-prefix"));
+            return new PrefixedUriInfo(uriInfo, headers);
         }
     }
 }

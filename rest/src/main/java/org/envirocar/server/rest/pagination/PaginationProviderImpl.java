@@ -47,7 +47,7 @@ public class PaginationProviderImpl implements PaginationProvider {
     @Inject
     public PaginationProviderImpl(HttpHeaders headers, UriInfo uriInfo) {
         this.headers = headers;
-        this.uriInfo = new PrefixedUriInfo(uriInfo, headers);
+        this.uriInfo = uriInfo;
     }
 
     @Override
