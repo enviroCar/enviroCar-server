@@ -16,10 +16,8 @@
  */
 package org.envirocar.server.rest.resources;
 
-import com.google.common.base.Optional;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-import com.google.inject.name.Named;
 import org.envirocar.server.core.DataService;
 import org.envirocar.server.core.FriendService;
 import org.envirocar.server.core.GroupService;
@@ -33,16 +31,13 @@ import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.exception.BadRequestException;
 import org.envirocar.server.core.util.pagination.Pagination;
 import org.envirocar.server.rest.ForbiddenException;
-import org.envirocar.server.rest.PrefixedUriInfo;
 import org.envirocar.server.rest.UnauthorizedException;
 import org.envirocar.server.rest.auth.PrincipalImpl;
 import org.envirocar.server.rest.pagination.PaginationProvider;
 import org.envirocar.server.rest.rights.AccessRights;
 
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
-import java.util.Set;
 
 /**
  * TODO JavaDoc
@@ -61,10 +56,7 @@ public abstract class AbstractResource {
     private Provider<UriInfo> uriInfo;
     private Provider<ResourceFactory> resourceFactory;
     private Provider<EntityFactory> entityFactory;
-    private Provider<Optional<Set<String>>> allowedMailAddresses;
     private PaginationProvider pagination;
-
-    private Provider<HttpHeaders> headers;
 
     protected AccessRights getRights() {
         return rights.get();
@@ -75,7 +67,7 @@ public abstract class AbstractResource {
     }
 
     protected UriInfo getUriInfo() {
-        return new PrefixedUriInfo(uriInfo.get(), headers.get().getRequestHeader("x-forwarded-prefix"));
+        return uriInfo.get();
     }
 
     protected DataService getDataService() {
@@ -136,11 +128,6 @@ public abstract class AbstractResource {
     @Inject
     public void setUriInfo(Provider<UriInfo> uriInfo) {
         this.uriInfo = uriInfo;
-    }
-
-    @Inject
-    public void setHeaders(Provider<HttpHeaders> headers) {
-        this.headers = headers;
     }
 
     @Inject
