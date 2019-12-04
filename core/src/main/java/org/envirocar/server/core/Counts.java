@@ -14,16 +14,34 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.core.dao;
+package org.envirocar.server.core;
 
-import org.envirocar.server.core.entities.Announcement;
-import org.envirocar.server.core.entities.Announcements;
-import org.envirocar.server.core.util.pagination.Pagination;
+public interface Counts {
+    long getActivities();
 
-public interface AnnouncementsDao extends Dao {
+    long getAnnouncements();
 
-    Announcements get(Pagination p);
+    long getBadges();
 
-    Announcement getById(String id);
+    long getFuelings();
 
+    long getGroups();
+
+    long getMeasurements();
+
+    long getPhenomenons();
+
+    long getPrivacyStatements();
+
+    long getSensors();
+
+    long getStatistics();
+
+    long getTermsOfUses();
+
+    long getTracks();
+
+    long getUsers();
+
+    long getUserStatistics();
 }

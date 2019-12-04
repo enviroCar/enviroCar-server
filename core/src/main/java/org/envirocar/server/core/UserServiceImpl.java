@@ -85,6 +85,12 @@ public class UserServiceImpl implements UserService {
     private final Provider<ConfirmationLinkFactory> confirmationLinkFactory;
     private final TermsRepository termsRepository;
 
+    private static class UserCounts {
+        private long activities;
+        private long users;
+        private long groups;
+    }
+
     @Inject
     public UserServiceImpl(ActivityDao activityDao,
                            UserDao userDao,

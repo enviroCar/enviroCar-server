@@ -27,7 +27,7 @@ import org.envirocar.server.core.util.pagination.Pagination;
  *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public interface UserDao {
+public interface UserDao extends Dao {
 
     /**
      * Try to confirm the the user.

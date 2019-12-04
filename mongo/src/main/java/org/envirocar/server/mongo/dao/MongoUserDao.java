@@ -66,6 +66,11 @@ public class MongoUserDao extends AbstractMongoDao<String, MongoUser, Users> imp
         this.passwordResetDao = dao;
     }
 
+    @Override
+    public long getCount() {
+        return count();
+    }
+
     @Inject
     public void setTrackDao(MongoTrackDao trackDao) {
         this.trackDao = trackDao;

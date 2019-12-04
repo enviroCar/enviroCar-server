@@ -27,7 +27,7 @@ import org.envirocar.server.core.util.pagination.Pagination;
  *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public interface GroupDao {
+public interface GroupDao extends Dao {
     Group getByName(String name);
 
     Groups search(String search, Pagination p);

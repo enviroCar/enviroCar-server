@@ -26,7 +26,7 @@ import org.envirocar.server.core.filter.SensorFilter;
  * @author Christian Autermann <autermann@uni-muenster.de>
  * @author Jan Wirwahn <jan.wirwahn@wwu.de>
  */
-public interface SensorDao {
+public interface SensorDao extends Dao {
     Sensor getByIdentifier(String identifier);
 
     Sensor create(Sensor sensor);

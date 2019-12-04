@@ -65,6 +65,11 @@ public class MongoSensorDao extends AbstractMongoDao<ObjectId, MongoSensor, Sens
     }
 
     @Override
+    public long getCount() {
+        return count();
+    }
+
+    @Override
     public Sensor getByIdentifier(String id) {
         try {
             /*

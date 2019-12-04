@@ -35,6 +35,11 @@ public class MongoAnnouncementsDao extends AbstractMongoDao<ObjectId, MongoAnnou
 	}
 
 	@Override
+	public long getCount() {
+		return count();
+	}
+
+	@Override
 	public Announcements get(Pagination p) {
 		return fetch(q(), p);
 	}

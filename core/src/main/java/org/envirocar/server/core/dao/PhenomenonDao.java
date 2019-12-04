@@ -25,7 +25,7 @@ import org.envirocar.server.core.util.pagination.Pagination;
  *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public interface PhenomenonDao {
+public interface PhenomenonDao extends Dao {
     Phenomenon getByName(String name);
 
     Phenomenons get(Pagination p);

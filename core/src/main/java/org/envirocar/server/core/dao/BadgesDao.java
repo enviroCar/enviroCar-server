@@ -19,8 +19,8 @@ package org.envirocar.server.core.dao;
 import org.envirocar.server.core.entities.Badges;
 import org.envirocar.server.core.util.pagination.Pagination;
 
-public interface BadgesDao {
+public interface BadgesDao extends Dao {
 
-	Badges get(Pagination pagination);
+    Badges get(Pagination pagination);
 
 }

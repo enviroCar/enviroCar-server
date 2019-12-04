@@ -21,6 +21,8 @@ import com.google.inject.Scopes;
 import org.envirocar.server.core.CarSimilarityService;
 import org.envirocar.server.core.CarSimilarityServiceImpl;
 import org.envirocar.server.core.ConfirmationLinkFactory;
+import org.envirocar.server.core.CountService;
+import org.envirocar.server.core.CountServiceImpl;
 import org.envirocar.server.core.DataService;
 import org.envirocar.server.core.DataServiceImpl;
 import org.envirocar.server.core.FriendService;
@@ -61,6 +63,7 @@ public class CoreModule extends AbstractModule {
         bind(PasswordEncoder.class).to(BCryptPasswordEncoder.class);
         bind(GeometryOperations.class).to(GeodesicGeometryOperations.class);
         bind(CarSimilarityService.class).to(CarSimilarityServiceImpl.class);
+        bind(CountService.class).to(CountServiceImpl.class);
         DateTimeZone.setDefault(DateTimeZone.UTC);
         requireBinding(ConfirmationLinkFactory.class);
         bind(TermsRepository.class).to(TermsRepositoryImpl.class).in(Scopes.SINGLETON);

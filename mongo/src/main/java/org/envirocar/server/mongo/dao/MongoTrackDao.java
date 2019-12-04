@@ -55,6 +55,11 @@ public class MongoTrackDao extends AbstractMongoDao<ObjectId, MongoTrack, Tracks
         super(MongoTrack.class, mongoDB);
     }
 
+    @Override
+    public long getCount() {
+        return count();
+    }
+
     public MongoMeasurementDao getMeasurementDao() {
         return measurementDao;
     }

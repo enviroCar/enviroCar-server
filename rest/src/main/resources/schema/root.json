@@ -41,6 +41,14 @@
     "statistics": {
       "type": "string",
       "format": "uri"
+    },
+    "counts": {
+      "type": "object",
+      "patternProperties": {
+        ".+": {
+          "type": "integer"
+        }
+      }
     }
   }
 }

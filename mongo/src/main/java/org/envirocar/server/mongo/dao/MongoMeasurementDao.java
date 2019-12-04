@@ -97,6 +97,11 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
     }
 
     @Override
+    public long getCount() {
+        return count();
+    }
+
+    @Override
     public MongoMeasurement create(Measurement measurement) {
         return save(measurement);
     }

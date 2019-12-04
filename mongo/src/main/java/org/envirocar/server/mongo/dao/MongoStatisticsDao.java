@@ -91,6 +91,11 @@ public class MongoStatisticsDao implements StatisticsDao {
     }
 
     @Override
+    public long getCount() {
+        return this.dao.count();
+    }
+
+    @Override
     public Statistics getStatistics(StatisticsFilter request) {
         return Statistics.from(getStatistics1(request).getStatistics()).build();
     }

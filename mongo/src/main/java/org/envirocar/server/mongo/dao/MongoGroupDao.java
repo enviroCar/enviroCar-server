@@ -49,6 +49,11 @@ public class MongoGroupDao extends AbstractMongoDao<String, MongoGroup, Groups>
             .getLogger(MongoGroupDao.class);
     private MongoUserDao userDao;
 
+    @Override
+    public long getCount() {
+        return count();
+    }
+
     @Inject
     public MongoGroupDao(MongoDB mongoDB) {
         super(MongoGroup.class, mongoDB);
