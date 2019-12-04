@@ -16,8 +16,8 @@
  */
 package org.envirocar.server.mongo.dao;
 
-import static org.envirocar.server.mongo.util.MongoUtils.reverse;
-
+import com.google.inject.Inject;
+import dev.morphia.query.Query;
 import org.bson.types.ObjectId;
 import org.envirocar.server.core.activities.Activities;
 import org.envirocar.server.core.activities.Activity;
@@ -28,8 +28,7 @@ import org.envirocar.server.mongo.MongoDB;
 import org.envirocar.server.mongo.activities.MongoActivity;
 import org.envirocar.server.mongo.entity.MongoUser;
 
-import dev.morphia.query.Query;
-import com.google.inject.Inject;
+import static org.envirocar.server.mongo.util.MongoUtils.reverse;
 
 /**
  * TODO JavaDoc
@@ -71,6 +70,11 @@ public class MongoActivityDao extends AbstractMongoDao<ObjectId, MongoActivity, 
     }
 
     @Override
+    public long getCount() {
+        return count();
+    }
+
+    @Override
     public void save(Activity activity) {
         save((MongoActivity) activity);
     }
@@ -82,19 +86,19 @@ public class MongoActivityDao extends AbstractMongoDao<ObjectId, MongoActivity, 
             MongoUser u = (MongoUser) request.getUser();
             if (request.isFriendActivities()) {
                 q.field(MongoActivity.USER)
-                        .in(userDao.getBidirectionalFriendRefs(u));
+                 .in(userDao.getBidirectionalFriendRefs(u));
             } else {
                 q.field(MongoActivity.USER)
-                        .equal(key(u));
+                 .equal(key(u));
             }
         }
         if (request.hasGroup()) {
             q.field(MongoActivity.USER)
-                    .in(groupDao.getMemberRefs(request.getGroup()));
+             .in(groupDao.getMemberRefs(request.getGroup()));
         }
         if (request.hasType()) {
             q.field(MongoActivity.TYPE)
-                    .equal(request.getType());
+             .equal(request.getType());
         }
         return fetch(q, request.getPagination());
     }
@@ -116,19 +120,19 @@ public class MongoActivityDao extends AbstractMongoDao<ObjectId, MongoActivity, 
             MongoUser u = (MongoUser) request.getUser();
             if (request.isFriendActivities()) {
                 q.field(MongoActivity.USER)
-                        .in(userDao.getFriendRefs(u));
+                 .in(userDao.getFriendRefs(u));
             } else {
                 q.field(MongoActivity.USER)
-                        .equal(key(u));
+                 .equal(key(u));
             }
         }
         if (request.hasGroup()) {
             q.field(MongoActivity.USER)
-                    .in(groupDao.getMemberRefs(request.getGroup()));
+             .in(groupDao.getMemberRefs(request.getGroup()));
         }
         if (request.hasType()) {
             q.field(MongoActivity.TYPE)
-                    .equal(request.getType());
+             .equal(request.getType());
         }
         try {
             q.field(MongoActivity.ID).equal(new ObjectId(id));

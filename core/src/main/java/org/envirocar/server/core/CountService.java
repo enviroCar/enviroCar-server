@@ -14,16 +14,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.core.dao;
+package org.envirocar.server.core;
 
-import org.envirocar.server.core.entities.Announcement;
-import org.envirocar.server.core.entities.Announcements;
-import org.envirocar.server.core.util.pagination.Pagination;
-
-public interface AnnouncementsDao extends Dao {
-
-    Announcements get(Pagination p);
-
-    Announcement getById(String id);
-
+public interface CountService {
+    Counts getCounts();
 }

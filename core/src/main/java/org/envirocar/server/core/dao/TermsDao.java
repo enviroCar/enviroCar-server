@@ -22,7 +22,7 @@ import org.envirocar.server.core.util.pagination.Pagination;
 
 import java.util.Optional;
 
-public interface TermsDao<T extends Terms, V extends UpCastingIterable<T>> {
+public interface TermsDao<T extends Terms, V extends UpCastingIterable<T>> extends Dao {
     V get(Pagination p);
 
     Optional<T> getById(String id);

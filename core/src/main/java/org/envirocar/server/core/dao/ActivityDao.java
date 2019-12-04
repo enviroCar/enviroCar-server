@@ -25,7 +25,7 @@ import org.envirocar.server.core.filter.ActivityFilter;
  *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public interface ActivityDao {
+public interface ActivityDao extends Dao {
     void save(Activity activity);
 
     Activities get(ActivityFilter request);

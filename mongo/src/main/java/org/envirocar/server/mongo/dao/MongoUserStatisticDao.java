@@ -17,6 +17,10 @@
 package org.envirocar.server.mongo.dao;
 
 import com.google.inject.Inject;
+import dev.morphia.Datastore;
+import dev.morphia.Key;
+import dev.morphia.dao.BasicDAO;
+import dev.morphia.query.UpdateOperations;
 import org.envirocar.server.core.DataService;
 import org.envirocar.server.core.dao.UserStatisticDao;
 import org.envirocar.server.core.entities.Measurements;
@@ -34,10 +38,6 @@ import org.envirocar.server.mongo.entity.MongoUserStatistic;
 import org.envirocar.server.mongo.entity.MongoUserStatisticKey;
 import org.envirocar.server.mongo.util.TrackStatistic;
 import org.envirocar.server.mongo.util.TrackStatisticImpl;
-import dev.morphia.Datastore;
-import dev.morphia.Key;
-import dev.morphia.dao.BasicDAO;
-import dev.morphia.query.UpdateOperations;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -67,6 +67,11 @@ public class MongoUserStatisticDao implements UserStatisticDao {
         this.dao = new BasicDAO<>(MongoUserStatistic.class, mongoDB.getDatastore());
         this.dataService = dataService;
 
+    }
+
+    @Override
+    public long getCount() {
+        return dao.count();
     }
 
     @Override

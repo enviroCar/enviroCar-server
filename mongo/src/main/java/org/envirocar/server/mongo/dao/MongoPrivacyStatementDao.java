@@ -43,6 +43,11 @@ public class MongoPrivacyStatementDao extends AbstractMongoDao<ObjectId, MongoPr
     }
 
     @Override
+    public long getCount() {
+        return count();
+    }
+
+    @Override
     public PrivacyStatements get(Pagination p) {
         return fetch(q().order(MongoUtils.reverse(MongoPrivacyStatement.CREATION_DATE)), p);
     }

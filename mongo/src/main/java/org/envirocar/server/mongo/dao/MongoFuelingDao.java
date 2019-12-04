@@ -48,6 +48,11 @@ public class MongoFuelingDao extends AbstractMongoDao<ObjectId, MongoFueling, Fu
     }
 
     @Override
+    public long getCount() {
+        return count();
+    }
+
+    @Override
     protected Fuelings createPaginatedIterable(Iterable<MongoFueling> i,
                                                Pagination p, long count) {
         return Fuelings.from(i).withPagination(p).withElements(count).build();

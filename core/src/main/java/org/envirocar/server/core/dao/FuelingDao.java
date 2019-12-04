@@ -25,13 +25,12 @@ import org.envirocar.server.core.filter.FuelingFilter;
  *
  * @author Christian Autermann
  */
-public interface FuelingDao {
+public interface FuelingDao extends Dao {
 
     /**
      * Get the {@code Fueling} with the specified identifier.
      *
      * @param identifier the identifier
-     *
      * @return the {@code Fueling}
      */
     Fueling getById(String identifier);
@@ -40,7 +39,6 @@ public interface FuelingDao {
      * Save the supplied {@code Fueling}.
      *
      * @param fueling the fueling
-     *
      * @return the {@code Fueling}
      */
     Fueling create(Fueling fueling);
@@ -49,7 +47,6 @@ public interface FuelingDao {
      * Get the {@code Fueling}s matching the specified filter.
      *
      * @param request the request
-     *
      * @return the {@code Fuelings}
      */
     Fuelings get(FuelingFilter request);

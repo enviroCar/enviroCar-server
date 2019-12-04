@@ -25,7 +25,7 @@ import org.envirocar.server.core.filter.TrackFilter;
  *
  * @author Arne de Wall <a.dewall@52north.org>
  */
-public interface TrackDao {
+public interface TrackDao extends Dao {
     Track create(Track track);
 
     Track save(Track track);

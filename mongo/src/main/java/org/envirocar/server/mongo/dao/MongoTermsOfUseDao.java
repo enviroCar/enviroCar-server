@@ -43,6 +43,11 @@ public class MongoTermsOfUseDao extends AbstractMongoDao<ObjectId, MongoTermsOfU
     }
 
     @Override
+    public long getCount() {
+        return count();
+    }
+
+    @Override
     public TermsOfUse get(Pagination p) {
         return fetch(q().order(MongoUtils.reverse(MongoTermsOfUseInstance.CREATION_DATE)), p);
     }

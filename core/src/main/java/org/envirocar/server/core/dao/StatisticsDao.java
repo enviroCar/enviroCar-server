@@ -27,7 +27,7 @@ import org.envirocar.server.core.statistics.Statistics;
  *
  * @author Jan Wirwahn
  */
-public interface StatisticsDao {
+public interface StatisticsDao extends Dao {
     Statistics getStatistics(StatisticsFilter request);
 
     Statistic getStatistic(StatisticsFilter request, Phenomenon phenomenon);

@@ -26,7 +26,7 @@ import org.envirocar.server.core.filter.UserStatisticFilter;
  *
  * @author Maurin Radtke <maurin.radtke@uni-muenster.de>
  */
-public interface UserStatisticDao {
+public interface UserStatisticDao extends Dao {
 
     /**
      * Get the {@code UserStatistic}s matching the specified filter.

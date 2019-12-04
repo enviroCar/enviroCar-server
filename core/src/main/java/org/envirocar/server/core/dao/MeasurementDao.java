@@ -25,7 +25,7 @@ import org.envirocar.server.core.filter.MeasurementFilter;
  *
  * @author Arne de Wall <a.dewall@52north.org>
  */
-public interface MeasurementDao {
+public interface MeasurementDao extends Dao {
     Measurement create(Measurement measurement);
 
     Measurement save(Measurement measurement);

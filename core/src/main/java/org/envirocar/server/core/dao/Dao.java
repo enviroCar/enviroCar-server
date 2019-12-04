@@ -16,14 +16,7 @@
  */
 package org.envirocar.server.core.dao;
 
-import org.envirocar.server.core.entities.Announcement;
-import org.envirocar.server.core.entities.Announcements;
-import org.envirocar.server.core.util.pagination.Pagination;
+public interface Dao {
 
-public interface AnnouncementsDao extends Dao {
-
-    Announcements get(Pagination p);
-
-    Announcement getById(String id);
-
+    long getCount();
 }

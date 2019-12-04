@@ -20,6 +20,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
+import org.envirocar.server.core.CountService;
+import org.envirocar.server.core.Counts;
 import org.envirocar.server.rest.JSONConstants;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
@@ -54,10 +56,12 @@ public class RootResource extends AbstractResource {
     public static final String CONFIRM = "confirm";
     public static final String PRIVACY_STATEMENTS = "privacyStatements";
     private final JsonNodeFactory factory;
+    private final CountService countService;
 
     @Inject
-    public RootResource(JsonNodeFactory factory) {
+    public RootResource(JsonNodeFactory factory, CountService countService) {
         this.factory = factory;
+        this.countService = countService;
     }
 
     @GET
@@ -96,6 +100,25 @@ public class RootResource extends AbstractResource {
         root.put(JSONConstants.SCHEMA, getUriBuilder().path(SCHEMA).build().toString());
         root.put(JSONConstants.PRIVACY_STATEMENTS, getUriBuilder().path(PRIVACY_STATEMENTS).build().toString());
         root.put(JSONConstants.TERMS_OF_USE_KEY, getUriBuilder().path(TERMS_OF_USE).build().toString());
+
+        Counts counts = countService.getCounts();
+
+        root.putObject(JSONConstants.COUNTS_KEY)
+            .put(JSONConstants.USERS_KEY, counts.getUsers())
+            .put(JSONConstants.GROUPS_KEY, counts.getGroups())
+            .put(JSONConstants.TRACKS_KEY, counts.getTracks())
+            .put(JSONConstants.SENSORS_KEY, counts.getSensors())
+            .put(JSONConstants.PHENOMENONS_KEY, counts.getPhenomenons())
+            .put(JSONConstants.MEASUREMENTS_KEY, counts.getMeasurements())
+            .put(JSONConstants.STATISTICS_KEY, counts.getStatistics())
+            .put(JSONConstants.ANNOUNCEMENTS_KEY, counts.getAnnouncements())
+            .put(JSONConstants.BADGES_KEY, counts.getBadges())
+            .put(JSONConstants.PRIVACY_STATEMENTS, counts.getPrivacyStatements())
+            .put(JSONConstants.TERMS_OF_USE_KEY, counts.getTermsOfUses())
+            .put(JSONConstants.ACTIVITIES_KEY, counts.getActivities())
+            .put(JSONConstants.USERSTATISTIC_KEY, counts.getUserStatistics())
+            .put(JSONConstants.FUELINGS, counts.getFuelings());
+
         return root;
     }
 

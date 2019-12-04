@@ -18,7 +18,6 @@ package org.envirocar.server.rest.resources;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
-import org.locationtech.jts.geom.GeometryFactory;
 import org.envirocar.server.core.SpatialFilter;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.entities.Tracks;
@@ -34,6 +33,7 @@ import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.TrackWithMeasurments;
 import org.envirocar.server.rest.auth.Authenticated;
 import org.envirocar.server.rest.schema.Schema;
+import org.locationtech.jts.geom.GeometryFactory;
 
 import javax.annotation.Nullable;
 import javax.ws.rs.Consumes;
