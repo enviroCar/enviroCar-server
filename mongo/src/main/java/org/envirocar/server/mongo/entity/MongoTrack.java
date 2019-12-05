@@ -17,7 +17,10 @@
 package org.envirocar.server.mongo.entity;
 
 import static org.envirocar.server.mongo.entity.MongoMeasurement.IDENTIFIER;
+import static org.envirocar.server.mongo.util.MongoUtils.reverse;
 
+import dev.morphia.annotations.Indexed;
+import dev.morphia.utils.IndexDirection;
 import org.bson.types.ObjectId;
 import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.core.entities.Track;
@@ -53,6 +56,7 @@ public class MongoTrack extends MongoEntityBase implements Track {
 	public static final String OBD_DEVICE = "obdDevice";
 	public static final String TERMS_OF_USE_VERSION = "touVersion";
 	public static final String LENGTH = "length";
+    public static final String BEGIN_ORDER = reverse(BEGIN);
     @Id
     private ObjectId id = new ObjectId();
     @Property(USER)
@@ -68,6 +72,7 @@ public class MongoTrack extends MongoEntityBase implements Track {
     @Property(BBOX)
     private Geometry bbox;
     @Property(BEGIN)
+    @Indexed(IndexDirection.DESC)
     private DateTime begin;
     @Property(END)
     private DateTime end;
