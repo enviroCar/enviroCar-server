@@ -61,7 +61,7 @@
         <repository>
             <id>geotools</id>
             <name>Geotools Repo</name>
-            <url>http://download.osgeo.org/webdav/geotools</url>
+            <url>https://download.osgeo.org/webdav/geotools</url>
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
@@ -69,14 +69,14 @@
         <repository>
             <id>n52-releases</id>
             <name>52n Releases</name>
-            <url>http://52north.org/maven/repo/releases</url>
+            <url>https://52north.org/maven/repo/releases</url>
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
         </repository>
         <repository>
             <id>clojars.org</id>
-            <url>http://clojars.org/repo</url>
+            <url>https://clojars.org/repo</url>
         </repository>
     </repositories>
     <dependencyManagement>
