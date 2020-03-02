@@ -52,7 +52,7 @@
         <guice-version>4.2.2</guice-version>
         <jackson-version>2.10.2</jackson-version>
         <testcontainers-version>1.12.5</testcontainers-version>
-        <jetty-version>9.4.26.v20200117</jetty-version>
+        <jetty-version>9.4.27.v20200227</jetty-version>
     </properties>
     <repositories>
         <repository>
