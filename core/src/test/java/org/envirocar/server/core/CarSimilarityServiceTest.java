@@ -23,10 +23,13 @@ import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.core.entities.Sensors;
 import org.envirocar.server.core.exception.ResourceNotFoundException;
 import org.envirocar.server.core.filter.SensorFilter;
+import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
+
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  *
@@ -52,12 +55,12 @@ public class CarSimilarityServiceTest {
         serviceMock.setSimilarityDefinition("/car-similarity-test.json");
         
         Sensor equi = serviceMock.resolveEquivalent(newSensor);
-        Assert.assertThat(equi, Matchers.is(oldSensor));
+        assertThat(equi, Matchers.is(oldSensor));
         
         props.put("manufacturer", "vito mobile  ");
         
         Sensor similar = serviceMock.resolveEquivalent(newSensor);
-        Assert.assertThat(similar, Matchers.is(oldSensor));
+        assertThat(similar, Matchers.is(oldSensor));
         
         Mockito.verify(serviceMock, Mockito.times(1)).isManufacturerSimilar(Mockito.any(String.class), Mockito.any(String.class));
     }
@@ -111,7 +114,7 @@ public class CarSimilarityServiceTest {
         service.setSimilarityDefinition("/car-similarity-test.json");
         
         Sensor resolved = service.resolveMappedSensor("51ffab4fe4b058cd3d654007");
-        Assert.assertThat(resolved, Matchers.is(oldSensor));
+        assertThat(resolved, Matchers.is(oldSensor));
     }
     
     @Test(expected = ResourceNotFoundException.class)
@@ -132,9 +135,9 @@ public class CarSimilarityServiceTest {
         service.setSimilarityDefinition("/car-similarity-test.json");
         
         Collection<String> mapped = service.getMappedSensorIds();
-        
-        Assert.assertThat(mapped.size(), Matchers.is(1));
-        Assert.assertThat(mapped.iterator().next(), Matchers.is(id));
+
+        assertThat(mapped.size(), Matchers.is(1));
+        assertThat(mapped.iterator().next(), Matchers.is(id));
     }
 
 }

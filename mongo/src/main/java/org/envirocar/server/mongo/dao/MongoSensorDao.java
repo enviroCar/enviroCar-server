@@ -19,7 +19,12 @@ package org.envirocar.server.mongo.dao;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
-import com.mongodb.*;
+import com.mongodb.AggregationOptions;
+import com.mongodb.BasicDBObject;
+import com.mongodb.Cursor;
+import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
+import dev.morphia.query.Query;
 import org.bson.types.ObjectId;
 import org.envirocar.server.core.CarSimilarityService;
 import org.envirocar.server.core.dao.SensorDao;
@@ -34,7 +39,6 @@ import org.envirocar.server.mongo.MongoDB;
 import org.envirocar.server.mongo.entity.MongoMeasurement;
 import org.envirocar.server.mongo.entity.MongoSensor;
 import org.envirocar.server.mongo.util.MongoUtils;
-import dev.morphia.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,8 +47,6 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-
-import static org.envirocar.server.mongo.dao.MongoMeasurementDao.ID;
 
 /**
  * TODO JavaDoc
@@ -56,7 +58,6 @@ public class MongoSensorDao extends AbstractMongoDao<ObjectId, MongoSensor, Sens
 
     private static final Logger log = LoggerFactory.getLogger(MongoSensorDao.class);
     private final CarSimilarityService carSimilarity;
-
 
     @Inject
     public MongoSensorDao(MongoDB mongoDB, CarSimilarityService carSimilarity) {
@@ -106,13 +107,13 @@ public class MongoSensorDao extends AbstractMongoDao<ObjectId, MongoSensor, Sens
         if (request.hasFilters()) {
             applyFilters(q, request.getFilters());
         }
-        Sensors result = fetch(q, request.getPagination());
-        return result;
+        return fetch(q, request.getPagination());
     }
 
-
     public List<ObjectId> getIds(User user) {
-        DBObject group = MongoUtils.group(new BasicDBObject(ID, MongoUtils.valueOf(MongoMeasurement.SENSOR, ID)));
+        DBObject group = MongoUtils.group(new BasicDBObject(MongoSensor.ID,
+                                                            MongoUtils.valueOf(MongoMeasurement.SENSOR,
+                                                                               MongoSensor.ID)));
         DBObject match = MongoUtils.match(MongoMeasurement.USER, ref(user));
         DBCollection collection = getMongoDB().getDatastore().getCollection(MongoMeasurement.class);
         List<DBObject> ops = Arrays.asList(match, group);
@@ -121,7 +122,7 @@ public class MongoSensorDao extends AbstractMongoDao<ObjectId, MongoSensor, Sens
             List<ObjectId> ids = new LinkedList<>();
             result.forEachRemaining(x -> {
                 //ids.add(new Key<>(MongoSensor.class, collection.getName(), x.get(ID)));
-                ids.add((ObjectId) x.get(ID));
+                ids.add((ObjectId) x.get(MongoSensor.ID));
             });
             return ids;
         }
@@ -182,7 +183,7 @@ public class MongoSensorDao extends AbstractMongoDao<ObjectId, MongoSensor, Sens
         char localeMinusSign = symbols.getMinusSign();
 
         if (!Character.isDigit(str.charAt(0)) &&
-                str.charAt(0) != localeMinusSign) {
+            str.charAt(0) != localeMinusSign) {
             return false;
         }
 

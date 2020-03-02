@@ -27,7 +27,7 @@ import javax.ws.rs.core.MediaType;
 import static org.envirocar.server.matchers.JerseyMatchers.hasProperty;
 import static org.envirocar.server.matchers.JerseyMatchers.*;
 import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * TODO JavaDoc

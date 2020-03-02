@@ -17,7 +17,7 @@
 package org.envirocar.server.rest.schema;
 
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 import org.envirocar.server.rest.GuiceRunner;
 import org.envirocar.server.rest.MediaTypes;

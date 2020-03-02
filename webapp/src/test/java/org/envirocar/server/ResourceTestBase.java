@@ -30,20 +30,19 @@ import org.envirocar.server.mongo.entity.MongoUser;
 import org.envirocar.server.rest.JSONConstants;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.resources.RootResource;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.ClassRule;
 
 import javax.ws.rs.core.Response;
 
 import static org.envirocar.server.matchers.JerseyMatchers.hasStatus;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.lessThan;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
-import static org.junit.Assert.assertThat;
 
 /**
  * TODO JavaDoc
@@ -97,12 +96,12 @@ public class ResourceTestBase {
 
         DBObject mongoUser = db.getCollection(MongoUser.COLLECTION).findOne(new BasicDBObject(MongoUser.NAME, name));
 
-        Assert.assertThat(mongoUser, is(not(nullValue())));
+        assertThat(mongoUser, is(not(nullValue())));
         String confirmationCode = (String) mongoUser.get(MongoUser.CONFIRMATION_CODE);
-        Assert.assertThat(resource().path("/").path(RootResource.CONFIRM).path(confirmationCode)
-                                    .get(ClientResponse.class).getStatus(),
-                          allOf(is(greaterThanOrEqualTo(Response.Status.OK.getStatusCode())),
-                                is(lessThan(Response.Status.BAD_REQUEST.getStatusCode()))));
+        assertThat(resource().path("/").path(RootResource.CONFIRM).path(confirmationCode)
+                             .get(ClientResponse.class).getStatus(),
+                   allOf(is(greaterThanOrEqualTo(Response.Status.OK.getStatusCode())),
+                         is(lessThan(Response.Status.BAD_REQUEST.getStatusCode()))));
     }
 
 }

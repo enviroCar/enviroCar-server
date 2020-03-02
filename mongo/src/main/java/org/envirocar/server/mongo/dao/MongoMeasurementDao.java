@@ -76,7 +76,7 @@ import org.locationtech.jts.geom.Geometry;
  */
 public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasurement, Measurements>
         implements MeasurementDao {
-    public static final String ID = Mapper.ID_KEY;
+    public static final String ID = MongoMeasurement.IDENTIFIER;
     private static final Logger log = LoggerFactory
             .getLogger(MongoMeasurementDao.class);
     private static final String TRACKS = "tracks";
