@@ -8,7 +8,8 @@ services:
 after_script:
     - "gem query --local | grep bundler >/dev/null || gem install bundler"
     - "export BUNDLE_GEMFILE=$PWD/docs/Gemfile"
-    - "bundle install --path docs/_vendor/bundle"
+    - "bundle config set path 'docs/_vendor/bundle'"
+    - "bundle install"
     - "cd docs"
     - "rake travis"
 env:
