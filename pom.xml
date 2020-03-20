@@ -49,7 +49,7 @@
         <slf4j-version>1.7.30</slf4j-version>
         <geotools-version>22.3</geotools-version>
         <wps-version>3.6.3</wps-version>
-        <guice-version>4.2.2</guice-version>
+        <guice-version>4.2.3</guice-version>
         <jackson-version>2.10.3</jackson-version>
         <testcontainers-version>1.13.0</testcontainers-version>
         <jetty-version>9.4.27.v20200227</jetty-version>
