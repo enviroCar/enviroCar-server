@@ -51,7 +51,7 @@
         <wps-version>3.6.3</wps-version>
         <guice-version>4.2.3</guice-version>
         <jackson-version>2.10.3</jackson-version>
-        <testcontainers-version>1.13.0</testcontainers-version>
+        <testcontainers-version>1.14.0</testcontainers-version>
         <jetty-version>9.4.27.v20200227</jetty-version>
     </properties>
     <repositories>
