@@ -31,7 +31,6 @@ import org.envirocar.server.rest.JSONConstants;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.resources.RootResource;
 import org.junit.Before;
-import org.junit.ClassRule;
 
 import javax.ws.rs.core.Response;
 
@@ -49,33 +48,33 @@ import static org.hamcrest.Matchers.nullValue;
  *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class ResourceTestBase {
+public abstract class ResourceTestBase {
     @Inject
     private DB db;
     @Inject
     private JsonNodeCreator nodeFactory;
-    @ClassRule
-    public static EnviroCarServer server = new EnviroCarServer();
 
     protected JsonNodeCreator getNodeFactory() {
         return nodeFactory;
     }
 
+    protected abstract EnviroCarServer getServer();
+
     @Before
     public void inject() {
-        server.getInjector().injectMembers(this);
+        getServer().getInjector().injectMembers(this);
     }
 
     protected WebResource resource() {
-        return server.resource();
+        return getServer().resource();
     }
 
     protected Client client() {
-        return server.client();
+        return getServer().client();
     }
 
     protected String getBaseURL() {
-        return server.getBaseURL();
+        return getServer().getBaseURL();
     }
 
     protected String getBasicAuthHeader(String username, String password) {

@@ -25,6 +25,7 @@ import org.envirocar.server.core.util.GeoJSONConstants;
 import org.envirocar.server.rest.JSONConstants;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.resources.RootResource;
+import org.junit.ClassRule;
 import org.junit.Test;
 
 import javax.ws.rs.core.HttpHeaders;
@@ -56,6 +57,13 @@ public class TrackResourceTest extends ResourceTestBase {
     @Inject
     private ObjectReader reader;
 
+    @ClassRule
+    public static EnviroCarServer server = new EnviroCarServer();
+
+    @Override
+    protected EnviroCarServer getServer() {
+        return server;
+    }
     @Test
     public void testContentNegotiation() throws IOException {
 
