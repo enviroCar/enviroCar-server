@@ -34,10 +34,6 @@ public class MongoContainer extends GenericContainer<MongoContainer> {
         withExposedPorts(PORT);
     }
 
-    public String getHost() {
-        return getContainerIpAddress();
-    }
-
     public int getPort() {
         return getMappedPort(PORT);
     }
