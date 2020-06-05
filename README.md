@@ -59,7 +59,7 @@ The documentation is a GitHub page and managed in the branch ``gh-pages``, see h
 * Deploy the `war` file in `webapp/target` to a application server of your choice (e.g. [Apache Tomcat](http://tomcat.apache.org/)).
 
 ## References
-
+The following project uses the enviroCar Server:
 - [CITRAM - Citizen Science for Traffic Management](https://www.citram.de/)
 
 ## [License](LICENSE) ##
