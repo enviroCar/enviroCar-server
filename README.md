@@ -5,6 +5,7 @@
 ### User and Data Management
 
 **Managing and sharing Open XFCD**
+
 The enviroCar server’s central tasks are the enviroCar platform user management and
 the management of the XFCD data provided as OpenData by the enviroCar drivers. To
 ensure data privacy, the server anonymizes the recorded tracks for external access.
