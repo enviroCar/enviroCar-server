@@ -50,7 +50,7 @@
         <geotools-version>23.1</geotools-version>
         <wps-version>3.6.3</wps-version>
         <guice-version>4.2.3</guice-version>
-        <jackson-version>2.11.0</jackson-version>
+        <jackson-version>2.11.1</jackson-version>
         <testcontainers-version>1.14.3</testcontainers-version>
         <jetty-version>9.4.30.v20200611</jetty-version>
     </properties>
@@ -366,7 +366,7 @@
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-databind</artifactId>
-                <version>2.9.10.4</version>
+                <version>${jackson-version}</version>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
