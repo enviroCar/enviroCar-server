@@ -30,7 +30,7 @@ import com.google.common.base.Objects;
 @Entity("announcements")
 public class MongoAnnouncement extends MongoEntityBase implements Announcement {
 
-	public static final String NAME = Mapper.ID_KEY;
+	public static final String NAME = "_id";
 	public static final String CONTENTS = "content";
 	public static final String VERSIONS = "versions";
 	public static final String PRIORITY = "priority";

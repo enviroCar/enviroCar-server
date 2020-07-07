@@ -61,7 +61,7 @@ import com.mongodb.DBRef;
  */
 public class MongoStatisticsDao implements StatisticsDao {
 
-    public static final String ID = Mapper.ID_KEY;
+    public static final String ID = "_id";
     public static final String PHENOMENON_NAME_PATH = MongoUtils.path(MongoMeasurement.PHENOMENONS,
                                                                       MongoMeasurementValue.PHENOMENON,
                                                                       MongoPhenomenon.NAME);

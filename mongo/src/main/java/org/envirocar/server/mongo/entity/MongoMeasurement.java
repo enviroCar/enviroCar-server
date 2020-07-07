@@ -50,7 +50,7 @@ import org.envirocar.server.core.entities.User;
  */
 @Entity("measurements")
 public class MongoMeasurement extends MongoEntityBase implements Measurement {
-    public static final String IDENTIFIER = Mapper.ID_KEY;
+    public static final String IDENTIFIER = "_id";
     public static final String PHENOMENONS = "phenomenons";
     public static final String USER = "user";
     public static final String SENSOR = "sensor";

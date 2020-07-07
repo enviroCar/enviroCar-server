@@ -39,7 +39,7 @@ import static java.util.stream.Collectors.toList;
  */
 @Entity("userstatistic")
 public class MongoUserStatistic implements UserStatistic {
-    public static final String ID = Mapper.ID_KEY;
+    public static final String ID = "_id";
     public static final String CREATED = "created";
     public static final String DISTANCE_TOTAL = "distance";
     public static final String DURATION_TOTAL = "duration";

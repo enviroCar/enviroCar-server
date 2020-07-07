@@ -31,7 +31,7 @@ import org.envirocar.server.core.entities.Phenomenon;
  */
 @Entity("phenomenons")
 public class MongoPhenomenon extends MongoEntityBase implements Phenomenon {
-    public static final String NAME = Mapper.ID_KEY;
+    public static final String NAME = "_id";
     public static final String UNIT = "unit";
     @Id
     private String name;

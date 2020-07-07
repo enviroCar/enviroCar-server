@@ -38,7 +38,7 @@ import java.util.Set;
 public class MongoUser extends MongoEntityBase implements User {
     public static final String TOKEN = "token";
     public static final String IS_ADMIN = "isAdmin";
-    public static final String NAME = Mapper.ID_KEY;
+    public static final String NAME = "_id";
     public static final String MAIL = "mail";
     public static final String FRIENDS = "friends";
     public static final String LAST_NAME = "lastName";
