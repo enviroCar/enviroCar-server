@@ -44,7 +44,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <logback-version>1.2.3</logback-version>
-        <morphia-version>1.5.8</morphia-version>
+        <morphia-version>1.6.0</morphia-version>
         <jersey-version>1.19.4</jersey-version>
         <slf4j-version>1.7.30</slf4j-version>
         <geotools-version>23.1</geotools-version>
