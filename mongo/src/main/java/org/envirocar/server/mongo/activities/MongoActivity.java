@@ -47,7 +47,7 @@ import com.google.inject.assistedinject.AssistedInject;
  */
 @Entity("activities")
 public class MongoActivity implements Activity {
-    public static final String ID = Mapper.ID_KEY;
+    public static final String ID = "_id";
     public static final String USER = "user";
     public static final String TYPE = "type";
     public static final String TIME = "time";

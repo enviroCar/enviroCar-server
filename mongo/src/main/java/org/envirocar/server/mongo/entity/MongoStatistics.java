@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
  */
 @Entity("statistics")
 public class MongoStatistics {
-    public static final String KEY = Mapper.ID_KEY;
+    public static final String KEY = "_id";
     public static final String CREATED = "created";
     public static final String STATISTICS = "statistics";
     //    private static final int EXPIRE_AFTER_SECONDS = 60 * 60 * 3; // 3 hours

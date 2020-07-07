@@ -29,7 +29,7 @@ import com.google.common.base.Objects;
 @Entity("badges")
 public class MongoBadge extends MongoEntityBase implements Badge {
 
-	public static final String NAME = Mapper.ID_KEY;
+	public static final String NAME = "_id";
 	public static final String DISPLAY_NAME = "displayName";
 	public static final String DESCRIPTION = "description";
 

@@ -28,7 +28,7 @@ import java.util.Map;
 import java.util.Optional;
 
 public class MongoTerms extends MongoEntityBase implements Terms {
-    public static final String NAME = Mapper.ID_KEY;
+    public static final String NAME = "_id";
     public static final String CONTENTS = "contents";
     public static final String ISSUED_DATE = "issuedDate";
     public static final String TRANSLATIONS = "translations";

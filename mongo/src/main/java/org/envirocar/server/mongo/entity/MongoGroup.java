@@ -38,7 +38,7 @@ import org.envirocar.server.core.entities.User;
 @Entity("groups")
 public class MongoGroup extends MongoEntityBase implements Group {
     public static final String OWNER = "owner";
-    public static final String NAME = Mapper.ID_KEY;
+    public static final String NAME = "_id";
     public static final String DESCRIPTION = "desc";
     public static final String MEMBERS = "members";
     @Property(OWNER)

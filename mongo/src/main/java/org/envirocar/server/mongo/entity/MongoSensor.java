@@ -36,7 +36,7 @@ import org.envirocar.server.core.entities.Sensor;
  */
 @Entity("sensors")
 public class MongoSensor extends MongoEntityBase implements Sensor {
-    public static final String ID = Mapper.ID_KEY;
+    public static final String ID = "_id";
     public static final String TYPE = "type";
     public static final String PROPERTIES = "properties";
     @Id

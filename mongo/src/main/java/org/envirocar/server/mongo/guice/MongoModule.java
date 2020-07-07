@@ -100,11 +100,6 @@ public class MongoModule extends AbstractModule {
     }
 
     @Provides
-    public Mongo mongo(MongoDB mongoDB) {
-        return mongoClient(mongoDB);
-    }
-
-    @Provides
     public Mapper mapper(Morphia morphia) {
         return morphia.getMapper();
     }

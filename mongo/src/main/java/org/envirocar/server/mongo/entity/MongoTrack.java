@@ -44,7 +44,7 @@ import org.locationtech.jts.geom.Geometry;
  */
 @Entity("tracks")
 public class MongoTrack extends MongoEntityBase implements Track {
-    public static final String ID = Mapper.ID_KEY;
+    public static final String ID = "_id";
     public static final String USER = "user";
     public static final String SENSOR = "sensor";
     public static final String NAME = "name";

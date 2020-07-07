@@ -33,7 +33,7 @@ import dev.morphia.mapping.Mapper;
 public class MongoPasswordReset extends MongoEntityBase implements PasswordReset {
 
 
-    public static final String NAME = Mapper.ID_KEY;
+    public static final String NAME = "_id";
     public static final String EXPIRES = "expires";
     public static final String VERIFICATION_CODE = "code";
     public static final String USER = "user";

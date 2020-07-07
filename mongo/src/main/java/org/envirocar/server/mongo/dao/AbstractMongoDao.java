@@ -88,7 +88,7 @@ public abstract class AbstractMongoDao<K, E, C extends Paginated<? super E>> {
     }
 
     protected UpdateResults update(K key, UpdateOperations<E> ops) {
-        return dao.update(q().field(Mapper.ID_KEY).equal(key), ops);
+        return dao.update(q().field("_id").equal(key), ops);
     }
 
     protected BasicDAO<E, K> dao() {
