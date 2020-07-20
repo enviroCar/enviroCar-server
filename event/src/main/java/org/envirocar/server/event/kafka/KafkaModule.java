@@ -67,6 +67,7 @@ public final class KafkaModule extends AbstractModule {
         Properties props = new Properties();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, brokers);
         props.put(ProducerConfig.CLIENT_ID_CONFIG, clientId);
+        props.put(ProducerConfig.MAX_REQUEST_SIZE_CONFIG, 157286400); // 150MB
         return new KafkaProducer<>(props, keySerializer, valueSerializer);
     }
 
