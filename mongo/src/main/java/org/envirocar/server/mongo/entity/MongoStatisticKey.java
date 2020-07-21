@@ -16,10 +16,10 @@
  */
 package org.envirocar.server.mongo.entity;
 
+import com.google.common.base.Objects;
 import dev.morphia.Key;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Property;
-import com.google.common.base.Objects;
 
 /**
  * TODO JavaDoc
@@ -47,7 +47,7 @@ public class MongoStatisticKey {
         this.track = track;
         this.user = user;
         this.sensor = sensor;
-        all = track == null && user == null && sensor == null;
+        this.all = track == null && user == null && sensor == null;
     }
 
     public MongoStatisticKey() {
@@ -55,30 +55,30 @@ public class MongoStatisticKey {
     }
 
     public Key<MongoTrack> getTrack() {
-        return track;
+        return this.track;
     }
 
     public void setTrack(Key<MongoTrack> track) {
         this.track = track;
-        this.all = track == null && user == null && sensor == null;
+        this.all = track == null && this.user == null && this.sensor == null;
     }
 
     public Key<MongoUser> getUser() {
-        return user;
+        return this.user;
     }
 
     public void setUser(Key<MongoUser> user) {
         this.user = user;
-        this.all = track == null && user == null && sensor == null;
+        this.all = this.track == null && user == null && this.sensor == null;
     }
 
     public Key<MongoSensor> getSensor() {
-        return sensor;
+        return this.sensor;
     }
 
     public void setSensor(Key<MongoSensor> sensor) {
         this.sensor = sensor;
-        this.all = track == null && user == null && sensor == null;
+        this.all = this.track == null && this.user == null && sensor == null;
     }
 
     @Override
@@ -94,7 +94,7 @@ public class MongoStatisticKey {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final MongoStatisticKey other = (MongoStatisticKey) obj;
+        MongoStatisticKey other = (MongoStatisticKey) obj;
         return Objects.equal(this.track, other.track) &&
                Objects.equal(this.user, other.user) &&
                Objects.equal(this.sensor, other.sensor);
@@ -102,7 +102,7 @@ public class MongoStatisticKey {
     }
 
     public boolean isAll() {
-        return all;
+        return this.all;
     }
 
     public void setAll(boolean all) {
@@ -118,6 +118,5 @@ public class MongoStatisticKey {
     public String toString() {
         return String.format("MongoStatisticKey [user=%s, track=%s, sensor=%s]", this.user, this.track, this.sensor);
     }
-    
-    
+
 }

@@ -16,12 +16,13 @@
  */
 package org.envirocar.server.mongo.dao;
 
-import static java.util.stream.Collectors.toSet;
-
-import java.util.Collections;
-import java.util.Set;
-import java.util.UUID;
-
+import com.google.common.collect.Sets;
+import com.google.inject.Inject;
+import com.mongodb.DuplicateKeyException;
+import dev.morphia.Key;
+import dev.morphia.query.Query;
+import dev.morphia.query.UpdateOperations;
+import dev.morphia.query.UpdateResults;
 import org.envirocar.server.core.dao.UserDao;
 import org.envirocar.server.core.entities.PasswordReset;
 import org.envirocar.server.core.entities.User;
@@ -35,16 +36,16 @@ import org.envirocar.server.mongo.entity.MongoPasswordReset;
 import org.envirocar.server.mongo.entity.MongoUser;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
-import dev.morphia.Key;
-import dev.morphia.query.Query;
-import dev.morphia.query.UpdateOperations;
-import dev.morphia.query.UpdateResults;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.collect.Sets;
-import com.google.inject.Inject;
-import com.mongodb.DuplicateKeyException;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
+
+import static java.util.stream.Collectors.toSet;
 
 /**
  * TODO JavaDoc
@@ -92,7 +93,7 @@ public class MongoUserDao extends AbstractMongoDao<String, MongoUser, Users> imp
     }
 
     @Override
-    public MongoUser getByName(final String name, boolean includeUnconfirmed) {
+    public MongoUser getByName(String name, boolean includeUnconfirmed) {
         Query<MongoUser> q = q().field(MongoUser.NAME).equal(name);
 
         if (!includeUnconfirmed) {
@@ -107,7 +108,7 @@ public class MongoUserDao extends AbstractMongoDao<String, MongoUser, Users> imp
         if (!includeUnconfirmed) {
             q = q.field(MongoUser.CONFIRMATION_CODE).doesNotExist();
         }
-        return q.get();
+        return q.first();
     }
 
     @Override
@@ -143,14 +144,14 @@ public class MongoUserDao extends AbstractMongoDao<String, MongoUser, Users> imp
     public void delete(User u, boolean deleteContent) {
         MongoUser user = (MongoUser) u;
         if (deleteContent) {
-            trackDao.deleteUser(user);
-            measurementDao.deleteUser(user);
+            this.trackDao.deleteUser(user);
+            this.measurementDao.deleteUser(user);
         } else {
-            trackDao.removeUser(user);
-            measurementDao.removeUser(user);
+            this.trackDao.removeUser(user);
+            this.measurementDao.removeUser(user);
         }
-        groupDao.removeUser(user);
-        fuelingDao.removeUser(user);
+        this.groupDao.removeUser(user);
+        this.fuelingDao.removeUser(user);
         Key<MongoUser> userRef = key(user);
         UpdateResults result = update(
                 q().field(MongoUser.FRIENDS).hasThisElement(userRef),
@@ -235,7 +236,7 @@ public class MongoUserDao extends AbstractMongoDao<String, MongoUser, Users> imp
     }
 
     public Set<Key<MongoUser>> getBidirectionalFriendRefs(User user) {
-        final Set<String> ids = getFriendRefs(user).stream()
+        Set<String> ids = getFriendRefs(user).stream()
                 .map(key -> (String) key.getId())
                 .collect(toSet());
 
@@ -243,11 +244,10 @@ public class MongoUserDao extends AbstractMongoDao<String, MongoUser, Users> imp
             return Sets.newHashSet();
         }
 
-        final Iterable<Key<MongoUser>> filtered = q()
-                .field(MongoUser.NAME).in(ids)
-                .field(MongoUser.FRIENDS).hasThisElement(key(user))
-                .fetchKeys();
-        return Sets.newHashSet(filtered);
+        List<Key<MongoUser>> filtered = q().field(MongoUser.NAME).in(ids)
+                                           .field(MongoUser.FRIENDS).hasThisElement(key(user))
+                                           .keys().toList();
+        return new HashSet<>(filtered);
     }
 
     @Override
@@ -278,19 +278,19 @@ public class MongoUserDao extends AbstractMongoDao<String, MongoUser, Users> imp
 
     @Override
     public Users getPendingIncomingFriendRequests(User user) {
-        final Set<Key<MongoUser>> friendRefs = getFriendRefs(user);
-        final Set<String> ids = friendRefs.stream().map(Key::getId).map(x -> (String) x).collect(toSet());
-        final Iterable<Key<MongoUser>> filtered;
+        Set<Key<MongoUser>> friendRefs = getFriendRefs(user);
+        Set<String> ids = friendRefs.stream().map(Key::getId).map(x -> (String) x).collect(toSet());
+        Iterable<Key<MongoUser>> filtered;
 
         if (ids.isEmpty()) {
             filtered = q()
                     .field(MongoUser.FRIENDS).hasThisElement(key(user))
-                    .fetchKeys();
+                    .keys().toList();
         } else {
             filtered = q()
                     .field(MongoUser.NAME).notIn(ids)
                     .field(MongoUser.FRIENDS).hasThisElement(key(user))
-                    .fetchKeys();
+                    .keys().toList();
         }
 
         return Users.from(deref(MongoUser.class, filtered)).build();

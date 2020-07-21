@@ -16,18 +16,15 @@
  */
 package org.envirocar.server.mongo.entity;
 
-import java.util.Map;
-
-import org.bson.types.ObjectId;
-
+import com.google.common.base.Objects;
+import com.google.common.collect.Maps;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Property;
-import dev.morphia.mapping.Mapper;
-import com.google.common.base.Objects;
-import com.google.common.collect.Maps;
-
+import org.bson.types.ObjectId;
 import org.envirocar.server.core.entities.Sensor;
+
+import java.util.Map;
 
 /**
  * TODO JavaDoc
@@ -49,7 +46,7 @@ public class MongoSensor extends MongoEntityBase implements Sensor {
     @Override
     public String toString() {
         return toStringHelper()
-                .add(ID, id).toString();
+                       .add(ID, id).toString();
     }
 
     @Override

@@ -112,11 +112,11 @@ public class MongoStatisticsDao implements StatisticsDao {
         if (v == null) {
             if (!request.hasSensor() && !request.hasTrack() && !request.hasUser()) {
                 // overall stats
-                this.scheduler.updateStatistics(request, key, calculateFunction, true);
+                this.scheduler.updateStatistics(request, key, this.calculateFunction, true);
                 v = this.dao.get(key);
             } else if (!request.hasSensor() && !request.hasTrack() && request.hasUser()) {
                 // user stats
-                this.scheduler.updateStatistics(request, key, calculateFunction, true);
+                this.scheduler.updateStatistics(request, key, this.calculateFunction, true);
                 v = this.dao.get(key);
             } else {
                 v = calculateAndSaveStatistics(request, key);
@@ -137,7 +137,7 @@ public class MongoStatisticsDao implements StatisticsDao {
         MongoTrack track = (MongoTrack) request.getTrack();
         MongoUser user = (MongoUser) request.getUser();
         MongoSensor sensor = (MongoSensor) request.getSensor();
-        return new MongoStatisticKey(mongoDB.key(track), mongoDB.key(user), mongoDB.key(sensor));
+        return new MongoStatisticKey(this.mongoDB.key(track), this.mongoDB.key(user), this.mongoDB.key(sensor));
     }
 
     private Iterable<DBObject> aggregate(DBObject... ops) {
@@ -146,7 +146,7 @@ public class MongoStatisticsDao implements StatisticsDao {
 
     private Iterable<DBObject> aggregate(List<DBObject> ops) {
         AggregationOptions options = AggregationOptions.builder().build();
-        DBCollection collection = mongoDB.getDatastore().getCollection(MongoMeasurement.class);
+        DBCollection collection = this.mongoDB.getDatastore().getCollection(MongoMeasurement.class);
         try (Cursor cursor = collection.aggregate(ops, options)) {
             LinkedList<DBObject> list = new LinkedList<>();
             cursor.forEachRemaining(list::add);
@@ -181,11 +181,11 @@ public class MongoStatisticsDao implements StatisticsDao {
         BasicDBObjectBuilder b = new BasicDBObjectBuilder();
         BasicDBObjectBuilder match = b.push(Ops.MATCH);
         if (request.hasTrack()) {
-            DBRef track = mongoDB.ref(request.getTrack());
+            DBRef track = this.mongoDB.ref(request.getTrack());
             match.add(MongoMeasurement.TRACK, track);
         }
         if (request.hasUser()) {
-            DBRef user = mongoDB.ref(request.getUser());
+            DBRef user = this.mongoDB.ref(request.getUser());
             match.add(MongoMeasurement.USER, user);
         }
         if (request.hasSensor()) {
@@ -231,11 +231,11 @@ public class MongoStatisticsDao implements StatisticsDao {
     public void updateStatisticsOnNewTrack(Track t) {
         StatisticsFilter allFilter = new StatisticsFilter();
         MongoStatisticKey allKey = key(allFilter);
-        this.scheduler.updateStatistics(allFilter, allKey, calculateFunction, false);
+        this.scheduler.updateStatistics(allFilter, allKey, this.calculateFunction, false);
 
         StatisticsFilter userFilter = new StatisticsFilter(t.getUser());
         MongoStatisticKey userKey = key(userFilter);
-        this.scheduler.updateStatistics(userFilter, userKey, calculateFunction, false);
+        this.scheduler.updateStatistics(userFilter, userKey, this.calculateFunction, false);
     }
 
 }

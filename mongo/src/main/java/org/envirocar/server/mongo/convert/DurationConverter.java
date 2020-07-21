@@ -40,7 +40,6 @@ public class DurationConverter extends TypeConverter implements
     }
 
     @Override
-    @SuppressWarnings("rawtypes")
     public Object decode(Class c, Object o, MappedField i) throws
             MappingException {
         if (o == null) {

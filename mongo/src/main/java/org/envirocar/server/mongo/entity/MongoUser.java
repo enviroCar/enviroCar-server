@@ -17,13 +17,17 @@
 package org.envirocar.server.mongo.entity;
 
 import com.google.common.base.Objects;
-import org.locationtech.jts.geom.Geometry;
+import dev.morphia.Key;
+import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
+import dev.morphia.annotations.IndexOptions;
+import dev.morphia.annotations.Indexed;
+import dev.morphia.annotations.Property;
+import dev.morphia.annotations.Transient;
 import org.envirocar.server.core.entities.Gender;
 import org.envirocar.server.core.entities.User;
 import org.joda.time.DateTime;
-import dev.morphia.Key;
-import dev.morphia.annotations.*;
-import dev.morphia.mapping.Mapper;
+import org.locationtech.jts.geom.Geometry;
 
 import java.net.URL;
 import java.util.Collections;
@@ -63,46 +67,46 @@ public class MongoUser extends MongoEntityBase implements User {
     public static final String PRIVACY_STATEMENT_VERSION = "privacyStatementVersion";
     public static final String COLLECTION = "users";
 
-    @Property(MongoUser.TOKEN)
+    @Property(TOKEN)
     private String token;
-    @Property(MongoUser.IS_ADMIN)
-    private boolean isAdmin = false;
+    @Property(IS_ADMIN)
+    private boolean isAdmin;
     @Id
     private String name;
     @Indexed
-    @Property(MongoUser.MAIL)
+    @Property(MAIL)
     private String mail;
-    @Property(MongoUser.FRIENDS)
+    @Property(FRIENDS)
     private Set<Key<MongoUser>> friends;
-    @Property(MongoUser.FIRST_NAME)
+    @Property(FIRST_NAME)
     private String firstName;
-    @Property(MongoUser.LAST_NAME)
+    @Property(LAST_NAME)
     private String lastName;
-    @Property(MongoUser.COUNTRY)
+    @Property(COUNTRY)
     private String country;
-    @Property(MongoUser.LOCATION)
+    @Property(LOCATION)
     private Geometry location;
-    @Property(MongoUser.ABOUT_ME)
+    @Property(ABOUT_ME)
     private String aboutMe;
-    @Property(MongoUser.URL)
+    @Property(URL)
     private URL url;
-    @Property(MongoUser.DAY_OF_BIRTH)
+    @Property(DAY_OF_BIRTH)
     private String dayOfBirth;
-    @Property(MongoUser.GENDER)
+    @Property(GENDER)
     private Gender gender;
-    @Property(MongoUser.LANGUAGE)
+    @Property(LANGUAGE)
     private String language;
-    @Property(MongoUser.BADGES)
+    @Property(BADGES)
     private Set<String> badges;
     /**
      * @deprecated use {@link #termsOfUseVersion} instead. kept for backwards compatibility
      */
     @Deprecated
-    @Property(MongoUser.ACCEPTED_TERMS_OF_USE)
+    @Property(ACCEPTED_TERMS_OF_USE)
     private String acceptedTermsOfUseVersion;
-    @Property(MongoUser.TERMS_OF_USE_VERSION)
+    @Property(TERMS_OF_USE_VERSION)
     private String termsOfUseVersion;
-    @Property(MongoUser.PRIVACY_STATEMENT_VERSION)
+    @Property(PRIVACY_STATEMENT_VERSION)
     private String privacyStatementVersion;
 
     @Indexed(
@@ -111,10 +115,10 @@ public class MongoUser extends MongoEntityBase implements User {
                     partialFilter = "{confirmationCode:{$type: \"string\"}}"
             )
     )
-    @Property(MongoUser.CONFIRMATION_CODE)
+    @Property(CONFIRMATION_CODE)
     private String confirmationCode;
     @Indexed(options = @IndexOptions(expireAfterSeconds = 0))
-    @Property(MongoUser.EXPIRE_AT)
+    @Property(EXPIRE_AT)
     private DateTime expireAt;
 
     @Transient
@@ -141,7 +145,7 @@ public class MongoUser extends MongoEntityBase implements User {
 
     @Override
     public String getMail() {
-        return mail;
+        return this.mail;
     }
 
     @Override
@@ -161,7 +165,7 @@ public class MongoUser extends MongoEntityBase implements User {
 
     @Override
     public boolean isAdmin() {
-        return isAdmin;
+        return this.isAdmin;
     }
 
     @Override
@@ -170,16 +174,16 @@ public class MongoUser extends MongoEntityBase implements User {
     }
 
     public Set<Key<MongoUser>> getFriends() {
-        return friends == null ? null : Collections.unmodifiableSet(friends);
+        return this.friends == null ? null : Collections.unmodifiableSet(this.friends);
     }
 
     @Override
     public String toString() {
         return toStringHelper()
-                .add(NAME, name)
-                .add(MAIL, mail)
-                .add(IS_ADMIN, isAdmin)
-                .add(FRIENDS, friends).toString();
+                       .add(NAME, this.name)
+                       .add(MAIL, this.mail)
+                       .add(IS_ADMIN, this.isAdmin)
+                       .add(FRIENDS, this.friends).toString();
     }
 
     @Override
@@ -195,13 +199,13 @@ public class MongoUser extends MongoEntityBase implements User {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final MongoUser other = (MongoUser) obj;
+        MongoUser other = (MongoUser) obj;
         return Objects.equal(this.name, other.name);
     }
 
     @Override
     public String getFirstName() {
-        return firstName;
+        return this.firstName;
     }
 
     @Override
@@ -211,7 +215,7 @@ public class MongoUser extends MongoEntityBase implements User {
 
     @Override
     public String getLastName() {
-        return lastName;
+        return this.lastName;
     }
 
     @Override
@@ -221,7 +225,7 @@ public class MongoUser extends MongoEntityBase implements User {
 
     @Override
     public String getCountry() {
-        return country;
+        return this.country;
     }
 
     @Override
@@ -231,7 +235,7 @@ public class MongoUser extends MongoEntityBase implements User {
 
     @Override
     public Geometry getLocation() {
-        return location;
+        return this.location;
     }
 
     @Override
@@ -241,7 +245,7 @@ public class MongoUser extends MongoEntityBase implements User {
 
     @Override
     public String getAboutMe() {
-        return aboutMe;
+        return this.aboutMe;
     }
 
     @Override
@@ -251,7 +255,7 @@ public class MongoUser extends MongoEntityBase implements User {
 
     @Override
     public URL getUrl() {
-        return url;
+        return this.url;
     }
 
     @Override
@@ -261,7 +265,7 @@ public class MongoUser extends MongoEntityBase implements User {
 
     @Override
     public String getDayOfBirth() {
-        return dayOfBirth;
+        return this.dayOfBirth;
     }
 
     @Override
@@ -271,7 +275,7 @@ public class MongoUser extends MongoEntityBase implements User {
 
     @Override
     public Gender getGender() {
-        return gender;
+        return this.gender;
     }
 
     @Override
@@ -281,7 +285,7 @@ public class MongoUser extends MongoEntityBase implements User {
 
     @Override
     public String getLanguage() {
-        return language;
+        return this.language;
     }
 
     @Override
@@ -297,7 +301,7 @@ public class MongoUser extends MongoEntityBase implements User {
     @Override
     public String getTermsOfUseVersion() {
         //acceptedTermsOfUseVersion kept for backwards compatibility with older users
-        return termsOfUseVersion != null ? termsOfUseVersion : acceptedTermsOfUseVersion;
+        return this.termsOfUseVersion != null ? this.termsOfUseVersion : this.acceptedTermsOfUseVersion;
     }
 
     @Override

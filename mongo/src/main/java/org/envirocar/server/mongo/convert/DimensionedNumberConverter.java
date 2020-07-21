@@ -50,7 +50,6 @@ public class DimensionedNumberConverter
     }
 
     @Override
-    @SuppressWarnings("rawtypes")
     public DimensionedNumber decode(Class c, Object o, MappedField i) throws
             MappingException {
         if (o == null) {
@@ -64,7 +63,7 @@ public class DimensionedNumberConverter
             } else if (v instanceof String) {
                 value = new BigDecimal((String) v);
             } else if (v instanceof Number) {
-                value = new BigDecimal(((Number) v).doubleValue());
+                value = new BigDecimal(v.toString());
             } else {
                 throw new MappingException("Can not decode " + v);
             }

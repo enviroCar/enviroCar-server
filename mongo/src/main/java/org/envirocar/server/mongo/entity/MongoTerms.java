@@ -17,11 +17,10 @@
 package org.envirocar.server.mongo.entity;
 
 import com.google.common.base.Objects;
-import org.bson.types.ObjectId;
-import org.envirocar.server.core.entities.Terms;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Property;
-import dev.morphia.mapping.Mapper;
+import org.bson.types.ObjectId;
+import org.envirocar.server.core.entities.Terms;
 
 import java.util.Collections;
 import java.util.Map;
@@ -47,7 +46,7 @@ public class MongoTerms extends MongoEntityBase implements Terms {
 
     @Override
     public Map<String, String> getTranslations() {
-        return translations;
+        return this.translations;
     }
 
     @Override
@@ -98,7 +97,7 @@ public class MongoTerms extends MongoEntityBase implements Terms {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final MongoTerms other = (MongoTerms) obj;
+        MongoTerms other = (MongoTerms) obj;
         return Objects.equal(this.issuedDate, other.issuedDate);
     }
 }

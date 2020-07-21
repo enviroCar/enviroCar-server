@@ -16,6 +16,7 @@
  */
 package org.envirocar.server.mongo.dao;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Set;
 
@@ -60,7 +61,7 @@ public class MongoGroupDao extends AbstractMongoDao<String, MongoGroup, Groups>
     }
 
     public MongoUserDao getUserDao() {
-        return userDao;
+        return this.userDao;
     }
 
     @Inject
@@ -212,7 +213,7 @@ public class MongoGroupDao extends AbstractMongoDao<String, MongoGroup, Groups>
         if (memberRefs == null) {
             MongoGroup groupWithMembers = q()
                     .field(MongoGroup.NAME).equal(g.getName())
-                    .project(MongoGroup.MEMBERS, true).get();
+                    .project(MongoGroup.MEMBERS, true).first();
             if (groupWithMembers != null) {
                 memberRefs = groupWithMembers.getMembers();
             }
@@ -222,9 +223,7 @@ public class MongoGroupDao extends AbstractMongoDao<String, MongoGroup, Groups>
 
     @Override
     public boolean shareGroup(User user1, User user2) {
-        @SuppressWarnings("unchecked")
-        Iterable<Key<User>> users = Lists.newArrayList(key(user1),
-                                                       key(user2));
-        return q().field(MongoGroup.MEMBERS).hasAllOf(users).getKey() != null;
+        Iterable<Key<User>> users = Arrays.asList(key(user1), key(user2));
+        return q().field(MongoGroup.MEMBERS).hasAllOf(users).first() != null;
     }
 }

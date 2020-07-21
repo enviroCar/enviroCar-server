@@ -14,24 +14,23 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- /*
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
 package org.envirocar.server.mongo.statistics;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.function.Function;
-
+import com.google.inject.Singleton;
 import org.envirocar.server.core.filter.StatisticsFilter;
 import org.envirocar.server.mongo.entity.MongoStatisticKey;
 import org.envirocar.server.mongo.entity.MongoStatistics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.inject.Singleton;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.function.Function;
 
 /**
  *
@@ -45,15 +44,17 @@ public class StatisticsUpdateScheduler {
     private final Set<MongoStatisticKey> currentKeyStatisticUpdates = new HashSet<>();
     private final Set<MongoStatisticKey> updatePendingForKey = new HashSet<>();
 
-    public void updateStatistics(StatisticsFilter filter, MongoStatisticKey key,
-                                 Function<StatisticsFilter, MongoStatistics> calculator, boolean waitForResult) {
+    public void updateStatistics(StatisticsFilter filter,
+                                 MongoStatisticKey key,
+                                 Function<? super StatisticsFilter, MongoStatistics> calculator,
+                                 boolean waitForResult) {
 
         synchronized (this.keyStatisticMutex) {
             if (this.currentKeyStatisticUpdates.contains(key)) {
                 /*
                 schedule another update
                  */
-                updatePendingForKey.add(key);
+                this.updatePendingForKey.add(key);
                 if (waitForResult) {
                     try {
                         this.keyStatisticMutex.wait();
@@ -75,8 +76,8 @@ public class StatisticsUpdateScheduler {
             this.keyStatisticMutex.notifyAll();
             this.currentKeyStatisticUpdates.remove(key);
 
-            if (updatePendingForKey.contains(key)) {
-                updatePendingForKey.remove(key);
+            if (this.updatePendingForKey.contains(key)) {
+                this.updatePendingForKey.remove(key);
 
                 /*
                 another update is pending, start it

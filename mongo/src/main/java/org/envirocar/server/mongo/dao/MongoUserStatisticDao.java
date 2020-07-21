@@ -71,7 +71,7 @@ public class MongoUserStatisticDao implements UserStatisticDao {
 
     @Override
     public long getCount() {
-        return dao.count();
+        return this.dao.count();
     }
 
     @Override
@@ -90,11 +90,11 @@ public class MongoUserStatisticDao implements UserStatisticDao {
     }
 
     private CompletableFuture<MongoUserStatistic> getFuture(UserStatisticFilter request) {
-        lock.writeLock().lock();
+        this.lock.writeLock().lock();
         try {
-            return updates.computeIfAbsent(key(request.getUser()), this::createFuture);
+            return this.updates.computeIfAbsent(key(request.getUser()), this::createFuture);
         } finally {
-            lock.writeLock().unlock();
+            this.lock.writeLock().unlock();
         }
     }
 
@@ -103,14 +103,14 @@ public class MongoUserStatisticDao implements UserStatisticDao {
             try {
                 return createUserStatistic(key);
             } finally {
-                lock.writeLock().lock();
+                this.lock.writeLock().lock();
                 try {
-                    updates.remove(key);
+                    this.updates.remove(key);
                 } finally {
-                    lock.writeLock().unlock();
+                    this.lock.writeLock().unlock();
                 }
             }
-        }, executor);
+        }, this.executor);
     }
 
     private MongoUserStatistic createUserStatistic(MongoUserStatisticKey key) {
@@ -130,21 +130,21 @@ public class MongoUserStatisticDao implements UserStatisticDao {
     @Override
     public void updateStatisticsOnTrackDeletion(Track track, Measurements measurements) {
         MongoUserStatisticKey key = key(track.getUser());
-        lock.readLock().lock();
+        this.lock.readLock().lock();
         try {
-            if (updates.containsKey(key)) {
-                updates.get(key).thenAcceptAsync(s -> updateOnDeletion(track));
+            if (this.updates.containsKey(key)) {
+                this.updates.get(key).thenAcceptAsync(s -> updateOnDeletion(track));
                 return;
             }
         } finally {
-            lock.readLock().unlock();
+            this.lock.readLock().unlock();
         }
         updateOnDeletion(track);
     }
 
     private void updateOnDeletion(Track track) {
         // update now
-        Datastore datastore = mongoDB.getDatastore();
+        Datastore datastore = this.mongoDB.getDatastore();
 
         UpdateOperations<MongoUserStatistic> ops = datastore.createUpdateOperations(MongoUserStatistic.class);
         ops.dec(MongoUserStatistic.NUM_TRACKS);
@@ -174,22 +174,22 @@ public class MongoUserStatisticDao implements UserStatisticDao {
     public void updateStatisticsOnNewTrack(Track track) {
 
         MongoUserStatisticKey key = key(track.getUser());
-        lock.readLock().lock();
+        this.lock.readLock().lock();
         try {
-            if (updates.containsKey(key)) {
-                updates.get(key).thenAcceptAsync(s -> updateOnInsertion(key, track));
+            if (this.updates.containsKey(key)) {
+                this.updates.get(key).thenAcceptAsync(s -> updateOnInsertion(key, track));
                 return;
             }
         } finally {
-            lock.readLock().unlock();
+            this.lock.readLock().unlock();
         }
         updateOnInsertion(key, track);
     }
 
     private void updateOnInsertion(MongoUserStatisticKey key, Track track) {
-        Datastore datastore = mongoDB.getDatastore();
+        Datastore datastore = this.mongoDB.getDatastore();
 
-        UpdateOperations<MongoUserStatistic> ops = dao.createUpdateOperations();
+        UpdateOperations<MongoUserStatistic> ops = this.dao.createUpdateOperations();
         TrackStatistic stats = new TrackStatisticImpl(track, getMeasurements(track));
         ops.inc(MongoUserStatistic.NUM_TRACKS);
         ops.push(MongoUserStatistic.TRACK_SUMMARIES, stats.getSummary());
@@ -218,21 +218,17 @@ public class MongoUserStatisticDao implements UserStatisticDao {
     }
 
     private Key<MongoUser> getKey(User user) {
-        return mongoDB.key((MongoUser) user);
+        return this.mongoDB.key((MongoUser) user);
     }
 
     private Tracks getTracks(MongoUserStatisticKey key) {
         MongoUser user = new MongoUser();
         user.setName((String) key.getUser().getId());
-        return dataService.getTracks(new TrackFilter(user));
+        return this.dataService.getTracks(new TrackFilter(user));
     }
 
     private Measurements getMeasurements(Track track) {
-        return dataService.getMeasurements(new MeasurementFilter(track));
-    }
-
-    private MongoUserStatistic getFor(User user) {
-        return this.dao.get(key(user));
+        return this.dataService.getMeasurements(new MeasurementFilter(track));
     }
 
 }

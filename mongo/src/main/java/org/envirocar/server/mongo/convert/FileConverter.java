@@ -39,7 +39,6 @@ public class FileConverter extends TypeConverter implements SimpleValueConverter
     }
 
     @Override
-    @SuppressWarnings("rawtypes")
     public Object decode(Class c, Object o, MappedField i) throws
             MappingException {
         if (o == null) {

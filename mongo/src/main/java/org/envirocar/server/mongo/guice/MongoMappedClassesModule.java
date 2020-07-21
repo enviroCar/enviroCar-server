@@ -34,7 +34,6 @@ import org.envirocar.server.mongo.entity.*;
  */
 public class MongoMappedClassesModule extends AbstractModule {
     @Override
-    @SuppressWarnings("rawtypes")
     protected void configure() {
         Multibinder<Class<?>> mb = Multibinder.newSetBinder(
                 binder(), new TypeLiteral<Class<?>>() {

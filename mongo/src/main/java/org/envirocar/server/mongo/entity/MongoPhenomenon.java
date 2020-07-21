@@ -16,12 +16,10 @@
  */
 package org.envirocar.server.mongo.entity;
 
+import com.google.common.base.Objects;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Property;
-import dev.morphia.mapping.Mapper;
-import com.google.common.base.Objects;
-
 import org.envirocar.server.core.entities.Phenomenon;
 
 /**
@@ -50,7 +48,7 @@ public class MongoPhenomenon extends MongoEntityBase implements Phenomenon {
 
     @Override
     public String getUnit() {
-        return unit;
+        return this.unit;
     }
 
     @Override
@@ -70,8 +68,7 @@ public class MongoPhenomenon extends MongoEntityBase implements Phenomenon {
 
     @Override
     public String toString() {
-        return toStringHelper()
-                .add(NAME, name).toString();
+        return toStringHelper().add(NAME, this.name).toString();
     }
 
     @Override
@@ -87,7 +84,7 @@ public class MongoPhenomenon extends MongoEntityBase implements Phenomenon {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final MongoPhenomenon other = (MongoPhenomenon) obj;
+        MongoPhenomenon other = (MongoPhenomenon) obj;
         return Objects.equal(this.name, other.name);
     }
 }

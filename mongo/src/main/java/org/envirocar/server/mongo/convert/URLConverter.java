@@ -16,13 +16,13 @@
  */
 package org.envirocar.server.mongo.convert;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
 import dev.morphia.converters.SimpleValueConverter;
 import dev.morphia.converters.TypeConverter;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.MappingException;
+
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * TODO JavaDoc
@@ -43,9 +43,8 @@ public class URLConverter extends TypeConverter implements SimpleValueConverter 
     }
 
     @Override
-    @SuppressWarnings("rawtypes")
     public Object decode(Class c, Object o, MappedField i) throws
-            MappingException {
+                                                           MappingException {
         if (o == null) {
             return null;
         }

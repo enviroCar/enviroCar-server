@@ -16,11 +16,11 @@
  */
 package org.envirocar.server.mongo.dao;
 
-import org.envirocar.server.core.util.pagination.Paginated;
-import org.envirocar.server.core.util.pagination.Pagination;
-import org.envirocar.server.mongo.MongoDB;
-import org.envirocar.server.mongo.entity.MongoEntityBase;
-import org.joda.time.DateTime;
+import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
+import com.mongodb.DBRef;
+import com.mongodb.WriteResult;
+import com.mongodb.client.model.DBCollectionFindAndModifyOptions;
 import dev.morphia.Datastore;
 import dev.morphia.Key;
 import dev.morphia.annotations.Version;
@@ -34,12 +34,11 @@ import dev.morphia.query.Query;
 import dev.morphia.query.UpdateOperations;
 import dev.morphia.query.UpdateOpsImpl;
 import dev.morphia.query.UpdateResults;
-
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
-import com.mongodb.DBRef;
-import com.mongodb.WriteResult;
-import com.mongodb.client.model.DBCollectionFindAndModifyOptions;
+import org.envirocar.server.core.util.pagination.Paginated;
+import org.envirocar.server.core.util.pagination.Pagination;
+import org.envirocar.server.mongo.MongoDB;
+import org.envirocar.server.mongo.entity.MongoEntityBase;
+import org.joda.time.DateTime;
 
 /**
  * TODO JavaDoc
@@ -47,7 +46,6 @@ import com.mongodb.client.model.DBCollectionFindAndModifyOptions;
  * @param <K> the key type
  * @param <E> the entity type
  * @param <C> the collection type
- *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public abstract class AbstractMongoDao<K, E, C extends Paginated<? super E>> {
@@ -60,35 +58,35 @@ public abstract class AbstractMongoDao<K, E, C extends Paginated<? super E>> {
     }
 
     public MongoDB getMongoDB() {
-        return mongoDB;
+        return this.mongoDB;
     }
 
     protected Query<E> q() {
-        return dao.createQuery();
+        return this.dao.createQuery();
     }
 
     protected UpdateOperations<E> up() {
-        return dao.createUpdateOperations();
+        return this.dao.createUpdateOperations();
     }
 
     protected E get(K key) {
-        return dao.get(key);
+        return this.dao.get(key);
     }
 
     protected long count() {
-        return dao.count();
+        return this.dao.count();
     }
 
     protected long count(Query<E> q) {
-        return dao.count(q);
+        return this.dao.count(q);
     }
 
     protected Key<E> save(E entity) {
-        return dao.save(entity);
+        return this.dao.save(entity);
     }
 
     protected UpdateResults update(K key, UpdateOperations<E> ops) {
-        return dao.update(q().field("_id").equal(key), ops);
+        return this.dao.update(q().field("_id").equal(key), ops);
     }
 
     protected BasicDAO<E, K> dao() {
@@ -96,7 +94,7 @@ public abstract class AbstractMongoDao<K, E, C extends Paginated<? super E>> {
     }
 
     protected UpdateResults update(Query<E> q, UpdateOperations<E> ops) {
-        return dao.update(q, ops);
+        return this.dao.update(q, ops);
     }
 
     protected Iterable<E> fetch(Query<E> q) {
@@ -104,7 +102,7 @@ public abstract class AbstractMongoDao<K, E, C extends Paginated<? super E>> {
     }
 
     protected Iterable<E> fetch(Query<E> q, FindOptions options) {
-        return dao.find(q).fetch(options);
+        return this.dao.find(q).fetch(options);
     }
 
     protected C fetch(Query<E> q, Pagination p) {
@@ -116,7 +114,7 @@ public abstract class AbstractMongoDao<K, E, C extends Paginated<? super E>> {
             findOptions.skip((int) p.getBegin());
             findOptions.limit((int) p.getLimit());
         }
-        return createPaginatedIterable(fetch(q,findOptions), p, count);
+        return createPaginatedIterable(fetch(q, findOptions), p, count);
     }
 
     protected E findAndModify(Query<E> query, UpdateOperations<E> update, boolean returnNew) {
@@ -134,13 +132,14 @@ public abstract class AbstractMongoDao<K, E, C extends Paginated<? super E>> {
         }
 
         mc.getFieldsAnnotatedWith(Version.class).stream()
-                .map(MappedField::getNameToStore)
-                .forEach(field -> update.inc(field, 1));
+          .map(MappedField::getNameToStore)
+          .forEach(field -> update.inc(field, 1));
 
         DBObject operations = ((UpdateOpsImpl) update).getOps();
 
         DBCollectionFindAndModifyOptions options = new DBCollectionFindAndModifyOptions()
-                .upsert(false).remove(false).update(operations).returnNew(returnNew);
+                                                           .upsert(false).remove(false).update(operations)
+                                                           .returnNew(returnNew);
 
         DBObject dbObject = dbColl.findAndModify(queryObject, options);
 
@@ -150,49 +149,47 @@ public abstract class AbstractMongoDao<K, E, C extends Paginated<? super E>> {
 
         EntityCache entityCache = mapper.createEntityCache();
 
-        E entity = mapper.fromDBObject(datastore, entityClass, dbObject, entityCache);
-
-        return entity;
+        return mapper.fromDBObject(datastore, entityClass, dbObject, entityCache);
     }
 
     protected abstract C createPaginatedIterable(
             Iterable<E> i, Pagination p, long count);
 
     protected WriteResult delete(K id) {
-        return dao.deleteById(id);
+        return this.dao.deleteById(id);
     }
 
     protected WriteResult delete(Query<E> q) {
-        return dao.deleteByQuery(q);
+        return this.dao.deleteByQuery(q);
     }
 
     @SuppressWarnings("unchecked")
     protected void updateTimestamp(E e) {
         update((K) this.mongoDB.getMapper().getId(e), up()
-               .set(MongoEntityBase.LAST_MODIFIED, new DateTime()));
+                                                              .set(MongoEntityBase.LAST_MODIFIED, new DateTime()));
     }
 
     public <T> T deref(Class<T> c, Key<T> key) {
-        return mongoDB.deref(c, key);
+        return this.mongoDB.deref(c, key);
     }
 
     public <T> Iterable<T> deref(Class<T> c, Iterable<Key<T>> keys) {
-        return mongoDB.deref(c, keys);
+        return this.mongoDB.deref(c, keys);
     }
 
     public <T> Key<T> key(T entity) {
-        return mongoDB.key(entity);
+        return this.mongoDB.key(entity);
     }
 
     public <T> DBRef ref(T entity) {
-        return mongoDB.ref(entity);
+        return this.mongoDB.ref(entity);
     }
 
     public Datastore getDatastore() {
-        return mongoDB.getDatastore();
+        return this.mongoDB.getDatastore();
     }
 
     public Mapper getMapper() {
-        return mongoDB.getMapper();
+        return this.mongoDB.getMapper();
     }
 }

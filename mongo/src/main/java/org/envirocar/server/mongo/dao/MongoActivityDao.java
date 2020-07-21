@@ -46,7 +46,7 @@ public class MongoActivityDao extends AbstractMongoDao<ObjectId, MongoActivity, 
     }
 
     public MongoGroupDao getGroupDao() {
-        return groupDao;
+        return this.groupDao;
     }
 
     @Inject
@@ -55,7 +55,7 @@ public class MongoActivityDao extends AbstractMongoDao<ObjectId, MongoActivity, 
     }
 
     public MongoUserDao getUserDao() {
-        return userDao;
+        return this.userDao;
     }
 
     @Inject
@@ -86,7 +86,7 @@ public class MongoActivityDao extends AbstractMongoDao<ObjectId, MongoActivity, 
             MongoUser u = (MongoUser) request.getUser();
             if (request.isFriendActivities()) {
                 q.field(MongoActivity.USER)
-                 .in(userDao.getBidirectionalFriendRefs(u));
+                 .in(this.userDao.getBidirectionalFriendRefs(u));
             } else {
                 q.field(MongoActivity.USER)
                  .equal(key(u));
@@ -94,7 +94,7 @@ public class MongoActivityDao extends AbstractMongoDao<ObjectId, MongoActivity, 
         }
         if (request.hasGroup()) {
             q.field(MongoActivity.USER)
-             .in(groupDao.getMemberRefs(request.getGroup()));
+             .in(this.groupDao.getMemberRefs(request.getGroup()));
         }
         if (request.hasType()) {
             q.field(MongoActivity.TYPE)
@@ -120,7 +120,7 @@ public class MongoActivityDao extends AbstractMongoDao<ObjectId, MongoActivity, 
             MongoUser u = (MongoUser) request.getUser();
             if (request.isFriendActivities()) {
                 q.field(MongoActivity.USER)
-                 .in(userDao.getFriendRefs(u));
+                 .in(this.userDao.getFriendRefs(u));
             } else {
                 q.field(MongoActivity.USER)
                  .equal(key(u));
@@ -128,7 +128,7 @@ public class MongoActivityDao extends AbstractMongoDao<ObjectId, MongoActivity, 
         }
         if (request.hasGroup()) {
             q.field(MongoActivity.USER)
-             .in(groupDao.getMemberRefs(request.getGroup()));
+             .in(this.groupDao.getMemberRefs(request.getGroup()));
         }
         if (request.hasType()) {
             q.field(MongoActivity.TYPE)

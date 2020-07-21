@@ -55,8 +55,7 @@ public class MongoConnectionModule extends AbstractModule {
                 host = p.getProperty(MongoDB.HOST_PROPERTY).trim();
             }
             if (p.containsKey(MongoDB.PORT_PROPERTY)) {
-                port = Integer.valueOf(p.getProperty(MongoDB.PORT_PROPERTY)
-                        .trim());
+                port = Integer.parseInt(p.getProperty(MongoDB.PORT_PROPERTY).trim());
             }
             if (p.containsKey(MongoDB.USER_PROPERTY)) {
                 user = p.getProperty(MongoDB.USER_PROPERTY).trim();

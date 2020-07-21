@@ -16,26 +16,24 @@
  */
 package org.envirocar.server.mongo.entity;
 
-import static org.envirocar.server.mongo.entity.MongoMeasurement.IDENTIFIER;
-import static org.envirocar.server.mongo.util.MongoUtils.reverse;
-
+import com.google.common.base.Objects;
+import dev.morphia.Key;
+import dev.morphia.annotations.Embedded;
+import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Indexed;
+import dev.morphia.annotations.Property;
+import dev.morphia.annotations.Transient;
 import dev.morphia.utils.IndexDirection;
 import org.bson.types.ObjectId;
 import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.entities.User;
 import org.joda.time.DateTime;
-
-import dev.morphia.Key;
-import dev.morphia.annotations.Embedded;
-import dev.morphia.annotations.Entity;
-import dev.morphia.annotations.Id;
-import dev.morphia.annotations.Property;
-import dev.morphia.annotations.Transient;
-import dev.morphia.mapping.Mapper;
-import com.google.common.base.Objects;
 import org.locationtech.jts.geom.Geometry;
+
+import static org.envirocar.server.mongo.entity.MongoMeasurement.IDENTIFIER;
+import static org.envirocar.server.mongo.util.MongoUtils.reverse;
 
 /**
  * TODO JavaDoc
@@ -52,10 +50,10 @@ public class MongoTrack extends MongoEntityBase implements Track {
     public static final String BBOX = "bbox";
     public static final String BEGIN = "begin";
     public static final String END = "end";
-	public static final String APP_VERSION = "appVersion";
-	public static final String OBD_DEVICE = "obdDevice";
-	public static final String TERMS_OF_USE_VERSION = "touVersion";
-	public static final String LENGTH = "length";
+    public static final String APP_VERSION = "appVersion";
+    public static final String OBD_DEVICE = "obdDevice";
+    public static final String TERMS_OF_USE_VERSION = "touVersion";
+    public static final String LENGTH = "length";
     public static final String BEGIN_ORDER = reverse(BEGIN);
     @Id
     private ObjectId id = new ObjectId();
@@ -180,7 +178,7 @@ public class MongoTrack extends MongoEntityBase implements Track {
     }
 
     public ObjectId getId() {
-        return id;
+        return this.id;
     }
 
     public void setId(ObjectId id) {
@@ -190,15 +188,15 @@ public class MongoTrack extends MongoEntityBase implements Track {
     @Override
     public String toString() {
         return toStringHelper()
-                .add(IDENTIFIER, id)
-                .add(NAME, name)
-                .add(DESCRIPTION, description)
-                .add(USER, user)
-                .add(SENSOR, sensor)
-                .add(BBOX, bbox)
-                .add(BEGIN, begin)
-                .add(END, end)
-                .toString();
+                       .add(IDENTIFIER, this.id)
+                       .add(NAME, this.name)
+                       .add(DESCRIPTION, this.description)
+                       .add(USER, this.user)
+                       .add(SENSOR, this.sensor)
+                       .add(BBOX, this.bbox)
+                       .add(BEGIN, this.begin)
+                       .add(END, this.end)
+                       .toString();
     }
 
     @Override
@@ -214,13 +212,13 @@ public class MongoTrack extends MongoEntityBase implements Track {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final MongoTrack other = (MongoTrack) obj;
+        MongoTrack other = (MongoTrack) obj;
         return Objects.equal(this.id, other.id);
     }
 
     @Override
     public DateTime getBegin() {
-        return begin;
+        return this.begin;
     }
 
     @Override
@@ -235,7 +233,7 @@ public class MongoTrack extends MongoEntityBase implements Track {
 
     @Override
     public DateTime getEnd() {
-        return end;
+        return this.end;
     }
 
     @Override
@@ -249,63 +247,63 @@ public class MongoTrack extends MongoEntityBase implements Track {
     }
 
     @Override
-	public String getAppVersion() {
-		return appVersion;
-	}
+    public String getAppVersion() {
+        return this.appVersion;
+    }
 
     @Override
-	public void setAppVersion(String appVersion) {
-		this.appVersion = appVersion;
-	}
+    public void setAppVersion(String appVersion) {
+        this.appVersion = appVersion;
+    }
 
     @Override
-	public String getObdDevice() {
-		return obdDevice;
-	}
+    public String getObdDevice() {
+        return this.obdDevice;
+    }
 
     @Override
-	public void setObdDevice(String obdDevice) {
-		this.obdDevice = obdDevice;
-	}
+    public void setObdDevice(String obdDevice) {
+        this.obdDevice = obdDevice;
+    }
 
     @Override
-	public String getTouVersion() {
-		return touVersion;
-	}
-
-	@Override
-	public double getLength() {		
-		return length;
-	}
-
-	@Override
-	public void setLength(double length) {
-		this.length = length;
-	}
+    public String getTouVersion() {
+        return this.touVersion;
+    }
 
     @Override
-	public void setTouVersion(String touVersion) {
-		this.touVersion = touVersion;
-	}
+    public double getLength() {
+        return this.length;
+    }
 
-	@Override
-	public boolean hasAppVersion() {
-		return appVersion != null && !appVersion.isEmpty();
-	}
+    @Override
+    public void setLength(double length) {
+        this.length = length;
+    }
 
-	@Override
-	public boolean hasObdDevice() {
-		return obdDevice != null && !obdDevice.isEmpty();
-	}
+    @Override
+    public void setTouVersion(String touVersion) {
+        this.touVersion = touVersion;
+    }
 
-	@Override
-	public boolean hasTouVersion() {
-		return touVersion != null && !touVersion.isEmpty();
-	}
+    @Override
+    public boolean hasAppVersion() {
+        return this.appVersion != null && !this.appVersion.isEmpty();
+    }
 
-	@Override
-	public boolean hasLength() {
-		return getLength() != 0.0;
-	}
-    
+    @Override
+    public boolean hasObdDevice() {
+        return this.obdDevice != null && !this.obdDevice.isEmpty();
+    }
+
+    @Override
+    public boolean hasTouVersion() {
+        return this.touVersion != null && !this.touVersion.isEmpty();
+    }
+
+    @Override
+    public boolean hasLength() {
+        return getLength() != 0.0;
+    }
+
 }

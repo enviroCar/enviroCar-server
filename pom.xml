@@ -53,6 +53,7 @@
         <jackson-version>2.11.1</jackson-version>
         <testcontainers-version>1.14.3</testcontainers-version>
         <jetty-version>9.4.30.v20200611</jetty-version>
+        <mongo-driver-version>4.0.3</mongo-driver-version>
     </properties>
     <repositories>
         <repository>
@@ -235,9 +236,24 @@
                 <version>${morphia-version}</version>
             </dependency>
             <dependency>
-                <artifactId>mongo-java-driver</artifactId>
                 <groupId>org.mongodb</groupId>
-                <version>3.12.6</version>
+                <artifactId>mongodb-driver-legacy</artifactId>
+                <version>${mongo-driver-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mongodb</groupId>
+                <artifactId>mongodb-driver-sync</artifactId>
+                <version>${mongo-driver-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mongodb</groupId>
+                <artifactId>mongodb-driver-core</artifactId>
+                <version>${mongo-driver-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mongodb</groupId>
+                <artifactId>mongodb-driver-async</artifactId>
+                <version>${mongo-driver-version}</version>
             </dependency>
             <dependency>
                 <artifactId>slf4j-api</artifactId>

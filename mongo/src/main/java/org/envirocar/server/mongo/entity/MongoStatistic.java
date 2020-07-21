@@ -16,10 +16,10 @@
  */
 package org.envirocar.server.mongo.entity;
 
-import org.envirocar.server.core.entities.Phenomenon;
-import org.envirocar.server.core.statistics.Statistic;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Property;
+import org.envirocar.server.core.entities.Phenomenon;
+import org.envirocar.server.core.statistics.Statistic;
 
 /**
  * TODO JavaDoc
@@ -55,7 +55,7 @@ public class MongoStatistic implements Statistic {
 
     @Override
     public Phenomenon getPhenomenon() {
-        return phenomenon;
+        return this.phenomenon;
     }
 
     public void setPhenomenon(Phenomenon phenomenon) {
@@ -64,7 +64,7 @@ public class MongoStatistic implements Statistic {
 
     @Override
     public long getMeasurements() {
-        return measurements;
+        return this.measurements;
     }
 
     public void setMeasurements(long measurements) {
@@ -73,7 +73,7 @@ public class MongoStatistic implements Statistic {
 
     @Override
     public long getUsers() {
-        return users;
+        return this.users;
     }
 
     public void setUsers(long users) {
@@ -82,7 +82,7 @@ public class MongoStatistic implements Statistic {
 
     @Override
     public long getTracks() {
-        return tracks;
+        return this.tracks;
     }
 
     public void setTracks(long tracks) {
@@ -91,7 +91,7 @@ public class MongoStatistic implements Statistic {
 
     @Override
     public double getMean() {
-        return mean;
+        return this.mean;
     }
 
     public void setMean(double mean) {
@@ -100,7 +100,7 @@ public class MongoStatistic implements Statistic {
 
     @Override
     public double getMin() {
-        return min;
+        return this.min;
     }
 
     public void setMin(double min) {
@@ -109,7 +109,7 @@ public class MongoStatistic implements Statistic {
 
     @Override
     public double getMax() {
-        return max;
+        return this.max;
     }
 
     public void setMax(double max) {
@@ -118,7 +118,7 @@ public class MongoStatistic implements Statistic {
 
     @Override
     public long getSensors() {
-        return sensors;
+        return this.sensors;
     }
 
     public void setSensors(long sensors) {

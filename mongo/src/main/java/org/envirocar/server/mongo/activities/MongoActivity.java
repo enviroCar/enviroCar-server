@@ -18,6 +18,7 @@ package org.envirocar.server.mongo.activities;
 
 import java.util.Objects;
 
+import dev.morphia.annotations.Indexes;
 import org.bson.types.ObjectId;
 import org.envirocar.server.core.activities.Activity;
 import org.envirocar.server.core.activities.ActivityType;

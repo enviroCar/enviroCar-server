@@ -171,11 +171,11 @@ public class MongoSensorDao extends AbstractMongoDao<ObjectId, MongoSensor, Sens
     }
 
     public boolean isTrue(String str) {
-        return str.equalsIgnoreCase("true");
+        return "true".equalsIgnoreCase(str);
     }
 
     public boolean isFalse(String str) {
-        return str.equalsIgnoreCase("false");
+        return "false".equalsIgnoreCase(str);
     }
 
     public boolean isNumeric(String str) {
@@ -187,13 +187,13 @@ public class MongoSensorDao extends AbstractMongoDao<ObjectId, MongoSensor, Sens
             return false;
         }
 
-        boolean isDecimalSeparatorFound = false;
+        boolean noDecimalSeparatorFound = true;
         char localeDecimalSeparator = symbols.getDecimalSeparator();
 
         for (char c : str.substring(1).toCharArray()) {
             if (!Character.isDigit(c)) {
-                if (c == localeDecimalSeparator && !isDecimalSeparatorFound) {
-                    isDecimalSeparatorFound = true;
+                if (c == localeDecimalSeparator && noDecimalSeparatorFound) {
+                    noDecimalSeparatorFound = false;
                     continue;
                 }
                 return false;
