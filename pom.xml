@@ -50,7 +50,7 @@
         <geotools-version>24.0</geotools-version>
         <wps-version>3.6.3</wps-version>
         <guice-version>4.2.3</guice-version>
-        <jackson-version>2.11.2</jackson-version>
+        <jackson-version>2.11.3</jackson-version>
         <testcontainers-version>1.14.3</testcontainers-version>
         <jetty-version>9.4.31.v20200723</jetty-version>
         <mongo-driver-version>4.0.3</mongo-driver-version>
