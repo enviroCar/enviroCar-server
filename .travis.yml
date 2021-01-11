@@ -1,17 +1,21 @@
 language: java
 notifications:
-    email: false
+  email: false
 jdk:
-    - openjdk8
+- openjdk8
 services:
-    - docker
+- docker
+before_install:
+- echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 after_script:
-    - "gem query --local | grep bundler >/dev/null || gem install bundler"
-    - "export BUNDLE_GEMFILE=$PWD/docs/Gemfile"
-    - "bundle config set path 'docs/_vendor/bundle'"
-    - "bundle install"
-    - "cd docs"
-    - "rake travis"
+- gem query --local | grep bundler >/dev/null || gem install bundler
+- export BUNDLE_GEMFILE=$PWD/docs/Gemfile
+- bundle config set path 'docs/_vendor/bundle'
+- bundle install
+- cd docs
+- rake travis
 env:
   global:
-    secure: GwYDfj/JiE/x3Q9BaVlxNSODaidWWL75vjahnTP1XBaViydDSleF+dtLvA2iffSx7vdvQvh7Dr6F43kGwda8dUhahDHk1s3Gt5KFSPfN+urwZ023XoFYCANL/6ys9JR0Hpyz5bIE0F2jGpiD1UyQk3pK10ZuuVHmSD2jpSJLJpw=
+  - secure: GwYDfj/JiE/x3Q9BaVlxNSODaidWWL75vjahnTP1XBaViydDSleF+dtLvA2iffSx7vdvQvh7Dr6F43kGwda8dUhahDHk1s3Gt5KFSPfN+urwZ023XoFYCANL/6ys9JR0Hpyz5bIE0F2jGpiD1UyQk3pK10ZuuVHmSD2jpSJLJpw=
+  - secure: qrg++wIhAgZj4fkHjAPP0qBzCVLOHBdz9gSmExI4WT98DYHpf+YLG40o6TEak62pJ0IKUb5jplcGNcTOmj1LB7f4RqdaCMiY5EWSQQKd/TyOqp9E0N2nEw0gM6h/5+2hYOTB67ZbzUMK7O9TQwOMOzJ32RY/3WHRjFxt6BJE1x0=
+  - secure: p9ohZCkQynybx31Z3UVi9Y4YwV8JzOVMI2igkV06ZeSF1oNTk5WUkadfV/NuBdRPBzOMwm8opwcZjAEufy76E8wGqcQciQmph1CB8ijzLgB4ZDwNru6Do9nsoQwgqaYhKuqCyBaLMsx2EuExqDXw6HT9P5arlscw553Z3iRZ9b8=
