@@ -19,6 +19,7 @@ package org.envirocar.server.core.mail;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
@@ -123,6 +124,7 @@ public class MailerImpl implements Mailer {
             }
             message.setRecipients(Message.RecipientType.TO, new Address[] { address });
             message.setSubject(mail.getSubject());
+            message.setSentDate(new Date());
 
             if (contents.size() == 1) {
                 setContent(contents.iterator().next(), message);
