@@ -52,7 +52,7 @@
         <guice-version>4.2.3</guice-version>
         <jackson-version>2.12.2</jackson-version>
         <testcontainers-version>1.15.2</testcontainers-version>
-        <jetty-version>9.4.38.v20210224</jetty-version>
+        <jetty-version>9.4.39.v20210325</jetty-version>
         <mongo-driver-version>4.0.3</mongo-driver-version>
     </properties>
     <repositories>
