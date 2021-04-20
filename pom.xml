@@ -212,7 +212,7 @@
             <dependency>
                 <groupId>com.netflix.governator</groupId>
                 <artifactId>governator-core</artifactId>
-                <version>1.17.11</version>
+                <version>1.17.12</version>
             </dependency>
 
             <dependency>
