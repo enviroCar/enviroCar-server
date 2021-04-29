@@ -1,0 +1,34 @@
+version: 2
+updates:
+- package-ecosystem: maven
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "04:00"
+  open-pull-requests-limit: 99
+  reviewers:
+  - autermann
+  assignees:
+  - autermann
+  ignore:
+  - dependency-name: javax.servlet:javax.servlet-api
+    versions:
+    - ">= 4.a, < 5"
+  - dependency-name: org.eclipse.jetty:jetty-maven-plugin
+    versions:
+    - ">= 10.a, < 11"
+  - dependency-name: org.eclipse.jetty:jetty-maven-plugin
+    versions:
+    - ">= 11.a, < 12"
+  - dependency-name: org.eclipse.jetty:jetty-servlet
+    versions:
+    - ">= 10.a, < 11"
+  - dependency-name: org.eclipse.jetty:jetty-servlet
+    versions:
+    - ">= 11.a, < 12"
+  - dependency-name: org.eclipse.jetty:jetty-maven-plugin
+    versions:
+    - 9.4.39.v20210325
+  - dependency-name: org.eclipse.jetty:jetty-servlet
+    versions:
+    - 9.4.39.v20210325
