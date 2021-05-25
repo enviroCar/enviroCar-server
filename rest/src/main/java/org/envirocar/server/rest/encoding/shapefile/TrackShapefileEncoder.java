@@ -146,7 +146,6 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder {
     }
 
     private SimpleFeatureType createFeatureType(Track track, Measurements measurements) {
-
         SimpleFeatureTypeBuilder sftb = new SimpleFeatureTypeBuilder();
         sftb.setCRS(getCRS());
         sftb.setNamespaceURI("https://enviroCar.org/api/stable/tracks");
@@ -154,6 +153,7 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder {
         sftb.add(GEOMETRY_ATTRIBUTE_NAME, Point.class);
         sftb.add(ID_ATTRIBUTE_NAME, String.class);
         sftb.add(TIME_ATTRIBUTE_NAME, String.class);
+        // TODO support double, boolean, String types
         measurements.stream().map(Measurement::getValues)
                     .flatMap(MeasurementValues::stream)
                     .map(mv -> mv.getPhenomenon().getName())
@@ -166,7 +166,6 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder {
             throws IOException {
         Path tempDirectory = Files.createTempDirectory("enviroCarShapeExport-");
         try {
-
             ShapefileDumper dumper = new ShapefileDumper(tempDirectory.toFile());
             dumper.setCharset(StandardCharsets.UTF_8);
             dumper.setEmptyShapefileAllowed(true);
