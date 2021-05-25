@@ -5,3 +5,4 @@ _vendor
 _highlight_repos
 *.sublime-project
 *.sublime-workspace
+.jekyll-cache/

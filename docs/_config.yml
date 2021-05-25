@@ -1,12 +1,12 @@
 safe: false
 lsi: false
-highlighter: pygments
+highlighter: rouge
 exclude:
     - Gemfile
     - Gemfile.lock
     - Rakefile
     - README.md
-markdown: redcarpet
+markdown: kramdown
 redcarpet:
     extensions:
         - "no_intra_emphasis"
