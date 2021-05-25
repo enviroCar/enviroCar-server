@@ -62,7 +62,6 @@ import java.io.Serializable;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -150,7 +149,7 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder {
 
         List<SimpleFeature> simpleFeatureList = measurements.stream().map(measurement -> {
             sfb.set(ID_ATTRIBUTE_NAME, measurement.getIdentifier());
-            sfb.set(TIME_ATTRIBUTE_NAME, measurement.getTime().toDate());
+            sfb.set(TIME_ATTRIBUTE_NAME, dateTimeFormat.print(measurement.getTime()));
             sfb.set(GEOMETRY_ATTRIBUTE_NAME, measurement.getGeometry());
             measurement.getValues().forEach(mv -> sfb.set(getPropertyName(mv), mv.getValue().toString()));
             return sfb.buildFeature(measurement.getIdentifier());
@@ -170,7 +169,7 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder {
         sftb.setName(new NameImpl(namespace, String.format("Feature-%s", uuid)));
         sftb.add(GEOMETRY_ATTRIBUTE_NAME, Point.class);
         sftb.add(ID_ATTRIBUTE_NAME, String.class);
-        sftb.add(TIME_ATTRIBUTE_NAME, Date.class);
+        sftb.add(TIME_ATTRIBUTE_NAME, String.class);
         measurements.stream().map(Measurement::getValues)
                     .flatMap(MeasurementValues::stream)
                     .map(this::getPropertyName)
@@ -181,7 +180,7 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder {
     }
 
     private String getPropertyName(MeasurementValue measurementValue) {
-        String name = measurementValue.getPhenomenon().getName();
+        String name = measurementValue.getPhenomenon().getName().toLowerCase().replaceAll("[^a-z]","_");
         if (name.length() > 10) {
             name = name.substring(0, 11);
         }
