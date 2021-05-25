@@ -62,6 +62,7 @@ import java.io.Serializable;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -84,7 +85,7 @@ import static java.util.stream.Collectors.toList;
 public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder {
     private static final Logger LOG = LoggerFactory.getLogger(TrackShapefileEncoder.class);
     private static final String ID_ATTRIBUTE_NAME = "id";
-    private static final String GEOMETRY_ATTRIBUTE_NAME = "geometry";
+    private static final String GEOMETRY_ATTRIBUTE_NAME = "the_geom";
     private static final String TIME_ATTRIBUTE_NAME = "time";
     private static final String PROPERTIES_PATH = "/export.properties";
     private static final String DEFAULT_PROPERTIES_PATH = "/export.default.properties";
@@ -149,7 +150,7 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder {
 
         List<SimpleFeature> simpleFeatureList = measurements.stream().map(measurement -> {
             sfb.set(ID_ATTRIBUTE_NAME, measurement.getIdentifier());
-            sfb.set(TIME_ATTRIBUTE_NAME, dateTimeFormat.print(measurement.getTime()));
+            sfb.set(TIME_ATTRIBUTE_NAME, measurement.getTime().toDate());
             sfb.set(GEOMETRY_ATTRIBUTE_NAME, measurement.getGeometry());
             measurement.getValues().forEach(mv -> sfb.set(getPropertyName(mv), mv.getValue().toString()));
             return sfb.buildFeature(measurement.getIdentifier());
@@ -169,16 +170,22 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder {
         sftb.setName(new NameImpl(namespace, String.format("Feature-%s", uuid)));
         sftb.add(GEOMETRY_ATTRIBUTE_NAME, Point.class);
         sftb.add(ID_ATTRIBUTE_NAME, String.class);
-        sftb.add(TIME_ATTRIBUTE_NAME, String.class);
-        measurements.stream().map(Measurement::getValues).flatMap(MeasurementValues::stream)
-                    .map(this::getPropertyName).distinct().forEach(name -> sftb.add(name, String.class));
+        sftb.add(TIME_ATTRIBUTE_NAME, Date.class);
+        measurements.stream().map(Measurement::getValues)
+                    .flatMap(MeasurementValues::stream)
+                    .map(this::getPropertyName)
+                    .distinct()
+                    .forEach(name -> sftb.add(name, String.class));
 
         return sftb.buildFeatureType();
     }
 
     private String getPropertyName(MeasurementValue measurementValue) {
-        Phenomenon phenomenon = measurementValue.getPhenomenon();
-        return String.format("%s(%s)", phenomenon.getName(), phenomenon.getUnit());
+        String name = measurementValue.getPhenomenon().getName();
+        if (name.length() > 10) {
+            name = name.substring(0, 11);
+        }
+        return name;
     }
 
     private Path createShapeFile(String name, FeatureCollection<SimpleFeatureType, SimpleFeature> collection)
