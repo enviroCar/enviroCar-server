@@ -76,7 +76,7 @@ public abstract class AbstractShapefileMessageBodyWriter<T> implements MessageBo
     }
 
     protected void delete(Path path) throws IOException {
-        if (path != null && !Files.exists(path)) {
+        if (path != null && Files.exists(path)) {
             Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
