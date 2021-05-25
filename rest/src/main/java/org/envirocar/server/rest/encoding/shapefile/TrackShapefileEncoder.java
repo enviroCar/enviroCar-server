@@ -117,8 +117,7 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder {
     }
 
     @Override
-    public Path encodeShapefile(Track track, AccessRights rights, MediaType mediaType)
-            throws IOException {
+    public Path encodeShapefile(Track track, AccessRights rights, MediaType mediaType) throws IOException {
         Path shapeDirectory = null;
         try {
             Measurements measurements = this.dataService.getMeasurements(new MeasurementFilter(track));
@@ -127,13 +126,11 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder {
         } finally {
             delete(shapeDirectory);
         }
-
     }
 
     private SimpleFeatureCollection createFeatureCollection(Track track, Measurements measurements) {
         SimpleFeatureType sft = createFeatureType(track, measurements);
         SimpleFeatureBuilder sfb = new SimpleFeatureBuilder(sft);
-
         List<SimpleFeature> simpleFeatureList = measurements.stream().map(m -> {
             sfb.set(ID_ATTRIBUTE_NAME, m.getIdentifier());
             sfb.set(TIME_ATTRIBUTE_NAME, this.dateTimeFormat.print(m.getTime()));

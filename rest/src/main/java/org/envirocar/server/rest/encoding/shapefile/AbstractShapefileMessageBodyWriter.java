@@ -69,6 +69,7 @@ public abstract class AbstractShapefileMessageBodyWriter<T> implements MessageBo
         Path shapeFile = null;
         try {
             shapeFile = encodeShapefile(t, mediaType);
+            h.putSingle(HttpHeaders.CONTENT_LENGTH, Files.size(shapeFile));
             Files.copy(shapeFile, out);
         } finally {
             if (shapeFile != null) {
