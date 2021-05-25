@@ -39,7 +39,7 @@ public class MongoPhenomenonDao extends AbstractMongoDao<String, MongoPhenomenon
     }
 
     @Override
-    public MongoPhenomenon getByName(final String name) {
+    public MongoPhenomenon getByName(String name) {
         return q().field(MongoSensor.ID).equal(name).get();
     }
 
@@ -54,10 +54,10 @@ public class MongoPhenomenonDao extends AbstractMongoDao<String, MongoPhenomenon
     }
 
     @Override
-    public MongoPhenomenon create(Phenomenon phen) {
-        MongoPhenomenon ph = (MongoPhenomenon) phen;
-        save(ph);
-        return ph;
+    public MongoPhenomenon create(Phenomenon phenomenon) {
+        MongoPhenomenon mongoPhenomenon = (MongoPhenomenon) phenomenon;
+        save(mongoPhenomenon);
+        return mongoPhenomenon;
     }
 
     @Override

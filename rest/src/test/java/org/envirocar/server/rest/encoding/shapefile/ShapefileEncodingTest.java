@@ -35,7 +35,6 @@ import org.joda.time.format.ISODateTimeFormat;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.PrecisionModel;
@@ -61,13 +60,11 @@ import static org.junit.Assert.assertTrue;
  */
 public class ShapefileEncodingTest {
     @Rule
-    public final ExpectedException exception = ExpectedException.none();
-    @Rule
     public final MockitoRule mockitoRule = MockitoJUnit.rule();
     private GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(PrecisionModel.FLOATING), 4326);
     private final Track track = createTrack();
     private final Sensor sensor = createSensor();
-    private final List<Phenomenon> phenomenons = createPhenomenoms();
+    private final List<Phenomenon> phenomenons = createPhenomenons();
 
     @Mock
     private DataService dataService;
@@ -100,12 +97,12 @@ public class ShapefileEncodingTest {
                                           .collect(toList())).build();
     }
 
-    private Measurement createMeasurement(int basenumber) {
+    private Measurement createMeasurement(int baseNumber) {
 
         Measurement measurement = new MongoMeasurement();
         measurement.setGeometry(geometryFactory.createPoint(new Coordinate(51.9, 7)));
         measurement.setSensor(sensor);
-        int value = basenumber;
+        int value = baseNumber;
         for (Phenomenon phenomenon : phenomenons) {
             MeasurementValue measurementValue = new MongoMeasurementValue();
             measurementValue.setPhenomenon(phenomenon);
@@ -127,12 +124,12 @@ public class ShapefileEncodingTest {
         return result;
     }
 
-    private List<Phenomenon> createPhenomenoms() {
+    private List<Phenomenon> createPhenomenons() {
         List<Phenomenon> phenomena = new ArrayList<>();
-        phenomena.add(createPhenomenom("RPM", "u/min"));
-        phenomena.add(createPhenomenom("Intake Temperature", "C"));
-        phenomena.add(createPhenomenom("Speed", "km/h"));
-        phenomena.add(createPhenomenom("MAF", "l/s"));
+        phenomena.add(createPhenomenon("RPM", "u/min"));
+        phenomena.add(createPhenomenon("Intake Temperature", "C"));
+        phenomena.add(createPhenomenon("Speed", "km/h"));
+        phenomena.add(createPhenomenon("MAF", "l/s"));
         return phenomena;
     }
 
@@ -144,7 +141,7 @@ public class ShapefileEncodingTest {
         return sensor;
     }
 
-    private Phenomenon createPhenomenom(String name, String unit) {
+    private Phenomenon createPhenomenon(String name, String unit) {
         MongoPhenomenon phenomenon = new MongoPhenomenon();
         phenomenon.setName(name);
         phenomenon.setUnit(unit);

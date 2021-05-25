@@ -16,78 +16,75 @@
  */
 package org.envirocar.server.mongo.entity;
 
-import java.util.Map;
-
-import org.envirocar.server.core.entities.Badge;
-
+import com.google.common.base.Objects;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Property;
-import dev.morphia.mapping.Mapper;
-import com.google.common.base.Objects;
+import org.envirocar.server.core.entities.Badge;
+
+import java.util.Map;
 
 @Entity("badges")
 public class MongoBadge extends MongoEntityBase implements Badge {
 
-	public static final String NAME = Mapper.ID_KEY;
-	public static final String DISPLAY_NAME = "displayName";
-	public static final String DESCRIPTION = "description";
+    public static final String NAME = "_id";
+    public static final String DISPLAY_NAME = "displayName";
+    public static final String DESCRIPTION = "description";
 
-	@Id
-	private String name;
+    @Id
+    private String name;
 
-	@Property(DISPLAY_NAME)
-	private Map<String, String> displayName;
-	
-	@Property(DESCRIPTION)
-	private Map<String, String> description;
-	
-    
-	@Override
-	public int hashCode() {
-		return Objects.hashCode(this.name);
-	}
+    @Property(DISPLAY_NAME)
+    private Map<String, String> displayName;
 
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		final MongoBadge other = (MongoBadge) obj;
-		return Objects.equal(this.name, other.name);
-	}
-	
-	@Override
-	public Map<String, String> getDescription() {
-		return description;
-	}
+    @Property(DESCRIPTION)
+    private Map<String, String> description;
 
-	@Override
-	public void setDescription(Map<String, String> descriptions) {
-		this.description = descriptions;
-	}
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(this.name);
+    }
 
-	@Override
-	public Map<String, String> getDisplayName() {
-		return displayName;
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        MongoBadge other = (MongoBadge) obj;
+        return Objects.equal(this.name, other.name);
+    }
 
-	@Override
-	public void setDisplayName(Map<String, String> dnames) {
-		this.displayName = dnames;
-	}
+    @Override
+    public Map<String, String> getDescription() {
+        return this.description;
+    }
 
-	@Override
-	public String getName() {
-		return name;
-	}
+    @Override
+    public void setDescription(Map<String, String> descriptions) {
+        this.description = descriptions;
+    }
 
-	@Override
-	public void setName(String name) {
-		this.name = name;
-	}
+    @Override
+    public Map<String, String> getDisplayName() {
+        return this.displayName;
+    }
+
+    @Override
+    public void setDisplayName(Map<String, String> displayNames) {
+        this.displayName = displayNames;
+    }
+
+    @Override
+    public String getName() {
+        return this.name;
+    }
+
+    @Override
+    public void setName(String name) {
+        this.name = name;
+    }
 
 }

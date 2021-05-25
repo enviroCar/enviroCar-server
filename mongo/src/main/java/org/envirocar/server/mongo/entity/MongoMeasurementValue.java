@@ -72,8 +72,8 @@ public class MongoMeasurementValue implements MeasurementValue {
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
-                .add(VALUE, value)
-                .add(PHENOMENON, phenomenon)
+                .add(VALUE, this.value)
+                .add(PHENOMENON, this.phenomenon)
                 .toString();
     }
 
@@ -90,7 +90,7 @@ public class MongoMeasurementValue implements MeasurementValue {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final MongoMeasurementValue other = (MongoMeasurementValue) obj;
+        MongoMeasurementValue other = (MongoMeasurementValue) obj;
         return Objects.equals(this.value, other.value) &&
                Objects.equals(this.phenomenon, other.phenomenon);
     }

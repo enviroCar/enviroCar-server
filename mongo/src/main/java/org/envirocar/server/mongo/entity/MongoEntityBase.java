@@ -16,21 +16,20 @@
  */
 package org.envirocar.server.mongo.entity;
 
-import static org.envirocar.server.mongo.util.MongoUtils.reverse;
-
-import org.envirocar.server.core.entities.BaseEntity;
-import org.envirocar.server.mongo.MongoDB;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
+import com.google.common.base.MoreObjects;
+import com.google.common.base.MoreObjects.ToStringHelper;
+import com.google.inject.Inject;
 import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.PrePersist;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Transient;
 import dev.morphia.utils.IndexDirection;
+import org.envirocar.server.core.entities.BaseEntity;
+import org.envirocar.server.mongo.MongoDB;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 
-import com.google.common.base.MoreObjects;
-import com.google.common.base.MoreObjects.ToStringHelper;
-import com.google.inject.Inject;
+import static org.envirocar.server.mongo.util.MongoUtils.reverse;
 
 /**
  * TODO JavaDoc
@@ -99,8 +98,8 @@ public abstract class MongoEntityBase implements BaseEntity {
 
     protected ToStringHelper toStringHelper() {
         return MoreObjects.toStringHelper(this)
-                .omitNullValues()
-                .add(CREATION_DATE, this.creationTime)
-                .add(LAST_MODIFIED, this.modificationTime);
+                          .omitNullValues()
+                          .add(CREATION_DATE, this.creationTime)
+                          .add(LAST_MODIFIED, this.modificationTime);
     }
 }

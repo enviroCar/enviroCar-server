@@ -76,7 +76,7 @@ import org.locationtech.jts.geom.Geometry;
  */
 public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasurement, Measurements>
         implements MeasurementDao {
-    public static final String ID = Mapper.ID_KEY;
+    public static final String ID = MongoMeasurement.IDENTIFIER;
     private static final Logger log = LoggerFactory
             .getLogger(MongoMeasurementDao.class);
     private static final String TRACKS = "tracks";
@@ -143,7 +143,7 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
             update = true;
         }
         if (update) {
-            trackDao.save(track);
+            this.trackDao.save(track);
         }
     }
 
@@ -176,7 +176,7 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
         if (request.hasSpatialFilter()) {
             SpatialFilter sf = request.getSpatialFilter();
             try {
-                q.add(MongoMeasurement.GEOMETRY, MongoUtils.spatialFilter(sf, geometryConverter));
+                q.add(MongoMeasurement.GEOMETRY, MongoUtils.spatialFilter(sf, this.geometryConverter));
             } catch (GeometryConverterException e) {
                 log.error("Error while applying spatial filter: {}", e.getLocalizedMessage());
             }
@@ -265,7 +265,7 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
 
     private Iterable<DBObject> aggregate(List<DBObject> ops) {
         AggregationOptions options = AggregationOptions.builder().build();
-        DBCollection collection = mongoDB.getDatastore().getCollection(MongoMeasurement.class);
+        DBCollection collection = this.mongoDB.getDatastore().getCollection(MongoMeasurement.class);
         try (Cursor cursor = collection.aggregate(ops, options)) {
             LinkedList<DBObject> list = new LinkedList<>();
             cursor.forEachRemaining(list::add);
@@ -291,7 +291,7 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
 
     private DBObject withinGeometry(Geometry polygon) {
         try {
-            return MongoUtils.geoWithin(geometryConverter.encode(polygon));
+            return MongoUtils.geoWithin(this.geometryConverter.encode(polygon));
         } catch (GeometryConverterException e) {
             throw new RuntimeException(e);
         }
@@ -318,18 +318,18 @@ public class MongoMeasurementDao extends AbstractMongoDao<ObjectId, MongoMeasure
     }
 
     private Measurements query(DBObject query, Pagination p) {
-        final Mapper mapper = this.mongoDB.getMapper();
-        final Datastore ds = this.mongoDB.getDatastore();
-        final DBCollection coll = ds.getCollection(MongoMeasurement.class);
+        Mapper mapper = this.mongoDB.getMapper();
+        Datastore ds = this.mongoDB.getDatastore();
+        DBCollection coll = ds.getCollection(MongoMeasurement.class);
 
         DBCursor cursor = coll.find(query);
         long count = 0;
 
         DBDecoderFactory dbDecoderFactory = coll.getDBDecoderFactory();
         if (dbDecoderFactory == null) {
-            dbDecoderFactory = mongoDB.getMongoClient()
-                    .getMongoClientOptions()
-                    .getDbDecoderFactory();
+            dbDecoderFactory = this.mongoDB.getMongoClient()
+                                           .getMongoClientOptions()
+                                           .getDbDecoderFactory();
         }
         cursor.setDecoderFactory(dbDecoderFactory);
 

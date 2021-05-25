@@ -24,9 +24,6 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
-import com.mongodb.BasicDBObject;
-import com.mongodb.BasicDBObjectBuilder;
-import com.mongodb.DBCollection;
 import com.mongodb.DBRef;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientOptions;
@@ -38,11 +35,12 @@ import dev.morphia.Morphia;
 import dev.morphia.converters.TypeConverter;
 import dev.morphia.mapping.DefaultCreator;
 import dev.morphia.mapping.Mapper;
-import org.envirocar.server.mongo.entity.MongoMeasurement;
+import dev.morphia.query.internal.MorphiaCursor;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -74,24 +72,24 @@ public class MongoDB implements AutoCloseable {
                    @Nullable @Named(PASS_PROPERTY) char[] password) {
         try {
             if (username == null) {
-                mongo = new MongoClient(new ServerAddress(host, port));
+                this.mongo = new MongoClient(new ServerAddress(host, port));
             } else {
-                mongo = new MongoClient(new ServerAddress(host, port),
-                                        MongoCredential.createCredential(username, database, password),
-                                        MongoClientOptions.builder().build());
+                this.mongo = new MongoClient(new ServerAddress(host, port),
+                                             MongoCredential.createCredential(username, database, password),
+                                             MongoClientOptions.builder().build());
             }
 
-            morphia = new Morphia();
-            morphia.getMapper().getOptions()
-                   .setObjectFactory(new CustomGuiceObjectFactory(new DefaultCreator(morphia.getMapper().getOptions()),
-                                                                  injector));
+            this.morphia = new Morphia();
+            this.morphia.getMapper().getOptions()
+                        .setObjectFactory(new CustomGuiceObjectFactory(new DefaultCreator(this.morphia.getMapper()
+                                                                                                      .getOptions()),
+                                                                       injector));
             addConverters(converters);
             addMappedClasses(mappedClasses);
 
-            datastore = morphia.createDatastore(mongo, database);
-            datastore.ensureIndexes();
-            ensureIndexes();
-            datastore.ensureCaps();
+            this.datastore = this.morphia.createDatastore(this.mongo, database);
+            this.datastore.ensureIndexes();
+            this.datastore.ensureCaps();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -121,18 +119,6 @@ public class MongoDB implements AutoCloseable {
         mappedClasses.forEach(getMapper()::addMappedClass);
     }
 
-    /*
-     * FIXME remove this once 2dsphere indexes are supported by morphia in v1.3.0
-     */
-    private void ensureIndexes() {
-        DBCollection collection = getDatastore().getCollection(MongoMeasurement.class);
-        collection.createIndex(new BasicDBObject(MongoMeasurement.GEOMETRY, "2dsphere"));
-        collection.createIndex(new BasicDBObjectBuilder()
-                                       .append(MongoMeasurement.GEOMETRY, "2dsphere")
-                                       .append(MongoMeasurement.TIME, 1)
-                                       .get());
-    }
-
     public <T> T deref(Class<T> c, Key<T> key) {
         return key == null ? null : getDatastore().getByKey(c, key);
     }
@@ -147,7 +133,7 @@ public class MongoDB implements AutoCloseable {
             return Collections.emptyList();
         }
         ListMultimap<String, Key<T>> kindMap = getKindMap(clazz, keys);
-        List<Iterable<T>> fetched = Lists.newLinkedList();
+        List<T> fetched = new LinkedList<>();
         for (String kind : kindMap.keySet()) {
             List<Key<T>> kindKeys = kindMap.get(kind);
             List<Object> objIds = new ArrayList<>(kindKeys.size());
@@ -155,12 +141,12 @@ public class MongoDB implements AutoCloseable {
                                  ? (Class<T>) kindKeys.get(0).getType()
                                  : clazz;
             kindKeys.stream().map(Key::getId).forEach(objIds::add);
-            fetched.add(getDatastore()
-                                .find(kindClass)
-                                .disableValidation()
-                                .field(Mapper.ID_KEY)
-                                .in(objIds)
-                                .fetch());
+            try (MorphiaCursor<T> id = getDatastore().find(kindClass).disableValidation()
+                                                     .field("_id").in(objIds)
+                                                     .find()) {
+                id.forEachRemaining(fetched::add);
+            }
+
         }
         return Iterables.concat(fetched);
     }

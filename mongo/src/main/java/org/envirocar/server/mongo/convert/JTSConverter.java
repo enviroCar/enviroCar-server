@@ -16,13 +16,14 @@
  */
 package org.envirocar.server.mongo.convert;
 
-import org.bson.BSONObject;
-
+import com.google.inject.Inject;
 import dev.morphia.converters.SimpleValueConverter;
 import dev.morphia.converters.TypeConverter;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.MappingException;
-import com.google.inject.Inject;
+import org.bson.BSONObject;
+import org.envirocar.server.core.exception.GeometryConverterException;
+import org.envirocar.server.core.util.GeometryConverter;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.GeometryCollection;
 import org.locationtech.jts.geom.LineString;
@@ -31,10 +32,6 @@ import org.locationtech.jts.geom.MultiPoint;
 import org.locationtech.jts.geom.MultiPolygon;
 import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.geom.Polygon;
-
-import org.envirocar.server.core.exception.GeometryConverterException;
-
-import org.envirocar.server.core.util.GeometryConverter;
 
 /**
  * TODO JavaDoc
@@ -59,7 +56,7 @@ public class JTSConverter extends TypeConverter implements SimpleValueConverter 
             return null;
         } else if (value instanceof Geometry) {
             try {
-                return geoJSON.encode((Geometry) value);
+                return this.geoJSON.encode((Geometry) value);
             } catch (GeometryConverterException ex) {
                 throw new MappingException("Can not encode geometry", ex);
             }
@@ -69,14 +66,13 @@ public class JTSConverter extends TypeConverter implements SimpleValueConverter 
     }
 
     @Override
-    @SuppressWarnings("rawtypes")
     public Geometry decode(Class targetClass, Object db,
                            MappedField optionalExtraInfo) {
         if (db == null) {
             return null;
         } else if (db instanceof BSONObject) {
             try {
-                return geoJSON.decode((BSONObject) db);
+                return this.geoJSON.decode((BSONObject) db);
             } catch (GeometryConverterException ex) {
                 throw new MappingException("Can not decode geometry", ex);
             }

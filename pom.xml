@@ -44,14 +44,16 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <logback-version>1.2.3</logback-version>
-        <morphia-version>1.5.8</morphia-version>
+        <morphia-version>1.6.1</morphia-version>
         <jersey-version>1.19.4</jersey-version>
         <slf4j-version>1.7.30</slf4j-version>
-        <geotools-version>22.3</geotools-version>
+        <geotools-version>25.1</geotools-version>
         <wps-version>3.6.3</wps-version>
-        <guice-version>4.2.2</guice-version>
-        <jackson-version>2.10.2</jackson-version>
-        <testcontainers-version>1.12.5</testcontainers-version>
+        <guice-version>4.2.3</guice-version>
+        <jackson-version>2.12.3</jackson-version>
+        <testcontainers-version>1.15.3</testcontainers-version>
+        <jetty-version>9.4.41.v20210516</jetty-version>
+        <mongo-driver-version>4.0.3</mongo-driver-version>
     </properties>
     <repositories>
         <repository>
@@ -152,7 +154,7 @@
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
-                <version>4.13</version>
+                <version>4.13.2</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -169,18 +171,18 @@
             <dependency>
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
-                <version>2.6</version>
+                <version>2.8.0</version>
             </dependency>
             <dependency>
                 <groupId>com.thetransactioncompany</groupId>
                 <artifactId>cors-filter</artifactId>
-                <version>2.8</version>
+                <version>2.10</version>
                 <scope>runtime</scope>
             </dependency>
             <dependency>
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
-                <version>23.0</version>
+                <version>30.1.1-jre</version>
             </dependency>
             <dependency>
                 <groupId>com.google.inject</groupId>
@@ -205,12 +207,12 @@
             <dependency>
                 <groupId>com.google.inject.extensions</groupId>
                 <artifactId>guice-throwingproviders</artifactId>
-                <version>4.2.2</version>
+                <version>${guice-version}</version>
             </dependency>
             <dependency>
                 <groupId>com.netflix.governator</groupId>
                 <artifactId>governator-core</artifactId>
-                <version>1.17.10</version>
+                <version>1.17.12</version>
             </dependency>
 
             <dependency>
@@ -234,9 +236,24 @@
                 <version>${morphia-version}</version>
             </dependency>
             <dependency>
-                <artifactId>mongo-java-driver</artifactId>
                 <groupId>org.mongodb</groupId>
-                <version>3.12.1</version>
+                <artifactId>mongodb-driver-legacy</artifactId>
+                <version>${mongo-driver-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mongodb</groupId>
+                <artifactId>mongodb-driver-sync</artifactId>
+                <version>${mongo-driver-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mongodb</groupId>
+                <artifactId>mongodb-driver-core</artifactId>
+                <version>${mongo-driver-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mongodb</groupId>
+                <artifactId>mongodb-driver-async</artifactId>
+                <version>${mongo-driver-version}</version>
             </dependency>
             <dependency>
                 <artifactId>slf4j-api</artifactId>
@@ -276,12 +293,12 @@
             <dependency>
                 <groupId>joda-time</groupId>
                 <artifactId>joda-time</artifactId>
-                <version>2.10.5</version>
+                <version>2.10.10</version>
             </dependency>
             <dependency>
                 <groupId>org.locationtech.jts</groupId>
                 <artifactId>jts-core</artifactId>
-                <version>1.16.1</version>
+                <version>1.18.1</version>
             </dependency>
             <dependency>
                 <groupId>com.sun.jersey</groupId>
@@ -307,7 +324,7 @@
             <dependency>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-servlet</artifactId>
-                <version>9.4.26.v20200117</version>
+                <version>${jetty-version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -339,13 +356,13 @@
             <dependency>
                 <groupId>org.apache.jena</groupId>
                 <artifactId>apache-jena-libs</artifactId>
-                <version>3.14.0</version>
+                <version>3.17.0</version>
                 <type>pom</type>
             </dependency>
             <dependency>
                 <groupId>commons-codec</groupId>
                 <artifactId>commons-codec</artifactId>
-                <version>1.14</version>
+                <version>1.15</version>
             </dependency>
             <dependency>
                 <groupId>org.clojars.ndimiduk</groupId>
@@ -365,7 +382,7 @@
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-databind</artifactId>
-                <version>2.9.10.1</version>
+                <version>${jackson-version}</version>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
@@ -375,7 +392,7 @@
             <dependency>
                 <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>httpclient</artifactId>
-                <version>4.5.11</version>
+                <version>4.5.13</version>
             </dependency>
             <dependency>
                 <groupId>org.testcontainers</groupId>
@@ -390,7 +407,7 @@
             <dependency>
                 <groupId>org.apache.kafka</groupId>
                 <artifactId>kafka-clients</artifactId>
-                <version>2.4.0</version>
+                <version>2.8.0</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -449,7 +466,7 @@
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>build-helper-maven-plugin</artifactId>
-                    <version>3.0.0</version>
+                    <version>3.2.0</version>
                 </plugin>
                 <plugin>
                     <groupId>com.mycila.maven-license-plugin</groupId>
@@ -459,7 +476,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-war-plugin</artifactId>
-                    <version>3.2.3</version>
+                    <version>3.3.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
@@ -481,7 +498,7 @@
                 <plugin>
                     <groupId>org.eclipse.jetty</groupId>
                     <artifactId>jetty-maven-plugin</artifactId>
-                    <version>9.4.26.v20200117</version>
+                    <version>${jetty-version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -491,7 +508,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-project-info-reports-plugin</artifactId>
-                <version>3.0.0</version>
+                <version>3.1.2</version>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -501,7 +518,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>3.1.1</version>
+                <version>3.1.2</version>
             </plugin>
         </plugins>
     </reporting>

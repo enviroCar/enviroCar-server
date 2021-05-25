@@ -17,10 +17,11 @@
 package org.envirocar.server;
 
 import com.sun.jersey.api.client.ClientResponse;
+import org.junit.ClassRule;
 import org.junit.Test;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
 
 /**
  * TODO JavaDoc
@@ -28,6 +29,14 @@ import static org.junit.Assert.assertThat;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class UsersResourceTest extends ResourceTestBase {
+    @ClassRule
+    public static EnviroCarServer server = new EnviroCarServer();
+
+    @Override
+    protected EnviroCarServer getServer() {
+        return server;
+    }
+
     @Test
     public void testGetUsers() {
         assertThat(resource().path("/users").get(ClientResponse.class).getStatus(), is(401));

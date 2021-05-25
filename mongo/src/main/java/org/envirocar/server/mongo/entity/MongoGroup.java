@@ -16,19 +16,17 @@
  */
 package org.envirocar.server.mongo.entity;
 
-import java.util.Collections;
-import java.util.Set;
-
+import com.google.common.base.Objects;
 import dev.morphia.Key;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Transient;
-import dev.morphia.mapping.Mapper;
-import com.google.common.base.Objects;
-
 import org.envirocar.server.core.entities.Group;
 import org.envirocar.server.core.entities.User;
+
+import java.util.Collections;
+import java.util.Set;
 
 /**
  * TODO JavaDoc
@@ -38,7 +36,7 @@ import org.envirocar.server.core.entities.User;
 @Entity("groups")
 public class MongoGroup extends MongoEntityBase implements Group {
     public static final String OWNER = "owner";
-    public static final String NAME = Mapper.ID_KEY;
+    public static final String NAME = "_id";
     public static final String DESCRIPTION = "desc";
     public static final String MEMBERS = "members";
     @Property(OWNER)
@@ -109,10 +107,10 @@ public class MongoGroup extends MongoEntityBase implements Group {
     @Override
     public String toString() {
         return toStringHelper()
-                .add(NAME, name)
-                .add(OWNER, owner)
-                .add(DESCRIPTION, description)
-                .add(MEMBERS, members).toString();
+                       .add(NAME, name)
+                       .add(OWNER, owner)
+                       .add(DESCRIPTION, description)
+                       .add(MEMBERS, members).toString();
     }
 
     @Override

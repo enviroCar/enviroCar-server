@@ -16,9 +16,10 @@
  */
 package org.envirocar.server.mongo.dao.privates;
 
-import java.util.Calendar;
-import java.util.UUID;
-
+import com.google.inject.Inject;
+import com.mongodb.client.MongoCursor;
+import dev.morphia.query.Query;
+import dev.morphia.query.internal.MorphiaCursor;
 import org.bson.types.ObjectId;
 import org.envirocar.server.core.entities.PasswordReset;
 import org.envirocar.server.core.entities.User;
@@ -28,11 +29,11 @@ import org.envirocar.server.core.util.pagination.Pagination;
 import org.envirocar.server.mongo.MongoDB;
 import org.envirocar.server.mongo.dao.AbstractMongoDao;
 import org.envirocar.server.mongo.entity.MongoPasswordReset;
-import dev.morphia.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.inject.Inject;
+import java.util.Calendar;
+import java.util.UUID;
 
 public class MongoPasswordResetDAO extends AbstractMongoDao<ObjectId, MongoPasswordReset, MongoPasswordResetDAO.MongoPasswordResetStatusCollection>
         implements PasswordResetDAO {
@@ -103,9 +104,10 @@ public class MongoPasswordResetDAO extends AbstractMongoDao<ObjectId, MongoPassw
             result.field(MongoPasswordReset.VERIFICATION_CODE).equal(verificationCode);
         }
 
-        Iterable<MongoPasswordReset> fetch = result.fetch();
-        if (fetch.iterator().hasNext()) {
-            return result.fetch().iterator().next();
+        try (MongoCursor<MongoPasswordReset> cursor = result.find()) {
+            if (cursor.hasNext()) {
+                return cursor.next();
+            }
         }
 
         LOG.info("No result for query.");

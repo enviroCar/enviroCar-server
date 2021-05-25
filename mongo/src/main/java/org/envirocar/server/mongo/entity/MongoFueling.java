@@ -16,18 +16,7 @@
  */
 package org.envirocar.server.mongo.entity;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import org.bson.types.ObjectId;
-import org.envirocar.server.core.entities.DimensionedNumber;
-import org.envirocar.server.core.entities.Fueling;
-import org.envirocar.server.core.entities.Sensor;
-import org.envirocar.server.core.entities.User;
-import org.joda.time.DateTime;
-
+import com.google.common.base.Strings;
 import dev.morphia.Key;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
@@ -36,7 +25,17 @@ import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Transient;
 import dev.morphia.utils.IndexDirection;
-import com.google.common.base.Strings;
+import org.bson.types.ObjectId;
+import org.envirocar.server.core.entities.DimensionedNumber;
+import org.envirocar.server.core.entities.Fueling;
+import org.envirocar.server.core.entities.Sensor;
+import org.envirocar.server.core.entities.User;
+import org.joda.time.DateTime;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Mongo implementation of a {@link Fueling}.

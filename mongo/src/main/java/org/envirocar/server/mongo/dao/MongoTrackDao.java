@@ -61,7 +61,7 @@ public class MongoTrackDao extends AbstractMongoDao<ObjectId, MongoTrack, Tracks
     }
 
     public MongoMeasurementDao getMeasurementDao() {
-        return measurementDao;
+        return this.measurementDao;
     }
 
     @Inject
@@ -95,7 +95,7 @@ public class MongoTrackDao extends AbstractMongoDao<ObjectId, MongoTrack, Tracks
     @Override
     public void delete(Track track) {
         MongoTrack t = (MongoTrack) track;
-        measurementDao.removeTrack(t);
+        this.measurementDao.removeTrack(t);
         delete(t.getId());
     }
 
@@ -103,7 +103,7 @@ public class MongoTrackDao extends AbstractMongoDao<ObjectId, MongoTrack, Tracks
     public Tracks get(TrackFilter request) {
         Query<MongoTrack> q = q();
         if (request.hasSpatialFilter()) {
-            List<Key<MongoTrack>> keys = measurementDao
+            List<Key<MongoTrack>> keys = this.measurementDao
                     .getTrackKeysByBbox(new MeasurementFilter(
                     null, request.getUser(), request.getSpatialFilter(), null, null));
             if (keys.isEmpty()) {

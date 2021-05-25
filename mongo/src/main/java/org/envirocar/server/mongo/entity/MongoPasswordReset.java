@@ -16,10 +16,6 @@
  */
 package org.envirocar.server.mongo.entity;
 
-import org.bson.types.ObjectId;
-import org.envirocar.server.core.entities.PasswordReset;
-import org.envirocar.server.core.entities.User;
-import org.joda.time.DateTime;
 import dev.morphia.Key;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
@@ -27,13 +23,15 @@ import dev.morphia.annotations.IndexOptions;
 import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Transient;
-import dev.morphia.mapping.Mapper;
+import org.bson.types.ObjectId;
+import org.envirocar.server.core.entities.PasswordReset;
+import org.envirocar.server.core.entities.User;
+import org.joda.time.DateTime;
 
 @Entity("passwordResetStatus")
 public class MongoPasswordReset extends MongoEntityBase implements PasswordReset {
 
-
-    public static final String NAME = Mapper.ID_KEY;
+    public static final String NAME = "_id";
     public static final String EXPIRES = "expires";
     public static final String VERIFICATION_CODE = "code";
     public static final String USER = "user";
@@ -62,7 +60,7 @@ public class MongoPasswordReset extends MongoEntityBase implements PasswordReset
 
     @Override
     public DateTime getExpires() {
-        return expires;
+        return this.expires;
     }
 
     public void setExpires(DateTime expires) {
@@ -84,7 +82,7 @@ public class MongoPasswordReset extends MongoEntityBase implements PasswordReset
 
     @Override
     public String getCode() {
-        return code;
+        return this.code;
     }
 
     public void setCode(String code) {
@@ -97,7 +95,7 @@ public class MongoPasswordReset extends MongoEntityBase implements PasswordReset
     }
 
     public ObjectId getId() {
-        return id;
+        return this.id;
     }
 
 }

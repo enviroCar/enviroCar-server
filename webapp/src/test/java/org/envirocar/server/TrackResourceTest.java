@@ -25,7 +25,7 @@ import org.envirocar.server.core.util.GeoJSONConstants;
 import org.envirocar.server.rest.JSONConstants;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.resources.RootResource;
-import org.junit.Assert;
+import org.junit.ClassRule;
 import org.junit.Test;
 
 import javax.ws.rs.core.HttpHeaders;
@@ -38,10 +38,10 @@ import java.util.Set;
 
 import static org.envirocar.server.matchers.JerseyMatchers.hasStatus;
 import static org.envirocar.server.matchers.JerseyMatchers.isCompatible;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.isEmptyOrNullString;
 import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.assertThat;
 
 public class TrackResourceTest extends ResourceTestBase {
 
@@ -57,6 +57,13 @@ public class TrackResourceTest extends ResourceTestBase {
     @Inject
     private ObjectReader reader;
 
+    @ClassRule
+    public static EnviroCarServer server = new EnviroCarServer();
+
+    @Override
+    protected EnviroCarServer getServer() {
+        return server;
+    }
     @Test
     public void testContentNegotiation() throws IOException {
 
@@ -90,14 +97,14 @@ public class TrackResourceTest extends ResourceTestBase {
     }
 
     protected void createPhenomenon(String name, String unit) {
-        Assert.assertThat(resource().path("/").path(RootResource.PHENOMENONS)
-                                    .header(HttpHeaders.AUTHORIZATION, getBasicAuthHeader(USERNAME, PASSWORD))
-                                    .entity(getNodeFactory().objectNode()
-                                                            .put(JSONConstants.NAME_KEY, name)
-                                                            .put(JSONConstants.UNIT_KEY, unit),
-                                            MediaTypes.JSON)
-                                    .post(ClientResponse.class),
-                          hasStatus(Response.Status.CREATED));
+        assertThat(resource().path("/").path(RootResource.PHENOMENONS)
+                             .header(HttpHeaders.AUTHORIZATION, getBasicAuthHeader(USERNAME, PASSWORD))
+                             .entity(getNodeFactory().objectNode()
+                                                     .put(JSONConstants.NAME_KEY, name)
+                                                     .put(JSONConstants.UNIT_KEY, unit),
+                                     MediaTypes.JSON)
+                             .post(ClientResponse.class),
+                   hasStatus(Response.Status.CREATED));
     }
 
     private String createSensor() {

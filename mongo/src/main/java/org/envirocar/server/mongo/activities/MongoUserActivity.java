@@ -16,18 +16,17 @@
  */
 package org.envirocar.server.mongo.activities;
 
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
+import com.google.inject.assistedinject.AssistedInject;
+import dev.morphia.Key;
+import dev.morphia.annotations.Property;
+import dev.morphia.annotations.Transient;
 import org.envirocar.server.core.activities.ActivityType;
 import org.envirocar.server.core.activities.UserActivity;
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.mongo.MongoDB;
 import org.envirocar.server.mongo.entity.MongoUser;
-
-import dev.morphia.Key;
-import dev.morphia.annotations.Property;
-import dev.morphia.annotations.Transient;
-import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
-import com.google.inject.assistedinject.AssistedInject;
 
 /**
  * TODO JavaDoc

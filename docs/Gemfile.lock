@@ -44,11 +44,11 @@ GEM
     public_suffix (2.0.5)
     pygments.rb (1.2.1)
       multi_json (>= 1.0.0)
-    rake (12.0.0)
+    rake (12.3.3)
     rb-fsevent (0.10.3)
     rb-inotify (0.9.10)
       ffi (>= 0.5.0, < 2)
-    redcarpet (3.3.4)
+    redcarpet (3.5.1)
     rouge (1.11.1)
     ruby_dep (1.5.0)
     safe_yaml (1.0.4)
@@ -68,4 +68,4 @@ DEPENDENCIES
   redcarpet
 
 BUNDLED WITH
-   1.17.1
+   2.1.4

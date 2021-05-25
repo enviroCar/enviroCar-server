@@ -16,12 +16,11 @@
  */
 package org.envirocar.server.mongo;
 
+import com.google.inject.Injector;
+import com.mongodb.DBObject;
 import dev.morphia.ObjectFactory;
 import dev.morphia.ext.guice.GuiceObjectFactory;
 import dev.morphia.mapping.Mapper;
-
-import com.google.inject.Injector;
-import com.mongodb.DBObject;
 
 /**
  * TODO JavaDoc
@@ -34,7 +33,7 @@ public class CustomGuiceObjectFactory extends GuiceObjectFactory {
     }
 
     @Override
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({"unchecked"})
     public Object createInstance(Class clazz, DBObject dbObj) {
         String className = (String) dbObj.get(Mapper.CLASS_NAME_FIELDNAME);
         if (className != null) {

@@ -18,15 +18,14 @@ package org.envirocar.server.mongo.entity;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.Sets;
-import org.envirocar.server.core.entities.Phenomenon;
-import org.envirocar.server.core.entities.Phenomenons;
-import org.joda.time.DateTime;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.Property;
-import dev.morphia.mapping.Mapper;
+import org.envirocar.server.core.entities.Phenomenon;
+import org.envirocar.server.core.entities.Phenomenons;
+import org.joda.time.DateTime;
 
 import java.util.Collections;
 import java.util.List;
@@ -39,7 +38,7 @@ import java.util.stream.Collectors;
  */
 @Entity("statistics")
 public class MongoStatistics {
-    public static final String KEY = Mapper.ID_KEY;
+    public static final String KEY = "_id";
     public static final String CREATED = "created";
     public static final String STATISTICS = "statistics";
     //    private static final int EXPIRE_AFTER_SECONDS = 60 * 60 * 3; // 3 hours
@@ -48,7 +47,7 @@ public class MongoStatistics {
     private MongoStatisticKey key;
     @Indexed
     @Property(CREATED)
-    private DateTime created = new DateTime();
+    private final DateTime created = new DateTime();
     @Embedded(STATISTICS)
     private List<MongoStatistic> statistics = Collections.emptyList();
 
@@ -93,7 +92,7 @@ public class MongoStatistics {
     }
 
     public DateTime getCreated() {
-        return created;
+        return this.created;
     }
 
     @Override
@@ -109,7 +108,7 @@ public class MongoStatistics {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final MongoStatistics other = (MongoStatistics) obj;
+        MongoStatistics other = (MongoStatistics) obj;
         return Objects.equal(this.key, other.key);
     }
 }

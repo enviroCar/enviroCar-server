@@ -20,14 +20,18 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.ClientResponse.Status;
 import org.envirocar.server.rest.JSONConstants;
+import org.junit.ClassRule;
 import org.junit.Test;
 
 import javax.ws.rs.core.MediaType;
 
 import static org.envirocar.server.matchers.JerseyMatchers.hasProperty;
-import static org.envirocar.server.matchers.JerseyMatchers.*;
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.assertThat;
+import static org.envirocar.server.matchers.JerseyMatchers.hasStatus;
+import static org.envirocar.server.matchers.JerseyMatchers.isCompatible;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 
 /**
  * TODO JavaDoc
@@ -35,10 +39,19 @@ import static org.junit.Assert.assertThat;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class RootResourceTest extends ResourceTestBase {
+
+    @ClassRule
+    public static EnviroCarServer server = new EnviroCarServer();
+
+    @Override
+    protected EnviroCarServer getServer() {
+        return server;
+    }
+
     @Test
     public void testGetRoot() {
         ClientResponse response = resource().path("/")
-                .accept(MediaType.APPLICATION_JSON).get(ClientResponse.class);
+                                            .accept(MediaType.APPLICATION_JSON).get(ClientResponse.class);
 
         assertThat(response, hasStatus(Status.OK));
         assertThat(response.getType(), isCompatible(MediaType.APPLICATION_JSON_TYPE));
@@ -70,4 +83,5 @@ public class RootResourceTest extends ResourceTestBase {
     public void testDeleteRoot() {
         assertThat(resource().path("/").delete(ClientResponse.class).getStatus(), is(405));
     }
+
 }

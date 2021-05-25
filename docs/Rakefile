@@ -30,7 +30,7 @@ end
 
 task :travis do | t |
     # only build one matrix execution
-    return unless ENV["TRAVIS_JOB_NUMBER"] == "#{ENV["TRAVIS_BUILD_NUMBER"]}.1"
+    next unless ENV["TRAVIS_JOB_NUMBER"] == "#{ENV["TRAVIS_BUILD_NUMBER"]}.1"
 
     puts "Configuring GIT"
     system "git config --global user.name \"#{github_name}\""

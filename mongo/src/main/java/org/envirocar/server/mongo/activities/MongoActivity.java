@@ -18,6 +18,7 @@ package org.envirocar.server.mongo.activities;
 
 import java.util.Objects;
 
+import dev.morphia.annotations.Indexes;
 import org.bson.types.ObjectId;
 import org.envirocar.server.core.activities.Activity;
 import org.envirocar.server.core.activities.ActivityType;
@@ -47,7 +48,7 @@ import com.google.inject.assistedinject.AssistedInject;
  */
 @Entity("activities")
 public class MongoActivity implements Activity {
-    public static final String ID = Mapper.ID_KEY;
+    public static final String ID = "_id";
     public static final String USER = "user";
     public static final String TYPE = "type";
     public static final String TIME = "time";
