@@ -22,22 +22,14 @@ import com.google.common.io.Closeables;
 import com.google.inject.Inject;
 import org.envirocar.server.core.DataService;
 import org.envirocar.server.core.entities.Measurement;
-import org.envirocar.server.core.entities.MeasurementValue;
 import org.envirocar.server.core.entities.MeasurementValues;
 import org.envirocar.server.core.entities.Measurements;
-import org.envirocar.server.core.entities.Phenomenon;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.filter.MeasurementFilter;
 import org.envirocar.server.rest.rights.AccessRights;
-import org.geotools.data.DataStoreFactorySpi;
-import org.geotools.data.DefaultTransaction;
-import org.geotools.data.FeatureStore;
-import org.geotools.data.Transaction;
 import org.geotools.data.collection.ListFeatureCollection;
-import org.geotools.data.shapefile.ShapefileDataStore;
-import org.geotools.data.shapefile.ShapefileDataStoreFactory;
-import org.geotools.feature.FeatureCollection;
-import org.geotools.feature.NameImpl;
+import org.geotools.data.shapefile.ShapefileDumper;
+import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.geotools.referencing.CRS;
@@ -58,17 +50,14 @@ import javax.ws.rs.ext.Provider;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.Serializable;
 import java.io.UncheckedIOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
-import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -84,7 +73,7 @@ import static java.util.stream.Collectors.toList;
 public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder {
     private static final Logger LOG = LoggerFactory.getLogger(TrackShapefileEncoder.class);
     private static final String ID_ATTRIBUTE_NAME = "id";
-    private static final String GEOMETRY_ATTRIBUTE_NAME = "geometry";
+    private static final String GEOMETRY_ATTRIBUTE_NAME = "the_geom";
     private static final String TIME_ATTRIBUTE_NAME = "time";
     private static final String PROPERTIES_PATH = "/export.properties";
     private static final String DEFAULT_PROPERTIES_PATH = "/export.default.properties";
@@ -113,12 +102,12 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder {
                 properties.load(in);
             }
 
+            return properties;
         } catch (IOException ex) {
             throw new UncheckedIOException(ex);
         } finally {
             Closeables.closeQuietly(in);
         }
-        return properties;
     }
 
     @Inject
@@ -128,96 +117,56 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder {
     }
 
     @Override
-    public Path encodeShapefile(Track track, AccessRights rights, MediaType mediaType)
-            throws IOException {
+    public Path encodeShapefile(Track track, AccessRights rights, MediaType mediaType) throws IOException {
         Path shapeDirectory = null;
-        Path zippedShapeFile;
         try {
-            Measurements measurements = dataService.getMeasurements(new MeasurementFilter(track));
-            shapeDirectory = createShapeFile(track.getIdentifier(), createFeatureCollection(measurements));
-            zippedShapeFile = zip(shapeDirectory);
+            Measurements measurements = this.dataService.getMeasurements(new MeasurementFilter(track));
+            shapeDirectory = createShapeFile(track.getIdentifier(), createFeatureCollection(track, measurements));
+            return zip(shapeDirectory);
         } finally {
             delete(shapeDirectory);
         }
-
-        return zippedShapeFile;
     }
 
-    private FeatureCollection<SimpleFeatureType, SimpleFeature> createFeatureCollection(Measurements measurements) {
-        SimpleFeatureType sft = createFeatureType(measurements);
+    private SimpleFeatureCollection createFeatureCollection(Track track, Measurements measurements) {
+        SimpleFeatureType sft = createFeatureType(track, measurements);
         SimpleFeatureBuilder sfb = new SimpleFeatureBuilder(sft);
-
-        List<SimpleFeature> simpleFeatureList = measurements.stream().map(measurement -> {
-            sfb.set(ID_ATTRIBUTE_NAME, measurement.getIdentifier());
-            sfb.set(TIME_ATTRIBUTE_NAME, dateTimeFormat.print(measurement.getTime()));
-            sfb.set(GEOMETRY_ATTRIBUTE_NAME, measurement.getGeometry());
-            measurement.getValues().forEach(mv -> sfb.set(getPropertyName(mv), mv.getValue().toString()));
-            return sfb.buildFeature(measurement.getIdentifier());
+        List<SimpleFeature> simpleFeatureList = measurements.stream().map(m -> {
+            sfb.set(ID_ATTRIBUTE_NAME, m.getIdentifier());
+            sfb.set(TIME_ATTRIBUTE_NAME, this.dateTimeFormat.print(m.getTime()));
+            sfb.set(GEOMETRY_ATTRIBUTE_NAME, m.getGeometry());
+            m.getValues().forEach(mv -> sfb.set(mv.getPhenomenon().getName(), mv.getValue().toString()));
+            return sfb.buildFeature(m.getIdentifier());
         }).collect(toList());
 
         return new ListFeatureCollection(sft, simpleFeatureList);
     }
 
-    private SimpleFeatureType createFeatureType(Measurements measurements) {
-        String uuid = UUID.randomUUID().toString().substring(0, 5);
-
-        String namespace = String.format("http://enviroCar.org/%s", uuid);
-
+    private SimpleFeatureType createFeatureType(Track track, Measurements measurements) {
         SimpleFeatureTypeBuilder sftb = new SimpleFeatureTypeBuilder();
         sftb.setCRS(getCRS());
-        sftb.setNamespaceURI(namespace);
-        sftb.setName(new NameImpl(namespace, String.format("Feature-%s", uuid)));
+        sftb.setNamespaceURI("https://enviroCar.org/api/stable/tracks");
+        sftb.setName(track.getIdentifier());
         sftb.add(GEOMETRY_ATTRIBUTE_NAME, Point.class);
         sftb.add(ID_ATTRIBUTE_NAME, String.class);
         sftb.add(TIME_ATTRIBUTE_NAME, String.class);
-        measurements.stream().map(Measurement::getValues).flatMap(MeasurementValues::stream)
-                    .map(this::getPropertyName).distinct().forEach(name -> sftb.add(name, String.class));
-
+        // TODO support double, boolean, String types
+        measurements.stream().map(Measurement::getValues)
+                    .flatMap(MeasurementValues::stream)
+                    .map(mv -> mv.getPhenomenon().getName())
+                    .distinct()
+                    .forEach(name -> sftb.add(name, String.class));
         return sftb.buildFeatureType();
     }
 
-    private String getPropertyName(MeasurementValue measurementValue) {
-        Phenomenon phenomenon = measurementValue.getPhenomenon();
-        return String.format("%s(%s)", phenomenon.getName(), phenomenon.getUnit());
-    }
-
-    private Path createShapeFile(String name, FeatureCollection<SimpleFeatureType, SimpleFeature> collection)
+    private Path createShapeFile(String name, SimpleFeatureCollection collection)
             throws IOException {
         Path tempDirectory = Files.createTempDirectory("enviroCarShapeExport-");
         try {
-            Path shpFile = tempDirectory.resolve(String.format("%s.shp", name));
-
-            DataStoreFactorySpi dataStoreFactory = new ShapefileDataStoreFactory();
-
-            Map<String, Serializable> params = new HashMap<>();
-            params.put("url", shpFile.toUri().toURL());
-            params.put("create spatial index", Boolean.TRUE);
-
-            ShapefileDataStore newDataStore = (ShapefileDataStore) dataStoreFactory.createNewDataStore(params);
-
-            newDataStore.createSchema(collection.getSchema());
-            if (collection.getSchema().getCoordinateReferenceSystem() == null) {
-                newDataStore.forceSchemaCRS(getCRS());
-            } else {
-                newDataStore.forceSchemaCRS(collection.getSchema().getCoordinateReferenceSystem());
-            }
-
-            Transaction transaction = new DefaultTransaction("create");
-
-            String typeName = newDataStore.getTypeNames()[0];
-            @SuppressWarnings("unchecked")
-            FeatureStore<SimpleFeatureType, SimpleFeature> featureStore
-                    = (FeatureStore<SimpleFeatureType, SimpleFeature>) newDataStore.getFeatureSource(typeName);
-            featureStore.setTransaction(transaction);
-            try {
-                featureStore.addFeatures(collection);
-                transaction.commit();
-            } catch (Exception problem) {
-                transaction.rollback();
-            } finally {
-                transaction.close();
-            }
-
+            ShapefileDumper dumper = new ShapefileDumper(tempDirectory.toFile());
+            dumper.setCharset(StandardCharsets.UTF_8);
+            dumper.setEmptyShapefileAllowed(true);
+            dumper.dump(collection);
             return tempDirectory;
         } catch (Exception e) {
             try {
@@ -246,16 +195,16 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder {
                          throw new UncheckedIOException(e);
                      }
                  });
+            return zipFile;
         }
-        return zipFile;
     }
 
     private CoordinateReferenceSystem getCRS() {
-        if (crs == null) {
+        if (this.crs == null) {
             try {
                 CRSAuthorityFactory authorityFactory = CRS.getAuthorityFactory(false);
                 try {
-                    crs = authorityFactory.createCoordinateReferenceSystem("EPSG:4326");
+                    this.crs = authorityFactory.createCoordinateReferenceSystem("EPSG:4326");
                 } finally {
                     if (authorityFactory instanceof AbstractAuthorityFactory) {
                         ((AbstractAuthorityFactory) authorityFactory).dispose();
@@ -265,7 +214,7 @@ public class TrackShapefileEncoder extends AbstractShapefileTrackEncoder {
                 LOG.debug(e.getMessage());
             }
         }
-        return crs;
+        return this.crs;
     }
 
 }
