@@ -20,6 +20,7 @@ import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.encoding.ShapefileTrackEncoder;
 
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.MessageBodyWriter;
@@ -40,7 +41,7 @@ import java.nio.file.attribute.BasicFileAttributes;
  */
 @Produces(MediaTypes.APPLICATION_ZIPPED_SHP)
 public abstract class AbstractShapefileMessageBodyWriter<T> implements MessageBodyWriter<T>, ShapefileTrackEncoder<T> {
-
+    public static final String CONTENT_DISPOSITION = "Content-Disposition";
     private final Class<T> classType;
 
     public AbstractShapefileMessageBodyWriter(Class<T> classType) {
@@ -56,8 +57,9 @@ public abstract class AbstractShapefileMessageBodyWriter<T> implements MessageBo
     @Override
     public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations,
                                MediaType mediaType) {
-        return this.classType.isAssignableFrom(type) &&
-               mediaType.isCompatible(MediaTypes.APPLICATION_ZIPPED_SHP_TYPE);
+        return this.classType.isAssignableFrom(type) && (
+                mediaType.isCompatible(MediaTypes.APPLICATION_ZIPPED_SHP_TYPE) ||
+                mediaType.isCompatible(MediaTypes.APPLICATION_X_SHAPEFILE_TYPE));
     }
 
     @Override

@@ -23,7 +23,11 @@ import org.envirocar.server.rest.encoding.ShapefileTrackEncoder;
 import org.envirocar.server.rest.rights.AccessRights;
 
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
 import java.nio.file.Path;
 
 /**
@@ -42,6 +46,13 @@ public abstract class AbstractShapefileTrackEncoder extends AbstractShapefileMes
     @Inject
     public void setRights(Provider<AccessRights> rights) {
         this.rights = rights;
+    }
+
+    @Override
+    public void writeTo(Track track, Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType,
+                        MultivaluedMap<String, Object> h, OutputStream out) throws IOException {
+        h.putSingle(CONTENT_DISPOSITION, String.format("attachment; filename=\"%s.zip\"", track.getIdentifier()));
+        super.writeTo(track, type, genericType, annotations, mediaType, h, out);
     }
 
     @Override

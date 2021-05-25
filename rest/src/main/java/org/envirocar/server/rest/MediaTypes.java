@@ -36,10 +36,12 @@ public interface MediaTypes {
     String JPEG = "image/jpeg";
     String PNG = "image/png";
     String APPLICATION_ZIPPED_SHP = "application/x-zipped-shp";
+    String APPLICATION_X_SHAPEFILE = "application/x-shapefile";
 
     MediaType JSON_TYPE = MediaType.APPLICATION_JSON_TYPE;
     MediaType XML_RDF_TYPE = MediaType.valueOf(XML_RDF);
     MediaType APPLICATION_ZIPPED_SHP_TYPE = MediaType.valueOf(APPLICATION_ZIPPED_SHP);
+    MediaType APPLICATION_X_SHAPEFILE_TYPE = MediaType.valueOf(APPLICATION_X_SHAPEFILE);
     MediaType CSV_TYPE = MediaType.valueOf(CSV);
     MediaType TURTLE_TYPE = MediaType.valueOf(TURTLE);
     MediaType TURTLE_ALT_TYPE = MediaType.valueOf(TURTLE_ALT);
