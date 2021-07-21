@@ -51,7 +51,7 @@
         <wps-version>3.6.3</wps-version>
         <guice-version>4.2.3</guice-version>
         <jackson-version>2.12.3</jackson-version>
-        <testcontainers-version>1.15.3</testcontainers-version>
+        <testcontainers-version>1.16.0</testcontainers-version>
         <jetty-version>9.4.42.v20210604</jetty-version>
         <mongo-driver-version>4.0.3</mongo-driver-version>
     </properties>
