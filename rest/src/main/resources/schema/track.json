@@ -72,6 +72,9 @@
         "end": {
           "type": "string",
           "format": "date-time"
+        },
+        "status": {
+          "$ref": "definitions.json#/track-status"
         }
       }
     }

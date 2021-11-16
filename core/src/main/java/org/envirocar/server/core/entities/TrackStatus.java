@@ -14,32 +14,36 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.envirocar.server.core.event;
+package org.envirocar.server.core.entities;
 
-import org.envirocar.server.core.entities.Track;
-import org.envirocar.server.core.entities.User;
+public enum TrackStatus {
+    FINISHED("finished"),
+    ONGOING("ongoing");
 
-/**
- * TODO JavaDoc
- *
- * @author Christian Autermann <autermann@uni-muenster.de>
- */
-public class CreatedTrackEvent implements TrackEvent {
-    private final User user;
-    private final Track track;
+    private final String value;
 
-    public CreatedTrackEvent(User user, Track track) {
-        this.user = user;
-        this.track = track;
+    TrackStatus(String value) {
+        this.value = value;
+    }
+
+    public String value() {
+        return this.value;
+    }
+
+    public static TrackStatus fromString(String string) {
+        if (string == null || string.isEmpty()) {
+            return null;
+        }
+        for (TrackStatus status : TrackStatus.values()) {
+            if (status.value().equalsIgnoreCase(string)) {
+                return status;
+            }
+        }
+        throw new IllegalArgumentException("unsupported TrackStatus: " + string);
     }
 
     @Override
-    public User getUser() {
-        return this.user;
-    }
-
-    @Override
-    public Track getTrack() {
-        return this.track;
+    public String toString() {
+        return this.value;
     }
 }

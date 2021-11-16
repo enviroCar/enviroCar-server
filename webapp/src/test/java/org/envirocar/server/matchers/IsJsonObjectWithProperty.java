@@ -37,7 +37,7 @@ public class IsJsonObjectWithProperty extends BaseMatcher<JsonNode> {
     public boolean matches(Object item) {
         if (item instanceof JsonNode) {
             JsonNode json = (JsonNode) item;
-            return !json.path(key).isMissingNode();
+            return !json.path(this.key).isMissingNode();
         } else {
             return false;
         }

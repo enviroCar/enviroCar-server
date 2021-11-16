@@ -50,7 +50,7 @@ public class TracksJSONEncoder extends AbstractJSONEntityEncoder<Tracks> {
         ObjectNode root = getJsonFactory().objectNode();
         ArrayNode tracks = root.putArray(JSONConstants.TRACKS_KEY);
         for (Track track : entity) {
-            tracks.add(trackEncoder.encodeJSON(track, rights, mediaType));
+            tracks.add(this.trackEncoder.encodeJSON(track, rights, mediaType));
         }
         return root;
     }

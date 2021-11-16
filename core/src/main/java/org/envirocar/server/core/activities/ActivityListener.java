@@ -16,6 +16,9 @@
  */
 package org.envirocar.server.core.activities;
 
+import com.google.common.eventbus.AllowConcurrentEvents;
+import com.google.common.eventbus.Subscribe;
+import com.google.inject.Inject;
 import org.envirocar.server.core.dao.ActivityDao;
 import org.envirocar.server.core.event.ChangedGroupEvent;
 import org.envirocar.server.core.event.ChangedProfileEvent;
@@ -27,10 +30,6 @@ import org.envirocar.server.core.event.JoinedGroupEvent;
 import org.envirocar.server.core.event.LeftGroupEvent;
 import org.envirocar.server.core.event.UnfriendedUserEvent;
 
-import com.google.common.eventbus.AllowConcurrentEvents;
-import com.google.common.eventbus.Subscribe;
-import com.google.inject.Inject;
-
 /**
  * TODO JavaDoc
  *
@@ -41,8 +40,7 @@ public class ActivityListener {
     private final ActivityFactory fac;
 
     @Inject
-    public ActivityListener(ActivityDao dao,
-                            ActivityFactory factory) {
+    public ActivityListener(ActivityDao dao, ActivityFactory factory) {
         this.dao = dao;
         this.fac = factory;
     }
@@ -50,71 +48,54 @@ public class ActivityListener {
     @Subscribe
     @AllowConcurrentEvents
     public void onChangedGroupEvent(ChangedGroupEvent e) {
-        dao.save(fac.createGroupActivity(ActivityType.CHANGED_GROUP,
-                                         e.getUser(),
-                                         e.getGroup()));
+        this.dao.save(this.fac.createGroupActivity(ActivityType.CHANGED_GROUP, e.getUser(), e.getGroup()));
     }
 
     @Subscribe
     @AllowConcurrentEvents
     public void onChangedProfileEvent(ChangedProfileEvent e) {
-        dao.save(fac.createActivity(ActivityType.CHANGED_PROFILE,
-                                    e.getUser()));
+        this.dao.save(this.fac.createActivity(ActivityType.CHANGED_PROFILE, e.getUser()));
     }
 
     @Subscribe
     @AllowConcurrentEvents
     public void onCreatedGroupEvent(CreatedGroupEvent e) {
-        dao.save(fac.createGroupActivity(ActivityType.CREATED_GROUP,
-                                         e.getUser(),
-                                         e.getGroup()));
+        this.dao.save(this.fac.createGroupActivity(ActivityType.CREATED_GROUP, e.getUser(), e.getGroup()));
     }
 
     @Subscribe
     @AllowConcurrentEvents
     public void onCreatedTrackEvent(CreatedTrackEvent e) {
-        dao.save(fac.createTrackActivity(ActivityType.CREATED_TRACK,
-                                         e.getUser(),
-                                         e.getTrack()));
+        this.dao.save(this.fac.createTrackActivity(ActivityType.CREATED_TRACK, e.getUser(), e.getTrack()));
     }
 
     @Subscribe
     @AllowConcurrentEvents
     public void onDeletedGroupEvent(DeletedGroupEvent e) {
-        dao.save(fac.createGroupActivity(ActivityType.DELETED_GROUP,
-                                         e.getUser(),
-                                         e.getGroup()));
+        this.dao.save(this.fac.createGroupActivity(ActivityType.DELETED_GROUP, e.getUser(), e.getGroup()));
     }
 
     @Subscribe
     @AllowConcurrentEvents
     public void onFriendedUserEvent(FriendedUserEvent e) {
-        dao.save(fac.createUserActivity(ActivityType.FRIENDED_USER,
-                                        e.getUser(),
-                                        e.getOther()));
+        this.dao.save(this.fac.createUserActivity(ActivityType.FRIENDED_USER, e.getUser(), e.getOther()));
     }
 
     @Subscribe
     @AllowConcurrentEvents
     public void onJoinedGroupEvent(JoinedGroupEvent e) {
-        dao.save(fac.createGroupActivity(ActivityType.JOINED_GROUP,
-                                         e.getUser(),
-                                         e.getGroup()));
+        this.dao.save(this.fac.createGroupActivity(ActivityType.JOINED_GROUP, e.getUser(), e.getGroup()));
     }
 
     @Subscribe
     @AllowConcurrentEvents
     public void onLeftGroupEvent(LeftGroupEvent e) {
-        dao.save(fac.createGroupActivity(ActivityType.LEFT_GROUP,
-                                         e.getUser(),
-                                         e.getGroup()));
+        this.dao.save(this.fac.createGroupActivity(ActivityType.LEFT_GROUP, e.getUser(), e.getGroup()));
     }
 
     @Subscribe
     @AllowConcurrentEvents
     public void onUnfriendedUserEvent(UnfriendedUserEvent e) {
-        dao.save(fac.createUserActivity(ActivityType.UNFRIENDED_USER,
-                                        e.getUser(),
-                                        e.getOther()));
+        this.dao.save(this.fac.createUserActivity(ActivityType.UNFRIENDED_USER, e.getUser(), e.getOther()));
     }
 }

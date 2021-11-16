@@ -17,29 +17,26 @@
 package org.envirocar.server.core.event;
 
 import org.envirocar.server.core.entities.Track;
+import org.envirocar.server.core.entities.TrackStatus;
 import org.envirocar.server.core.entities.User;
 
-/**
- * TODO JavaDoc
- *
- * @author Christian Autermann <autermann@uni-muenster.de>
- */
-public class CreatedTrackEvent implements TrackEvent {
-    private final User user;
-    private final Track track;
+public class ChangedTrackStatusEvent extends ChangedTrackEvent {
+    private final TrackStatus before;
 
-    public CreatedTrackEvent(User user, Track track) {
-        this.user = user;
-        this.track = track;
+    public ChangedTrackStatusEvent(User user, Track track, TrackStatus before) {
+        super(user, track);
+        this.before = before;
     }
 
-    @Override
-    public User getUser() {
-        return this.user;
+    public TrackStatus getAfter() {
+        return getTrack().getStatus();
     }
 
-    @Override
-    public Track getTrack() {
-        return this.track;
+    public TrackStatus getBefore() {
+        return this.before;
+    }
+
+    public boolean matches(TrackStatus before, TrackStatus after) {
+        return (before == null || before == getBefore()) && (after == null || after == getAfter());
     }
 }

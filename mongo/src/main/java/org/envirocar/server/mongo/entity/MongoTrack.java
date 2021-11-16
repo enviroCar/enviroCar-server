@@ -28,6 +28,7 @@ import dev.morphia.utils.IndexDirection;
 import org.bson.types.ObjectId;
 import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.core.entities.Track;
+import org.envirocar.server.core.entities.TrackStatus;
 import org.envirocar.server.core.entities.User;
 import org.joda.time.DateTime;
 import org.locationtech.jts.geom.Geometry;
@@ -54,6 +55,7 @@ public class MongoTrack extends MongoEntityBase implements Track {
     public static final String OBD_DEVICE = "obdDevice";
     public static final String TERMS_OF_USE_VERSION = "touVersion";
     public static final String LENGTH = "length";
+    public static final String STATUS = "status";
     public static final String BEGIN_ORDER = reverse(BEGIN);
     @Id
     private ObjectId id = new ObjectId();
@@ -82,6 +84,8 @@ public class MongoTrack extends MongoEntityBase implements Track {
     private String touVersion;
     @Property(LENGTH)
     private double length;
+    @Property(STATUS)
+    private TrackStatus status;
 
     @Override
     public MongoUser getUser() {
@@ -188,15 +192,15 @@ public class MongoTrack extends MongoEntityBase implements Track {
     @Override
     public String toString() {
         return toStringHelper()
-                       .add(IDENTIFIER, this.id)
-                       .add(NAME, this.name)
-                       .add(DESCRIPTION, this.description)
-                       .add(USER, this.user)
-                       .add(SENSOR, this.sensor)
-                       .add(BBOX, this.bbox)
-                       .add(BEGIN, this.begin)
-                       .add(END, this.end)
-                       .toString();
+                .add(IDENTIFIER, this.id)
+                .add(NAME, this.name)
+                .add(DESCRIPTION, this.description)
+                .add(USER, this.user)
+                .add(SENSOR, this.sensor)
+                .add(BBOX, this.bbox)
+                .add(BEGIN, this.begin)
+                .add(END, this.end)
+                .toString();
     }
 
     @Override
@@ -304,6 +308,16 @@ public class MongoTrack extends MongoEntityBase implements Track {
     @Override
     public boolean hasLength() {
         return getLength() != 0.0;
+    }
+
+    @Override
+    public TrackStatus getStatus() {
+        return this.status;
+    }
+
+    @Override
+    public void setStatus(TrackStatus status) {
+        this.status = status;
     }
 
 }

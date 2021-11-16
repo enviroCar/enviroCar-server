@@ -21,6 +21,9 @@ import com.google.inject.Inject;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.envirocar.server.core.entities.Track;
+import org.envirocar.server.core.entities.TrackStatus;
+import org.envirocar.server.core.event.ChangedTrackEvent;
+import org.envirocar.server.core.event.ChangedTrackStatusEvent;
 import org.envirocar.server.core.event.CreatedTrackEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,10 +44,27 @@ public class KafkaListener {
 
     @Subscribe
     public void onCreatedTrackEvent(CreatedTrackEvent e) {
-        Track track = e.getTrack();
-        ProducerRecord<String, Track> record = new ProducerRecord<>(topicName, track.getIdentifier(), track);
+        if (e.getTrack().getStatus() == TrackStatus.ONGOING) {
+            LOG.debug("Created ongoing track, won't publish");
+        } else {
+            publish(e.getTrack());
+        }
+    }
+
+    @Subscribe
+    public void onModifiedTrackEvent(ChangedTrackEvent e) {
+        if (e instanceof ChangedTrackStatusEvent) {
+            if (((ChangedTrackStatusEvent) e).matches(TrackStatus.ONGOING, TrackStatus.FINISHED)) {
+                LOG.debug("Finished ongoing track, publish");
+                publish(e.getTrack());
+            }
+        }
+    }
+
+    private void publish(Track track) {
+        ProducerRecord<String, Track> record = new ProducerRecord<>(this.topicName, track.getIdentifier(), track);
         LOG.info("Publishing track {} to kafka", record.key());
-        producer.send(record, (metadata, exception) -> {
+        this.producer.send(record, (metadata, exception) -> {
             if (exception != null) {
                 LOG.error("Error publishing track to kafka", exception);
             }

@@ -55,8 +55,12 @@ public interface DataService {
             TrackNotFoundException;
 
     Track modifyTrack(Track track, Track changes) throws
-            ValidationException,
-            IllegalModificationException;
+                                                  ValidationException,
+                                                  IllegalModificationException;
+
+    Track modifyTrack(Track track, Track changes, List<Measurement> measurements) throws
+                                                  ValidationException,
+                                                  IllegalModificationException;
 
     Tracks getTracks(TrackFilter request);
 

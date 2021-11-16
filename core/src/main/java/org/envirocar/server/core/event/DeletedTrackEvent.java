@@ -42,15 +42,15 @@ public class DeletedTrackEvent implements TrackEvent {
 
     @Override
     public Track getTrack() {
-        return track;
+        return this.track;
     }
 
     @Override
     public User getUser() {
-        return user;
+        return this.user;
     }
     
     public Measurements getMeasurements(){
-        return measurements;
+        return this.measurements;
     }
 }

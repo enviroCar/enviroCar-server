@@ -474,6 +474,11 @@ public class NonRestrictiveRights extends AbstractAccessRights {
     }
 
     @Override
+    public boolean canSeeStatusOf(Track t) {
+        return true;
+    }
+
+    @Override
     public boolean canDelete(Fueling f) {
         return true;
     }

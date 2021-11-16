@@ -128,4 +128,5 @@ public interface JSONConstants {
     String TOU_VERSION_KEY = "touVersion";
     String TRACK_COUNT = "trackCount";
     String COUNTS_KEY = "counts";
+    String STATUS_KEY = "status";
 }

@@ -26,7 +26,29 @@
         },
         "description": {
           "type": "string"
+        },
+        "appVersion": {
+          "type": "string"
+        },
+        "obdDevice": {
+          "type": "string"
+        },
+        "touVersion": {
+          "type": "string"
+        },
+        "length": {
+          "type": "number"
+        },
+        "status": {
+          "$ref": "definitions.json#/track-status"
         }
+      }
+    },
+    "features": {
+      "type": "array",
+      "minItems": 0,
+      "items": {
+        "$ref": "measurement.create.json#"
       }
     }
   }

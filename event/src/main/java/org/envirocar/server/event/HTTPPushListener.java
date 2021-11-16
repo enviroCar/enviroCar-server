@@ -30,8 +30,11 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.envirocar.server.core.entities.Track;
+import org.envirocar.server.core.entities.TrackStatus;
+import org.envirocar.server.core.event.ChangedTrackEvent;
 import org.envirocar.server.core.event.CreatedTrackEvent;
 import org.envirocar.server.core.event.DeletedTrackEvent;
+import org.envirocar.server.core.event.ChangedTrackStatusEvent;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.encoding.JSONEntityEncoder;
@@ -46,15 +49,14 @@ import java.io.IOException;
 public class HTTPPushListener {
     //TODO make configurable
     private static final String host = "http://ags.52north.org:8080/enviroCar-broker/";
-    private static final Logger logger = LoggerFactory.getLogger(HTTPPushListener.class);
+    private static final Logger LOG = LoggerFactory.getLogger(HTTPPushListener.class);
     private static final AccessRightsImpl DEFAULT_ACCESS_RIGHTS = new AccessRightsImpl();
     private final HttpClient client;
-    private final JSONEntityEncoder<Track> encoder;
+    private final JSONEntityEncoder<? super Track> encoder;
     private final ObjectWriter writer;
 
     @Inject
-    public HTTPPushListener(JSONEntityEncoder<Track> encoder,
-                            ObjectWriter writer) throws Exception {
+    public HTTPPushListener(JSONEntityEncoder<Track> encoder, ObjectWriter writer) {
         this.client = createClient();
         this.encoder = encoder;
         this.writer = writer;
@@ -62,7 +64,21 @@ public class HTTPPushListener {
 
     @Subscribe
     public void onCreatedTrackEvent(CreatedTrackEvent e) {
+        if (e.getTrack().getStatus() == TrackStatus.ONGOING) {
+            LOG.info("Created ongoing track, won't publish");
+            return;
+        }
         pushNewTrack(e.getTrack());
+    }
+
+    @Subscribe
+    public void onCreatedTrackEvent(ChangedTrackEvent e) {
+        if (e instanceof ChangedTrackStatusEvent) {
+            if (((ChangedTrackStatusEvent) e).matches(TrackStatus.ONGOING, TrackStatus.FINISHED)) {
+                LOG.debug("Finished ongoing track, publish");
+                pushNewTrack(e.getTrack());
+            }
+        }
     }
 
     @Subscribe
@@ -79,22 +95,21 @@ public class HTTPPushListener {
         try {
 
             MediaType mediaType = MediaTypes.jsonWithSchema(Schemas.TRACK);
-
-            ObjectNode jsonTrack = encoder.encodeJSON(track, DEFAULT_ACCESS_RIGHTS, mediaType);
-            String content = writer.writeValueAsString(jsonTrack);
+            ObjectNode jsonTrack = this.encoder.encodeJSON(track, DEFAULT_ACCESS_RIGHTS, mediaType);
+            String content = this.writer.writeValueAsString(jsonTrack);
             //logger.debug("Entity: {}", content);
             HttpEntity entity = new StringEntity(content, ContentType.APPLICATION_JSON);
             HttpPost hp = new HttpPost(host);
             hp.setEntity(entity);
             resp = this.client.execute(hp);
         } catch (IOException e) {
-            logger.warn(e.getMessage(), e);
+            LOG.warn(e.getMessage(), e);
         } finally {
             if (resp != null) {
                 try {
                     EntityUtils.consume(resp.getEntity());
                 } catch (IOException e) {
-                    logger.warn(e.getMessage());
+                    LOG.warn(e.getMessage());
                 }
             }
         }

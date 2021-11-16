@@ -40,6 +40,7 @@ import org.envirocar.server.rest.encoding.json.JsonNodeMessageBodyWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testcontainers.containers.KafkaContainer;
+import org.testcontainers.utility.DockerImageName;
 
 /**
  * TODO JavaDoc
@@ -62,7 +63,7 @@ public class EnviroCarServer extends ExternalResource {
         this.port = port;
         this.jettyServer = new Server(port);
         this.jettyServer.setStopAtShutdown(true);
-        this.kafka = new KafkaContainer().withEmbeddedZookeeper();
+        this.kafka = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:5.4.3")).withEmbeddedZookeeper();
         this.mongo = new MongoContainer();
     }
 

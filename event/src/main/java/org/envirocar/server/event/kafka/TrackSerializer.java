@@ -48,8 +48,8 @@ public class TrackSerializer implements Serializer<Track> {
         try {
             MediaType mediaType = MediaTypes.jsonWithSchema(Schemas.TRACK);
             AccessRightsImpl rights = new AccessRightsImpl();
-            ObjectNode jsonTrack = encoder.encodeJSON(data, rights, mediaType);
-            return objectMapper.writeValueAsBytes(jsonTrack);
+            ObjectNode jsonTrack = this.encoder.encodeJSON(data, rights, mediaType);
+            return this.objectMapper.writeValueAsBytes(jsonTrack);
         } catch (JsonProcessingException ex) {
             LOG.error("Error in serializing track", ex);
             return null;

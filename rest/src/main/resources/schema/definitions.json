@@ -79,7 +79,31 @@
       },
       "name": {
         "type": "string"
+      },
+      "begin": {
+        "type": "string",
+        "format": "date-time"
+      },
+      "end": {
+        "type": "string",
+        "format": "date-time"
+      },
+      "sensor": {
+        "$ref": "sensor.json#"
+      },
+      "length": {
+        "type": "number"
+      },
+      "status": {
+        "$ref": "#/track-status"
       }
     }
+  },
+  "track-status": {
+    "type": "string",
+    "enum": [
+      "finished",
+      "ongoing"
+    ]
   }
 }

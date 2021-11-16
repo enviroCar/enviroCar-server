@@ -17,7 +17,6 @@
 package org.envirocar.server.core.entities;
 
 import org.joda.time.DateTime;
-
 import org.locationtech.jts.geom.Geometry;
 
 /**
@@ -74,27 +73,40 @@ public interface Track extends BaseEntity {
 
     boolean hasEnd();
 
-	void setTouVersion(String touVersion);
+    void setTouVersion(String touVersion);
 
-	String getTouVersion();
+    String getTouVersion();
 
-	void setObdDevice(String obdDevice);
+    void setObdDevice(String obdDevice);
 
-	String getObdDevice();
+    String getObdDevice();
 
-	void setAppVersion(String appVersion);
+    void setAppVersion(String appVersion);
 
-	String getAppVersion();
+    String getAppVersion();
 
-	boolean hasAppVersion();
+    boolean hasAppVersion();
 
-	boolean hasObdDevice();
+    boolean hasObdDevice();
 
-	boolean hasTouVersion();
-	
-	double getLength();
-	
-	void setLength(double length);
+    boolean hasTouVersion();
 
-	boolean hasLength();
+    double getLength();
+
+    void setLength(double length);
+
+    boolean hasLength();
+
+    TrackStatus getStatus();
+
+    void setStatus(TrackStatus status);
+
+    default void setStatus(String status) {
+        setStatus(TrackStatus.fromString(status));
+    }
+
+    default boolean hasStatus() {
+        return getStatus() != null;
+    }
+
 }

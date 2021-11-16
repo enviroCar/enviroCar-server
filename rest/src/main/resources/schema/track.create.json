@@ -40,6 +40,9 @@
         },
         "length": {
           "type": "number"
+        },
+        "status": {
+          "$ref": "definitions.json#/track-status"
         }
       }
     },

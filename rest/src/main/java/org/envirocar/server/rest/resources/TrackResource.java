@@ -23,6 +23,7 @@ import org.envirocar.server.core.exception.IllegalModificationException;
 import org.envirocar.server.core.exception.ValidationException;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
+import org.envirocar.server.rest.TrackWithMeasurments;
 import org.envirocar.server.rest.auth.Authenticated;
 import org.envirocar.server.rest.schema.Schema;
 
@@ -54,12 +55,16 @@ public class TrackResource extends AbstractResource {
 
     @PUT
     @Schema(request = Schemas.TRACK_MODIFY)
-    @Consumes({MediaTypes.JSON})
+    @Consumes(MediaTypes.JSON)
     @Authenticated
     public Response modify(Track changes) throws IllegalModificationException, ValidationException {
-        checkRights(getRights().canModify(track));
-        getDataService().modifyTrack(track, changes);
-        return Response.ok().build();
+        checkRights(getRights().canModify(this.track));
+        if (changes instanceof TrackWithMeasurments) {
+            getDataService().modifyTrack(this.track, changes, ((TrackWithMeasurments) changes).getMeasurements());
+        } else {
+            getDataService().modifyTrack(this.track, changes);
+        }
+        return Response.noContent().build();
     }
 
     @GET
@@ -71,42 +76,42 @@ public class TrackResource extends AbstractResource {
                MediaTypes.CSV,
                MediaTypes.APPLICATION_ZIPPED_SHP})
     public Track get() {
-        return track;
+        return this.track;
     }
 
     @DELETE
     @Authenticated
     public void delete() {
-        checkRights(getRights().canDelete(track));
-        getDataService().deleteTrack(track);
+        checkRights(getRights().canDelete(this.track));
+        getDataService().deleteTrack(this.track);
     }
 
     @Path(MEASUREMENTS)
     public MeasurementsResource measurements() {
-        checkRights(getRights().canSeeMeasurementsOf(track));
-        return getResourceFactory().createMeasurementsResource(null, track);
+        checkRights(getRights().canSeeMeasurementsOf(this.track));
+        return getResourceFactory().createMeasurementsResource(null, this.track);
     }
 
     @Path(SENSOR)
     public SensorResource sensor() {
-        checkRights(getRights().canSeeSensorOf(track));
-        return getResourceFactory().createSensorResource(track.getSensor());
+        checkRights(getRights().canSeeSensorOf(this.track));
+        return getResourceFactory().createSensorResource(this.track.getSensor());
     }
 
     @Path(STATISTICS)
     public StatisticsResource statistics() {
-        checkRights(getRights().canSeeStatisticsOf(track));
-        return getResourceFactory().createStatisticsResource(track);
+        checkRights(getRights().canSeeStatisticsOf(this.track));
+        return getResourceFactory().createStatisticsResource(this.track);
     }
 
     @Path(SHARE)
     public ShareResource share() {
-        return getResourceFactory().createShareResource(track);
+        return getResourceFactory().createShareResource(this.track);
     }
 
     @Path(PREVIEW)
     public PreviewResource preview() {
-        return getResourceFactory().createPreviewResource(track);
+        return getResourceFactory().createPreviewResource(this.track);
 
     }
 }

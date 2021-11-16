@@ -17,7 +17,6 @@
 package org.envirocar.server.core.update;
 
 import org.envirocar.server.core.entities.Track;
-
 import org.envirocar.server.core.exception.IllegalModificationException;
 
 /**
@@ -31,6 +30,15 @@ public class TrackUpdater implements EntityUpdater<Track> {
             throws IllegalModificationException {
         if (changes.getBoundingBox() != null) {
             original.setBoundingBox(changes.getBoundingBox());
+        }
+        if (changes.getDescription() != null) {
+            original.setDescription(changes.getDescription());
+        }
+        if (changes.getName() != null) {
+            original.setName(changes.getName());
+        }
+        if (changes.getStatus() != null) {
+            original.setStatus(changes.getStatus());
         }
     }
 }

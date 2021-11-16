@@ -32,6 +32,6 @@ public class DeletedUserEvent implements UserCausedEvent {
 
     @Override
     public User getUser() {
-        return user;
+        return this.user;
     }
 }

@@ -43,9 +43,11 @@ import org.envirocar.server.core.entities.Sensors;
 import org.envirocar.server.core.entities.TermsOfUse;
 import org.envirocar.server.core.entities.TermsOfUseInstance;
 import org.envirocar.server.core.entities.Track;
+import org.envirocar.server.core.entities.TrackStatus;
 import org.envirocar.server.core.entities.Tracks;
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.event.ChangedTrackEvent;
+import org.envirocar.server.core.event.ChangedTrackStatusEvent;
 import org.envirocar.server.core.event.CreatedFuelingEvent;
 import org.envirocar.server.core.event.CreatedMeasurementEvent;
 import org.envirocar.server.core.event.CreatedPhenomenonEvent;
@@ -73,6 +75,7 @@ import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -91,10 +94,10 @@ public class DataServiceImpl implements DataService {
     private final TermsOfUseDao termsOfUseDao;
     private final FuelingDao fuelingDao;
     private final PrivacyStatementDao privacyStatementDao;
-    private final EntityValidator<Track> trackValidator;
-    private final EntityUpdater<Track> trackUpdater;
-    private final EntityValidator<Measurement> measurementValidator;
-    private final EntityValidator<Fueling> fuelingValidator;
+    private final EntityValidator<? super Track> trackValidator;
+    private final EntityUpdater<? super Track> trackUpdater;
+    private final EntityValidator<? super Measurement> measurementValidator;
+    private final EntityValidator<? super Fueling> fuelingValidator;
     private final EventBus eventBus;
     private final AnnouncementsDao announcementsDao;
     private final BadgesDao badgesDao;
@@ -109,7 +112,8 @@ public class DataServiceImpl implements DataService {
                            TermsOfUseDao termsOfUseDao,
                            PrivacyStatementDao privacyStatementDao,
                            AnnouncementsDao announcementsDao,
-                           BadgesDao badgesDao, FuelingDao fuelingDao,
+                           BadgesDao badgesDao,
+                           FuelingDao fuelingDao,
                            EntityValidator<Track> trackValidator,
                            EntityUpdater<Track> trackUpdater,
                            EntityValidator<Measurement> measurementValidator,
@@ -138,16 +142,55 @@ public class DataServiceImpl implements DataService {
     @Override
     public Track modifyTrack(Track track, Track changes)
             throws ValidationException, IllegalModificationException {
-        this.trackValidator.validateCreate(track);
+        return modifyTrack(track, changes, Collections.emptyList());
+    }
+
+    @Override
+    public Track modifyTrack(Track track, Track changes, List<Measurement> measurements)
+            throws ValidationException, IllegalModificationException {
+        this.trackValidator.validateUpdate(changes);
+
+        TrackStatus statusBefore = track.getStatus();
         this.trackUpdater.update(changes, track);
+        TrackStatus statusAfter = track.getStatus();
+
+        updateTrackProperties(track, measurements, track.getBegin(), track.getEnd());
         this.trackDao.save(track);
-        this.eventBus.post(new ChangedTrackEvent(track.getUser(), track));
+        for (Measurement m : measurements) {
+            this.measurementDao.create(m);
+        }
+        if (statusAfter == statusBefore) {
+            this.eventBus.post(new ChangedTrackEvent(track.getUser(), track));
+        } else {
+            this.eventBus.post(new ChangedTrackStatusEvent(track.getUser(), track, statusBefore));
+        }
         return track;
+    }
+
+    private void updateTrackProperties(Track track, List<Measurement> measurements, DateTime begin, DateTime end) {
+        for (Measurement m : measurements) {
+            m.setUser(track.getUser());
+            m.setSensor(track.getSensor());
+            m.setTrack(track);
+            this.measurementValidator.validateCreate(m);
+            if (begin == null || m.getTime().isBefore(begin)) {
+                begin = m.getTime();
+            }
+            if (end == null || m.getTime().isAfter(end)) {
+                end = m.getTime();
+            }
+        }
+        track.setBegin(begin);
+        track.setEnd(end);
+
+        if (!track.hasLength()) {
+            track.setLength(this.geomOps.calculateLength(measurements));
+        }
     }
 
     @Override
     public Track getTrack(String id) throws TrackNotFoundException {
-        Track track = trackDao.getById(id);
+        Track track = this.trackDao.getById(id);
         if (track == null) {
             throw new TrackNotFoundException(id);
         }
@@ -166,23 +209,7 @@ public class DataServiceImpl implements DataService {
     public Track createTrack(Track track, List<Measurement> measurements)
             throws ValidationException {
         this.trackValidator.validateCreate(track);
-        DateTime begin = null, end = null;
-        for (Measurement m : measurements) {
-            m.setUser(track.getUser());
-            this.measurementValidator.validateCreate(m);
-            if (begin == null || m.getTime().isBefore(begin)) {
-                begin = m.getTime();
-            }
-            if (end == null || m.getTime().isAfter(end)) {
-                end = m.getTime();
-            }
-        }
-        track.setBegin(begin);
-        track.setEnd(end);
-
-        if (!track.hasLength()) {
-            track.setLength(geomOps.calculateLength(measurements));
-        }
+        updateTrackProperties(track, measurements, null, null);
 
         this.trackDao.create(track);
         for (Measurement m : measurements) {
@@ -306,11 +333,11 @@ public class DataServiceImpl implements DataService {
     @Override
     public TermsOfUseInstance getTermsOfUseInstance(String id)
             throws ResourceNotFoundException {
-        return termsOfUseDao.getById(id)
-                            .orElseThrow(() -> {
-                                String message = String.format("TermsOfUse with id '%s' not found.", id);
-                                return new ResourceNotFoundException(message);
-                            });
+        return this.termsOfUseDao.getById(id)
+                                 .orElseThrow(() -> {
+                                     String message = String.format("TermsOfUse with id '%s' not found.", id);
+                                     return new ResourceNotFoundException(message);
+                                 });
     }
 
     @Override
@@ -320,11 +347,11 @@ public class DataServiceImpl implements DataService {
 
     @Override
     public PrivacyStatement getPrivacyStatement(String id) throws ResourceNotFoundException {
-        return privacyStatementDao.getById(id)
-                                  .orElseThrow(() -> {
-                                      String message = String.format("PrivacyStatement with id '%s' not found.", id);
-                                      return new ResourceNotFoundException(message);
-                                  });
+        return this.privacyStatementDao.getById(id)
+                                       .orElseThrow(() -> {
+                                           String message = String.format("PrivacyStatement with id '%s' not found.", id);
+                                           return new ResourceNotFoundException(message);
+                                       });
     }
 
     @Override
