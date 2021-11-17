@@ -16,8 +16,12 @@
  */
 package org.envirocar.server.mongo.dao;
 
-import java.util.List;
-
+import com.google.common.collect.Lists;
+import com.google.inject.Inject;
+import com.mongodb.WriteResult;
+import dev.morphia.Key;
+import dev.morphia.query.Query;
+import dev.morphia.query.UpdateResults;
 import org.bson.types.ObjectId;
 import org.envirocar.server.core.dao.TrackDao;
 import org.envirocar.server.core.entities.Track;
@@ -32,22 +36,16 @@ import org.envirocar.server.mongo.util.MorphiaUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import dev.morphia.Key;
-import dev.morphia.query.Query;
-import dev.morphia.query.UpdateResults;
-import com.google.common.collect.Lists;
-import com.google.inject.Inject;
-import com.mongodb.WriteResult;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * TODO JavaDoc
  *
  * @author Arne de Wall <a.dewall@52north.org>
  */
-public class MongoTrackDao extends AbstractMongoDao<ObjectId, MongoTrack, Tracks>
-        implements TrackDao {
-    private static final Logger log = LoggerFactory
-            .getLogger(MongoTrackDao.class);
+public class MongoTrackDao extends AbstractMongoDao<ObjectId, MongoTrack, Tracks> implements TrackDao {
+    private static final Logger log = LoggerFactory.getLogger(MongoTrackDao.class);
     private MongoMeasurementDao measurementDao;
 
     @Inject
@@ -113,10 +111,14 @@ public class MongoTrackDao extends AbstractMongoDao<ObjectId, MongoTrack, Tracks
         } else if (request.hasUser()) {
             q.field(MongoTrack.USER).equal(key(request.getUser()));
         }
+        if (request.hasStatus()) {
+            q.field(MongoTrack.STATUS).equal(request.getStatus());
+        }
         if (request.hasTemporalFilter()) {
-            MorphiaUtils.temporalFilter(q.field(MongoTrack.BEGIN),
-                                           q.field(MongoTrack.END),
-                                           request.getTemporalFilter());
+            MorphiaUtils.temporalFilter(
+                    q.field(MongoTrack.BEGIN),
+                    q.field(MongoTrack.END),
+                    request.getTemporalFilter());
         }
         return fetch(q, request.getPagination());
     }
@@ -152,8 +154,7 @@ public class MongoTrackDao extends AbstractMongoDao<ObjectId, MongoTrack, Tracks
     }
 
     @Override
-    protected Tracks createPaginatedIterable(Iterable<MongoTrack> i,
-                                             Pagination p, long count) {
+    protected Tracks createPaginatedIterable(Iterable<MongoTrack> i, Pagination p, long count) {
         return Tracks.from(i).withPagination(p).withElements(count).build();
     }
 
@@ -168,11 +169,7 @@ public class MongoTrackDao extends AbstractMongoDao<ObjectId, MongoTrack, Tracks
     }
 
     protected <T> List<Object> toIdList(List<Key<T>> keys) {
-        List<Object> ids = Lists.newArrayListWithExpectedSize(keys.size());
-        for (Key<T> key : keys) {
-            ids.add(key.getId());
-        }
-        return ids;
+        return keys.stream().map(Key::getId).collect(Collectors.toList());
     }
 
 }

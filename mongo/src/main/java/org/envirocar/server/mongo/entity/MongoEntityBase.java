@@ -52,7 +52,7 @@ public abstract class MongoEntityBase implements BaseEntity {
 
     @Override
     public DateTime getCreationTime() {
-        return creationTime;
+        return this.creationTime;
     }
 
     public void setCreationTime(DateTime creationDate) {
@@ -61,7 +61,7 @@ public abstract class MongoEntityBase implements BaseEntity {
 
     @Override
     public DateTime getModificationTime() {
-        return modificationTime;
+        return this.modificationTime;
     }
 
     public void setModificationTime(DateTime lastModificationDate) {
@@ -88,7 +88,7 @@ public abstract class MongoEntityBase implements BaseEntity {
     }
 
     public MongoDB getMongoDB() {
-        return mongoDB;
+        return this.mongoDB;
     }
 
     @Inject

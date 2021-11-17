@@ -60,6 +60,7 @@ public class MongoTrack extends MongoEntityBase implements Track {
     @Id
     private ObjectId id = new ObjectId();
     @Property(USER)
+    @Indexed
     private Key<MongoUser> user;
     @Transient
     private MongoUser _user;
@@ -85,6 +86,7 @@ public class MongoTrack extends MongoEntityBase implements Track {
     @Property(LENGTH)
     private double length;
     @Property(STATUS)
+    @Indexed
     private TrackStatus status;
 
     @Override

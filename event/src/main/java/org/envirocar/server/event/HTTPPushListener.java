@@ -16,6 +16,7 @@
  */
 package org.envirocar.server.event;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.eventbus.Subscribe;
@@ -95,7 +96,7 @@ public class HTTPPushListener {
         try {
 
             MediaType mediaType = MediaTypes.jsonWithSchema(Schemas.TRACK);
-            ObjectNode jsonTrack = this.encoder.encodeJSON(track, DEFAULT_ACCESS_RIGHTS, mediaType);
+            JsonNode jsonTrack = this.encoder.encodeJSON(track, DEFAULT_ACCESS_RIGHTS, mediaType);
             String content = this.writer.writeValueAsString(jsonTrack);
             //logger.debug("Entity: {}", content);
             HttpEntity entity = new StringEntity(content, ContentType.APPLICATION_JSON);

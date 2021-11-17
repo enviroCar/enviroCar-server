@@ -19,7 +19,9 @@ package org.envirocar.server.rest.resources;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import org.envirocar.server.core.SpatialFilter;
+import org.envirocar.server.core.TemporalFilter;
 import org.envirocar.server.core.entities.Track;
+import org.envirocar.server.core.entities.TrackStatus;
 import org.envirocar.server.core.entities.Tracks;
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.exception.BadRequestException;
@@ -56,8 +58,7 @@ public class TracksResource extends AbstractResource {
     private final GeometryFactory factory;
 
     @Inject
-    public TracksResource(@Assisted @Nullable User user,
-                          GeometryFactory factory) {
+    public TracksResource(@Assisted @Nullable User user, GeometryFactory factory) {
         this.user = user;
         this.factory = factory;
     }
@@ -65,24 +66,24 @@ public class TracksResource extends AbstractResource {
     @GET
     @Schema(response = Schemas.TRACKS)
     @Produces({MediaTypes.JSON, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
-    public Tracks get(@QueryParam(RESTConstants.BBOX) BoundingBox bbox) throws BadRequestException {
+    public Tracks get(@QueryParam(RESTConstants.BBOX) BoundingBox bbox,
+                      @QueryParam(RESTConstants.STATUS) TrackStatus status) throws BadRequestException {
         SpatialFilter spatialFilter = null;
         if (bbox != null) {
-            spatialFilter = SpatialFilter.bbox(bbox.asPolygon(factory));
+            spatialFilter = SpatialFilter.bbox(bbox.asPolygon(this.factory));
         }
-        return getDataService()
-                       .getTracks(new TrackFilter(user, spatialFilter,
-                                                  parseTemporalFilterForInterval(),
-                                                  getPagination()));
+        TemporalFilter temporalFilter = parseTemporalFilterForInterval();
+        TrackFilter filter = new TrackFilter(this.user, spatialFilter, temporalFilter, status, getPagination());
+        return getDataService().getTracks(filter);
     }
 
     @POST
     @Authenticated
     @Schema(request = Schemas.TRACK_CREATE)
-    @Consumes({MediaTypes.JSON})
+    @Consumes(MediaTypes.JSON)
     public Response create(Track track) throws ValidationException {
-        if (user != null) {
-            checkRights(getRights().isSelf(user));
+        if (this.user != null) {
+            checkRights(getRights().isSelf(this.user));
         }
         track.setUser(getCurrentUser());
 

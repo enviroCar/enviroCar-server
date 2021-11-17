@@ -71,13 +71,13 @@ public class SendVerificationCodeViaMailListener {
     public void onPasswordResetRequestedEvent(PasswordResetEvent e) {
         try {
             Path path;
-            if (Files.exists(templateFile)) {
-                path = templateFile;
+            if (Files.exists(this.templateFile)) {
+                path = this.templateFile;
             } else if (Files.exists(EMAIL_TEMPLATE_FILE.toAbsolutePath())) {
                 path = EMAIL_TEMPLATE_FILE.toAbsolutePath();
             } else {
                 LOG.error("Could not find email template file for password reset at {} or {}",
-                          templateFile, EMAIL_TEMPLATE_FILE.toAbsolutePath());
+                          this.templateFile, EMAIL_TEMPLATE_FILE.toAbsolutePath());
                 return;
             }
 

@@ -345,8 +345,8 @@ public class MongoUser extends MongoEntityBase implements User {
     }
 
     @Override
-    public void setAcceptedPrivacyStatement(boolean hasAccceptedPrivacyStatement) {
-        this.hasAcceptedPrivacyStatement = hasAccceptedPrivacyStatement;
+    public void setAcceptedPrivacyStatement(boolean hasAcceptedPrivacyStatement) {
+        this.hasAcceptedPrivacyStatement = hasAcceptedPrivacyStatement;
     }
 
     @Override

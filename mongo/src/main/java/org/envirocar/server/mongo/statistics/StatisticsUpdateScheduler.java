@@ -59,7 +59,7 @@ public class StatisticsUpdateScheduler {
                     try {
                         this.keyStatisticMutex.wait();
                     } catch (InterruptedException ex) {
-                        LOGGER.warn("interrupted wail waiting for statistsics", ex);
+                        LOGGER.warn("interrupted wail waiting for statistics", ex);
                     }
                 }
                 return;

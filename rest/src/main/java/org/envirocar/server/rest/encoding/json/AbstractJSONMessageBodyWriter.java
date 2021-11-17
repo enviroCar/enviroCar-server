@@ -16,6 +16,7 @@
  */
 package org.envirocar.server.rest.encoding.json;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
@@ -55,7 +56,7 @@ public abstract class AbstractJSONMessageBodyWriter<T> implements MessageBodyWri
     public void writeTo(T entity, Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType,
                         MultivaluedMap<String, Object> httpHeaders, OutputStream out)
             throws IOException, WebApplicationException {
-        writer.writeValue(out, encodeJSON(entity, mediaType));
+        this.writer.writeValue(out, encodeJSON(entity, mediaType));
         out.flush();
     }
 
@@ -64,5 +65,5 @@ public abstract class AbstractJSONMessageBodyWriter<T> implements MessageBodyWri
         return -1;
     }
 
-    public abstract ObjectNode encodeJSON(T entity, MediaType mediaType);
+    public abstract JsonNode encodeJSON(T entity, MediaType mediaType);
 }

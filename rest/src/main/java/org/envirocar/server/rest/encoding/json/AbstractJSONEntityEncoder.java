@@ -16,11 +16,10 @@
  */
 package org.envirocar.server.rest.encoding.json;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-import org.envirocar.server.rest.encoding.JSONEntityEncoder;
 import org.envirocar.server.rest.rights.AccessRights;
 import org.envirocar.server.rest.schema.JsonSchemaUriConfiguration;
 import org.joda.time.format.DateTimeFormatter;
@@ -33,8 +32,7 @@ import javax.ws.rs.core.MediaType;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public abstract class AbstractJSONEntityEncoder<T>
-        extends AbstractJSONMessageBodyWriter<T>
-        implements JSONEntityEncoder<T> {
+        extends AbstractJSONMessageBodyWriter<T> {
     private JsonNodeFactory jsonFactory;
     private DateTimeFormatter dateTimeFormat;
     private Provider<AccessRights> rights;
@@ -45,7 +43,7 @@ public abstract class AbstractJSONEntityEncoder<T>
     }
 
     public JsonNodeFactory getJsonFactory() {
-        return jsonFactory;
+        return this.jsonFactory;
     }
 
     @Inject
@@ -54,7 +52,7 @@ public abstract class AbstractJSONEntityEncoder<T>
     }
 
     public DateTimeFormatter getDateTimeFormat() {
-        return dateTimeFormat;
+        return this.dateTimeFormat;
     }
 
     @Inject
@@ -68,8 +66,8 @@ public abstract class AbstractJSONEntityEncoder<T>
     }
 
     @Override
-    public ObjectNode encodeJSON(T entity, MediaType mediaType) {
-        return encodeJSON(entity, rights.get(), mediaType);
+    public JsonNode encodeJSON(T entity, MediaType mediaType) {
+        return encodeJSON(entity, this.rights.get(), mediaType);
     }
 
     @Inject
@@ -78,6 +76,6 @@ public abstract class AbstractJSONEntityEncoder<T>
     }
 
     protected JsonSchemaUriConfiguration getSchemaUriConfiguration() {
-        return schemaUriConfiguration;
+        return this.schemaUriConfiguration;
     }
 }

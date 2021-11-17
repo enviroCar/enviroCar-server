@@ -26,6 +26,9 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.envirocar.server.core.dao.StatisticsDao;
 import org.envirocar.server.core.dao.UserStatisticDao;
+import org.envirocar.server.core.entities.TrackStatus;
+import org.envirocar.server.core.event.ChangedTrackEvent;
+import org.envirocar.server.core.event.ChangedTrackStatusEvent;
 import org.envirocar.server.core.event.CreatedTrackEvent;
 import org.envirocar.server.core.event.DeletedTrackEvent;
 
@@ -42,8 +45,21 @@ public class NewTrackListener {
 
     @Subscribe
     public void onCreatedTrackEvent(CreatedTrackEvent e) {
+        if (e.getTrack().getStatus() == TrackStatus.ONGOING) {
+            return;
+        }
         this.dao.updateStatisticsOnNewTrack(e.getTrack());
         this.userStatisticDao.updateStatisticsOnNewTrack(e.getTrack());
+    }
+
+    @Subscribe
+    public void onModifiedTrackEvent(ChangedTrackEvent e) {
+        if (e instanceof ChangedTrackStatusEvent) {
+            if (((ChangedTrackStatusEvent) e).matches(TrackStatus.ONGOING, TrackStatus.FINISHED)) {
+                this.dao.updateStatisticsOnNewTrack(e.getTrack());
+                this.userStatisticDao.updateStatisticsOnNewTrack(e.getTrack());
+            }
+        }
     }
 
     @Subscribe

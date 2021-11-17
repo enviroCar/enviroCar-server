@@ -38,37 +38,36 @@ public enum TemporalFilterOperator {
     metBy(true, false, false, false),
     overlapped(true, false, false, false),
     overlaps(true, false, false, false);
-    public static final DateTimeFormatter DATE_TIME_NO_MILLIS =
-            ISODateTimeFormat.dateTimeNoMillis();
+    public static final DateTimeFormatter DATE_TIME_NO_MILLIS = ISODateTimeFormat.dateTimeNoMillis();
     private final boolean intervalFilteredByInterval;
     private final boolean intervalFilteredByInstant;
-    private final boolean instantfilteredByInterval;
+    private final boolean instantFilteredByInterval;
     private final boolean instantFilteredByInstant;
 
     TemporalFilterOperator(boolean intervalFilteredByInterval,
                            boolean intervalFilteredByInstant,
-                           boolean instantfilteredByInterval,
+                           boolean instantFilteredByInterval,
                            boolean instantFilteredByInstant) {
         this.intervalFilteredByInterval = intervalFilteredByInterval;
         this.intervalFilteredByInstant = intervalFilteredByInstant;
-        this.instantfilteredByInterval = instantfilteredByInterval;
+        this.instantFilteredByInterval = instantFilteredByInterval;
         this.instantFilteredByInstant = instantFilteredByInstant;
     }
 
     public boolean supportsIntervalFilteredByInterval() {
-        return intervalFilteredByInterval;
+        return this.intervalFilteredByInterval;
     }
 
     public boolean supportsIntervalFilteredByInstant() {
-        return intervalFilteredByInstant;
+        return this.intervalFilteredByInstant;
     }
 
     public boolean supportsInstantFilteredByInterval() {
-        return instantfilteredByInterval;
+        return this.instantFilteredByInterval;
     }
 
     public boolean supportsInstantFilteredByInstant() {
-        return instantFilteredByInstant;
+        return this.instantFilteredByInstant;
     }
 
     public TemporalFilter parseFilterForInstant(String param) {
@@ -93,20 +92,18 @@ public enum TemporalFilterOperator {
         return parseTemporalFilter(param);
     }
 
-    protected TemporalFilter parseTemporalFilter(String param) {
+    private TemporalFilter parseTemporalFilter(String param) {
         if (param.indexOf(',') < 0) {
-            return new TemporalFilter(this,
-                    DATE_TIME_NO_MILLIS.parseDateTime(param));
+            return new TemporalFilter(this, DATE_TIME_NO_MILLIS.parseDateTime(param));
         } else {
             String[] split = param.split(",");
             if (split.length > 2) {
                 throw new IllegalArgumentException();
             }
             return new TemporalFilter(this,
-                    DATE_TIME_NO_MILLIS.parseDateTime(split[0]),
-                    DATE_TIME_NO_MILLIS.parseDateTime(split[1]));
+                                      DATE_TIME_NO_MILLIS.parseDateTime(split[0]),
+                                      DATE_TIME_NO_MILLIS.parseDateTime(split[1]));
         }
     }
-
 
 }

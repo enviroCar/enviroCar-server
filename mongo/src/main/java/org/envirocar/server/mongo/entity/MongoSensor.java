@@ -46,7 +46,7 @@ public class MongoSensor extends MongoEntityBase implements Sensor {
     @Override
     public String toString() {
         return toStringHelper()
-                       .add(ID, id).toString();
+                .add(ID, this.id).toString();
     }
 
     @Override
@@ -62,7 +62,7 @@ public class MongoSensor extends MongoEntityBase implements Sensor {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final MongoSensor other = (MongoSensor) obj;
+        MongoSensor other = (MongoSensor) obj;
         return Objects.equal(this.id, other.id);
     }
 
@@ -78,7 +78,7 @@ public class MongoSensor extends MongoEntityBase implements Sensor {
 
     @Override
     public Map<String, Object> getProperties() {
-        return properties;
+        return this.properties;
     }
 
     @Override
@@ -93,7 +93,7 @@ public class MongoSensor extends MongoEntityBase implements Sensor {
 
     @Override
     public boolean hasProperties() {
-        return properties.size() > 0;
+        return !this.properties.isEmpty();
     }
 
     @Override
@@ -112,7 +112,7 @@ public class MongoSensor extends MongoEntityBase implements Sensor {
     }
 
     public ObjectId getId() {
-        return id;
+        return this.id;
     }
 
     public void setId(ObjectId id) {

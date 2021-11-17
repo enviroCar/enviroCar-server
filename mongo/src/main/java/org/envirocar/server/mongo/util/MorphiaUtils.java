@@ -16,9 +16,8 @@
  */
 package org.envirocar.server.mongo.util;
 
-import org.envirocar.server.core.TemporalFilter;
-import org.joda.time.DateTime;
 import dev.morphia.query.FieldEnd;
+import org.envirocar.server.core.TemporalFilter;
 
 /**
  * TODO JavaDoc
@@ -29,121 +28,115 @@ public class MorphiaUtils {
     private MorphiaUtils() {
     }
 
-    public static void temporalFilter(FieldEnd<?> thisBegin, FieldEnd<?> thisEnd, TemporalFilter temporalFilter) {
-        final DateTime other = temporalFilter.getInstant();
-        final DateTime otherEnd = temporalFilter.getEnd();
-        final DateTime otherBegin = temporalFilter.getBegin();
-        switch (temporalFilter.getOperator()) {
+    public static void temporalFilter(FieldEnd<?> begin, FieldEnd<?> end, TemporalFilter tf) {
+        switch (tf.getOperator()) {
             case after:
-                if (temporalFilter.isInstant()) {
-                    thisBegin.greaterThan(other);
+                if (tf.isInstant()) {
+                    begin.greaterThan(tf.getInstant());
                 } else {
-                    thisBegin.greaterThan(otherEnd);
+                    begin.greaterThan(tf.getEnd());
                 }
                 break;
             case before:
-                if (temporalFilter.isInstant()) {
-                    thisEnd.lessThan(other);
+                if (tf.isInstant()) {
+                    end.lessThan(tf.getInstant());
                 } else {
-                    thisEnd.lessThan(otherBegin);
+                    end.lessThan(tf.getBegin());
                 }
                 break;
             case begins:
-                thisBegin.equal(otherBegin);
-                thisEnd.lessThan(otherEnd);
+                begin.equal(tf.getBegin());
+                end.lessThan(tf.getEnd());
                 break;
             case begunBy:
-                if (temporalFilter.isInstant()) {
-                    thisBegin.equal(other);
+                if (tf.isInstant()) {
+                    begin.equal(tf.getInstant());
                 } else {
-                    thisBegin.equal(otherBegin);
-                    thisEnd.greaterThan(otherEnd);
+                    begin.equal(tf.getBegin());
+                    end.greaterThan(tf.getEnd());
                 }
                 break;
             case contains:
-                if (temporalFilter.isInstant()) {
-                    thisBegin.lessThan(other);
-                    thisEnd.greaterThan(other);
+                if (tf.isInstant()) {
+                    begin.lessThan(tf.getInstant());
+                    end.greaterThan(tf.getInstant());
                 } else {
-                    thisBegin.lessThan(otherBegin);
-                    thisEnd.greaterThan(otherEnd);
+                    begin.lessThan(tf.getBegin());
+                    end.greaterThan(tf.getEnd());
                 }
                 break;
             case during:
-                thisBegin.greaterThan(otherBegin);
-                thisEnd.lessThan(otherEnd);
+                begin.greaterThan(tf.getBegin());
+                end.lessThan(tf.getEnd());
                 break;
             case endedBy:
-                if (temporalFilter.isInstant()) {
-                    thisEnd.equal(other);
+                if (tf.isInstant()) {
+                    end.equal(tf.getInstant());
                 } else {
-                    thisBegin.lessThan(otherBegin);
-                    thisEnd.equal(otherEnd);
+                    begin.lessThan(tf.getBegin());
+                    end.equal(tf.getEnd());
                 }
                 break;
             case ends:
-                thisBegin.greaterThan(otherBegin);
-                thisEnd.equal(otherEnd);
+                begin.greaterThan(tf.getBegin());
+                end.equal(tf.getEnd());
                 break;
             case equals:
-                thisBegin.equal(otherBegin);
-                thisEnd.equal(otherEnd);
+                begin.equal(tf.getBegin());
+                end.equal(tf.getEnd());
                 break;
             case meets:
-                thisEnd.equal(otherBegin);
+                end.equal(tf.getBegin());
                 break;
             case metBy:
-                thisBegin.equal(otherEnd);
+                begin.equal(tf.getEnd());
                 break;
             case overlapped:
-                thisBegin.greaterThan(otherBegin);
-                thisBegin.lessThan(otherEnd);
-                thisEnd.greaterThan(otherEnd);
+                begin.greaterThan(tf.getBegin());
+                begin.lessThan(tf.getEnd());
+                end.greaterThan(tf.getEnd());
                 break;
             case overlaps:
-                thisBegin.lessThan(otherBegin);
-                thisEnd.greaterThan(otherBegin);
-                thisEnd.lessThan(otherEnd);
+                begin.lessThan(tf.getBegin());
+                end.greaterThan(tf.getBegin());
+                end.lessThan(tf.getEnd());
                 break;
             default:
-                throw new IllegalArgumentException("unsupported temporal operator: " + temporalFilter.getOperator());
+                throw new IllegalArgumentException("unsupported temporal operator: " + tf.getOperator());
         }
     }
 
-    public static void temporalFilter(FieldEnd<?> time, TemporalFilter temporalFilter) {
-        final DateTime instant = temporalFilter.getInstant();
-        final DateTime otherEnd = temporalFilter.getEnd();
-        final DateTime otherBegin = temporalFilter.getBegin();
-        switch (temporalFilter.getOperator()) {
+    public static void temporalFilter(FieldEnd<?> time, TemporalFilter tf) {
+        switch (tf.getOperator()) {
             case after:
-                if (temporalFilter.isInstant()) {
-                    time.greaterThan(instant);
+                if (tf.isInstant()) {
+                    time.greaterThan(tf.getInstant());
                 } else {
-                    time.greaterThan(otherEnd);
+                    time.greaterThan(tf.getEnd());
                 }
                 break;
             case before:
-                if (temporalFilter.isInstant()) {
-                    time.lessThan(instant);
+                if (tf.isInstant()) {
+                    time.lessThan(tf.getInstant());
                 } else {
-                    time.lessThan(otherBegin);
+                    time.lessThan(tf.getBegin());
                 }
                 break;
             case begins:
-                time.equal(otherBegin);
+                time.equal(tf.getBegin());
                 break;
             case ends:
-                time.equal(otherEnd);
+                time.equal(tf.getEnd());
                 break;
             case during:
-                time.lessThan(otherEnd);
-                time.greaterThan(otherBegin);
+                time.lessThan(tf.getEnd());
+                time.greaterThan(tf.getBegin());
                 break;
             case equals:
-                time.equal(instant);
+                time.equal(tf.getInstant());
                 break;
             default:
-                throw new IllegalArgumentException("unsupported temporal operator: " + temporalFilter.getOperator());
+                throw new IllegalArgumentException("unsupported temporal operator: " + tf.getOperator());
         }
     }
 }

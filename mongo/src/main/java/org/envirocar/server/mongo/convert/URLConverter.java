@@ -43,8 +43,7 @@ public class URLConverter extends TypeConverter implements SimpleValueConverter 
     }
 
     @Override
-    public Object decode(Class c, Object o, MappedField i) throws
-                                                           MappingException {
+    public Object decode(Class c, Object o, MappedField i) throws MappingException {
         if (o == null) {
             return null;
         }

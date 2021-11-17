@@ -28,4 +28,5 @@ public interface RESTConstants {
     String TYPE = "type";
     String BBOX = "bbox";
     String NEAR_POINT = "nearPoint";
+    String STATUS = "status";
 }
