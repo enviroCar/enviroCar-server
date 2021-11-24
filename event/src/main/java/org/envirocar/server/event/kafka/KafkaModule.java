@@ -24,6 +24,7 @@ import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.Serializer;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.Track;
 
 import javax.inject.Named;
@@ -36,8 +37,10 @@ public final class KafkaModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(new TypeLiteral<Serializer<Track>>() {}).to(TrackSerializer.class);
+        bind(new TypeLiteral<Serializer<Measurement>>() {}).to(MeasurementSerializer.class);
         bind(new TypeLiteral<Serializer<String>>() {}).to(StringSerializer.class);
-        bind(KafkaListener.class).asEagerSingleton();
+        bind(KafkaTrackListener.class).asEagerSingleton();
+        bind(KafkaMeasurementListener.class).asEagerSingleton();
     }
 
     @Provides
@@ -54,16 +57,36 @@ public final class KafkaModule extends AbstractModule {
     }
 
     @Provides
-    @Named(KafkaConstants.KAFKA_TOPIC)
-    public String topic(Properties properties) {
-        return getProperty(properties, KafkaConstants.KAFKA_TOPIC, "tracks");
+    @Named(KafkaConstants.KAFKA_TRACK_TOPIC)
+    public String tracksTopic(Properties properties) {
+        return getProperty(properties, KafkaConstants.KAFKA_TRACK_TOPIC, "tracks");
     }
 
     @Provides
-    public Producer<String, Track> createProducer(Serializer<String> keySerializer,
-                                                  Serializer<Track> valueSerializer,
-                                                  @Named(KafkaConstants.KAFKA_BROKERS) String brokers,
-                                                  @Named(KafkaConstants.KAFKA_CLIENT_ID) String clientId) {
+    @Named(KafkaConstants.KAFKA_MEASUREMENT_TOPIC)
+    public String measurementsTopic(Properties properties) {
+        return getProperty(properties, KafkaConstants.KAFKA_MEASUREMENT_TOPIC, "measurements");
+    }
+
+    @Provides
+    public Producer<String, Track> createTrackProducer(
+            Serializer<String> keySerializer,
+            Serializer<Track> valueSerializer,
+            @Named(KafkaConstants.KAFKA_BROKERS) String brokers,
+            @Named(KafkaConstants.KAFKA_CLIENT_ID) String clientId) {
+        Properties props = new Properties();
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, brokers);
+        props.put(ProducerConfig.CLIENT_ID_CONFIG, clientId);
+        props.put(ProducerConfig.MAX_REQUEST_SIZE_CONFIG, 157286400); // 150MB
+        return new KafkaProducer<>(props, keySerializer, valueSerializer);
+    }
+
+    @Provides
+    public Producer<String, Measurement> createMeasurementProducer(
+            Serializer<String> keySerializer,
+            Serializer<Measurement> valueSerializer,
+            @Named(KafkaConstants.KAFKA_BROKERS) String brokers,
+            @Named(KafkaConstants.KAFKA_CLIENT_ID) String clientId) {
         Properties props = new Properties();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, brokers);
         props.put(ProducerConfig.CLIENT_ID_CONFIG, clientId);
@@ -88,3 +111,4 @@ public final class KafkaModule extends AbstractModule {
         return Optional.ofNullable(property).filter(x -> !x.isEmpty());
     }
 }
+

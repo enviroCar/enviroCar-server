@@ -158,6 +158,7 @@ public class DataServiceImpl implements DataService {
         this.trackDao.save(track);
         for (Measurement m : measurements) {
             this.measurementDao.create(m);
+            this.eventBus.post(new CreatedMeasurementEvent(m.getUser(), m));
         }
         if (statusAfter == statusBefore) {
             this.eventBus.post(new ChangedTrackEvent(track.getUser(), track));

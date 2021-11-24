@@ -17,7 +17,8 @@
 package org.envirocar.server.event.kafka;
 
 public interface KafkaConstants {
-    String KAFKA_TOPIC = "kafka.topic";
+    String KAFKA_MEASUREMENT_TOPIC = "kafka.topic.measurement";
+    String KAFKA_TRACK_TOPIC = "kafka.topic.track";
     String KAFKA_BROKERS = "kafka.brokers";
     String KAFKA_CLIENT_ID = "kafka.clientId";
 }

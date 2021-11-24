@@ -22,6 +22,8 @@ import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Iterators;
 import com.google.inject.Inject;
 import com.sun.jersey.api.client.ClientResponse;
 import org.apache.kafka.clients.admin.AdminClient;
@@ -35,6 +37,7 @@ import org.apache.kafka.common.serialization.Deserializer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.envirocar.server.core.entities.TrackStatus;
 import org.envirocar.server.core.util.GeoJSONConstants;
+import org.envirocar.server.event.kafka.KafkaConstants;
 import org.envirocar.server.rest.JSONConstants;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.resources.RootResource;
@@ -42,13 +45,16 @@ import org.junit.ClassRule;
 import org.junit.Test;
 import org.testcontainers.containers.KafkaContainer;
 
+import javax.inject.Named;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.Year;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
@@ -81,12 +87,16 @@ public class TrackChunkTest extends ResourceTestBase {
     private ObjectMapper mapper;
     @Inject
     private JsonNodeFactory nodeFactory;
-
     @ClassRule
     public static final EnviroCarServer server = new EnviroCarServer();
-
     @Inject
     private KafkaContainer kafkaContainer;
+    @Inject
+    @Named(KafkaConstants.KAFKA_TRACK_TOPIC)
+    private String trackTopic;
+    @Inject
+    @Named(KafkaConstants.KAFKA_MEASUREMENT_TOPIC)
+    private String measurementTopic;
 
     @Override
     protected EnviroCarServer getServer() {
@@ -108,11 +118,12 @@ public class TrackChunkTest extends ResourceTestBase {
                         ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers,
                         ConsumerConfig.GROUP_ID_CONFIG, "test-" + UUID.randomUUID(),
                         ConsumerConfig.FETCH_MAX_BYTES_CONFIG, 157286400,
-                        ConsumerConfig.MAX_PARTITION_FETCH_BYTES_CONFIG, 157286400
+                        ConsumerConfig.MAX_PARTITION_FETCH_BYTES_CONFIG, 157286400,
+                        ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 2000
                                ),
                 new StringDeserializer(),
                 new KafkaJacksonDeserializer<>(JsonNode.class, this.mapper));
-        consumer.subscribe(Collections.singletonList(TOPIC_NAME));
+        consumer.subscribe(Arrays.asList(this.trackTopic, this.measurementTopic));
         return consumer;
     }
 
@@ -153,7 +164,10 @@ public class TrackChunkTest extends ResourceTestBase {
 
             // check that there are no published tracks
             records = kafkaConsumer.poll(Duration.ofSeconds(2));
-            assertThat(records.count(), is(0));
+            assertThat(records.count(), is(features.size()));
+            assertThat(Iterables.size(records.records(this.trackTopic)), is(0));
+            assertThat(Iterables.size(records.records(this.measurementTopic)), is(features.size()));
+
 
             // finish the track
             response = putTrack(createTrackStatusUpdate(), location);

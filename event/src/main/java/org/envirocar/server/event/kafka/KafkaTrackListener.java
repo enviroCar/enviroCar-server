@@ -31,13 +31,14 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Named;
 import java.util.Objects;
 
-public class KafkaListener {
-    private static final Logger LOG = LoggerFactory.getLogger(KafkaListener.class);
+public class KafkaTrackListener {
+    private static final Logger LOG = LoggerFactory.getLogger(KafkaTrackListener.class);
     private final Producer<String, Track> producer;
     private final String topicName;
 
     @Inject
-    public KafkaListener(Producer<String, Track> producer, @Named(KafkaConstants.KAFKA_TOPIC) String topic) {
+    public KafkaTrackListener(Producer<String, Track> producer,
+                              @Named(KafkaConstants.KAFKA_TRACK_TOPIC) String topic) {
         this.producer = Objects.requireNonNull(producer);
         this.topicName = Objects.requireNonNull(topic);
     }

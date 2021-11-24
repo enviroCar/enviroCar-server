@@ -61,7 +61,7 @@ public class MeasurementJSONEncoder extends AbstractJSONEntityEncoder<Measuremen
         ObjectNode measurement = getJsonFactory().objectNode();
         measurement.put(GeoJSONConstants.TYPE_KEY, GeoJSONConstants.FEATURE_TYPE);
         if (entity.hasGeometry() && rights.canSeeGeometryOf(entity)) {
-            measurement.set(JSONConstants.GEOMETRY_KEY, geometryEncoder.encodeJSON(entity.getGeometry(), rights, mediaType));
+            measurement.set(JSONConstants.GEOMETRY_KEY, this.geometryEncoder.encodeJSON(entity.getGeometry(), rights, mediaType));
         }
 
         ObjectNode properties = measurement.putObject(GeoJSONConstants.PROPERTIES_KEY);
@@ -74,10 +74,10 @@ public class MeasurementJSONEncoder extends AbstractJSONEntityEncoder<Measuremen
 
         if (!getSchemaUriConfiguration().isSchema(mediaType, Schemas.TRACK)) {
             if (entity.hasSensor() && rights.canSeeSensorOf(entity)){
-                properties.set(JSONConstants.SENSOR_KEY, sensorProvider.encodeJSON(entity.getSensor(), rights, mediaType));
+                properties.set(JSONConstants.SENSOR_KEY, this.sensorProvider.encodeJSON(entity.getSensor(), rights, mediaType));
             }
             if (entity.hasUser() && rights.canSeeUserOf(entity)) {
-                properties.set(JSONConstants.USER_KEY, userProvider.encodeJSON(entity.getUser(), rights, mediaType));
+                properties.set(JSONConstants.USER_KEY, this.userProvider.encodeJSON(entity.getUser(), rights, mediaType));
             }
             if (entity.hasModificationTime() && rights.canSeeModificationTimeOf(entity)) {
                 properties.put(JSONConstants.MODIFIED_KEY, getDateTimeFormat().print(entity.getModificationTime()));
