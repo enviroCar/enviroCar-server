@@ -87,7 +87,7 @@ public class MongoTrack extends MongoEntityBase implements Track {
     private double length;
     @Property(STATUS)
     @Indexed
-    private TrackStatus status;
+    private TrackStatus status = TrackStatus.FINISHED;
 
     @Override
     public MongoUser getUser() {

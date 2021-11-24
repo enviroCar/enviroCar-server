@@ -16,7 +16,6 @@
  */
 package org.envirocar.server.mongo.dao;
 
-import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.mongodb.WriteResult;
 import dev.morphia.Key;
@@ -25,6 +24,7 @@ import dev.morphia.query.UpdateResults;
 import org.bson.types.ObjectId;
 import org.envirocar.server.core.dao.TrackDao;
 import org.envirocar.server.core.entities.Track;
+import org.envirocar.server.core.entities.TrackStatus;
 import org.envirocar.server.core.entities.Tracks;
 import org.envirocar.server.core.filter.MeasurementFilter;
 import org.envirocar.server.core.filter.TrackFilter;
@@ -112,7 +112,12 @@ public class MongoTrackDao extends AbstractMongoDao<ObjectId, MongoTrack, Tracks
             q.field(MongoTrack.USER).equal(key(request.getUser()));
         }
         if (request.hasStatus()) {
-            q.field(MongoTrack.STATUS).equal(request.getStatus());
+            if (request.getStatus() == TrackStatus.FINISHED) {
+                q.or(q.criteria(MongoTrack.STATUS).doesNotExist(),
+                     q.criteria(MongoTrack.STATUS).equal(request.getStatus()));
+            } else {
+                q.field(MongoTrack.STATUS).equal(request.getStatus());
+            }
         }
         if (request.hasTemporalFilter()) {
             MorphiaUtils.temporalFilter(
@@ -130,7 +135,7 @@ public class MongoTrackDao extends AbstractMongoDao<ObjectId, MongoTrack, Tracks
 
     void deleteUser(MongoUser user) {
         WriteResult result = delete(q().field(MongoTrack.USER).equal(key(user)));
-        
+
         if (result.wasAcknowledged()) {
             log.debug("Removed user {} from {} tracks",
                       user, result.getN());
