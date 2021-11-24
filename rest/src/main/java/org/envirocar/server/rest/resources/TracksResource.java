@@ -73,6 +73,9 @@ public class TracksResource extends AbstractResource {
             spatialFilter = SpatialFilter.bbox(bbox.asPolygon(this.factory));
         }
         TemporalFilter temporalFilter = parseTemporalFilterForInterval();
+        if (status == null) {
+            status = TrackStatus.FINISHED;
+        }
         TrackFilter filter = new TrackFilter(this.user, spatialFilter, temporalFilter, status, getPagination());
         return getDataService().getTracks(filter);
     }
