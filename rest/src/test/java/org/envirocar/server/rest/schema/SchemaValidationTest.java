@@ -49,9 +49,11 @@ public class SchemaValidationTest {
 
     @Test
     public void validate() {
-        schemas.stream().map(URI::create).forEach(schema ->
-                errors.checkThat(
-                        errors.checkSucceeds(() -> loader.load(schema)),
-                        validation.validInstanceOf(SCHEMA_URI)));
+        this.schemas.stream()
+                    .map(URI::create)
+                    .forEach(schema ->
+                                     this.errors.checkThat(
+                                             this.errors.checkSucceeds(() -> this.loader.load(schema)),
+                                             this.validation.validInstanceOf(SCHEMA_URI)));
     }
 }
