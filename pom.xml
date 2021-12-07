@@ -8,12 +8,8 @@
     <packaging>pom</packaging>
     <name>enviroCar server</name>
     <inceptionYear>2013</inceptionYear>
-    <ciManagement>
-        <system>jenkins</system>
-        <url>http://build.dev.52north.org/jenkins/view/enviroCar/job/envirocar-server-stable/</url>
-    </ciManagement>
     <scm>
-        <url>http://github.com/enviroCar/enviroCar-server</url>
+        <url>https://github.com/enviroCar/enviroCar-server</url>
         <connection>scm:git:ssh://github.com/enviroCar/enviroCar-server.git</connection>
         <developerConnection>scm:git:git+ssh://git@github.com/enviroCar/enviroCar-server.git</developerConnection>
         <tag>server-1.1.0</tag>
@@ -31,7 +27,7 @@
     <licenses>
         <license>
             <name>AGPLv3</name>
-            <url>http://www.gnu.org/licenses/agpl-3.0.html</url>
+            <url>https://www.gnu.org/licenses/agpl-3.0.html</url>
         </license>
     </licenses>
     <modules>
