@@ -42,7 +42,6 @@ public class Schemas {
     public static final String GROUP = "group";
     public static final String GROUP_CREATE = "group-create";
     public static final String GROUP_MODIFY = "group-modify";
-    public static final String GROUP_REF = "group-ref";
     public static final String GROUPS = "groups";
     public static final String MEASUREMENT = "measurement";
     public static final String MEASUREMENT_CREATE = "measurement-create";
@@ -90,7 +89,6 @@ public class Schemas {
             GEOMETRY,
             GROUP_CREATE,
             GROUP_MODIFY,
-            GROUP_REF,
             GROUP,
             GROUPS,
             MEASUREMENT_CREATE,
