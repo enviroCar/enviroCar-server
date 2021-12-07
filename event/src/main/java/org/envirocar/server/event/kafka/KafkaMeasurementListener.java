@@ -44,7 +44,7 @@ public class KafkaMeasurementListener {
     public void onCreatedTrackEvent(CreatedMeasurementEvent e) {
         Measurement m = e.getMeasurement();
         ProducerRecord<String, Measurement> record = new ProducerRecord<>(this.topicName, m.getIdentifier(), m);
-        LOG.info("Publishing measurement {} to kafka", record.key());
+        LOG.trace("Publishing measurement {} to kafka", record.key());
         this.producer.send(record, (metadata, exception) -> {
             if (exception != null) {
                 LOG.error("Error publishing measurement to kafka", exception);
