@@ -1,0 +1,745 @@
+openapi: 3.0.0
+info:
+  title: enviroCar REST API
+  description: enviroCar REST API
+  version: "1.0.0"
+  contact:
+    email: info@envirocar.org
+    name: "52\xB0North GmbH"
+    url: https://52north.org
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: https://envirocar.org/conditions.html?lng=en
+servers:
+  - url: https://envirocar.org/api/anonymous
+tags:
+  - description: General Operations
+    name: default
+  - description: Track Operations
+    name: tracks
+  - description: Measurement Operations
+    name: measurements
+  - description: Sensor Operations
+    name: sensors
+  - description: Phenomenon Operations
+    name: phenomenons
+  - description: Statistic Operations
+    name: statistics
+paths:
+  '/':
+    get:
+      operationId: getRoot
+      summary: Get the root index.
+      description: Get the root index.
+      tags:
+        - default
+      responses:
+        '200':
+          $ref: '#/components/responses/Root'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/phenomenons':
+    get:
+      operationId: getPhenomenons
+      summary: Get the phenomenon listing.
+      description: Get the phenomenon listing.
+      tags:
+        - phenomenons
+      responses:
+        '200':
+          $ref: '#/components/responses/Phenomenons'
+        '206':
+          $ref: '#/components/responses/Phenomenons'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      operationId: createPhenomenon
+      summary: Create new phenomenon.
+      description: Create new phenomenon.
+      tags:
+        - phenomenons
+      requestBody:
+        description: The phenomenon to create.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: 'phenomenon-create.json#'
+      parameters:
+        - $ref: '#/components/parameters/TermsOfUseHeader'
+        - $ref: '#/components/parameters/PrivacyStatementHeader'
+      responses:
+        '201':
+          description: The phenomenon was created.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '451':
+          $ref: '#/components/responses/UnavailableForLegalReasons'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/phenomenons/{phenomenonId}':
+    parameters:
+      - $ref: '#/components/parameters/phenomenonId'
+    get:
+      operationId: getPhenomenonById
+      summary: Get the phenomenon by id.
+      description: Get the phenomenon by id.
+      tags:
+        - phenomenons
+      responses:
+        '200':
+          $ref: '#/components/responses/Phenomenon'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/phenomenons/{phenomenonId}/statistic':
+    parameters:
+      - $ref: '#/components/parameters/phenomenonId'
+    get:
+      operationId: getPhenomenonStatistic
+      summary: Get the phenomenon statistics.
+      description: Get the phenomenon statistics.
+      tags:
+        - phenomenons
+        - statistics
+      responses:
+        '200':
+          $ref: '#/components/responses/Statistic'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/sensors':
+    get:
+      operationId: getSensors
+      summary: Get the Sensor listing.
+      description: Get the Sensor listing.
+      tags:
+        - sensors
+      parameters:
+        - $ref: '#/components/parameters/sensorType'
+      responses:
+        '200':
+          $ref: '#/components/responses/Sensors'
+        '206':
+          $ref: '#/components/responses/Sensors'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      operationId: createSensor
+      summary: Create a new Sensor.
+      description: Create a new Sensor.
+      tags:
+        - sensors
+      requestBody:
+        description: The sensor to create.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: 'sensor-create.json#'
+      parameters:
+        - $ref: '#/components/parameters/TermsOfUseHeader'
+        - $ref: '#/components/parameters/PrivacyStatementHeader'
+      responses:
+        '201':
+          description: The Sensor was created
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '451':
+          $ref: '#/components/responses/UnavailableForLegalReasons'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/sensors/{sensorId}':
+    parameters:
+      - $ref: '#/components/parameters/sensorId'
+    get:
+      operationId: getSensorById
+      summary: Get the Sensor by id.
+      description: Get the Sensor by id.
+      tags:
+        - sensors
+      responses:
+        '200':
+          $ref: '#/components/responses/Sensor'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/sensors/{sensorId}/statistics':
+    parameters:
+      - $ref: '#/components/parameters/sensorId'
+    get:
+      operationId: getSensorStatistics
+      summary: Get the Sensor statistics.
+      description: Get the Sensor statistics.
+      tags:
+        - sensors
+        - statistics
+      responses:
+        '200':
+          $ref: '#/components/responses/Statistics'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/tracks':
+    get:
+      operationId: getTracks
+      summary: Get the list of tracks.
+      description: Get the list of tracks.
+      tags:
+        - tracks
+      parameters:
+        - $ref: '#/components/parameters/bbox'
+        - $ref: '#/components/parameters/nearPoint'
+        - $ref: '#/components/parameters/after'
+        - $ref: '#/components/parameters/before'
+        - $ref: '#/components/parameters/begins'
+        - $ref: '#/components/parameters/begunBy'
+        - $ref: '#/components/parameters/contains'
+        - $ref: '#/components/parameters/during'
+        - $ref: '#/components/parameters/endedBy'
+        - $ref: '#/components/parameters/ends'
+        - $ref: '#/components/parameters/equals'
+        - $ref: '#/components/parameters/meets'
+        - $ref: '#/components/parameters/metBy'
+        - $ref: '#/components/parameters/overlapped'
+        - $ref: '#/components/parameters/overlaps'
+      responses:
+        '200':
+          $ref: '#/components/responses/Tracks'
+        '206':
+          $ref: '#/components/responses/Tracks'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      operationId: createTrack
+      summary: Create a new track.
+      description: Create a new track.
+      tags:
+        - tracks
+      requestBody:
+        description: The track to create.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: 'track-create.json#'
+      parameters:
+        - $ref: '#/components/parameters/TermsOfUseHeader'
+        - $ref: '#/components/parameters/PrivacyStatementHeader'
+      responses:
+        '201':
+          description: Created
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '451':
+          $ref: '#/components/responses/UnavailableForLegalReasons'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/tracks/{trackId}':
+    parameters:
+      - $ref: '#/components/parameters/trackId'
+    get:
+      operationId: getTrackById
+      summary: Get the specified track.
+      description: Get the specified track.
+      tags:
+        - tracks
+      responses:
+        '200':
+          $ref: '#/components/responses/Track'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/tracks/{trackId}/measurements':
+    parameters:
+      - $ref: '#/components/parameters/trackId'
+    get:
+      operationId: getTrackMeasurements
+      summary: Get the measurements of a track.
+      description: Get the measurements of a track.
+      tags:
+        - tracks
+        - measurements
+      responses:
+        '200':
+          $ref: '#/components/responses/Measurements'
+        '206':
+          $ref: '#/components/responses/Measurements'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/tracks/{trackId}/preview':
+    parameters:
+      - $ref: '#/components/parameters/trackId'
+    get:
+      operationId: previewTrack
+      summary: Get the preview image of the track.
+      description: Get the preview image of the track.
+      tags:
+        - tracks
+      responses:
+        '200':
+          $ref: '#/components/responses/PNG'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/tracks/{trackId}/share':
+    parameters:
+      - $ref: '#/components/parameters/trackId'
+    get:
+      operationId: shareTrack
+      summary: Get the share link of the track.
+      description: Get the share link of the track.
+      tags:
+        - tracks
+      parameters:
+        - $ref: '#/components/parameters/locale'
+      responses:
+        '200':
+          $ref: '#/components/responses/PNG'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/tracks/{trackId}/statistics':
+    parameters:
+      - $ref: '#/components/parameters/trackId'
+    get:
+      operationId: getTrackStatistics
+      summary: Get the statistics of a track.
+      description: Get the statistics of a track.
+      tags:
+        - tracks
+        - statistics
+      responses:
+        '200':
+          $ref: '#/components/responses/Statistics'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/tracks/{trackId}/sensor':
+    parameters:
+      - $ref: '#/components/parameters/trackId'
+    get:
+      operationId: getTrackSensor
+      summary: Get the sensor of a track.
+      description: Get the sensor of a track.
+      tags:
+        - tracks
+        - sensors
+      responses:
+        '200':
+          $ref: '#/components/responses/Sensor'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/measurements':
+    get:
+      operationId: getMeasurements
+      summary: Get the list of measurements.
+      description: Get the list of measurements.
+      tags:
+        - measurements
+      parameters:
+        - $ref: '#/components/parameters/bbox'
+        - $ref: '#/components/parameters/nearPoint'
+        - $ref: '#/components/parameters/after'
+        - $ref: '#/components/parameters/before'
+        - $ref: '#/components/parameters/begins'
+        - $ref: '#/components/parameters/begunBy'
+        - $ref: '#/components/parameters/contains'
+        - $ref: '#/components/parameters/during'
+        - $ref: '#/components/parameters/endedBy'
+        - $ref: '#/components/parameters/ends'
+        - $ref: '#/components/parameters/equals'
+        - $ref: '#/components/parameters/meets'
+        - $ref: '#/components/parameters/metBy'
+        - $ref: '#/components/parameters/overlapped'
+        - $ref: '#/components/parameters/overlaps'
+      responses:
+        '200':
+          $ref: '#/components/responses/Measurements'
+        '206':
+          $ref: '#/components/responses/Measurements'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      operationId: createMeasurement
+      summary: Create a new measurement.
+      description: Create a new measurement.
+      tags:
+        - measurements
+      requestBody:
+        description: The measurement to create.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: 'measurement-create.json#'
+      parameters:
+        - $ref: '#/components/parameters/TermsOfUseHeader'
+        - $ref: '#/components/parameters/PrivacyStatementHeader'
+      responses:
+        '201':
+          description: Created
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '451':
+          $ref: '#/components/responses/UnavailableForLegalReasons'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/measurements/{measurementId}':
+    parameters:
+      - $ref: '#/components/parameters/measurementId'
+    get:
+      operationId: getMeasurementById
+      summary: Get the specified measurement.
+      description: Get the specified measurement.
+      tags:
+        - measurements
+      responses:
+        '200':
+          $ref: '#/components/responses/Measurement'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+components:
+  parameters:
+    after:
+      description: The time instant or interval to be applied with the `after` operator.
+      in: query
+      name: after
+      required: false
+      schema:
+        $ref: '#/components/schemas/TemporalFilter'
+    bbox:
+      description: The bounding box the requested tracks have to intersect with.
+      explode: false
+      in: query
+      name: bbox
+      required: false
+      style: form
+      schema:
+        items:
+          type: number
+        maxItems: 4
+        minItems: 4
+        type: array
+    before:
+      description: The time instant or interval to be applied with the `before` operator.
+      in: query
+      name: before
+      required: false
+      schema:
+        $ref: '#/components/schemas/TemporalFilter'
+    begins:
+      description: The time instant or interval to be applied with the `begins` operator.
+      in: query
+      name: begins
+      required: false
+      schema:
+        $ref: '#/components/schemas/TemporalFilter'
+    begunBy:
+      description: The time instant or interval to be applied with the `begunBy` operator.
+      in: query
+      name: begunBy
+      required: false
+      schema:
+        $ref: '#/components/schemas/TemporalFilter'
+    contains:
+      description: The time instant or interval to be applied with the `contains`
+        operator.
+      in: query
+      name: contains
+      required: false
+      schema:
+        $ref: '#/components/schemas/TemporalFilter'
+    during:
+      description: The time instant or interval to be applied with the `during` operator.
+      in: query
+      name: during
+      required: false
+      schema:
+        $ref: '#/components/schemas/TemporalFilter'
+    endedBy:
+      description: The time instant or interval to be applied with the `endedBy` operator.
+      in: query
+      name: endedBy
+      required: false
+      schema:
+        $ref: '#/components/schemas/TemporalFilter'
+    ends:
+      description: The time instant or interval to be applied with the `ends` operator.
+      in: query
+      name: ends
+      required: false
+      schema:
+        $ref: '#/components/schemas/TemporalFilter'
+    equals:
+      description: The time instant or interval to be applied with the `equals` operator.
+      in: query
+      name: equals
+      required: false
+      schema:
+        $ref: '#/components/schemas/TemporalFilter'
+    locale:
+      in: query
+      name: locale
+      schema:
+        pattern: ^[a-z]{2}([-_][A-Z]{2})?$
+        type: string
+    measurementId:
+      description: The measurement id.
+      in: path
+      name: measurementId
+      required: true
+      schema:
+        type: string
+    meets:
+      description: The time instant or interval to be applied with the `meets` operator.
+      in: query
+      name: meets
+      required: false
+      schema:
+        $ref: '#/components/schemas/TemporalFilter'
+    metBy:
+      description: The time instant or interval to be applied with the `metBy` operator.
+      in: query
+      name: metBy
+      required: false
+      schema:
+        $ref: '#/components/schemas/TemporalFilter'
+    nearPoint:
+      description: The point to which the distance can not fall below a certain threshold.
+      explode: false
+      in: query
+      name: nearPoint
+      required: false
+      schema:
+        items:
+          type: number
+        maxItems: 3
+        minItems: 3
+        type: array
+      style: form
+    overlapped:
+      description: The time instant or interval to be applied with the `overlapped`
+        operator.
+      in: query
+      name: overlapped
+      required: false
+      schema:
+        $ref: '#/components/schemas/TemporalFilter'
+    overlaps:
+      description: The time instant or interval to be applied with the `overlaps`
+        operator.
+      in: query
+      name: overlaps
+      required: false
+      schema:
+        $ref: '#/components/schemas/TemporalFilter'
+    phenomenonId:
+      description: The phenomenon id.
+      in: path
+      name: phenomenonId
+      required: true
+      schema:
+        type: string
+    sensorId:
+      description: The Sensor id.
+      in: path
+      name: sensorId
+      required: true
+      schema:
+        type: string
+    sensorType:
+      description: The Sensor type.
+      in: query
+      name: type
+      required: false
+      schema:
+        type: string
+    trackId:
+      description: The track id.
+      in: path
+      name: trackId
+      required: true
+      schema:
+        type: string
+    TermsOfUseHeader:
+      in: header
+      name: Accept-Terms-Of-Use
+      description: Declare that the end user accepted the terms of use of this service.
+      required: true
+      schema:
+        type: boolean
+    PrivacyStatementHeader:
+      in: header
+      name: Accept-Privacy-Statement
+      description: Declare that the end user accepted the privacy statement.
+      required: true
+      schema:
+        type: boolean
+  responses:
+    PNG:
+      description: The image.
+      content:
+        image/png: {}
+    BadRequest:
+      description: The request was malformed.
+      content:
+        application/json:
+          schema:
+            $ref: 'exception.json#'
+    Forbidden:
+      description: The operation is not allowed by current user.
+      content:
+        application/json:
+          schema:
+            $ref: 'exception.json#'
+    InternalServerError:
+      description: An internal server error occured.
+      content:
+        application/json:
+          schema:
+            $ref: 'exception.json#'
+    NotFound:
+      description: The Resource could not be found.
+      content:
+        application/json:
+          schema:
+            $ref: 'exception.json#'
+    UnavailableForLegalReasons:
+      description: The operation requieres acceptance of the terms of use and privacy statement.
+      content:
+        application/json:
+          schema:
+            $ref: 'exception.json#'
+    Phenomenons:
+      description: The phenomenons.
+      content:
+        application/json:
+          schema:
+            $ref: 'phenomenons.json#'
+    Phenomenon:
+      description: The phenomenon.
+      content:
+        application/json:
+          schema:
+            $ref: 'phenomenon.json#'
+    Sensor:
+      description: The Sensor.
+      content:
+        application/json:
+          schema:
+            $ref: 'sensor.json#'
+    Sensors:
+      description: The Sensors.
+      content:
+        application/json:
+          schema:
+            $ref: 'sensor-create.json#'
+    Statistic:
+      description: The statistic.
+      content:
+        application/json:
+          schema:
+            $ref: 'statistic.json#'
+    Statistics:
+      description: The statistics.
+      content:
+        application/json:
+          schema:
+            $ref: 'statistics.json#'
+    Track:
+      description: The track.
+      content:
+        application/json:
+          schema:
+            $ref: 'track.json#'
+    Tracks:
+      description: The tracks.
+      content:
+        application/json:
+          schema:
+            $ref: 'tracks.json#'
+    Measurement:
+      description: The measurement.
+      content:
+        application/json:
+          schema:
+            $ref: 'measurement.json#'
+    Measurements:
+      description: The measurements.
+      content:
+        application/json:
+          schema:
+            $ref: 'measurements.json#'
+    Root:
+      description: The root.
+      content:
+        application/json:
+          schema:
+            $ref: 'root.json#'
+        text/yaml:
+          schema:
+            $ref: 'root.json#'
+  schemas:
+    TemporalFilter:
+      oneOf:
+        - type: string
+          description: Two comma-seperated date-times that form a temporal interval.
+        - format: date-time
+          type: string
+          description: The temporal instant.

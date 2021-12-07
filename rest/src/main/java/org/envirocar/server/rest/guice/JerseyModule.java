@@ -69,11 +69,11 @@ public class JerseyModule extends AbstractModule {
 
         private Map<String, String> getContainerFilterConfig() {
             return ImmutableMap.<String, String>builder()
-                           .put(ResourceConfig.PROPERTY_CONTAINER_REQUEST_FILTERS, classList(requestFilters()))
-                           .put(ResourceConfig.PROPERTY_CONTAINER_RESPONSE_FILTERS, classList(responseFilters()))
-                           .put(ResourceConfig.PROPERTY_RESOURCE_FILTER_FACTORIES, classList(filterFactories()))
-                           .put(ResourceConfig.FEATURE_DISABLE_WADL, "true")
-                           .build();
+                               .put(ResourceConfig.FEATURE_DISABLE_WADL, "true")
+                               .put(ResourceConfig.PROPERTY_CONTAINER_REQUEST_FILTERS, classList(requestFilters()))
+                               .put(ResourceConfig.PROPERTY_CONTAINER_RESPONSE_FILTERS, classList(responseFilters()))
+                               .put(ResourceConfig.PROPERTY_RESOURCE_FILTER_FACTORIES, classList(filterFactories()))
+                               .build();
         }
 
         private String classList(Iterable<? extends Class<?>> classes) {

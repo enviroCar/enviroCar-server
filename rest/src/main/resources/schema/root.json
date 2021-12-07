@@ -34,7 +34,7 @@
       "type": "string",
       "format": "uri"
     },
-    "privacyStatements:": {
+    "privacyStatements": {
       "type": "string",
       "format": "uri"
     },

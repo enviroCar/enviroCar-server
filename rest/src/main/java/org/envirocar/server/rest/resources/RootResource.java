@@ -53,6 +53,7 @@ public class RootResource extends AbstractResource {
     public static final String RESET_PASSWORD = "resetPassword";
     public static final String CONFIRM = "confirm";
     public static final String PRIVACY_STATEMENTS = "privacyStatements";
+    public static final String API_DOCS = "api-docs";
     private final JsonNodeFactory factory;
     private final CountService countService;
 
@@ -94,6 +95,7 @@ public class RootResource extends AbstractResource {
             root.put(JSONConstants.BADGES_KEY, getUriBuilder().path(BADGES).build().toString());
         }
 
+        root.put(JSONConstants.API_DOCS, getUriBuilder().path(API_DOCS).build().toString());
         root.put(JSONConstants.SCHEMAS, getUriBuilder().path(SCHEMAS).build().toString());
         root.put(JSONConstants.PRIVACY_STATEMENTS, getUriBuilder().path(PRIVACY_STATEMENTS).build().toString());
         root.put(JSONConstants.TERMS_OF_USE_KEY, getUriBuilder().path(TERMS_OF_USE).build().toString());
@@ -199,6 +201,11 @@ public class RootResource extends AbstractResource {
     @Path(CONFIRM)
     public ConfirmResource confirm() {
         return getResourceFactory().createConfirmResource();
+    }
+
+    @Path(API_DOCS)
+    public ApiDocsResource apiDocs() {
+        return getResourceFactory().createApiDocsResource();
     }
 
     @Path("rest")
