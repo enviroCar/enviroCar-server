@@ -23,13 +23,11 @@ import com.google.inject.Inject;
 import org.envirocar.server.core.CountService;
 import org.envirocar.server.core.Counts;
 import org.envirocar.server.rest.JSONConstants;
-import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.schema.Schema;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.UriBuilder;
 
 /**
@@ -49,7 +47,7 @@ public class RootResource extends AbstractResource {
     public static final String MEASUREMENTS = "measurements";
     public static final String STATISTICS = "statistics";
     public static final String TERMS_OF_USE = "termsOfUse";
-    public static final String SCHEMA = "schema";
+    public static final String SCHEMAS = "schemas";
     public static final String ANNOUNCEMENTS = "announcements";
     public static final String BADGES = "badges";
     public static final String RESET_PASSWORD = "resetPassword";
@@ -66,9 +64,8 @@ public class RootResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.ROOT)
-    @Produces({MediaTypes.JSON})
     public JsonNode get() {
-        ObjectNode root = factory.objectNode();
+        ObjectNode root = this.factory.objectNode();
         if (getRights().canSeeUsers()) {
             root.put(JSONConstants.USERS_KEY, getUriBuilder().path(USERS).build().toString());
         }
@@ -97,11 +94,11 @@ public class RootResource extends AbstractResource {
             root.put(JSONConstants.BADGES_KEY, getUriBuilder().path(BADGES).build().toString());
         }
 
-        root.put(JSONConstants.SCHEMA, getUriBuilder().path(SCHEMA).build().toString());
+        root.put(JSONConstants.SCHEMAS, getUriBuilder().path(SCHEMAS).build().toString());
         root.put(JSONConstants.PRIVACY_STATEMENTS, getUriBuilder().path(PRIVACY_STATEMENTS).build().toString());
         root.put(JSONConstants.TERMS_OF_USE_KEY, getUriBuilder().path(TERMS_OF_USE).build().toString());
 
-        Counts counts = countService.getCounts();
+        Counts counts = this.countService.getCounts();
 
         root.putObject(JSONConstants.COUNTS_KEY)
             .put(JSONConstants.USERS_KEY, counts.getUsers())
@@ -172,7 +169,7 @@ public class RootResource extends AbstractResource {
         return getResourceFactory().createTermsOfUseResource();
     }
 
-    @Path(SCHEMA)
+    @Path(SCHEMAS)
     public JsonSchemaResource schemas() {
         return getResourceFactory().createSchemaResource();
     }

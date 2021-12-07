@@ -35,17 +35,20 @@ public interface MediaTypes {
     String TURTLE_ALT = "application/x-turtle";
     String JPEG = "image/jpeg";
     String PNG = "image/png";
+    String YAML = "text/yaml";
     String APPLICATION_ZIPPED_SHP = "application/x-zipped-shp";
     String APPLICATION_X_SHAPEFILE = "application/x-shapefile";
 
     MediaType JSON_TYPE = MediaType.APPLICATION_JSON_TYPE;
+    MediaType YAML_TYPE = MediaType.valueOf(YAML);
     MediaType XML_RDF_TYPE = MediaType.valueOf(XML_RDF);
     MediaType APPLICATION_ZIPPED_SHP_TYPE = MediaType.valueOf(APPLICATION_ZIPPED_SHP);
     MediaType APPLICATION_X_SHAPEFILE_TYPE = MediaType.valueOf(APPLICATION_X_SHAPEFILE);
     MediaType CSV_TYPE = MediaType.valueOf(CSV);
     MediaType TURTLE_TYPE = MediaType.valueOf(TURTLE);
     MediaType TURTLE_ALT_TYPE = MediaType.valueOf(TURTLE_ALT);
-    MediaType EXCEPTION_TYPE = jsonWithSchema(Schemas.EXCEPTION);
+    MediaType JSON_EXCEPTION_TYPE = jsonWithSchema(Schemas.EXCEPTION);
+    MediaType YAML_EXCEPTION_TYPE = yamlWithSchema(Schemas.EXCEPTION);
 
     String SCHEMA_ATTRIBUTE = "schema";
 
@@ -57,15 +60,19 @@ public interface MediaTypes {
         return new MediaType(JSON_TYPE.getType(), JSON_TYPE.getSubtype(), schema(schema));
     }
 
+    static MediaType yamlWithSchema(String schema) {
+        return new MediaType(YAML_TYPE.getType(), YAML_TYPE.getSubtype(), schema(schema));
+    }
+
     static boolean hasSchemaAttribute(MediaType mediaType) {
         return mediaType != null
-               && mediaType.isCompatible(JSON_TYPE)
+               && (mediaType.isCompatible(JSON_TYPE) || mediaType.isCompatible(YAML_TYPE))
                && mediaType.getParameters().containsKey(SCHEMA_ATTRIBUTE);
     }
 
     static Optional<String> getSchemaAttribute(MediaType mediaType) {
         return Optional.ofNullable(mediaType)
-                       .filter(mt -> mt.isCompatible(JSON_TYPE))
+                       .filter(MediaTypes::hasSchemaAttribute)
                        .map(MediaType::getParameters)
                        .map(m -> m.get(SCHEMA_ATTRIBUTE));
     }

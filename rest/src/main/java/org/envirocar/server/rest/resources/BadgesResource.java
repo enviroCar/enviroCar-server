@@ -18,16 +18,13 @@ package org.envirocar.server.rest.resources;
 
 import org.envirocar.server.core.entities.Badges;
 import org.envirocar.server.core.exception.BadRequestException;
-import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.schema.Schema;
 
 import javax.ws.rs.GET;
-import javax.ws.rs.Produces;
 
 public class BadgesResource extends AbstractResource {
     @GET
-    @Produces({MediaTypes.JSON})
     @Schema(response = Schemas.BADGES)
     public Badges get() throws BadRequestException {
         return getDataService().getBadges(getPagination());

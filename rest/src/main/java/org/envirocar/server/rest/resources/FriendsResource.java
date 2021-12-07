@@ -54,10 +54,9 @@ public class FriendsResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.USERS)
-    @Produces({MediaTypes.JSON, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
     public Users get() {
-        checkRights(getRights().canSeeFriendsOf(user));
-        return getFriendService().getFriends(user);
+        checkRights(getRights().canSeeFriendsOf(this.user));
+        return getFriendService().getFriends(this.user);
     }
 
     @POST
@@ -69,31 +68,29 @@ public class FriendsResource extends AbstractResource {
             throw new BadRequestException();
         }
         User f = getUserService().getUser(friend.getName());
-        checkRights(getRights().canFriend(user, f));
-        getFriendService().addFriend(user, f);
+        checkRights(getRights().canFriend(this.user, f));
+        getFriendService().addFriend(this.user, f);
     }
 
     @Path(FRIEND)
     public UserResource friend(@PathParam("friend") String friendName) throws UserNotFoundException {
-        checkRights(getRights().canSeeFriendsOf(user));
-        User friends = getFriendService().getFriend(user, friendName);
-        return getResourceFactory().createFriendResource(user, friends);
+        checkRights(getRights().canSeeFriendsOf(this.user));
+        User friends = getFriendService().getFriend(this.user, friendName);
+        return getResourceFactory().createFriendResource(this.user, friends);
     }
 
     @GET
     @Path(INCOMING_FRIEND_REQUESTS)
-    @Produces(MediaTypes.JSON)
     public Users pendingIncomingFriendRequests() {
-        checkRights(getRights().canSeeFriendsOf(user));
-        return getFriendService().pendingIncomingRequests(user);
+        checkRights(getRights().canSeeFriendsOf(this.user));
+        return getFriendService().pendingIncomingRequests(this.user);
     }
 
     @GET
     @Path(OUTGOING_FRIEND_REQUESTS)
-    @Produces(MediaTypes.JSON)
     public Users pendingOutgoingFriendRequests() {
-        checkRights(getRights().canSeeFriendsOf(user));
-        return getFriendService().pendingOutgoingRequests(user);
+        checkRights(getRights().canSeeFriendsOf(this.user));
+        return getFriendService().pendingOutgoingRequests(this.user);
     }
 
     @POST
@@ -108,6 +105,6 @@ public class FriendsResource extends AbstractResource {
             throw new UserNotFoundException(friend.getName());
         }
 
-        getFriendService().removeFriend(f, user);
+        getFriendService().removeFriend(f, this.user);
     }
 }

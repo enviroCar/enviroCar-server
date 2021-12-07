@@ -26,7 +26,7 @@ import com.google.inject.name.Named;
 import org.envirocar.server.core.exception.BadRequestException;
 import org.envirocar.server.core.exception.ResourceNotFoundException;
 import org.envirocar.server.rest.JSONConstants;
-import org.envirocar.server.rest.MediaTypes;
+import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.guice.JsonSchemaModule;
 import org.envirocar.server.rest.schema.JsonSchemaUriLoader;
 import org.envirocar.server.rest.schema.JsonSchemaUriReplacer;
@@ -35,7 +35,6 @@ import org.envirocar.server.rest.schema.Schema;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.UriBuilder;
 import java.io.IOException;
 import java.net.URI;
@@ -68,10 +67,10 @@ public class JsonSchemaResource extends AbstractResource {
     }
 
     @GET
-    @Produces(MediaTypes.JSON)
+    @Schema(response = Schemas.SCHEMAS)
     public JsonNode get() {
-        ObjectNode root = nodeCreator.objectNode();
-        ArrayNode schemas = root.putArray(JSONConstants.SCHEMA);
+        ObjectNode root = this.nodeCreator.objectNode();
+        ArrayNode schemas = root.putArray(JSONConstants.SCHEMAS);
         UriBuilder builder = getUriInfo().getRequestUriBuilder().path(SCHEMA);
         this.schemas.stream().map(builder::build).map(URI::toString).forEach(schemas::add);
         return root;
@@ -80,17 +79,14 @@ public class JsonSchemaResource extends AbstractResource {
     @GET
     @Path(SCHEMA)
     @Schema(response = "http://json-schema.org/draft-04/schema#")
-    @Produces(MediaTypes.JSON)
     public JsonNode get(@PathParam("schema") String schema) throws ResourceNotFoundException {
-        String schemaName = schema.endsWith(".json") ? schema : String.format("%s.json", schema);
         try {
-            return replacer.replaceSchemaLinks(loader.load(new URI(schemaName)));
+            return this.replacer.replaceSchemaLinks(this.loader.load(new URI(schema)));
         } catch (URISyntaxException ex) {
             throw new BadRequestException(ex);
         } catch (IOException ex) {
-            throw new ResourceNotFoundException(String.format("schema %s not found", schemaName), ex);
+            throw new ResourceNotFoundException(String.format("schema %s not found", schema), ex);
         }
     }
-
 
 }

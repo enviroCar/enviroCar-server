@@ -39,12 +39,17 @@ public class JsonSchemaUriConfigurationImpl implements JsonSchemaUriConfiguratio
         if (uri.isAbsolute() || uri.getScheme() != null || uri.getPath().isEmpty()) {
             return uri;
         }
-        return uriInfo.get()
-                .getBaseUriBuilder()
-                .path(RootResource.SCHEMA)
-                .path(JsonSchemaResource.SCHEMA)
-                .fragment(uri.getFragment())
-                .build(uri.getPath());
+
+        String path = uri.getPath().endsWith(".json")
+                      ? uri.getPath().substring(0, uri.getPath().length() - ".json".length())
+                      : uri.getPath();
+
+        return this.uriInfo.get()
+                           .getBaseUriBuilder()
+                           .path(RootResource.SCHEMAS)
+                           .path(JsonSchemaResource.SCHEMA)
+                           .fragment(uri.getFragment())
+                           .build(path);
     }
 
     @Override
@@ -52,7 +57,7 @@ public class JsonSchemaUriConfigurationImpl implements JsonSchemaUriConfiguratio
         if (uri.isAbsolute() || uri.getScheme() != null || uri.getPath().isEmpty()) {
             return uri;
         }
-        String resourceName = String.format("/schema/%s", uri.getPath());
+        String resourceName = String.format("/schema/%s.json", uri.getPath());
         URL resource = JsonSchemaUriConfigurationImpl.class.getResource(resourceName);
         if (resource != null) {
             try {
@@ -60,7 +65,7 @@ public class JsonSchemaUriConfigurationImpl implements JsonSchemaUriConfiguratio
             } catch (URISyntaxException ignored) {
             }
         }
-        return uri;
+        return null;
     }
 
 }

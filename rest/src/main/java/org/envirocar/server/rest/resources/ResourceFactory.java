@@ -111,5 +111,7 @@ public interface ResourceFactory {
     PreviewResource createPreviewResource(Track track);
 
     ConfirmResource createConfirmResource();
+
+    ApiDocsResource createApiDocsResource();
 }
 

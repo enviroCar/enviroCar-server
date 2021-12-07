@@ -16,6 +16,10 @@
  */
 package org.envirocar.server.rest;
 
+import com.google.common.collect.ImmutableSet;
+
+import java.util.Set;
+
 /**
  * TODO JavaDoc
  *
@@ -23,49 +27,102 @@ package org.envirocar.server.rest;
  */
 public class Schemas {
 
-    public static final String ROOT = "root.json";
-    public static final String USERS = "users.json";
-    public static final String USER = "user.json";
-    public static final String USER_MODIFY = "user.modify.json";
-    public static final String USER_CREATE = "user.create.json";
-    public static final String USER_REF = "user.ref.json";
-    public static final String GROUPS = "groups.json";
-    public static final String GROUP = "group.json";
-    public static final String GROUP_MODIFY = "group.modify.json";
-    public static final String GROUP_CREATE = "group.create.json";
-    public static final String GROUP_REF = "group.ref.json";
-    public static final String TRACK = "track.json";
-    public static final String TRACKS = "tracks.json";
-    public static final String TRACK_CREATE = "track.create.json";
-    public static final String TRACK_MODIFY = "track.modify.json";
-    public static final String MEASUREMENT = "measurement.json";
-    public static final String MEASUREMENTS = "measurements.json";
-    public static final String MEASUREMENT_CREATE = "measurement.create.json";
-    public static final String SENSOR = "sensor.json";
-    public static final String SENSORS = "sensors.json";
-    public static final String SENSOR_CREATE = "sensor.create.json";
-    public static final String PHENOMENON = "phenomenon.json";
-    public static final String PHENOMENONS = "phenomenons.json";
-    public static final String PHENOMENON_CREATE = "phenomenon.create.json";
-    public static final String STATISTICS = "statistics.json";
-    public static final String STATISTIC = "statistic.json";
-    public static final String ACTIVITY = "activitiy.json";
-    public static final String ACTIVITIES = "activities.json";
-    public static final String TERMS_OF_USE = "terms-of-use.json";
-    public static final String TERMS_OF_USE_INSTANCE = "terms-of-use-instance.json";
-    public static final String ANNOUNCEMENTS = "announcements.json";
-    public static final String ANNOUNCEMENT = "announcement.json";
-    public static final String BADGE = "badge.json";
-    public static final String BADGES = "badges.json";
-    public static final String FUELING = "fueling.json";
-    public static final String FUELING_CREATE = "fueling.create.json";
-    public static final String FUELINGS = "fuelings.json";
-    public static final String PASSWORD_RESET_REQUEST = "passwordResetRequest.json";
-    public static final String PASSWORD_RESET_VERIFICATION = "passwordResetVerification.json";
-    public static final String USER_STATISTIC = "userStatistic.json";
-    public static final String PRIVACY_STATEMENT = "privacy-statement.json";
-    public static final String PRIVACY_STATEMENTS = "privacy-statements.json";
-    public static final String EXCEPTION = "exception.json";
+    public static final String ACTIVITIES = "activities";
+    public static final String ACTIVITY = "activity";
+    public static final String ANNOUNCEMENT = "announcement";
+    public static final String ANNOUNCEMENTS = "announcements";
+    public static final String BADGE = "badge";
+    public static final String BADGES = "badges";
+    public static final String DEFINITIONS = "definitions";
+    public static final String EXCEPTION = "exception";
+    public static final String FUELING = "fueling";
+    public static final String FUELING_CREATE = "fueling-create";
+    public static final String FUELINGS = "fuelings";
+    public static final String GEOMETRY = "geometry";
+    public static final String GROUP = "group";
+    public static final String GROUP_CREATE = "group-create";
+    public static final String GROUP_MODIFY = "group-modify";
+    public static final String GROUP_REF = "group-ref";
+    public static final String GROUPS = "groups";
+    public static final String MEASUREMENT = "measurement";
+    public static final String MEASUREMENT_CREATE = "measurement-create";
+    public static final String MEASUREMENTS = "measurements";
+    public static final String PASSWORD_RESET_REQUEST = "passwordResetRequest";
+    public static final String PASSWORD_RESET_VERIFICATION = "passwordResetVerification";
+    public static final String PHENOMENON = "phenomenon";
+    public static final String PHENOMENON_CREATE = "phenomenon-create";
+    public static final String PHENOMENON_MODIFY = "phenomenon-modify";
+    public static final String PHENOMENONS = "phenomenons";
+    public static final String PRIVACY_STATEMENT = "privacy-statement";
+    public static final String PRIVACY_STATEMENTS = "privacy-statements";
+    public static final String ROOT = "root";
+    public static final String SENSOR = "sensor";
+    public static final String SENSOR_CREATE = "sensor-create";
+    public static final String SENSORS = "sensors";
+    public static final String STATISTIC = "statistic";
+    public static final String STATISTICS = "statistics";
+    public static final String TERMS_OF_USE = "terms-of-use";
+    public static final String TERMS_OF_USE_INSTANCE = "terms-of-use-instance";
+    public static final String TRACK = "track";
+    public static final String TRACK_CREATE = "track-create";
+    public static final String TRACK_MODIFY = "track-modify";
+    public static final String TRACKS = "tracks";
+    public static final String USER = "user";
+    public static final String USER_CREATE = "user-create";
+    public static final String USER_MODIFY = "user-modify";
+    public static final String USER_REF = "user-ref";
+    public static final String USER_STATISTIC = "userStatistic";
+    public static final String USERS = "users";
+    public static final String SCHEMAS = "schemas";
+
+    public static final Set<String> ALL_SCHEMAS = ImmutableSet.of(
+            ACTIVITIES,
+            ACTIVITY,
+            ANNOUNCEMENT,
+            ANNOUNCEMENTS,
+            BADGE,
+            BADGES,
+            DEFINITIONS,
+            EXCEPTION,
+            FUELING_CREATE,
+            FUELING,
+            FUELINGS,
+            GEOMETRY,
+            GROUP_CREATE,
+            GROUP_MODIFY,
+            GROUP_REF,
+            GROUP,
+            GROUPS,
+            MEASUREMENT_CREATE,
+            MEASUREMENT,
+            MEASUREMENTS,
+            PASSWORD_RESET_REQUEST,
+            PASSWORD_RESET_VERIFICATION,
+            PHENOMENON_CREATE,
+            PHENOMENON_MODIFY,
+            PHENOMENON,
+            PHENOMENONS,
+            PRIVACY_STATEMENT,
+            PRIVACY_STATEMENTS,
+            ROOT,
+            SENSOR_CREATE,
+            SENSOR,
+            SENSORS,
+            STATISTIC,
+            STATISTICS,
+            TERMS_OF_USE_INSTANCE,
+            TERMS_OF_USE,
+            TRACK_CREATE,
+            TRACK_MODIFY,
+            TRACK,
+            TRACKS,
+            USER_CREATE,
+            USER_MODIFY,
+            USER_REF,
+            USER_STATISTIC,
+            USER,
+            USERS,
+            SCHEMAS);
 
     private Schemas() {
     }

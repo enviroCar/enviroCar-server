@@ -49,33 +49,30 @@ public class JsonSchemaUriReplacerImpl implements JsonSchemaUriReplacer {
     }
 
     private JsonNode handleArrayNode(JsonNode node) {
-        ArrayNode arrayNode = jsonNodeCreator.arrayNode();
+        ArrayNode arrayNode = this.jsonNodeCreator.arrayNode();
         IntStream.range(0, node.size())
-                .mapToObj(node::path)
-                .map(this::replaceSchemaLinks)
-                .forEachOrdered(arrayNode::add);
+                 .mapToObj(node::path)
+                 .map(this::replaceSchemaLinks)
+                 .forEachOrdered(arrayNode::add);
         return arrayNode;
     }
 
     private JsonNode handleObjectNode(JsonNode node) {
-        ObjectNode objectNode = jsonNodeCreator.objectNode();
+        ObjectNode objectNode = this.jsonNodeCreator.objectNode();
         node.fieldNames().forEachRemaining(name -> {
             JsonNode child = node.path(name);
-            if (name.equals("$ref") && child.isTextual()) {
+            if ("$ref".equals(name) && child.isTextual()) {
                 String textValue = child.textValue();
                 try {
-                    objectNode.put(name, schemaUriConfiguration.toExternalURI(new URI(textValue)).toString());
+                    objectNode.put(name, this.schemaUriConfiguration.toExternalURI(new URI(textValue)).toString());
                 } catch (URISyntaxException ignored) {
                     objectNode.set(name, child);
                 }
             } else {
                 objectNode.set(name, replaceSchemaLinks(child));
             }
-
-
         });
         return objectNode;
     }
-
 
 }

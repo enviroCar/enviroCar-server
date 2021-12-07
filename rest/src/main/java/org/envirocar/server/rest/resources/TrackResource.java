@@ -69,12 +69,6 @@ public class TrackResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.TRACK)
-    @Produces({MediaTypes.JSON,
-               MediaTypes.XML_RDF,
-               MediaTypes.TURTLE,
-               MediaTypes.TURTLE_ALT,
-               MediaTypes.CSV,
-               MediaTypes.APPLICATION_ZIPPED_SHP})
     public Track get() {
         return this.track;
     }

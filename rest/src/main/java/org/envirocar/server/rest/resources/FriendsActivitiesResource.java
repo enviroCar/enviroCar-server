@@ -24,12 +24,14 @@ import org.envirocar.server.core.activities.ActivityType;
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.exception.BadRequestException;
 import org.envirocar.server.core.filter.ActivityFilter;
-import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.RESTConstants;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.schema.Schema;
 
-import javax.ws.rs.*;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
 
 /**
  * TODO JavaDoc
@@ -47,20 +49,18 @@ public class FriendsActivitiesResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.ACTIVITIES)
-    @Produces({MediaTypes.JSON, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
     public Activities activities(@QueryParam(RESTConstants.TYPE) ActivityType type) throws BadRequestException {
-        return getUserService().getActivities(new ActivityFilter(user, getPagination()));
+        return getUserService().getActivities(new ActivityFilter(this.user, getPagination()));
     }
 
     @GET
     @Path(ACTIVITY)
     @Schema(response = Schemas.ACTIVITY)
-    @Produces({MediaTypes.JSON, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
     public Activity activity(@PathParam("id") String id) {
-        return getUserService().getActivity(new ActivityFilter(user, null), id);
+        return getUserService().getActivity(new ActivityFilter(this.user, null), id);
     }
 
     public User getUser() {
-        return user;
+        return this.user;
     }
 }

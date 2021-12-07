@@ -47,9 +47,9 @@ public class AvatarResource extends AbstractResource {
     }
 
     @GET
-    @Produces({MediaTypes.JPEG})
+    @Produces(MediaTypes.JPEG)
     public Response get(@DefaultValue(DEFAULT_SIZE) @QueryParam(SIZE) int size) {
-        return Response.temporaryRedirect(getURI(user, size)).build();
+        return Response.temporaryRedirect(getURI(this.user, size)).build();
     }
 
     protected URI getURI(User user, int size) {

@@ -49,13 +49,12 @@ public class UserStatisticResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.USER_STATISTIC)
-    @Produces({MediaTypes.JSON, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
     public UserStatistic UserStatistics() {
         return getUserStatisticService()
-                .getUserStatistic(new UserStatisticFilter(user));
+                .getUserStatistic(new UserStatisticFilter(this.user));
     }
 
     public User getUser() {
-        return user;
+        return this.user;
     }
 }

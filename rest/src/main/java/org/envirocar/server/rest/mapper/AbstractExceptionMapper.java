@@ -43,7 +43,7 @@ public abstract class AbstractExceptionMapper<T extends Throwable> implements Ex
         Response.StatusType status = getStatus(exception);
         JsonNode details = getDetails(exception);
         return Response.status(status)
-                .type(MediaTypes.EXCEPTION_TYPE)
+                .type(MediaTypes.JSON_EXCEPTION_TYPE)
                 .entity(new ErrorMessage(status, message, details, exception))
                 .build();
     }

@@ -46,22 +46,21 @@ public class MeasurementResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.MEASUREMENT)
-    @Produces({MediaTypes.JSON, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
     public Measurement get() {
-        return measurement;
+        return this.measurement;
     }
 
     @DELETE
     @Authenticated
     public void delete() {
-        checkRights(getRights().canDelete(measurement));
-        getDataService().deleteMeasurement(measurement);
+        checkRights(getRights().canDelete(this.measurement));
+        getDataService().deleteMeasurement(this.measurement);
     }
 
     @Path(SENSOR)
     public SensorResource sensor() {
-        checkRights(getRights().canSeeSensorOf(measurement));
-        Sensor sensor = measurement.getSensor();
+        checkRights(getRights().canSeeSensorOf(this.measurement));
+        Sensor sensor = this.measurement.getSensor();
         checkRights(getRights().canSee(sensor));
         return getResourceFactory().createSensorResource(sensor);
     }

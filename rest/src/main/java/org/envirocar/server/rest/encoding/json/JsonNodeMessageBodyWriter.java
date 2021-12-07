@@ -18,6 +18,7 @@ package org.envirocar.server.rest.encoding.json;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.rights.AccessRights;
 
 import javax.inject.Singleton;
@@ -32,7 +33,7 @@ import javax.ws.rs.ext.Provider;
  */
 @Provider
 @Singleton
-@Produces(MediaType.APPLICATION_JSON)
+@Produces({MediaType.APPLICATION_JSON, MediaTypes.YAML})
 public class JsonNodeMessageBodyWriter extends AbstractJSONMessageBodyWriter<JsonNode> {
     public JsonNodeMessageBodyWriter() {
         super(JsonNode.class);

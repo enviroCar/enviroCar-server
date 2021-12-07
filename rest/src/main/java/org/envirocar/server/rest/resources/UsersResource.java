@@ -41,7 +41,6 @@ public class UsersResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.USERS)
-    @Produces({MediaTypes.JSON, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
     public Users get() throws BadRequestException {
         checkRights(getRights().canSeeUsers());
         return getUserService().getUsers(getPagination());

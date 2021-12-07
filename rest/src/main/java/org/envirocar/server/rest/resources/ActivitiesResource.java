@@ -60,24 +60,22 @@ public class ActivitiesResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.ACTIVITIES)
-    @Produces({MediaTypes.JSON, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
     public Activities activities(@QueryParam(RESTConstants.TYPE) ActivityType type) throws BadRequestException {
-        return getUserService().getActivities(new ActivityFilter(group, user, type, getPagination()));
+        return getUserService().getActivities(new ActivityFilter(this.group, this.user, type, getPagination()));
     }
 
     @GET
     @Path(ACTIVITY)
     @Schema(response = Schemas.ACTIVITY)
-    @Produces({MediaTypes.JSON, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
     public Activity activity(@PathParam("id") String id) {
-        return getUserService().getActivity(new ActivityFilter(group, user, null, null), id);
+        return getUserService().getActivity(new ActivityFilter(this.group, this.user, null, null), id);
     }
 
     public User getUser() {
-        return user;
+        return this.user;
     }
 
     public Group getGroup() {
-        return group;
+        return this.group;
     }
 }

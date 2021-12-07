@@ -35,10 +35,9 @@ public class AnnouncementResource extends AbstractResource {
     }
 
     @GET
-    @Produces({MediaTypes.JSON})
     @Schema(response = Schemas.TERMS_OF_USE_INSTANCE)
     public Announcement announcement() {
-        return announcement;
+        return this.announcement;
     }
 
 }

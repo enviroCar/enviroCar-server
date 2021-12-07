@@ -67,15 +67,15 @@ public class UserResource extends AbstractResource {
     @PUT
     @Authenticated
     @Schema(request = Schemas.USER_MODIFY)
-    @Consumes({MediaTypes.JSON})
+    @Consumes(MediaTypes.JSON)
     @AllowOutdatedTerms
     public Response modify(User changes)
             throws UserNotFoundException, IllegalModificationException,
             ValidationException, ResourceAlreadyExistException {
-        checkRights(getRights().canModify(user));
+        checkRights(getRights().canModify(this.user));
 //        checkMail(user);
-        User modified = getUserService().modifyUser(user, changes);
-        if (modified.getName().equals(user.getName())) {
+        User modified = getUserService().modifyUser(this.user, changes);
+        if (modified.getName().equals(this.user.getName())) {
             return Response.noContent().build();
         } else {
             UriBuilder b = getUriInfo().getBaseUriBuilder();
@@ -90,16 +90,15 @@ public class UserResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.USER)
-    @Produces({MediaTypes.JSON, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
     public User get() {
-        return user;
+        return this.user;
     }
 
     @DELETE
     @Authenticated
     public void delete(@QueryParam(DELETE_CONTENT) @DefaultValue("false") boolean deleteContent)
             throws ResourceNotFoundException {
-        checkRights(getRights().canDelete(user));
+        checkRights(getRights().canDelete(this.user));
         getUserService().deleteUser(this.user, deleteContent);
     }
 
@@ -110,61 +109,61 @@ public class UserResource extends AbstractResource {
 
     @Path(GROUPS)
     public GroupsResource groups() {
-        checkRights(getRights().canSeeGroupsOf(user));
+        checkRights(getRights().canSeeGroupsOf(this.user));
         return getResourceFactory().createGroupsResource(this.user);
     }
 
     @Path(TRACKS)
     public TracksResource tracks() {
-        checkRights(getRights().canSeeTracksOf(user));
+        checkRights(getRights().canSeeTracksOf(this.user));
         return getResourceFactory().createTracksResource(this.user);
     }
 
     @Path(MEASUREMENTS)
     public MeasurementsResource measurements() {
-        checkRights(getRights().canSeeMeasurementsOf(user));
+        checkRights(getRights().canSeeMeasurementsOf(this.user));
         return getResourceFactory().createMeasurementsResource(this.user, null);
     }
 
     @Path(STATISTICS)
     public StatisticsResource statistics() {
-        checkRights(getRights().canSeeStatisticsOf(user));
+        checkRights(getRights().canSeeStatisticsOf(this.user));
         return getResourceFactory().createStatisticsResource(this.user);
     }
 
     @Path(USERSTATISTIC)
     public UserStatisticResource userStatistic() {
-        checkRights(getRights().canSeeUserStatisticsOf(user));
+        checkRights(getRights().canSeeUserStatisticsOf(this.user));
         return getResourceFactory().createUserStatisticsResource(this.user);
     }
 
     @Path(ACTIVITIES)
     public ActivitiesResource activities() {
-        checkRights(getRights().canSeeActivitiesOf(user));
+        checkRights(getRights().canSeeActivitiesOf(this.user));
         return getResourceFactory().createActivitiesResource(this.user);
     }
 
     @Path(FRIEND_ACTIVITIES)
     public FriendsActivitiesResource friendActivities() {
-        checkRights(getRights().canSeeFriendActivitiesOf(user));
+        checkRights(getRights().canSeeFriendActivitiesOf(this.user));
         return getResourceFactory().createFriendActivitiesResource(this.user);
     }
 
     @Path(AVATAR)
     public AvatarResource avatar() {
-        checkRights(getRights().canSeeAvatarOf(user));
+        checkRights(getRights().canSeeAvatarOf(this.user));
         return getResourceFactory().createAvatarResource(this.user);
     }
 
     @Path(FUELINGS)
     public FuelingsResource fuelings() {
-        checkRights(getRights().canSeeFuelingsOf(user));
+        checkRights(getRights().canSeeFuelingsOf(this.user));
         return getResourceFactory().createFuelingsResource(this.user);
     }
 
     @Path(SENSORS)
     public SensorsResource sensors() {
-        checkRights(getRights().canSee(user));
+        checkRights(getRights().canSee(this.user));
         return getResourceFactory().createSensorsResource(this.user);
     }
 }

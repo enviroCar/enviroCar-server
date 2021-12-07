@@ -98,7 +98,7 @@ public interface JSONConstants {
     String APP_VERSION_KEY = "appVersion";
     String OBD_DEVICE_KEY = "obdDevice";
     String ACCEPTED_PRIVACY_STATEMENT_VERSION = "acceptedPrivacyStatementVersion";
-    String SCHEMA = "schema";
+    String SCHEMAS = "schemas";
     String ANNOUNCEMENTS_KEY = "announcements";
     String ISSUED_DATE = "issuedDate";
     String CONTENTS = "contents";
@@ -129,4 +129,6 @@ public interface JSONConstants {
     String TRACK_COUNT = "trackCount";
     String COUNTS_KEY = "counts";
     String STATUS_KEY = "status";
+    String API_DOCS = "api-docs";
+    String SERVERS = "servers";
 }

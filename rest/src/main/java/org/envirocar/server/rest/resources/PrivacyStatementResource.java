@@ -19,13 +19,11 @@ package org.envirocar.server.rest.resources;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import org.envirocar.server.core.entities.PrivacyStatement;
-import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.rights.AllowOutdatedTerms;
 import org.envirocar.server.rest.schema.Schema;
 
 import javax.ws.rs.GET;
-import javax.ws.rs.Produces;
 
 public class PrivacyStatementResource extends TermsResource {
     private final PrivacyStatement entity;
@@ -38,9 +36,8 @@ public class PrivacyStatementResource extends TermsResource {
     @GET
     @AllowOutdatedTerms
     @Schema(response = Schemas.PRIVACY_STATEMENT)
-    @Produces({MediaTypes.JSON})
     public PrivacyStatement get() {
-        return setContents(entity);
+        return setContents(this.entity);
     }
 
 }
