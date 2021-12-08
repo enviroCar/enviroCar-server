@@ -25,6 +25,7 @@ import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Paths;
 
 public class JsonSchemaUriConfigurationImpl implements JsonSchemaUriConfiguration {
     private final Provider<UriInfo> uriInfo;
@@ -43,6 +44,8 @@ public class JsonSchemaUriConfigurationImpl implements JsonSchemaUriConfiguratio
         String path = uri.getPath().endsWith(".json")
                       ? uri.getPath().substring(0, uri.getPath().length() - ".json".length())
                       : uri.getPath();
+
+        path = Paths.get(path).getFileName().toString();
 
         return this.uriInfo.get()
                            .getBaseUriBuilder()
