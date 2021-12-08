@@ -1,4 +1,4 @@
-openapi: 3.0.0
+openapi: 3.0.3
 info:
   title: enviroCar REST API
   description: enviroCar REST API
@@ -41,6 +41,18 @@ paths:
           $ref: '#/components/responses/BadRequest'
         '5XX':
           $ref: '#/components/responses/InternalServerError'
+  '/api-docs':
+    get:
+      operationId: apiDocs
+      summary: Get the OpenAPI specification of this service.
+      description: Get the OpenAPI specification of this service.
+      tags:
+        - default
+      responses:
+        '200':
+          $ref: '#/components/responses/ApiDocs'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
   '/phenomenons':
     get:
       operationId: getPhenomenons
@@ -69,7 +81,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: 'phenomenon-create.json#'
+              $ref: 'schema/phenomenon-create.json'
       parameters:
         - $ref: '#/components/parameters/TermsOfUseHeader'
         - $ref: '#/components/parameters/PrivacyStatementHeader'
@@ -151,7 +163,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: 'sensor-create.json#'
+              $ref: 'schema/sensor-create.json'
       parameters:
         - $ref: '#/components/parameters/TermsOfUseHeader'
         - $ref: '#/components/parameters/PrivacyStatementHeader'
@@ -226,6 +238,7 @@ paths:
         - $ref: '#/components/parameters/metBy'
         - $ref: '#/components/parameters/overlapped'
         - $ref: '#/components/parameters/overlaps'
+        - $ref: '#/components/parameters/status'
       responses:
         '200':
           $ref: '#/components/responses/Tracks'
@@ -247,7 +260,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: 'track-create.json#'
+              $ref: 'schema/track-create.json'
       parameters:
         - $ref: '#/components/parameters/TermsOfUseHeader'
         - $ref: '#/components/parameters/PrivacyStatementHeader'
@@ -276,6 +289,47 @@ paths:
           $ref: '#/components/responses/Track'
         '400':
           $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+    put:
+      operationId: modifyTrack
+      summary: Update the specified track.
+      description: Update the specified track.
+      tags:
+        - tracks
+      requestBody:
+        description: The track update.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: 'schema/track-modify.json'
+      responses:
+        '201':
+          $ref: '#/components/responses/NoContent'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      operationId: deleteTrack
+      summary: Delete the specified track.
+      description: Delete the specified track.
+      tags:
+        - tracks
+      responses:
+        '201':
+          $ref: '#/components/responses/NoContent'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
         '5XX':
@@ -421,7 +475,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: 'measurement-create.json#'
+              $ref: 'schema/measurement-create.json'
       parameters:
         - $ref: '#/components/parameters/TermsOfUseHeader'
         - $ref: '#/components/parameters/PrivacyStatementHeader'
@@ -589,6 +643,12 @@ components:
       required: false
       schema:
         $ref: '#/components/schemas/TemporalFilter'
+    status:
+      in: query
+      name: status
+      required: false
+      schema:
+        $ref: 'schema/definitions.json#/track-status'
     phenomenonId:
       description: The phenomenon id.
       in: path
@@ -632,6 +692,8 @@ components:
       schema:
         type: boolean
   responses:
+    NoContent:
+      description: A empty response
     PNG:
       description: The image.
       content:
@@ -641,100 +703,140 @@ components:
       content:
         application/json:
           schema:
-            $ref: 'exception.json#'
+            $ref: 'schema/exception.json'
     Forbidden:
       description: The operation is not allowed by current user.
       content:
         application/json:
           schema:
-            $ref: 'exception.json#'
+            $ref: 'schema/exception.json'
     InternalServerError:
       description: An internal server error occured.
       content:
         application/json:
           schema:
-            $ref: 'exception.json#'
+            $ref: 'schema/exception.json'
     NotFound:
       description: The Resource could not be found.
       content:
         application/json:
           schema:
-            $ref: 'exception.json#'
+            $ref: 'schema/exception.json'
     UnavailableForLegalReasons:
       description: The operation requieres acceptance of the terms of use and privacy statement.
       content:
         application/json:
           schema:
-            $ref: 'exception.json#'
+            $ref: 'schema/exception.json'
     Phenomenons:
       description: The phenomenons.
       content:
         application/json:
           schema:
-            $ref: 'phenomenons.json#'
+            $ref: 'schema/phenomenons.json'
+        text/yaml:
+          schema:
+            $ref: 'schema/phenomenons.json'
     Phenomenon:
       description: The phenomenon.
       content:
         application/json:
           schema:
-            $ref: 'phenomenon.json#'
+            $ref: 'schema/phenomenon.json'
+        text/yaml:
+          schema:
+            $ref: 'schema/phenomenon.json'
     Sensor:
       description: The Sensor.
       content:
         application/json:
           schema:
-            $ref: 'sensor.json#'
+            $ref: 'schema/sensor.json'
+        text/yaml:
+          schema:
+            $ref: 'schema/sensor.json'
     Sensors:
       description: The Sensors.
       content:
         application/json:
           schema:
-            $ref: 'sensor-create.json#'
+            $ref: 'schema/sensors.json'
+        text/yaml:
+          schema:
+            $ref: 'schema/sensors.json'
     Statistic:
       description: The statistic.
       content:
         application/json:
           schema:
-            $ref: 'statistic.json#'
+            $ref: 'schema/statistic.json'
+        text/yaml:
+          schema:
+            $ref: 'schema/statistic.json'
     Statistics:
       description: The statistics.
       content:
         application/json:
           schema:
-            $ref: 'statistics.json#'
+            $ref: 'schema/statistics.json'
+        text/yaml:
+          schema:
+            $ref: 'schema/statistics.json'
     Track:
       description: The track.
       content:
         application/json:
           schema:
-            $ref: 'track.json#'
+            $ref: 'schema/track.json'
+        text/yaml:
+          schema:
+            $ref: 'schema/track.json'
     Tracks:
       description: The tracks.
       content:
         application/json:
           schema:
-            $ref: 'tracks.json#'
+            $ref: 'schema/tracks.json'
+        text/yaml:
+          schema:
+            $ref: 'schema/tracks.json'
     Measurement:
       description: The measurement.
       content:
         application/json:
           schema:
-            $ref: 'measurement.json#'
+            $ref: 'schema/measurement.json'
+        text/yaml:
+          schema:
+            $ref: 'schema/measurement.json'
     Measurements:
       description: The measurements.
       content:
         application/json:
           schema:
-            $ref: 'measurements.json#'
+            $ref: 'schema/measurements.json'
+        text/yaml:
+          schema:
+            $ref: 'schema/measurements.json'
     Root:
       description: The root.
       content:
         application/json:
           schema:
-            $ref: 'root.json#'
+            $ref: 'schema/root.yaml'
         text/yaml:
           schema:
-            $ref: 'root.json#'
+            $ref: 'schema/root.json'
+    ApiDocs:
+      description: The OpenAPI specification of this service.
+      content:
+        application/json:
+          schema:
+            $ref: 'https://spec.openapis.org/oas/3.0/schema/2021-09-28'
+        text/yaml:
+          schema:
+            $ref: 'https://spec.openapis.org/oas/3.0/schema/2021-09-28'
+        text/html: { }
   schemas:
     TemporalFilter:
       oneOf:

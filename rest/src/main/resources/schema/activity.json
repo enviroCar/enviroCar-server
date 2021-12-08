@@ -12,7 +12,7 @@
       "format": "date-time"
     },
     "user": {
-      "$ref": "user.json#"
+      "$ref": "user.json"
     },
     "type": {
       "type": "string"

@@ -50,7 +50,7 @@
       "type": "array",
       "minItems": 0,
       "items": {
-        "$ref": "measurement.create.json#"
+        "$ref": "measurement-create.json"
       }
     }
   }

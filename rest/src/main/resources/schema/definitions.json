@@ -89,7 +89,7 @@
         "format": "date-time"
       },
       "sensor": {
-        "$ref": "sensor.json#"
+        "$ref": "sensor.json"
       },
       "length": {
         "type": "number"
