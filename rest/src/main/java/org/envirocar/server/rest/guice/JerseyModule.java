@@ -40,15 +40,26 @@ import org.envirocar.server.rest.filter.URIContentNegotiationFilter;
 import org.envirocar.server.rest.pagination.PaginationFilter;
 import org.envirocar.server.rest.rights.HasAcceptedLatestLegalPoliciesResourceFilterFactory;
 import org.envirocar.server.rest.schema.JsonSchemaResourceFilterFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UncheckedIOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.stream.StreamSupport;
 
+import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toMap;
 
 /**
  * TODO JavaDoc
@@ -56,9 +67,31 @@ import static java.util.stream.Collectors.joining;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class JerseyModule extends AbstractModule {
+    private static final Logger LOG = LoggerFactory.getLogger(JerseyModule.class);
+    private static final String FILE_EXTENSIONS_PROPERTIES = "/file-extensions.properties";
+
     @Override
     protected void configure() {
         install(Modules.override(new JerseyModuleImpl()).with(new JerseyOverrideModule()));
+    }
+
+    @Provides
+    public Map<String, MediaType> getMapping() {
+        Properties properties = new Properties();
+        InputStream stream = URIContentNegotiationFilter.class.getResourceAsStream(FILE_EXTENSIONS_PROPERTIES);
+        if (stream == null) {
+            LOG.warn("no file extensions found");
+        } else {
+            try (InputStream inputStream = stream;
+                 InputStreamReader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8)) {
+                properties.load(reader);
+            } catch (IOException e) {
+                throw new UncheckedIOException(e);
+            }
+        }
+
+        return properties.stringPropertyNames().stream()
+                         .collect(toMap(identity(), ex -> MediaType.valueOf(properties.getProperty(ex))));
     }
 
     private static class JerseyModuleImpl extends JerseyServletModule {

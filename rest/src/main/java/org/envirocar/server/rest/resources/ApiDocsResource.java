@@ -29,20 +29,26 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Paths;
+import java.util.Map;
+import java.util.Optional;
 
 public class ApiDocsResource extends AbstractResource {
     private final JsonSchemaUriReplacer replacer;
     private final ObjectMapper objectMapper;
+    private final Map<String, MediaType> mediaTypeByExtension;
 
     @Inject
     public ApiDocsResource(JsonSchemaUriReplacer replacer,
-                           @YAML ObjectMapper objectMapper) {
+                           @YAML ObjectMapper objectMapper,
+                           Map<String, MediaType> mediaTypeByExtension) {
         this.replacer = replacer;
         this.objectMapper = objectMapper;
+        this.mediaTypeByExtension = mediaTypeByExtension;
     }
 
     private JsonNode loadYaml() throws IOException {
@@ -75,18 +81,28 @@ public class ApiDocsResource extends AbstractResource {
     }
 
     @GET
-    @Produces({"text/html", "text/css", "application/javascript"})
+    @Produces({"text/html", "text/css", "application/javascript", "image/png"})
     @Path("{file}")
     public Response ui(@PathParam("file") String file) {
         if (file == null || file.isEmpty()) {
             return Response.seeOther(getUriInfo().getAbsolutePathBuilder().path("index.html").build()).build();
         }
         String name = Paths.get(file).getFileName().toString();
-        InputStream resourceAsStream = ApiDocsResource.class.getResourceAsStream("/swagger-ui/" + name);
-        if (resourceAsStream == null) {
+        InputStream stream = ApiDocsResource.class.getResourceAsStream("/swagger-ui/" + name);
+        if (stream == null) {
             throw new NotFoundException();
         }
-        return Response.ok(resourceAsStream).build();
+        return getMediaType(name)
+                .map(mediaType -> Response.ok(stream, mediaType))
+                .orElseGet(() -> Response.ok(stream))
+                .build();
+    }
 
+    private Optional<MediaType> getMediaType(String fileName) {
+        int dot = fileName.lastIndexOf('.');
+        if (dot < 0) {
+            return Optional.empty();
+        }
+        return Optional.ofNullable(this.mediaTypeByExtension.get(fileName.substring(dot)));
     }
 }
