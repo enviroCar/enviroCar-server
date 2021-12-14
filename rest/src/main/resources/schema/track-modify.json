@@ -40,7 +40,7 @@
           "type": "number"
         },
         "status": {
-          "$ref": "definitions.json#/track-status"
+          "$ref": "track-status.json"
         }
       }
     },
@@ -48,7 +48,7 @@
       "type": "array",
       "minItems": 0,
       "items": {
-        "$ref": "measurement-create.json#"
+        "$ref": "measurement-create.json"
       }
     }
   }

@@ -3,6 +3,7 @@
   "type": "object",
   "additionalProperties": false,
   "required": [
+    "type",
     "properties"
   ],
   "properties": {
@@ -42,7 +43,7 @@
           "type": "number"
         },
         "status": {
-          "$ref": "definitions.json#/track-status"
+          "$ref": "track-status.json"
         }
       }
     },

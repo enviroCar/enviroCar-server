@@ -34,6 +34,7 @@ import com.sun.jersey.spi.container.WebApplication;
 import org.envirocar.server.rest.PrefixedUriInfo;
 import org.envirocar.server.rest.auth.AuthenticationFilter;
 import org.envirocar.server.rest.auth.AuthenticationResourceFilterFactory;
+import org.envirocar.server.rest.filter.ApiDocsLinkFilter;
 import org.envirocar.server.rest.filter.CachingFilter;
 import org.envirocar.server.rest.filter.LoggingFilter;
 import org.envirocar.server.rest.filter.URIContentNegotiationFilter;
@@ -118,6 +119,7 @@ public class JerseyModule extends AbstractModule {
                     LoggingFilter.class,
                     CachingFilter.class,
                     PaginationFilter.class,
+                    ApiDocsLinkFilter.class,
                     GZIPContentEncodingFilter.class);
         }
 

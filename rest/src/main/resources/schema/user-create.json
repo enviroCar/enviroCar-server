@@ -10,15 +10,16 @@
   ],
   "allOf": [
     {
-      "$ref": "definitions.json#/optional-user-properties"
+      "$ref": "optional-user-properties.json"
     },
     {
       "properties": {
         "name": {
-          "$ref": "definitions.json#/username"
+          "$ref": "username.json"
         },
         "mail": {
-          "$ref": "definitions.json#/mail"
+          "type": "string",
+          "pattern": "^[_A-Za-z0-9-+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$"
         },
         "token": {
           "type": "string"

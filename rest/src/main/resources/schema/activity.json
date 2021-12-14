@@ -52,7 +52,7 @@
     "track-activity": {
       "properties": {
         "track": {
-          "$ref": "definitions.json#/track-ref"
+          "$ref": "track-reference.json"
         },
         "type": {
           "enum": [

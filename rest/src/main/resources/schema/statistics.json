@@ -10,7 +10,7 @@
       "type": "array",
       "minItems": 0,
       "items": {
-        "$ref": "statistic.json#"
+        "$ref": "statistic.json"
       }
     }
   }

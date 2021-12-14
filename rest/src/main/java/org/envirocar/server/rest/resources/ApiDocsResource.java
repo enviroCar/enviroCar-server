@@ -77,7 +77,7 @@ public class ApiDocsResource extends AbstractResource {
     @GET
     @Produces("text/html")
     public Response ui() throws IOException {
-        return ui("index.html");
+        return Response.temporaryRedirect(getUriInfo().getRequestUriBuilder().path("index.html").build()).build();
     }
 
     @GET

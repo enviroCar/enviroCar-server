@@ -57,7 +57,6 @@ public class ActivitiesResource extends AbstractResource {
     public ActivitiesResource() {
     }
 
-
     @GET
     @Schema(response = Schemas.ACTIVITIES)
     public Activities activities(@QueryParam(RESTConstants.TYPE) ActivityType type) throws BadRequestException {

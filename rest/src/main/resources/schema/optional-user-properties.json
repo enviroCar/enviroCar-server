@@ -1,0 +1,53 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "properties": {
+    "firstName": {
+      "type": "string"
+    },
+    "lastName": {
+      "type": "string"
+    },
+    "country": {
+      "type": "string"
+    },
+    "location": {
+      "$ref": "geometry.json"
+    },
+    "aboutMe": {
+      "type": "string"
+    },
+    "url": {
+      "type": "string",
+      "format": "uri"
+    },
+    "dayOfBirth": {
+      "type": "string",
+      "format": "date"
+    },
+    "gender": {
+      "type": "string",
+      "enum": [
+        "m",
+        "f"
+      ]
+    },
+    "language": {
+      "type": "string",
+      "pattern": "^[a-z]{2}[-_][A-Z]{2}$"
+    },
+    "badges": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "acceptedTermsOfUseVersion": {
+      "type": "string",
+      "format": "date"
+    },
+    "acceptedPrivacyStatementVersion": {
+      "type": "string",
+      "format": "date"
+    }
+  }
+}
