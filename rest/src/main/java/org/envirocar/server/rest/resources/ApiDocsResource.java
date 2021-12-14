@@ -34,6 +34,7 @@ import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -48,7 +49,12 @@ public class ApiDocsResource extends AbstractResource {
                            Map<String, MediaType> mediaTypeByExtension) {
         this.replacer = replacer;
         this.objectMapper = objectMapper;
-        this.mediaTypeByExtension = mediaTypeByExtension;
+        this.mediaTypeByExtension = new HashMap<>(mediaTypeByExtension);
+        this.mediaTypeByExtension.put("js", MediaType.valueOf("application/javascript"));
+        this.mediaTypeByExtension.put("css", MediaType.valueOf("text/css"));
+        this.mediaTypeByExtension.put("png", MediaType.valueOf("image/png"));
+        this.mediaTypeByExtension.put("html", MediaType.valueOf("text/html"));
+
     }
 
     private JsonNode loadYaml() throws IOException {
@@ -100,9 +106,10 @@ public class ApiDocsResource extends AbstractResource {
 
     private Optional<MediaType> getMediaType(String fileName) {
         int dot = fileName.lastIndexOf('.');
-        if (dot < 0) {
+        if (dot < 0 || fileName.length() < dot + 1) {
             return Optional.empty();
         }
-        return Optional.ofNullable(this.mediaTypeByExtension.get(fileName.substring(dot)));
+        String extension = fileName.substring(dot + 1);
+        return Optional.ofNullable(this.mediaTypeByExtension.get(extension));
     }
 }
