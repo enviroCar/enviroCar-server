@@ -1596,7 +1596,6 @@ paths:
       summary: Create the group.
       description: Create the group.
       tags:
-        - Users
         - Groups
       security:
         - basicAuth: [ ]
@@ -2265,6 +2264,13 @@ components:
         application/json:
           schema:
             $ref: 'schema/fueling-create.json'
+    CreateGroup:
+      description: The group to create.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: 'schema/group-create.json'
     ModifyUser:
       description: The user modifications.
       required: true
@@ -2345,7 +2351,7 @@ components:
         Link:
           $ref: '#/components/headers/Link'
     InternalServerError:
-      description: An internal server error occured.
+      description: An internal server error occurred.
       content:
         application/json:
           schema:
@@ -2363,7 +2369,7 @@ components:
         Link:
           $ref: '#/components/headers/Link'
     UnavailableForLegalReasons:
-      description: The operation requieres acceptance of the terms of use and privacy statement.
+      description: The operation requires acceptance of the terms of use and privacy statement.
       content:
         application/json:
           schema:
@@ -2555,7 +2561,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: 'schema/root.yaml'
+            $ref: 'schema/root.json'
         text/yaml:
           schema:
             $ref: 'schema/root.json'
