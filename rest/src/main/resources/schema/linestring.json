@@ -1,0 +1,29 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "LineString",
+  "type": "object",
+  "required": [
+    "type",
+    "coordinates"
+  ],
+  "properties": {
+    "type": {
+      "enum": [
+        "LineString"
+      ]
+    },
+    "coordinates": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "array",
+        "minItems": 2,
+        "maxItems": 2,
+        "additionalItems": false,
+        "items": {
+          "type": "number"
+        }
+      }
+    }
+  }
+}

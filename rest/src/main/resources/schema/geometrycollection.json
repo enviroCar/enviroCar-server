@@ -1,16 +1,20 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
   "type": "object",
-  "additionalProperties": false,
   "required": [
-    "users"
+    "type",
+    "geometries"
   ],
   "properties": {
-    "users": {
+    "type": {
+      "enum": [
+        "GeometryCollection"
+      ]
+    },
+    "geometries": {
       "type": "array",
-      "minItems": 0,
       "items": {
-        "$ref": "user.json"
+        "$ref": "geometry.json"
       }
     }
   }

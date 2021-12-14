@@ -38,6 +38,22 @@
       "type": "string",
       "format": "uri"
     },
+    "schemas": {
+      "type": "string",
+      "format": "uri"
+    },
+    "api-docs": {
+      "type": "string",
+      "format": "uri"
+    },
+    "badges": {
+      "type": "string",
+      "format": "uri"
+    },
+    "announcements": {
+      "type": "string",
+      "format": "uri"
+    },
     "statistics": {
       "type": "string",
       "format": "uri"

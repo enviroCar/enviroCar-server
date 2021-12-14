@@ -57,14 +57,13 @@ public class TrackResource extends AbstractResource {
     @Schema(request = Schemas.TRACK_MODIFY)
     @Consumes(MediaTypes.JSON)
     @Authenticated
-    public Response modify(Track changes) throws IllegalModificationException, ValidationException {
+    public void modify(Track changes) throws IllegalModificationException, ValidationException {
         checkRights(getRights().canModify(this.track));
         if (changes instanceof TrackWithMeasurments) {
             getDataService().modifyTrack(this.track, changes, ((TrackWithMeasurments) changes).getMeasurements());
         } else {
             getDataService().modifyTrack(this.track, changes);
         }
-        return Response.noContent().build();
     }
 
     @GET

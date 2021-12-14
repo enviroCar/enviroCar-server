@@ -93,7 +93,7 @@ public class TrackResourceTest extends ResourceTestBase {
         assertThat(response.getType().getParameters().containsKey(MediaTypes.SCHEMA_ATTRIBUTE), is(true));
 
         assertThat(response.getType().getParameters().get(MediaTypes.SCHEMA_ATTRIBUTE),
-                   is(String.format("%s/schema/track.json", getBaseURL())));
+                   is(String.format("%s/schemas/track", getBaseURL())));
     }
 
     protected void createPhenomenon(String name, String unit) {

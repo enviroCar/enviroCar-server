@@ -73,7 +73,7 @@ public class FriendsResource extends AbstractResource {
     }
 
     @Path(FRIEND)
-    public UserResource friend(@PathParam("friend") String friendName) throws UserNotFoundException {
+    public FriendResource friend(@PathParam("friend") String friendName) throws UserNotFoundException {
         checkRights(getRights().canSeeFriendsOf(this.user));
         User friends = getFriendService().getFriend(this.user, friendName);
         return getResourceFactory().createFriendResource(this.user, friends);

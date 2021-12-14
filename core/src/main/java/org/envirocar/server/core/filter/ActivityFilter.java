@@ -48,9 +48,10 @@ public class ActivityFilter {
         this(group, user, type, false, pagination);
     }
 
-    public ActivityFilter(User user, Pagination pagination) {
-        this(null, user, null, true, pagination);
+    public ActivityFilter(User friend, Pagination pagination) {
+        this(null, friend, null, true, pagination);
     }
+
 
     public Group getGroup() {
         return group;

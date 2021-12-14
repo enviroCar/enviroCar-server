@@ -3,12 +3,12 @@
   "type": "object",
   "allOf": [
     {
-      "$ref": "definitions.json#/optional-user-properties"
+      "$ref": "optional-user-properties.json"
     },
     {
       "properties": {
         "mail": {
-          "$ref": "definitions.json#/mail"
+          "$ref": "mail-address.json"
         },
         "token": {
           "type": "string"

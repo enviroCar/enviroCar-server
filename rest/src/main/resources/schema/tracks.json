@@ -10,7 +10,7 @@
       "type": "array",
       "minItems": 0,
       "items": {
-        "$ref": "definitions.json#/track-ref"
+        "$ref": "track-reference.json"
       }
     }
   }

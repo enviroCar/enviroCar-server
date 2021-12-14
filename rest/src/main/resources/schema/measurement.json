@@ -15,7 +15,7 @@
       ]
     },
     "geometry": {
-      "$ref": "geometry.json#"
+      "$ref": "geometry.json"
     },
     "properties": {
       "type": "object",
@@ -38,14 +38,14 @@
           "format": "date-time"
         },
         "sensor": {
-          "$ref": "sensor.json#"
+          "$ref": "sensor.json"
         },
         "time": {
           "type": "string",
           "format": "date-time"
         },
         "user": {
-          "$ref": "user.json#"
+          "$ref": "user.json"
         },
         "track": {
           "type": "string"
@@ -63,10 +63,16 @@
                 "type": "object",
                 "properties": {
                   "value": {
-                    "type": [
-                      "string",
-                      "number",
-                      "boolean"
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "boolean"
+                      }
                     ]
                   }
                 }

@@ -18,6 +18,7 @@ package org.envirocar.server.rest.encoding.json;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.node.JsonNodeCreator;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -67,6 +68,8 @@ public abstract class AbstractJSONMessageBodyWriter<T> implements MessageBodyWri
     @Inject
     private JsonSchemaFactory schemaFactory;
     @Inject
+    private ObjectMapper objectMapper;
+    @Inject
     private JsonNodeCreator nodeCreator;
     @Inject
     private Provider<JsonSchemaUriConfiguration> jsonSchemaUriConfiguration;
@@ -98,13 +101,15 @@ public abstract class AbstractJSONMessageBodyWriter<T> implements MessageBodyWri
                        ? MediaType.APPLICATION_JSON_TYPE : mediaType;
         Optional<URI> schema = getSchema(annotations, mediaType);
 
-        JsonNode value = encodeJSON(entity, mediaType);
+        if (schema.isPresent()) {
+            URI uri = this.jsonSchemaUriConfiguration.get().toExternalURI(schema.get());
+            mt = createMediaType(mt, uri);
+            httpHeaders.putSingle(HttpHeaders.CONTENT_TYPE, mt);
+        }
 
-        schema.ifPresent(id -> {
-            validateResponse(id, value);
-            URI uri = this.jsonSchemaUriConfiguration.get().toExternalURI(id);
-            httpHeaders.putSingle(HttpHeaders.CONTENT_TYPE, createMediaType(mt, uri));
-        });
+        JsonNode value = encodeJSON(entity, mt);
+
+        schema.ifPresent(uri -> validateResponse(uri, value));
 
         if (mt.isCompatible(MediaTypes.JSON_TYPE)) {
             this.jsonWriter.writeValue(out, value);
@@ -176,5 +181,14 @@ public abstract class AbstractJSONMessageBodyWriter<T> implements MessageBodyWri
         return -1;
     }
 
+    protected JsonNodeCreator getJsonFactory() {
+        return this.nodeCreator;
+    }
+
+    protected ObjectMapper getObjectMapper() {
+        return this.objectMapper;
+    }
+
     public abstract JsonNode encodeJSON(T entity, MediaType mediaType);
+
 }

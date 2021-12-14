@@ -170,7 +170,7 @@ public class GeoJSONTest {
             JsonNode json = conv.encode(geom);
             Geometry parsed = conv.decode(json);
             assertThat(geom, is(equalTo(parsed)));
-            assertThat(json, is(validate.validInstanceOf("geometry.json#")));
+            assertThat(json, is(validate.validInstanceOf("geometry#")));
         } catch (GeometryConverterException ex) {
             errors.addError(ex);
         }

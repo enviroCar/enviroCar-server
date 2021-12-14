@@ -18,7 +18,7 @@
       "type": "array",
       "minItems": 0,
       "items": {
-        "$ref": "measurement.json#"
+        "$ref": "measurement.json"
       }
     },
     "properties": {
@@ -41,10 +41,10 @@
           "format": "date-time"
         },
         "sensor": {
-          "$ref": "sensor.json#"
+          "$ref": "sensor.json"
         },
         "user": {
-          "$ref": "user.json#"
+          "$ref": "user.json"
         },
         "name": {
           "type": "string"
@@ -74,7 +74,7 @@
           "format": "date-time"
         },
         "status": {
-          "$ref": "definitions.json#/track-status"
+          "$ref": "track-status.json"
         }
       }
     }

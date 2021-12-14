@@ -1,23 +1,24 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Point",
   "type": "object",
-  "additionalProperties": false,
   "required": [
     "type",
-    "features"
+    "coordinates"
   ],
   "properties": {
     "type": {
-      "type": "string",
       "enum": [
-        "FeatureCollection"
+        "Point"
       ]
     },
-    "features": {
+    "coordinates": {
       "type": "array",
-      "minItems": 0,
+      "minItems": 2,
+      "maxItems": 2,
+      "additionalItems": false,
       "items": {
-        "$ref": "measurement.json"
+        "type": "number"
       }
     }
   }

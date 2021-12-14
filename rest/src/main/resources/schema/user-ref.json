@@ -7,7 +7,7 @@
   ],
   "properties": {
     "name": {
-      "$ref": "definitions.json#/username"
+      "$ref": "username.json"
     }
   }
 }
