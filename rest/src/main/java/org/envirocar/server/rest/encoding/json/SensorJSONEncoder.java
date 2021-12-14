@@ -60,7 +60,8 @@ public class SensorJSONEncoder extends AbstractJSONEntityEncoder<Sensor> {
                 properties.put(JSONConstants.MODIFIED_KEY, getDateTimeFormat().print(entity.getModificationTime()));
             }
         }
-        sensor.putPOJO(JSONConstants.PROPERTIES_KEY, properties);
+
+        sensor.set(JSONConstants.PROPERTIES_KEY, getObjectMapper().valueToTree(properties));
         return sensor;
     }
 }

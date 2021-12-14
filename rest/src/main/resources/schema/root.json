@@ -34,7 +34,23 @@
       "type": "string",
       "format": "uri"
     },
-    "privacyStatements:": {
+    "privacyStatements": {
+      "type": "string",
+      "format": "uri"
+    },
+    "schemas": {
+      "type": "string",
+      "format": "uri"
+    },
+    "api-docs": {
+      "type": "string",
+      "format": "uri"
+    },
+    "badges": {
+      "type": "string",
+      "format": "uri"
+    },
+    "announcements": {
       "type": "string",
       "format": "uri"
     },

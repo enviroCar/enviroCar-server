@@ -65,7 +65,6 @@ public class TracksResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.TRACKS)
-    @Produces({MediaTypes.JSON, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
     public Tracks get(@QueryParam(RESTConstants.BBOX) BoundingBox bbox,
                       @QueryParam(RESTConstants.STATUS) TrackStatus status) throws BadRequestException {
         SpatialFilter spatialFilter = null;

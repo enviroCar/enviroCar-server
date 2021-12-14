@@ -17,7 +17,7 @@
       "type": "string"
     },
     "owner": {
-      "$ref": "user.json#"
+      "$ref": "user.json"
     }
   },
   "required": [

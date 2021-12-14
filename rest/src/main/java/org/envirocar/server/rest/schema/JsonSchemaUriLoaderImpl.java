@@ -24,6 +24,7 @@ import com.google.common.cache.LoadingCache;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
 import java.util.concurrent.ExecutionException;
@@ -41,18 +42,27 @@ public class JsonSchemaUriLoaderImpl implements JsonSchemaUriLoader {
     @Override
     public JsonNode load(URI uri) throws IOException {
         try {
-            return jsonCache.get(uri);
+            return this.jsonCache.get(uri);
         } catch (ExecutionException e) {
             throw new IOException(e);
         }
+    }
+
+    private JsonNode loadInternal(URI key) throws IOException {
+        URI uri = this.jsonSchemaUriConfiguration.toInternalURI(key);
+        if (uri == null) {
+            throw new FileNotFoundException();
+        }
+        return JsonLoader.fromURL(uri.toURL());
     }
 
     private LoadingCache<URI, JsonNode> jsonCache() {
         return CacheBuilder.newBuilder().build(new CacheLoader<URI, JsonNode>() {
             @Override
             public JsonNode load(URI key) throws IOException {
-                return JsonLoader.fromURL(jsonSchemaUriConfiguration.toInternalURI(key).toURL());
+                return loadInternal(key);
             }
         });
     }
+
 }

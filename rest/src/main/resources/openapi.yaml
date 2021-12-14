@@ -1,0 +1,2738 @@
+openapi: 3.0.3
+info:
+  title: enviroCar REST API
+  description: enviroCar REST API
+  version: "1.0.0"
+  contact:
+    email: info@envirocar.org
+    name: "52\xB0North GmbH"
+    url: https://52north.org
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: https://envirocar.org/conditions.html?lng=en
+servers: [ ]
+tags:
+  - description: General Operations
+    name: General
+  - description: Track Operations
+    name: Tracks
+  - description: Measurement Operations
+    name: Measurements
+  - description: Sensor Operations
+    name: Sensors
+  - description: Phenomenon Operations
+    name: Phenomenons
+  - description: Statistic Operations
+    name: Statistics
+  - description: User Operations
+    name: Users
+  - description: Group Operations
+    name: Groups
+  - description: Announcements Operations
+    name: Announcements
+  - description: Badges Operations
+    name: Badges
+  - description: Terms Of Use and Privacy Statement Operations
+    name: Terms
+  - description: Schema Operations
+    name: Schemas
+  - description: Fueling Operations
+    name: Fuelings
+paths:
+  '/':
+    get:
+      operationId: getRoot
+      summary: Get the root index.
+      description: Get the root index.
+      tags:
+        - General
+      responses:
+        '200':
+          $ref: '#/components/responses/Root'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/api-docs':
+    get:
+      operationId: apiDocs
+      summary: Get the OpenAPI specification of this service.
+      description: Get the OpenAPI specification of this service.
+      tags:
+        - General
+      responses:
+        '200':
+          $ref: '#/components/responses/ApiDocs'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/phenomenons':
+    get:
+      operationId: getPhenomenons
+      summary: Get the phenomenon listing.
+      description: Get the phenomenon listing.
+      tags:
+        - Phenomenons
+      parameters:
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/range'
+      responses:
+        '200':
+          $ref: '#/components/responses/Phenomenons'
+        '206':
+          $ref: '#/components/responses/Phenomenons'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      operationId: createPhenomenon
+      summary: Create new phenomenon.
+      description: Create new phenomenon.
+      tags:
+        - Phenomenons
+      security:
+        - basicAuth: [ ]
+      requestBody:
+        $ref: '#/components/requestBodies/CreatePhenomenon'
+      responses:
+        '201':
+          $ref: '#/components/responses/Created'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '451':
+          $ref: '#/components/responses/UnavailableForLegalReasons'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/phenomenons/{phenomenonId}':
+    parameters:
+      - $ref: '#/components/parameters/phenomenonId'
+    get:
+      operationId: getPhenomenonById
+      summary: Get the phenomenon by id.
+      description: Get the phenomenon by id.
+      tags:
+        - Phenomenons
+      responses:
+        '200':
+          $ref: '#/components/responses/Phenomenon'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/phenomenons/{phenomenonId}/statistic':
+    parameters:
+      - $ref: '#/components/parameters/phenomenonId'
+    get:
+      operationId: getPhenomenonStatistic
+      summary: Get the phenomenon statistics.
+      description: Get the phenomenon statistics.
+      tags:
+        - Phenomenons
+        - Statistics
+      responses:
+        '200':
+          $ref: '#/components/responses/Statistic'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/sensors':
+    get:
+      operationId: getSensors
+      summary: Get the Sensor listing.
+      description: Get the Sensor listing.
+      tags:
+        - Sensors
+      parameters:
+        - $ref: '#/components/parameters/sensorType'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/range'
+      responses:
+        '200':
+          $ref: '#/components/responses/Sensors'
+        '206':
+          $ref: '#/components/responses/Sensors'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      operationId: createSensor
+      summary: Create a new Sensor.
+      description: Create a new Sensor.
+      tags:
+        - Sensors
+      requestBody:
+        $ref: '#/components/requestBodies/CreateSensor'
+      responses:
+        '201':
+          $ref: '#/components/responses/Created'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '451':
+          $ref: '#/components/responses/UnavailableForLegalReasons'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/sensors/{sensorId}':
+    parameters:
+      - $ref: '#/components/parameters/sensorId'
+    get:
+      operationId: getSensorById
+      summary: Get the Sensor by id.
+      description: Get the Sensor by id.
+      tags:
+        - Sensors
+      responses:
+        '200':
+          $ref: '#/components/responses/Sensor'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/sensors/{sensorId}/statistics':
+    parameters:
+      - $ref: '#/components/parameters/sensorId'
+    get:
+      operationId: getSensorStatistics
+      summary: Get the Sensor statistics.
+      description: Get the Sensor statistics.
+      tags:
+        - Sensors
+        - Statistics
+      responses:
+        '200':
+          $ref: '#/components/responses/Statistics'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/tracks':
+    get:
+      operationId: getTracks
+      summary: Get the list of tracks.
+      description: Get the list of tracks.
+      tags:
+        - Tracks
+      parameters:
+        - $ref: '#/components/parameters/bbox'
+        - $ref: '#/components/parameters/nearPoint'
+        - $ref: '#/components/parameters/after'
+        - $ref: '#/components/parameters/before'
+        - $ref: '#/components/parameters/begins'
+        - $ref: '#/components/parameters/begunBy'
+        - $ref: '#/components/parameters/contains'
+        - $ref: '#/components/parameters/during'
+        - $ref: '#/components/parameters/endedBy'
+        - $ref: '#/components/parameters/ends'
+        - $ref: '#/components/parameters/equals'
+        - $ref: '#/components/parameters/meets'
+        - $ref: '#/components/parameters/metBy'
+        - $ref: '#/components/parameters/overlapped'
+        - $ref: '#/components/parameters/overlaps'
+        - $ref: '#/components/parameters/status'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/range'
+      responses:
+        '200':
+          $ref: '#/components/responses/Tracks'
+        '206':
+          $ref: '#/components/responses/Tracks'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      operationId: createTrack
+      summary: Create a new track.
+      description: Create a new track.
+      tags:
+        - Tracks
+      security:
+        - basicAuth: [ ]
+      requestBody:
+        $ref: '#/components/requestBodies/CreateTrack'
+      responses:
+        '201':
+          $ref: '#/components/responses/Created'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '451':
+          $ref: '#/components/responses/UnavailableForLegalReasons'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/tracks/{trackId}':
+    parameters:
+      - $ref: '#/components/parameters/trackId'
+    get:
+      operationId: getTrackById
+      summary: Get the specified track.
+      description: Get the specified track.
+      tags:
+        - Tracks
+      responses:
+        '200':
+          $ref: '#/components/responses/Track'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+    put:
+      operationId: modifyTrack
+      summary: Update the specified track.
+      description: Update the specified track.
+      tags:
+        - Tracks
+      security:
+        - basicAuth: [ ]
+      requestBody:
+        $ref: '#/components/requestBodies/ModifyTrack'
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      operationId: deleteTrack
+      summary: Delete the specified track.
+      description: Delete the specified track.
+      tags:
+        - Tracks
+      security:
+        - basicAuth: [ ]
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/tracks/{trackId}/measurements':
+    parameters:
+      - $ref: '#/components/parameters/trackId'
+    get:
+      operationId: getTrackMeasurements
+      summary: Get the measurements of a track.
+      description: Get the measurements of a track.
+      tags:
+        - Tracks
+        - Measurements
+      parameters:
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/range'
+      responses:
+        '200':
+          $ref: '#/components/responses/Measurements'
+        '206':
+          $ref: '#/components/responses/Measurements'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      operationId: addTrackMeasurement
+      summary: Add a measurement to a track.
+      description: Add a measurement to a track.
+      tags:
+        - Tracks
+        - Measurements
+      security:
+        - basicAuth: [ ]
+      requestBody:
+        $ref: '#/components/requestBodies/CreateMeasurement'
+      responses:
+        '201':
+          $ref: '#/components/responses/Created'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/tracks/{trackId}/preview':
+    parameters:
+      - $ref: '#/components/parameters/trackId'
+    get:
+      operationId: previewTrack
+      summary: Get the preview image of the track.
+      description: Get the preview image of the track.
+      tags:
+        - Tracks
+      responses:
+        '200':
+          $ref: '#/components/responses/PNG'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/tracks/{trackId}/share':
+    parameters:
+      - $ref: '#/components/parameters/trackId'
+    get:
+      operationId: shareTrack
+      summary: Get the share link of the track.
+      description: Get the share link of the track.
+      tags:
+        - Tracks
+      parameters:
+        - $ref: '#/components/parameters/locale'
+      responses:
+        '200':
+          $ref: '#/components/responses/PNG'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/tracks/{trackId}/statistics':
+    parameters:
+      - $ref: '#/components/parameters/trackId'
+    get:
+      operationId: getTrackStatistics
+      summary: Get the statistics of a track.
+      description: Get the statistics of a track.
+      tags:
+        - Tracks
+        - Statistics
+      responses:
+        '200':
+          $ref: '#/components/responses/Statistics'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/tracks/{trackId}/sensor':
+    parameters:
+      - $ref: '#/components/parameters/trackId'
+    get:
+      operationId: getTrackSensor
+      summary: Get the sensor of a track.
+      description: Get the sensor of a track.
+      tags:
+        - Tracks
+        - Sensors
+      responses:
+        '200':
+          $ref: '#/components/responses/Sensor'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/measurements':
+    get:
+      operationId: getMeasurements
+      summary: Get the list of measurements.
+      description: Get the list of measurements.
+      tags:
+        - Measurements
+      parameters:
+        - $ref: '#/components/parameters/bbox'
+        - $ref: '#/components/parameters/nearPoint'
+        - $ref: '#/components/parameters/after'
+        - $ref: '#/components/parameters/before'
+        - $ref: '#/components/parameters/begins'
+        - $ref: '#/components/parameters/begunBy'
+        - $ref: '#/components/parameters/contains'
+        - $ref: '#/components/parameters/during'
+        - $ref: '#/components/parameters/endedBy'
+        - $ref: '#/components/parameters/ends'
+        - $ref: '#/components/parameters/equals'
+        - $ref: '#/components/parameters/meets'
+        - $ref: '#/components/parameters/metBy'
+        - $ref: '#/components/parameters/overlapped'
+        - $ref: '#/components/parameters/overlaps'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/range'
+      responses:
+        '200':
+          $ref: '#/components/responses/Measurements'
+        '206':
+          $ref: '#/components/responses/Measurements'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      operationId: createMeasurement
+      summary: Create a new measurement.
+      description: Create a new measurement.
+      tags:
+        - Measurements
+      security:
+        - basicAuth: [ ]
+      requestBody:
+        $ref: '#/components/requestBodies/CreateMeasurement'
+      responses:
+        '201':
+          $ref: '#/components/responses/Created'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '451':
+          $ref: '#/components/responses/UnavailableForLegalReasons'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/measurements/{measurementId}':
+    parameters:
+      - $ref: '#/components/parameters/measurementId'
+    get:
+      operationId: getMeasurementById
+      summary: Get the specified measurement.
+      description: Get the specified measurement.
+      tags:
+        - Measurements
+      responses:
+        '200':
+          $ref: '#/components/responses/Measurement'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      operationId: deleteMeasurement
+      summary: Delete a existing measurement.
+      description: Delete a existing measurement.
+      tags:
+        - Measurements
+      security:
+        - basicAuth: [ ]
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/measurements/{measurementId}/sensor':
+    parameters:
+      - $ref: '#/components/parameters/measurementId'
+    get:
+      operationId: getMeasurementSensor
+      summary: Get the sensor of a measurement.
+      description: Get the sensor of a measurement.
+      tags:
+        - Measurements
+        - Sensors
+      responses:
+        '200':
+          $ref: '#/components/responses/Sensor'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/privacyStatements':
+    get:
+      operationId: getPrivacyStatements
+      summary: Get the list of privacy statements.
+      description: Get the list of privacy statements.
+      tags:
+        - Terms
+      responses:
+        '200':
+          $ref: '#/components/responses/PrivacyStatements'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/privacyStatements/{privacyStatementId}':
+    parameters:
+      - $ref: '#/components/parameters/privacyStatementId'
+    get:
+      operationId: getPrivacyStatementsById
+      summary: Get the privacy statement.
+      description: Get the privacy statement.
+      tags:
+        - Terms
+      responses:
+        '200':
+          $ref: '#/components/responses/PrivacyStatement'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/termsOfUse':
+    get:
+      operationId: getTermsOfUse
+      summary: Get the list of terms of use.
+      description: Get the list of terms of use.
+      tags:
+        - Terms
+      responses:
+        '200':
+          $ref: '#/components/responses/TermsOfUse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/termsOfUse/{termsOfUseId}':
+    parameters:
+      - $ref: '#/components/parameters/termsOfUseId'
+    get:
+      operationId: getTermsOfUseById
+      summary: Get the terms of use.
+      description: Get the terms of use.
+      tags:
+        - Terms
+      responses:
+        '200':
+          $ref: '#/components/responses/TermsOfUseInstance'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/users':
+    get:
+      operationId: getUsers
+      summary: Get the users.
+      description: Get the users.
+      tags:
+        - Users
+      security:
+        - basicAuth: [ ]
+      parameters:
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/range'
+      responses:
+        '200':
+          $ref: '#/components/responses/Users'
+        '206':
+          $ref: '#/components/responses/Users'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      operationId: createUser
+      summary: Create a new user.
+      description: Create a new user.
+      tags:
+        - Users
+      security:
+        - basicAuth: [ ]
+      requestBody:
+        $ref: '#/components/requestBodies/CreateSensor'
+      responses:
+        '201':
+          $ref: '#/components/responses/Created'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '451':
+          $ref: '#/components/responses/UnavailableForLegalReasons'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/users/{userId}':
+    parameters:
+      - $ref: '#/components/parameters/userId'
+    get:
+      operationId: getUserById
+      summary: Get the user.
+      description: Get the user.
+      tags:
+        - Users
+      security:
+        - basicAuth: [ ]
+      responses:
+        '200':
+          $ref: '#/components/responses/User'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+    put:
+      operationId: modifyUser
+      summary: Change the user.
+      description: Change the user.
+      tags:
+        - Users
+      security:
+        - basicAuth: [ ]
+      requestBody:
+        $ref: '#/components/requestBodies/ModifyUser'
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      operationId: deleteUser
+      summary: Delete the user.
+      description: Delete the user.
+      tags:
+        - Users
+      security:
+        - basicAuth: [ ]
+      parameters:
+        - $ref: '#/components/parameters/deleteContent'
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/users/{userId}/friends':
+    parameters:
+      - $ref: '#/components/parameters/userId'
+    get:
+      operationId: getFriends
+      summary: Get the friends.
+      description: Get the friends.
+      tags:
+        - Users
+      security:
+        - basicAuth: [ ]
+      responses:
+        '200':
+          $ref: '#/components/responses/Users'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      operationId: addFriend
+      summary: Add a friend.
+      description: Add a friend.
+      tags:
+        - Users
+      security:
+        - basicAuth: [ ]
+      requestBody:
+        $ref: '#/components/requestBodies/UserRef'
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/users/{userId}/friends/incomingRequests':
+    parameters:
+      - $ref: '#/components/parameters/userId'
+    get:
+      operationId: getIncomingFriendRequests
+      summary: Get incoming friend requests.
+      description: Get incoming friend requests.
+      tags:
+        - Users
+      security:
+        - basicAuth: [ ]
+      responses:
+        '200':
+          $ref: '#/components/responses/Users'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/users/{userId}/friends/outgoingRequests':
+    parameters:
+      - $ref: '#/components/parameters/userId'
+    get:
+      operationId: getOutgoingFriendRequests
+      summary: Get outgoing friend requests.
+      description: Get outgoing friend requests.
+      tags:
+        - Users
+      security:
+        - basicAuth: [ ]
+      responses:
+        '200':
+          $ref: '#/components/responses/Users'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/users/{userId}/friends/declineRequest':
+    parameters:
+      - $ref: '#/components/parameters/userId'
+    post:
+      operationId: declineRequest
+      summary: Decline friend request.
+      description: Decline friend request.
+      tags:
+        - Users
+      security:
+        - basicAuth: [ ]
+      requestBody:
+        $ref: '#/components/requestBodies/UserRef'
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/users/{userId}/friends/{friendId}':
+    parameters:
+      - $ref: '#/components/parameters/userId'
+      - $ref: '#/components/parameters/friendId'
+    get:
+      operationId: getFriend
+      summary: Get the friend.
+      description: Get the friend.
+      tags:
+        - Users
+      security:
+        - basicAuth: [ ]
+      responses:
+        '200':
+          $ref: '#/components/responses/User'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      operationId: deleteFriend
+      summary: Delete the friend.
+      description: Delete the friend.
+      tags:
+        - Users
+      security:
+        - basicAuth: [ ]
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/users/{userId}/groups':
+    parameters:
+      - $ref: '#/components/parameters/userId'
+    get:
+      operationId: getUserGroups
+      summary: Get the groups of the user.
+      description: Get the groups of the user
+      parameters:
+        - $ref: '#/components/parameters/q'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/range'
+      tags:
+        - Users
+        - Groups
+      security:
+        - basicAuth: [ ]
+      responses:
+        '200':
+          $ref: '#/components/responses/Groups'
+        '206':
+          $ref: '#/components/responses/Groups'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      operationId: createUserGroup
+      summary: Create the user group.
+      description: Create the user group.
+      tags:
+        - Users
+        - Groups
+      security:
+        - basicAuth: []
+      requestBody:
+        $ref: '#/components/requestBodies/CreateGroup'
+      responses:
+        '201':
+          $ref: '#/components/responses/Created'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/users/{userId}/groups/{groupId}':
+    parameters:
+      - $ref: '#/components/parameters/userId'
+      - $ref: '#/components/parameters/groupId'
+    get:
+      operationId: getUserGroup
+      summary: Get the group of the user.
+      description: Get the group of the user
+      tags:
+        - Users
+        - Groups
+      security:
+        - basicAuth: [ ]
+      responses:
+        '200':
+          $ref: '#/components/responses/Group'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+    put:
+      operationId: modifyUserGroup
+      summary: Modify the group.
+      description: Modify the group.
+      tags:
+        - Users
+        - Groups
+      security:
+        - basicAuth: [ ]
+      requestBody:
+        $ref: '#/components/requestBodies/ModifyGroup'
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      operationId: deleteUserGroup
+      summary: Delete the group.
+      description: Delete the group.
+      tags:
+        - Users
+        - Groups
+      security:
+        - basicAuth: [ ]
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/users/{userId}/tracks':
+    parameters:
+      - $ref: '#/components/parameters/userId'
+    get:
+      operationId: getTracksOfUser
+      summary: Get the list of tracks.
+      description: Get the list of tracks.
+      tags:
+        - Tracks
+        - Users
+      security:
+        - basicAuth: [ ]
+      parameters:
+        - $ref: '#/components/parameters/bbox'
+        - $ref: '#/components/parameters/nearPoint'
+        - $ref: '#/components/parameters/after'
+        - $ref: '#/components/parameters/before'
+        - $ref: '#/components/parameters/begins'
+        - $ref: '#/components/parameters/begunBy'
+        - $ref: '#/components/parameters/contains'
+        - $ref: '#/components/parameters/during'
+        - $ref: '#/components/parameters/endedBy'
+        - $ref: '#/components/parameters/ends'
+        - $ref: '#/components/parameters/equals'
+        - $ref: '#/components/parameters/meets'
+        - $ref: '#/components/parameters/metBy'
+        - $ref: '#/components/parameters/overlapped'
+        - $ref: '#/components/parameters/overlaps'
+        - $ref: '#/components/parameters/status'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/range'
+      responses:
+        '200':
+          $ref: '#/components/responses/Tracks'
+        '206':
+          $ref: '#/components/responses/Tracks'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      operationId: createTrackForUser
+      summary: Create a new track.
+      description: Create a new track.
+      tags:
+        - Tracks
+        - Users
+      security:
+        - basicAuth: [ ]
+      requestBody:
+        $ref: '#/components/requestBodies/CreateTrack'
+      responses:
+        '201':
+          $ref: '#/components/responses/Created'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '451':
+          $ref: '#/components/responses/UnavailableForLegalReasons'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/users/{userId}/measurements':
+    parameters:
+      - $ref: '#/components/parameters/userId'
+    get:
+      operationId: getMeasurementsOfUser
+      summary: Get the list of measurements.
+      description: Get the list of measurements.
+      tags:
+        - Measurements
+      security:
+        - basicAuth: [ ]
+      parameters:
+        - $ref: '#/components/parameters/bbox'
+        - $ref: '#/components/parameters/nearPoint'
+        - $ref: '#/components/parameters/after'
+        - $ref: '#/components/parameters/before'
+        - $ref: '#/components/parameters/begins'
+        - $ref: '#/components/parameters/begunBy'
+        - $ref: '#/components/parameters/contains'
+        - $ref: '#/components/parameters/during'
+        - $ref: '#/components/parameters/endedBy'
+        - $ref: '#/components/parameters/ends'
+        - $ref: '#/components/parameters/equals'
+        - $ref: '#/components/parameters/meets'
+        - $ref: '#/components/parameters/metBy'
+        - $ref: '#/components/parameters/overlapped'
+        - $ref: '#/components/parameters/overlaps'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/range'
+      responses:
+        '200':
+          $ref: '#/components/responses/Measurements'
+        '206':
+          $ref: '#/components/responses/Measurements'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      operationId: createMeasurementForUser
+      summary: Create a new measurement.
+      description: Create a new measurement.
+      tags:
+        - Measurements
+      security:
+        - basicAuth: [ ]
+      requestBody:
+        $ref: '#/components/requestBodies/CreateMeasurement'
+      responses:
+        '201':
+          $ref: '#/components/responses/Created'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '451':
+          $ref: '#/components/responses/UnavailableForLegalReasons'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/users/{userId}/statistics':
+    parameters:
+      - $ref: '#/components/parameters/userId'
+    get:
+      operationId: getStatisticsOfUser
+      summary: Get the user statistics.
+      description: Get the user statistics.
+      tags:
+        - Users
+        - Statistics
+      security:
+        - basicAuth: [ ]
+      responses:
+        '200':
+          $ref: '#/components/responses/Statistics'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/users/{userId}/userStatistic':
+    parameters:
+      - $ref: '#/components/parameters/userId'
+    get:
+      operationId: getUserStatistics
+      summary: Get the user statistics.
+      description: Get the user statistics.
+      tags:
+        - Users
+        - Statistics
+      security:
+        - basicAuth: [ ]
+      responses:
+        '200':
+          $ref: '#/components/responses/UserStatistic'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/users/{userId}/activities':
+    parameters:
+      - $ref: '#/components/parameters/userId'
+    get:
+      operationId: getUserActivities
+      summary: Get the activities of the user.
+      description: Get the activities of the user.
+      tags:
+        - Users
+      security:
+        - basicAuth: [ ]
+      parameters:
+        - $ref: '#/components/parameters/activityType'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/range'
+      responses:
+        '200':
+          $ref: '#/components/responses/Activities'
+        '206':
+          $ref: '#/components/responses/Activities'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/users/{userId}/activities/{activityId}':
+    parameters:
+      - $ref: '#/components/parameters/userId'
+      - $ref: '#/components/parameters/activityId'
+    get:
+      operationId: getUserActivityById
+      summary: Get the activity of the user.
+      description: Get the activity of the user.
+      tags:
+        - Users
+      security:
+        - basicAuth: [ ]
+      responses:
+        '200':
+          $ref: '#/components/responses/Activity'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/users/{userId}/friendActivities':
+    parameters:
+      - $ref: '#/components/parameters/userId'
+    get:
+      operationId: getFriendActivities
+      summary: Get the activities of the friend.
+      description: Get the activities of the friend.
+      tags:
+        - Users
+      security:
+        - basicAuth: [ ]
+      parameters:
+        - $ref: '#/components/parameters/activityType'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/range'
+      responses:
+        '200':
+          $ref: '#/components/responses/Activities'
+        '206':
+          $ref: '#/components/responses/Activities'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/users/{userId}/friendActivities/{activityId}':
+    parameters:
+      - $ref: '#/components/parameters/userId'
+      - $ref: '#/components/parameters/activityId'
+    get:
+      operationId: getFriendActivityById
+      summary: Get the activity of the friend.
+      description: Get the activity of the friend.
+      tags:
+        - Users
+      security:
+        - basicAuth: [ ]
+      responses:
+        '200':
+          $ref: '#/components/responses/Activity'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/users/{userId}/avatar':
+    parameters:
+      - $ref: '#/components/parameters/userId'
+    get:
+      operationId: getAvatar
+      summary: Get the avatar of the user.
+      description: Get the avatar of the user.
+      tags:
+        - Users
+      security:
+        - basicAuth: [ ]
+      responses:
+        '200':
+          $ref: '#/components/responses/JPEG'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/users/{userId}/fuelings':
+    parameters:
+      - $ref: '#/components/parameters/userId'
+    get:
+      operationId: getFuelings
+      summary: Get the fuelings for the user.
+      description: Get the fuelings for the user.
+      tags:
+        - Fuelings
+        - Users
+      security:
+        - basicAuth: [ ]
+      parameters:
+        - $ref: '#/components/parameters/after'
+        - $ref: '#/components/parameters/before'
+        - $ref: '#/components/parameters/begins'
+        - $ref: '#/components/parameters/begunBy'
+        - $ref: '#/components/parameters/contains'
+        - $ref: '#/components/parameters/during'
+        - $ref: '#/components/parameters/endedBy'
+        - $ref: '#/components/parameters/ends'
+        - $ref: '#/components/parameters/equals'
+        - $ref: '#/components/parameters/meets'
+        - $ref: '#/components/parameters/metBy'
+        - $ref: '#/components/parameters/overlapped'
+        - $ref: '#/components/parameters/overlaps'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/range'
+      responses:
+        '200':
+          $ref: '#/components/responses/Fuelings'
+        '206':
+          $ref: '#/components/responses/Fuelings'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      operationId: createFueling
+      summary: Create a new fueling for the user.
+      description: Create a new fueling for the user.
+      tags:
+        - Fuelings
+        - Users
+      security:
+        - basicAuth: [ ]
+      requestBody:
+        $ref: '#/components/requestBodies/CreateFueling'
+      responses:
+        '201':
+          $ref: '#/components/responses/Created'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/users/{userId}/fuelings/{fuelingId}':
+    parameters:
+      - $ref: '#/components/parameters/userId'
+      - $ref: '#/components/parameters/fuelingId'
+    get:
+      operationId: getFueling
+      summary: Get the fueling for the user.
+      description: Get the fueling for the user.
+      tags:
+        - Fuelings
+        - Users
+      security:
+        - basicAuth: [ ]
+      responses:
+        '200':
+          $ref: '#/components/responses/Fueling'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      operationId: deleteFueling
+      summary: Delete the fueling for the user.
+      description: Delete the fueling for the user.
+      tags:
+        - Fuelings
+        - Users
+      security:
+        - basicAuth: [ ]
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/users/{userId}/sensors':
+    parameters:
+      - $ref: '#/components/parameters/userId'
+    get:
+      operationId: getSensorsOfUser
+      summary: Get the Sensor listing.
+      description: Get the Sensor listing.
+      tags:
+        - Sensors
+        - Users
+      security:
+        - basicAuth: [ ]
+      parameters:
+        - $ref: '#/components/parameters/sensorType'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/range'
+      responses:
+        '200':
+          $ref: '#/components/responses/Sensors'
+        '206':
+          $ref: '#/components/responses/Sensors'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      operationId: createSensorForUser
+      summary: Create a new Sensor.
+      description: Create a new Sensor.
+      tags:
+        - Sensors
+        - Users
+      security:
+        - basicAuth: [ ]
+      requestBody:
+        $ref: '#/components/requestBodies/CreateSensor'
+      responses:
+        '201':
+          $ref: '#/components/responses/Created'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '451':
+          $ref: '#/components/responses/UnavailableForLegalReasons'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/groups':
+    get:
+      operationId: getGroups
+      summary: Get the groups.
+      description: Get the groups.
+      parameters:
+        - $ref: '#/components/parameters/q'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/range'
+      tags:
+        - Groups
+      security:
+        - basicAuth: [ ]
+      responses:
+        '200':
+          $ref: '#/components/responses/Groups'
+        '206':
+          $ref: '#/components/responses/Groups'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      operationId: createGroup
+      summary: Create the group.
+      description: Create the group.
+      tags:
+        - Users
+        - Groups
+      security:
+        - basicAuth: [ ]
+      requestBody:
+        $ref: '#/components/requestBodies/CreateGroup'
+      responses:
+        '201':
+          $ref: '#/components/responses/Created'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/groups/{groupId}':
+    parameters:
+      - $ref: '#/components/parameters/groupId'
+    get:
+      operationId: getGroup
+      summary: Get the group.
+      description: Get the group
+      tags:
+        - Groups
+      security:
+        - basicAuth: [ ]
+      responses:
+        '200':
+          $ref: '#/components/responses/Group'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+    put:
+      operationId: modifyGroup
+      summary: Modify the group.
+      description: Modify the group.
+      tags:
+        - Groups
+      security:
+        - basicAuth: [ ]
+      requestBody:
+        $ref: '#/components/requestBodies/ModifyGroup'
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      operationId: deleteGroup
+      summary: Delete the group.
+      description: Delete the group.
+      tags:
+        - Groups
+      security:
+        - basicAuth: []
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/groups/{groupId}/activities':
+    parameters:
+      - $ref: '#/components/parameters/groupId'
+    get:
+      operationId: getGroupActivities
+      summary: Get the activities of the group.
+      description: Get the activities of the group.
+      tags:
+        - Groups
+      security:
+        - basicAuth: [ ]
+      parameters:
+        - $ref: '#/components/parameters/activityType'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/range'
+      responses:
+        '200':
+          $ref: '#/components/responses/Activities'
+        '206':
+          $ref: '#/components/responses/Activities'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/groups/{groupId}/activities/{activityId}':
+    parameters:
+      - $ref: '#/components/parameters/groupId'
+      - $ref: '#/components/parameters/activityId'
+    get:
+      operationId: getGroupActivityById
+      summary: Get the activity of the group.
+      description: Get the activity of the group.
+      tags:
+        - Groups
+      security:
+        - basicAuth: [ ]
+      responses:
+        '200':
+          $ref: '#/components/responses/Activity'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/groups/{groupId}/members':
+    parameters:
+      - $ref: '#/components/parameters/groupId'
+    get:
+      operationId: getGroupMembers
+      summary: Get the group members.
+      description: Get the group members.
+      tags:
+        - Groups
+      security:
+        - basicAuth: [ ]
+      parameters:
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/range'
+      responses:
+        '200':
+          $ref: '#/components/responses/Users'
+        '206':
+          $ref: '#/components/responses/Users'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      operationId: addGroupMember
+      summary: Add the group member.
+      description: Add the group member.
+      tags:
+        - Groups
+      security:
+        - basicAuth: [ ]
+      requestBody:
+        $ref: '#/components/requestBodies/UserRef'
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/groups/{groupId}/members/{memberId}':
+    parameters:
+      - $ref: '#/components/parameters/groupId'
+      - $ref: '#/components/parameters/memberId'
+    get:
+      operationId: getGroupMember
+      summary: Get the group member.
+      description: Get the group member.
+      tags:
+        - Groups
+      security:
+        - basicAuth: [ ]
+      responses:
+        '200':
+          $ref: '#/components/responses/User'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      operationId: removeGroupMember
+      summary: Remove the user from the group.
+      description: Remove the user from the group.
+      tags:
+        - Groups
+      security:
+        - basicAuth: []
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/schemas':
+    get:
+      operationId: getSchemas
+      tags:
+        - Schemas
+      responses:
+        '200':
+          $ref: '#/components/responses/Schemas'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/schemas/{schemaId}':
+    parameters:
+      - $ref: '#/components/parameters/schemaId'
+    get:
+      operationId: getSchemaById
+      tags:
+        - Schemas
+      responses:
+        '200':
+          $ref: '#/components/responses/Schema'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/badges':
+    get:
+      operationId: getBadges
+      summary: Get the list of badges.
+      description: Get the list of badges.
+      tags:
+        - Badges
+      responses:
+        '200':
+          $ref: '#/components/responses/Badges'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+  '/announcements':
+    get:
+      operationId: getAnnouncements
+      summary: Get the list of announcements.
+      description: Get the list of announcements.
+      tags:
+        - Announcements
+      responses:
+        '200':
+          $ref: '#/components/responses/Announcements'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+components:
+  parameters:
+    after:
+      description: The time instant or interval to be applied with the `after` operator.
+      in: query
+      name: after
+      required: false
+      schema:
+        $ref: '#/components/schemas/TemporalFilter'
+    bbox:
+      description: The bounding box the requested tracks have to intersect with.
+      explode: false
+      in: query
+      name: bbox
+      required: false
+      style: form
+      schema:
+        items:
+          type: number
+        maxItems: 4
+        minItems: 4
+        type: array
+    before:
+      description: The time instant or interval to be applied with the `before` operator.
+      in: query
+      name: before
+      required: false
+      schema:
+        $ref: '#/components/schemas/TemporalFilter'
+    begins:
+      description: The time instant or interval to be applied with the `begins` operator.
+      in: query
+      name: begins
+      required: false
+      schema:
+        $ref: '#/components/schemas/TemporalFilter'
+    begunBy:
+      description: The time instant or interval to be applied with the `begunBy` operator.
+      in: query
+      name: begunBy
+      required: false
+      schema:
+        $ref: '#/components/schemas/TemporalFilter'
+    contains:
+      description: The time instant or interval to be applied with the `contains`
+        operator.
+      in: query
+      name: contains
+      required: false
+      schema:
+        $ref: '#/components/schemas/TemporalFilter'
+    during:
+      description: The time instant or interval to be applied with the `during` operator.
+      in: query
+      name: during
+      required: false
+      schema:
+        $ref: '#/components/schemas/TemporalFilter'
+    endedBy:
+      description: The time instant or interval to be applied with the `endedBy` operator.
+      in: query
+      name: endedBy
+      required: false
+      schema:
+        $ref: '#/components/schemas/TemporalFilter'
+    ends:
+      description: The time instant or interval to be applied with the `ends` operator.
+      in: query
+      name: ends
+      required: false
+      schema:
+        $ref: '#/components/schemas/TemporalFilter'
+    equals:
+      description: The time instant or interval to be applied with the `equals` operator.
+      in: query
+      name: equals
+      required: false
+      schema:
+        $ref: '#/components/schemas/TemporalFilter'
+    locale:
+      in: query
+      name: locale
+      schema:
+        pattern: ^[a-z]{2}([-_][A-Z]{2})?$
+        type: string
+    measurementId:
+      description: The measurement id.
+      in: path
+      name: measurementId
+      required: true
+      schema:
+        type: string
+    meets:
+      description: The time instant or interval to be applied with the `meets` operator.
+      in: query
+      name: meets
+      required: false
+      schema:
+        $ref: '#/components/schemas/TemporalFilter'
+    metBy:
+      description: The time instant or interval to be applied with the `metBy` operator.
+      in: query
+      name: metBy
+      required: false
+      schema:
+        $ref: '#/components/schemas/TemporalFilter'
+    nearPoint:
+      description: The point to which the distance can not fall below a certain threshold.
+      explode: false
+      in: query
+      name: nearPoint
+      required: false
+      schema:
+        items:
+          type: number
+        maxItems: 3
+        minItems: 3
+        type: array
+      style: form
+    overlapped:
+      description: The time instant or interval to be applied with the `overlapped`
+        operator.
+      in: query
+      name: overlapped
+      required: false
+      schema:
+        $ref: '#/components/schemas/TemporalFilter'
+    overlaps:
+      description: The time instant or interval to be applied with the `overlaps`
+        operator.
+      in: query
+      name: overlaps
+      required: false
+      schema:
+        $ref: '#/components/schemas/TemporalFilter'
+    status:
+      in: query
+      name: status
+      required: false
+      schema:
+        $ref: 'schema/track-status.json'
+    limit:
+      description: The number of entities per page.
+      in: query
+      name: limit
+      required: false
+      schema:
+        type: integer
+        default: 100
+    page:
+      description: The page of entities to request.
+      in: query
+      name: page
+      required: false
+      schema:
+        type: integer
+        default: 1
+    q:
+      name: q
+      description: The term to search for.
+      in: query
+      schema:
+        type: string
+    range:
+      description: The range of entities to request.
+      in: header
+      name: Range
+      required: false
+      style: simple
+      explode: true
+      schema:
+        type: object
+        properties:
+          items:
+            type: string
+            pattern: '^\d+-\d+$'
+    activityType:
+      in: query
+      name: type
+      description: The activity type.
+      schema:
+        type: string
+        enum:
+          - CHANGED_PROFILE,
+          - CREATED_GROUP,
+          - CHANGED_GROUP,
+          - JOINED_GROUP,
+          - LEFT_GROUP,
+          - DELETED_GROUP,
+          - FRIENDED_USER,
+          - UNFRIENDED_USER,
+          - CREATED_TRACK
+    deleteContent:
+      in: query
+      name: deleteContent
+      description: If the user created tracks and measurements also should be deleted.
+      required: false
+      schema:
+        type: boolean
+        default: false
+    schemaId:
+      description: The schema id.
+      in: path
+      name: schemaId
+      required: true
+      schema:
+        type: string
+    userId:
+      description: The user id.
+      in: path
+      name: userId
+      required: true
+      schema:
+        type: string
+    friendId:
+      description: The friend id.
+      in: path
+      name: friendId
+      required: true
+      schema:
+        type: string
+    groupId:
+      description: The group id.
+      in: path
+      name: groupId
+      required: true
+      schema:
+        type: string
+    memberId:
+      description: The member id.
+      in: path
+      name: memberId
+      required: true
+      schema:
+        type: string
+    activityId:
+      description: The activity id.
+      in: path
+      name: activityId
+      required: true
+      schema:
+        type: string
+    termsOfUseId:
+      description: The terms of use id.
+      in: path
+      name: termsOfUseId
+      required: true
+      schema:
+        type: string
+    privacyStatementId:
+      description: The privacy statement id.
+      in: path
+      name: privacyStatementId
+      required: true
+      schema:
+        type: string
+    phenomenonId:
+      description: The phenomenon id.
+      in: path
+      name: phenomenonId
+      required: true
+      schema:
+        type: string
+    sensorId:
+      description: The Sensor id.
+      in: path
+      name: sensorId
+      required: true
+      schema:
+        type: string
+    sensorType:
+      description: The Sensor type.
+      in: query
+      name: type
+      required: false
+      schema:
+        type: string
+    trackId:
+      description: The track id.
+      in: path
+      name: trackId
+      required: true
+      schema:
+        type: string
+    fuelingId:
+      description: The fueling id.
+      in: path
+      name: fuelingId
+      required: true
+      schema:
+        type: string
+    TermsOfUseHeader:
+      in: header
+      name: Accept-Terms-Of-Use
+      description: Declare that the end user accepted the terms of use of this service.
+      required: true
+      schema:
+        type: boolean
+    PrivacyStatementHeader:
+      in: header
+      name: Accept-Privacy-Statement
+      description: Declare that the end user accepted the privacy statement.
+      required: true
+      schema:
+        type: boolean
+  headers:
+    ContentRange:
+      style: simple
+      explode: true
+      schema:
+        type: string
+        pattern: '^items\s+\d+-\d+/(\d+|\*)$'
+    Link:
+      style: simple
+      explode: true
+      schema:
+        type: object
+        properties:
+          items:
+            type: string
+            pattern: '^<.*>\s?;\s?rel=(first|last|next|prev|service-desc)\s?;\s?type=.+/.+'
+    Location:
+      schema:
+        type: string
+        format: uri
+    WWW-Authenticate:
+      schema:
+        type: string
+  requestBodies:
+    CreateMeasurement:
+      description: The measurement to create.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: 'schema/measurement-create.json'
+    CreatePhenomenon:
+      description: The phenomenon to create.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: 'schema/phenomenon-create.json'
+    CreateSensor:
+      description: The sensor to create.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: 'schema/sensor-create.json'
+    CreateTrack:
+      description: The track to create.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: 'schema/track-create.json'
+    CreateUser:
+      description: The user to create.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: 'schema/user-create.json'
+    CreateFueling:
+      description: The fueling to create.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: 'schema/fueling-create.json'
+    ModifyUser:
+      description: The user modifications.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: 'schema/user-modify.json'
+    ModifyTrack:
+      description: The track modifications.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: 'schema/track-modify.json'
+    ModifyGroup:
+      description: The group modifications.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: 'schema/group-modify.json'
+    UserRef:
+      description: The user reference.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: 'schema/user-ref.json'
+  responses:
+    NoContent:
+      description: A empty response
+      headers:
+        Link:
+          $ref: '#/components/headers/Link'
+    Created:
+      description: The entity was created.
+      headers:
+        Location:
+          $ref: '#/components/headers/Location'
+        Link:
+          $ref: '#/components/headers/Link'
+    PNG:
+      description: The image.
+      content:
+        image/png:
+          schema:
+            type: string
+            format: binary
+      headers:
+        Link:
+          $ref: '#/components/headers/Link'
+    JPEG:
+      description: The image.
+      content:
+        image/jpeg:
+          schema:
+            type: string
+            format: binary
+      headers:
+        Link:
+          $ref: '#/components/headers/Link'
+    BadRequest:
+      description: The request was malformed.
+      content:
+        application/json:
+          schema:
+            $ref: 'schema/exception.json'
+      headers:
+        Link:
+          $ref: '#/components/headers/Link'
+    Forbidden:
+      description: The operation is not allowed by current user.
+      content:
+        application/json:
+          schema:
+            $ref: 'schema/exception.json'
+      headers:
+        Link:
+          $ref: '#/components/headers/Link'
+    InternalServerError:
+      description: An internal server error occured.
+      content:
+        application/json:
+          schema:
+            $ref: 'schema/exception.json'
+      headers:
+        Link:
+          $ref: '#/components/headers/Link'
+    NotFound:
+      description: The Resource could not be found.
+      content:
+        application/json:
+          schema:
+            $ref: 'schema/exception.json'
+      headers:
+        Link:
+          $ref: '#/components/headers/Link'
+    UnavailableForLegalReasons:
+      description: The operation requieres acceptance of the terms of use and privacy statement.
+      content:
+        application/json:
+          schema:
+            $ref: 'schema/exception.json'
+      headers:
+        Link:
+          $ref: '#/components/headers/Link'
+    UnauthorizedError:
+      description: Authentication information is missing or invalid
+      content:
+        application/json:
+          schema:
+            $ref: 'schema/exception.json'
+      headers:
+        Link:
+          $ref: '#/components/headers/Link'
+        WWW-Authenticate:
+          $ref: '#/components/headers/WWW-Authenticate'
+    Phenomenons:
+      description: The phenomenons.
+      content:
+        application/json:
+          schema:
+            $ref: 'schema/phenomenons.json'
+        text/yaml:
+          schema:
+            $ref: 'schema/phenomenons.json'
+      headers:
+        Link:
+          $ref: '#/components/headers/Link'
+        Content-Range:
+          $ref: '#/components/headers/ContentRange'
+    Phenomenon:
+      description: The phenomenon.
+      content:
+        application/json:
+          schema:
+            $ref: 'schema/phenomenon.json'
+        text/yaml:
+          schema:
+            $ref: 'schema/phenomenon.json'
+      headers:
+        Link:
+          $ref: '#/components/headers/Link'
+    Sensor:
+      description: The Sensor.
+      content:
+        application/json:
+          schema:
+            $ref: 'schema/sensor.json'
+        text/yaml:
+          schema:
+            $ref: 'schema/sensor.json'
+      headers:
+        Link:
+          $ref: '#/components/headers/Link'
+    Sensors:
+      description: The Sensors.
+      content:
+        application/json:
+          schema:
+            $ref: 'schema/sensors.json'
+        text/yaml:
+          schema:
+            $ref: 'schema/sensors.json'
+      headers:
+        Link:
+          $ref: '#/components/headers/Link'
+        Content-Range:
+          $ref: '#/components/headers/ContentRange'
+    Statistic:
+      description: The statistic.
+      content:
+        application/json:
+          schema:
+            $ref: 'schema/statistic.json'
+        text/yaml:
+          schema:
+            $ref: 'schema/statistic.json'
+      headers:
+        Link:
+          $ref: '#/components/headers/Link'
+    Statistics:
+      description: The statistics.
+      content:
+        application/json:
+          schema:
+            $ref: 'schema/statistics.json'
+        text/yaml:
+          schema:
+            $ref: 'schema/statistics.json'
+      headers:
+        Link:
+          $ref: '#/components/headers/Link'
+        Content-Range:
+          $ref: '#/components/headers/ContentRange'
+    Activities:
+      description: The activities.
+      content:
+        application/json:
+          schema:
+            $ref: 'schema/activities.json'
+        text/yaml:
+          schema:
+            $ref: 'schema/activities.json'
+      headers:
+        Link:
+          $ref: '#/components/headers/Link'
+        Content-Range:
+          $ref: '#/components/headers/ContentRange'
+    Activity:
+      description: The activity.
+      content:
+        application/json:
+          schema:
+            $ref: 'schema/activity.json'
+        text/yaml:
+          schema:
+            $ref: 'schema/activity.json'
+      headers:
+        Link:
+          $ref: '#/components/headers/Link'
+    UserStatistic:
+      description: The user statistic.
+      content:
+        application/json:
+          schema:
+            $ref: 'schema/userStatistic.json'
+        text/yaml:
+          schema:
+            $ref: 'schema/userStatistic.json'
+      headers:
+        Link:
+          $ref: '#/components/headers/Link'
+    Track:
+      description: The track.
+      content:
+        application/json:
+          schema:
+            $ref: 'schema/track.json'
+        text/yaml:
+          schema:
+            $ref: 'schema/track.json'
+      headers:
+        Link:
+          $ref: '#/components/headers/Link'
+    Tracks:
+      description: The tracks.
+      content:
+        application/json:
+          schema:
+            $ref: 'schema/tracks.json'
+        text/yaml:
+          schema:
+            $ref: 'schema/tracks.json'
+      headers:
+        Link:
+          $ref: '#/components/headers/Link'
+        Content-Range:
+          $ref: '#/components/headers/ContentRange'
+    Measurement:
+      description: The measurement.
+      content:
+        application/json:
+          schema:
+            $ref: 'schema/measurement.json'
+        text/yaml:
+          schema:
+            $ref: 'schema/measurement.json'
+      headers:
+        Link:
+          $ref: '#/components/headers/Link'
+    Measurements:
+      description: The measurements.
+      content:
+        application/json:
+          schema:
+            $ref: 'schema/measurements.json'
+        text/yaml:
+          schema:
+            $ref: 'schema/measurements.json'
+      headers:
+        Link:
+          $ref: '#/components/headers/Link'
+        Content-Range:
+          $ref: '#/components/headers/ContentRange'
+    Root:
+      description: The root.
+      content:
+        application/json:
+          schema:
+            $ref: 'schema/root.yaml'
+        text/yaml:
+          schema:
+            $ref: 'schema/root.json'
+      headers:
+        Link:
+          $ref: '#/components/headers/Link'
+    ApiDocs:
+      description: The OpenAPI specification of this service.
+      content:
+        application/json:
+          schema:
+            $ref: 'https://spec.openapis.org/oas/3.0/schema/2021-09-28'
+        text/yaml:
+          schema:
+            $ref: 'https://spec.openapis.org/oas/3.0/schema/2021-09-28'
+        text/html: { }
+      headers:
+        Link:
+          $ref: '#/components/headers/Link'
+
+    Schemas:
+      description: The schema listing.
+      content:
+        application/json:
+          schema:
+            $ref: 'schema/schemas.json'
+        text/yaml:
+          schema:
+            $ref: 'schema/schemas.json'
+    Badges:
+      description: The badges.
+      content:
+        application/json:
+          schema:
+            $ref: 'schema/badges.json'
+        text/yaml:
+          schema:
+            $ref: 'schema/badges.json'
+    Announcements:
+      description: The announcements.
+      content:
+        application/json:
+          schema:
+            $ref: 'schema/announcements.json'
+        text/yaml:
+          schema:
+            $ref: 'schema/announcements.json'
+
+    PrivacyStatements:
+      description: The privacy statements.
+      content:
+        application/json:
+          schema:
+            $ref: 'schema/privacy-statements.json'
+        text/yaml:
+          schema:
+            $ref: 'schema/privacy-statements.json'
+    PrivacyStatement:
+      description: The privacy statement.
+      content:
+        application/json:
+          schema:
+            $ref: 'schema/privacy-statement.json'
+        text/yaml:
+          schema:
+            $ref: 'schema/privacy-statement.json'
+    TermsOfUse:
+      description: The terms of use.
+      content:
+        application/json:
+          schema:
+            $ref: 'schema/terms-of-use.json'
+        text/yaml:
+          schema:
+            $ref: 'schema/terms-of-use.json'
+    TermsOfUseInstance:
+      description: The terms of use instance.
+      content:
+        application/json:
+          schema:
+            $ref: 'schema/terms-of-use-instance.json'
+        text/yaml:
+          schema:
+            $ref: 'schema/terms-of-use-instance.json'
+    Schema:
+      description: The schema.
+      content:
+        application/json:
+          schema:
+            $ref: 'https://spec.openapis.org/oas/3.0/schema/2021-09-28#/definitions/Schema'
+        text/yaml:
+          schema:
+            $ref: 'https://spec.openapis.org/oas/3.0/schema/2021-09-28#/definitions/Schema'
+    User:
+      description: The user.
+      content:
+        application/json:
+          schema:
+            $ref: 'schema/user.json'
+        text/yaml:
+          schema:
+            $ref: 'schema/user.json'
+    Users:
+      description: The users.
+      content:
+        application/json:
+          schema:
+            $ref: 'schema/users.json'
+        text/yaml:
+          schema:
+            $ref: 'schema/users.json'
+      headers:
+        Link:
+          $ref: '#/components/headers/Link'
+        Content-Range:
+          $ref: '#/components/headers/ContentRange'
+    Fueling:
+      description: The fuelings.
+      content:
+        application/json:
+          schema:
+            $ref: 'schema/fueling.json'
+        text/yaml:
+          schema:
+            $ref: 'schema/fueling.json'
+      headers:
+        Link:
+          $ref: '#/components/headers/Link'
+    Fuelings:
+      description: The fuelings.
+      content:
+        application/json:
+          schema:
+            $ref: 'schema/fuelings.json'
+        text/yaml:
+          schema:
+            $ref: 'schema/fuelings.json'
+      headers:
+        Link:
+          $ref: '#/components/headers/Link'
+        Content-Range:
+          $ref: '#/components/headers/ContentRange'
+    Groups:
+      description: The groups.
+      content:
+        application/json:
+          schema:
+            $ref: 'schema/groups.json'
+        text/yaml:
+          schema:
+            $ref: 'schema/groups.json'
+      headers:
+        Link:
+          $ref: '#/components/headers/Link'
+        Content-Range:
+          $ref: '#/components/headers/ContentRange'
+    Group:
+      description: The group.
+      content:
+        application/json:
+          schema:
+            $ref: 'schema/group.json'
+        text/yaml:
+          schema:
+            $ref: 'schema/group.json'
+      headers:
+        Link:
+          $ref: '#/components/headers/Link'
+  schemas:
+    TemporalFilter:
+      oneOf:
+        - type: string
+          description: Two comma-seperated date-times that form a temporal interval.
+        - format: date-time
+          type: string
+          description: The temporal instant.
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic

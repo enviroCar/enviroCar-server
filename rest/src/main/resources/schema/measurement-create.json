@@ -15,7 +15,7 @@
       ]
     },
     "geometry": {
-      "$ref": "geometry.json#"
+      "$ref": "geometry.json"
     },
     "properties": {
       "type": "object",
@@ -42,10 +42,16 @@
             ],
             "properties": {
               "value": {
-                "type": [
-                  "string",
-                  "number",
-                  "boolean"
+                "oneOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "boolean"
+                  }
                 ]
               }
             }

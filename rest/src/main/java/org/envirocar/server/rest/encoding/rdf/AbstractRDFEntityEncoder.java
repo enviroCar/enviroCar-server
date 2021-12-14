@@ -31,8 +31,7 @@ import javax.ws.rs.core.UriInfo;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public abstract class AbstractRDFEntityEncoder<T>
-        extends AbstractRDFMessageBodyWriter<T>
-        implements RDFEntityEncoder<T> {
+        extends AbstractRDFMessageBodyWriter<T> {
     private Provider<AccessRights> rights;
     private Provider<UriInfo> uriInfo;
 
@@ -52,7 +51,7 @@ public abstract class AbstractRDFEntityEncoder<T>
 
     @Override
     public Model encodeRDF(T t) {
-        return encodeRDF(t, rights.get());
+        return encodeRDF(t, this.rights.get());
     }
 
     @Override
@@ -63,7 +62,7 @@ public abstract class AbstractRDFEntityEncoder<T>
     private class RequestUriBuilderProvider implements Provider<UriBuilder> {
         @Override
         public UriBuilder get() {
-            return uriInfo.get().getBaseUriBuilder();
+            return AbstractRDFEntityEncoder.this.uriInfo.get().getBaseUriBuilder();
         }
     }
 }

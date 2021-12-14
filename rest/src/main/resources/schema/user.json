@@ -6,7 +6,7 @@
   ],
   "allOf": [
     {
-      "$ref": "definitions.json#/optional-user-properties"
+      "$ref": "optional-user-properties.json"
     },
     {
       "properties": {
@@ -15,14 +15,14 @@
           "format": "date-time"
         },
         "mail": {
-          "$ref": "definitions.json#/mail"
+          "$ref": "mail-address.json"
         },
         "modified": {
           "type": "string",
           "format": "date-time"
         },
         "name": {
-          "$ref": "definitions.json#/username"
+          "$ref": "username.json"
         }
       }
     }

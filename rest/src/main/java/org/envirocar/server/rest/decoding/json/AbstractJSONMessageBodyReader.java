@@ -50,7 +50,7 @@ public abstract class AbstractJSONMessageBodyReader<T> implements MessageBodyRea
     private JsonNodeFactory factory;
     private final Class<T> classType;
 
-    public AbstractJSONMessageBodyReader(Class<T> classType) {
+    protected AbstractJSONMessageBodyReader(Class<T> classType) {
         this.classType = classType;
     }
 
@@ -64,7 +64,7 @@ public abstract class AbstractJSONMessageBodyReader<T> implements MessageBodyRea
                       MultivaluedMap<String, String> h,
                       InputStream in) throws IOException, WebApplicationException {
         try {
-            return decode(reader.readTree(in), mt);
+            return decode(this.reader.readTree(in), mt);
         } catch (JsonParseException e) {
             throw new BadRequestException(e);
         }

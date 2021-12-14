@@ -21,7 +21,6 @@ import com.sun.jersey.api.model.AbstractMethod;
 import com.sun.jersey.spi.container.ResourceFilter;
 import com.sun.jersey.spi.container.ResourceFilterFactory;
 
-import javax.inject.Provider;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,28 +33,18 @@ import java.util.Optional;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public class JsonSchemaResourceFilterFactory implements ResourceFilterFactory {
-    private final JsonSchemaResponseValidationFilter responseValidationFilter;
     private final JsonSchemaRequestValidationFilter requestValidationFilter;
-    private final Provider<JsonSchemaUriConfiguration> schemaUriConfiguration;
 
     @Inject
-    public JsonSchemaResourceFilterFactory(JsonSchemaResponseValidationFilter responseValidationFilter,
-                                           JsonSchemaRequestValidationFilter requestValidationFilter,
-                                           Provider<JsonSchemaUriConfiguration> schemaUriConfiguration) {
-        this.responseValidationFilter = Objects.requireNonNull(responseValidationFilter);
+    public JsonSchemaResourceFilterFactory(JsonSchemaRequestValidationFilter requestValidationFilter) {
         this.requestValidationFilter = Objects.requireNonNull(requestValidationFilter);
-        this.schemaUriConfiguration = Objects.requireNonNull(schemaUriConfiguration);
     }
 
     @Override
     public List<ResourceFilter> create(AbstractMethod am) {
         URI request = getRequestSchema(am);
-        URI response = getResponseSchema(am);
 
         List<ResourceFilter> filters = new ArrayList<>(3);
-        // always add the response validation filter for exceptions
-        filters.add(this.responseValidationFilter);
-        filters.add(new JsonSchemaMediaTypeResourceFilter(request, response, schemaUriConfiguration));
         if (request != null) {
             filters.add(this.requestValidationFilter);
         }
@@ -64,15 +53,7 @@ public class JsonSchemaResourceFilterFactory implements ResourceFilterFactory {
 
     private URI getRequestSchema(AbstractMethod am) {
         return Optional.ofNullable(am.getAnnotation(Schema.class)).map(Schema::request)
-                       .filter(this::isNotEmpty).map(URI::create).orElse(null);
+                       .filter(value -> !value.isEmpty()).map(URI::create).orElse(null);
     }
 
-    private URI getResponseSchema(AbstractMethod am) {
-        return Optional.ofNullable(am.getAnnotation(Schema.class)).map(Schema::response)
-                       .filter(this::isNotEmpty).map(URI::create).orElse(null);
-    }
-
-    private boolean isNotEmpty(String value) {
-        return !value.isEmpty();
-    }
 }

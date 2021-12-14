@@ -42,7 +42,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import java.security.InvalidParameterException;
@@ -69,7 +68,6 @@ public class MeasurementsResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.MEASUREMENTS)
-    @Produces({MediaTypes.JSON, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
     public Measurements get(@QueryParam(RESTConstants.BBOX) BoundingBox bbox,
                             @QueryParam(RESTConstants.NEAR_POINT) NearPoint nearPoint) throws BadRequestException {
         //check spatial filter

@@ -41,7 +41,7 @@ public abstract class AbstractLinkerRDFEntityEncoder<T> extends AbstractRDFEntit
                            Provider<UriBuilder> uriBuilder) {
         Model m = ModelFactory.createDefaultModel();
         Resource r = m.createResource(getURI(t, uriBuilder));
-        for (RDFLinker<T> linker : linkers) {
+        for (RDFLinker<T> linker : this.linkers) {
             linker.link(m, t, rights, r, uriBuilder);
         }
         return m;

@@ -57,7 +57,6 @@ public class GroupsResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.GROUPS)
-    @Produces({MediaTypes.JSON, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
     public Groups get(@QueryParam(RESTConstants.SEARCH) String search) throws BadRequestException {
         if (user != null) {
             return getGroupService().getGroups(user, getPagination());

@@ -54,12 +54,12 @@
           },
           "startPosition": {
             "geometry": {
-              "$ref": "geometry.json#"
+              "$ref": "geometry.json"
             }
           },
           "endPosition": {
             "geometry": {
-              "$ref": "geometry.json#"
+              "$ref": "geometry.json"
             }
           }
         }

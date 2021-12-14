@@ -19,6 +19,7 @@ package org.envirocar.server.rest.schema;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.ImplementedBy;
 
+@FunctionalInterface
 @ImplementedBy(JsonSchemaUriReplacerImpl.class)
 public interface JsonSchemaUriReplacer {
     JsonNode replaceSchemaLinks(JsonNode node);

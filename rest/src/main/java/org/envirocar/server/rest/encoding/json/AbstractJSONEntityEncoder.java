@@ -17,6 +17,7 @@
 package org.envirocar.server.rest.encoding.json;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.JsonNodeCreator;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -40,10 +41,6 @@ public abstract class AbstractJSONEntityEncoder<T>
 
     public AbstractJSONEntityEncoder(Class<T> classType) {
         super(classType);
-    }
-
-    public JsonNodeFactory getJsonFactory() {
-        return this.jsonFactory;
     }
 
     @Inject

@@ -37,7 +37,6 @@ public class PrivacyStatementsResource extends AbstractResource {
     @GET
     @AllowOutdatedTerms
     @Schema(response = Schemas.PRIVACY_STATEMENTS)
-    @Produces({MediaTypes.JSON})
     public PrivacyStatements get() throws BadRequestException {
         return getDataService().getPrivacyStatements(getPagination());
     }

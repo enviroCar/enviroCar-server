@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "required": [
+    "type",
+    "geometries"
+  ],
+  "properties": {
+    "type": {
+      "enum": [
+        "GeometryCollection"
+      ]
+    },
+    "geometries": {
+      "type": "array",
+      "items": {
+        "$ref": "geometry.json"
+      }
+    }
+  }
+}

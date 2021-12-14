@@ -25,7 +25,7 @@ import java.net.URI;
 @ImplementedBy(JsonSchemaUriConfigurationImpl.class)
 public interface JsonSchemaUriConfiguration {
     /**
-     * Convert the schema {@link URI} to it's external form.
+     * Convert the schema {@link URI} to its external form.
      *
      * @param uri The internal URI.
      * @return The external URI.
@@ -33,7 +33,7 @@ public interface JsonSchemaUriConfiguration {
     URI toExternalURI(URI uri);
 
     /**
-     * Convert the schema {@link URI} to it's internal URI.
+     * Convert the schema {@link URI} to its internal URI.
      *
      * @param uri The internal URI.
      * @return The resource URI.

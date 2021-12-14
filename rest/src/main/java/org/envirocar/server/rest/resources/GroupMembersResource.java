@@ -52,27 +52,26 @@ public class GroupMembersResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.USERS)
-    @Produces({MediaTypes.JSON, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
     public Users get() throws BadRequestException {
-        checkRights(getRights().canSeeMembersOf(group));
-        return getGroupService().getGroupMembers(group, getPagination());
+        checkRights(getRights().canSeeMembersOf(this.group));
+        return getGroupService().getGroupMembers(this.group, getPagination());
     }
 
     @POST
     @Authenticated
-    @Consumes({MediaTypes.JSON})
+    @Consumes(MediaTypes.JSON)
     @Schema(request = Schemas.USER_REF)
     public void add(UserReference user) throws UserNotFoundException {
         User u = getUserService().getUser(user.getName());
-        checkRights(getRights().isSelf(u) && getRights().canJoinGroup(group));
-        getGroupService().addGroupMember(group, u);
+        checkRights(getRights().isSelf(u) && getRights().canJoinGroup(this.group));
+        getGroupService().addGroupMember(this.group, u);
     }
 
     @Path(MEMBER)
     public GroupMemberResource member(@PathParam("member") String username) throws UserNotFoundException {
-        checkRights(getRights().canSeeMembersOf(group));
-        User user = getGroupService().getGroupMember(group, username);
+        checkRights(getRights().canSeeMembersOf(this.group));
+        User user = getGroupService().getGroupMember(this.group, username);
         checkRights(getRights().canSee(user));
-        return getResourceFactory().createGroupMemberResource(group, user);
+        return getResourceFactory().createGroupMemberResource(this.group, user);
     }
 }

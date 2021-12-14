@@ -43,7 +43,6 @@ public class TermsOfUseInstanceResource extends TermsResource {
     @GET
     @AllowOutdatedTerms
     @Schema(response = Schemas.TERMS_OF_USE_INSTANCE)
-    @Produces({MediaTypes.JSON})
     public TermsOfUseInstance get() {
         return setContents(entity);
     }

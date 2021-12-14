@@ -16,9 +16,14 @@
  */
 package org.envirocar.server.rest.util;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import org.envirocar.server.rest.GuiceRunner;
+import org.envirocar.server.rest.util.OSMTileRenderer.BoundingBox;
+import org.junit.Before;
+import org.junit.ClassRule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
+import org.junit.runner.RunWith;
+import org.locationtech.jts.geom.Coordinate;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -30,51 +35,51 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.envirocar.server.rest.GuiceRunner;
-import org.envirocar.server.rest.util.OSMTileRenderer.BoundingBox;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import org.locationtech.jts.geom.Coordinate;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(GuiceRunner.class)
 public class OSMTileRendererTests {
-    private final OSMTileRenderer osmt;
+    private OSMTileRenderer osmt;
+    @ClassRule
+    public static final TemporaryFolder temp = new TemporaryFolder();
 
-    public OSMTileRendererTests() {
-        osmt = new OSMTileRenderer();
+    @Before
+    public void setup() throws IOException {
+        this.osmt = new OSMTileRenderer(temp.getRoot().getAbsolutePath());
     }
 
     @Test
     public void wmtServiceWorks() throws IOException {
-        assertNotNull(osmt.downloadTile(1, 1, 19));
+        assertNotNull(this.osmt.downloadTile(1, 1, 18));
     }
 
     @Test
     public void saveImageWorks() throws IOException {
-        osmt.saveImage(new BufferedImage(768, 512, BufferedImage.TYPE_INT_RGB), "saveImage-test");
+        this.osmt.saveImage(new BufferedImage(768, 512, BufferedImage.TYPE_INT_RGB), "saveImage-test");
     }
 
     @Test
     public void createImageTestHorizontal() throws IOException {
         BufferedImage bi = createImageTest(populateCoordinates("horizontal"));
-        osmt.saveImage(bi, "1235456-test");
-        assertEquals("Image height ok", 1024, bi.getHeight());
-        assertEquals("Image width ok", 1280, bi.getWidth());
+        this.osmt.saveImage(bi, "1235456-test");
+        assertEquals("Image height ok", 512, bi.getHeight());
+        assertEquals("Image width ok", 512, bi.getWidth());
     }
 
     @Test
     public void createImageTestVertical() throws IOException {
         BufferedImage biv = createImageTest(populateCoordinates("vertical"));
-        osmt.saveImage(biv, "1235456-test-vertical");
-        assertEquals("Image height ok", 1024, biv.getHeight());
-        assertEquals("Image width ok", 1280, biv.getWidth());
+        this.osmt.saveImage(biv, "1235456-test-vertical");
+        assertEquals("Image height ok", 512, biv.getHeight());
+        assertEquals("Image width ok", 512 , biv.getWidth());
     }
 
     @Test
     public void createImageTestSmall() throws IOException {
         BufferedImage biv = createImageTest(populateCoordinates("regular"));
-        osmt.saveImage(biv, "1235456-test-small");
+        this.osmt.saveImage(biv, "1235456-test-small");
         assertEquals("Image height ok", 1024, biv.getHeight());
         assertEquals("Image width ok", 1280, biv.getWidth());
     }
@@ -84,20 +89,20 @@ public class OSMTileRendererTests {
         List<Coordinate> coords = new ArrayList<>(2);
         coords.add(new Coordinate(89.9, 179.9));
         coords.add(new Coordinate(-89.9, -179.9));
-        int level = osmt.getZoomLevel(coords);
+        int level = this.osmt.getZoomLevel(coords);
         assertEquals("Zoom level exceeds limit", 2, level);
     }
 
     @Test
     public void zoomLevelTest() throws IOException {
-        int level = osmt.getZoomLevel(populateCoordinates("regular"));
+        int level = this.osmt.getZoomLevel(populateCoordinates("regular"));
         assertEquals(17, level);
     }
 
     @Test
     public void colorCodeTest() {
         double speed = 53.76; // in kmph
-        Color color = osmt.getColorCode(speed);
+        Color color = this.osmt.getColorCode(speed);
         assertEquals(new Color(0, 204, 0).getRGB(), color.getRGB());
     }
 
@@ -106,7 +111,7 @@ public class OSMTileRendererTests {
         double lat = 0.0;
         double lon = 0.0;
         int zoom = 19;
-        int[] tileDetails = osmt.getTileDetails(lon, lat, zoom);
+        int[] tileDetails = this.osmt.getTileDetails(lon, lat, zoom);
         assertEquals(tileDetails[0], 262144);
         assertEquals(tileDetails[1], 262144);
     }
@@ -116,14 +121,14 @@ public class OSMTileRendererTests {
         double lat = 51.93612792994827;
         double lon = 7.651712168008089;
         int zoom = 17;
-        int[] tileDetails = osmt.getTileDetails(lon, lat, zoom);
+        int[] tileDetails = this.osmt.getTileDetails(lon, lat, zoom);
         assertEquals(tileDetails[0], 68321);
         assertEquals(tileDetails[1], 43332);
     }
 
     @Test
     public void validateBBox() throws IOException {
-        BoundingBox bbox = osmt.findBoundingBoxForGivenLocations(populateCoordinates("regular"));
+        BoundingBox bbox = this.osmt.findBoundingBoxForGivenLocations(populateCoordinates("regular"));
         assertTrue(bbox.east <= 180);
         assertTrue(bbox.west <= 180);
         assertTrue(bbox.north <= 180);
@@ -137,7 +142,7 @@ public class OSMTileRendererTests {
 
     @Test
     public void bBox() throws IOException {
-        BoundingBox bbox = osmt.findBoundingBoxForGivenLocations(populateCoordinates("regular"));
+        BoundingBox bbox = this.osmt.findBoundingBoxForGivenLocations(populateCoordinates("regular"));
         assertEquals(decimalRound(bbox.east), decimalRound(7.651712168008089), 0.0);
         assertEquals(decimalRound(bbox.west), decimalRound(7.653740337118506), 0.0);
         assertEquals(decimalRound(bbox.north), decimalRound(51.93612792994827), 0.0);
@@ -147,8 +152,7 @@ public class OSMTileRendererTests {
 
     public double decimalRound(double input) throws IOException {
         DecimalFormat f = new DecimalFormat("##.000000");
-        double output = Double.parseDouble(f.format(input));
-        return output;
+        return Double.parseDouble(f.format(input));
     }
 
     private ArrayList<Coordinate> populateCoordinates(String test) throws IOException {
@@ -156,16 +160,16 @@ public class OSMTileRendererTests {
         BufferedReader br;
         if (test.equals("horizontal")) {
             br = new BufferedReader(new InputStreamReader(this
-                    .getClass().getClassLoader()
-                    .getResourceAsStream("testcordinates-horizontal.txt")));
+                                                                  .getClass().getClassLoader()
+                                                                  .getResourceAsStream("testcordinates-horizontal.txt")));
         } else if (test.equals("vertical")) {
             br = new BufferedReader(new InputStreamReader(this
-                    .getClass().getClassLoader()
-                    .getResourceAsStream("testcoordinates-vertical.txt")));
+                                                                  .getClass().getClassLoader()
+                                                                  .getResourceAsStream("testcoordinates-vertical.txt")));
         } else {
             br = new BufferedReader(new InputStreamReader(this
-                    .getClass().getClassLoader()
-                    .getResourceAsStream("testcordinates.txt")));
+                                                                  .getClass().getClassLoader()
+                                                                  .getResourceAsStream("testcordinates.txt")));
         }
         String strLine;
         ArrayList<Coordinate> coords = new ArrayList<>();
@@ -179,16 +183,16 @@ public class OSMTileRendererTests {
     }
 
     public BufferedImage createImageTest(ArrayList<Coordinate> coords) throws IOException {
-        int zoom = osmt.getZoomLevel(coords);
-        BufferedImage image = new BufferedImage(256 * (osmt.getNumberOfXTiles() + 1 + 2 * osmt.getImagePadding()),
-                                                256 * (osmt.getNumberOfYTiles() + 1 + 2 * osmt.getImagePadding()),
+        int zoom = this.osmt.getZoomLevel(coords);
+        BufferedImage image = new BufferedImage(256 * (this.osmt.getNumberOfXTiles() + 1 + 2 * this.osmt.getImagePadding()),
+                                                256 * (this.osmt.getNumberOfYTiles() + 1 + 2 * this.osmt.getImagePadding()),
                                                 BufferedImage.TYPE_INT_RGB);
-        Graphics2D g2d = osmt.appendImage(image,
-                                          osmt.getBaseTileX() + osmt.getNumberOfXTiles(),
-                                          osmt.getBaseTileX(),
-                                          osmt.getBaseTileY() + osmt.getNumberOfYTiles(),
-                                          osmt.getBaseTileY(), zoom);
-        osmt.drawRoute(g2d, coords, null, zoom, osmt.getImagePadding());
+        Graphics2D g2d = this.osmt.appendImage(image,
+                                               this.osmt.getBaseTileX() + this.osmt.getNumberOfXTiles(),
+                                               this.osmt.getBaseTileX(),
+                                               this.osmt.getBaseTileY() + this.osmt.getNumberOfYTiles(),
+                                               this.osmt.getBaseTileY(), zoom);
+        this.osmt.drawRoute(g2d, coords, null, zoom, this.osmt.getImagePadding());
         g2d.dispose();
         return image;
     }

@@ -45,7 +45,6 @@ public class PhenomenonsResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.PHENOMENONS)
-    @Produces({MediaTypes.JSON, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
     public Phenomenons get() throws BadRequestException {
         return getDataService().getPhenomenons(getPagination());
     }
