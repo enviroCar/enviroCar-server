@@ -42,7 +42,7 @@
         <logback-version>1.2.7</logback-version>
         <morphia-version>1.6.1</morphia-version>
         <jersey-version>1.19.4</jersey-version>
-        <slf4j-version>1.7.32</slf4j-version>
+        <slf4j-version>1.7.35</slf4j-version>
         <geotools-version>26.1</geotools-version>
         <wps-version>3.6.3</wps-version>
         <guice-version>4.2.3</guice-version>
