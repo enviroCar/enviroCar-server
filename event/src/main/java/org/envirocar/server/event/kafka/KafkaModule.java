@@ -26,8 +26,15 @@ import org.apache.kafka.common.serialization.Serializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.Track;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.io.ParseException;
+import org.locationtech.jts.io.WKTReader;
 
 import javax.inject.Named;
+import java.io.StringReader;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.UUID;
@@ -41,6 +48,21 @@ public final class KafkaModule extends AbstractModule {
         bind(new TypeLiteral<Serializer<String>>() {}).to(StringSerializer.class);
         bind(KafkaTrackListener.class).asEagerSingleton();
         bind(KafkaMeasurementListener.class).asEagerSingleton();
+        bind(GeofenceKafkaMeasurementListener.class).asEagerSingleton();
+    }
+
+    @Provides
+    public Map<String, Geometry> geofences(Properties properties) throws ParseException {
+        Map<String, Geometry> geofences = new HashMap<>(1);
+        String wkt = getProperty(properties, KafkaConstants.KAFKA_DVFO_GEOFENCE, null);
+        String topic = getProperty(properties, KafkaConstants.KAFKA_DVFO_TOPIC, "dvfo_measurements");
+        if (wkt != null) {
+            try (StringReader reader = new StringReader(wkt)) {
+                Geometry geofence = new WKTReader().read(reader);
+                geofences.put(topic, geofence);
+            }
+        }
+        return Collections.unmodifiableMap(geofences);
     }
 
     @Provides

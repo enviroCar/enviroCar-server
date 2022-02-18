@@ -21,4 +21,6 @@ public interface KafkaConstants {
     String KAFKA_TRACK_TOPIC = "kafka.topic.track";
     String KAFKA_BROKERS = "kafka.brokers";
     String KAFKA_CLIENT_ID = "kafka.clientId";
+    String KAFKA_DVFO_GEOFENCE = "kafka.dvfo.geofence";
+    String KAFKA_DVFO_TOPIC = "kafka.dvfo.topic.measurements";
 }

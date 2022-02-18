@@ -22,34 +22,41 @@ import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.event.CreatedMeasurementEvent;
+import org.locationtech.jts.geom.Geometry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Named;
+import java.util.Map;
 import java.util.Objects;
 
-public class KafkaMeasurementListener {
-    private static final Logger LOG = LoggerFactory.getLogger(KafkaTrackListener.class);
+public class GeofenceKafkaMeasurementListener {
+    private static final Logger LOG = LoggerFactory.getLogger(GeofenceKafkaMeasurementListener.class);
+    private final Map<String, Geometry> geofences;
     private final Producer<String, Measurement> producer;
-    private final String topicName;
 
     @Inject
-    public KafkaMeasurementListener(Producer<String, Measurement> producer,
-                                    @Named(KafkaConstants.KAFKA_MEASUREMENT_TOPIC) String topic) {
+    public GeofenceKafkaMeasurementListener(Producer<String, Measurement> producer,
+                                            Map<String, Geometry> geofences) {
         this.producer = Objects.requireNonNull(producer);
-        this.topicName = Objects.requireNonNull(topic);
+        this.geofences = Objects.requireNonNull(geofences);
     }
 
     @Subscribe
     public void onCreatedMeasurementEvent(CreatedMeasurementEvent e) {
-        Measurement m = e.getMeasurement();
-        ProducerRecord<String, Measurement> record = new ProducerRecord<>(this.topicName, m.getIdentifier(), m);
-        LOG.trace("Publishing measurement {} to kafka", record.key());
-        this.producer.send(record, (metadata, exception) -> {
-            if (exception != null) {
-                LOG.error("Error publishing measurement to kafka", exception);
+        this.geofences.forEach((topic, geofence) -> {
+            if (geofence.intersects(e.getMeasurement().getGeometry())) {
+                ProducerRecord<String, Measurement> record = new ProducerRecord<>(
+                        topic, e.getMeasurement().getIdentifier(), e.getMeasurement());
+                LOG.trace("Publishing measurement {} to kafka topic {}", record.key(), topic);
+                this.producer.send(record, (metadata, exception) -> {
+                    if (exception != null) {
+                        LOG.error(String.format("Error publishing measurement %s to kafka topic %s",
+                                                record.key(), topic), exception);
+                    }
+                });
             }
         });
+
     }
 
 }
