@@ -81,7 +81,7 @@ public class UserStatisticJSONEncoder extends AbstractJSONEntityEncoder<UserStat
     private ObjectNode encodeTrackSummary(TrackSummary trackSummary, AccessRights rights, MediaType mediaType) {
         ObjectNode node = getJsonFactory().objectNode();
         if (trackSummary.hasIdentifier()) {
-            node.putPOJO(JSONConstants.IDENTIFIER_KEY, trackSummary.getIdentifier());
+            node.put(JSONConstants.IDENTIFIER_KEY, trackSummary.getIdentifier());
         }
         if (trackSummary.hasStartPosition()) {
             ObjectNode startPosition = node.putObject(JSONConstants.STARTPOSITION_KEY);
