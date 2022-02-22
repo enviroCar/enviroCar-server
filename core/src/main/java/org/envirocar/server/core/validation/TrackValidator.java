@@ -39,8 +39,6 @@ public class TrackValidator extends AbstractValidator<Track> {
     public void validateUpdate(Track t) throws ValidationException {
         isNull("created", t.getCreationTime());
         isNull("modified", t.getModificationTime());
-        isNull("user", t.getUser());
-        isNull("sensor", t.getSensor());
     }
 
 }
