@@ -69,15 +69,15 @@ public class EnviroCarServer extends ExternalResource {
 
     @Override
     protected void before() throws Throwable {
-        CheckedRunnable.runAll(kafka::start, mongo::start);
+        CheckedRunnable.runAll(this.kafka::start, this.mongo::start);
 
-        ServletContextHandler sch = new ServletContextHandler(jettyServer, "/");
+        ServletContextHandler sch = new ServletContextHandler(this.jettyServer, "/");
         sch.addFilter(GuiceFilter.class, "/*", null);
         ServletContextListener servletContextListener = new ServletContextListener(new Module() {
             @Override
             public void configure(Binder binder) {
-                binder.bind(MongoContainer.class).toInstance(mongo);
-                binder.bind(KafkaContainer.class).toInstance(kafka);
+                binder.bind(MongoContainer.class).toInstance(EnviroCarServer.this.mongo);
+                binder.bind(KafkaContainer.class).toInstance(EnviroCarServer.this.kafka);
                 binder.bind(Mailer.class).to(NoopMailer.class);
                 binder.bind(String.class).annotatedWith(Names.named(MongoDB.DATABASE_PROPERTY))
                       .toInstance("enviroCar-Testing");
@@ -101,11 +101,11 @@ public class EnviroCarServer extends ExternalResource {
                 return mongo.getPort();
             }
         });
-        injector = servletContextListener.getInjector();
+        this.injector = servletContextListener.getInjector();
         sch.addEventListener(servletContextListener);
         sch.addServlet(DefaultServlet.class, "/");
 
-        jettyServer.start();
+        this.jettyServer.start();
     }
 
     public WebResource resource() {
@@ -118,22 +118,22 @@ public class EnviroCarServer extends ExternalResource {
 
     public Client client() {
         ClientConfig cc = new DefaultClientConfig();
-        cc.getSingletons().add(injector.getInstance(JsonNodeMessageBodyReader.class));
-        cc.getSingletons().add(injector.getInstance(JsonNodeMessageBodyWriter.class));
+        cc.getSingletons().add(this.injector.getInstance(JsonNodeMessageBodyReader.class));
+        cc.getSingletons().add(this.injector.getInstance(JsonNodeMessageBodyWriter.class));
         return Client.create(cc);
     }
 
     @Override
     protected void after() throws Exception {
-        CheckedRunnable.runAll(jettyServer::stop, mongo::stop, kafka::stop);
+        CheckedRunnable.runAll(this.jettyServer::stop, this.mongo::stop, this.kafka::stop);
     }
 
     public Server getServer() {
-        return jettyServer;
+        return this.jettyServer;
     }
 
     public Injector getInjector() {
-        return injector;
+        return this.injector;
     }
 
 }

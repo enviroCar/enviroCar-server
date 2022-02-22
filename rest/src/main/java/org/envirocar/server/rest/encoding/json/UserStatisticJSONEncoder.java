@@ -86,12 +86,12 @@ public class UserStatisticJSONEncoder extends AbstractJSONEntityEncoder<UserStat
         if (trackSummary.hasStartPosition()) {
             ObjectNode startPosition = node.putObject(JSONConstants.STARTPOSITION_KEY);
             startPosition.set(JSONConstants.GEOMETRY_KEY,
-                              geometryEncoder.encodeJSON(trackSummary.getStartPosition(), rights, mediaType));
+                              this.geometryEncoder.encodeJSON(trackSummary.getStartPosition(), rights, mediaType));
         }
         if (trackSummary.hasEndPosition()) {
             ObjectNode endPosition = node.putObject(JSONConstants.ENDPOSITION_KEY);
             endPosition.set(JSONConstants.GEOMETRY_KEY,
-                            geometryEncoder.encodeJSON(trackSummary.getEndPosition(), rights, mediaType));
+                            this.geometryEncoder.encodeJSON(trackSummary.getEndPosition(), rights, mediaType));
         }
         return node;
     }
