@@ -154,7 +154,7 @@ public class DataServiceImpl implements DataService {
         this.trackUpdater.update(changes, track);
         TrackStatus statusAfter = track.getStatus();
 
-        updateTrackProperties(track, measurements, track.getBegin(), track.getEnd());
+        updateTrackProperties(track, measurements);
         this.trackDao.save(track);
         for (Measurement m : measurements) {
             this.measurementDao.create(m);
@@ -168,7 +168,9 @@ public class DataServiceImpl implements DataService {
         return track;
     }
 
-    private void updateTrackProperties(Track track, List<Measurement> measurements, DateTime begin, DateTime end) {
+    private void updateTrackProperties(Track track, List<Measurement> measurements) {
+        DateTime begin = track.getBegin();
+        DateTime end = track.getEnd();
         for (Measurement m : measurements) {
             m.setUser(track.getUser());
             m.setSensor(track.getSensor());
@@ -210,7 +212,7 @@ public class DataServiceImpl implements DataService {
     public Track createTrack(Track track, List<Measurement> measurements)
             throws ValidationException {
         this.trackValidator.validateCreate(track);
-        updateTrackProperties(track, measurements, null, null);
+        updateTrackProperties(track, measurements);
 
         this.trackDao.create(track);
         for (Measurement m : measurements) {
