@@ -55,29 +55,24 @@
           "additionalItems": {
             "type": "object",
             "additionalProperties": false,
-            "allOf": [
-              {
-                "$ref": "phenomenon.json"
+            "properties": {
+              "unit": {
+                "type": "string"
               },
-              {
-                "type": "object",
-                "properties": {
-                  "value": {
-                    "oneOf": [
-                      {
-                        "type": "string"
-                      },
-                      {
-                        "type": "number"
-                      },
-                      {
-                        "type": "boolean"
-                      }
-                    ]
+              "value": {
+                "oneOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "boolean"
                   }
-                }
+                ]
               }
-            ]
+            }
           }
         }
       }
