@@ -30,6 +30,8 @@ import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.io.ParseException;
 import org.locationtech.jts.io.WKTReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Named;
 import java.io.StringReader;
@@ -41,7 +43,7 @@ import java.util.Properties;
 import java.util.UUID;
 
 public final class KafkaModule extends AbstractModule {
-
+    private static final Logger LOG = LoggerFactory.getLogger(KafkaModule.class);
     @Override
     protected void configure() {
         bind(new TypeLiteral<Serializer<Track>>() {}).to(TrackSerializer.class);
@@ -62,7 +64,8 @@ public final class KafkaModule extends AbstractModule {
             Map<String, Geometry> geofences = new HashMap<>(split.length);
             for (String name : split) {
                 String topic = getProperty(properties, "kafka.topic." + name, name);
-                String wkt = getProperty(properties, "kafka.topic." + name, null);
+                String wkt = getProperty(properties, "kafka.geofence." + name, null);
+                LOG.info("Configuring geofence for Kafka topic '{}': {}", topic, wkt);
                 if (wkt != null) {
                     try (StringReader reader = new StringReader(wkt)) {
                         geofences.put(topic, wktReader.read(reader));
