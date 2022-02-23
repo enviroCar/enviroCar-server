@@ -84,7 +84,7 @@ public class EnviroCarServer extends ExternalResource {
             }
 
             @Provides
-            @Named(KafkaConstants.KAFKA_BROKERS)
+            @Named(KafkaConstants.KAFKA_BOOTSTRAP_SERVERS)
             public String brokers(KafkaContainer kafka) {
                 return kafka.getBootstrapServers();
             }

@@ -27,6 +27,7 @@ import org.apache.kafka.common.serialization.StringSerializer;
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.Track;
 import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.io.ParseException;
 import org.locationtech.jts.io.WKTReader;
 
@@ -52,17 +53,25 @@ public final class KafkaModule extends AbstractModule {
     }
 
     @Provides
-    public Map<String, Geometry> geofences(Properties properties) throws ParseException {
-        Map<String, Geometry> geofences = new HashMap<>(1);
-        String wkt = getProperty(properties, KafkaConstants.KAFKA_DVFO_GEOFENCE, null);
-        String topic = getProperty(properties, KafkaConstants.KAFKA_DVFO_TOPIC, "dvfo_measurements");
-        if (wkt != null) {
-            try (StringReader reader = new StringReader(wkt)) {
-                Geometry geofence = new WKTReader().read(reader);
-                geofences.put(topic, geofence);
+    public Map<String, Geometry> geofences(GeometryFactory geometryFactory, Properties properties)
+            throws ParseException {
+        WKTReader wktReader = new WKTReader(geometryFactory);
+        String names = getProperty(properties, "kafka.geofences", null);
+        if (names != null) {
+            String[] split = names.split(",");
+            Map<String, Geometry> geofences = new HashMap<>(split.length);
+            for (String name : split) {
+                String topic = getProperty(properties, "kafka.topic." + name, name);
+                String wkt = getProperty(properties, "kafka.topic." + name, null);
+                if (wkt != null) {
+                    try (StringReader reader = new StringReader(wkt)) {
+                        geofences.put(topic, wktReader.read(reader));
+                    }
+                }
             }
+            return Collections.unmodifiableMap(geofences);
         }
-        return Collections.unmodifiableMap(geofences);
+        return Collections.emptyMap();
     }
 
     @Provides
@@ -73,9 +82,9 @@ public final class KafkaModule extends AbstractModule {
     }
 
     @Provides
-    @Named(KafkaConstants.KAFKA_BROKERS)
+    @Named(KafkaConstants.KAFKA_BOOTSTRAP_SERVERS)
     public String brokers(Properties properties) {
-        return getProperty(properties, KafkaConstants.KAFKA_BROKERS, "processing.envirocar.org:9092");
+        return getProperty(properties, KafkaConstants.KAFKA_BOOTSTRAP_SERVERS, "processing.envirocar.org:9092");
     }
 
     @Provides
@@ -94,7 +103,7 @@ public final class KafkaModule extends AbstractModule {
     public Producer<String, Track> createTrackProducer(
             Serializer<String> keySerializer,
             Serializer<Track> valueSerializer,
-            @Named(KafkaConstants.KAFKA_BROKERS) String brokers,
+            @Named(KafkaConstants.KAFKA_BOOTSTRAP_SERVERS) String brokers,
             @Named(KafkaConstants.KAFKA_CLIENT_ID) String clientId) {
         Properties props = new Properties();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, brokers);
@@ -107,7 +116,7 @@ public final class KafkaModule extends AbstractModule {
     public Producer<String, Measurement> createMeasurementProducer(
             Serializer<String> keySerializer,
             Serializer<Measurement> valueSerializer,
-            @Named(KafkaConstants.KAFKA_BROKERS) String brokers,
+            @Named(KafkaConstants.KAFKA_BOOTSTRAP_SERVERS) String brokers,
             @Named(KafkaConstants.KAFKA_CLIENT_ID) String clientId) {
         Properties props = new Properties();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, brokers);
@@ -118,14 +127,12 @@ public final class KafkaModule extends AbstractModule {
 
     private String getProperty(Properties properties, String key, String defaultValue) {
         Optional<String> property = getOptional(System.getenv(key));
-
         if (!property.isPresent()) {
             property = getOptional(System.getProperty(key));
         }
         if (!property.isPresent()) {
             property = getOptional(properties.getProperty(key));
         }
-
         return property.orElse(defaultValue);
     }
 

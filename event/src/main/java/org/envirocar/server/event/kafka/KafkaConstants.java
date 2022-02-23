@@ -16,11 +16,11 @@
  */
 package org.envirocar.server.event.kafka;
 
+import org.apache.kafka.clients.producer.ProducerConfig;
+
 public interface KafkaConstants {
-    String KAFKA_MEASUREMENT_TOPIC = "kafka.topic.measurement";
-    String KAFKA_TRACK_TOPIC = "kafka.topic.track";
-    String KAFKA_BROKERS = "kafka.brokers";
-    String KAFKA_CLIENT_ID = "kafka.clientId";
-    String KAFKA_DVFO_GEOFENCE = "kafka.dvfo.geofence";
-    String KAFKA_DVFO_TOPIC = "kafka.dvfo.topic.measurements";
+    String KAFKA_MEASUREMENT_TOPIC = "enviroCar.kafka.topic.measurements";
+    String KAFKA_TRACK_TOPIC = "enviroCar.kafka.topic.tracks";
+    String KAFKA_BOOTSTRAP_SERVERS = "kafka." + ProducerConfig.BOOTSTRAP_SERVERS_CONFIG;
+    String KAFKA_CLIENT_ID = "kafka." + ProducerConfig.CLIENT_ID_CONFIG;
 }
