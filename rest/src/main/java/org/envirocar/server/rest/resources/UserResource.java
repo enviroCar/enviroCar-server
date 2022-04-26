@@ -96,6 +96,7 @@ public class UserResource extends AbstractResource {
 
     @DELETE
     @Authenticated
+    @AllowOutdatedTerms
     public void delete(@QueryParam(DELETE_CONTENT) @DefaultValue("false") boolean deleteContent)
             throws ResourceNotFoundException {
         checkRights(getRights().canDelete(this.user));
