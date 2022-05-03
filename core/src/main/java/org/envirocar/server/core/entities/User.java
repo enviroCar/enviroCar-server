@@ -16,10 +16,13 @@
  */
 package org.envirocar.server.core.entities;
 
+import com.google.common.base.Strings;
 import org.locationtech.jts.geom.Geometry;
 import org.joda.time.DateTime;
 
 import java.net.URL;
+import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -170,5 +173,46 @@ public interface User extends BaseEntity {
     default boolean hasPrivacyStatementVersion() {
         String version = getPrivacyStatementVersion();
         return version != null && !version.isEmpty();
+    }
+
+    List<TermsHistoryItem> getTermsOfUseHistory();
+
+    void setTermsOfUseHistory(List<TermsHistoryItem> history);
+
+    void addTermsOfUseHistoryItem(TermsHistoryItem item);
+
+    List<TermsHistoryItem> getPrivacyStatementHistory();
+
+    void setPrivacyStatementHistory(List<TermsHistoryItem> history);
+
+    void addPrivacyStatementHistoryItem(TermsHistoryItem item);
+
+    class TermsHistoryItem {
+        private String version;
+        private DateTime date;
+
+        public TermsHistoryItem() {}
+
+        public TermsHistoryItem(String version, DateTime date) {
+            this.date = Objects.requireNonNull(date);
+            this.version = Objects.requireNonNull(Strings.emptyToNull(version));
+        }
+
+        public String getTermsOfUseVersion() {
+            return this.version;
+        }
+
+        public void setTermsOfUseVersion(String version) {
+            this.version = version;
+        }
+
+        public DateTime getAcceptanceDate() {
+            return this.date;
+        }
+
+        public void setAcceptanceDate(DateTime date) {
+            this.date = date;
+        }
+
     }
 }

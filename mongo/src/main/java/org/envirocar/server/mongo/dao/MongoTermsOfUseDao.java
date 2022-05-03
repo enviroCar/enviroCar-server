@@ -80,4 +80,9 @@ public class MongoTermsOfUseDao extends AbstractMongoDao<ObjectId, MongoTermsOfU
         return Optional.empty();
     }
 
+    @Override
+    public void create(TermsOfUseInstance terms) {
+        save((MongoTermsOfUseInstance) terms);
+    }
+
 }

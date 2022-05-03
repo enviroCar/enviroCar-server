@@ -35,7 +35,9 @@ import org.envirocar.server.core.entities.Group;
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.MeasurementValue;
 import org.envirocar.server.core.entities.Phenomenon;
+import org.envirocar.server.core.entities.PrivacyStatement;
 import org.envirocar.server.core.entities.Sensor;
+import org.envirocar.server.core.entities.TermsOfUseInstance;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.mongo.MongoDB;
@@ -48,7 +50,9 @@ import org.envirocar.server.mongo.entity.MongoGroup;
 import org.envirocar.server.mongo.entity.MongoMeasurement;
 import org.envirocar.server.mongo.entity.MongoMeasurementValue;
 import org.envirocar.server.mongo.entity.MongoPhenomenon;
+import org.envirocar.server.mongo.entity.MongoPrivacyStatement;
 import org.envirocar.server.mongo.entity.MongoSensor;
+import org.envirocar.server.mongo.entity.MongoTermsOfUseInstance;
 import org.envirocar.server.mongo.entity.MongoTrack;
 import org.envirocar.server.mongo.entity.MongoUser;
 import org.envirocar.server.mongo.statistics.NewTrackListener;
@@ -71,6 +75,8 @@ public class MongoModule extends AbstractModule {
                         .implement(Phenomenon.class, MongoPhenomenon.class)
                         .implement(Sensor.class, MongoSensor.class)
                         .implement(Fueling.class, MongoFueling.class)
+                        .implement(TermsOfUseInstance.class, MongoTermsOfUseInstance.class)
+                        .implement(PrivacyStatement.class, MongoPrivacyStatement.class)
                         .build(EntityFactory.class));
         install(new FactoryModuleBuilder()
                         .implement(Activity.class, MongoActivity.class)

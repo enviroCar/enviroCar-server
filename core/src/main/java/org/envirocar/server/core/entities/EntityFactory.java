@@ -38,4 +38,8 @@ public interface EntityFactory {
     Phenomenon createPhenomenon();
 
     Fueling createFueling();
+
+    TermsOfUseInstance createTermsOfUseInstance();
+
+    PrivacyStatement createPrivacyStatement();
 }

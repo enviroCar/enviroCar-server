@@ -28,4 +28,7 @@ public interface TermsDao<T extends Terms, V extends UpCastingIterable<T>> exten
     Optional<T> getById(String id);
 
     Optional<T> getLatest();
+
+    void create(T terms);
+
 }

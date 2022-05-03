@@ -26,10 +26,19 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.core.util.Base64;
+import org.envirocar.server.core.dao.PrivacyStatementDao;
+import org.envirocar.server.core.dao.TermsOfUseDao;
+import org.envirocar.server.core.entities.EntityFactory;
+import org.envirocar.server.core.entities.PrivacyStatement;
+import org.envirocar.server.core.entities.TermsOfUseInstance;
+import org.envirocar.server.mongo.entity.MongoEntityBase;
 import org.envirocar.server.mongo.entity.MongoUser;
 import org.envirocar.server.rest.JSONConstants;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.resources.RootResource;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.junit.Before;
 
 import javax.ws.rs.core.Response;
@@ -53,9 +62,16 @@ public abstract class ResourceTestBase {
     private DB db;
     @Inject
     private JsonNodeCreator nodeFactory;
+    @Inject
+    EntityFactory entityFactory;
+
+    @Inject
+    TermsOfUseDao termsOfUseDao;
+    @Inject
+    PrivacyStatementDao privacyStatementDao;
 
     protected JsonNodeCreator getNodeFactory() {
-        return nodeFactory;
+        return this.nodeFactory;
     }
 
     protected abstract EnviroCarServer getServer();
@@ -82,7 +98,17 @@ public abstract class ResourceTestBase {
     }
 
     protected void createUser(String name, String pass, String mail) {
-        final ObjectNode user = getNodeFactory().objectNode()
+        String version = DateTimeFormat.forPattern("yyyy-MM-dd").print(DateTime.now());
+        PrivacyStatement privacyStatement = this.entityFactory.createPrivacyStatement();
+        privacyStatement.setIssuedDate(version);
+        privacyStatement.setContents("PrivacyStatement");
+        this.privacyStatementDao.create(privacyStatement);
+        TermsOfUseInstance termsOfUseInstance = this.entityFactory.createTermsOfUseInstance();
+        termsOfUseInstance.setIssuedDate(version);
+        termsOfUseInstance.setContents("TermsOfUse");
+        this.termsOfUseDao.create(termsOfUseInstance);
+
+        ObjectNode user = getNodeFactory().objectNode()
                                                 .put(JSONConstants.NAME_KEY, name)
                                                 .put(JSONConstants.MAIL_KEY, mail)
                                                 .put(JSONConstants.TOKEN_KEY, pass)
@@ -93,7 +119,7 @@ public abstract class ResourceTestBase {
                              .post(ClientResponse.class),
                    hasStatus(Response.Status.CREATED));
 
-        DBObject mongoUser = db.getCollection(MongoUser.COLLECTION).findOne(new BasicDBObject(MongoUser.NAME, name));
+        DBObject mongoUser = this.db.getCollection(MongoUser.COLLECTION).findOne(new BasicDBObject(MongoUser.NAME, name));
 
         assertThat(mongoUser, is(not(nullValue())));
         String confirmationCode = (String) mongoUser.get(MongoUser.CONFIRMATION_CODE);
