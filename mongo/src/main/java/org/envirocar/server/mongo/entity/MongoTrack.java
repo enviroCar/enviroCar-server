@@ -57,6 +57,7 @@ public class MongoTrack extends MongoEntityBase implements Track {
     public static final String LENGTH = "length";
     public static final String STATUS = "status";
     public static final String BEGIN_ORDER = reverse(BEGIN);
+    public static final String MEASUREMENT_PROFILE = "measurementProfile";
     @Id
     private ObjectId id = new ObjectId();
     @Property(USER)
@@ -88,6 +89,8 @@ public class MongoTrack extends MongoEntityBase implements Track {
     @Property(STATUS)
     @Indexed
     private TrackStatus status = TrackStatus.FINISHED;
+    @Property(MEASUREMENT_PROFILE)
+    private String measurementProfile;
 
     @Override
     public MongoUser getUser() {
@@ -320,6 +323,16 @@ public class MongoTrack extends MongoEntityBase implements Track {
     @Override
     public void setStatus(TrackStatus status) {
         this.status = status;
+    }
+
+    @Override
+    public String getMeasurementProfile() {
+        return this.measurementProfile;
+    }
+
+    @Override
+    public void setMeasurementProfile(String measurementProfile) {
+        this.measurementProfile = measurementProfile;
     }
 
 }

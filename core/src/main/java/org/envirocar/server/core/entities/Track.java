@@ -109,4 +109,12 @@ public interface Track extends BaseEntity {
         return getStatus() != null;
     }
 
+    String getMeasurementProfile();
+
+    void setMeasurementProfile(String measurementProfile);
+
+    default boolean hasMeasurementProfile() {
+        return getMeasurementProfile() != null && !getMeasurementProfile().isEmpty();
+    }
+
 }

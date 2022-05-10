@@ -54,6 +54,8 @@ public interface TrackRights {
 
     boolean canSeeTouVersionOf(Track track);
 
+    boolean canSeeMeasurementProfile(Track track);
+
     boolean canSeeLengthOf(Track t);
 
     boolean canSeeStatusOf(Track t);

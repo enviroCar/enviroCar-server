@@ -439,6 +439,11 @@ public class NonRestrictiveRights extends AbstractAccessRights {
     }
 
     @Override
+    public boolean canSeeMeasurementProfile(Track track) {
+        return true;
+    }
+
+    @Override
     public boolean canSeeAnnouncements() {
         return true;
     }

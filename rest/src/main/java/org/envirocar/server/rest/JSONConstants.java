@@ -129,6 +129,7 @@ public interface JSONConstants {
     String TRACK_COUNT = "trackCount";
     String COUNTS_KEY = "counts";
     String STATUS_KEY = "status";
+    String MEASUREMENT_PROFILE = "measurementProfile";
     String API_DOCS = "api-docs";
     String SERVERS = "servers";
 }

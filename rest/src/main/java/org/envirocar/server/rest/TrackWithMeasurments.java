@@ -278,4 +278,14 @@ public class TrackWithMeasurments implements Track, Iterable<Measurement> {
     public void setStatus(TrackStatus status) {
         this.track.setStatus(status);
     }
+
+    @Override
+    public String getMeasurementProfile() {
+        return this.track.getMeasurementProfile();
+    }
+
+    @Override
+    public void setMeasurementProfile(String measurementProfile) {
+        this.track.setMeasurementProfile(measurementProfile);
+    }
 }

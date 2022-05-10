@@ -73,6 +73,9 @@
           "type": "string",
           "format": "date-time"
         },
+        "measurementProfile": {
+          "type": "string"
+        },
         "status": {
           "$ref": "track-status.json"
         }

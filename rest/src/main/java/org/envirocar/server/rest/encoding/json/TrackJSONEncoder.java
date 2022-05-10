@@ -83,6 +83,9 @@ public class TrackJSONEncoder extends AbstractJSONEntityEncoder<Track> {
             if (entity.hasTouVersion() && rights.canSeeTouVersionOf(entity)) {
                 properties.put(JSONConstants.TOU_VERSION_KEY, entity.getTouVersion());
             }
+            if (entity.hasMeasurementProfile() && rights.canSeeMeasurementProfile(entity)) {
+                properties.put(JSONConstants.MEASUREMENT_PROFILE, entity.getMeasurementProfile());
+            }
             addCommonProperties(entity, rights, properties, mediaType);
             JsonNode features;
             if (rights.canSeeMeasurementsOf(entity)) {
