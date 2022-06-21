@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2020 The enviroCar project
+ * Copyright (C) 2013-2022 The enviroCar project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -30,7 +30,7 @@ import org.envirocar.server.core.exception.ValidationException;
 public class UserValidator extends AbstractValidator<User> {
     public static final Pattern EMAIL_PATTERN = Pattern
             .compile("^[_A-Za-z0-9-+]+(\\.[_A-Za-z0-9-]+)*@" +
-                     "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
+                     "[A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$");
     private static final Pattern NAME_PATTERN = Pattern
             .compile("^[_A-Za-z0-9-]{4,}$");
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2020 The enviroCar project
+ * Copyright (C) 2013-2022 The enviroCar project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -41,7 +41,7 @@ public abstract class AbstractLinkerRDFEntityEncoder<T> extends AbstractRDFEntit
                            Provider<UriBuilder> uriBuilder) {
         Model m = ModelFactory.createDefaultModel();
         Resource r = m.createResource(getURI(t, uriBuilder));
-        for (RDFLinker<T> linker : linkers) {
+        for (RDFLinker<T> linker : this.linkers) {
             linker.link(m, t, rights, r, uriBuilder);
         }
         return m;

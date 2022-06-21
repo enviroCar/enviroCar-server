@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2020 The enviroCar project
+ * Copyright (C) 2013-2022 The enviroCar project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -56,20 +56,18 @@ public class GroupResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.GROUP)
-    @Produces({MediaTypes.JSON, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
-
     public Group get() {
-        return group;
+        return this.group;
     }
 
     @PUT
     @Authenticated
-    @Consumes({MediaTypes.JSON})
+    @Consumes(MediaTypes.JSON)
     @Schema(request = Schemas.GROUP_MODIFY)
     public Response modify(Group changes) throws ValidationException, IllegalModificationException {
-        checkRights(getRights().canModify(group));
-        Group modified = getGroupService().modifyGroup(group, changes);
-        if (modified.getName().equals(group.getName())) {
+        checkRights(getRights().canModify(this.group));
+        Group modified = getGroupService().modifyGroup(this.group, changes);
+        if (modified.getName().equals(this.group.getName())) {
             return Response.noContent().build();
         } else {
             UriBuilder b = getUriInfo().getBaseUriBuilder();
@@ -85,18 +83,18 @@ public class GroupResource extends AbstractResource {
     @DELETE
     @Authenticated
     public void delete() throws GroupNotFoundException {
-        checkRights(getRights().canDelete(group));
-        getGroupService().deleteGroup(group);
+        checkRights(getRights().canDelete(this.group));
+        getGroupService().deleteGroup(this.group);
     }
 
     @Path(MEMBERS)
     public GroupMembersResource members() {
-        return getResourceFactory().createGroupMembersResource(group);
+        return getResourceFactory().createGroupMembersResource(this.group);
     }
 
     @Path(ACTIVITIES)
     public ActivitiesResource activities() {
-        checkRights(getRights().canSeeActivitiesOf(group));
-        return getResourceFactory().createActivitiesResource(group);
+        checkRights(getRights().canSeeActivitiesOf(this.group));
+        return getResourceFactory().createActivitiesResource(this.group);
     }
 }

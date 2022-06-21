@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2020 The enviroCar project
+ * Copyright (C) 2013-2022 The enviroCar project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -25,6 +25,7 @@ import org.envirocar.server.core.dao.SensorDao;
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.core.entities.Track;
+import org.envirocar.server.core.entities.TrackStatus;
 import org.envirocar.server.core.util.GeoJSONConstants;
 import org.envirocar.server.rest.JSONConstants;
 import org.envirocar.server.rest.TrackWithMeasurments;
@@ -61,7 +62,7 @@ public class TrackDecoder extends AbstractJSONEntityDecoder<Track> {
         if (node.has(GeoJSONConstants.PROPERTIES_KEY)) {
             JsonNode p = node.path(GeoJSONConstants.PROPERTIES_KEY);
             if (p.has(JSONConstants.SENSOR_KEY)) {
-                trackSensor = sensorDao.getByIdentifier(p.get(JSONConstants.SENSOR_KEY).asText());
+                trackSensor = this.sensorDao.getByIdentifier(p.get(JSONConstants.SENSOR_KEY).asText());
                 track.setSensor(trackSensor);
             }
             track.setName(p.path(JSONConstants.NAME_KEY).textValue());
@@ -70,16 +71,18 @@ public class TrackDecoder extends AbstractJSONEntityDecoder<Track> {
             track.setObdDevice(p.path(JSONConstants.OBD_DEVICE_KEY).textValue());
             track.setTouVersion(p.path(JSONConstants.TOU_VERSION_KEY).textValue());
             track.setLength(p.path(JSONConstants.LENGTH_KEY).asDouble());
+            track.setStatus(p.path(JSONConstants.STATUS_KEY).textValue());
+            track.setMeasurementProfile(p.path(JSONConstants.MEASUREMENT_PROFILE).textValue());
         }
 
         if (!node.path(GeoJSONConstants.FEATURES_KEY).isMissingNode()) {
             JsonNode ms = node.path(GeoJSONConstants.FEATURES_KEY);
             TrackWithMeasurments twm = new TrackWithMeasurments(track);
             
-            ContextKnowledge knowledge = contextKnowledgeFactory.create();
+            ContextKnowledge knowledge = this.contextKnowledgeFactory.create();
             
             for (int i = 0; i < ms.size(); i++) {
-                Measurement m = measurementDecoder.decode(ms.get(i), mediaType, knowledge);
+                Measurement m = this.measurementDecoder.decode(ms.get(i), mediaType, knowledge);
                 m.setTrack(track);
                 if (m.getSensor() == null) {
                     m.setSensor(trackSensor);
@@ -87,7 +90,7 @@ public class TrackDecoder extends AbstractJSONEntityDecoder<Track> {
                 twm.addMeasurement(m);
                 
             }
-            track = twm;
+            return twm;
         }
         return track;
     }

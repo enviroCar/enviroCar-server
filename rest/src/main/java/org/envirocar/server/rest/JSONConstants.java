@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2020 The enviroCar project
+ * Copyright (C) 2013-2022 The enviroCar project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -98,7 +98,7 @@ public interface JSONConstants {
     String APP_VERSION_KEY = "appVersion";
     String OBD_DEVICE_KEY = "obdDevice";
     String ACCEPTED_PRIVACY_STATEMENT_VERSION = "acceptedPrivacyStatementVersion";
-    String SCHEMA = "schema";
+    String SCHEMAS = "schemas";
     String ANNOUNCEMENTS_KEY = "announcements";
     String ISSUED_DATE = "issuedDate";
     String CONTENTS = "contents";
@@ -128,4 +128,8 @@ public interface JSONConstants {
     String TOU_VERSION_KEY = "touVersion";
     String TRACK_COUNT = "trackCount";
     String COUNTS_KEY = "counts";
+    String STATUS_KEY = "status";
+    String MEASUREMENT_PROFILE = "measurementProfile";
+    String API_DOCS = "api-docs";
+    String SERVERS = "servers";
 }

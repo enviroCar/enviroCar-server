@@ -9,10 +9,10 @@
       "type": "string"
     },
     "car": {
-      "$ref": "sensor.json#"
+      "$ref": "sensor.json"
     },
     "user": {
-      "$ref": "user.json#"
+      "$ref": "user.json"
     },
     "cost": {
       "$ref": "#/definitions/numberWithUnit"

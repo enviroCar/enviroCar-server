@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2020 The enviroCar project
+ * Copyright (C) 2013-2022 The enviroCar project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -22,6 +22,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
 import com.google.inject.multibindings.Multibinder;
 import com.google.inject.name.Names;
+import org.envirocar.server.rest.Schemas;
 
 import javax.ws.rs.core.UriInfo;
 
@@ -42,51 +43,7 @@ public class JsonSchemaModule extends AbstractModule {
 
         bind(JsonSchemaFactory.class).toProvider(JsonSchemaFactoryProvider.class).in(Scopes.SINGLETON);
 
-        Multibinder<String> mb = Multibinder.newSetBinder(binder(), String.class, Names.named(JsonSchemaModule.SCHEMAS));
-        mb.addBinding().toInstance("definitions.json");
-        mb.addBinding().toInstance("geometry.json");
-        mb.addBinding().toInstance("group.create.json");
-        mb.addBinding().toInstance("group.json");
-        mb.addBinding().toInstance("group.modify.json");
-        mb.addBinding().toInstance("groups.json");
-        mb.addBinding().toInstance("measurement.create.json");
-        mb.addBinding().toInstance("measurement.json");
-        mb.addBinding().toInstance("measurements.json");
-        mb.addBinding().toInstance("phenomenon.create.json");
-        mb.addBinding().toInstance("phenomenon.json");
-        mb.addBinding().toInstance("phenomenon.modify.json");
-        mb.addBinding().toInstance("phenomenons.json");
-        mb.addBinding().toInstance("root.json");
-        mb.addBinding().toInstance("sensor.create.json");
-        mb.addBinding().toInstance("sensor.json");
-        mb.addBinding().toInstance("sensors.json");
-        mb.addBinding().toInstance("track.create.json");
-        mb.addBinding().toInstance("track.json");
-        mb.addBinding().toInstance("track.modify.json");
-        mb.addBinding().toInstance("tracks.json");
-        mb.addBinding().toInstance("user.create.json");
-        mb.addBinding().toInstance("user.json");
-        mb.addBinding().toInstance("user.modify.json");
-        mb.addBinding().toInstance("user.ref.json");
-        mb.addBinding().toInstance("users.json");
-        mb.addBinding().toInstance("statistics.json");
-        mb.addBinding().toInstance("statistic.json");
-        mb.addBinding().toInstance("activity.json");
-        mb.addBinding().toInstance("activities.json");
-        mb.addBinding().toInstance("terms-of-use.json");
-        mb.addBinding().toInstance("terms-of-use-instance.json");
-        mb.addBinding().toInstance("announcement.json");
-        mb.addBinding().toInstance("announcements.json");
-        mb.addBinding().toInstance("badge.json");
-        mb.addBinding().toInstance("badges.json");
-        mb.addBinding().toInstance("fueling.json");
-        mb.addBinding().toInstance("fueling.create.json");
-        mb.addBinding().toInstance("fuelings.json");
-        mb.addBinding().toInstance("passwordResetRequest.json");
-        mb.addBinding().toInstance("passwordResetVerification.json");
-        mb.addBinding().toInstance("userStatistic.json");
-        mb.addBinding().toInstance("privacy-statements.json");
-        mb.addBinding().toInstance("privacy-statement.json");
-        mb.addBinding().toInstance("exception.json");
+        Multibinder<String> mb = Multibinder.newSetBinder(binder(), String.class, Names.named(SCHEMAS));
+        Schemas.ALL_SCHEMAS.forEach(schema -> mb.addBinding().toInstance(schema));
     }
 }

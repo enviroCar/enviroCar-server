@@ -17,7 +17,7 @@
       "type": "array",
       "minItems": 0,
       "items": {
-        "$ref": "measurement.json#"
+        "$ref": "measurement.json"
       }
     }
   }

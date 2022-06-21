@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2020 The enviroCar project
+ * Copyright (C) 2013-2022 The enviroCar project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -50,7 +50,7 @@ public abstract class AbstractJSONMessageBodyReader<T> implements MessageBodyRea
     private JsonNodeFactory factory;
     private final Class<T> classType;
 
-    public AbstractJSONMessageBodyReader(Class<T> classType) {
+    protected AbstractJSONMessageBodyReader(Class<T> classType) {
         this.classType = classType;
     }
 
@@ -64,7 +64,7 @@ public abstract class AbstractJSONMessageBodyReader<T> implements MessageBodyRea
                       MultivaluedMap<String, String> h,
                       InputStream in) throws IOException, WebApplicationException {
         try {
-            return decode(reader.readTree(in), mt);
+            return decode(this.reader.readTree(in), mt);
         } catch (JsonParseException e) {
             throw new BadRequestException(e);
         }

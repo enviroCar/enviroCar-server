@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2020 The enviroCar project
+ * Copyright (C) 2013-2022 The enviroCar project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -16,9 +16,15 @@
  */
 package org.envirocar.server.rest.guice;
 
-import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.node.JsonNodeCreator;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Scopes;
@@ -56,4 +62,34 @@ public class JacksonModule extends AbstractModule {
     public ObjectMapper objectMapper(JsonNodeFactory factory) {
         return new ObjectMapper().setNodeFactory(factory).disable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS);
     }
+
+    @Provides
+    @YAML
+    public ObjectMapper yamlObjectMapper(YAMLFactory factory, JsonNodeFactory jsonNodeFactory) {
+        return new ObjectMapper(factory).setNodeFactory(jsonNodeFactory)
+                                        .disable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS);
+    }
+
+    @Provides
+    @YAML
+    public ObjectReader yamlObjectReader(@YAML ObjectMapper mapper) {
+        return mapper.reader();
+    }
+
+    @Provides
+    @YAML
+    public ObjectWriter yamlObjectWriter(@YAML ObjectMapper mapper) {
+        return mapper.writer();
+    }
+
+    @Provides
+    public YAMLFactory yamlFactory() {
+        return YAMLFactory.builder()
+                          .configure(YAMLGenerator.Feature.WRITE_DOC_START_MARKER, false)
+                          .configure(YAMLGenerator.Feature.MINIMIZE_QUOTES, true)
+                          .configure(YAMLGenerator.Feature.SPLIT_LINES, true)
+                          .configure(YAMLGenerator.Feature.LITERAL_BLOCK_STYLE, true)
+                          .build();
+    }
+
 }

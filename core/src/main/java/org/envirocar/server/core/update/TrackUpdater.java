@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2020 The enviroCar project
+ * Copyright (C) 2013-2022 The enviroCar project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -17,7 +17,6 @@
 package org.envirocar.server.core.update;
 
 import org.envirocar.server.core.entities.Track;
-
 import org.envirocar.server.core.exception.IllegalModificationException;
 
 /**
@@ -31,6 +30,15 @@ public class TrackUpdater implements EntityUpdater<Track> {
             throws IllegalModificationException {
         if (changes.getBoundingBox() != null) {
             original.setBoundingBox(changes.getBoundingBox());
+        }
+        if (changes.getDescription() != null) {
+            original.setDescription(changes.getDescription());
+        }
+        if (changes.getName() != null) {
+            original.setName(changes.getName());
+        }
+        if (changes.getStatus() != null) {
+            original.setStatus(changes.getStatus());
         }
     }
 }

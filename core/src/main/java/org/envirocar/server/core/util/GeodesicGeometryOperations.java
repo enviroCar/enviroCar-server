@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2020 The enviroCar project
+ * Copyright (C) 2013-2022 The enviroCar project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -63,7 +63,7 @@ public class GeodesicGeometryOperations implements GeometryOperations {
     private double getDistance(double lat1, double lng1, double lat2, double lng2) {
         GlobalPosition p1 = new GlobalPosition(lat1, lng1, 0.0);
         GlobalPosition p2 = new GlobalPosition(lat2, lng2, 0.0);
-        return geoCalc.calculateGeodeticMeasurement(Ellipsoid.WGS84, p1, p2).getPointToPointDistance() / 1000.0;
+        return this.geoCalc.calculateGeodeticMeasurement(Ellipsoid.WGS84, p1, p2).getPointToPointDistance() / 1000.0;
     }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2020 The enviroCar project
+ * Copyright (C) 2013-2022 The enviroCar project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -60,7 +60,8 @@ public class SensorJSONEncoder extends AbstractJSONEntityEncoder<Sensor> {
                 properties.put(JSONConstants.MODIFIED_KEY, getDateTimeFormat().print(entity.getModificationTime()));
             }
         }
-        sensor.putPOJO(JSONConstants.PROPERTIES_KEY, properties);
+
+        sensor.set(JSONConstants.PROPERTIES_KEY, getObjectMapper().valueToTree(properties));
         return sensor;
     }
 }

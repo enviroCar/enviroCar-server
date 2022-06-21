@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2020 The enviroCar project
+ * Copyright (C) 2013-2022 The enviroCar project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -16,18 +16,18 @@
  */
 package org.envirocar.server.rest;
 
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-
+import com.google.common.collect.Lists;
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.core.entities.Track;
+import org.envirocar.server.core.entities.TrackStatus;
 import org.envirocar.server.core.entities.User;
 import org.joda.time.DateTime;
-
-import com.google.common.collect.Lists;
 import org.locationtech.jts.geom.Geometry;
+
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * TODO JavaDoc
@@ -50,47 +50,47 @@ public class TrackWithMeasurments implements Track, Iterable<Measurement> {
 
     @Override
     public String getName() {
-        return track.getName();
+        return this.track.getName();
     }
 
     @Override
     public void setName(String name) {
-        track.setName(name);
+        this.track.setName(name);
     }
 
     @Override
     public String getDescription() {
-        return track.getDescription();
+        return this.track.getDescription();
     }
 
     @Override
     public void setDescription(String description) {
-        track.setDescription(description);
+        this.track.setDescription(description);
     }
 
     @Override
     public String getIdentifier() {
-        return track.getIdentifier();
+        return this.track.getIdentifier();
     }
 
     @Override
     public void setIdentifier(String id) {
-        track.setIdentifier(id);
+        this.track.setIdentifier(id);
     }
 
     @Override
     public User getUser() {
-        return track.getUser();
+        return this.track.getUser();
     }
 
     @Override
     public void setUser(User user) {
-        track.setUser(user);
+        this.track.setUser(user);
     }
 
     @Override
     public Sensor getSensor() {
-        return track.getSensor();
+        return this.track.getSensor();
     }
 
     @Override
@@ -100,172 +100,192 @@ public class TrackWithMeasurments implements Track, Iterable<Measurement> {
 
     @Override
     public Geometry getBoundingBox() {
-        return track.getBoundingBox();
+        return this.track.getBoundingBox();
     }
 
     @Override
     public void setBoundingBox(Geometry bbox) {
-        track.setBoundingBox(bbox);
+        this.track.setBoundingBox(bbox);
     }
 
     @Override
     public DateTime getCreationTime() {
-        return track.getCreationTime();
+        return this.track.getCreationTime();
     }
 
     @Override
     public DateTime getModificationTime() {
-        return track.getModificationTime();
+        return this.track.getModificationTime();
     }
 
     @Override
     public Iterator<Measurement> iterator() {
-        return measurements.iterator();
+        return this.measurements.iterator();
     }
 
     public boolean addMeasurement(Measurement e) {
-        return measurements.add(e);
+        return this.measurements.add(e);
     }
 
     public boolean removeMeasurement(Measurement o) {
-        return measurements.remove(o);
+        return this.measurements.remove(o);
     }
 
     public List<Measurement> getMeasurements() {
-        return Collections.unmodifiableList(measurements);
+        return Collections.unmodifiableList(this.measurements);
     }
 
     public Track getTrack() {
-        return track;
+        return this.track;
     }
 
     @Override
     public boolean hasUser() {
-        return track.hasUser();
+        return this.track.hasUser();
     }
 
     @Override
     public boolean hasSensor() {
-        return track.hasSensor();
+        return this.track.hasSensor();
     }
 
     @Override
     public boolean hasName() {
-        return track.hasName();
+        return this.track.hasName();
     }
 
     @Override
     public boolean hasDescription() {
-        return track.hasDescription();
+        return this.track.hasDescription();
     }
 
     @Override
     public boolean hasIdentifier() {
-        return track.hasIdentifier();
+        return this.track.hasIdentifier();
     }
 
     @Override
     public boolean hasBoundingBox() {
-        return track.hasBoundingBox();
+        return this.track.hasBoundingBox();
     }
 
     @Override
     public boolean hasCreationTime() {
-        return track.hasCreationTime();
+        return this.track.hasCreationTime();
     }
 
     @Override
     public boolean hasModificationTime() {
-        return track.hasModificationTime();
+        return this.track.hasModificationTime();
     }
 
     @Override
     public DateTime getBegin() {
-        return track.getBegin();
+        return this.track.getBegin();
     }
 
     @Override
     public void setBegin(DateTime begin) {
-        track.setBegin(begin);
+        this.track.setBegin(begin);
     }
 
     @Override
     public boolean hasBegin() {
-        return track.hasBegin();
+        return this.track.hasBegin();
     }
 
     @Override
     public DateTime getEnd() {
-        return track.getEnd();
+        return this.track.getEnd();
     }
 
     @Override
     public void setEnd(DateTime end) {
-        track.setEnd(end);
+        this.track.setEnd(end);
     }
 
     @Override
     public boolean hasEnd() {
-        return track.hasEnd();
+        return this.track.hasEnd();
     }
 
-	@Override
-	public void setTouVersion(String touVersion) {
-		track.setTouVersion(touVersion);
-	}
+    @Override
+    public void setTouVersion(String touVersion) {
+        this.track.setTouVersion(touVersion);
+    }
 
-	@Override
-	public String getTouVersion() {
-		return track.getTouVersion();
-	}
+    @Override
+    public String getTouVersion() {
+        return this.track.getTouVersion();
+    }
 
-	@Override
-	public void setObdDevice(String obdDevice) {
-		track.setObdDevice(obdDevice);
-	}
+    @Override
+    public void setObdDevice(String obdDevice) {
+        this.track.setObdDevice(obdDevice);
+    }
 
-	@Override
-	public String getObdDevice() {
-		return track.getObdDevice();
-	}
+    @Override
+    public String getObdDevice() {
+        return this.track.getObdDevice();
+    }
 
-	@Override
-	public void setAppVersion(String appVersion) {
-		track.setAppVersion(appVersion);
-	}
+    @Override
+    public void setAppVersion(String appVersion) {
+        this.track.setAppVersion(appVersion);
+    }
 
-	@Override
-	public String getAppVersion() {
-		return track.getAppVersion();
-	}
+    @Override
+    public String getAppVersion() {
+        return this.track.getAppVersion();
+    }
 
-	@Override
-	public boolean hasAppVersion() {
-		return track.hasAppVersion();
-	}
+    @Override
+    public boolean hasAppVersion() {
+        return this.track.hasAppVersion();
+    }
 
-	@Override
-	public boolean hasObdDevice() {
-		return track.hasObdDevice();
-	}
+    @Override
+    public boolean hasObdDevice() {
+        return this.track.hasObdDevice();
+    }
 
-	@Override
-	public boolean hasTouVersion() {
-		return track.hasTouVersion();
-	}
+    @Override
+    public boolean hasTouVersion() {
+        return this.track.hasTouVersion();
+    }
 
-	@Override
-	public double getLength() {
-		return track.getLength();
-	}
+    @Override
+    public double getLength() {
+        return this.track.getLength();
+    }
 
-	@Override
-	public void setLength(double length) {
-		track.setLength(length);		
-	}
+    @Override
+    public void setLength(double length) {
+        this.track.setLength(length);
+    }
 
-	@Override
-	public boolean hasLength() {
-		return track.hasLength();
-	}
+    @Override
+    public boolean hasLength() {
+        return this.track.hasLength();
+    }
+
+    @Override
+    public TrackStatus getStatus() {
+        return this.track.getStatus();
+    }
+
+    @Override
+    public void setStatus(TrackStatus status) {
+        this.track.setStatus(status);
+    }
+
+    @Override
+    public String getMeasurementProfile() {
+        return this.track.getMeasurementProfile();
+    }
+
+    @Override
+    public void setMeasurementProfile(String measurementProfile) {
+        this.track.setMeasurementProfile(measurementProfile);
+    }
 }

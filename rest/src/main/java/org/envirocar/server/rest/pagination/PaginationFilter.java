@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2020 The enviroCar project
+ * Copyright (C) 2013-2022 The enviroCar project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -16,19 +16,16 @@
  */
 package org.envirocar.server.rest.pagination;
 
-import java.net.URI;
-import java.util.Optional;
-
-import javax.ws.rs.core.MediaType;
-
-import org.envirocar.server.core.util.pagination.Paginated;
-import org.envirocar.server.core.util.pagination.Pagination;
-import org.envirocar.server.rest.RESTConstants;
-
 import com.sun.jersey.core.header.LinkHeader;
 import com.sun.jersey.spi.container.ContainerRequest;
 import com.sun.jersey.spi.container.ContainerResponse;
 import com.sun.jersey.spi.container.ContainerResponseFilter;
+import org.envirocar.server.core.util.pagination.Paginated;
+import org.envirocar.server.core.util.pagination.Pagination;
+import org.envirocar.server.rest.RESTConstants;
+
+import javax.ws.rs.core.MediaType;
+import java.net.URI;
 
 public class PaginationFilter implements ContainerResponseFilter {
     public static final String REL_FIRST = "first";
@@ -43,7 +40,7 @@ public class PaginationFilter implements ContainerResponseFilter {
                                     ContainerResponse res) {
         Object entity = res.getEntity();
         if (entity instanceof Paginated) {
-            Paginated<?> p = (Paginated) entity;
+            Paginated<?> p = (Paginated<?>) entity;
             if (p.isPaginated()) {
                 insertLinks(p, req, res);
                 insertRangeHeader(p, res);
@@ -68,35 +65,20 @@ public class PaginationFilter implements ContainerResponseFilter {
         }
     }
 
-
-    private void insertLinks(Paginated<?> p,
-                             ContainerRequest req,
-                             ContainerResponse res) {
-        java.util.Optional<Pagination> first = p.getFirst();
-        if (first.isPresent()) {
-            addLink(REL_FIRST, first.get(), req, res);
-        }
-        Optional<Pagination> last = p.getLast();
-        if (last.isPresent()) {
-            addLink(REL_LAST, last.get(), req, res);
-        }
-        java.util.Optional<Pagination> previous = p.getPrevious();
-        if (previous.isPresent()) {
-            addLink(REL_PREV, previous.get(), req, res);
-        }
-        java.util.Optional<Pagination> next = p.getNext();
-        if (next.isPresent()) {
-            addLink(REL_NEXT, next.get(), req, res);
-        }
+    private void insertLinks(Paginated<?> p, ContainerRequest req, ContainerResponse res) {
+        p.getFirst().ifPresent(pagination -> addLink(REL_FIRST, pagination, req, res));
+        p.getLast().ifPresent(pagination -> addLink(REL_LAST, pagination, req, res));
+        p.getPrevious().ifPresent(pagination -> addLink(REL_PREV, pagination, req, res));
+        p.getNext().ifPresent(pagination -> addLink(REL_NEXT, pagination, req, res));
     }
 
     protected void addLink(String rel, Pagination p, ContainerRequest req,
                            ContainerResponse res) {
-        if (p.getPage()>= 0 && p.getLimit() >= 0) {
+        if (p.getPage() >= 0 && p.getLimit() >= 0) {
             URI uri = req.getRequestUriBuilder()
-                    .replaceQueryParam(RESTConstants.LIMIT, p.getLimit())
-                    .replaceQueryParam(RESTConstants.PAGE, p.getPage())
-                    .build();
+                         .replaceQueryParam(RESTConstants.LIMIT, p.getLimit())
+                         .replaceQueryParam(RESTConstants.PAGE, p.getPage())
+                         .build();
             MediaType type = res.getMediaType();
             LinkHeader header = LinkHeader.uri(uri).type(type).rel(rel).build();
             res.getHttpHeaders().add(LINK_HEADER, header.toString());

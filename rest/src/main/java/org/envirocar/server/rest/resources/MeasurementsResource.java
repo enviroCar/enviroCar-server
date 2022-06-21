@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2020 The enviroCar project
+ * Copyright (C) 2013-2022 The enviroCar project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -18,7 +18,6 @@ package org.envirocar.server.rest.resources;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
-import org.locationtech.jts.geom.GeometryFactory;
 import org.envirocar.server.core.SpatialFilter;
 import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.Measurements;
@@ -35,6 +34,7 @@ import org.envirocar.server.rest.RESTConstants;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.auth.Authenticated;
 import org.envirocar.server.rest.schema.Schema;
+import org.locationtech.jts.geom.GeometryFactory;
 
 import javax.annotation.Nullable;
 import javax.ws.rs.Consumes;
@@ -42,7 +42,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import java.security.InvalidParameterException;
@@ -69,7 +68,6 @@ public class MeasurementsResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.MEASUREMENTS)
-    @Produces({MediaTypes.JSON, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
     public Measurements get(@QueryParam(RESTConstants.BBOX) BoundingBox bbox,
                             @QueryParam(RESTConstants.NEAR_POINT) NearPoint nearPoint) throws BadRequestException {
         //check spatial filter
@@ -77,25 +75,27 @@ public class MeasurementsResource extends AbstractResource {
         if (bbox != null && nearPoint != null) {
             throw new InvalidParameterException("Only one spatial filter can be applied!");
         } else if (bbox != null) {
-            sf = SpatialFilter.bbox(bbox.asPolygon(geometryFactory));
+            sf = SpatialFilter.bbox(bbox.asPolygon(this.geometryFactory));
         } else if (nearPoint != null) {
             sf = SpatialFilter.nearPoint(nearPoint.getPoint(), nearPoint.getDistance());
         }
 
         return getDataService()
-                       .getMeasurements(new MeasurementFilter(track, user, sf, parseTemporalFilterForInstant(), getPagination()));
+                .getMeasurements(new MeasurementFilter(this.track, this.user, sf,
+                                                       parseTemporalFilterForInstant(),
+                                                       getPagination()));
     }
 
     @POST
     @Authenticated
     @Schema(request = Schemas.MEASUREMENT_CREATE)
-    @Consumes({MediaTypes.JSON})
+    @Consumes(MediaTypes.JSON)
     public Response create(Measurement measurement) throws ValidationException {
         Measurement m;
-        if (track != null) {
-            checkRights(getRights().canModify(track));
+        if (this.track != null) {
+            checkRights(getRights().canModify(this.track));
             measurement.setUser(getCurrentUser());
-            m = getDataService().createMeasurement(track, measurement);
+            m = getDataService().createMeasurement(this.track, measurement);
         } else {
             measurement.setUser(getCurrentUser());
             m = getDataService().createMeasurement(measurement);
@@ -106,15 +106,15 @@ public class MeasurementsResource extends AbstractResource {
     @Path(MEASUREMENT)
     public MeasurementResource measurement(@PathParam("measurement") String id)
             throws MeasurementNotFoundException {
-        if (user != null) {
-            checkRights(getRights().canSeeMeasurementsOf(user));
+        if (this.user != null) {
+            checkRights(getRights().canSeeMeasurementsOf(this.user));
         }
-        if (track != null) {
-            checkRights(getRights().canSeeMeasurementsOf(track));
+        if (this.track != null) {
+            checkRights(getRights().canSeeMeasurementsOf(this.track));
         }
 
         Measurement m = getDataService().getMeasurement(id);
         checkRights(getRights().canSee(m));
-        return getResourceFactory().createMeasurementResource(m, user, track);
+        return getResourceFactory().createMeasurementResource(m, this.user, this.track);
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2020 The enviroCar project
+ * Copyright (C) 2013-2022 The enviroCar project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -42,15 +42,15 @@ public class DeletedTrackEvent implements TrackEvent {
 
     @Override
     public Track getTrack() {
-        return track;
+        return this.track;
     }
 
     @Override
     public User getUser() {
-        return user;
+        return this.user;
     }
     
     public Measurements getMeasurements(){
-        return measurements;
+        return this.measurements;
     }
 }

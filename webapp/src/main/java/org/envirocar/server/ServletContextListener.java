@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2020 The enviroCar project
+ * Copyright (C) 2013-2022 The enviroCar project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -40,7 +40,7 @@ public class ServletContextListener extends GuiceServletContextListener {
     private static final Logger LOG = LoggerFactory.getLogger(ServletContextListener.class);
     private LifecycleInjector injector;
 
-    private Module overrides;
+    private final Module overrides;
 
     public ServletContextListener() {
         this(null);
@@ -53,20 +53,20 @@ public class ServletContextListener extends GuiceServletContextListener {
     @Override
     protected Injector getInjector() {
 
-        if (injector == null) {
+        if (this.injector == null) {
             Module module = new ServiceLoaderConfigurationModule();
-            if (overrides != null) {
-                module = Modules.override(module).with(overrides);
+            if (this.overrides != null) {
+                module = Modules.override(module).with(this.overrides);
             }
             try {
-                injector = new LifecycleInjectorCreator().createInjector(Stage.PRODUCTION, module);
+                this.injector = new LifecycleInjectorCreator().createInjector(Stage.PRODUCTION, module);
             } catch (CreationException ex) {
                 LOG.error("Error creating injector", ex);
                 throw ex;
             }
         }
 
-        return injector;
+        return this.injector;
 
     }
 
@@ -78,8 +78,8 @@ public class ServletContextListener extends GuiceServletContextListener {
 
     @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
-        if (injector != null) {
-            injector.close();
+        if (this.injector != null) {
+            this.injector.close();
         }
         super.contextDestroyed(servletContextEvent);
     }

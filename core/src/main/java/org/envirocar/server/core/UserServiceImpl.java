@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2020 The enviroCar project
+ * Copyright (C) 2013-2022 The enviroCar project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -48,6 +48,7 @@ import org.envirocar.server.core.util.pagination.Pagination;
 import org.envirocar.server.core.validation.EntityValidator;
 import org.envirocar.server.core.validation.PrivacyStatementException;
 import org.envirocar.server.core.validation.TermsOfUseException;
+import org.joda.time.DateTime;
 import org.joda.time.format.ISODateTimeFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -115,32 +116,35 @@ public class UserServiceImpl implements UserService {
     @Override
     public User createUser(User user) throws ValidationException,
                                              ResourceAlreadyExistException {
-        userValidator.validateCreate(user);
-        if (userDao.getByName(user.getName(), true) != null) {
+        DateTime now = DateTime.now();
+        this.userValidator.validateCreate(user);
+        if (this.userDao.getByName(user.getName(), true) != null) {
             throw new ResourceAlreadyExistException("name already exists");
         }
-        if (userDao.getByMail(user.getMail(), true) != null) {
+        if (this.userDao.getByMail(user.getMail(), true) != null) {
             throw new ResourceAlreadyExistException("mail already exists");
         }
         // set the hashed password
-        user.setToken(passwordEncoder.encode(user.getToken()));
+        user.setToken(this.passwordEncoder.encode(user.getToken()));
 
-        if (user.hasAcceptedTermsOfUse() && !user.hasTermsOfUseVersion()) {
-            termsRepository.getLatestTermsOfUse().map(Terms::getIssuedDate)
-                           .ifPresent(user::setTermsOfUseVersion);
+        if (!user.hasTermsOfUseVersion()) {
+            this.termsRepository.getLatestTermsOfUse().map(Terms::getIssuedDate)
+                                .ifPresent(user::setTermsOfUseVersion);
         }
+        user.addTermsOfUseHistoryItem(new User.TermsHistoryItem(user.getTermsOfUseVersion(), now));
 
-        if (user.hasAcceptedPrivacyStatement() && !user.hasPrivacyStatementVersion()) {
-            termsRepository.getLatestPrivacyStatement().map(Terms::getIssuedDate)
-                           .ifPresent(user::setPrivacyStatementVersion);
+        if (!user.hasPrivacyStatementVersion()) {
+            this.termsRepository.getLatestPrivacyStatement().map(Terms::getIssuedDate)
+                                .ifPresent(user::setPrivacyStatementVersion);
         }
+        user.addPrivacyStatementHistoryItem(new User.TermsHistoryItem(user.getPrivacyStatementVersion(), now));
 
         checkCurrentTerms(user);
 
         User created = this.userDao.create(user);
 
         try {
-            mailer.send(createVerificationMail(created));
+            this.mailer.send(createVerificationMail(created));
         } catch (MailerException ex) {
             throw new RuntimeException(ex);
         }
@@ -150,7 +154,7 @@ public class UserServiceImpl implements UserService {
 
     private void checkCurrentTerms(User user) {
         if (user.hasTermsOfUseVersion()) {
-            Optional<TermsOfUseInstance> term = termsRepository.getLatestTermsOfUse();
+            Optional<TermsOfUseInstance> term = this.termsRepository.getLatestTermsOfUse();
             if (!term.map(Terms::getIssuedDate).map(user.getTermsOfUseVersion()::equals).orElse(false)) {
                 throw new TermsOfUseException(term.map(Terms::getIssuedDate).orElse(null),
                                               user.getTermsOfUseVersion());
@@ -158,7 +162,7 @@ public class UserServiceImpl implements UserService {
         }
 
         if (user.hasPrivacyStatementVersion()) {
-            Optional<PrivacyStatement> term = termsRepository.getLatestPrivacyStatement();
+            Optional<PrivacyStatement> term = this.termsRepository.getLatestPrivacyStatement();
             if (!term.map(Terms::getIssuedDate).map(user.getPrivacyStatementVersion()::equals).orElse(false)) {
                 throw new PrivacyStatementException(term.map(Terms::getIssuedDate).orElse(null),
                                                     user.getPrivacyStatementVersion());
@@ -255,7 +259,7 @@ public class UserServiceImpl implements UserService {
         /*
          * we got here without exception, fire an event
          */
-        eventBus.post(new PasswordResetEvent(code.getCode(), user, code.getExpires()));
+        this.eventBus.post(new PasswordResetEvent(code.getCode(), user, code.getExpires()));
     }
 
     @Override
@@ -283,7 +287,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private PlainMail createVerificationMail(User user) {
-        URI confirmationLink = confirmationLinkFactory.get().getConfirmationLink(user);
+        URI confirmationLink = this.confirmationLinkFactory.get().getConfirmationLink(user);
         String expirationTime = user.getExpirationDate().toString(ISODateTimeFormat.dateTimeNoMillis());
         String mailSubject = REGISTRATION_FALLBACK_SUBJECT;
         String mailBody = null;

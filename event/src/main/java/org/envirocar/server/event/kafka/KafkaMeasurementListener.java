@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2020 The enviroCar project
+ * Copyright (C) 2013-2022 The enviroCar project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -20,33 +20,34 @@ import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
-import org.envirocar.server.core.entities.Track;
-import org.envirocar.server.core.event.CreatedTrackEvent;
+import org.envirocar.server.core.entities.Measurement;
+import org.envirocar.server.core.event.CreatedMeasurementEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Named;
 import java.util.Objects;
 
-public class KafkaListener {
-    private static final Logger LOG = LoggerFactory.getLogger(KafkaListener.class);
-    private final Producer<String, Track> producer;
+public class KafkaMeasurementListener {
+    private static final Logger LOG = LoggerFactory.getLogger(KafkaTrackListener.class);
+    private final Producer<String, Measurement> producer;
     private final String topicName;
 
     @Inject
-    public KafkaListener(Producer<String, Track> producer, @Named(KafkaConstants.KAFKA_TOPIC) String topic) {
+    public KafkaMeasurementListener(Producer<String, Measurement> producer,
+                                    @Named(KafkaConstants.KAFKA_MEASUREMENT_TOPIC) String topic) {
         this.producer = Objects.requireNonNull(producer);
         this.topicName = Objects.requireNonNull(topic);
     }
 
     @Subscribe
-    public void onCreatedTrackEvent(CreatedTrackEvent e) {
-        Track track = e.getTrack();
-        ProducerRecord<String, Track> record = new ProducerRecord<>(topicName, track.getIdentifier(), track);
-        LOG.info("Publishing track {} to kafka", record.key());
-        producer.send(record, (metadata, exception) -> {
+    public void onCreatedMeasurementEvent(CreatedMeasurementEvent e) {
+        Measurement m = e.getMeasurement();
+        ProducerRecord<String, Measurement> record = new ProducerRecord<>(this.topicName, m.getIdentifier(), m);
+        LOG.trace("Publishing measurement {} to kafka", record.key());
+        this.producer.send(record, (metadata, exception) -> {
             if (exception != null) {
-                LOG.error("Error publishing track to kafka", exception);
+                LOG.error("Error publishing measurement to kafka", exception);
             }
         });
     }

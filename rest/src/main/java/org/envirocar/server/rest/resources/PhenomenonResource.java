@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2020 The enviroCar project
+ * Copyright (C) 2013-2022 The enviroCar project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -19,13 +19,11 @@ package org.envirocar.server.rest.resources;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import org.envirocar.server.core.entities.Phenomenon;
-import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.schema.Schema;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
 
 /**
  * TODO JavaDoc
@@ -43,15 +41,14 @@ public class PhenomenonResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.PHENOMENON)
-    @Produces({MediaTypes.JSON, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
     public Phenomenon getPhenomenon() {
-        return phenomenon;
+        return this.phenomenon;
     }
 
     @Path(STATISTIC)
     public StatisticResource getStatistic() {
-        checkRights(getRights().canSeeStatisticsOf(phenomenon));
+        checkRights(getRights().canSeeStatisticsOf(this.phenomenon));
         return getResourceFactory()
-                .createStatisticResource(phenomenon, null, null, null);
+                .createStatisticResource(this.phenomenon, null, null, null);
     }
 }

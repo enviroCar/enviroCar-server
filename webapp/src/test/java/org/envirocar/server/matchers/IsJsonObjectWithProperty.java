@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2020 The enviroCar project
+ * Copyright (C) 2013-2022 The enviroCar project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -37,7 +37,7 @@ public class IsJsonObjectWithProperty extends BaseMatcher<JsonNode> {
     public boolean matches(Object item) {
         if (item instanceof JsonNode) {
             JsonNode json = (JsonNode) item;
-            return !json.path(key).isMissingNode();
+            return !json.path(this.key).isMissingNode();
         } else {
             return false;
         }

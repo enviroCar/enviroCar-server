@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2020 The enviroCar project
+ * Copyright (C) 2013-2022 The enviroCar project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -40,6 +40,7 @@ import org.envirocar.server.rest.encoding.json.JsonNodeMessageBodyWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testcontainers.containers.KafkaContainer;
+import org.testcontainers.utility.DockerImageName;
 
 /**
  * TODO JavaDoc
@@ -62,28 +63,28 @@ public class EnviroCarServer extends ExternalResource {
         this.port = port;
         this.jettyServer = new Server(port);
         this.jettyServer.setStopAtShutdown(true);
-        this.kafka = new KafkaContainer().withEmbeddedZookeeper();
+        this.kafka = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:5.4.3")).withEmbeddedZookeeper();
         this.mongo = new MongoContainer();
     }
 
     @Override
     protected void before() throws Throwable {
-        CheckedRunnable.runAll(kafka::start, mongo::start);
+        CheckedRunnable.runAll(this.kafka::start, this.mongo::start);
 
-        ServletContextHandler sch = new ServletContextHandler(jettyServer, "/");
+        ServletContextHandler sch = new ServletContextHandler(this.jettyServer, "/");
         sch.addFilter(GuiceFilter.class, "/*", null);
         ServletContextListener servletContextListener = new ServletContextListener(new Module() {
             @Override
             public void configure(Binder binder) {
-                binder.bind(MongoContainer.class).toInstance(mongo);
-                binder.bind(KafkaContainer.class).toInstance(kafka);
+                binder.bind(MongoContainer.class).toInstance(EnviroCarServer.this.mongo);
+                binder.bind(KafkaContainer.class).toInstance(EnviroCarServer.this.kafka);
                 binder.bind(Mailer.class).to(NoopMailer.class);
                 binder.bind(String.class).annotatedWith(Names.named(MongoDB.DATABASE_PROPERTY))
                       .toInstance("enviroCar-Testing");
             }
 
             @Provides
-            @Named(KafkaConstants.KAFKA_BROKERS)
+            @Named(KafkaConstants.KAFKA_BOOTSTRAP_SERVERS)
             public String brokers(KafkaContainer kafka) {
                 return kafka.getBootstrapServers();
             }
@@ -100,11 +101,11 @@ public class EnviroCarServer extends ExternalResource {
                 return mongo.getPort();
             }
         });
-        injector = servletContextListener.getInjector();
+        this.injector = servletContextListener.getInjector();
         sch.addEventListener(servletContextListener);
         sch.addServlet(DefaultServlet.class, "/");
 
-        jettyServer.start();
+        this.jettyServer.start();
     }
 
     public WebResource resource() {
@@ -117,22 +118,22 @@ public class EnviroCarServer extends ExternalResource {
 
     public Client client() {
         ClientConfig cc = new DefaultClientConfig();
-        cc.getSingletons().add(injector.getInstance(JsonNodeMessageBodyReader.class));
-        cc.getSingletons().add(injector.getInstance(JsonNodeMessageBodyWriter.class));
+        cc.getSingletons().add(this.injector.getInstance(JsonNodeMessageBodyReader.class));
+        cc.getSingletons().add(this.injector.getInstance(JsonNodeMessageBodyWriter.class));
         return Client.create(cc);
     }
 
     @Override
     protected void after() throws Exception {
-        CheckedRunnable.runAll(jettyServer::stop, mongo::stop, kafka::stop);
+        CheckedRunnable.runAll(this.jettyServer::stop, this.mongo::stop, this.kafka::stop);
     }
 
     public Server getServer() {
-        return jettyServer;
+        return this.jettyServer;
     }
 
     public Injector getInjector() {
-        return injector;
+        return this.injector;
     }
 
 }

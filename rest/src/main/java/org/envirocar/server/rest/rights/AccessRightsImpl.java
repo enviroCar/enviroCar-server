@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2020 The enviroCar project
+ * Copyright (C) 2013-2022 The enviroCar project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -18,7 +18,13 @@ package org.envirocar.server.rest.rights;
 
 import org.envirocar.server.core.FriendService;
 import org.envirocar.server.core.GroupService;
-import org.envirocar.server.core.entities.*;
+import org.envirocar.server.core.entities.Fueling;
+import org.envirocar.server.core.entities.Group;
+import org.envirocar.server.core.entities.Measurement;
+import org.envirocar.server.core.entities.Phenomenon;
+import org.envirocar.server.core.entities.Sensor;
+import org.envirocar.server.core.entities.Track;
+import org.envirocar.server.core.entities.User;
 
 /**
  * TODO JavaDoc
@@ -438,6 +444,11 @@ public class AccessRightsImpl extends AbstractAccessRights {
     }
 
     @Override
+    public boolean canSeeMeasurementProfile(Track track) {
+        return true;
+    }
+
+    @Override
     public boolean canSeeAnnouncements() {
         return true;
     }
@@ -469,6 +480,12 @@ public class AccessRightsImpl extends AbstractAccessRights {
 
     @Override
     public boolean canSeeLengthOf(Track t) {
+        return true;
+    }
+
+    @Override
+    public boolean canSeeStatusOf(Track t) {
+        //TODO re-visit regarding privacy
         return true;
     }
 

@@ -10,7 +10,7 @@
       "type": "array",
       "minItems": 0,
       "items": {
-        "$ref": "activity.json#"
+        "$ref": "activity.json"
       }
     }
   }

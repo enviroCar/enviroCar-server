@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2020 The enviroCar project
+ * Copyright (C) 2013-2022 The enviroCar project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -16,8 +16,8 @@
  */
 package org.envirocar.server.mongo.entity;
 
-import com.google.common.base.Objects;
 import dev.morphia.Key;
+import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.IndexOptions;
@@ -31,6 +31,10 @@ import org.locationtech.jts.geom.Geometry;
 
 import java.net.URL;
 import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -64,7 +68,9 @@ public class MongoUser extends MongoEntityBase implements User {
     @Deprecated
     public static final String ACCEPTED_TERMS_OF_USE = "acceptedTermsOfUseVersion";
     public static final String TERMS_OF_USE_VERSION = "touVersion";
+    public static final String TERMS_OF_USE_HISTORY = "touHistory";
     public static final String PRIVACY_STATEMENT_VERSION = "privacyStatementVersion";
+    public static final String PRIVACY_STATEMENT_HISTORY = "privacyStatementHistory";
     public static final String COLLECTION = "users";
 
     @Property(TOKEN)
@@ -106,8 +112,12 @@ public class MongoUser extends MongoEntityBase implements User {
     private String acceptedTermsOfUseVersion;
     @Property(TERMS_OF_USE_VERSION)
     private String termsOfUseVersion;
+    @Embedded(TERMS_OF_USE_HISTORY)
+    private List<TermsHistoryItem> termsOfUseHistory;
     @Property(PRIVACY_STATEMENT_VERSION)
     private String privacyStatementVersion;
+    @Embedded(PRIVACY_STATEMENT_HISTORY)
+    private List<TermsHistoryItem> privacyStatementHistory;
 
     @Indexed(
             options = @IndexOptions(
@@ -200,7 +210,7 @@ public class MongoUser extends MongoEntityBase implements User {
             return false;
         }
         MongoUser other = (MongoUser) obj;
-        return Objects.equal(this.name, other.name);
+        return Objects.equals(this.name, other.name);
     }
 
     @Override
@@ -345,8 +355,8 @@ public class MongoUser extends MongoEntityBase implements User {
     }
 
     @Override
-    public void setAcceptedPrivacyStatement(boolean hasAccceptedPrivacyStatement) {
-        this.hasAcceptedPrivacyStatement = hasAccceptedPrivacyStatement;
+    public void setAcceptedPrivacyStatement(boolean hasAcceptedPrivacyStatement) {
+        this.hasAcceptedPrivacyStatement = hasAcceptedPrivacyStatement;
     }
 
     @Override
@@ -358,4 +368,41 @@ public class MongoUser extends MongoEntityBase implements User {
     public String getPrivacyStatementVersion() {
         return this.privacyStatementVersion;
     }
+
+    @Override
+    public List<TermsHistoryItem> getTermsOfUseHistory() {
+        return Optional.ofNullable(this.termsOfUseHistory).orElseGet(Collections::emptyList);
+    }
+
+    @Override
+    public void setTermsOfUseHistory(List<TermsHistoryItem> history) {
+        this.termsOfUseHistory = Objects.requireNonNull(history);
+    }
+
+    @Override
+    public void addTermsOfUseHistoryItem(TermsHistoryItem item) {
+        if (this.termsOfUseHistory == null) {
+            this.termsOfUseHistory = new LinkedList<>();
+        }
+        this.termsOfUseHistory.add(Objects.requireNonNull(item));
+    }
+
+    @Override
+    public List<TermsHistoryItem> getPrivacyStatementHistory() {
+        return Optional.ofNullable(this.privacyStatementHistory).orElseGet(Collections::emptyList);
+    }
+
+    @Override
+    public void setPrivacyStatementHistory(List<TermsHistoryItem> history) {
+        this.privacyStatementHistory = Objects.requireNonNull(history);
+    }
+
+    @Override
+    public void addPrivacyStatementHistoryItem(TermsHistoryItem item) {
+        if (this.privacyStatementHistory == null) {
+            this.privacyStatementHistory = new LinkedList<>();
+        }
+        this.privacyStatementHistory.add(Objects.requireNonNull(item));
+    }
 }
+

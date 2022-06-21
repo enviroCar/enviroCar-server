@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2020 The enviroCar project
+ * Copyright (C) 2013-2022 The enviroCar project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -20,7 +20,6 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import org.apache.jena.rdf.model.Model;
 import org.envirocar.server.rest.MediaTypes;
-import org.envirocar.server.rest.PrefixedUriInfo;
 import org.envirocar.server.rest.encoding.RDFEntityEncoder;
 
 import javax.ws.rs.Produces;
@@ -48,20 +47,17 @@ public abstract class AbstractRDFMessageBodyWriter<T>
     @Inject
     private Provider<HttpHeaders> headers;
 
-    public AbstractRDFMessageBodyWriter(Class<T> classType) {
+    protected AbstractRDFMessageBodyWriter(Class<T> classType) {
         this.classType = classType;
     }
 
     @Override
     public boolean isWriteable(Class<?> type, Type genericType,
                                Annotation[] annotations, MediaType mediaType) {
-        if (this.classType.isAssignableFrom(type)) {
-            return mediaType.isCompatible(MediaTypes.XML_RDF_TYPE) ||
-                   mediaType.isCompatible(MediaTypes.TURTLE_TYPE) ||
-                   mediaType.isCompatible(MediaTypes.TURTLE_ALT_TYPE);
-        } else {
-            return false;
-        }
+        return this.classType.isAssignableFrom(type) &&
+               (mediaType.isCompatible(MediaTypes.XML_RDF_TYPE) ||
+                mediaType.isCompatible(MediaTypes.TURTLE_TYPE) ||
+                mediaType.isCompatible(MediaTypes.TURTLE_ALT_TYPE));
     }
 
     @Override

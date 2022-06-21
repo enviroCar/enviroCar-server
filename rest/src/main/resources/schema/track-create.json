@@ -16,6 +16,9 @@
     "properties": {
       "type": "object",
       "additionalProperties": false,
+      "required": [
+        "sensor"
+      ],
       "properties": {
         "sensor": {
           "type": "string",
@@ -26,7 +29,29 @@
         },
         "description": {
           "type": "string"
+        },
+        "appVersion": {
+          "type": "string"
+        },
+        "obdDevice": {
+          "type": "string"
+        },
+        "touVersion": {
+          "type": "string"
+        },
+        "length": {
+          "type": "number"
+        },
+        "status": {
+          "$ref": "track-status.json"
         }
+      }
+    },
+    "features": {
+      "type": "array",
+      "minItems": 0,
+      "items": {
+        "$ref": "measurement-create.json"
       }
     }
   }

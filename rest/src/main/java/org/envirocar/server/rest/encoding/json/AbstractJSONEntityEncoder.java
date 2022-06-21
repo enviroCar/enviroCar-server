@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2020 The enviroCar project
+ * Copyright (C) 2013-2022 The enviroCar project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -16,11 +16,11 @@
  */
 package org.envirocar.server.rest.encoding.json;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.JsonNodeCreator;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-import org.envirocar.server.rest.encoding.JSONEntityEncoder;
 import org.envirocar.server.rest.rights.AccessRights;
 import org.envirocar.server.rest.schema.JsonSchemaUriConfiguration;
 import org.joda.time.format.DateTimeFormatter;
@@ -33,8 +33,7 @@ import javax.ws.rs.core.MediaType;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public abstract class AbstractJSONEntityEncoder<T>
-        extends AbstractJSONMessageBodyWriter<T>
-        implements JSONEntityEncoder<T> {
+        extends AbstractJSONMessageBodyWriter<T> {
     private JsonNodeFactory jsonFactory;
     private DateTimeFormatter dateTimeFormat;
     private Provider<AccessRights> rights;
@@ -44,17 +43,13 @@ public abstract class AbstractJSONEntityEncoder<T>
         super(classType);
     }
 
-    public JsonNodeFactory getJsonFactory() {
-        return jsonFactory;
-    }
-
     @Inject
     public void setJsonFactory(JsonNodeFactory jsonFactory) {
         this.jsonFactory = jsonFactory;
     }
 
     public DateTimeFormatter getDateTimeFormat() {
-        return dateTimeFormat;
+        return this.dateTimeFormat;
     }
 
     @Inject
@@ -68,8 +63,8 @@ public abstract class AbstractJSONEntityEncoder<T>
     }
 
     @Override
-    public ObjectNode encodeJSON(T entity, MediaType mediaType) {
-        return encodeJSON(entity, rights.get(), mediaType);
+    public JsonNode encodeJSON(T entity, MediaType mediaType) {
+        return encodeJSON(entity, this.rights.get(), mediaType);
     }
 
     @Inject
@@ -78,6 +73,6 @@ public abstract class AbstractJSONEntityEncoder<T>
     }
 
     protected JsonSchemaUriConfiguration getSchemaUriConfiguration() {
-        return schemaUriConfiguration;
+        return this.schemaUriConfiguration;
     }
 }

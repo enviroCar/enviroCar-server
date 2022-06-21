@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2020 The enviroCar project
+ * Copyright (C) 2013-2022 The enviroCar project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -115,7 +115,7 @@ public class PrefixedUriInfo extends DelegatingUriInfo {
 
     @Override
     public String getPath(boolean decode) {
-        if (prefix == null || prefix.isEmpty()) {
+        if (this.prefix == null || this.prefix.isEmpty()) {
             return super.getPath(decode);
         }
         Iterator<String> iter = this.prefix.iterator();
@@ -157,11 +157,11 @@ public class PrefixedUriInfo extends DelegatingUriInfo {
             }
             builder = builder.path(uri.getPath());
         }
-        if (port > 0) {
-            builder = builder.port(port);
+        if (this.port > 0) {
+            builder = builder.port(this.port);
         }
-        if (scheme != null) {
-            builder = builder.scheme(scheme);
+        if (this.scheme != null) {
+            builder = builder.scheme(this.scheme);
         }
         return builder;
     }

@@ -3,6 +3,7 @@
   "type": "object",
   "additionalProperties": false,
   "required": [
+    "type",
     "properties"
   ],
   "properties": {
@@ -15,9 +16,6 @@
     "properties": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "sensor"
-      ],
       "properties": {
         "sensor": {
           "type": "string",
@@ -40,6 +38,9 @@
         },
         "length": {
           "type": "number"
+        },
+        "status": {
+          "$ref": "track-status.json"
         }
       }
     },
@@ -47,7 +48,7 @@
       "type": "array",
       "minItems": 0,
       "items": {
-        "$ref": "measurement.create.json#"
+        "$ref": "measurement-create.json"
       }
     }
   }

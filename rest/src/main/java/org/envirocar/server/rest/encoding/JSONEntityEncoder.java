@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2020 The enviroCar project
+ * Copyright (C) 2013-2022 The enviroCar project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -16,11 +16,10 @@
  */
 package org.envirocar.server.rest.encoding;
 
-import javax.ws.rs.core.MediaType;
-
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
+import com.fasterxml.jackson.databind.JsonNode;
 import org.envirocar.server.rest.rights.AccessRights;
+
+import javax.ws.rs.core.MediaType;
 
 /**
  * TODO JavaDoc
@@ -28,5 +27,5 @@ import org.envirocar.server.rest.rights.AccessRights;
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
 public interface JSONEntityEncoder<T> {
-    ObjectNode encodeJSON(T entity, AccessRights rights, MediaType mediaType);
+    JsonNode encodeJSON(T entity, AccessRights rights, MediaType mediaType);
 }

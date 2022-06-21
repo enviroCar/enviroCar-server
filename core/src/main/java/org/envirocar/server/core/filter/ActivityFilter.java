@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2020 The enviroCar project
+ * Copyright (C) 2013-2022 The enviroCar project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -48,9 +48,10 @@ public class ActivityFilter {
         this(group, user, type, false, pagination);
     }
 
-    public ActivityFilter(User user, Pagination pagination) {
-        this(null, user, null, true, pagination);
+    public ActivityFilter(User friend, Pagination pagination) {
+        this(null, friend, null, true, pagination);
     }
+
 
     public Group getGroup() {
         return group;

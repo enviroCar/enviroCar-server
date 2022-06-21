@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2020 The enviroCar project
+ * Copyright (C) 2013-2022 The enviroCar project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -59,47 +59,47 @@ public abstract class AbstractResource {
     private PaginationProvider pagination;
 
     protected AccessRights getRights() {
-        return rights.get();
+        return this.rights.get();
     }
 
     protected Pagination getPagination() throws BadRequestException {
-        return pagination.get();
+        return this.pagination.get();
     }
 
     protected UriInfo getUriInfo() {
-        return uriInfo.get();
+        return this.uriInfo.get();
     }
 
     protected DataService getDataService() {
-        return dataService.get();
+        return this.dataService.get();
     }
 
     protected FriendService getFriendService() {
-        return friendService.get();
+        return this.friendService.get();
     }
 
     protected GroupService getGroupService() {
-        return groupService.get();
+        return this.groupService.get();
     }
 
     protected UserService getUserService() {
-        return userService.get();
+        return this.userService.get();
     }
 
     protected StatisticsService getStatisticsService() {
-        return statisticsService.get();
+        return this.statisticsService.get();
     }
 
     protected UserStatisticService getUserStatisticService() {
-        return userStatisticService.get();
+        return this.userStatisticService.get();
     }
 
     protected ResourceFactory getResourceFactory() {
-        return resourceFactory.get();
+        return this.resourceFactory.get();
     }
 
     protected EntityFactory getEntityFactory() {
-        return entityFactory.get();
+        return this.entityFactory.get();
     }
 
     protected void checkRights(boolean right) {
@@ -111,7 +111,7 @@ public abstract class AbstractResource {
     }
 
     protected User getCurrentUser() {
-        PrincipalImpl p = (PrincipalImpl) securityContext.get().getUserPrincipal();
+        PrincipalImpl p = (PrincipalImpl) this.securityContext.get().getUserPrincipal();
         return p == null ? null : p.getUser();
     }
 

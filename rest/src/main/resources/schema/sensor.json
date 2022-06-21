@@ -5,7 +5,18 @@
       "$ref": "#/definitions/base"
     },
     {
-      "$ref": "#/definitions/with-id"
+      "properties": {
+        "properties": {
+          "required": [
+            "id"
+          ],
+          "properties": {
+            "id": {
+              "type": "string"
+            }
+          }
+        }
+      }
     },
     {
       "oneOf": [
@@ -40,20 +51,6 @@
         },
         "properties": {
           "type": "object"
-        }
-      }
-    },
-    "with-id": {
-      "properties": {
-        "properties": {
-          "required": [
-            "id"
-          ],
-          "properties": {
-            "id": {
-              "type": "string"
-            }
-          }
         }
       }
     },

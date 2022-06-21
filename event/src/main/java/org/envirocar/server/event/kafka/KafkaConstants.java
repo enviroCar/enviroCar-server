@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2020 The enviroCar project
+ * Copyright (C) 2013-2022 The enviroCar project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -16,8 +16,11 @@
  */
 package org.envirocar.server.event.kafka;
 
+import org.apache.kafka.clients.producer.ProducerConfig;
+
 public interface KafkaConstants {
-    String KAFKA_TOPIC = "kafka.topic";
-    String KAFKA_BROKERS = "kafka.brokers";
-    String KAFKA_CLIENT_ID = "kafka.clientId";
+    String KAFKA_MEASUREMENT_TOPIC = "enviroCar.kafka.topic.measurements";
+    String KAFKA_TRACK_TOPIC = "enviroCar.kafka.topic.tracks";
+    String KAFKA_BOOTSTRAP_SERVERS = "kafka." + ProducerConfig.BOOTSTRAP_SERVERS_CONFIG;
+    String KAFKA_CLIENT_ID = "kafka." + ProducerConfig.CLIENT_ID_CONFIG;
 }

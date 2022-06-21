@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "MultiPoint",
+  "type": "object",
+  "required": [
+    "type",
+    "coordinates"
+  ],
+  "properties": {
+    "type": {
+      "enum": [
+        "MultiPoint"
+      ]
+    },
+    "coordinates": {
+      "type": "array",
+      "items": {
+        "type": "array",
+        "minItems": 2,
+        "maxItems": 2,
+        "additionalItems": false,
+        "items": {
+          "type": "number"
+        }
+      }
+    }
+  }
+}

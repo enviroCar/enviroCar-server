@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2020 The enviroCar project
+ * Copyright (C) 2013-2022 The enviroCar project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -45,7 +45,6 @@ public class PhenomenonsResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.PHENOMENONS)
-    @Produces({MediaTypes.JSON, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
     public Phenomenons get() throws BadRequestException {
         return getDataService().getPhenomenons(getPagination());
     }

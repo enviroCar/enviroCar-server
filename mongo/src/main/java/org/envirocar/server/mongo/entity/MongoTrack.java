@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2020 The enviroCar project
+ * Copyright (C) 2013-2022 The enviroCar project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -28,6 +28,7 @@ import dev.morphia.utils.IndexDirection;
 import org.bson.types.ObjectId;
 import org.envirocar.server.core.entities.Sensor;
 import org.envirocar.server.core.entities.Track;
+import org.envirocar.server.core.entities.TrackStatus;
 import org.envirocar.server.core.entities.User;
 import org.joda.time.DateTime;
 import org.locationtech.jts.geom.Geometry;
@@ -54,10 +55,13 @@ public class MongoTrack extends MongoEntityBase implements Track {
     public static final String OBD_DEVICE = "obdDevice";
     public static final String TERMS_OF_USE_VERSION = "touVersion";
     public static final String LENGTH = "length";
+    public static final String STATUS = "status";
     public static final String BEGIN_ORDER = reverse(BEGIN);
+    public static final String MEASUREMENT_PROFILE = "measurementProfile";
     @Id
     private ObjectId id = new ObjectId();
     @Property(USER)
+    @Indexed
     private Key<MongoUser> user;
     @Transient
     private MongoUser _user;
@@ -82,6 +86,11 @@ public class MongoTrack extends MongoEntityBase implements Track {
     private String touVersion;
     @Property(LENGTH)
     private double length;
+    @Property(STATUS)
+    @Indexed
+    private TrackStatus status = TrackStatus.FINISHED;
+    @Property(MEASUREMENT_PROFILE)
+    private String measurementProfile;
 
     @Override
     public MongoUser getUser() {
@@ -188,15 +197,15 @@ public class MongoTrack extends MongoEntityBase implements Track {
     @Override
     public String toString() {
         return toStringHelper()
-                       .add(IDENTIFIER, this.id)
-                       .add(NAME, this.name)
-                       .add(DESCRIPTION, this.description)
-                       .add(USER, this.user)
-                       .add(SENSOR, this.sensor)
-                       .add(BBOX, this.bbox)
-                       .add(BEGIN, this.begin)
-                       .add(END, this.end)
-                       .toString();
+                .add(IDENTIFIER, this.id)
+                .add(NAME, this.name)
+                .add(DESCRIPTION, this.description)
+                .add(USER, this.user)
+                .add(SENSOR, this.sensor)
+                .add(BBOX, this.bbox)
+                .add(BEGIN, this.begin)
+                .add(END, this.end)
+                .toString();
     }
 
     @Override
@@ -304,6 +313,26 @@ public class MongoTrack extends MongoEntityBase implements Track {
     @Override
     public boolean hasLength() {
         return getLength() != 0.0;
+    }
+
+    @Override
+    public TrackStatus getStatus() {
+        return this.status;
+    }
+
+    @Override
+    public void setStatus(TrackStatus status) {
+        this.status = status;
+    }
+
+    @Override
+    public String getMeasurementProfile() {
+        return this.measurementProfile;
+    }
+
+    @Override
+    public void setMeasurementProfile(String measurementProfile) {
+        this.measurementProfile = measurementProfile;
     }
 
 }

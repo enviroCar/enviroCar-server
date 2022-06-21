@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2020 The enviroCar project
+ * Copyright (C) 2013-2022 The enviroCar project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -19,6 +19,7 @@ package org.envirocar.server.core.update;
 import com.google.inject.Inject;
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.util.PasswordEncoder;
+import org.joda.time.DateTime;
 
 /**
  * TODO JavaDoc
@@ -39,7 +40,7 @@ public class UserUpdater implements EntityUpdater<User> {
             original.setMail(changes.getMail());
         }
         if (changes.getToken() != null) {
-            original.setToken(encoder.encode(changes.getToken()));
+            original.setToken(this.encoder.encode(changes.getToken()));
         }
         if (changes.getAboutMe() != null) {
             if (changes.getAboutMe().isEmpty()) {
@@ -92,11 +93,15 @@ public class UserUpdater implements EntityUpdater<User> {
         if (changes.getUrl() != null) {
             original.setUrl(changes.getUrl());
         }
+        DateTime now = DateTime.now();
         if (changes.getTermsOfUseVersion() != null) {
             original.setTermsOfUseVersion(changes.getTermsOfUseVersion());
+            original.addTermsOfUseHistoryItem(new User.TermsHistoryItem(changes.getTermsOfUseVersion(), now));
         }
         if (changes.hasPrivacyStatementVersion()) {
             original.setPrivacyStatementVersion(changes.getPrivacyStatementVersion());
+            original.addPrivacyStatementHistoryItem(new User.TermsHistoryItem(changes.getPrivacyStatementVersion(), now));
+
         }
     }
 }

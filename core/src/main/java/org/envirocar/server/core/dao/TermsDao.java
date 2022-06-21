@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2020 The enviroCar project
+ * Copyright (C) 2013-2022 The enviroCar project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -28,4 +28,7 @@ public interface TermsDao<T extends Terms, V extends UpCastingIterable<T>> exten
     Optional<T> getById(String id);
 
     Optional<T> getLatest();
+
+    void create(T terms);
+
 }

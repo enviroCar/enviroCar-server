@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2020 The enviroCar project
+ * Copyright (C) 2013-2022 The enviroCar project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -24,13 +24,11 @@ import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.filter.StatisticsFilter;
 import org.envirocar.server.core.statistics.Statistic;
-import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.schema.Schema;
 
 import javax.annotation.Nullable;
 import javax.ws.rs.GET;
-import javax.ws.rs.Produces;
 
 /**
  * TODO JavaDoc
@@ -56,24 +54,24 @@ public class StatisticResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.STATISTIC)
-    @Produces({MediaTypes.JSON, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
     public Statistic get() {
-        return getStatisticsService().getStatistic(new StatisticsFilter(user, track, sensor), phenomenon);
+        return getStatisticsService()
+                .getStatistic(new StatisticsFilter(this.user, this.track, this.sensor), this.phenomenon);
     }
 
     public Track getTrack() {
-        return track;
+        return this.track;
     }
 
     public User getUser() {
-        return user;
+        return this.user;
     }
 
     public Sensor getSensor() {
-        return sensor;
+        return this.sensor;
     }
 
     public Phenomenon getPhenomenon() {
-        return phenomenon;
+        return this.phenomenon;
     }
 }

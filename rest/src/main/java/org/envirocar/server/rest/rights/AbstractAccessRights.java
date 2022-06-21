@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2020 The enviroCar project
+ * Copyright (C) 2013-2022 The enviroCar project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -64,43 +64,43 @@ public abstract class AbstractAccessRights implements AccessRights {
     }
 
     protected boolean isFriend(User user) {
-        if (this.user == null || user == null || friendService == null) {
+        if (this.user == null || user == null || this.friendService == null) {
             return false;
         }
-        if (!isFriend.containsKey(user)) {
-            isFriend.put(user, friendService.isFriend(this.user, user));
+        if (!this.isFriend.containsKey(user)) {
+            this.isFriend.put(user, this.friendService.isFriend(this.user, user));
         }
-        return isFriend.get(user);
+        return this.isFriend.get(user);
     }
 
     protected boolean isFriendOf(User user) {
-        if (this.user == null || user == null || friendService == null) {
+        if (this.user == null || user == null || this.friendService == null) {
             return false;
         }
-        if (!isFriendOf.containsKey(user)) {
-            isFriendOf.put(user, friendService.isFriend(user, this.user));
+        if (!this.isFriendOf.containsKey(user)) {
+            this.isFriendOf.put(user, this.friendService.isFriend(user, this.user));
         }
-        return isFriendOf.get(user);
+        return this.isFriendOf.get(user);
     }
 
     protected boolean shareGroup(User user) {
-        if (this.user == null || user == null || groupService == null) {
+        if (this.user == null || user == null || this.groupService == null) {
             return false;
         }
-        if (!shareGroup.containsKey(user)) {
-            shareGroup.put(user, groupService.shareGroup(this.user, user));
+        if (!this.shareGroup.containsKey(user)) {
+            this.shareGroup.put(user, this.groupService.shareGroup(this.user, user));
         }
-        return shareGroup.get(user);
+        return this.shareGroup.get(user);
     }
 
     protected boolean isMember(Group group) {
-        if (this.user == null || group == null || groupService == null) {
+        if (this.user == null || group == null || this.groupService == null) {
             return false;
         }
-        if (!isMember.containsKey(group)) {
-            isMember.put(group, groupService.isGroupMember(group, this.user));
+        if (!this.isMember.containsKey(group)) {
+            this.isMember.put(group, this.groupService.isGroupMember(group, this.user));
         }
-        return isMember.get(group);
+        return this.isMember.get(group);
     }
 
     protected boolean isSelfFriendOfOrShareGroup(User user) {

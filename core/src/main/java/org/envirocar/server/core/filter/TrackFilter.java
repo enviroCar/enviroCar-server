@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2020 The enviroCar project
+ * Copyright (C) 2013-2022 The enviroCar project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -18,6 +18,7 @@ package org.envirocar.server.core.filter;
 
 import org.envirocar.server.core.SpatialFilter;
 import org.envirocar.server.core.TemporalFilter;
+import org.envirocar.server.core.entities.TrackStatus;
 import org.envirocar.server.core.entities.User;
 import org.envirocar.server.core.util.pagination.Pagination;
 
@@ -31,67 +32,85 @@ public class TrackFilter {
     private final SpatialFilter spatialFilter;
     private final TemporalFilter temporalFilter;
     private final Pagination pagination;
+    private final TrackStatus status;
 
-    public TrackFilter(User u, SpatialFilter sf, TemporalFilter tf, Pagination p) {
+    public TrackFilter(User u, SpatialFilter sf, TemporalFilter tf, TrackStatus s, Pagination p) {
         this.user = u;
         this.spatialFilter = sf;
         this.pagination = p;
         this.temporalFilter = tf;
+        this.status = s;
     }
 
     public TrackFilter(User u, SpatialFilter g, Pagination p) {
-        this(u, g, null, p);
+        this(u, g, null, null, p);
     }
 
     public TrackFilter(SpatialFilter g, Pagination p) {
-        this(null, g, null, p);
+        this(null, g, null, null, p);
     }
 
     public TrackFilter(User u, Pagination p) {
-        this(u, null, null, p);
+        this(u, null, null, null, p);
     }
 
     public TrackFilter(User u) {
-        this(u, null, null, null);
+        this(u, null, null, null, null);
+    }
+
+    public TrackFilter(User u, TrackStatus status) {
+        this(u, null, null, status, null);
     }
 
     public TrackFilter(Pagination p) {
-        this(null, null, null, p);
+        this(null, null, null, null, p);
     }
 
     public TrackFilter() {
-        this(null, null, null, null);
+        this(null, null, null, null, null);
+    }
+
+    public TrackFilter(TrackStatus status) {
+        this(null, null, null, status, null);
     }
 
     public User getUser() {
-        return user;
+        return this.user;
     }
 
     public boolean hasUser() {
-        return user != null;
+        return this.user != null;
     }
 
     public SpatialFilter getSpatialFilter() {
-        return spatialFilter;
+        return this.spatialFilter;
     }
 
     public boolean hasSpatialFilter() {
-        return spatialFilter != null;
+        return this.spatialFilter != null;
     }
 
     public Pagination getPagination() {
-        return pagination;
+        return this.pagination;
     }
 
     public boolean hasPagination() {
-        return pagination != null;
+        return this.pagination != null;
     }
 
     public TemporalFilter getTemporalFilter() {
-        return temporalFilter;
+        return this.temporalFilter;
     }
 
     public boolean hasTemporalFilter() {
-        return temporalFilter != null;
+        return this.temporalFilter != null;
+    }
+
+    public TrackStatus getStatus() {
+        return this.status;
+    }
+
+    public boolean hasStatus() {
+        return this.status != null;
     }
 }

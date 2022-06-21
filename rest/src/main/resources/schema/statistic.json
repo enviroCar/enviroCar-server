@@ -12,7 +12,7 @@
   ],
   "properties": {
     "phenomenon": {
-      "$ref": "phenomenon.json#"
+      "$ref": "phenomenon.json"
     },
     "measurements": {
       "type": "integer",

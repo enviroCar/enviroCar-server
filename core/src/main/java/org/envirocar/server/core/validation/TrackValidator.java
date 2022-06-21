@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2020 The enviroCar project
+ * Copyright (C) 2013-2022 The enviroCar project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -39,7 +39,6 @@ public class TrackValidator extends AbstractValidator<Track> {
     public void validateUpdate(Track t) throws ValidationException {
         isNull("created", t.getCreationTime());
         isNull("modified", t.getModificationTime());
-        isNull("user", t.getUser());
     }
 
 }

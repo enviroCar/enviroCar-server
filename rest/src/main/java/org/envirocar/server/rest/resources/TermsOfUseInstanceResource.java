@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2020 The enviroCar project
+ * Copyright (C) 2013-2022 The enviroCar project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -43,7 +43,6 @@ public class TermsOfUseInstanceResource extends TermsResource {
     @GET
     @AllowOutdatedTerms
     @Schema(response = Schemas.TERMS_OF_USE_INSTANCE)
-    @Produces({MediaTypes.JSON})
     public TermsOfUseInstance get() {
         return setContents(entity);
     }

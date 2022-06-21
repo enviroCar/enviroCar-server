@@ -1,196 +1,24 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "type": "object",
   "oneOf": [
+
     {
-      "allOf": [
-        {
-          "required": [
-            "type",
-            "coordinates"
-          ]
-        },
-        {
-          "oneOf": [
-            {
-              "$ref": "#/definitions/Point"
-            },
-            {
-              "$ref": "#/definitions/MultiPoint"
-            },
-            {
-              "$ref": "#/definitions/LineString"
-            },
-            {
-              "$ref": "#/definitions/MultiLineString"
-            },
-            {
-              "$ref": "#/definitions/Polygon"
-            },
-            {
-              "$ref": "#/definitions/MultiPolygon"
-            }
-          ]
-        }
-      ]
+      "$ref": "point.json"
     },
     {
-      "required": [
-        "type",
-        "geometries"
-      ],
-      "properties": {
-        "type": {
-          "enum": [
-            "GeometryCollection"
-          ]
-        },
-        "geometries": {
-          "type": "array",
-          "items": {
-            "$ref": "#"
-          }
-        }
-      }
+      "$ref": "multipoint.json"
+    },
+    {
+      "$ref": "linestring.json"
+    },
+    {
+      "$ref": "multilinestring.json"
+    },
+    {
+      "$ref": "polygon.json"
+    },
+    {
+      "$ref": "multipolygon.json"
     }
-  ],
-  "definitions": {
-    "Point": {
-      "title": "Point",
-      "type": "object",
-      "properties": {
-        "type": {
-          "enum": [
-            "Point"
-          ]
-        },
-        "coordinates": {
-          "$ref": "#/definitions/position"
-        }
-      }
-    },
-    "MultiPoint": {
-      "title": "MultiPoint",
-      "type": "object",
-      "properties": {
-        "type": {
-          "enum": [
-            "MultiPoint"
-          ]
-        },
-        "coordinates": {
-          "$ref": "#/definitions/positionArray"
-        }
-      }
-    },
-    "LineString": {
-      "title": "LineString",
-      "type": "object",
-      "properties": {
-        "type": {
-          "enum": [
-            "LineString"
-          ]
-        },
-        "coordinates": {
-          "$ref": "#/definitions/lineString"
-        }
-      }
-    },
-    "MultiLineString": {
-      "title": "MultiLineString",
-      "type": "object",
-      "properties": {
-        "type": {
-          "enum": [
-            "MultiLineString"
-          ]
-        },
-        "coordinates": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/lineString"
-          }
-        }
-      }
-    },
-    "Polygon": {
-      "title": "Polygon",
-      "type": "object",
-      "properties": {
-        "type": {
-          "enum": [
-            "Polygon"
-          ]
-        },
-        "coordinates": {
-          "$ref": "#/definitions/polygonCoordinates"
-        }
-      }
-    },
-    "MultiPolygon": {
-      "title": "MultiPolygon",
-      "type": "object",
-      "properties": {
-        "type": {
-          "enum": [
-            "MultiPolygon"
-          ]
-        },
-        "coordinates": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/polygonCoordinates"
-          }
-        }
-      }
-    },
-    "lineString": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/positionArray"
-        },
-        {
-          "minItems": 2
-        }
-      ]
-    },
-    "linearRingCoordinates": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/positionArray"
-        },
-        {
-          "minItems": 4
-        }
-      ]
-    },
-    "polygonCoordinates": {
-      "type": "array",
-      "minItems": 1,
-      "items": {
-        "$ref": "#/definitions/linearRingCoordinates"
-      }
-    },
-    "position": {
-      "type": "array",
-      "minItems": 2,
-      "maxItems": 2,
-      "additionalItems": false,
-      "items": [
-        {
-          "type": "number"
-        },
-        {
-          "type": "number"
-        }
-      ]
-    },
-    "positionArray": {
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/position"
-      }
-    }
-  }
+  ]
 }

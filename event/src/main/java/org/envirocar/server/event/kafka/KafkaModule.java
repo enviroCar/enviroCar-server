@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2020 The enviroCar project
+ * Copyright (C) 2013-2022 The enviroCar project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -24,20 +24,57 @@ import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.Serializer;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.envirocar.server.core.entities.Measurement;
 import org.envirocar.server.core.entities.Track;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.io.ParseException;
+import org.locationtech.jts.io.WKTReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Named;
+import java.io.StringReader;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.UUID;
 
 public final class KafkaModule extends AbstractModule {
-
+    private static final Logger LOG = LoggerFactory.getLogger(KafkaModule.class);
     @Override
     protected void configure() {
         bind(new TypeLiteral<Serializer<Track>>() {}).to(TrackSerializer.class);
+        bind(new TypeLiteral<Serializer<Measurement>>() {}).to(MeasurementSerializer.class);
         bind(new TypeLiteral<Serializer<String>>() {}).to(StringSerializer.class);
-        bind(KafkaListener.class).asEagerSingleton();
+        bind(KafkaTrackListener.class).asEagerSingleton();
+        bind(KafkaMeasurementListener.class).asEagerSingleton();
+        bind(GeofenceKafkaMeasurementListener.class).asEagerSingleton();
+    }
+
+    @Provides
+    public Map<String, Geometry> geofences(GeometryFactory geometryFactory, Properties properties)
+            throws ParseException {
+        WKTReader wktReader = new WKTReader(geometryFactory);
+        String names = getProperty(properties, "kafka.geofences", null);
+        if (names != null) {
+            String[] split = names.split(",");
+            Map<String, Geometry> geofences = new HashMap<>(split.length);
+            for (String name : split) {
+                String topic = getProperty(properties, "kafka.topic." + name, name);
+                String wkt = getProperty(properties, "kafka.geofence." + name, null);
+                LOG.info("Configuring geofence for Kafka topic '{}': {}", topic, wkt);
+                if (wkt != null) {
+                    try (StringReader reader = new StringReader(wkt)) {
+                        geofences.put(topic, wktReader.read(reader));
+                    }
+                }
+            }
+            return Collections.unmodifiableMap(geofences);
+        }
+        return Collections.emptyMap();
     }
 
     @Provides
@@ -48,22 +85,42 @@ public final class KafkaModule extends AbstractModule {
     }
 
     @Provides
-    @Named(KafkaConstants.KAFKA_BROKERS)
+    @Named(KafkaConstants.KAFKA_BOOTSTRAP_SERVERS)
     public String brokers(Properties properties) {
-        return getProperty(properties, KafkaConstants.KAFKA_BROKERS, "processing.envirocar.org:9092");
+        return getProperty(properties, KafkaConstants.KAFKA_BOOTSTRAP_SERVERS, "processing.envirocar.org:9092");
     }
 
     @Provides
-    @Named(KafkaConstants.KAFKA_TOPIC)
-    public String topic(Properties properties) {
-        return getProperty(properties, KafkaConstants.KAFKA_TOPIC, "tracks");
+    @Named(KafkaConstants.KAFKA_TRACK_TOPIC)
+    public String tracksTopic(Properties properties) {
+        return getProperty(properties, KafkaConstants.KAFKA_TRACK_TOPIC, "tracks");
     }
 
     @Provides
-    public Producer<String, Track> createProducer(Serializer<String> keySerializer,
-                                                  Serializer<Track> valueSerializer,
-                                                  @Named(KafkaConstants.KAFKA_BROKERS) String brokers,
-                                                  @Named(KafkaConstants.KAFKA_CLIENT_ID) String clientId) {
+    @Named(KafkaConstants.KAFKA_MEASUREMENT_TOPIC)
+    public String measurementsTopic(Properties properties) {
+        return getProperty(properties, KafkaConstants.KAFKA_MEASUREMENT_TOPIC, "measurements");
+    }
+
+    @Provides
+    public Producer<String, Track> createTrackProducer(
+            Serializer<String> keySerializer,
+            Serializer<Track> valueSerializer,
+            @Named(KafkaConstants.KAFKA_BOOTSTRAP_SERVERS) String brokers,
+            @Named(KafkaConstants.KAFKA_CLIENT_ID) String clientId) {
+        Properties props = new Properties();
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, brokers);
+        props.put(ProducerConfig.CLIENT_ID_CONFIG, clientId);
+        props.put(ProducerConfig.MAX_REQUEST_SIZE_CONFIG, 157286400); // 150MB
+        return new KafkaProducer<>(props, keySerializer, valueSerializer);
+    }
+
+    @Provides
+    public Producer<String, Measurement> createMeasurementProducer(
+            Serializer<String> keySerializer,
+            Serializer<Measurement> valueSerializer,
+            @Named(KafkaConstants.KAFKA_BOOTSTRAP_SERVERS) String brokers,
+            @Named(KafkaConstants.KAFKA_CLIENT_ID) String clientId) {
         Properties props = new Properties();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, brokers);
         props.put(ProducerConfig.CLIENT_ID_CONFIG, clientId);
@@ -73,14 +130,12 @@ public final class KafkaModule extends AbstractModule {
 
     private String getProperty(Properties properties, String key, String defaultValue) {
         Optional<String> property = getOptional(System.getenv(key));
-
         if (!property.isPresent()) {
             property = getOptional(System.getProperty(key));
         }
         if (!property.isPresent()) {
             property = getOptional(properties.getProperty(key));
         }
-
         return property.orElse(defaultValue);
     }
 
@@ -88,3 +143,4 @@ public final class KafkaModule extends AbstractModule {
         return Optional.ofNullable(property).filter(x -> !x.isEmpty());
     }
 }
+

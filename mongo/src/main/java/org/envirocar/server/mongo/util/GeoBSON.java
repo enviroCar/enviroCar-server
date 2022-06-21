@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2020 The enviroCar project
+ * Copyright (C) 2013-2022 The enviroCar project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -35,35 +35,12 @@ import static org.envirocar.server.core.util.GeoJSONConstants.*;
  *
  * @author Christian Autermann <autermann@uni-muenster.de>
  */
-public class GeoBSON implements GeometryConverter<BSONObject> {
+public class GeoBSON extends GeometryConverter.AbstractGeometryConverter<BSONObject> {
     private final GeometryFactory factory;
 
     @Inject
     public GeoBSON(GeometryFactory factory) {
         this.factory = factory;
-    }
-
-    private BSONObject encodeGeometry(Geometry geometry) throws GeometryConverterException {
-        Objects.requireNonNull(geometry);
-        if (geometry.isEmpty()) {
-            return null;
-        } else if (geometry instanceof Point) {
-            return encode((Point) geometry);
-        } else if (geometry instanceof LineString) {
-            return encode((LineString) geometry);
-        } else if (geometry instanceof Polygon) {
-            return encode((Polygon) geometry);
-        } else if (geometry instanceof MultiPoint) {
-            return encode((MultiPoint) geometry);
-        } else if (geometry instanceof MultiLineString) {
-            return encode((MultiLineString) geometry);
-        } else if (geometry instanceof MultiPolygon) {
-            return encode((MultiPolygon) geometry);
-        } else if (geometry instanceof GeometryCollection) {
-            return encode((GeometryCollection) geometry);
-        } else {
-            throw new GeometryConverterException(String.format("unknown geometry type %s", geometry.getGeometryType()));
-        }
     }
 
     @Override
@@ -220,15 +197,15 @@ public class GeoBSON implements GeometryConverter<BSONObject> {
         if (coordinates.size() < 1) {
             throw new GeometryConverterException("missing polygon shell");
         }
-        LinearRing shell = factory
+        LinearRing shell = this.factory
                 .createLinearRing(decodeCoordinates(toList(coordinates.get(0))));
         LinearRing[] holes = new LinearRing[coordinates.size() - 1];
         for (int i = 1; i < coordinates.size(); ++i) {
-            holes[i - 1] = factory
+            holes[i - 1] = this.factory
                     .createLinearRing(decodeCoordinates(toList(coordinates
                             .get(i))));
         }
-        return factory.createPolygon(shell, holes);
+        return this.factory.createPolygon(shell, holes);
     }
 
     private Geometry decodeGeometry(Object db) throws GeometryConverterException {
@@ -267,28 +244,27 @@ public class GeoBSON implements GeometryConverter<BSONObject> {
         LineString[] lineStrings = new LineString[coordinates.size()];
         for (int i = 0; i < coordinates.size(); ++i) {
             Object coords = coordinates.get(i);
-            lineStrings[i] = factory
-                    .createLineString(decodeCoordinates(toList(coords)));
+            lineStrings[i] = this.factory.createLineString(decodeCoordinates(toList(coords)));
         }
-        return factory.createMultiLineString(lineStrings);
+        return this.factory.createMultiLineString(lineStrings);
     }
 
     @Override
     public LineString decodeLineString(BSONObject bson) throws GeometryConverterException {
         Coordinate[] coordinates = decodeCoordinates(requireCoordinates(bson));
-        return factory.createLineString(coordinates);
+        return this.factory.createLineString(coordinates);
     }
 
     @Override
     public MultiPoint decodeMultiPoint(BSONObject bson) throws GeometryConverterException {
         Coordinate[] coordinates = decodeCoordinates(requireCoordinates(bson));
-        return factory.createMultiPointFromCoords(coordinates);
+        return this.factory.createMultiPointFromCoords(coordinates);
     }
 
     @Override
     public Point decodePoint(BSONObject bson) throws GeometryConverterException {
         Coordinate parsed = decodeCoordinate(requireCoordinates(bson));
-        return factory.createPoint(parsed);
+        return this.factory.createPoint(parsed);
     }
 
     @Override
@@ -304,7 +280,7 @@ public class GeoBSON implements GeometryConverter<BSONObject> {
         for (int i = 0; i < coordinates.size(); ++i) {
             polygons[i] = decodePolygonCoordinates(toList(coordinates.get(i)));
         }
-        return factory.createMultiPolygon(polygons);
+        return this.factory.createMultiPolygon(polygons);
     }
 
     @Override
@@ -317,16 +293,11 @@ public class GeoBSON implements GeometryConverter<BSONObject> {
         for (int i = 0; i < geometries.size(); ++i) {
             geoms[i] = decodeGeometry(geometries.get(i));
         }
-        return factory.createGeometryCollection(geoms);
+        return this.factory.createGeometryCollection(geoms);
     }
 
     @Override
     public Geometry decode(BSONObject json) throws GeometryConverterException {
         return json == null ? null : decodeGeometry(json);
-    }
-
-    @Override
-    public BSONObject encode(Geometry value) throws GeometryConverterException {
-        return value == null ? null : encodeGeometry(value);
     }
 }

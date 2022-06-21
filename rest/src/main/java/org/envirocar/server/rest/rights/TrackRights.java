@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2020 The enviroCar project
+ * Copyright (C) 2013-2022 The enviroCar project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -47,12 +47,16 @@ public interface TrackRights {
     boolean canDelete(Track track);
 
     boolean canSeeStatisticsOf(Track track);
-    
+
     boolean canSeeAppVersionOf(Track track);
-    
+
     boolean canSeeObdDeviceOf(Track track);
-    
+
     boolean canSeeTouVersionOf(Track track);
 
-	boolean canSeeLengthOf(Track t);
+    boolean canSeeMeasurementProfile(Track track);
+
+    boolean canSeeLengthOf(Track t);
+
+    boolean canSeeStatusOf(Track t);
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2020 The enviroCar project
+ * Copyright (C) 2013-2022 The enviroCar project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -71,13 +71,13 @@ public class SendVerificationCodeViaMailListener {
     public void onPasswordResetRequestedEvent(PasswordResetEvent e) {
         try {
             Path path;
-            if (Files.exists(templateFile)) {
-                path = templateFile;
+            if (Files.exists(this.templateFile)) {
+                path = this.templateFile;
             } else if (Files.exists(EMAIL_TEMPLATE_FILE.toAbsolutePath())) {
                 path = EMAIL_TEMPLATE_FILE.toAbsolutePath();
             } else {
                 LOG.error("Could not find email template file for password reset at {} or {}",
-                          templateFile, EMAIL_TEMPLATE_FILE.toAbsolutePath());
+                          this.templateFile, EMAIL_TEMPLATE_FILE.toAbsolutePath());
                 return;
             }
 

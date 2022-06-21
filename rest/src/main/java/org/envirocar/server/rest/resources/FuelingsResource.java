@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2020 The enviroCar project
+ * Copyright (C) 2013-2022 The enviroCar project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -58,15 +58,14 @@ public class FuelingsResource extends AbstractResource {
 
     @GET
     @Schema(response = Schemas.FUELINGS)
-    @Produces({MediaTypes.JSON, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
     public Fuelings getAll() throws BadRequestException {
         TemporalFilter tf = parseTemporalFilterForInstant();
-        return getDataService().getFuelings(new FuelingFilter(user, tf, getPagination()));
+        return getDataService().getFuelings(new FuelingFilter(this.user, tf, getPagination()));
     }
 
     @POST
     @Schema(request = Schemas.FUELING_CREATE)
-    @Consumes({MediaTypes.JSON})
+    @Consumes(MediaTypes.JSON)
     public Response create(Fueling fueling) {
         fueling.setUser(getCurrentUser());
         Fueling f = getDataService().createFueling(fueling);
@@ -76,15 +75,14 @@ public class FuelingsResource extends AbstractResource {
     @GET
     @Path(FUELING)
     @Schema(response = Schemas.FUELING)
-    @Produces({MediaTypes.JSON, MediaTypes.XML_RDF, MediaTypes.TURTLE, MediaTypes.TURTLE_ALT})
     public Fueling getFueling(@PathParam("id") String id) throws FuelingNotFoundException {
-        return getDataService().getFueling(user, id);
+        return getDataService().getFueling(this.user, id);
     }
 
     @DELETE
     @Path(FUELING)
     public void delete(@PathParam("id") String id) throws FuelingNotFoundException {
-        Fueling fueling = getDataService().getFueling(user, id);
+        Fueling fueling = getDataService().getFueling(this.user, id);
         checkRights(getRights().canDelete(fueling));
         getDataService().deleteFueling(fueling);
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2020 The enviroCar project
+ * Copyright (C) 2013-2022 The enviroCar project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -16,8 +16,17 @@
  */
 package org.envirocar.server.core.util;
 
-import org.locationtech.jts.geom.*;
 import org.envirocar.server.core.exception.GeometryConverterException;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.GeometryCollection;
+import org.locationtech.jts.geom.LineString;
+import org.locationtech.jts.geom.MultiLineString;
+import org.locationtech.jts.geom.MultiPoint;
+import org.locationtech.jts.geom.MultiPolygon;
+import org.locationtech.jts.geom.Point;
+import org.locationtech.jts.geom.Polygon;
+
+import java.util.Objects;
 
 /**
  * TODO JavaDoc
@@ -56,4 +65,34 @@ public interface GeometryConverter<T> {
     T encode(MultiPoint geometry) throws GeometryConverterException;
 
     T encode(MultiPolygon geometry) throws GeometryConverterException;
+
+    abstract class AbstractGeometryConverter<T> implements GeometryConverter<T> {
+
+        @Override
+        public T encode(Geometry value) throws GeometryConverterException {
+            return value == null ? null : encodeGeometry(value);
+        }
+        protected T encodeGeometry(Geometry geometry) throws GeometryConverterException {
+            Objects.requireNonNull(geometry);
+            if (geometry.isEmpty()) {
+                return null;
+            } else if (geometry instanceof Point) {
+                return encode((Point) geometry);
+            } else if (geometry instanceof LineString) {
+                return encode((LineString) geometry);
+            } else if (geometry instanceof Polygon) {
+                return encode((Polygon) geometry);
+            } else if (geometry instanceof MultiPoint) {
+                return encode((MultiPoint) geometry);
+            } else if (geometry instanceof MultiLineString) {
+                return encode((MultiLineString) geometry);
+            } else if (geometry instanceof MultiPolygon) {
+                return encode((MultiPolygon) geometry);
+            } else if (geometry instanceof GeometryCollection) {
+                return encode((GeometryCollection) geometry);
+            } else {
+                throw new GeometryConverterException(String.format("unknown geometry type %s", geometry.getGeometryType()));
+            }
+        }
+    }
 }

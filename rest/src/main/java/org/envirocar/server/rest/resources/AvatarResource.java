@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2020 The enviroCar project
+ * Copyright (C) 2013-2022 The enviroCar project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -47,9 +47,9 @@ public class AvatarResource extends AbstractResource {
     }
 
     @GET
-    @Produces({MediaTypes.JPEG})
+    @Produces(MediaTypes.JPEG)
     public Response get(@DefaultValue(DEFAULT_SIZE) @QueryParam(SIZE) int size) {
-        return Response.temporaryRedirect(getURI(user, size)).build();
+        return Response.temporaryRedirect(getURI(this.user, size)).build();
     }
 
     protected URI getURI(User user, int size) {

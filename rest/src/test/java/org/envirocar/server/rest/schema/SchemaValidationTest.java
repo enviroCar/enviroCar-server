@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2020 The enviroCar project
+ * Copyright (C) 2013-2022 The enviroCar project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -49,9 +49,11 @@ public class SchemaValidationTest {
 
     @Test
     public void validate() {
-        schemas.stream().map(URI::create).forEach(schema ->
-                errors.checkThat(
-                        errors.checkSucceeds(() -> loader.load(schema)),
-                        validation.validInstanceOf(SCHEMA_URI)));
+        this.schemas.stream()
+                    .map(URI::create)
+                    .forEach(schema ->
+                                     this.errors.checkThat(
+                                             this.errors.checkSucceeds(() -> this.loader.load(schema)),
+                                             this.validation.validInstanceOf(SCHEMA_URI)));
     }
 }

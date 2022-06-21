@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2020 The enviroCar project
+ * Copyright (C) 2013-2022 The enviroCar project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -16,6 +16,7 @@
  */
 package org.envirocar.server.rest.encoding.json;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 import org.locationtech.jts.geom.Geometry;
@@ -47,9 +48,9 @@ public class GeometryJSONEncoder extends AbstractJSONEntityEncoder<Geometry> {
     }
 
     @Override
-    public ObjectNode encodeJSON(Geometry entity, AccessRights rights, MediaType mediaType) {
+    public JsonNode encodeJSON(Geometry entity, AccessRights rights, MediaType mediaType) {
         try {
-            return geoJSON.encode(entity);
+            return this.geoJSON.encode(entity);
         } catch (GeometryConverterException ex) {
             throw new InternalServerError(ex);
         }

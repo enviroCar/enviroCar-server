@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2020 The enviroCar project
+ * Copyright (C) 2013-2022 The enviroCar project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -81,17 +81,17 @@ public class UserStatisticJSONEncoder extends AbstractJSONEntityEncoder<UserStat
     private ObjectNode encodeTrackSummary(TrackSummary trackSummary, AccessRights rights, MediaType mediaType) {
         ObjectNode node = getJsonFactory().objectNode();
         if (trackSummary.hasIdentifier()) {
-            node.putPOJO(JSONConstants.IDENTIFIER_KEY, trackSummary.getIdentifier());
+            node.put(JSONConstants.IDENTIFIER_KEY, trackSummary.getIdentifier());
         }
         if (trackSummary.hasStartPosition()) {
             ObjectNode startPosition = node.putObject(JSONConstants.STARTPOSITION_KEY);
             startPosition.set(JSONConstants.GEOMETRY_KEY,
-                              geometryEncoder.encodeJSON(trackSummary.getStartPosition(), rights, mediaType));
+                              this.geometryEncoder.encodeJSON(trackSummary.getStartPosition(), rights, mediaType));
         }
         if (trackSummary.hasEndPosition()) {
             ObjectNode endPosition = node.putObject(JSONConstants.ENDPOSITION_KEY);
             endPosition.set(JSONConstants.GEOMETRY_KEY,
-                            geometryEncoder.encodeJSON(trackSummary.getEndPosition(), rights, mediaType));
+                            this.geometryEncoder.encodeJSON(trackSummary.getEndPosition(), rights, mediaType));
         }
         return node;
     }

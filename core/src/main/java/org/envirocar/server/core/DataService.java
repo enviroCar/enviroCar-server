@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2020 The enviroCar project
+ * Copyright (C) 2013-2022 The enviroCar project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -55,8 +55,12 @@ public interface DataService {
             TrackNotFoundException;
 
     Track modifyTrack(Track track, Track changes) throws
-            ValidationException,
-            IllegalModificationException;
+                                                  ValidationException,
+                                                  IllegalModificationException;
+
+    Track modifyTrack(Track track, Track changes, List<Measurement> measurements) throws
+                                                  ValidationException,
+                                                  IllegalModificationException;
 
     Tracks getTracks(TrackFilter request);
 

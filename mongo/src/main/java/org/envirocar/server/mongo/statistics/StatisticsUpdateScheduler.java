@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2020 The enviroCar project
+ * Copyright (C) 2013-2022 The enviroCar project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -59,7 +59,7 @@ public class StatisticsUpdateScheduler {
                     try {
                         this.keyStatisticMutex.wait();
                     } catch (InterruptedException ex) {
-                        LOGGER.warn("interrupted wail waiting for statistsics", ex);
+                        LOGGER.warn("interrupted wail waiting for statistics", ex);
                     }
                 }
                 return;

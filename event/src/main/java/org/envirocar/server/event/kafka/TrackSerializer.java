@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2020 The enviroCar project
+ * Copyright (C) 2013-2022 The enviroCar project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -17,14 +17,15 @@
 package org.envirocar.server.event.kafka;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 import org.apache.kafka.common.serialization.Serializer;
 import org.envirocar.server.core.entities.Track;
 import org.envirocar.server.rest.MediaTypes;
 import org.envirocar.server.rest.Schemas;
 import org.envirocar.server.rest.encoding.JSONEntityEncoder;
+import org.envirocar.server.rest.rights.AccessRights;
 import org.envirocar.server.rest.rights.AccessRightsImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,9 +48,9 @@ public class TrackSerializer implements Serializer<Track> {
     public byte[] serialize(String topic, Track data) {
         try {
             MediaType mediaType = MediaTypes.jsonWithSchema(Schemas.TRACK);
-            AccessRightsImpl rights = new AccessRightsImpl();
-            ObjectNode jsonTrack = encoder.encodeJSON(data, rights, mediaType);
-            return objectMapper.writeValueAsBytes(jsonTrack);
+            AccessRights rights = new AccessRightsImpl();
+            JsonNode jsonTrack = this.encoder.encodeJSON(data, rights, mediaType);
+            return this.objectMapper.writeValueAsBytes(jsonTrack);
         } catch (JsonProcessingException ex) {
             LOG.error("Error in serializing track", ex);
             return null;

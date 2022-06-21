@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2020 The enviroCar project
+ * Copyright (C) 2013-2022 The enviroCar project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -21,9 +21,11 @@ import org.bson.types.ObjectId;
 import org.envirocar.server.core.dao.PrivacyStatementDao;
 import org.envirocar.server.core.entities.PrivacyStatement;
 import org.envirocar.server.core.entities.PrivacyStatements;
+import org.envirocar.server.core.entities.TermsOfUseInstance;
 import org.envirocar.server.core.util.pagination.Pagination;
 import org.envirocar.server.mongo.MongoDB;
 import org.envirocar.server.mongo.entity.MongoPrivacyStatement;
+import org.envirocar.server.mongo.entity.MongoTermsOfUseInstance;
 import org.envirocar.server.mongo.util.MongoUtils;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Sort;
@@ -80,4 +82,8 @@ public class MongoPrivacyStatementDao extends AbstractMongoDao<ObjectId, MongoPr
         return Optional.empty();
     }
 
+    @Override
+    public void create(PrivacyStatement terms) {
+        save((MongoPrivacyStatement) terms);
+    }
 }
