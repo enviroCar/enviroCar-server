@@ -49,7 +49,7 @@
         <jackson-version>2.13.3</jackson-version>
         <testcontainers-version>1.17.2</testcontainers-version>
         <jetty-version>9.4.47.v20220610</jetty-version>
-        <mongo-driver-version>4.0.3</mongo-driver-version>
+        <mongo-driver-version>4.0.6</mongo-driver-version>
     </properties>
     <repositories>
         <repository>
