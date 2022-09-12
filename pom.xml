@@ -48,8 +48,8 @@
         <guice-version>4.2.3</guice-version>
         <jackson-version>2.13.3</jackson-version>
         <testcontainers-version>1.17.3</testcontainers-version>
-        <jetty-version>9.4.47.v20220610</jetty-version>
-        <mongo-driver-version>4.0.3</mongo-driver-version>
+        <jetty-version>9.4.48.v20220622</jetty-version>
+        <mongo-driver-version>4.0.6</mongo-driver-version>
     </properties>
     <repositories>
         <repository>
@@ -294,7 +294,7 @@
             <dependency>
                 <groupId>org.locationtech.jts</groupId>
                 <artifactId>jts-core</artifactId>
-                <version>1.18.2</version>
+                <version>1.19.0</version>
             </dependency>
             <dependency>
                 <groupId>com.sun.jersey</groupId>
