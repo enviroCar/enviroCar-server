@@ -232,7 +232,6 @@ paths:
         - Tracks
       parameters:
         - $ref: '#/components/parameters/bbox'
-        - $ref: '#/components/parameters/nearPoint'
         - $ref: '#/components/parameters/after'
         - $ref: '#/components/parameters/before'
         - $ref: '#/components/parameters/begins'
