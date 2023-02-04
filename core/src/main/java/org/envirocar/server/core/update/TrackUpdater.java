@@ -40,5 +40,8 @@ public class TrackUpdater implements EntityUpdater<Track> {
         if (changes.getStatus() != null) {
             original.setStatus(changes.getStatus());
         }
+        if (changes.hasLength()) {
+            original.setLength(changes.getLength());
+        }
     }
 }

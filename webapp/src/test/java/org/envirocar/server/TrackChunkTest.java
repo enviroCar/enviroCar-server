@@ -161,6 +161,7 @@ public class TrackChunkTest extends ResourceTestBase {
             responseEntity = checkTrackResponse(location, TrackStatus.ONGOING);
             assertThat(responseEntity.path(GeoJSONConstants.FEATURES_KEY).isArray(), is(true));
             assertThat(responseEntity.path(GeoJSONConstants.FEATURES_KEY).size(), is(features.size()));
+            assertThat(responseEntity.path(GeoJSONConstants.PROPERTIES_KEY).path(JSONConstants.LENGTH_KEY).asDouble(), is(0.5));
 
             // check that there are no published tracks
             records = kafkaConsumer.poll(Duration.ofSeconds(2));
@@ -177,6 +178,7 @@ public class TrackChunkTest extends ResourceTestBase {
             responseEntity = checkTrackResponse(location, TrackStatus.FINISHED);
             assertThat(responseEntity.path(GeoJSONConstants.FEATURES_KEY).isArray(), is(true));
             assertThat(responseEntity.path(GeoJSONConstants.FEATURES_KEY).size(), is(features.size()));
+            assertThat(responseEntity.path(GeoJSONConstants.PROPERTIES_KEY).path(JSONConstants.LENGTH_KEY).asDouble(), is(200.0));
 
             // check that the track was published
             records = kafkaConsumer.poll(Duration.ofSeconds(30));
@@ -196,7 +198,8 @@ public class TrackChunkTest extends ResourceTestBase {
     private ObjectNode createTrackStatusUpdate() {
         ObjectNode track = createFeatureCollection();
         track.with(GeoJSONConstants.PROPERTIES_KEY)
-             .put(JSONConstants.STATUS_KEY, TrackStatus.FINISHED.toString());
+             .put(JSONConstants.STATUS_KEY, TrackStatus.FINISHED.toString())
+             .put(JSONConstants.LENGTH_KEY, 200.0);
         return track;
     }
 
@@ -204,6 +207,7 @@ public class TrackChunkTest extends ResourceTestBase {
         ObjectNode track = createFeatureCollection();
         track.with(GeoJSONConstants.PROPERTIES_KEY)
              .put(JSONConstants.STATUS_KEY, TrackStatus.ONGOING.toString())
+             .put(JSONConstants.LENGTH_KEY, 0.5)
              .put(JSONConstants.SENSOR_KEY, sensorId);
         return track;
     }
