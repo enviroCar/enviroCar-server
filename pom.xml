@@ -39,17 +39,17 @@
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <logback-version>1.2.11</logback-version>
+        <logback-version>1.4.5</logback-version>
         <morphia-version>1.6.1</morphia-version>
         <jersey-version>1.19.4</jersey-version>
-        <slf4j-version>1.7.36</slf4j-version>
-        <geotools-version>27.0</geotools-version>
+        <slf4j-version>2.0.5</slf4j-version>
+        <geotools-version>28.0</geotools-version>
         <wps-version>3.6.3</wps-version>
         <guice-version>4.2.3</guice-version>
-        <jackson-version>2.13.3</jackson-version>
-        <testcontainers-version>1.17.2</testcontainers-version>
-        <jetty-version>9.4.47.v20220610</jetty-version>
-        <mongo-driver-version>4.0.3</mongo-driver-version>
+        <jackson-version>2.14.1</jackson-version>
+        <testcontainers-version>1.17.6</testcontainers-version>
+        <jetty-version>9.4.49.v20220914</jetty-version>
+        <mongo-driver-version>4.0.6</mongo-driver-version>
     </properties>
     <repositories>
         <repository>
@@ -289,12 +289,12 @@
             <dependency>
                 <groupId>joda-time</groupId>
                 <artifactId>joda-time</artifactId>
-                <version>2.10.14</version>
+                <version>2.12.2</version>
             </dependency>
             <dependency>
                 <groupId>org.locationtech.jts</groupId>
                 <artifactId>jts-core</artifactId>
-                <version>1.18.2</version>
+                <version>1.19.0</version>
             </dependency>
             <dependency>
                 <groupId>com.sun.jersey</groupId>
@@ -378,7 +378,7 @@
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-databind</artifactId>
-                <version>2.13.3</version>
+                <version>${jackson-version}</version>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
@@ -393,7 +393,7 @@
             <dependency>
                 <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>httpclient</artifactId>
-                <version>4.5.13</version>
+                <version>4.5.14</version>
             </dependency>
             <dependency>
                 <groupId>org.testcontainers</groupId>
@@ -408,7 +408,7 @@
             <dependency>
                 <groupId>org.apache.kafka</groupId>
                 <artifactId>kafka-clients</artifactId>
-                <version>3.2.0</version>
+                <version>3.3.1</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -467,7 +467,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jar-plugin</artifactId>
-                    <version>3.2.2</version>
+                    <version>3.3.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
@@ -514,7 +514,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-project-info-reports-plugin</artifactId>
-                <version>3.3.0</version>
+                <version>3.4.1</version>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -524,7 +524,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>3.1.2</version>
+                <version>3.2.0</version>
             </plugin>
         </plugins>
     </reporting>

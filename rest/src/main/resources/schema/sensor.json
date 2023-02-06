@@ -81,7 +81,8 @@
                 "biodiesel",
                 "kerosene",
                 "electric",
-                "hybrid"
+                "hybrid",
+                "gas"
               ]
             },
             "constructionYear": {
