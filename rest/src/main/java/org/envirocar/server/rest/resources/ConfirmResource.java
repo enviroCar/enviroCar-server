@@ -51,13 +51,13 @@ public class ConfirmResource extends AbstractResource {
 
         if (confirmed == null) {
             URI uri = UriBuilder.fromUri(APP)
-                    .fragment("#!/confirmFailed")
+                    .fragment("!/confirmFailed")
                     .build();
             return Response.seeOther(uri).build();
         }
         try {
             URI uri = UriBuilder.fromUri(APP)
-                    .fragment("#!/confirmSuccess?username=" + URLEncoder
+                    .fragment("!/confirmSuccess?username=" + URLEncoder
                             .encode(confirmed.getName(), StandardCharsets.UTF_8.name()))
                     .build();
             return Response.seeOther(uri).build();
