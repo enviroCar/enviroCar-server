@@ -40,7 +40,7 @@ import java.nio.charset.StandardCharsets;
 public class ConfirmResource extends AbstractResource {
     public static final String CODE = "{code}";
     private static final URI WEBSITE = URI.create("https://envirocar.org");
-    private static final URI APP = WEBSITE.resolve("/app");
+    private static final URI APP = WEBSITE.resolve("/app/");
 
     @GET
     @Anonymous
@@ -50,11 +50,14 @@ public class ConfirmResource extends AbstractResource {
         User confirmed = getUserService().confirmUser(confirmationCode);
 
         if (confirmed == null) {
-            throw new ResourceNotFoundException(String.format("confirmation code %s not found", confirmationCode));
+            URI uri = UriBuilder.fromUri(APP)
+                    .fragment("!/confirmFailed")
+                    .build();
+            return Response.seeOther(uri).build();
         }
         try {
             URI uri = UriBuilder.fromUri(APP)
-                    .fragment("#!/login?username=" + URLEncoder
+                    .fragment("!/confirmSuccess?username=" + URLEncoder
                             .encode(confirmed.getName(), StandardCharsets.UTF_8.name()))
                     .build();
             return Response.seeOther(uri).build();
